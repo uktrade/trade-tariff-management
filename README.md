@@ -20,7 +20,6 @@ Other related projects:
 
   - Ruby
   - Postgresql
-  - ElasticSearch
   - Redis
   - Memcached (production)
 

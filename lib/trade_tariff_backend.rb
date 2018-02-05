@@ -59,16 +59,6 @@ module TradeTariffBackend
       lock.lock &block
     end
 
-    def reindex(indexer = search_client)
-      TimeMachine.with_relevant_validity_periods do
-        begin
-          indexer.reindex
-        rescue StandardError => e
-          Mailer.reindex_exception(e).deliver_now
-        end
-      end
-    end
-
     # Number of changes to fetch for Commodity/Heading/Chapter
     def change_count
       10
@@ -76,31 +66,6 @@ module TradeTariffBackend
 
     def number_formatter
       @number_formatter ||= TradeTariffBackend::NumberFormatter.new
-    end
-
-    attr_writer :search_namespace
-
-    # Returns search index instance for given model instance or
-    # model class instance
-    def search_index_for(model)
-      index_name = model.is_a?(Class) ? model : model.class
-
-      "#{index_name}Index".constantize.new(search_namespace)
-    end
-
-    def search_operation_options
-      @search_operation_options || {}
-    end
-    attr_writer :search_operation_options
-
-    def indexed_models
-      [Chapter, Commodity, Heading, SearchReference, Section]
-    end
-
-    def search_indexes
-      indexed_models.map { |model|
-        "#{model}Index".constantize.new(search_namespace)
-      }
     end
 
     def model_serializer_for(model)
