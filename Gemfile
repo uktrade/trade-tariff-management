@@ -9,48 +9,54 @@ ruby "2.4.3"
 
 gem "rails", "5.1.3"
 
-
+# DB
 gem "pg", "0.18.4"
 gem "sequel", "~> 4.32"
 gem "sequel-rails", "~> 0.9", ">= 0.9.12"
 
-
+# Server
 gem "puma", "~> 3.4"
 
+# UI
+gem "govuk_template", "0.20.0"
+gem "coffee-rails", "~> 4.2.2", ">= 4.1.0"
+gem "govuk_frontend_toolkit", "~> 4.18", ">= 4.18.4"
+gem 'govuk_elements_rails', '~> 1.2', '>= 1.2.2'
+gem "jquery-rails", "~> 4.2.2"
+gem "sass-rails", "~> 5.0.6"
+gem "uglifier", "~> 2.7"
 
+# AWS
 gem "aws-sdk", "~> 2"
 gem "aws-sdk-rails", ">= 1.0.1"
 
-
+# Helpers
 gem "hashie", "~> 3.4"
 gem "multi_json", "~> 1.11"
 gem "yajl-ruby", "~> 1.3.1", require: "yajl"
 gem "builder", "~> 3.2"
 gem "ox", ">= 2.8.1"
 gem "nokogiri", "~> 1.8.1"
+gem 'holidays'
+gem "govspeak", "~> 3.6", ">= 3.6.2"
+gem "addressable", "~> 2.3"
 
-
+# API related
 gem "tilt"
 gem "rabl", "~> 0.12"
 gem "ansi", "~> 1.5"
 gem "responders", "~> 2.1", ">= 2.1.0"
 
-
+# Background jobs
 gem "sidekiq", "~> 4.1.4"
 gem "sidekiq-scheduler", "~> 2.1.8"
-
 
 gem "plek", "~> 1.11"
 gem "gds-sso", "~> 13", ">= 12.1.0"
 
-gem "curb", "~> 0.8"
+# System gems
 gem "dalli", "~> 2.7"
 gem "connection_pool", "~> 2.2"
-
-
-gem 'holidays'
-
-
 gem "newrelic_rpm"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
