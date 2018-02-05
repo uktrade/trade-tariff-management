@@ -7,7 +7,6 @@ module TradeTariffBackend
   autoload :DataMigrator,    'trade_tariff_backend/data_migrator'
   autoload :Mailer,          'trade_tariff_backend/mailer'
   autoload :NumberFormatter, 'trade_tariff_backend/number_formatter'
-  autoload :SearchClient,    'trade_tariff_backend/search_client'
   autoload :Validator,       'trade_tariff_backend/validator'
 
   class << self
@@ -79,18 +78,6 @@ module TradeTariffBackend
       @number_formatter ||= TradeTariffBackend::NumberFormatter.new
     end
 
-    def search_client
-      @search_client ||= SearchClient.new(
-        Elasticsearch::Client.new,
-        namespace: search_namespace,
-        indexed_models: indexed_models,
-        search_operation_options: search_operation_options
-      )
-    end
-
-    def search_namespace
-      @search_namespace ||= 'tariff'
-    end
     attr_writer :search_namespace
 
     # Returns search index instance for given model instance or

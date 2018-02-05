@@ -49,15 +49,4 @@ Rails.application.configure do
   if ENV['GOVUK_APP_DOMAIN'].blank?
     ENV['GOVUK_APP_DOMAIN'] = 'test.gov.uk'
   end
-
-  config.after_initialize do
-    TradeTariffBackend.configure do |tariff|
-      tariff.search_namespace = 'tariff-test' # default is just tariff
-      # We need search index to be refreshed after each operation
-      # in order to assert record presence in the index (in integration specs)
-      # Elasticsearch has a 1 second interval between index refreshes
-      # by default.
-      tariff.search_operation_options = { refresh: true }
-    end
-  end
 end
