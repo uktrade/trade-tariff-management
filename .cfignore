@@ -10,10 +10,6 @@ vendor/bundle/*
 /tmp/*
 .byebug_history
 
-# Local tariff files
-data/*/*.xml
-data/*/*.txt
-
 # Environment files
 .env
 

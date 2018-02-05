@@ -52,15 +52,15 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ];
-              then CF_SPACE=development CF_APP=tariff-backend-dev CF_APP_WORKER=tariff-backend-worker-dev ./bin/deploy
+              then CF_SPACE=development CF_APP=tariff-management-dev CF_APP_WORKER=tariff-management-worker-dev ./bin/deploy
             fi
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "staging" ];
-              then CF_SPACE=staging CF_APP=tariff-backend-staging CF_APP_WORKER=tariff-backend-worker-staging ./bin/deploy
+              then CF_SPACE=staging CF_APP=tariff-management-staging CF_APP_WORKER=tariff-management-worker-staging ./bin/deploy
             fi
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "production" ];
-              then CF_SPACE=production CF_APP=tariff-backend-production CF_APP_WORKER=tariff-backend-worker-production ./bin/deploy
+              then CF_SPACE=production CF_APP=tariff-management-production CF_APP_WORKER=tariff-management-worker-production ./bin/deploy
             fi
