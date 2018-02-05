@@ -7,80 +7,6 @@ namespace :tariff do
                    install:chief:static_national_data
                    install:chief:standing_data]
 
-  desc 'Reindex relevant entities on ElasticSearch'
-  task reindex: %w[environment] do
-    TradeTariffBackend.reindex
-  end
-
-  desc 'Download and apply Taric and CHIEF data'
-  task sync: %w[environment sync:apply]
-
-  desc "Restore missing chief records files"
-  task restore_missing_chief_records: :environment do
-    require "csv"
-
-    # Custom converter
-    CSV::Converters[:null_to_nil] = lambda do |field|
-      field && field == "NULL" ? nil : field
-    end
-
-    ["comm", "tamf", "tbl9", "mfcm", "tame"].each do |table_name|
-      file_path = File.join(Rails.root, "data", "missing_chief_records", "#{table_name}.csv")
-
-      rows = CSV.read(file_path, headers: true, header_converters: :symbol, converters: [:null_to_nil])
-
-      rows.each do |line|
-        "Chief::#{table_name.capitalize}".constantize.insert line.to_hash
-      end
-
-      puts "#{table_name} table processed"
-    end
-  end
-
-  desc "Process missing chief records files"
-  task process_missing_chief_records: :environment do
-    processor = ChiefTransformer::Processor.new(Chief::Mfcm.unprocessed.all, Chief::Tame.unprocessed.all)
-    processor.process
-  end
-
-  namespace :sync do
-    desc 'Update database by downloading and then applying CHIEF and TARIC updates via worker'
-    task update: [:environment, :class_eager_load] do
-      UpdatesSynchronizerWorker.perform_async
-    end
-
-    desc 'Download pending Taric and CHIEF update files, Update tariff_updates table'
-    task download: [:environment, :class_eager_load] do
-      TariffSynchronizer.download
-    end
-
-    desc 'Apply pending updates Taric and CHIEF'
-    task apply: [:environment, :class_eager_load] do
-      TariffSynchronizer.apply
-    end
-
-    desc 'Transform CHIEF updates'
-    task transform: %w[environment] do
-      require 'chief_transformer'
-      # Transform imported intermediate Chief records to insert/change national measures
-
-      mode = ENV["MODE"].try(:to_sym).presence || :update
-
-      ChiefTransformer.instance.invoke(mode)
-      # Reindex ElasticSearch to see new/updated commodities
-      Rake::Task['tariff:reindex'].execute
-    end
-
-    desc 'Rollback to specific date in the past'
-    task rollback: %w[environment class_eager_load] do
-      if ENV['DATE']
-        TariffSynchronizer.rollback(ENV['DATE'], ENV['KEEP'])
-      else
-        raise ArgumentError.new("Please set the date using environment variable 'DATE'")
-      end
-    end
-  end
-
   namespace :install do
     desc "Load Green Page (SearchReference) entities from reference file"
     task green_pages: :environment do
@@ -106,7 +32,6 @@ namespace :tariff do
           end
         end
       end
-
 
       desc "Load Section notes into database"
       task section_notes: :environment do
