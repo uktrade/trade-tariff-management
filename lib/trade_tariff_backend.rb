@@ -5,7 +5,6 @@ module TradeTariffBackend
   autoload :Auditor,         'trade_tariff_backend/auditor'
   autoload :DataMigration,   'trade_tariff_backend/data_migration'
   autoload :DataMigrator,    'trade_tariff_backend/data_migrator'
-  autoload :Mailer,          'trade_tariff_backend/mailer'
   autoload :NumberFormatter, 'trade_tariff_backend/number_formatter'
   autoload :Validator,       'trade_tariff_backend/validator'
 

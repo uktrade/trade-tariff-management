@@ -14,7 +14,7 @@ describe ChapterSerializer do
                      }.ignore_extra_keys!
                    }
 
-    it 'returns json representation for ElasticSearch' do
+    it 'returns json representation' do
       expect(chapter.to_json).to match_json_expression pattern
     end
   end
