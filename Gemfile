@@ -40,6 +40,7 @@ gem "nokogiri", "~> 1.8.1"
 gem 'holidays'
 gem "govspeak", "~> 3.6", ">= 3.6.2"
 gem "addressable", "~> 2.3"
+gem 'slim-rails'
 
 # API related
 gem "tilt"

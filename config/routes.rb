@@ -1,6 +1,8 @@
 require 'api_constraints'
 
 Rails.application.routes.draw do
+  get 'home/index'
+
   get "healthcheck" => "healthcheck#index"
 
   namespace :api, defaults: {format: 'json'}, path: "/" do
@@ -11,7 +13,7 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: 'application#nothing'
+  root to: 'home#index'
 
   get '*path', to: 'application#render_not_found'
 end
