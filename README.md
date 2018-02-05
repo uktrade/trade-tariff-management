@@ -1,18 +1,7 @@
 [![CircleCI](https://circleci.com/gh/bitzesty/trade-tariff-backend/tree/master.svg?style=svg&circle-token=b8a9dd7a0291f0c6c5558c6c5240be5908dbb649)](https://circleci.com/gh/bitzesty/trade-tariff-backend/tree/master)
 [![Code Climate](https://codeclimate.com/github/bitzesty/trade-tariff-backend/badges/gpa.svg)](https://codeclimate.com/github/bitzesty/trade-tariff-backend)
 
-# Trade Tariff Backend
-
-__Now maintained at https://github.com/bitzesty/trade-tariff-backend__
-
-The API back-end for:
-
-* [Trade Tariff Frontend](https://github.com/bitzesty/trade-tariff-frontend)
-* [Trade Tariff Admin](https://github.com/bitzesty/trade-tariff-admin)
-
-Other related projects:
-
-* [Trade Tariff Oracle](https://github.com/bitzesty/trade-tariff-oracle)
+# Trade Tariff Management
 
 ## Development
 
@@ -37,32 +26,7 @@ Other related projects:
 
 4. Verify that the app is up and running.
 
-    open http://localhost:3018/healthcheck
-
-## Load database
-
-Check out [wiki article on the subject](https://github.com/bitzesty/trade-tariff-backend/wiki/System-rebuild-procedure), or get a [recent database snapshot](mailto:support@bitzesty.com).
-
-## Performing daily updates
-
-These are run hourly by a background worker UpdatesSynchronizerWorker.
-
-### Sync process
-
-- checking failures (check tariff_synchronizer.rb) - if any of updates failed in the past, sync process will not proceed
-- downloading missing files up to Date.today (check base_update.rb and download methods in taric_update.rb and chief_update.rb)
-- applying downloaded files (applying measures, etc. TARIC first, then CHIEF)
-
-Updates are performed in portions and protected by redis lock (see TariffSynchronizer#apply).
-
-BaseUpdate#apply is responsible for most of the logging/checking job and running
-`import!` methods located in Taric/ChiefUpdate classes. Then it runs TaricImporter
-and ChiefImporter to parse and store xml/csv files.
-
-Whole process is quite similar for both TARIC and CHIEF, but CHIEF updates undergo a tranformation
-transformation process to convert them into a TARIC format. Check ChiefTransformer class for more info (and ChiefUpdate#import!).
-
-In case of any errors, changes (per single update) are roll-backed and record itself is marked as failed. The sync would need to be rerun after a rollback.
+    open http://localhost:3020/healthcheck
 
 ## Deployment
 
