@@ -17,7 +17,7 @@ module LoggerHelper
 
   def chief_transformer_logger
     setup # Setup LogSubscriber::TestHelper
-    ChiefTransformer::Logger.attach_to :chief_transformer
+    #ChiefTransformer::Logger.attach_to :chief_transformer
     yield
     teardown
   end
