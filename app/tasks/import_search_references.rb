@@ -7,12 +7,6 @@ class ImportSearchReferences
   CHAPTER_IDENTITY_REGEX = /Chapter (\d{1,2})|Ch (\d{1,2})|^\s{0,}\d{1,2}\s{0,}$/
   SECTION_IDENTITY_REGEX = /Section\s{1,}(\d{1,2})|section\s{1,}(\d{1,2})/
 
-  def self.reload(from_file = File.join(Rails.root, 'db', 'green-pages.csv'))
-    SearchReference.truncate
-
-    new(from_file).run
-  end
-
   def initialize(data_file)
     @data_file = data_file
   end
