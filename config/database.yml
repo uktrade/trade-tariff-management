@@ -9,7 +9,7 @@ development:
 
 test:
   <<: *default
-  database: tariff_test
+  database: tariff_management_test
 
 production:
   <<: *default
