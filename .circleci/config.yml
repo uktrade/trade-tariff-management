@@ -52,5 +52,5 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ];
-              then CF_SPACE=development CF_APP=tariff-management-dev CF_APP_WORKER=tariff-management-worker-dev ./bin/deploy
+              then CF_SPACE=dit-alpha CF_APP=tariff-management-dev CF_APP_WORKER=tariff-management-worker-dev ./bin/deploy
             fi
