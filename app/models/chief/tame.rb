@@ -36,9 +36,9 @@ module Chief
                  .order(Sequel.asc(:audit_tsmp))
     }
 
-    one_to_one :chief_update, key: :filename,
-                              primary_key: :origin,
-                              class_name: TariffSynchronizer::ChiefUpdate
+    # one_to_one :chief_update, key: :filename,
+    #                           primary_key: :origin,
+    #                           class_name: TariffSynchronizer::ChiefUpdate
 
     delegate :issue_date, to: :chief_update, allow_nil: true
 

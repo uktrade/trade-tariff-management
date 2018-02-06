@@ -35,9 +35,9 @@ module Chief
                                                  chief_measure_type_adco__tax_type_code: tty_code) },
                                                  class_name: 'Chief::MeasureTypeAdco'
 
-    one_to_one :chief_update, key: :filename,
-                              primary_key: :origin,
-                              class_name: TariffSynchronizer::ChiefUpdate
+    # one_to_one :chief_update, key: :filename,
+    #                           primary_key: :origin,
+    #                           class_name: TariffSynchronizer::ChiefUpdate
 
     delegate :issue_date, to: :chief_update, allow_nil: true
 
