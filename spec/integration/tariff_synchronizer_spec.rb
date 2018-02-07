@@ -59,20 +59,6 @@ describe TariffSynchronizer do
       end
     end
 
-    context 'but elasticsearch is buggy' do
-      before do
-        expect_any_instance_of(TaricImporter::Transaction).to receive(
-          :persist
-        ).and_raise Elasticsearch::Transport::Transport::SnifferTimeoutError
-      end
-
-      it 'stops syncing' do
-        expect { TariffSynchronizer.apply }.to raise_error Sequel::Rollback
-        expect(taric_update.reload).to_not be_applied
-        expect(chief_update.reload).to_not be_applied
-      end
-    end
-
     context 'but we have a timeout' do
       before do
         expect_any_instance_of(

@@ -7,11 +7,6 @@ namespace :tariff do
                    install:chief:static_national_data
                    install:chief:standing_data]
 
-  desc 'Reindex relevant entities on ElasticSearch'
-  task reindex: %w[environment] do
-    TradeTariffBackend.reindex
-  end
-
   desc 'Download and apply Taric and CHIEF data'
   task sync: %w[environment sync:apply]
 
@@ -67,8 +62,6 @@ namespace :tariff do
       mode = ENV["MODE"].try(:to_sym).presence || :update
 
       ChiefTransformer.instance.invoke(mode)
-      # Reindex ElasticSearch to see new/updated commodities
-      Rake::Task['tariff:reindex'].execute
     end
 
     desc 'Rollback to specific date in the past'
