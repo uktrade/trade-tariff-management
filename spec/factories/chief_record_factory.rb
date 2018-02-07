@@ -2,15 +2,15 @@ FactoryGirl.define do
   factory :mfcm, class: Chief::Mfcm do
     amend_indicator { ["I", "U", "X"].sample }
     fe_tsmp { DateTime.now.ago(10.years) }
-    msrgp_code { "DO" }
-    msr_type { "EDB" }
+    msrgp_code { ChiefTransformer::CandidateMeasure::RESTRICTION_GROUP_CODES.sample }
+    msr_type { (ChiefTransformer::CandidateMeasure::NATIONAL_MEASURE_TYPES - ['VTA','VTE', 'VTS', 'VTZ', 'EXA', 'EXB', 'EXC', 'EXD']).sample}
     tty_code { Forgery(:basic).text(exactly: 3) }
     le_tsmp  { nil }
     audit_tsmp { nil }
     cmdty_code { 10.times.map{ Random.rand(9) }.join }
 
     transient do
-      measure_type_id { "VTS" }
+      measure_type_id { ChiefTransformer::CandidateMeasure::NATIONAL_MEASURE_TYPES.sample }
     end
 
     before(:create) { |mfcm, evaluator|

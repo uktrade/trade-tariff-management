@@ -5,7 +5,9 @@ module TradeTariffBackend
   autoload :Auditor,         'trade_tariff_backend/auditor'
   autoload :DataMigration,   'trade_tariff_backend/data_migration'
   autoload :DataMigrator,    'trade_tariff_backend/data_migrator'
+  autoload :Mailer,          'trade_tariff_backend/mailer'
   autoload :NumberFormatter, 'trade_tariff_backend/number_formatter'
+  autoload :SearchClient,    'trade_tariff_backend/search_client'
   autoload :Validator,       'trade_tariff_backend/validator'
 
   class << self
@@ -58,6 +60,16 @@ module TradeTariffBackend
       lock.lock &block
     end
 
+    def reindex(indexer = search_client)
+      TimeMachine.with_relevant_validity_periods do
+        begin
+          indexer.reindex
+        rescue StandardError => e
+          Mailer.reindex_exception(e).deliver_now
+        end
+      end
+    end
+
     # Number of changes to fetch for Commodity/Heading/Chapter
     def change_count
       10
@@ -65,6 +77,43 @@ module TradeTariffBackend
 
     def number_formatter
       @number_formatter ||= TradeTariffBackend::NumberFormatter.new
+    end
+
+    def search_client
+      @search_client ||= SearchClient.new(
+        Elasticsearch::Client.new,
+        namespace: search_namespace,
+        indexed_models: indexed_models,
+        search_operation_options: search_operation_options
+      )
+    end
+
+    def search_namespace
+      @search_namespace ||= 'tariff'
+    end
+    attr_writer :search_namespace
+
+    # Returns search index instance for given model instance or
+    # model class instance
+    def search_index_for(model)
+      index_name = model.is_a?(Class) ? model : model.class
+
+      "#{index_name}Index".constantize.new(search_namespace)
+    end
+
+    def search_operation_options
+      @search_operation_options || {}
+    end
+    attr_writer :search_operation_options
+
+    def indexed_models
+      [Chapter, Commodity, Heading, SearchReference, Section]
+    end
+
+    def search_indexes
+      indexed_models.map { |model|
+        "#{model}Index".constantize.new(search_namespace)
+      }
     end
 
     def model_serializer_for(model)

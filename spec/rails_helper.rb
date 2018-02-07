@@ -17,6 +17,7 @@ require 'rspec/rails'
 require 'json_expressions/rspec'
 require 'fakefs/spec_helpers'
 require 'sidekiq/testing'
+require 'elasticsearch/extensions/test/cluster'
 
 require Rails.root.join("spec/support/tariff_validation_matcher.rb")
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
@@ -34,10 +35,11 @@ RSpec.configure do |config|
   config.alias_it_should_behave_like_to :it_is_associated, "it is associated"
   config.include RSpec::Rails::RequestExampleGroup, type: :request, file_path: /spec\/api/
   config.include ControllerSpecHelper, type: :controller
-  # config.include SynchronizerHelper
+  config.include SynchronizerHelper
   config.include LoggerHelper
   config.include RescueHelper
   config.include ChiefDataHelper
+  config.include CodesMappingHelper
   config.include ActiveSupport::Testing::TimeHelpers
 
   redis = Redis.new(:db => 15)
@@ -52,6 +54,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
+    stub_codes_mapping_data
     Rails.cache.clear
     Sidekiq::Worker.clear_all
   end

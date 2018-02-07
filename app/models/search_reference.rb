@@ -2,6 +2,7 @@ class SearchReference < Sequel::Model
   extend ActiveModel::Naming
 
   plugin :active_model
+  plugin :elasticsearch
   plugin :auditable
 
   many_to_one :referenced, reciprocal: :search_references, reciprocal_type: :many_to_one,

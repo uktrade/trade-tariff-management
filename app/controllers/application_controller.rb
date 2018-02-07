@@ -38,6 +38,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def nothing
+    render nothing: true
+  end
+
   protected
 
   def append_info_to_payload(payload)
