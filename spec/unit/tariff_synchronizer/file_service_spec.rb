@@ -55,7 +55,7 @@ describe TariffSynchronizer::FileService do
       @aws_bucket = instance_double("Aws::S3::Bucket")
       @aws_object = instance_double("Aws::S3::Object")
       expect(Aws::S3::Resource).to receive(:new).and_return(aws_resource)
-      expect(aws_resource).to receive(:bucket).with("trade-tariff-backend").and_return(@aws_bucket)
+      expect(aws_resource).to receive(:bucket).with("trade-tariff-management").and_return(@aws_bucket)
     end
 
     describe ".write_file" do

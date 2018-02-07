@@ -43,6 +43,7 @@ gem "addressable", "~> 2.3"
 gem 'slim-rails'
 
 # API related
+gem "curb", "~> 0.8"
 gem "tilt"
 gem "rabl", "~> 0.12"
 gem "ansi", "~> 1.5"
