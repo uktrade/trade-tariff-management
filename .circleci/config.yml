@@ -17,6 +17,12 @@ jobs:
     environment:
       - GOVUK_APP_DOMAIN: test
       - DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
+      - TARIFF_SYNC_HOST: "http://example.com"
+      - TARIFF_FROM_EMAIL: "no-reply@example.com"
+      - AWS_ACCESS_KEY_ID: "xxxxxxxxxxxxxxxxxxxx"
+      - AWS_SECRET_ACCESS_KEY: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      - AWS_REGION: "us-east-1"
+      - AWS_BUCKET_NAME: "trade-tariff-management"
     steps:
       - checkout
       - run:
