@@ -3,6 +3,12 @@
 
 # Trade Tariff Management
 
+## Useful Documents
+
+[TARIC3-Interface Data Specification.pdf](https://drive.google.com/file/d/0B9fpaFVNqUf1dnFTVmJTS25hR28/view)
+
+[20180206 System Functions - WIP.pdf](https://bitzesty.slack.com/messages/C917SKV9V/files/F94T9DJ49/)
+
 ## Development
 
 ### Dependencies
