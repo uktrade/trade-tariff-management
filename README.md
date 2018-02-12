@@ -9,6 +9,8 @@
 
 [20180206 System Functions - WIP.pdf](https://bitzesty.slack.com/messages/C917SKV9V/files/F94T9DJ49/)
 
+[Technical documentation for GOV.UK PaaS - all about deployment](https://docs.cloud.service.gov.uk/#technical-documentation-for-gov-uk-paas)
+
 ## Development
 
 ### Dependencies
