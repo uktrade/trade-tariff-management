@@ -11,6 +11,8 @@
 
 [Technical documentation for GOV.UK PaaS - all about deployment](https://docs.cloud.service.gov.uk/#technical-documentation-for-gov-uk-paas)
 
+[HOW TO GET AND LOAD DB DUMP](https://github.com/alphagov/paas-cf-conduit/blob/master/README.md)
+
 ## Development
 
 ### Dependencies
