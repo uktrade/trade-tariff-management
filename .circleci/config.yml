@@ -39,7 +39,10 @@ jobs:
           command: bundle install
       - run:
           name: Set up DB
-          command: RAILS_ENV=test bundle exec rake db:create db:migrate --trace
+          command: RAILS_ENV=test bundle exec rake db:create --trace
+      - run:
+          name: Load DB structure
+          command: RAILS_ENV=test SCHEMA=db/structure.sql bundle exec rake db:structure:load --trace
       - run:
           name: "Run Rspec"
           command: |
