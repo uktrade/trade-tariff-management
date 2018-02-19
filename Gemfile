@@ -50,6 +50,7 @@ gem "ansi", "~> 1.5"
 gem "responders", "~> 2.1", ">= 2.1.0"
 
 # Background jobs
+gem "redis-rails"
 gem "sidekiq", "~> 4.1.4"
 gem "sidekiq-scheduler", "~> 2.1.8"
 
