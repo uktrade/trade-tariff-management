@@ -37,6 +37,12 @@
 
     open http://localhost:3020/healthcheck
 
+## Test
+
+1. RAILS_ENV=test bundle exec rake db:drop db:create db:structure:load
+
+2. RAILS_ENV=test bundle exec rspec spec/
+
 ## Deployment
 
 We deploy to cloud foundry, so you need to have the CLI installed, and the following [cf plugin](https://docs.cloudfoundry.org/cf-cli/use-cli-plugins.html) installed:
