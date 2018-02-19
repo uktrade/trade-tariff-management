@@ -1,8 +1,10 @@
 require 'api_constraints'
+require "sidekiq/web"
 
 Rails.application.routes.draw do
-  get 'home/index'
+  mount Sidekiq::Web, at: "sidekiq"
 
+  get 'home/index'
   get "healthcheck" => "healthcheck#index"
 
   namespace :api, defaults: {format: 'json'}, path: "/" do

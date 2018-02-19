@@ -1,5 +1,5 @@
-[![CircleCI](https://circleci.com/gh/bitzesty/trade-tariff-backend/tree/master.svg?style=svg&circle-token=b8a9dd7a0291f0c6c5558c6c5240be5908dbb649)](https://circleci.com/gh/bitzesty/trade-tariff-backend/tree/master)
-[![Code Climate](https://codeclimate.com/github/bitzesty/trade-tariff-backend/badges/gpa.svg)](https://codeclimate.com/github/bitzesty/trade-tariff-backend)
+[![CircleCI](https://circleci.com/gh/bitzesty/trade-tariff-management/tree/master.svg?style=svg&circle-token=b8a9dd7a0291f0c6c5558c6c5240be5908dbb649)](https://circleci.com/gh/bitzesty/trade-tariff-management/tree/master)
+[![Code Climate](https://codeclimate.com/github/bitzesty/trade-tariff-management/badges/gpa.svg)](https://codeclimate.com/github/bitzesty/trade-tariff-management)
 
 # Trade Tariff Management
 
@@ -20,7 +20,6 @@
   - Ruby
   - Postgresql
   - Redis
-  - Memcached (production)
 
 ### Setup
 
@@ -37,6 +36,12 @@
 4. Verify that the app is up and running.
 
     open http://localhost:3020/healthcheck
+
+## Test
+
+1. RAILS_ENV=test bundle exec rake db:drop db:create db:structure:load
+
+2. RAILS_ENV=test bundle exec rspec spec/
 
 ## Deployment
 
@@ -71,8 +76,8 @@ NB: In the newer Diego architecture from CloudFoundry, no-route skips creating a
 
 ## Contributing
 
-Please check out the [Contributing guide](https://github.com/bitzesty/trade-tariff-backend/blob/master/CONTRIBUTING.md)
+Please check out the [Contributing guide](https://github.com/bitzesty/trade-tariff-management/blob/master/CONTRIBUTING.md)
 
 ## Licence
 
-Trade Tariff is licenced under the [MIT licence](https://github.com/bitzesty/trade-tariff-backend/blob/master/LICENCE.txt)
+Trade Tariff is licenced under the [MIT licence](https://github.com/bitzesty/trade-tariff-management/blob/master/LICENCE.txt)

@@ -50,6 +50,7 @@ gem "ansi", "~> 1.5"
 gem "responders", "~> 2.1", ">= 2.1.0"
 
 # Background jobs
+gem "redis-rails"
 gem "sidekiq", "~> 4.1.4"
 gem "sidekiq-scheduler", "~> 2.1.8"
 
@@ -57,9 +58,7 @@ gem "plek", "~> 1.11"
 gem "gds-sso", "~> 13", ">= 12.1.0"
 
 # System gems
-gem "dalli", "~> 2.7"
 gem "connection_pool", "~> 2.2"
-gem "newrelic_rpm"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "rack-timeout", "~> 0.4"

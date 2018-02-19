@@ -47,7 +47,7 @@ module TradeTariffBackend
     end
 
     def production?
-      ENV["GOVUK_APP_DOMAIN"] == "tariff-backend-production.cloudapps.digital"
+      ENV["GOVUK_APP_DOMAIN"] == "tariff-management-production.cloudapps.digital"
     end
 
     def data_migration_path

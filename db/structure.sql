@@ -10069,3 +10069,5 @@ CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
 -- PostgreSQL database dump complete
 --
 
+SET search_path TO "$user", public;
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
