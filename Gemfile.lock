@@ -165,7 +165,6 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     mustermann (1.0.1)
-    newrelic_rpm (4.4.0.336)
     nio4r (2.1.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
@@ -377,7 +376,6 @@ DEPENDENCIES
   lograge (>= 0.3.6)
   logstash-event
   multi_json (~> 1.11)
-  newrelic_rpm
   nokogiri (~> 1.8.1)
   ox (>= 2.8.1)
   pg (= 0.18.4)
