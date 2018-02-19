@@ -29,3 +29,6 @@ REVISION
 
 # RVM
 .ruby-gemset
+
+public/assets/*
+
