@@ -18,13 +18,12 @@ gem "sequel-rails", "~> 0.9", ">= 0.9.12"
 gem "puma", "~> 3.4"
 
 # UI
-gem "govuk_template", "0.20.0"
-gem "coffee-rails", "~> 4.2.2", ">= 4.1.0"
-gem "govuk_frontend_toolkit", "~> 4.18", ">= 4.18.4"
-gem 'govuk_elements_rails', '~> 1.2', '>= 1.2.2'
-gem "jquery-rails", "~> 4.2.2"
-gem "sass-rails", "~> 5.0.6"
+gem "sass-rails", "5.0.6"
+gem "jquery-rails", "~> 4.1.0"
+gem "coffee-rails", "~> 4.2.2"
 gem "uglifier", "~> 2.7"
+gem 'govuk_admin_template', '5.0.0'
+gem "bootstrap-datepicker-rails", "~> 1.4"
 
 # AWS
 gem "aws-sdk", "~> 2"
@@ -41,6 +40,8 @@ gem 'holidays'
 gem "govspeak", "~> 3.6", ">= 3.6.2"
 gem "addressable", "~> 2.3"
 gem 'slim-rails'
+gem 'kaminari'
+gem "simple_form", "~> 3.5"
 
 # API related
 gem "curb", "~> 0.8"
@@ -56,6 +57,7 @@ gem "sidekiq-scheduler", "~> 2.1.8"
 
 gem "plek", "~> 1.11"
 gem "gds-sso", "~> 13", ">= 12.1.0"
+gem "pundit", "0.3.0"
 
 # System gems
 gem "connection_pool", "~> 2.2"
@@ -63,6 +65,12 @@ gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "rack-timeout", "~> 0.4"
 gem "bootscale", "~> 0.5", require: false
+
+# We freezed it, as it installs higher version by default,
+# which conflicts with cloud foundary's ruby_buildpack
+# as in new version 'ffi' require 'automake' package
+#
+gem "ffi", "1.9.18"
 
 group :production do
   gem "rails_12factor"
