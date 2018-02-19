@@ -20,7 +20,6 @@
   - Ruby
   - Postgresql
   - Redis
-  - Memcached (production)
 
 ### Setup
 

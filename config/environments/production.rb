@@ -61,14 +61,8 @@ Rails.application.configure do
   config.lograge.ignore_actions = ['HealthcheckController#index']
 
   # Use a different cache store in production.
-  config.cache_store = :dalli_store, nil, {
-    compress:   true,
-    expires_in: 1.day,
-    username:   ENV["MEMCACHE_USER"],
-    password:   ENV["MEMCACHE_PASSWORD"],
-    namespace:  ENV["GOVUK_APP_DOMAIN"],
-    pool_size:  Integer(ENV["MAX_THREADS"] || 5)
-  }
+  config.cache_store = :redis_store
+
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
 

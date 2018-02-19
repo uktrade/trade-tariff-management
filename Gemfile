@@ -57,7 +57,6 @@ gem "plek", "~> 1.11"
 gem "gds-sso", "~> 13", ">= 12.1.0"
 
 # System gems
-gem "dalli", "~> 2.7"
 gem "connection_pool", "~> 2.2"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
