@@ -43,6 +43,11 @@ gem 'slim-rails'
 gem 'kaminari'
 gem "simple_form", "~> 3.5"
 
+# Decorators & Exposing named methods
+gem 'draper'
+gem 'decent_exposure'
+gem 'decent_decoration'
+
 # API related
 gem "curb", "~> 0.8"
 gem "tilt"
