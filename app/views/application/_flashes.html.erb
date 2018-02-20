@@ -1,0 +1,15 @@
+<div class="flashes">
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible">
+      <span class="close" data-dismiss="alert">&times;</span>
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <% if alert %>
+    <div class="alert alert-error alert-dismissible">
+      <span class="close" data-dismiss="alert">&times;</span>
+      <%= alert %>
+    </div>
+  <% end %>
+</div>

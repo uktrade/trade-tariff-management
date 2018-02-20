@@ -1,11 +1,14 @@
 module ApplicationHelper
-  # Used in generating links in JSON responses
-  #
-  # Trade Tariff Frontend app proxies API requests to the
-  # backend. We need to prefix the link /trade-tariff (which
-  # is an app slug of tariff) so that users would receive
-  # correct links
-  def api_link(relative_link)
-    "/trade-tariff#{relative_link}"
+  def nav_link(name, url, activator = '')
+    opts = {}
+
+    if (activator.is_a?(String) && request.path.start_with?(activator)) ||
+      (activator.is_a?(Regexp) && request.path =~ activator)
+      opts.merge!({ class: 'active' })
+    end
+
+    content_tag :li, opts do
+      link_to name, url
+    end
   end
 end

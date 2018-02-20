@@ -16,6 +16,4 @@ Rails.application.routes.draw do
   end
 
   root to: 'home#index'
-
-  get '*path', to: 'application#render_not_found'
 end
