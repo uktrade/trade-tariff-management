@@ -3,7 +3,6 @@ table.table.table-bordered.table-striped.table-condensed.table-footnotes
     tr
       th.span1 ID
       th.span6 Description
-      th.span3 Declarable
   tbody
     - commodities.map do |commodity|
       tr
@@ -11,5 +10,3 @@ table.table.table-bordered.table-striped.table-condensed.table-footnotes
           = commodity.goods_nomenclature_item_id
         td width="*"
           = commodity.description
-        td width="10%"
-          = commodity.declarable? ? 'Yes' : 'No'
