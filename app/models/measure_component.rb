@@ -1,5 +1,6 @@
 class MeasureComponent < Sequel::Model
   include Formatter
+  include ::XmlGeneration::BaseHelper
 
   plugin :time_machine
   plugin :oplog, primary_key: [:measure_sid, :duty_expression_id]

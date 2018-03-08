@@ -1,4 +1,7 @@
 class TransmissionComment < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:comment_sid, :language_id]
   plugin :conformance_validator
 

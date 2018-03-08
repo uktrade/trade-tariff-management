@@ -31,4 +31,5 @@ REVISION
 .ruby-gemset
 
 public/assets/*
+public/uploads/*
 

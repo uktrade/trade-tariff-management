@@ -1,4 +1,7 @@
 class MeasureTypeDescription < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   set_primary_key [:measure_type_id]
   plugin :oplog, primary_key: :measure_type_id
   plugin :conformance_validator

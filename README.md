@@ -9,6 +9,10 @@
 
 [20180206 System Functions - WIP.pdf](https://bitzesty.slack.com/messages/C917SKV9V/files/F94T9DJ49/)
 
+[XML DOCS - TARIC3 IDS Technical Message Exchange Specification](https://docs.google.com/document/d/1H5GOHECppTmUXXF444m-0Qce5N85TMFJCVWqYafbCjA/edit?usp=drive_web&ouid=113725455905915898903)
+
+[WIFERAMES of TARIFFSALPHA at uktrade.atlassian.net](https://uktrade.atlassian.net/wiki/spaces/TARIFFSALPHA/pages/294846783/Screen+Concepts)
+
 [Technical documentation for GOV.UK PaaS - all about deployment](https://docs.cloud.service.gov.uk/#technical-documentation-for-gov-uk-paas)
 
 [HOW TO GET AND LOAD DB DUMP](https://github.com/alphagov/paas-cf-conduit/blob/master/README.md)

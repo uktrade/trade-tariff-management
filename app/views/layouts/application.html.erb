@@ -5,13 +5,12 @@
 <% content_for :head do %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
 <% end %>
 
 <% content_for :navbar_items do %>
   <%= nav_link "Goods Nomenclatures", root_path, /\/$/ %>
-  <%= nav_link "TODO #1", "#", /\/regulations/ %>
-  <%= nav_link "TODO #2", "#", /\/measures/ %>
-  <%= nav_link "TODO #3", "#", /\/approvals/ %>
+  <%= nav_link "XML Exports", xml_generation_exports_path, /\/xml_generation|exports$/ %>
 <% end %>
 
 <% content_for :navbar_right do %>

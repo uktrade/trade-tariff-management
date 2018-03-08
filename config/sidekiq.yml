@@ -3,6 +3,7 @@
 :queues:
   - [rollbacks, 2]
   - [sync, 2]
+  - [xml_generation, 3]
   - [default, 5]
 :schedule:
   #
