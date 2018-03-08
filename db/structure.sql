@@ -6353,6 +6353,40 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
+-- Name: xml_export_files; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE xml_export_files (
+    id integer NOT NULL,
+    state character varying(1),
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone,
+    xml_data text,
+    relevant_date date,
+    issue_date timestamp without time zone
+);
+
+
+--
+-- Name: xml_export_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE xml_export_files_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: xml_export_files_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE xml_export_files_id_seq OWNED BY xml_export_files.id;
+
+
+--
 -- Name: oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7127,6 +7161,13 @@ ALTER TABLE ONLY transmission_comments_oplog ALTER COLUMN oid SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY xml_export_files ALTER COLUMN id SET DEFAULT nextval('xml_export_files_id_seq'::regclass);
 
 
 --
@@ -8039,6 +8080,14 @@ ALTER TABLE ONLY transmission_comments_oplog
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: xml_export_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY xml_export_files
+    ADD CONSTRAINT xml_export_files_pkey PRIMARY KEY (id);
 
 
 --
@@ -10070,4 +10119,9 @@ CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
 --
 
 SET search_path TO "$user", public;
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180305221434_remove_filename_from_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224610_add_relevant_date_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224900_add_issue_date_in_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');

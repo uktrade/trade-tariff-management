@@ -1,4 +1,7 @@
 class MeasureConditionCode < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: :condition_code
   plugin :conformance_validator

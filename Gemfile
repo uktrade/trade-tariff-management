@@ -25,9 +25,11 @@ gem "uglifier", "~> 2.7"
 gem 'govuk_admin_template', '5.0.0'
 gem "bootstrap-datepicker-rails", "~> 1.4"
 
-# AWS
-gem "aws-sdk", "~> 2"
-gem "aws-sdk-rails", ">= 1.0.1"
+# File uploads and AWS
+gem "shrine"
+gem "aws-sdk"
+gem "aws-sdk-rails"
+gem "aws-sdk-s3"
 
 # Helpers
 gem "hashie", "~> 3.4"
@@ -41,6 +43,7 @@ gem "govspeak", "~> 3.6", ">= 3.6.2"
 gem "addressable", "~> 2.3"
 gem 'slim-rails'
 gem 'kaminari'
+gem 'kaminari-sequel'
 gem "simple_form", "~> 3.5"
 
 # Decorators & Exposing named methods

@@ -1,4 +1,7 @@
 class MeasureType < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   IMPORT_MOVEMENT_CODES = [0, 2]
   EXPORT_MOVEMENT_CODES = [1, 2]
   EXCLUDED_TYPES = ['442', 'SPL']

@@ -1,4 +1,7 @@
 class Measure < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   VALID_ROLE_TYPE_IDS = [
     1, # Base regulation
     2, # Modification

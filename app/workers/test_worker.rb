@@ -4,6 +4,6 @@ class TestWorker
   include Sidekiq::Worker
 
   def perform
-    Rails.logger.info "TestWorker: #{Time.now.to_s}"
+    TestMailer.welcome("rusllonrails@bitzesty.com").deliver!
   end
 end

@@ -15,5 +15,9 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :xml_generation do
+    resources :exports, only: [:index, :show, :create]
+  end
+
   root to: 'home#index'
 end

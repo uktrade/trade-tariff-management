@@ -1,0 +1,14 @@
+= simple_form_for :export, url: xml_generation_exports_path, html: {class: 'footnote-form', method: :post} do |f|
+
+  .row
+    .col-sm-2
+      = f.input :date, as: :string, label: 'Select date',  input_html: { name: :export_date, class: 'form-control', 'data-behaviour' => 'datepicker' }
+
+  .form-actions.xml-generation-export-form-actions
+    = f.button :submit, 'Schedule Export', class: 'btn btn-warning with-right-margin', data: { 'disable-with' => 'Scheduling' }
+    = link_to 'Refresh Page', xml_generation_exports_path, class: 'btn btn-default with-right-margin'
+
+= simple_form_for :export, url: xml_generation_exports_path(mode: :samples), html: {class: 'footnote-form pull-right', method: :post} do |f|
+  = f.button :submit, 'Generate Sample XML', class: 'btn btn-primary with-right-margin', data: { 'disable-with' => 'Generating' }
+
+br

@@ -1,4 +1,7 @@
 class DutyExpressionDescription < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :duty_expression_id
   plugin :conformance_validator
 
