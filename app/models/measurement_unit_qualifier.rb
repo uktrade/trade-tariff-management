@@ -9,4 +9,12 @@ class MeasurementUnitQualifier < Sequel::Model
                                                       primary_key: :measurement_unit_qualifier_code
 
   delegate :formatted_measurement_unit_qualifier, :description, to: :measurement_unit_qualifier_description, allow_nil: true
+
+  def record_code
+    "215".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

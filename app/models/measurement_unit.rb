@@ -27,4 +27,12 @@ class MeasurementUnit < Sequel::Model
       measurement_unit_qualifier: measurement_unit_qualifier.try(:measurement_unit_qualifier_code)
     ).take
   end
+
+  def record_code
+    "210".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
