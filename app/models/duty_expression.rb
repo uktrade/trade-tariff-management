@@ -13,6 +13,12 @@ class DutyExpression < Sequel::Model
   one_to_one :duty_expression_description
 
   delegate :abbreviation, :description, to: :duty_expression_description
+
+  def record_code
+    "230".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-
