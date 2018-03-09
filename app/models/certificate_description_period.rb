@@ -7,6 +7,12 @@ class CertificateDescriptionPeriod < Sequel::Model
 
   one_to_one :certificate_description, key: :certificate_description_period_sid,
                                        primary_key: :certificate_description_period_sid
+
+  def record_code
+    "205".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end
-
-
