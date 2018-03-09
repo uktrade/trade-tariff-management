@@ -6,4 +6,12 @@ class AdditionalCodeTypeMeasureType < Sequel::Model
 
   many_to_one :measure_type
   many_to_one :additional_code_type
+
+  def record_code
+    "240".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

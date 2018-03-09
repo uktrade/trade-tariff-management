@@ -15,4 +15,11 @@ class AdditionalCodeDescription < Sequel::Model
   # many_to_one :language
   # many_to_one :additional_code_type, key: :additional_code_type_id
   # many_to_one :additional_code, key: :additional_code_sid
+  def record_code
+    "245".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end

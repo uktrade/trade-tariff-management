@@ -27,4 +27,12 @@ class AdditionalCode < Sequel::Model
   def code
     "#{additional_code_type_id}#{additional_code}"
   end
+
+  def record_code
+    "245".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
