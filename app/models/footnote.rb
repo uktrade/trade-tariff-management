@@ -79,10 +79,10 @@ class Footnote < Sequel::Model
   end
 
   def record_code
-    "100".freeze
+    "200".freeze
   end
 
   def subrecord_code
-    "05".freeze
+    "00".freeze
   end
 end
