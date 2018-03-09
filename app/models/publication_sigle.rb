@@ -4,4 +4,12 @@ class PublicationSigle < Sequel::Model
   plugin :conformance_validator
 
   set_primary_key [:code, :code_type_id]
+
+  def record_code
+    "170".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
