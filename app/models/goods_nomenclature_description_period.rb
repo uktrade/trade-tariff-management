@@ -8,6 +8,5 @@ class GoodsNomenclatureDescriptionPeriod < Sequel::Model
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid
   many_to_one :goods_nomenclature_description, key: [:goods_nomenclature_sid,
                                                      :goods_nomenclature_description_period_sid]
+
 end
-
-

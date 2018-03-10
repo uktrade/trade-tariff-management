@@ -20,6 +20,12 @@ class BaseRegulation < Sequel::Model
   def fully_replaced?
     replacement_indicator == 1
   end
+
+  def record_code
+    "285".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-

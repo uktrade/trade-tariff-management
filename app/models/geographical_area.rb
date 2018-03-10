@@ -62,4 +62,12 @@ class GeographicalArea < Sequel::Model
   def id
     geographical_area_id
   end
+
+  def record_code
+    "250".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

@@ -16,6 +16,12 @@ class GeographicalAreaDescription < Sequel::Model
       order(Sequel.desc(:operation_date))
     end
   end
+
+  def record_code
+    "250".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end
-
-

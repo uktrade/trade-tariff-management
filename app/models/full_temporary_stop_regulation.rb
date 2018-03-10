@@ -17,6 +17,12 @@ class FullTemporaryStopRegulation < Sequel::Model
   def effective_start_date
     validity_start_date.to_date
   end
+
+  def record_code
+    "300".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-
