@@ -1,4 +1,7 @@
 class AdditionalCodeTypeDescription < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :additional_code_type_id
   plugin :conformance_validator
 

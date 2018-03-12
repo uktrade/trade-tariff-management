@@ -2,8 +2,20 @@ module XmlGeneration
   class NodeMessage
 
     MEASURE_RELATED = [
+      RegulationRoleType,
+      RegulationRoleTypeDescription,
+      MeasureTypeSeries,
+      MeasureTypeSeriesDescription,
       MeasureType,
       MeasureTypeDescription,
+      AdditionalCodeType,
+      AdditionalCodeTypeDescription,
+      AdditionalCodeTypeMeasureType,
+      AdditionalCode,
+      AdditionalCodeDescription,
+      AdditionalCodeDescriptionPeriod,
+      MeasureAction,
+      MeasureActionDescription,
       Measure,
       DutyExpression,
       DutyExpressionDescription,
