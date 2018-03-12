@@ -8,4 +8,12 @@ class RegulationRoleType < Sequel::Model
                                                 primary_key: :regulation_role_type_id
 
   delegate :description, to: :regulation_role_type_description
+
+  def record_code
+    "160".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

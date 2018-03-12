@@ -33,6 +33,12 @@ class DutyExpressionDescription < Sequel::Model
       "99" => "UNSUP"
     }[duty_expression_id]
   end
+
+  def record_code
+    "230".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end
-
-

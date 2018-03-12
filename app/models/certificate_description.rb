@@ -8,6 +8,12 @@ class CertificateDescription < Sequel::Model
   def to_s
     description
   end
+
+  def record_code
+    "205".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end
-
-

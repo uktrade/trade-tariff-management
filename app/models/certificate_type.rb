@@ -13,6 +13,12 @@ class CertificateType < Sequel::Model
                              primary_key: :certificate_type_code
 
   delegate :description, to: :certificate_type_description
+
+  def record_code
+    "110".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-

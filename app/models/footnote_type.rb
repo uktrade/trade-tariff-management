@@ -5,5 +5,12 @@ class FootnoteType < Sequel::Model
   set_primary_key [:footnote_type_id]
 
   one_to_many :footnotes
-end
 
+  def record_code
+    "100".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
+end

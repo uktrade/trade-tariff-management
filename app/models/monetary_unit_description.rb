@@ -9,6 +9,12 @@ class MonetaryUnitDescription < Sequel::Model
       "EUC" => "EUR (EUC)",
     }[monetary_unit_code]
   end
+
+  def record_code
+    "225".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end
-
-

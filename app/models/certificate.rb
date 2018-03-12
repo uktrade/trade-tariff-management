@@ -26,4 +26,12 @@ class Certificate < Sequel::Model
   end
 
   delegate :description, to: :certificate_description
+
+  def record_code
+   "205".freeze
+  end
+
+  def subrecord_code
+   "00".freeze
+  end
 end

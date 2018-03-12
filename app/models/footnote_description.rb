@@ -11,4 +11,12 @@ class FootnoteDescription < Sequel::Model
 
   format :formatted_description, with: DescriptionFormatter,
                                  using: :description
+
+  def record_code
+   "200".freeze
+  end
+
+  def subrecord_code
+   "10".freeze
+  end
 end

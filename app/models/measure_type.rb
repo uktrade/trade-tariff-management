@@ -45,4 +45,12 @@ class MeasureType < Sequel::Model
   def vat?
     !!(description =~ /^VAT/)
   end
+
+  def record_code
+    "235".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

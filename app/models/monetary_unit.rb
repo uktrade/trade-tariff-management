@@ -13,6 +13,12 @@ class MonetaryUnit < Sequel::Model
   def to_s
     monetary_unit_code
   end
+
+  def record_code
+    "225".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-

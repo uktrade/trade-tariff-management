@@ -42,4 +42,12 @@ class AdditionalCodeType < Sequel::Model
   def export_refund_agricultural?
     application_code == "4"
   end
+
+  def record_code
+    "120".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

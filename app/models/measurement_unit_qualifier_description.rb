@@ -8,4 +8,12 @@ class MeasurementUnitQualifierDescription < Sequel::Model
 
   format :formatted_measurement_unit_qualifier, with: DescriptionFormatter,
                                                 using: :description
+
+  def record_code
+    "215".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end

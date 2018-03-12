@@ -77,4 +77,12 @@ class Footnote < Sequel::Model
   def code
     "#{footnote_type_id}#{footnote_id}"
   end
+
+  def record_code
+    "200".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

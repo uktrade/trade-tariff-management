@@ -4,6 +4,12 @@ class MeasureTypeSeries < Sequel::Model
   plugin :conformance_validator
 
   one_to_many :measure_types
+
+  def record_code
+    "140".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-

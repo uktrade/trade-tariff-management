@@ -12,6 +12,12 @@ class MeasureTypeDescription < Sequel::Model
   def to_s
     description
   end
+
+  def record_code
+    "235".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end
-
-
