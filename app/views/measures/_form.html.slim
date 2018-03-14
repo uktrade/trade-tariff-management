@@ -1,4 +1,4 @@
-= simple_form_for @form, url: measures_path, class: "measure-form" do |f|
+= simple_form_for @form, url: measures_path, html: { class: "measure-form" } do |f|
   = render "js_variables"
 
   fieldset
@@ -14,7 +14,7 @@
 
     .row
       .col-md-4
-        = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :oid
+        = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id
       .col-md-4
-        = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :oid
+        = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id
 

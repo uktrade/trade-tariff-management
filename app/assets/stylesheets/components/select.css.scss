@@ -1,0 +1,44 @@
+.selection {
+  display: block;
+  padding: 0.5em 0.2em !important;
+  padding-left: 3em !important;
+  position: relative !important;
+}
+
+.selection--strikethrough {
+  text-decoration: line-through;
+
+}
+
+.selectize-input .item {
+  white-space: nowrap !important;
+  max-width: 90% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.option-prefix {
+  display: inline-block;
+  width: 2.3em;
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+
+  .selection--strikethrough & {
+    position: relative;
+
+    &:after {
+      content: " ";
+      position: absolute;
+      top: calc(50% + 1px);
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: currentColor;
+    }
+  }
+}
+
+.option-prefix--type {
+
+}

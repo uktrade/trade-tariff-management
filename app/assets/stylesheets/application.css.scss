@@ -1,6 +1,6 @@
-/*
- *= require_tree .
- *= require bootstrap-datepicker
- */
-
 @import 'govuk_admin_template';
+@import 'bootstrap_overrides';
+@import 'selectize';
+@import 'selectize.bootstrap3';
+@import 'bootstrap-datepicker3';
+@import "components/*";

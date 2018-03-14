@@ -21,6 +21,9 @@ Rails.application.routes.draw do
 
   resources :measures
 
+  resources :measure_types, only: [:index]
+  resources :measure_type_series, only: [:index]
+
   root to: 'home#index'
 
   if Rails.env.development?

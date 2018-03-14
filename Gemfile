@@ -20,11 +20,12 @@ gem "puma", "~> 3.4"
 # UI
 gem "sass-rails", "5.0.6"
 gem 'vuejs-rails'
-gem "jquery-rails", "~> 4.1.0"
+gem "jquery-rails", "~> 4.3.1"
 gem "coffee-rails", "~> 4.2.2"
 gem "uglifier", "~> 2.7"
-gem 'govuk_admin_template', '5.0.0'
-gem "bootstrap-datepicker-rails", "~> 1.4"
+gem 'govuk_admin_template', '~> 6.5.0'
+gem "bootstrap-datepicker-rails", "~> 1.7.1.1"
+gem "selectize-rails"
 
 # File uploads and AWS
 gem "shrine"

@@ -28,26 +28,40 @@ class MeasureForm
   end
 
   def measure_type_series_collection
-    MeasureTypeSeries.all
+    @series ||= MeasureTypeSeries.all
+  end
+
+  def measure_types_series_json
+    series = measure_type_series_collection
+    json = []
+
+    series.each do |serie|
+      json << {
+        oid: serie.oid,
+        measure_type_series_id: serie.measure_type_series_id,
+        validity_start_date: serie.validity_start_date,
+        validity_end_date: serie.validity_end_date,
+        description: serie.description
+      }
+    end
+
+    json
   end
 
   #TODO: cache this
   def measure_types_json
     types = MeasureType.all
-    json = {}
+    json = []
 
     types.each do |type|
-      unless json.has_key?(type.measure_type_series_id.to_sym)
-        json[type.measure_type_series_id.to_sym] = []
-      end
-
-      json[type.measure_type_series_id.to_sym] << {
+      json << {
         oid: type.oid,
         measure_type_id: type.measure_type_id,
         measure_type_series_id: type.measure_type_series_id,
         validity_start_date: type.validity_start_date,
         validity_end_date: type.validity_end_date,
         measure_type_acronym: type.measure_type_acronym,
+        description: type.description
       }
     end
 
