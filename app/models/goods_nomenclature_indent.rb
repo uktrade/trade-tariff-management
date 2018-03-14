@@ -7,6 +7,12 @@ class GoodsNomenclatureIndent < Sequel::Model
   plugin :conformance_validator
 
   set_primary_key [:goods_nomenclature_indent_sid]
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end
-
-

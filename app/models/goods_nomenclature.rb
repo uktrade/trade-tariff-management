@@ -125,4 +125,12 @@ class GoodsNomenclature < Sequel::Model
   def bti_url
     "http://ec.europa.eu/taxation_customs/dds2/ebti/ebti_consultation.jsp?Lang=en&nomenc=#{code}&Expand=true"
   end
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

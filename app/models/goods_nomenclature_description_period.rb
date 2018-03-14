@@ -9,4 +9,11 @@ class GoodsNomenclatureDescriptionPeriod < Sequel::Model
   many_to_one :goods_nomenclature_description, key: [:goods_nomenclature_sid,
                                                      :goods_nomenclature_description_period_sid]
 
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end
