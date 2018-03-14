@@ -9,4 +9,12 @@ class QuotaBlockingPeriod < Sequel::Model
       order(Sequel.desc(:end_date)).first
     end
   end
+
+  def record_code
+    "370".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end

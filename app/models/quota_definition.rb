@@ -35,11 +35,17 @@ class QuotaDefinition < Sequel::Model
     @_last_blocking_period ||= quota_blocking_periods.last
   end
 
+  def record_code
+    "370".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
+
   private
 
   def critical_state?
     critical_state == 'Y'
   end
 end
-
-
