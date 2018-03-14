@@ -19,6 +19,7 @@ gem "puma", "~> 3.4"
 
 # UI
 gem "sass-rails", "5.0.6"
+gem 'vuejs-rails'
 gem "jquery-rails", "~> 4.1.0"
 gem "coffee-rails", "~> 4.2.2"
 gem "uglifier", "~> 2.7"

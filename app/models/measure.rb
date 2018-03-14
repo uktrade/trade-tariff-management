@@ -400,4 +400,16 @@ class Measure < Sequel::Model
      .limit(TradeTariffBackend.change_count)
      .order(Sequel.desc(:operation_date, nulls: :last))
   end
+
+  def self.max_per_page
+    25
+  end
+
+  def self.default_per_page
+    25
+  end
+
+  def self.max_pages
+    999
+  end
 end

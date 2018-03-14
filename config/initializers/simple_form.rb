@@ -5,7 +5,7 @@ SimpleForm.setup do |config|
     b.use :placeholder
     b.use :label
     b.wrapper :tag => 'div', :class => 'controls' do |ba|
-      ba.use :input
+      ba.use :input, class: "form-control"
       ba.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
       ba.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
     end
@@ -42,4 +42,6 @@ SimpleForm.setup do |config|
   # to learn about the different styles for forms and inputs,
   # buttons and other elements.
   config.default_wrapper = :bootstrap
+
+  GovukAdminTemplate.setup_simple_form(config)
 end

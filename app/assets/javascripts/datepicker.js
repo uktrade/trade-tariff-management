@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  $('[data-behaviour~=datepicker]').datepicker({
+  $('[data-behaviour~=datepicker], .datepicker').datepicker({
     format: 'yyyy/mm/dd'
   }).each(function (i, input){
     if (input.value === "") {

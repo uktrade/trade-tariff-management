@@ -19,5 +19,11 @@ Rails.application.routes.draw do
     resources :exports, only: [:index, :show, :create]
   end
 
+  resources :measures
+
   root to: 'home#index'
+
+  if Rails.env.development?
+    mount GovukAdminTemplate::Engine, at: "/style-guide"
+  end
 end

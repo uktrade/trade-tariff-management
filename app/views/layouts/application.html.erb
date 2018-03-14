@@ -10,6 +10,7 @@
 
 <% content_for :navbar_items do %>
   <%= nav_link "Goods Nomenclatures", root_path, /\/$/ %>
+  <%= nav_link "Measures", measures_path, /\/measures./ %>
   <%= nav_link "XML Exports", xml_generation_exports_path, /\/xml_generation|exports$/ %>
 <% end %>
 
