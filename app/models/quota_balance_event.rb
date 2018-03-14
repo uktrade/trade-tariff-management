@@ -17,4 +17,12 @@ class QuotaBalanceEvent < Sequel::Model
   def self.status
     'open'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

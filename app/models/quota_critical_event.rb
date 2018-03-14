@@ -10,6 +10,12 @@ class QuotaCriticalEvent < Sequel::Model
   def self.status
     'critical'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end
-
-
