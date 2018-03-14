@@ -4,6 +4,12 @@ class ExportRefundNomenclatureDescription < Sequel::Model
   plugin :conformance_validator
 
   set_primary_key [:export_refund_nomenclature_description_period_sid]
+
+  def record_code
+    "410".freeze
+  end
+
+  def subrecord_code
+    "15".freeze
+  end
 end
-
-

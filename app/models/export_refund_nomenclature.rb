@@ -75,4 +75,12 @@ class ExportRefundNomenclature < Sequel::Model
   def heading_id
     "#{goods_nomenclature_item_id.first(4)}______"
   end
+
+  def record_code
+    "410".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
