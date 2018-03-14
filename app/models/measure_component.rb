@@ -47,6 +47,14 @@ class MeasureComponent < Sequel::Model
     duty_expression_id.in?(DutyExpression::MEURSING_DUTY_EXPRESSION_IDS)
   end
 
+  def record_code
+    "430".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
+
   private
 
   def duty_expression_formatter_options

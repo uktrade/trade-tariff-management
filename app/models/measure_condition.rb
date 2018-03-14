@@ -109,4 +109,12 @@ class MeasureCondition < Sequel::Model
   def duty_expression
     measure_condition_components.map(&:formatted_duty_expression).join(" ")
   end
+
+  def record_code
+    "430".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end
