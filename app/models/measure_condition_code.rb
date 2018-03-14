@@ -20,5 +20,4 @@ class MeasureConditionCode < Sequel::Model
   def subrecord_code
     "00".freeze
   end
-
 end
