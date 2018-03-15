@@ -25,8 +25,4 @@ Rails.application.routes.draw do
   resources :measure_type_series, only: [:index]
 
   root to: 'home#index'
-
-  if Rails.env.development?
-    mount GovukAdminTemplate::Engine, at: "/style-guide"
-  end
 end

@@ -15,7 +15,10 @@ class MeasureForm
                 :additional_code_type_id,
                 :additional_code_id,
                 :additional_code_sid,
-                :tariff_measure_number
+                :tariff_measure_number,
+                :geographical_area_type,
+                :geographical_area_proxy,
+                :excluded_geographical_areas
 
   def initialize(measure)
     @measure = measure
@@ -74,5 +77,30 @@ class MeasureForm
     else
       MeasureType.all
     end
+  end
+
+  def geographical_groups_except_erga_omnes
+    GeographicalArea.groups.exclude(geographical_area_id: GeographicalArea::ERGA_OMNES)
+  end
+
+  def geographical_area_erga_omnes
+    GeographicalArea.where(geographical_area_id: GeographicalArea::ERGA_OMNES).first
+  end
+
+  def geographical_areas_json
+    json = {}
+
+    GeographicalArea.all.each do |group|
+      json[group.geographical_area_id] = []
+
+      group.contained_geographical_areas.each do |child|
+        json[group.geographical_area_id] << {
+          geographical_area_id: child.geographical_area_id,
+          description: child.description
+        }
+      end
+    end
+
+    json
   end
 end

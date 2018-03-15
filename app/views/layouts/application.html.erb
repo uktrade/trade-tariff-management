@@ -8,25 +8,30 @@
   <%= csrf_meta_tags %>
 <% end %>
 
-<% content_for :navbar_items do %>
-  <%= nav_link "Goods Nomenclatures", root_path, /\/$/ %>
-  <%= nav_link "Measures", measures_path, /\/measures./ %>
-  <%= nav_link "XML Exports", xml_generation_exports_path, /\/xml_generation|exports$/ %>
+<% content_for :global_header_text, "Tariff Management Application" %>
+
+<%= content_for :proposition_header do %>
+  <div class="header-proposition">
+    <div class="content">
+      <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+      <nav id="proposition-menu">
+        <a href="/govuk_template/" id="proposition-name">Service Name</a>
+        <ul id="proposition-links">
+          <li><%= link_to 'Sign out', gds_sign_out_path %></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 <% end %>
 
-<% content_for :navbar_right do %>
-  <ul class="nav">
-    <li class="dropdown">
-      <span class="dropdown-toggle" data-toggle="dropdown">
-        <%= current_user.name %>
-        <span class="caret"></span>
-      </span>
-      <ul class="dropdown-menu">
-        <li><%= link_to 'Sign out', gds_sign_out_path %></li>
-      </ul>
-    </li>
-  </ul>
+<% content_for :before_content do %>
+  <div class="phase-banner">
+    <p>
+      <strong class="phase-tag">ALPHA</strong>
+      <span>This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
+    </p>
+  </div>
 <% end %>
 
 <%= render "flashes" %>
-<%= render template: "layouts/govuk_admin_template" %>
+<%= render template: "layouts/govuk_template" %>

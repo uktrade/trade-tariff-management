@@ -18,3 +18,63 @@
       .col-md-4
         = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id
 
+  .form-group
+    h2.heading-small
+      | Specify the origin the measure will apply to
+
+    span.form-hint
+      | You can specify a single country or region, or a pre-defined group of countries, or select 'ERGA OMNES' to apply the measure to all origins. If the area group you need is not in the list, you can&nbsp;
+      a href="#"
+        | add it from here
+      |.
+
+    .controls.origins-region
+      = f.hidden_field :geographical_area_id, value: @form.geographical_area_id
+      = f.collection_select(:excluded_geographical_areas, GeographicalArea.all, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true})
+
+      .multiple-choice
+        = f.radio_button :geographical_area_type, :country, value: @form.geographical_area_type, class: "radio-inline-group"
+        label
+          = f.collection_select(:geographical_area_proxy, GeographicalArea.countries, :geographical_area_id, :description, { include_blank: true, prompt: "― select a country or region ―" }, {class: "origin-select", "data-placeholder" => "― select a country or region ―"})
+
+      .panel.panel-border-narrow.js-hidden#exclusions-for-country-region
+        label.form-label
+          | If you want to exclude countries from this measure, enter them here:
+
+        .exclusions-target
+
+        p
+          a href="#" class="js-add-country-exclusion"
+            | Add another exclusion
+
+
+      .multiple-choice
+        = f.radio_button :geographical_area_type, :group, value: @form.geographical_area_type, class: "radio-inline-group"
+        label
+          = f.collection_select(:geographical_area_proxy, @form.geographical_groups_except_erga_omnes, :geographical_area_id, :description, { include_blank: true, prompt: "― select a group of countries ―" }, { class: "origin-select", "data-placeholder" => "― select a group of countries ―" })
+
+      .panel.panel-border-narrow.js-hidden#exclusions-for-groups
+        label.form-label
+          | If you want to exclude countries from this measure, enter them here:
+
+        .exclusions-target
+
+        p
+          a href="#" class="js-add-country-exclusion"
+            | Add another exclusion
+
+
+      .multiple-choice
+        = f.radio_button :geographical_area_type, :erga_omnes, value: @form.geographical_area_type, class: "radio-inline-group"
+        label
+          | ERGA OMNES (all origins)
+
+      .panel.panel-border-narrow.js-hidden#exclusions-for-erga-omnes
+        label.form-label
+          | If you want to exclude countries from this measure, enter them here:
+
+        .exclusions-target
+
+        p
+          a href="#" class="js-add-country-exclusion"
+            | Add another exclusion

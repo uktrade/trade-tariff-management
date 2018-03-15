@@ -42,3 +42,19 @@
 .option-prefix--type {
 
 }
+
+.origin-select {
+  width: 400px;
+  top: -5px;
+}
+
+.selectize-control {
+  font-size: 1.6rem;
+}
+
+.selectize-input input {
+  line-height: 1 !important;
+  height: auto !important;
+  opacity: 1;
+  position: relative;
+}

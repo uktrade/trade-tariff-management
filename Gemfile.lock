@@ -6,6 +6,15 @@ GIT
       simplecov (>= 0.4.1)
 
 GIT
+  remote: https://github.com/alphagov/govuk_frontend_toolkit_gem.git
+  revision: 9cc9101f3c70f485f1b2d38be174665b79cbc16f
+  submodules: true
+  specs:
+    govuk_frontend_toolkit (7.4.2)
+      railties (>= 3.1.0)
+      sass (>= 3.2.0)
+
+GIT
   remote: https://github.com/mtunjic/forgery.git
   revision: e20e92abf738a2f0941b774938829b3bb3d102e7
   branch: master
@@ -609,9 +618,9 @@ GEM
     bootscale (0.7.0)
     bootstrap-datepicker-rails (1.7.1.1)
       railties (>= 3.0)
-    bootstrap-sass (3.3.5.1)
-      autoprefixer-rails (>= 5.0.0.1)
-      sass (>= 3.3.0)
+    bootstrap-sass (3.3.7)
+      autoprefixer-rails (>= 5.2.1)
+      sass (>= 3.3.4)
     builder (3.2.3)
     byebug (10.0.0)
     coderay (1.1.2)
@@ -676,10 +685,12 @@ GEM
       kramdown (~> 1.10.0)
       nokogiri (~> 1.5)
       sanitize (~> 2.1.0)
-    govuk_admin_template (6.5.0)
-      bootstrap-sass (= 3.3.5.1)
-      jquery-rails (~> 4.3.1)
-      rails (>= 3.2.0)
+    govuk_elements_rails (3.1.2)
+      govuk_frontend_toolkit (>= 6.0.2)
+      rails (>= 4.1.0)
+      sass (>= 3.2.0)
+    govuk_template (0.23.0)
+      rails (>= 3.1)
     hashdiff (0.3.7)
     hashie (3.5.7)
     holidays (6.3.0)
@@ -946,6 +957,7 @@ DEPENDENCIES
   aws-sdk-s3
   bootscale (~> 0.5)
   bootstrap-datepicker-rails (~> 1.7.1.1)
+  bootstrap-sass (~> 3.3.7)
   builder (~> 3.2)
   coffee-rails (~> 4.2.2)
   connection_pool (~> 2.2)
@@ -962,7 +974,9 @@ DEPENDENCIES
   forgery!
   gds-sso (~> 13, >= 12.1.0)
   govspeak (~> 3.6, >= 3.6.2)
-  govuk_admin_template (~> 6.5.0)
+  govuk_elements_rails
+  govuk_frontend_toolkit!
+  govuk_template
   hashie (~> 3.4)
   holidays
   jquery-rails (~> 4.3.1)
