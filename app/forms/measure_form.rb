@@ -18,7 +18,8 @@ class MeasureForm
                 :tariff_measure_number,
                 :geographical_area_type,
                 :geographical_area_proxy,
-                :excluded_geographical_areas
+                :excluded_geographical_areas,
+                :measure
 
   def initialize(measure)
     @measure = measure

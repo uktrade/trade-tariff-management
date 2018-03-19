@@ -52,9 +52,20 @@
   font-size: 1.6rem;
 }
 
-.selectize-input input {
-  line-height: 1 !important;
-  height: auto !important;
-  opacity: 1;
-  position: relative;
+.selectize-input {
+  border-radius: 0 !important;
+  border: 2px solid #000 !important;
+
+  &.focus {
+    box-shadow: none !important;
+    outline: 3px solid $focus-colour;
+  }
+
+  input {
+    line-height: 1 !important;
+    height: auto !important;
+    opacity: 1;
+    position: relative;
+    vertical-align: top;
+  }
 }

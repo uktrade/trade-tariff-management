@@ -1,25 +1,117 @@
-= simple_form_for @form, url: measures_path, html: { class: "measure-form" } do |f|
-  = render "js_variables"
+= render "js_variables"
+= render "shared/vue_templates/condition"
+= render "shared/vue_templates/selectize"
+= render "shared/vue_templates/quota_period"
+= render "shared/vue_templates/date_select"
+
+= simple_form_for @form, url: measures_path, html: { class: "measure-form", data: { measure: @form.measure.to_json, measure_condition_attributes: @form.measure.measure_conditions.to_json } } do |f|
 
   fieldset
-    legend
-      | Validity period
+    h3.heading-medium
+      | Specify the regulation that gives legal force to this measure
 
-    = f.input :validity_start_date, input_html: { class: "datepicker" }
-    = f.input :validity_end_date, input_html: { class: "datepicker" }
-
-  fieldset
-    legend
-      | Type
+    label.form-label
+      span.form-hint
+        | Start typing in the field to see available regulations. If the regulation you need is not in the list, you can&nbsp;
+        a href="#"
+          | add it here
+        |&nbsp;.
 
     .row
-      .col-md-4
+      .col-md-5
+        = content_tag "custom-select", "", url: "/regulations", labelField: "description", valueField: "regulation_id", placeholder: "― start typing ―", minLength: 2, "v-model" => "measure.regulation_id"
+
+  fieldset
+    h3.heading-medium
+      | Specify the measure's validity period
+
+    .form-group
+      label.form-label
+        | Start date
+        span.form-hint
+          | The measure will take effect (once approved) from this date.
+
+      .row
+        .col-md-6
+          = content_tag "date-select", "", "v-model" => "measure.validity_start_date"
+
+    .form-group
+      label.form-label
+        | End date
+        span.form-hint
+          | By default this is set to the end date of the regulation giving force to this measure. You can optionally bring it forward, but it cannot be later than the regulation's end date.
+
+      .row
+        .col-md-6
+          = content_tag "date-select", "", "v-model" => "measure.validity_end_date"
+
+  fieldset
+    h3.heading-medium
+      | Select the type of measure to create
+
+    label.form-label
+      span.form-hint
+        | Filter by measure series first to shorten the list of types shown.
+
+    .row
+      .col-md-5
         = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id
-      .col-md-4
+      .col-md-5
         = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id
 
+  fieldset
+    h3.heading-medium
+      | Configure the quota
+
+    .form-group
+      label.form-label
+        | Order number
+        span.form-hint
+          | This is the code an importer would need to enter into their customs declaration to benefit from this tariff quota.
+      .row
+        .col-md-5
+          input.form-control v-model="measure.ordernumber"
+
+    .form-group
+      label.form-label
+        | Initial status
+
+      .row
+        .col-md-5
+          = content_tag "custom-select"
+
+    .form-group
+      label.form-label
+        | Criticality threshold
+
+      .row
+        .col-md-2
+          input.form-control
+        .col-md-1
+          span.input-suffix
+            | %
+
+    .form-group
+      label.form-label
+        | Description
+
+        span.form-hint
+          | Optional.
+
+      textarea.form-control rows="3"
+
+    h3.heading-medium
+      | Set the quota opening balance
+
+    div.quota-period v-for="(quotaPeriod, index) in measure.quota_periods"
+      = content_tag "quota-period", "", { ":quota-period" => "quotaPeriod", ":index" => "index" }
+
+    p v-if="showAddMoreQuotaPeriods"
+      a href="#" v-on:click.prevent="addQuotaPeriod"
+        | Add another quota period
+
   .form-group
-    h2.heading-small
+    h3.heading-medium
       | Specify the origin the measure will apply to
 
     span.form-hint
@@ -78,3 +170,17 @@
         p
           a href="#" class="js-add-country-exclusion"
             | Add another exclusion
+
+  .form-group
+    h3.heading-medium
+      | Specify conditions
+
+    .conditions-target
+      .condition v-for='condition in measure.conditions'
+        = content_tag "measure-condition", "", ":condition" => "condition"
+
+      p
+        a href="#" v-on:click.prevent="addCondition" v-if="atLeastOneCondition"
+          | Add another condition
+        a href="#" v-on:click.prevent="addCondition" v-if="noCondition"
+          | Add condition

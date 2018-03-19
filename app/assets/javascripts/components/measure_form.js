@@ -1,3 +1,6 @@
+//= require vue
+//= require vue-resource
+
 function Origin(el) {
   this.choice = el;
   this.select = el.find("select");
@@ -154,6 +157,291 @@ $(document).ready(function() {
   if (!form) {
     return;
   }
+
+  Vue.component('custom-select', {
+    props: [
+      "url",
+      "value",
+      "options",
+      "placeholder",
+      "labelField",
+      "valueField",
+      "searchField",
+      "codeField",
+      "minLength"
+    ],
+    data: function() {
+      return {
+        condition: {}
+      }
+    },
+    template: "#selectize-template",
+    mounted: function () {
+      var vm = this;
+
+      var options = {
+        create: false,
+        placeholder: this.placeholder,
+        valueField: this.valueField,
+        labelField: this.labelField,
+        onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
+        onChange: function(){ this.$dropdown_content.removeHighlight(); }
+      };
+
+      if (this.options) {
+        options["options"] = this.options;
+      }
+
+      if (this.url && !this.minLength) {
+        options["onInitialize"] = function() {
+          var self = this;
+          var fn = self.settings.load;
+          self.load(function(callback) {
+              fn.apply(self, ["", callback]);
+          });
+        }
+      }
+
+      if (this.url) {
+        options["load"] = function(query, callback) {
+          if (options.minLength && query.length < options.minLength) return callback();
+          $.ajax({
+            url: vm.url,
+            data: {
+              q: query
+            },
+            type: 'GET',
+            error: function() {
+              callback();
+            },
+            success: function(res) {
+              callback(res);
+            }
+          });
+        }
+      }
+
+      var codeField = this.codeField;
+
+      if (codeField) {
+        options["render"] = {
+          option: function(data) {
+            return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--series'>" + data[codeField] + "</span> " + data[options.labelField] + "</span>";
+          },
+          item: function(data) {
+            return "<div class='item'>" + data[codeField] + " - " + data[options.labelField] + "</div>";
+          }
+        };
+      }
+
+      $(this.$el).selectize(options).val(this.value).trigger('change').on('change', function () {
+        vm.$emit('input', this.value)
+      });
+    },
+    watch: {
+      value: function (value) {
+        $(this.$el)[0].selectize.setValue(value, false);
+      },
+      options: function (options) {
+        $(this.$el)[0].selectize.clearOptions();
+        $(this.$el)[0].selectize.addOption(options);
+        $(this.$el)[0].selectize.refreshOptions(false);
+      }
+    },
+    destroyed: function () {
+      $(this.$el).off()[0].selectize.destroy();
+    }
+  });
+
+  Vue.component('quota-period', {
+    template: "#quota-period-template",
+    props: ["quotaPeriod", "index"],
+    data: function() {
+      return {
+        quotaOptions: [
+          { value: "annual", label: "Annual" },
+          { value: "bi_annual", label: "Bi-Annual" },
+          { value: "quarterly", label: "Quarterly" },
+          { value: "monthly", label: "Monthly" },
+          { value: "custom", label: "Custom" }
+        ]
+      }
+    },
+    computed: {
+      isAnnual: function() {
+        return this.quotaPeriod.type === "annual";
+      },
+      isQuarterly: function() {
+        return this.quotaPeriod.type === "quarterly";
+      },
+      isBiAnnual: function() {
+        return this.quotaPeriod.type === "bi_annual";
+      },
+      isMonthly: function() {
+        return this.quotaPeriod.type === "monthly";
+      },
+      isCustom: function() {
+        return this.quotaPeriod.type === "custom";
+      },
+      isAnnualOrCustom: function() {
+        return this.isCustom || this.isAnnual;
+      },
+      isFirst: function() {
+        return this.index === 0;
+      }
+    }
+  });
+
+  Vue.component('date-select', {
+    template: "#date-select-template",
+    props: ["value", "minYear"],
+    computed: {
+      days: function() {
+        var days = [];
+        for (var i = 1; i <= 31; i++) {
+          days.push({ value: i, label: i });
+        }
+
+        return days;
+      },
+      months: function() {
+        return [
+          { value: 0, label: "January" },
+          { value: 1, label: "February" },
+          { value: 2, label: "March" },
+          { value: 3, label: "April" },
+          { value: 4, label: "May" },
+          { value: 5, label: "June" },
+          { value: 6, label: "July" },
+          { value: 7, label: "August" },
+          { value: 8, label: "September" },
+          { value: 9, label: "October" },
+          { value: 10, label: "November" },
+          { value: 11, label: "December" }
+        ];
+      },
+      years: function() {
+        var minYear = this.minYear || (new Date()).getFullYear();
+        var years = [];
+
+        for (var i = 0; i < 80; i++) {
+          years.push({ value: minYear + i, label: minYear + i });
+        }
+
+        return years;
+      }
+    }
+  });
+
+  Vue.component('measure-condition', {
+    template: "#condition-template",
+    props: ["condition"],
+    computed: {
+      showAction: function() {
+        var codes = ["A"];
+
+        return true;
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      showMinimumPrice: function() {
+        var codes = [];
+
+        return true;
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      showReferencePrice: function() {
+        var codes = [];
+
+        return true;
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      certificateActionHint: function() {
+        var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z"];
+
+        return true;
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      noCertificateActionHint: function() {
+        var codes = ["D", "F", "G", "L", "M", "N", "R", "U", "V", "E"];
+
+        return true;
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      }
+    }
+  });
+
+  var app = new Vue({
+    el: form,
+    data: function() {
+      return {
+        measure: {
+          conditions: [],
+          quota_periods: []
+        },
+        id: null
+      };
+    },
+    mounted: function() {
+      if (this.measure.quota_periods.length === 0) {
+        this.measure.quota_periods.push({
+          type: null,
+          amount: null,
+          start_date: null,
+          end_date: null,
+          measurement_unit_id: null,
+          measurement_unit_qualifier_id: null
+        });
+      }
+    },
+    methods: {
+      addCondition: function() {
+        this.measure.conditions.push({
+          _destroy: null,
+          id: null,
+          action_id: null,
+          certificate_type_id: null,
+          certificate_id: null
+        });
+      },
+      addQuotaPeriod: function() {
+        this.measure.quota_periods.push({
+          type: "custom",
+          amount: null,
+          start_date: null,
+          end_date: null,
+          measurement_unit_id: null,
+          measurement_unit_qualifier_id: null
+        });
+      }
+    },
+    computed: {
+      showAddMoreQuotaPeriods: function() {
+        if (this.measure.quota_periods.length <= 0) {
+          return false;
+        }
+
+        return this.measure.quota_periods[0].type === "custom";
+      },
+      atLeastOneCondition: function() {
+        return this.measure.conditions.length > 0;
+      },
+      noCondition: function() {
+        return this.measure.conditions.length === 0;
+      }
+    },
+    watch: {
+      showAddMoreQuotaPeriods: function() {
+        if (!this.showAddMoreQuotaPeriods) {
+          this.measure.quota_periods.splice(1, 200);
+        }
+      }
+    }
+  });
 
   var findMeasureTypeById = function(id) {
     for (var k in window.measure_types_json) {
