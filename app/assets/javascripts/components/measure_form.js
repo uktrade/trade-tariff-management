@@ -381,9 +381,11 @@ $(document).ready(function() {
       return {
         measure: {
           conditions: [],
-          quota_periods: []
+          quota_periods: [],
         },
-        id: null
+        id: null,
+        goods_nomenclature_code: "",
+        meursing_code: ""
       };
     },
     mounted: function() {
@@ -439,6 +441,21 @@ $(document).ready(function() {
         if (!this.showAddMoreQuotaPeriods) {
           this.measure.quota_periods.splice(1, 200);
         }
+      },
+      goods_nomenclature_code: function() {
+        var self = this;
+
+        if (this.goods_nomenclature_code.trim().length < 10) {
+          $.ajax({
+            url: "/good_nomenclature_codes",
+            data: {
+
+            }
+          });
+        }
+      },
+      meursing_code: function() {
+
       }
     }
   });

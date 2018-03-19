@@ -184,3 +184,39 @@
           | Add another condition
         a href="#" v-on:click.prevent="addCondition" v-if="noCondition"
           | Add condition
+  fieldset
+    h3.heading-medium
+      | Specify the goods the measure will apply to
+
+    .form-group
+      label.form-label
+        | Goods nomenclature code
+        span.form-hint
+          | Enter the goods nomenclature code here. If you don't know which code you need, you can find it via the&nbsp;
+          a href="" target="_blank"
+            | Trade Tariff tool
+          |. You may optionally leave this field blank if you are providing a Meursing additional code below.
+      .row
+        .col-md-5
+          input.form-control v-model="goods_nomenclature_code"
+
+      label.form-label
+        span.form-hint v-html="goods_nomenclature_code_description" v-if="goods_nomenclature_code_description"
+
+        span.form-hint v-else
+          | Code description will appear here once you enter at least ten digits above.
+    .form-group
+      label.form-label
+        | Additional code
+        span.form-hint
+          | You can optionally specify an additional code here. If you do not provide a goods nomeclature code above, then you must provide a Meursing additional code here.
+      .row
+        .col-md-5
+          input.form-control v-model="meursing_code"
+
+      label.form-label
+        span.form-hint v-html="meursing_code_description" v-if="meursing_code_description"
+
+        span.form-hint v-else
+          | Code description will appear here once you enter an additional code above.
+
