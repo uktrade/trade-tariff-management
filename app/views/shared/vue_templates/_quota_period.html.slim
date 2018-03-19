@@ -1,0 +1,139 @@
+script type="text/x-template" id="quota-period-template"
+  div
+    .row
+      .col-md-5
+        .form-group v-if="isFirst"
+          label
+            | Quota period
+
+          = content_tag "custom-select", "", ":options" => "quotaOptions", "labelField" => "label", "valueField" => "value", "v-model" => "quotaPeriod.type"
+      .col-md-7
+        .form-group
+          label
+            | Starting on
+
+          = content_tag "date-select", "", "v-model" => "quotaPeriod.start_date"
+
+        .form-group v-if="isCustom"
+          label
+            | Ending on
+
+          = content_tag "date-select", "", "v-model" => "quotaPeriod.end_date"
+
+    div v-if="isBiAnnual"
+      .row
+        .col-md-3
+          .form-group
+            label
+              | Amount (1st semester)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (2nd semester)
+            input.form-control type="text"
+
+    div v-if="isQuarterly"
+      .row
+        .col-md-3
+          .form-group
+            label
+              | Amount (1st quarter)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (2nd quarter)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (3rd quarter)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (4th quarter)
+            input.form-control type="text"
+
+    div v-if="isMonthly"
+      .row
+        .col-md-3
+          .form-group
+            label
+              | Amount (1st month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (2nd month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (3rd month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (4th month)
+            input.form-control type="text"
+      .row
+        .col-md-3
+          .form-group
+            label
+              | Amount (5th month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (6th month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (7th month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (8th month)
+            input.form-control type="text"
+      .row
+        .col-md-3
+          .form-group
+            label
+              | Amount (9th month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (10th month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (11th month)
+            input.form-control type="text"
+        .col-md-3
+          .form-group
+            label
+              | Amount (12th month)
+            input.form-control type="text"
+    .row
+      .col-md-2 v-if="isAnnualOrCustom"
+        .form-group
+          label
+            | Amount
+          input.form-control type="text" v-model="quotaPeriod.amount"
+      .col-md-5
+        .form-group
+          label
+            | Measurement unit
+          = content_tag "custom-select", "", url: "/measurement_units", placeholder: "― select measurement unit ―", labelField: "description", valueField: "measurement_unit_id", "v-model" => "quotaPeriod.measurement_unit_id"
+      .col-md-5
+        .form-group
+          label
+            | Measurement unit qualifier
+          = content_tag "custom-select", "", url: "/measurement_unit_qualifiers", placeholder: "― select measurement unit qualifier ―", labelField: "description", valueField: "measurement_unit_qualifier_id", "v-model" => "quotaPeriod.measurement_unit_qualifier_id"
+

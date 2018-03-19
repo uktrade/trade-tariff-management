@@ -1,0 +1,53 @@
+input.datepicker {
+  max-width: 110px;
+}
+
+.form-control {
+  width: 100% !important;
+}
+
+.multiple-choice + .panel {
+  margin-left: 3.2em;
+}
+
+.exclusions-target {
+  margin: 1em 0;
+}
+
+.exclusion-select {
+  width: 300px;
+  max-width: 100%;
+}
+
+.form-hint {
+  margin: 1em 0 1em;
+}
+
+.selectize-control.form-control {
+  width: 100% !important;
+}
+
+.input-suffix {
+  display: inline-block;
+  position: relative;
+  top: 8px;
+  left: -20px;
+}
+
+.condition {
+  margin: 15px 0;
+  padding: 15px 0 15px;
+
+  & + .condition {
+    border-top: 1px solid #000;
+  }
+}
+
+.quota-period {
+  margin: 15px 0;
+  padding: 15px 0 0;
+
+  & + .quota-period {
+    border-top: 1px solid #000;
+  }
+}

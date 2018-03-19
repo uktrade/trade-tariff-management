@@ -1,5 +1,6 @@
 class GeographicalArea < Sequel::Model
   COUNTRIES_CODES = ['0', '2'].freeze
+  ERGA_OMNES = '1011'
 
   plugin :time_machine
   plugin :oplog, primary_key: :geographical_area_sid
@@ -54,6 +55,10 @@ class GeographicalArea < Sequel::Model
 
     def countries
       where(geographical_code: COUNTRIES_CODES)
+    end
+
+    def groups
+      exclude(geographical_code: COUNTRIES_CODES)
     end
   end
 
