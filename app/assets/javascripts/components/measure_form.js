@@ -295,6 +295,13 @@ $(document).ready(function() {
   Vue.component('date-select', {
     template: "#date-select-template",
     props: ["value", "minYear"],
+    data: function() {
+      return {
+        day: "",
+        month: "",
+        year: ""
+      }
+    },
     computed: {
       days: function() {
         var days = [];
