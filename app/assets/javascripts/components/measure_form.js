@@ -295,6 +295,13 @@ $(document).ready(function() {
   Vue.component('date-select', {
     template: "#date-select-template",
     props: ["value", "minYear"],
+    data: function() {
+      return {
+        day: "",
+        month: "",
+        year: ""
+      }
+    },
     computed: {
       days: function() {
         var days = [];
@@ -385,7 +392,9 @@ $(document).ready(function() {
         },
         id: null,
         goods_nomenclature_code: "",
-        meursing_code: ""
+        meursing_code: "",
+        goods_nomenclature_code_description: "",
+        meursing_code_description: ""
       };
     },
     mounted: function() {
