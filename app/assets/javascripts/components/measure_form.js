@@ -385,7 +385,9 @@ $(document).ready(function() {
         },
         id: null,
         goods_nomenclature_code: "",
-        meursing_code: ""
+        meursing_code: "",
+        goods_nomenclature_code_description: "",
+        meursing_code_description: ""
       };
     },
     mounted: function() {
