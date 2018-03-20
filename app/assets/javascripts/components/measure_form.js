@@ -392,9 +392,9 @@ $(document).ready(function() {
         },
         id: null,
         goods_nomenclature_code: "",
-        meursing_code: "",
+        additional_code: "",
         goods_nomenclature_code_description: "",
-        meursing_code_description: ""
+        additional_code_description: ""
       };
     },
     mounted: function() {
@@ -454,17 +454,58 @@ $(document).ready(function() {
       goods_nomenclature_code: function() {
         var self = this;
 
-        if (this.goods_nomenclature_code.trim().length < 10) {
+        if (this.goods_nomenclature_code.trim().length === 10) {
           $.ajax({
-            url: "/good_nomenclature_codes",
+            url: "/goods_nomenclatures",
             data: {
-
+              q: this.goods_nomenclature_code.trim()
+            },
+            success: function(data) {
+              if (data.length > 0) {
+                self.goods_nomenclature_code_description = data[0].description;
+                self.measure.goods_nomenclature_code = data[0].goods_nomenclature_code;
+              } else {
+                self.goods_nomenclature_code_description = "";
+                self.measure.goods_nomenclature_code = null;
+              }
+            },
+            error: function() {
+              self.goods_nomenclature_code_description = "";
+              self.measure.goods_nomenclature_code = null;
             }
           });
+        } else {
+          self.goods_nomenclature_code_description = "";
+          self.measure.goods_nomenclature_code = null;
         }
       },
-      meursing_code: function() {
+      additional_code: function() {
+        var self = this;
 
+        if (this.additional_code.trim().length === 4) {
+          $.ajax({
+            url: "/additional_codes",
+            data: {
+              q: this.additional_code.trim()
+            },
+            success: function(data) {
+              if (data.length > 0) {
+                self.additional_code_description = data[0].description;
+                self.measure.additional_code = data[0].additional_code;
+              } else {
+                self.additional_code_description = "";
+                self.measure.additional_code = null;
+              }
+            },
+            error: function() {
+              self.additional_code_description = "";
+              self.measure.additional_code = null;
+            }
+          });
+        } else {
+          self.additional_code_description = "";
+          self.measure.additional_code = null;
+        }
       }
     }
   });

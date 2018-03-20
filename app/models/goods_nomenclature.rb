@@ -125,4 +125,26 @@ class GoodsNomenclature < Sequel::Model
   def bti_url
     "http://ec.europa.eu/taxation_customs/dds2/ebti/ebti_consultation.jsp?Lang=en&nomenc=#{code}&Expand=true"
   end
+
+  def chapter?
+    gono_id = goods_nomenclature_item_id.to_s
+
+    gono_id.ends_with?('00000000')
+  end
+
+  def heading?
+    gono_id = goods_nomenclature_item_id.to_s
+
+    gono_id.ends_with?('000000') && gono_id.slice(2,2) != '00'
+  end
+
+  def commodity?
+    gono_id = goods_nomenclature_item_id.to_s
+
+    !gono_id.ends_with?('000000')
+  end
+
+  def good_nomenclature?
+    !(chapter? || heading? || commodity?)
+  end
 end

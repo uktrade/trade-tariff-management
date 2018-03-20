@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   resources :measure_types, only: [:index]
   resources :measure_type_series, only: [:index]
   resources :measure_condition_codes, only: [:index]
+  resources :goods_nomenclatures, only: [:index]
+  resources :additional_codes, only: [:index]
 
   root to: 'home#index'
 end

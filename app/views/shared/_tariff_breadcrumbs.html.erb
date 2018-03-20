@@ -1,0 +1,160 @@
+<div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
+  <nav>
+
+    <% if @nomenclature.commodity? %>
+      <div class="desktop-only">
+        <ul>
+          <li>
+            Section <%= @nomenclature.section_numeral %>: <%= @nomenclature.section %>, section_path(@nomenclature.section, request.query_parameters.symbolize_keys), class: "section-link" %>
+            <ul>
+              <li class="chapter-li">
+                <div class="chapter-code">
+                  <div class="code-text"><%= @nomenclature.chapter_short_code %></div>
+                </div>
+                <%= @nomenclature.chapter %>
+                <ul>
+                  <li class="heading-li">
+                    <div class="heading-code">
+                      <div class="code-text"><%= @nomenclature.heading_display_short_code %></div>
+                    </div>
+                    <% if @nomenclature.show_commodity_tree? %>
+                      <%= @nomenclature.heading.to_s.html_safe %>
+                      <%= commodity_tree(@nomenclature, @nomenclature.ancestors) %>
+                    <% else %>
+                      <%= declarable_heading(@nomenclature) %>
+                    <% end %>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="mobile-only">
+        <ul class="js-full-tree">
+          <li>
+            Section <%= @nomenclature.section_numeral %>: <%= @nomenclature.section %>
+            <ul>
+              <li class="chapter-li">
+                <div class="chapter-code">
+                  <div class="code-text"><%= @nomenclature.chapter_short_code  %></div>
+                </div>
+                <%= @nomenclature.chapter %>
+                <ul>
+                  <li class="heading-under-chapter-li">
+                    <div class="heading-code">
+                      <div class="code-text"><%= @nomenclature.heading_display_short_code %></div>
+                    </div>
+                    <% if @nomenclature.show_commodity_tree? %>
+                      <%= @nomenclature.heading.to_s.html_safe %>
+                      <%= commodity_tree(@nomenclature, @nomenclature.ancestors) %>
+                    <% else %>
+                      <%= declarable_heading(@nomenclature) %>
+                    <% end %>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="js-summary-tree">
+          <li>
+            <ul>
+              <li class="commodity-li">
+                <% if @nomenclature.show_commodity_tree? %>
+                  <%= commodity_heading_full(@nomenclature) %>
+                <% else %>
+                  <%= declarable_heading_full(@nomenclature) %>
+                <% end %>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    <% elsif @nomenclature.heading? %>
+      <div class="desktop-only">
+        <ul>
+          <li>
+            Section <%= @nomenclature.section.numeral %>: <%= @nomenclature.section.title %>
+            <ul>
+              <li class="chapter-li">
+                <div class="chapter-code">
+                  <div class="code-text"><%= @nomenclature.chapter_short_code  %></div>
+                </div>
+                <%= @nomenclature.chapter %>
+                <ul>
+                  <li class="heading-li">
+                    <div class="heading-code">
+                      <div class="code-text"><%= @nomenclature.heading_display_short_code %></div>
+                    </div>
+                    <h1><%= @nomenclature.formatted_description.html_safe %></h1>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="mobile-only">
+        <ul class="js-full-tree">
+          <li>
+            Section <%= @nomenclature.section.numeral %>: <%= @nomenclature.section.title %>
+            <ul>
+              <li class="chapter-li">
+                <div class="chapter-code">
+                  <div class="code-text"><%= @nomenclature.chapter_short_code  %></div>
+                </div>
+                <%= @nomenclature.chapter %>
+                <ul>
+                  <li class="heading-li">
+                    <div class="heading-code">
+                      <div class="code-text"><%= @nomenclature.heading_display_short_code %></div>
+                    </div>
+                    <h1><%= @nomenclature.formatted_description.html_safe %></h1>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="mobile-only js-summary-tree">
+          <li>
+            <ul>
+              <li class="chapter-and-heading-li">
+                <div class="chapter-code">
+                  <div class="code-text"><%= @nomenclature.chapter_short_code  %></div>
+                </div><div class="heading-code">
+                  <div class="code-text"><%= @nomenclature.heading_display_short_code %></div>
+                </div>
+                <h1><%= @nomenclature.formatted_description.html_safe %></h1>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    <% elsif @nomenclature.chapter? %>
+      <ul>
+        <li>
+          Section <%= @nomenclature.section_numeral %>: <%= @nomenclature.section %>
+          <ul>
+            <li class="chapter-li">
+              <div class="chapter-code">
+                <div class="code-text"><%= @nomenclature.short_code %></div>
+              </div>
+              <h1><%= @nomenclature %></h1>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+    <% elsif @nomenclature.goods_nomenclature? %>
+      <ul>
+        <li>
+          <h1>Section <%= @nomenclature.numeral %>: <%= @nomenclature %>
+        </li>
+      </ul>
+    <% end %>
+  </nav>
+</div>
