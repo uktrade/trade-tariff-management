@@ -1,4 +1,7 @@
 class MeasureAction < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: :action_code
   plugin :conformance_validator

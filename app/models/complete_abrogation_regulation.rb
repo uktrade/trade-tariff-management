@@ -1,4 +1,7 @@
 class CompleteAbrogationRegulation < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   set_primary_key [:complete_abrogation_regulation_id, :complete_abrogation_regulation_role]
 
   plugin :oplog, primary_key: [:complete_abrogation_regulation_id, :complete_abrogation_regulation_role]

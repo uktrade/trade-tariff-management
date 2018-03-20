@@ -1,5 +1,6 @@
 class AdditionalCodeDescription < Sequel::Model
   include Formatter
+  include ::XmlGeneration::BaseHelper
 
   plugin :time_machine
   plugin :oplog, primary_key: [:additional_code_description_period_sid, :additional_code_sid]

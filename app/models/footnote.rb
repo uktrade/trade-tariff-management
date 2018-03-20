@@ -1,4 +1,7 @@
 class Footnote < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: [:footnote_type_id, :footnote_id]
   plugin :conformance_validator
