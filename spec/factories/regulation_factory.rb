@@ -57,7 +57,7 @@ FactoryGirl.define do
     replaced_regulation_id    { generate(:sid) }
     measure_type_id           { generate(:sid) }
     geographical_area_id      { generate(:sid) }
-    chapter_heading           { Forgery(:basic).text }
+    chapter_heading           { Forgery(:basic).text(exactly: 3) }
   end
 
   factory :regulation_role_type do
