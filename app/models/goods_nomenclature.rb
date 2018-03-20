@@ -12,7 +12,11 @@ class GoodsNomenclature < Sequel::Model
   plugin :active_model
 
   plugin :sti, class_determinator: ->(record) {
-    gono_id = record[:goods_nomenclature_item_id].to_s
+    record.child_class_name
+  }
+
+  def child_class_name
+    gono_id = goods_nomenclature_item_id.to_s
 
     if gono_id.ends_with?('00000000')
       'Chapter'
@@ -23,7 +27,7 @@ class GoodsNomenclature < Sequel::Model
     else
       'GoodsNomenclature'
     end
-  }
+  end
 
   one_to_many :goods_nomenclature_indents, key: :goods_nomenclature_sid,
                                            primary_key: :goods_nomenclature_sid do |ds|
