@@ -1,4 +1,7 @@
 class FootnoteAssociationMeasure < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   set_primary_key [:measure_sid, :footnote_id, :footnote_type_id]
   plugin :oplog, primary_key: [:measure_sid,
                                :footnote_id,

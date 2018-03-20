@@ -104,6 +104,18 @@ FactoryGirl.define do
         FactoryGirl.create(:quota_order_number, quota_order_number_id: measure.ordernumber)
       }
     end
+
+    trait :xml do
+      export_refund_nomenclature_sid { generate(:sid) }
+      justification_regulation_role  { generate(:sid) }
+      justification_regulation_id    { 2 }
+      additional_code_id             { Forgery(:basic).text(exactly: 2) }
+      additional_code_sid            { generate(:sid) }
+      stopped_flag                   { 1 }
+      ordernumber                    { Forgery(:basic).text(exactly: 3) }
+      reduction_indicator            { 2 }
+      validity_end_date              { Date.today.ago(1.years) }
+    end
   end
 
   factory :measure_type do
@@ -149,11 +161,26 @@ FactoryGirl.define do
         description: evaluator.measure_type_description
       )
     }
+
+    trait :xml do
+      validity_end_date                 { Date.today.ago(1.years) }
+      trade_movement_code               { 1 }
+      priority_code                     { 5 }
+      measure_component_applicable_code { 0 }
+      origin_dest_code                  { 0 }
+      order_number_capture_code         { 2 }
+      measure_explosion_level           { 20 }
+      measure_type_series_id            { "P" }
+    end
   end
 
   factory :measure_type_description do
-    measure_type_id        { generate(:measure_type_id) }
-    description { Forgery(:basic).text }
+    measure_type_id { generate(:measure_type_id) }
+    description     { Forgery(:basic).text }
+
+    trait :xml do
+      language_id   { "EN" }
+    end
   end
 
   factory :measure_condition do

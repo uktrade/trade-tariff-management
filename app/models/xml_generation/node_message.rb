@@ -2,28 +2,59 @@ module XmlGeneration
   class NodeMessage
 
     MEASURE_RELATED = [
-      RegulationRoleType,
-      RegulationRoleTypeDescription,
       MeasureTypeSeries,
       MeasureTypeSeriesDescription,
       MeasureType,
       MeasureTypeDescription,
+      MeasureAction,
+      MeasureActionDescription,
+      Measure,
+      MeasureComponent,
+      MeasureConditionCode,
+      MeasureConditionCodeDescription,
+      MeasureCondition,
+      MeasureConditionComponent,
+      MeasurePartialTemporaryStop,
+      MeasureExcludedGeographicalArea
+    ]
+
+    ADDITIONAL_CODES = [
       AdditionalCodeType,
       AdditionalCodeTypeDescription,
       AdditionalCodeTypeMeasureType,
       AdditionalCode,
       AdditionalCodeDescription,
-      AdditionalCodeDescriptionPeriod,
-      MeasureAction,
-      MeasureActionDescription,
-      Measure,
+      AdditionalCodeDescriptionPeriod
+    ]
+
+    DUTY_EXPRESSIONS = [
       DutyExpression,
-      DutyExpressionDescription,
-      MeasureComponent,
-      MeasureConditionCode,
-      MeasureConditionCodeDescription,
-      MeasureCondition,
-      MeasureConditionComponent
+      DutyExpressionDescription
+    ]
+
+    REGULATIONS = [
+      RegulationRoleType,
+      RegulationRoleTypeDescription,
+      RegulationReplacement,
+      CompleteAbrogationRegulation,
+      ExplicitAbrogationRegulation,
+      FullTemporaryStopRegulation,
+      FtsRegulationAction,
+      ProrogationRegulation,
+      ProrogationRegulationAction
+    ]
+
+    FOOTNOTES = [
+      FootnoteType,
+      FootnoteTypeDescription,
+      Footnote,
+      FootnoteDescription,
+      FootnoteDescriptionPeriod,
+      FootnoteAssociationAdditionalCode,
+      FootnoteAssociationGoodsNomenclature,
+      FootnoteAssociationMeasure,
+      FootnoteAssociationMeursingHeading,
+      FootnoteAssociationErn
     ]
 
     SYSTEM = [
@@ -88,13 +119,26 @@ module XmlGeneration
       end
 
       def partial_folder_name
-        if MEASURE_RELATED.include?(record.class)
+        if it_is?(record, MEASURE_RELATED)
           :measures
-        elsif SYSTEM.include?(record.class)
+        elsif it_is?(record, ADDITIONAL_CODES)
+          :additional_codes
+        elsif it_is?(record, DUTY_EXPRESSIONS)
+          :duty_expressions
+        elsif it_is?(record, REGULATIONS)
+          :regulations
+        elsif it_is?(record, FOOTNOTES)
+          :footnotes
+        elsif it_is?(record, SYSTEM)
           :system
         else
           # TODO: add more types
         end
+      end
+
+      def it_is?(record, list)
+        list.map(&:to_s)
+            .include?(record.class.name)
       end
   end
 end

@@ -1,4 +1,7 @@
 class FtsRegulationAction < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:fts_regulation_id,
                                :fts_regulation_role,
                                :stopped_regulation_id,

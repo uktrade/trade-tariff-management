@@ -1,4 +1,7 @@
 class FootnoteAssociationErn < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:export_refund_nomenclature_sid,
                                :footnote_id,
                                :footnote_type,

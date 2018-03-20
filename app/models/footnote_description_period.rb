@@ -1,4 +1,7 @@
 class FootnoteDescriptionPeriod < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: [:footnote_id,
                                :footnote_type_id,

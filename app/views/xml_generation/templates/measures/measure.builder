@@ -72,6 +72,6 @@ xml.tag!("oub:measure") do |measure|
   end
 
   measure.tag!("oub:stopped.flag") do measure
-    xml_data_item(measure, "0")
+    xml_data_item(measure, self.stopped_flag)
   end
 end

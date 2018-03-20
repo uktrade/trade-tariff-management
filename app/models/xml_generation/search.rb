@@ -2,16 +2,49 @@ module XmlGeneration
   class Search
 
     SEQUENCE_OF_DATA_FETCH = [
+      MeasureTypeSeries,
+      MeasureTypeSeriesDescription,
       MeasureType,
       MeasureTypeDescription,
+      MeasureAction,
+      MeasureActionDescription,
       Measure,
-      DutyExpression,
-      DutyExpressionDescription,
       MeasureComponent,
       MeasureConditionCode,
       MeasureConditionCodeDescription,
       MeasureCondition,
       MeasureConditionComponent,
+
+      AdditionalCodeType,
+      AdditionalCodeTypeDescription,
+      AdditionalCodeTypeMeasureType,
+      AdditionalCode,
+      AdditionalCodeDescription,
+      AdditionalCodeDescriptionPeriod,
+
+      DutyExpression,
+      DutyExpressionDescription,
+
+      RegulationRoleType,
+      RegulationRoleTypeDescription,
+      RegulationReplacement,
+      CompleteAbrogationRegulation,
+      ExplicitAbrogationRegulation,
+      FullTemporaryStopRegulation,
+      FtsRegulationAction,
+      ProrogationRegulation,
+      ProrogationRegulationAction,
+
+      FootnoteType,
+      FootnoteTypeDescription,
+      Footnote,
+      FootnoteDescription,
+      FootnoteDescriptionPeriod,
+      FootnoteAssociationAdditionalCode,
+      FootnoteAssociationGoodsNomenclature,
+      FootnoteAssociationMeasure,
+      FootnoteAssociationMeursingHeading,
+
       TransmissionComment
     ]
 
