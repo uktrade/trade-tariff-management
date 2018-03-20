@@ -14,4 +14,12 @@ class QuotaOrderNumber < Sequel::Model
                                          key: :quota_order_number_sid
 
   delegate :present?, to: :quota_order_number_origin, prefix: true, allow_nil: true
+
+  def record_code
+    "360".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

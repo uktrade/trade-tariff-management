@@ -10,4 +10,12 @@ class QuotaExhaustionEvent < Sequel::Model
   def self.status
     'exhausted'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "15".freeze
+  end
 end

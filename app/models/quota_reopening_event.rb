@@ -10,6 +10,12 @@ class QuotaReopeningEvent < Sequel::Model
   def self.status
     'reopened'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "20".freeze
+  end
 end
-
-

@@ -10,6 +10,12 @@ class QuotaUnsuspensionEvent < Sequel::Model
   def self.status
     'unsuspended'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "25".freeze
+  end
 end
-
-

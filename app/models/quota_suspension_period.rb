@@ -9,4 +9,12 @@ class QuotaSuspensionPeriod < Sequel::Model
       order(Sequel.desc(:suspension_end_date)).first
     end
   end
+
+  def record_code
+    "370".freeze
+  end
+
+  def subrecord_code
+    "15".freeze
+  end
 end

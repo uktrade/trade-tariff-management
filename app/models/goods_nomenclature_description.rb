@@ -20,4 +20,12 @@ class GoodsNomenclatureDescription < Sequel::Model
   def to_s
     description
   end
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "15".freeze
+  end
 end

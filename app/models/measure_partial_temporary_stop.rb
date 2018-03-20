@@ -20,6 +20,12 @@ class MeasurePartialTemporaryStop < Sequel::Model
   def effective_start_date
     validity_start_date.to_date
   end
+
+  def record_code
+    "430".freeze
+  end
+
+  def subrecord_code
+    "25".freeze
+  end
 end
-
-

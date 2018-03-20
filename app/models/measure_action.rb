@@ -9,6 +9,12 @@ class MeasureAction < Sequel::Model
                                            primary_key: :action_code
 
   delegate :description, to: :measure_action_description
+
+  def record_code
+    "355".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-
