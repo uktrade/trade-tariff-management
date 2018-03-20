@@ -1,0 +1,35 @@
+script type="text/x-template" id="condition-template"
+  .row
+    .col-3
+      label
+        | Condition
+        span.form-hint
+          | You can optionally select conditions that will determine the customs treatment of the goods this measure applies to.
+      = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description" }
+    = content_tag :div, class: "col-3", "v-if" => "showReferencePrice" do
+      label
+        | Reference Price (£)
+        span.form-hint
+          | Specify the reference price (in £) at or above which this condition will apply.
+      input type="text"
+
+    = content_tag :div, class: "col-3", "v-if" => "showMinimumPrice" do
+      label
+        | Minimum Price (£)
+        span.form-hint
+          | Specify the price (in £) at or above which this condition will apply.
+      input type="text"
+
+    = content_tag :div, class: "col-3", "v-if" => "showAction" do
+      label
+        | Action
+        = content_tag :span, class: "form-hint", "v-if" => "certificateActionHint" do
+          | Define the action to take when the specified certificate (or no certificate) is presented.
+        = content_tag :span, class: "form-hint", "v-if" => "noCertificateActionHint" do
+          | Define the action to take if the condition is met.
+      = content_tag "custom-select"
+    = content_tag :div, class: "col-3", "v-if" => "showAction" do
+      label
+        | Action amount
+        span.form-hint
+      = content_tag "custom-select"

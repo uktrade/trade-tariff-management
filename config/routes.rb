@@ -19,5 +19,11 @@ Rails.application.routes.draw do
     resources :exports, only: [:index, :show, :create]
   end
 
+  resources :measures
+
+  resources :measure_types, only: [:index]
+  resources :measure_type_series, only: [:index]
+  resources :measure_condition_codes, only: [:index]
+
   root to: 'home#index'
 end

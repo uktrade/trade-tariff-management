@@ -1,0 +1,71 @@
+.selection {
+  display: block;
+  padding: 0.5em 0.2em !important;
+  padding-left: 3em !important;
+  position: relative !important;
+}
+
+.selection--strikethrough {
+  text-decoration: line-through;
+
+}
+
+.selectize-input .item {
+  white-space: nowrap !important;
+  max-width: 90% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.option-prefix {
+  display: inline-block;
+  width: 2.3em;
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+
+  .selection--strikethrough & {
+    position: relative;
+
+    &:after {
+      content: " ";
+      position: absolute;
+      top: calc(50% + 1px);
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: currentColor;
+    }
+  }
+}
+
+.option-prefix--type {
+
+}
+
+.origin-select {
+  width: 400px;
+  top: -5px;
+}
+
+.selectize-control {
+  font-size: 1.6rem;
+}
+
+.selectize-input {
+  border-radius: 0 !important;
+  border: 2px solid #000 !important;
+
+  &.focus {
+    box-shadow: none !important;
+    outline: 3px solid $focus-colour;
+  }
+
+  input {
+    line-height: 1 !important;
+    height: auto !important;
+    opacity: 1;
+    position: relative;
+    vertical-align: top;
+  }
+}

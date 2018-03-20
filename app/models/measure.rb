@@ -408,4 +408,16 @@ class Measure < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def self.max_per_page
+    25
+  end
+
+  def self.default_per_page
+    25
+  end
+
+  def self.max_pages
+    999
+  end
 end

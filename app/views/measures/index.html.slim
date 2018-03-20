@@ -1,0 +1,17 @@
+h2
+  | Measures
+
+= link_to "Create new measure", new_measure_path, class: "btn btn-primary"
+
+table.table
+  thead
+    tr
+      th
+        | Number
+  tbody
+    = @measures.each do |measure|
+      tr
+        td
+          = measure.goods_nomenclature_item_id
+
+/= paginate @measures

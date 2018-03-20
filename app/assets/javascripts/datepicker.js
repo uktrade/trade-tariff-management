@@ -8,4 +8,9 @@ $(document).ready(function(){
       $(input).datepicker("setDate", new Date());
     }
   });
+
+  $('.datepicker').datepicker({
+    format: 'yyyy/mm/dd',
+    autoclose: true
+  });
 })
