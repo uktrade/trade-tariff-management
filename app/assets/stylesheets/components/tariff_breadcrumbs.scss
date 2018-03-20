@@ -1,0 +1,115 @@
+.tariff-breadcrumbs {
+  position: relative;
+  padding: 1em;
+  margin: 0 0 30px 0;
+  background-color: $grey-4;
+  &::after {
+    content:"";
+    display:block;
+    clear:both;
+  }
+  nav {
+    @media (min-width: $desktop-min-width) {
+      margin-right: $breadcrumb-changes-link-width;
+    }
+    ul {
+      position: relative;
+      list-style: none;
+      padding-left: $breadcrumb-indent;
+      @media (min-width: $desktop-min-width) {
+        padding-left: $breadcrumb-indent-desktop;
+      }
+      li {
+        position: relative;
+        display: block;
+        line-height: 25px;
+        margin-top: 5px;
+        word-wrap: break-word;
+        &::before, &::after {
+          content: "";
+          position: absolute;
+          left: -12px;
+        }
+        &::before {
+          border-top: 1px solid #000;
+          top: 9px;
+          width: 8px;
+          height: 0;
+        }
+        &::after {
+          border-left: 1px solid #000;
+          height: 100%;
+          width: 0px;
+          top: 2px;
+        }
+        &:last-child::after {
+          height: 8px;
+        }
+        .chapter-code, .heading-code, .commodity-code {
+          float: left;
+          margin-right: $small-margin;
+        }
+        &.chapter-and-heading-li {
+          .chapter-code {
+            margin-right: 0;
+          }
+        }
+        &.commodity-li {
+          .chapter-code, .heading-code {
+            margin-right: 0;
+          }
+        }
+        ul.commodities {
+          padding-left: $breadcrumb-indent;
+          @media (min-width: $desktop-min-width) {
+            padding-left: $breadcrumb-indent-desktop;
+          }
+        }
+        h1 {
+          display: inline;
+        }
+      }
+    }
+
+    > ul {
+      padding-left: 0;
+
+      > li {
+        &:after,
+        &:before {
+          display: none;
+        }
+      }
+    }
+    @media (max-width: $mobile-max-width) {
+      .chapter-code ~ ul ul {
+        padding-left: 0;
+      }
+    }
+
+    .feed {
+      display: inline;
+      &::before {
+        content: '(';
+      }
+      &::after {
+        content: ')';
+      }
+      @media (min-width: $desktop-min-width) {
+        float: right;
+        margin-right: -$breadcrumb-changes-link-width;
+        &::before, &::after {
+          content: '';
+        }
+      }
+      a {
+        background: image-url('feed-icon-black') 0.2em 0.1em no-repeat;
+        padding-left: 20px;
+        @media (min-width: $desktop-min-width) {
+          background: image-url('feed-icon-black') 0.2em 0.2em no-repeat;
+          padding-left: 25px;
+        }
+      }
+    }
+  }
+}

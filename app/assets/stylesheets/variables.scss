@@ -1,0 +1,43 @@
+/* global variables */
+$desktop-min-width: 641px;
+$mobile-max-width: $desktop-min-width - 1;
+
+$standard-margin: 16px;
+$small-margin: $standard-margin / 2;
+
+$token-width: 27;
+$token-padding: 5;
+$token-space: $token-width + $token-padding; /* Uses above values */
+$top-level-padding: 10;
+
+$commodity-padding: $token-width;
+$expand-arrow-width: 11;
+$expand-arrow-space: 11 + $token-padding;
+
+$chapter-code-width: 30px;
+$chapter-code-height: 25px;
+$heading-code-width: $chapter-code-width;
+$commodity-code-width: 90px;
+$commodity-code-width-desktop: 90px;
+
+$breadcrumb-v-margin: 5px;
+$breadcrumb-indent: 15px;
+$breadcrumb-indent-desktop: 25px;
+$breadcrumb-changes-link-width: 70px;
+
+$identifier-width: $chapter-code-width + $heading-code-width + $commodity-code-width;
+$identifier-width-desktop: $chapter-code-width + $heading-code-width + $commodity-code-width-desktop;
+
+$table-row-standard-height: 1.31579em;
+$small-table-breakpoint: 840px;
+
+@function tint($color) {
+  @return mix($color, #fff, 25%);
+}
+
+$chapter-code-bg: tint($mauve);
+$heading-code-bg: tint($light-blue);
+$commodity-code-bg: tint($turquoise);
+$table-header-bg: #e1e8e8;
+$table-sub-border: tint($border-colour);
+

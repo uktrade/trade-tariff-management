@@ -407,6 +407,9 @@ $(document).ready(function() {
           measurement_unit_id: null,
           measurement_unit_qualifier_id: null
         });
+
+        this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
+        this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
       }
     },
     methods: {
@@ -428,6 +431,40 @@ $(document).ready(function() {
           measurement_unit_id: null,
           measurement_unit_qualifier_id: null
         });
+      },
+      fetchNomenclatureCode: function(url, length, code, description, type, description_field) {
+        var self = this;
+        if (this[code].trim().length === length) {
+          $.ajax({
+            url: url,
+            data: {
+              q: this[code].trim()
+            },
+            success: function(data) {
+
+              if (type === "json") {
+                if (data.length > 0) {
+                  self[description] = data[0][description_field];
+                  self.measure[code] = self[code].trim();
+                } else {
+                  self[description] = "";
+                  self.measure[code] = null;
+                }
+              } else {
+                self[description] = data;
+                self.measure[code] = self[code].trim();
+              }
+
+            },
+            error: function() {
+              self[description] = "";
+              self.measure[code] = null;
+            }
+          });
+        } else {
+          self[description] = "";
+          self.measure[code] = null;
+        }
       }
     },
     computed: {
@@ -452,60 +489,10 @@ $(document).ready(function() {
         }
       },
       goods_nomenclature_code: function() {
-        var self = this;
-
-        if (this.goods_nomenclature_code.trim().length === 10) {
-          $.ajax({
-            url: "/goods_nomenclatures",
-            data: {
-              q: this.goods_nomenclature_code.trim()
-            },
-            success: function(data) {
-              if (data.length > 0) {
-                self.goods_nomenclature_code_description = data[0].description;
-                self.measure.goods_nomenclature_code = data[0].goods_nomenclature_code;
-              } else {
-                self.goods_nomenclature_code_description = "";
-                self.measure.goods_nomenclature_code = null;
-              }
-            },
-            error: function() {
-              self.goods_nomenclature_code_description = "";
-              self.measure.goods_nomenclature_code = null;
-            }
-          });
-        } else {
-          self.goods_nomenclature_code_description = "";
-          self.measure.goods_nomenclature_code = null;
-        }
+        this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
       },
       additional_code: function() {
-        var self = this;
-
-        if (this.additional_code.trim().length === 4) {
-          $.ajax({
-            url: "/additional_codes",
-            data: {
-              q: this.additional_code.trim()
-            },
-            success: function(data) {
-              if (data.length > 0) {
-                self.additional_code_description = data[0].description;
-                self.measure.additional_code = data[0].additional_code;
-              } else {
-                self.additional_code_description = "";
-                self.measure.additional_code = null;
-              }
-            },
-            error: function() {
-              self.additional_code_description = "";
-              self.measure.additional_code = null;
-            }
-          });
-        } else {
-          self.additional_code_description = "";
-          self.measure.additional_code = null;
-        }
+        this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
       }
     }
   });

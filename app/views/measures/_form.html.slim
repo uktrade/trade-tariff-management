@@ -201,9 +201,9 @@
           input.form-control v-model="goods_nomenclature_code"
 
       label.form-label
-        span.form-hint v-html="goods_nomenclature_code_description" v-if="goods_nomenclature_code_description"
+        .after-field v-html="goods_nomenclature_code_description" v-if="goods_nomenclature_code_description"
 
-        span.form-hint v-else=""
+        span.form-hint.after-field v-else=""
           | Code description will appear here once you enter at least ten digits above.
     .form-group
       label.form-label
@@ -215,8 +215,8 @@
           input.form-control v-model="additional_code"
 
       label.form-label
-        span.form-hint v-html="additional_code_description" v-if="meursing_code_description"
+        .after-field v-html="additional_code_description" v-if="additional_code_description"
 
-        span.form-hint v-else=""
+        span.form-hint.after-field v-else=""
           | Code description will appear here once you enter an additional code above.
 

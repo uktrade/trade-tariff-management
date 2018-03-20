@@ -1,0 +1,39 @@
+.chapter-code, .heading-code, .commodity-code {
+  font-size: 14px;
+  display: inline-block;
+  position: relative;
+  height: 1.5625em;
+  @media (min-width: $desktop-min-width) {
+    font-size: 16px;
+  }
+  > .code-text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    text-align: center;
+  }
+}
+.chapter-code {
+  background-color: $chapter-code-bg;
+  width: $chapter-code-width;
+  height: $chapter-code-height;
+}
+.heading-code {
+  background-color: $heading-code-bg;
+  width: $heading-code-width;
+  height: $chapter-code-height;
+}
+.commodity-code {
+  background-color: $commodity-code-bg;
+  width: $commodity-code-width;
+  @media (min-width: $desktop-min-width) {
+    width: $commodity-code-width-desktop;
+  }
+  height: $chapter-code-height;
+
+  > .code-text {
+    position: relative;
+    width: 33.333%;
+  }
+}

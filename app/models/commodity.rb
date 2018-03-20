@@ -150,4 +150,48 @@ class Commodity < GoodsNomenclature
      .limit(TradeTariffBackend.change_count)
      .order(Sequel.desc(:operation_date, nulls: :last), Sequel.desc(:depth))
   end
+
+  def leaf?
+    children.none?
+  end
+
+  def has_children?
+    not(leaf?)
+  end
+
+  def display_short_code
+    code[4..-1]
+  end
+
+  def display_export_code
+    code[0..-3]
+  end
+
+  def chapter_code
+    code[0..1]
+  end
+
+  def heading_code
+    code[2..3]
+  end
+
+  def root
+    parent_sid.blank?
+  end
+
+  def children
+    if casted_by.present?
+      casted_by.commodities.select { |c| c.parent_sid == goods_nomenclature_sid }
+    else
+      []
+    end
+  end
+
+  def last_child?
+    if casted_by.present?
+      self.goods_nomenclature_sid == casted_by.commodities.select{|c| c.parent_sid == self.parent_sid }.last.goods_nomenclature_sid
+    else
+      false
+    end
+  end
 end

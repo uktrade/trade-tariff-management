@@ -29,6 +29,15 @@ class GoodsNomenclature < Sequel::Model
     end
   end
 
+  def sti_instance
+    if child_class_name == self.class.to_s
+      return self
+    else
+      klass = Object.const_get child_class_name
+      klass.find(goods_nomenclature_item_id: goods_nomenclature_item_id)
+    end
+  end
+
   one_to_many :goods_nomenclature_indents, key: :goods_nomenclature_sid,
                                            primary_key: :goods_nomenclature_sid do |ds|
     ds.with_actual(GoodsNomenclatureIndent, self)
