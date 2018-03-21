@@ -1,4 +1,9 @@
-h2 Goods Nomenclature - Demo (example) page
+h1.heading-large Welcome, #{current_user.name}
 
-= render "form"
-= render "table"
+h2.heading-small Measures
+
+div
+  h3.heading-small
+    = link_to new_measure_path do
+      = "Create new measure"
+	p.font-xsmall Create a single measures and assign to a regulation
