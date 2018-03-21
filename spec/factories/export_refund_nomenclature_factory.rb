@@ -20,6 +20,11 @@ FactoryGirl.define do
                                                                number_export_refund_nomenclature_indents: evaluator.indents)
       }
     end
+
+    trait :xml do
+      validity_end_date               { Date.today.ago(1.years) }
+      goods_nomenclature_sid          { generate(:sid) }
+    end
   end
 
   factory :export_refund_nomenclature_indent do
@@ -28,6 +33,14 @@ FactoryGirl.define do
     number_export_refund_nomenclature_indents { Forgery(:basic).number }
     validity_start_date { Date.today.ago(3.years) }
     validity_end_date   { nil }
+
+    trait :xml do
+      goods_nomenclature_item_id                 { Forgery(:basic).text(exactly: 2) }
+      additional_code_type                       { Forgery(:basic).text(exactly: 2) }
+      export_refund_code                         { Forgery(:basic).text(exactly: 2) }
+      productline_suffix                         { Forgery(:basic).text(exactly: 2) }
+      validity_end_date                          { Date.today.ago(1.years) }
+    end
   end
 
   factory :export_refund_nomenclature_description_period do
@@ -35,6 +48,14 @@ FactoryGirl.define do
     export_refund_nomenclature_description_period_sid { generate(:sid) }
     validity_start_date { Date.today.ago(3.years) }
     validity_end_date   { nil }
+
+    trait :xml do
+      goods_nomenclature_item_id                         { Forgery(:basic).text(exactly: 2) }
+      additional_code_type                               { Forgery(:basic).text(exactly: 2) }
+      export_refund_code                                 { Forgery(:basic).text(exactly: 2) }
+      productline_suffix                                 { Forgery(:basic).text(exactly: 2) }
+      validity_end_date                                  { Date.today.ago(1.years) }
+    end
   end
 
   factory :export_refund_nomenclature_description do
@@ -56,5 +77,13 @@ FactoryGirl.define do
                                                               validity_start_date: evaluator.valid_at,
                                                               validity_end_date: evaluator.valid_to)
     }
+
+    trait :xml do
+      language_id                                        { "EN" }
+      goods_nomenclature_item_id                         { Forgery(:basic).text(exactly: 2) }
+      additional_code_type                               { Forgery(:basic).text(exactly: 2) }
+      export_refund_code                                 { Forgery(:basic).text(exactly: 2) }
+      productline_suffix                                 { Forgery(:basic).text(exactly: 2) }
+    end
   end
 end

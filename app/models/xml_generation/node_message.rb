@@ -32,10 +32,22 @@ module XmlGeneration
       DutyExpressionDescription
     ]
 
+    CERTIFICATES = [
+      CertificateType,
+      CertificateTypeDescription,
+      Certificate,
+      CertificateDescription,
+      CertificateDescriptionPeriod
+    ]
+
     REGULATIONS = [
       RegulationRoleType,
       RegulationRoleTypeDescription,
       RegulationReplacement,
+      RegulationGroup,
+      RegulationGroupDescription,
+      BaseRegulation,
+      ModificationRegulation,
       CompleteAbrogationRegulation,
       ExplicitAbrogationRegulation,
       FullTemporaryStopRegulation,
@@ -57,7 +69,16 @@ module XmlGeneration
       FootnoteAssociationErn
     ]
 
+    EXPORT_REFUND_NOMENCLATURES = [
+      ExportRefundNomenclature,
+      ExportRefundNomenclatureDescription,
+      ExportRefundNomenclatureDescriptionPeriod,
+      ExportRefundNomenclatureIndent
+    ]
+
     SYSTEM = [
+      Language,
+      LanguageDescription,
       TransmissionComment
     ]
 
@@ -129,6 +150,10 @@ module XmlGeneration
           :regulations
         elsif it_is?(record, FOOTNOTES)
           :footnotes
+        elsif it_is?(record, EXPORT_REFUND_NOMENCLATURES)
+          :export_refund_nomenclatures
+        elsif it_is?(record, CERTIFICATES)
+          :certificates
         elsif it_is?(record, SYSTEM)
           :system
         else

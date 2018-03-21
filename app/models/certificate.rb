@@ -1,4 +1,7 @@
 class Certificate < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:certificate_code, :certificate_type_code]
   plugin :time_machine
   plugin :conformance_validator

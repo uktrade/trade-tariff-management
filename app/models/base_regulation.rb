@@ -1,4 +1,7 @@
 class BaseRegulation < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:base_regulation_id, :base_regulation_role]
   plugin :time_machine, period_start_column: :base_regulations__validity_start_date,
                         period_end_column: :effective_end_date

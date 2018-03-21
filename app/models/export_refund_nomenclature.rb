@@ -1,4 +1,7 @@
 class ExportRefundNomenclature < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine, period_start_column: :export_refund_nomenclatures__validity_start_date,
                         period_end_column:   :export_refund_nomenclatures__validity_end_date
   plugin :oplog, primary_key: :export_refund_nomenclature_sid
