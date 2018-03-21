@@ -1,4 +1,7 @@
 class ExportRefundNomenclatureDescriptionPeriod < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: [:export_refund_nomenclature_sid,
                                :export_refund_nomenclature_description_period_sid]

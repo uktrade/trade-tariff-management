@@ -25,9 +25,19 @@ module XmlGeneration
       DutyExpression,
       DutyExpressionDescription,
 
+      CertificateType,
+      CertificateTypeDescription,
+      Certificate,
+      CertificateDescription,
+      CertificateDescriptionPeriod,
+
       RegulationRoleType,
       RegulationRoleTypeDescription,
       RegulationReplacement,
+      RegulationGroup,
+      RegulationGroupDescription,
+      BaseRegulation,
+      ModificationRegulation,
       CompleteAbrogationRegulation,
       ExplicitAbrogationRegulation,
       FullTemporaryStopRegulation,
@@ -45,6 +55,13 @@ module XmlGeneration
       FootnoteAssociationMeasure,
       FootnoteAssociationMeursingHeading,
 
+      ExportRefundNomenclature,
+      ExportRefundNomenclatureDescription,
+      ExportRefundNomenclatureDescriptionPeriod,
+      ExportRefundNomenclatureIndent,
+
+      Language,
+      LanguageDescription,
       TransmissionComment
     ]
 

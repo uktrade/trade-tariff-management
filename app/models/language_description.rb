@@ -1,4 +1,7 @@
 class LanguageDescription < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:language_id, :language_code_id]
   plugin :conformance_validator
 
