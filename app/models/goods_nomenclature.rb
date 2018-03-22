@@ -1,6 +1,8 @@
 class GoodsNomenclature < Sequel::Model
   extend ActiveModel::Naming
 
+  include ::XmlGeneration::BaseHelper
+
   set_dataset order(Sequel.asc(:goods_nomenclatures__goods_nomenclature_item_id))
   set_primary_key [:goods_nomenclature_sid]
 

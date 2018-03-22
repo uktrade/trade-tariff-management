@@ -1,4 +1,7 @@
 class GoodsNomenclatureSuccessor < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:goods_nomenclature_sid,
                                :absorbed_goods_nomenclature_item_id,
                                :absorbed_productline_suffix,

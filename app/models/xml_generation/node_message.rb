@@ -1,6 +1,24 @@
 module XmlGeneration
   class NodeMessage
 
+    GEOGRAPHICAL_AREAS = [
+      GeographicalArea,
+      GeographicalAreaDescription,
+      GeographicalAreaDescriptionPeriod,
+      GeographicalAreaMembership
+    ]
+
+    GOODS_NOMENCLATURES = [
+      GoodsNomenclatureGroup,
+      GoodsNomenclatureGroupDescription,
+      GoodsNomenclature,
+      GoodsNomenclatureDescription,
+      GoodsNomenclatureDescriptionPeriod,
+      GoodsNomenclatureIndent,
+      GoodsNomenclatureOrigin,
+      GoodsNomenclatureSuccessor
+    ]
+
     MEASURE_RELATED = [
       MeasureTypeSeries,
       MeasureTypeSeriesDescription,
@@ -97,13 +115,11 @@ module XmlGeneration
     end
 
     def record_code
-      # TODO
-      rand(100..999)
+      record.record_code
     end
 
     def subrecord_code
-      # TODO
-      rand(10..99)
+      record.subrecord_code
     end
 
     def record_sequence_number
@@ -154,6 +170,10 @@ module XmlGeneration
           :export_refund_nomenclatures
         elsif it_is?(record, CERTIFICATES)
           :certificates
+        elsif it_is?(record, GEOGRAPHICAL_AREAS)
+          :geographical_areas
+        elsif it_is?(record, GOODS_NOMENCLATURES)
+          :goods_nomenclatures
         elsif it_is?(record, SYSTEM)
           :system
         else

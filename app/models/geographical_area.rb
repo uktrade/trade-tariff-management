@@ -1,4 +1,7 @@
 class GeographicalArea < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   COUNTRIES_CODES = ['0', '2'].freeze
   ERGA_OMNES = '1011'
 

@@ -1,4 +1,7 @@
 class GeographicalAreaDescriptionPeriod < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:geographical_area_description_period_sid,
                                :geographical_area_sid]
   plugin :conformance_validator

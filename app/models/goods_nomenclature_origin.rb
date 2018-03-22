@@ -1,4 +1,7 @@
 class GoodsNomenclatureOrigin < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:oid, :goods_nomenclature_sid, :derived_goods_nomenclature_item_id,
                    :derived_productline_suffix,
                    :goods_nomenclature_item_id, :productline_suffix]
