@@ -2,6 +2,20 @@ module XmlGeneration
   class Search
 
     SEQUENCE_OF_DATA_FETCH = [
+      GeographicalArea,
+      GeographicalAreaDescription,
+      GeographicalAreaDescriptionPeriod,
+      GeographicalAreaMembership,
+
+      GoodsNomenclatureGroup,
+      GoodsNomenclatureGroupDescription,
+      GoodsNomenclature,
+      GoodsNomenclatureDescription,
+      GoodsNomenclatureDescriptionPeriod,
+      GoodsNomenclatureIndent,
+      GoodsNomenclatureOrigin,
+      GoodsNomenclatureSuccessor,
+
       MeasureTypeSeries,
       MeasureTypeSeriesDescription,
       MeasureType,

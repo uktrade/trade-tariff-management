@@ -1,4 +1,7 @@
 class GoodsNomenclatureGroup < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:goods_nomenclature_group_id,
                                :goods_nomenclature_group_type]
   plugin :conformance_validator

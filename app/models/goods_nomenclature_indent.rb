@@ -1,4 +1,7 @@
 class GoodsNomenclatureIndent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   set_dataset order(Sequel.desc(:goods_nomenclature_indents__validity_end_date))
 
   plugin :oplog, primary_key: :goods_nomenclature_indent_sid

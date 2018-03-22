@@ -31,6 +31,12 @@ FactoryGirl.define do
     trait :with_description do
       # noop
     end
+
+    trait :xml do
+      parent_geographical_area_group_sid  { generate(:sid) }
+      validity_end_date                   { Date.today.ago(1.years) }
+      geographical_code                   { "0" }
+    end
   end
 
   factory :geographical_area_description_period do
@@ -39,6 +45,10 @@ FactoryGirl.define do
     geographical_area_id                     { Forgery(:basic).text(exactly: 3) }
     validity_start_date                      { Date.today.ago(2.years) }
     validity_end_date                        { nil }
+
+    trait :xml do
+      validity_end_date                         { Date.today.ago(1.years) }
+    end
   end
 
   factory :geographical_area_description do
@@ -50,7 +60,7 @@ FactoryGirl.define do
     geographical_area_description_period_sid { generate(:geographical_area_sid) }
     geographical_area_sid                    { generate(:geographical_area_sid) }
     geographical_area_id                     { Forgery(:basic).text(exactly: 3) }
-    description                            { Forgery(:lorem_ipsum).sentence }
+    description                              { Forgery(:lorem_ipsum).sentence }
 
     trait :with_period do
       after(:create) { |ga_description, evaluator|
@@ -61,6 +71,10 @@ FactoryGirl.define do
                                                                 validity_end_date: evaluator.valid_to)
       }
     end
+
+    trait :xml do
+      language_id                               { "EN" }
+    end
   end
 
   factory :geographical_area_membership do
@@ -68,5 +82,9 @@ FactoryGirl.define do
     geographical_area_group_sid              { generate(:geographical_area_sid) }
     validity_start_date                      { Date.today.ago(2.years) }
     validity_end_date                        { nil }
+
+    trait :xml do
+      validity_end_date                      { Date.today.ago(1.years) }
+    end
   end
 end
