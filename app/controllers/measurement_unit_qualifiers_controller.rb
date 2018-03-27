@@ -9,8 +9,7 @@ class MeasurementUnitQualifiersController < ApplicationController
 
       json << {
         measurement_unit_qualifier_code: qualifier.measurement_unit_qualifier_code,
-        description: qualifier.description,
-        abbreviation: qualifier.abbreviation
+        description: qualifier.description
       }
     end
 

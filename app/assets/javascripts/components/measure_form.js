@@ -201,6 +201,7 @@ $(document).ready(function() {
         valueField: this.valueField,
         labelField: this.labelField,
         searchField: [this.valueField, this.codeField, this.labelField],
+        sortField: this.codeField || this.labelField,
         onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
         onChange: function(){ this.$dropdown_content.removeHighlight(); }
       };
@@ -368,26 +369,45 @@ $(document).ready(function() {
     template: "#measure-component-template",
     props: ["measureComponent"],
     computed: {
-      showDutyAmountPercentage: function() {
+      showDutyAmountOrPercentage: function() {
+        var ids = ["01", "02", "04", "19", "20"];
 
+        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+      },
+      showDutyAmountPercentage: function() {
+        var ids = ["23"];
+
+        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
       },
       showDutyAmountNegativePercentage: function() {
+        var ids = ["36"];
 
+        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
       },
       showDutyAmountNumber: function() {
+        var ids = ["06", "07", "09", "11", "12", "13", "14", "21", "25", "27", "29", "31"];
 
+        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
       },
       showDutyAmountMinimum: function() {
+        var ids = ["15"];
 
+        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
       },
       showDutyAmountMaximum: function() {
+        var ids = ["17", "35"];
 
+        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
       },
       showDutyRefundAmount: function() {
+        var ids = ["40", "41", "42", "43", "44"];
 
+        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
       },
       showMeasurementUnit: function() {
+        var ids = ["23", "36", "37"];
 
+        return this.measureComponent.duty_expression_id && ids.indexOf(this.measureComponent.duty_expression_id) === -1;
       }
     }
   });
