@@ -1,4 +1,7 @@
 class MonetaryExchangePeriod < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:monetary_exchange_period_sid,
                                :parent_monetary_unit_code]
   plugin :conformance_validator

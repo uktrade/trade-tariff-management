@@ -1,4 +1,7 @@
 class QuotaExhaustionEvent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :quota_definition_sid
   plugin :conformance_validator
 

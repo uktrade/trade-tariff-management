@@ -8,6 +8,37 @@ module XmlGeneration
       GeographicalAreaMembership
     ]
 
+    MONETARY = [
+      MonetaryUnit,
+      MonetaryUnitDescription,
+      MonetaryExchangePeriod,
+      MonetaryExchangeRate
+    ]
+
+    MEASUREMENTS = [
+      MeasurementUnitQualifier,
+      MeasurementUnitQualifierDescription,
+      MeasurementUnit,
+      MeasurementUnitDescription,
+      Measurement
+    ]
+
+    QUOTA = [
+      QuotaOrderNumber,
+      QuotaOrderNumberOrigin,
+      QuotaOrderNumberOriginExclusion,
+      QuotaDefinition,
+      QuotaAssociation,
+      QuotaReopeningEvent,
+      QuotaUnsuspensionEvent,
+      QuotaUnblockingEvent,
+      QuotaBalanceEvent,
+      QuotaCriticalEvent,
+      QuotaExhaustionEvent,
+      QuotaSuspensionPeriod,
+      QuotaBlockingPeriod
+    ]
+
     GOODS_NOMENCLATURES = [
       GoodsNomenclatureGroup,
       GoodsNomenclatureGroupDescription,
@@ -16,7 +47,8 @@ module XmlGeneration
       GoodsNomenclatureDescriptionPeriod,
       GoodsNomenclatureIndent,
       GoodsNomenclatureOrigin,
-      GoodsNomenclatureSuccessor
+      GoodsNomenclatureSuccessor,
+      NomenclatureGroupMembership
     ]
 
     MEASURE_RELATED = [
@@ -43,6 +75,15 @@ module XmlGeneration
       AdditionalCode,
       AdditionalCodeDescription,
       AdditionalCodeDescriptionPeriod
+    ]
+
+    MEURSING = [
+      MeursingAdditionalCode,
+      MeursingTablePlan,
+      MeursingTableCellComponent,
+      MeursingHeading,
+      MeursingHeadingText,
+      MeursingSubheading
     ]
 
     DUTY_EXPRESSIONS = [
@@ -97,7 +138,8 @@ module XmlGeneration
     SYSTEM = [
       Language,
       LanguageDescription,
-      TransmissionComment
+      TransmissionComment,
+      PublicationSigle
     ]
 
     attr_accessor :record
@@ -174,6 +216,14 @@ module XmlGeneration
           :geographical_areas
         elsif it_is?(record, GOODS_NOMENCLATURES)
           :goods_nomenclatures
+        elsif it_is?(record, MEASUREMENTS)
+          :measurements
+        elsif it_is?(record, MEURSING)
+          :meursing
+        elsif it_is?(record, MONETARY)
+          :monetary
+        elsif it_is?(record, QUOTA)
+          :quota
         elsif it_is?(record, SYSTEM)
           :system
         else

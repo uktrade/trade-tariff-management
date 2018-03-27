@@ -1,4 +1,7 @@
 class MeursingTableCellComponent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:meursing_table_plan_id,
                                :heading_number,
                                :row_column_code,
