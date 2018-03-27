@@ -3,6 +3,8 @@
 = render "shared/vue_templates/selectize"
 = render "shared/vue_templates/quota_period"
 = render "shared/vue_templates/date_select"
+= render "shared/vue_templates/measure_component"
+= render "shared/vue_templates/footnote"
 
 = simple_form_for @form, url: measures_path, html: { class: "measure-form", data: { measure: @form.measure.to_json, measure_condition_attributes: @form.measure.measure_conditions.to_json } } do |f|
 
@@ -220,3 +222,30 @@
         span.form-hint.after-field v-else=""
           | Code description will appear here once you enter an additional code above.
 
+  fieldset
+    h3.heading-medium
+      | Specify duties
+
+    .measure-components
+      div.measure-component v-for="(measureComponent, index) in measure.measure_components"
+        = content_tag "measure-component", "", { ":measure-component" => "measureComponent", ":index" => "index" }
+
+    p
+      a href="#" v-on:click.prevent="addMeasureComponent"
+        | Add another duty expression
+
+  fieldset
+    h3.heading-medium
+      | Add footnotes
+
+    .footnotes
+      div.footnote v-for="(footnote, index) in measure.footnotes"
+        = content_tag "foot-note", "", { ":footnote" => "footnote", ":index" => "index" }
+
+    p
+      a href="#" v-on:click.prevent="addFootnote"
+        | Add another footnote
+
+
+  .form-actions
+    = f.button :submit, "Create measure", class: "button"

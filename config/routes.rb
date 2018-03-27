@@ -26,6 +26,11 @@ Rails.application.routes.draw do
   resources :measure_condition_codes, only: [:index]
   resources :goods_nomenclatures, only: [:index]
   resources :additional_codes, only: [:index]
+  resources :duty_expressions, only: [:index]
+  resources :measurement_units, only: [:index]
+  resources :measurement_unit_qualifiers, only: [:index]
+  resources :footnote_types, only: [:index]
+  resources :footnotes, only: [:index]
 
   root to: 'home#index'
 end

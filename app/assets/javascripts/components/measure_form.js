@@ -1,6 +1,21 @@
 //= require vue
 //= require vue-resource
 
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+};
+
 function Origin(el) {
   this.choice = el;
   this.select = el.find("select");
@@ -181,9 +196,11 @@ $(document).ready(function() {
 
       var options = {
         create: false,
+        items: [this.value],
         placeholder: this.placeholder,
         valueField: this.valueField,
         labelField: this.labelField,
+        searchField: [this.valueField, this.codeField, this.labelField],
         onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
         onChange: function(){ this.$dropdown_content.removeHighlight(); }
       };
@@ -197,9 +214,16 @@ $(document).ready(function() {
           var self = this;
           var fn = self.settings.load;
           self.load(function(callback) {
-              fn.apply(self, ["", callback]);
+            fn.apply(self, ["", callback]);
           });
-        }
+        };
+
+        options.onLoad = function(data) {
+          if (vm.url && !vm.minLength && vm.value && !vm.firstLoadSelected) {
+            $(vm.$el)[0].selectize.setValue(vm.value.toString());
+            vm.firstLoadSelected = true;
+          }
+        };
       }
 
       if (this.url) {
@@ -340,6 +364,91 @@ $(document).ready(function() {
     }
   });
 
+  Vue.component("measure-component", {
+    template: "#measure-component-template",
+    props: ["measureComponent"],
+    computed: {
+      showDutyAmountPercentage: function() {
+
+      },
+      showDutyAmountNegativePercentage: function() {
+
+      },
+      showDutyAmountNumber: function() {
+
+      },
+      showDutyAmountMinimum: function() {
+
+      },
+      showDutyAmountMaximum: function() {
+
+      },
+      showDutyRefundAmount: function() {
+
+      },
+      showMeasurementUnit: function() {
+
+      }
+    }
+  });
+
+  Vue.component("foot-note", {
+    template: "#footnote-template",
+    props: ["footnote"],
+    data: function() {
+      return {
+        suggestions: [],
+        lastSuggestionUsed: null
+      };
+    },
+    computed: {
+      hasSuggestions: function() {
+        return this.suggestions.length > 0;
+      }
+    },
+    mounted: function() {
+      this.fetchSuggestions = debounce(this.fetchSuggestions.bind(this), 100, false);
+    },
+    methods: {
+      fetchSuggestions: function() {
+        var self = this;
+        var type_id = this.footnote.footnote_type_id;
+        var description =  this.footnote.description.trim();
+
+        this.suggestions.splice(0, 999);
+
+        if (description.length < 1) {
+          return;
+        }
+
+        $.ajax({
+          url: "/footnotes",
+          data: {
+            footnote_type_id: type_id,
+            description: description
+          },
+          success: function(data) {
+            self.suggestions = data;
+          }
+        });
+      },
+      useSuggestion: function(suggestion) {
+        this.lastSuggestionUsed  = suggestion;
+        this.footnote.description = suggestion.description;
+        this.suggestions.splice(0, 999);
+      }
+    },
+    watch: {
+      "footnote.description": function(newVal, oldVal) {
+        if (this.lastSuggestionUsed && newVal === this.lastSuggestionUsed.description) {
+          return;
+        }
+
+        this.fetchSuggestions();
+      }
+    }
+  });
+
   Vue.component('measure-condition', {
     template: "#condition-template",
     props: ["condition"],
@@ -389,6 +498,8 @@ $(document).ready(function() {
         measure: {
           conditions: [],
           quota_periods: [],
+          measure_components: [],
+          footnotes: []
         },
         id: null,
         goods_nomenclature_code: "",
@@ -407,10 +518,27 @@ $(document).ready(function() {
           measurement_unit_id: null,
           measurement_unit_qualifier_id: null
         });
-
-        this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
-        this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
       }
+
+      if (this.measure.footnotes.length === 0) {
+        this.measure.footnotes.push({
+          footnote_type_id: null,
+          footnote_id: null,
+          text: null
+        });
+      }
+
+      if (this.measure.measure_components.length === 0) {
+        this.measure.measure_components.push({
+          duty_expression_id: null,
+          amount: null,
+          measurement_unit_code: null,
+          measurement_unit_qualifier_code: null
+        });
+      }
+
+      this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
+      this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
     },
     methods: {
       addCondition: function() {
@@ -430,6 +558,21 @@ $(document).ready(function() {
           end_date: null,
           measurement_unit_id: null,
           measurement_unit_qualifier_id: null
+        });
+      },
+      addMeasureComponent: function() {
+        this.measure.measure_components.push({
+          duty_expression_id: null,
+          amount: null,
+          measurement_unit_code: null,
+          measurement_unit_qualifier_code: null
+        });
+      },
+      addFootnote: function() {
+        this.measure.footnotes.push({
+          footnote_type_id: null,
+          footnote_id: null,
+          text: null
         });
       },
       fetchNomenclatureCode: function(url, length, code, description, type, description_field) {

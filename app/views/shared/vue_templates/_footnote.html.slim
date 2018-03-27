@@ -1,0 +1,36 @@
+script type="text/x-template" id="footnote-template"
+  div
+    .form-group
+      label.form-label
+        | Footnote type
+      .row
+        .col-md-5
+          = content_tag "custom-select", "", { url: "/footnote_types", "label-field" => "description", "value-field" => "footnote_type_id", "code-field" => "footnote_type_id", "v-model" => "footnote.footnote_type_id", "placeholder" => "― select the footnote type to use ―" }
+    div v-if="footnote.footnote_type_id"
+      .row
+        .col-md-8
+          .form-group
+            label.form-label
+              | Footnote
+              span.form-hint
+                | Start typing your footnote in the field below. Matching or similar footnotes (within the type selected above) will be listed below - select one to re-use it, or continue typing to create a new one.
+
+            textarea.form-control v-model="footnote.description" rows="5"
+
+      .form-group v-if="hasSuggestions"
+        .row
+          .col-md-8
+            label.form-label
+              span.form-hint
+                | If you choose to use one of the following existing footnotes, its text will be copied into the field above. Optionally you can then edit the text - this will create a new footnote. If you leave the text unchanged, the existing footnote will be referenced.
+
+            .footnote-suggestions
+              .footnote-suggestion v-for="suggestion in suggestions"
+                p
+                  | ID:&nbsp;
+                  span v-html="suggestion.footnote_id"
+                  |&nbsp;
+                  a href="#" v-on:click.prevent="useSuggestion(suggestion)"
+                    | Use this
+
+                p v-html="suggestion.description"

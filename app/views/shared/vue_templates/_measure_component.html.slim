@@ -1,0 +1,58 @@
+script type="text/x-template" id="measure-component-template"
+  .row
+    .col-md-3
+      .form-group
+        label.form-label
+          | Duty expression
+          span.form-hint
+            | Select the required duty expression. You will then be shown further fields according to the expression selected. You can add further duties via the 'add another' link.
+        = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_id", "v-model" => "measureComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―" }
+
+    .col-md-3 v-if="showDutyAmountPercentage"
+      .form-group
+        label.form-label
+          | Duty amount (%)
+        input.form-control v-model="measureComponent.amount"
+
+    .col-md-3 v-if="showDutyAmountNegativePercentage"
+      .form-group
+        label.form-label
+          | Duty amount (-%)
+        input.form-control v-model="measureComponent.amount"
+
+    .col-md-3 v-if="showDutyAmountNumber"
+      .form-group
+        label.form-label
+          | Duty amount (£)
+        input.form-control v-model="measureComponent.amount"
+
+    .col-md-3 v-if="showDutyAmountMinimum"
+      .form-group
+        label.form-label
+          | Duty amount (at least £)
+        input.form-control v-model="measureComponent.amount"
+
+    .col-md-3 v-if="showDutyAmountMaximum"
+      .form-group
+        label.form-label
+          | Duty amount (not more than £)
+        input.form-control v-model="measureComponent.amount"
+
+    .col-md-3 v-if="showDutyRefundAmount"
+      .form-group
+        label.form-label
+          | Refund amount (£)
+        input.form-control v-model="measureComponent.amount"
+
+    .col-md-3 v-if="showMeasurementUnit"
+      .form-group
+        label.form-label
+          | Measurement unit
+        = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measureComponent.measurement_unit_code", "v-model" => "measurement_unit_code", "placeholder" => "― select the duty expression to use ―" }
+
+    .col-md-3 v-if="showMeasurementUnit"
+      .form-group
+        label.form-label
+          | Measurement unit qualifier
+        = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measureComponent.measurement_unit_qualifier_code", "v-model" => "measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―" }
+
