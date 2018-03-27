@@ -1,4 +1,6 @@
 class QuotaOrderNumber < Sequel::Model
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: :quota_definition_sid
   plugin :conformance_validator
@@ -14,4 +16,12 @@ class QuotaOrderNumber < Sequel::Model
                                          key: :quota_order_number_sid
 
   delegate :present?, to: :quota_order_number_origin, prefix: true, allow_nil: true
+
+  def record_code
+    "360".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

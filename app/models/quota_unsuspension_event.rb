@@ -1,4 +1,7 @@
 class QuotaUnsuspensionEvent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :quota_definition_sid
   plugin :conformance_validator
 
@@ -10,6 +13,12 @@ class QuotaUnsuspensionEvent < Sequel::Model
   def self.status
     'unsuspended'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "25".freeze
+  end
 end
-
-

@@ -1,4 +1,7 @@
 class GoodsNomenclatureOrigin < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:oid, :goods_nomenclature_sid, :derived_goods_nomenclature_item_id,
                    :derived_productline_suffix,
                    :goods_nomenclature_item_id, :productline_suffix]
@@ -9,6 +12,12 @@ class GoodsNomenclatureOrigin < Sequel::Model
                    :goods_nomenclature_item_id, :productline_suffix]
 
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "35".freeze
+  end
 end
-
-

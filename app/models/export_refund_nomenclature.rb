@@ -1,4 +1,7 @@
 class ExportRefundNomenclature < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine, period_start_column: :export_refund_nomenclatures__validity_start_date,
                         period_end_column:   :export_refund_nomenclatures__validity_end_date
   plugin :oplog, primary_key: :export_refund_nomenclature_sid
@@ -74,5 +77,13 @@ class ExportRefundNomenclature < Sequel::Model
 
   def heading_id
     "#{goods_nomenclature_item_id.first(4)}______"
+  end
+
+  def record_code
+    "410".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
   end
 end

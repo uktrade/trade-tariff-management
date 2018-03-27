@@ -1,4 +1,7 @@
 class MeasureAction < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: :action_code
   plugin :conformance_validator
@@ -9,6 +12,12 @@ class MeasureAction < Sequel::Model
                                            primary_key: :action_code
 
   delegate :description, to: :measure_action_description
+
+  def record_code
+    "355".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end
-
-

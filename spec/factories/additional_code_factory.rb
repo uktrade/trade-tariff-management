@@ -15,6 +15,10 @@ FactoryGirl.define do
         FactoryGirl.create(:export_refund_nomenclature, export_refund_code: adco.additional_code)
       }
     end
+
+    trait :xml do
+      validity_end_date                    { Date.today.ago(1.years) }
+    end
   end
 
   factory :additional_code_description_period do
@@ -24,6 +28,10 @@ FactoryGirl.define do
     additional_code                        { Forgery(:basic).text(exactly: 3) }
     validity_start_date                    { Date.today.ago(2.years) }
     validity_end_date                      { nil }
+
+    trait :xml do
+      validity_end_date                    { Date.today.ago(1.years) }
+    end
   end
 
   factory :additional_code_description do
@@ -47,6 +55,10 @@ FactoryGirl.define do
                                                                 validity_start_date: evaluator.valid_at,
                                                                 validity_end_date: evaluator.valid_to)
       }
+    end
+
+    trait :xml do
+      language_id                          { "EN" }
     end
   end
 
@@ -79,6 +91,19 @@ FactoryGirl.define do
         create(:meursing_table_plan, meursing_table_plan_id: adco_type.meursing_table_plan_id)
       }
     end
+
+    trait :xml do
+      validity_end_date     { Date.today.ago(1.years) }
+    end
+  end
+
+  factory :additional_code_type_description do
+    additional_code_type_id                { Forgery(:basic).text(exactly: 1) }
+    description                            { Forgery(:lorem_ipsum).sentence }
+
+    trait :xml do
+      language_id                          { "EN" }
+    end
   end
 
   factory :meursing_additional_code do
@@ -86,6 +111,10 @@ FactoryGirl.define do
     additional_code         { Forgery(:basic).text(exactly: 3) }
     validity_start_date     { Date.today.ago(2.years) }
     validity_end_date       { nil }
+
+    trait :xml do
+      validity_end_date     { Date.today.ago(1.years) }
+    end
   end
 
   factory :additional_code_type_measure_type do |f|
@@ -96,5 +125,9 @@ FactoryGirl.define do
 
     f.measure_type         { create :measure_type, measure_type_id: measure_type_id }
     f.additional_code_type { create :additional_code_type, additional_code_type_id: additional_code_type_id }
+
+    trait :xml do
+      validity_end_date       { Date.today.ago(1.years) }
+    end
   end
 end

@@ -1,4 +1,7 @@
 class QuotaUnblockingEvent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:oid, :quota_definition_sid]
   plugin :conformance_validator
 
@@ -7,6 +10,12 @@ class QuotaUnblockingEvent < Sequel::Model
   def self.status
     'unblocked'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end
-
-

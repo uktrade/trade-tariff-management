@@ -1,4 +1,7 @@
 class FootnoteAssociationMeursingHeading < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:measure_sid,
                                :footnote_id,
                                :meursing_table_plan_id]

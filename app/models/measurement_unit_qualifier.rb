@@ -1,4 +1,7 @@
 class MeasurementUnitQualifier < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: :measurement_unit_qualifier_code
   plugin :conformance_validator

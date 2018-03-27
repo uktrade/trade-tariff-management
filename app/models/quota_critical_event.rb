@@ -1,4 +1,7 @@
 class QuotaCriticalEvent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:quota_definition_sid, :occurrence_timestamp]
   plugin :conformance_validator
 
@@ -10,6 +13,12 @@ class QuotaCriticalEvent < Sequel::Model
   def self.status
     'critical'
   end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "10".freeze
+  end
 end
-
-

@@ -1,4 +1,7 @@
 class PublicationSigle < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: [:oid, :code, :code_type_id]
   plugin :conformance_validator

@@ -401,6 +401,14 @@ class Measure < Sequel::Model
      .order(Sequel.desc(:operation_date, nulls: :last))
   end
 
+  def record_code
+    "430".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
+
   def self.max_per_page
     25
   end
