@@ -1,4 +1,4 @@
-xml.tag!("measure.condition.code.description") do |measure_condition_code_description|
+xml.tag!("oub:measure.condition.code.description") do |measure_condition_code_description|
   measure_condition_code_description.tag!("oub:condition.code") do measure_condition_code_description
     xml_data_item(measure_condition_code_description, self.condition_code)
   end

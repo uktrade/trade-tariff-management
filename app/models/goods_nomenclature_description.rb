@@ -1,5 +1,6 @@
 class GoodsNomenclatureDescription < Sequel::Model
   include Formatter
+  include ::XmlGeneration::BaseHelper
 
   plugin :time_machine
   plugin :oplog, primary_key: [:goods_nomenclature_sid,
@@ -19,5 +20,13 @@ class GoodsNomenclatureDescription < Sequel::Model
 
   def to_s
     description
+  end
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "15".freeze
   end
 end

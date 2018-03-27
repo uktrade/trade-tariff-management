@@ -1,4 +1,7 @@
 class QuotaExhaustionEvent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :quota_definition_sid
   plugin :conformance_validator
 
@@ -9,5 +12,13 @@ class QuotaExhaustionEvent < Sequel::Model
 
   def self.status
     'exhausted'
+  end
+
+  def record_code
+    "375".freeze
+  end
+
+  def subrecord_code
+    "15".freeze
   end
 end

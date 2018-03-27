@@ -1,4 +1,7 @@
 class MeasureExcludedGeographicalArea < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:measure_sid, :geographical_area_sid]
   plugin :conformance_validator
 
@@ -9,4 +12,12 @@ class MeasureExcludedGeographicalArea < Sequel::Model
 
   one_to_one :geographical_area, key: :geographical_area_sid,
                        primary_key: :geographical_area_sid
+
+  def record_code
+    "430".freeze
+  end
+
+  def subrecord_code
+    "15".freeze
+  end
 end

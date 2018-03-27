@@ -41,14 +41,22 @@ FactoryGirl.define do
     trait :non_national do
       national { false }
     end
+
+    trait :xml do
+      validity_end_date     { Date.today.ago(1.years) }
+    end
   end
 
   factory :footnote_description_period do
     footnote_description_period_sid { generate(:footnote_sid) }
-    footnote_id      { Forgery(:basic).text(exactly: 3) }
-    footnote_type_id { Forgery(:basic).text(exactly: 2) }
-    validity_start_date                    { Date.today.ago(2.years) }
-    validity_end_date                      { nil }
+    footnote_id                     { Forgery(:basic).text(exactly: 3) }
+    footnote_type_id                { Forgery(:basic).text(exactly: 2) }
+    validity_start_date             { Date.today.ago(2.years) }
+    validity_end_date               { nil }
+
+    trait :xml do
+      validity_end_date             { Date.today.ago(1.years) }
+    end
   end
 
   factory :footnote_description do
@@ -71,6 +79,10 @@ FactoryGirl.define do
                                                                 validity_end_date: evaluator.valid_to)
       }
     end
+
+    trait :xml do
+      language_id                   { "EN" }
+    end
   end
 
   factory :footnote_association_goods_nomenclature do
@@ -79,6 +91,12 @@ FactoryGirl.define do
     footnote_type                   { Forgery(:basic).text(exactly: 2) }
     validity_start_date             { Date.today.ago(3.years) }
     validity_end_date               { nil }
+
+    trait :xml do
+      goods_nomenclature_item_id    "0406909200"
+      productline_suffix            "80"
+      validity_end_date             { Date.today.ago(1.years) }
+    end
   end
 
   factory :footnote_association_ern do
@@ -87,6 +105,14 @@ FactoryGirl.define do
     footnote_type                   { Forgery(:basic).text(exactly: 2) }
     validity_start_date             { Date.today.ago(2.years) }
     validity_end_date               { nil }
+
+    trait :xml do
+      goods_nomenclature_item_id    "0406909200"
+      additional_code_type          "9"
+      export_refund_code            "500"
+      productline_suffix            "80"
+      validity_end_date             { Date.today.ago(1.years) }
+    end
   end
 
   factory :footnote_association_measure do
@@ -101,6 +127,12 @@ FactoryGirl.define do
     footnote_type_id                { Forgery(:basic).text(exactly: 2) }
     validity_start_date             { Date.today.ago(2.years) }
     validity_end_date               { nil }
+
+    trait :xml do
+      additional_code_type_id       "F"
+      additional_code               "397"
+      validity_end_date             { Date.today.ago(1.years) }
+    end
   end
 
   factory :footnote_association_meursing_heading do
@@ -110,11 +142,30 @@ FactoryGirl.define do
     footnote_type                   { Forgery(:basic).text(exactly: 2) }
     validity_start_date             { Date.today.ago(2.years) }
     validity_end_date               { nil }
+
+    trait :xml do
+      row_column_code               0
+      validity_end_date             { Date.today.ago(1.years) }
+    end
   end
 
   factory :footnote_type do
-    footnote_type_id { Forgery(:basic).text(exactly: 2) }
+    footnote_type_id    { Forgery(:basic).text(exactly: 2) }
     validity_start_date { Date.today.ago(2.years) }
     validity_end_date   { nil }
+
+    trait :xml do
+      application_code  4
+      validity_end_date { Date.today.ago(1.years) }
+    end
+  end
+
+  factory :footnote_type_description do
+    footnote_type_id                { Forgery(:basic).text(exactly: 2) }
+    description                     { Forgery(:lorem_ipsum).sentence }
+
+    trait :xml do
+      language_id                   { "EN" }
+    end
   end
 end

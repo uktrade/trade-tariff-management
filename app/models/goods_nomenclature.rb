@@ -160,4 +160,12 @@ class GoodsNomenclature < Sequel::Model
   def good_nomenclature?
     !(chapter? || heading? || commodity?)
   end
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "00".freeze
+  end
 end

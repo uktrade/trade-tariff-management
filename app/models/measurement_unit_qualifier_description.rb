@@ -1,5 +1,6 @@
 class MeasurementUnitQualifierDescription < Sequel::Model
   include Formatter
+  include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :measurement_unit_qualifier_code
   plugin :conformance_validator

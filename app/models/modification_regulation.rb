@@ -1,4 +1,7 @@
 class ModificationRegulation < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:modification_regulation_id,
                                :modification_regulation_role]
   plugin :time_machine, period_start_column: :modification_regulations__validity_start_date,

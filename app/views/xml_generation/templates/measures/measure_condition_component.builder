@@ -1,4 +1,4 @@
-xml.tag!("measure.condition.component") do |measure_condition_component|
+xml.tag!("oub:measure.condition.component") do |measure_condition_component|
   measure_condition_component.tag!("oub:measure.condition.sid") do measure_condition_component
     xml_data_item(measure_condition_component, self.measure_condition_sid)
   end

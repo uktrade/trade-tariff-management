@@ -1,4 +1,7 @@
 class GoodsNomenclatureSuccessor < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:goods_nomenclature_sid,
                                :absorbed_goods_nomenclature_item_id,
                                :absorbed_productline_suffix,
@@ -16,6 +19,12 @@ class GoodsNomenclatureSuccessor < Sequel::Model
                                            key: [:absorbed_goods_nomenclature_item_id,
                                                          :absorbed_productline_suffix],
                                            class: 'GoodsNomenclature'
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "40".freeze
+  end
 end
-
-

@@ -10,6 +10,11 @@ FactoryGirl.define do
     certificate_code      { Forgery(:basic).text(exactly: 3) }
     validity_start_date   { Date.today.ago(2.years) }
     validity_end_date     { nil }
+
+    trait :xml do
+      validity_end_date      { Date.today.ago(1.years) }
+      national_abbrev        { Forgery(:basic).text(exactly: 2) }
+    end
   end
 
   factory :certificate_description_period do
@@ -18,6 +23,10 @@ FactoryGirl.define do
     certificate_code                   { Forgery(:basic).text(exactly: 3) }
     validity_start_date                { Date.today.ago(2.years) }
     validity_end_date                  { nil }
+
+    trait :xml do
+      validity_end_date                   { Date.today.ago(1.years) }
+    end
   end
 
   factory :certificate_description do
@@ -40,6 +49,10 @@ FactoryGirl.define do
                                                             validity_end_date: evaluator.valid_to)
       }
     end
+
+    trait :xml do
+      language_id                      { "EN" }
+    end
   end
 
   factory :certificate_type do
@@ -58,10 +71,18 @@ FactoryGirl.define do
                            description: evaluator.description)
       }
     end
+
+    trait :xml do
+      validity_end_date      { Date.today.ago(1.years) }
+    end
   end
 
   factory :certificate_type_description do
     certificate_type_code { Forgery(:basic).text(exactly: 1) }
     description           { Forgery(:basic).text }
+
+    trait :xml do
+      language_id         { "EN" }
+    end
   end
 end

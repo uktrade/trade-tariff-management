@@ -8,6 +8,14 @@ class TransmissionComment < Sequel::Model
   set_primary_key [:comment_sid, :language_id]
 
   many_to_one :language
+
+  def record_code
+    "01".freeze
+  end
+
+  def subrecord_code
+    "000".freeze
+  end
 end
 
 

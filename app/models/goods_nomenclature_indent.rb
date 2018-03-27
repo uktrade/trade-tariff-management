@@ -1,4 +1,7 @@
 class GoodsNomenclatureIndent < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   set_dataset order(Sequel.desc(:goods_nomenclature_indents__validity_end_date))
 
   plugin :oplog, primary_key: :goods_nomenclature_indent_sid
@@ -7,6 +10,12 @@ class GoodsNomenclatureIndent < Sequel::Model
   plugin :conformance_validator
 
   set_primary_key [:goods_nomenclature_indent_sid]
+
+  def record_code
+    "400".freeze
+  end
+
+  def subrecord_code
+    "05".freeze
+  end
 end
-
-

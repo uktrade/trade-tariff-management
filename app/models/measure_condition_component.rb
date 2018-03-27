@@ -48,4 +48,12 @@ class MeasureConditionComponent < Sequel::Model
       measurement_unit_qualifier: measurement_unit_qualifier
     })
   end
+
+  def record_code
+    "430".freeze
+  end
+
+  def subrecord_code
+    "11".freeze
+  end
 end

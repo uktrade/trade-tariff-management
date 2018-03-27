@@ -1,4 +1,7 @@
 class MeasurementUnitDescription < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :measurement_unit_code
   plugin :conformance_validator
 

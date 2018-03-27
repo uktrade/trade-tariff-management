@@ -1,4 +1,7 @@
 class AdditionalCode < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :time_machine
   plugin :oplog, primary_key: :additional_code_sid
   plugin :conformance_validator

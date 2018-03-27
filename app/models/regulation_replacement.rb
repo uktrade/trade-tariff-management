@@ -1,4 +1,7 @@
 class RegulationReplacement < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:replacing_regulation_id,
                                :replacing_regulation_role,
                                :replaced_regulation_id,
