@@ -496,6 +496,7 @@ $(document).ready(function() {
     data: function() {
       return {
         measure: {
+          regulation_id: null,
           measure_type_series_id: null,
           measure_type_id: null,
           conditions: [],
@@ -550,6 +551,32 @@ $(document).ready(function() {
 
       $("#measure_form_measure_type_id").on("change", function() {
         self.measure.measure_type_id = $("#measure_form_measure_type_id").val();
+      });
+
+      $(".measure-form").on("submit", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var button = $("button[type='submit']");
+        button.attr("data-text", button.text());
+        button.text("Saving...");
+        button.prop("disabled", true);
+
+        $.ajax({
+          url: "/measures",
+          type: "POST",
+          data: {
+            measure: self.measure
+          },
+          success: function() {
+            window.location = "/measures";
+          },
+          error: function() {
+            //TODO: handle errors
+            button.text(button.attr("data-text"));
+            button.prop("disabled", false);
+          }
+        });
       });
     },
     methods: {
