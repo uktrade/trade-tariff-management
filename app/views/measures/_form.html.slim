@@ -57,9 +57,9 @@
 
     .row
       .col-md-5
-        = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id
+        = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id, input_html: { "v-model" => "measure.measure_type_series_id" }
       .col-md-5
-        = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id
+        = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id, input_html: { "v-model" => "measure.measure_type_id" }
 
   fieldset
     h3.heading-medium
@@ -233,6 +233,74 @@
     p
       a href="#" v-on:click.prevent="addMeasureComponent"
         | Add another duty expression
+
+  fieldset v-if="showStandardImportValue"
+    h3.heading-medium
+      | Set Standard Import Value
+
+    .row
+      .col-md-4
+        .form-group
+          label.form-label
+            | Amount (£)
+          input.form-control
+      .col-md-4
+        .form-group
+          label.form-label
+            | Measurement unit
+          = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measurement_unit_code", "placeholder" => "― select the duty expression to use ―" }
+
+      .col-md-4
+        .form-group
+          label.form-label
+            | Measurement unit qualifier
+          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―" }
+
+
+  fieldset v-if="showReferencePrice"
+    h3.heading-medium
+      | Set Reference Price
+
+    .row
+      .col-md-4
+        .form-group
+          label.form-label
+            | Amount (£)
+          input.form-control
+      .col-md-4
+        .form-group
+          label.form-label
+            | Measurement unit
+          = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measurement_unit_code", "placeholder" => "― select the duty expression to use ―" }
+
+      .col-md-4
+        .form-group
+          label.form-label
+            | Measurement unit qualifier
+          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―" }
+
+
+  fieldset v-if="showUnitPrice"
+    h3.heading-medium
+      | Set Unit Price
+
+    .row
+      .col-md-4
+        .form-group
+          label.form-label
+            | Amount (£)
+          input.form-control
+      .col-md-4
+        .form-group
+          label.form-label
+            | Measurement unit
+          = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measurement_unit_code", "placeholder" => "― select measurement unit ―" }
+
+      .col-md-4
+        .form-group
+          label.form-label
+            | Measurement unit qualifier
+          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measurement_unit_qualifier_code", "placeholder" => "― select measurement unit qualifier ―" }
 
   fieldset
     h3.heading-medium

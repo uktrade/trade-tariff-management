@@ -496,6 +496,8 @@ $(document).ready(function() {
     data: function() {
       return {
         measure: {
+          measure_type_series_id: null,
+          measure_type_id: null,
           conditions: [],
           quota_periods: [],
           measure_components: [],
@@ -509,6 +511,8 @@ $(document).ready(function() {
       };
     },
     mounted: function() {
+      var self = this;
+
       if (this.measure.quota_periods.length === 0) {
         this.measure.quota_periods.push({
           type: null,
@@ -539,6 +543,14 @@ $(document).ready(function() {
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
       this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
+
+      $("#measure_form_measure_type_series_id").on("change", function() {
+        self.measure.measure_type_series_id = $("#measure_form_measure_type_series_id").val();
+      });
+
+      $("#measure_form_measure_type_id").on("change", function() {
+        self.measure.measure_type_id = $("#measure_form_measure_type_id").val();
+      });
     },
     methods: {
       addCondition: function() {
@@ -618,6 +630,15 @@ $(document).ready(function() {
 
         return this.measure.quota_periods[0].type === "custom";
       },
+      showStandardImportValue: function() {
+        return this.measure.measure_type_id === "490";
+      },
+      showReferencePrice: function() {
+        return this.measure.measure_type_id === "489";
+      },
+      showUnitPrice: function() {
+        return this.measure.measure_type_id === "488";
+      },
       atLeastOneCondition: function() {
         return this.measure.conditions.length > 0;
       },
@@ -675,8 +696,10 @@ $(document).ready(function() {
     placeholder: "― optionally filter by measure series ―",
     valueField: 'measure_type_series_id',
     labelField: 'description',
+    searchField: ["measure_type_series_id", "description"],
     onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
-    onChange: function(){ this.$dropdown_content.removeHighlight(); },
+    onChange: function(){
+      this.$dropdown_content.removeHighlight(); },
     render: {
       option: function(data) {
         return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--series'>" + data.measure_type_series_id + "</span> " + data.description + "</span>";
@@ -692,6 +715,7 @@ $(document).ready(function() {
     create: false,
     valueField: 'measure_type_id',
     labelField: 'description',
+    searchField: ["measure_type_id", "description"],
     onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
     onChange: function(){ this.$dropdown_content.removeHighlight(); },
     render: {
