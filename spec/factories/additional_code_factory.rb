@@ -111,6 +111,10 @@ FactoryGirl.define do
     additional_code         { Forgery(:basic).text(exactly: 3) }
     validity_start_date     { Date.today.ago(2.years) }
     validity_end_date       { nil }
+
+    trait :xml do
+      validity_end_date     { Date.today.ago(1.years) }
+    end
   end
 
   factory :additional_code_type_measure_type do |f|

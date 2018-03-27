@@ -213,4 +213,18 @@ FactoryGirl.define do
     goods_nomenclature_item_id           { Forgery(:basic).text(exactly: 2) }
     productline_suffix                   { Forgery(:basic).text(exactly: 2) }
   end
+
+  factory :nomenclature_group_membership do
+    goods_nomenclature_sid         { generate(:sid) }
+    goods_nomenclature_group_type  { Forgery(:basic).text(exactly: 1) }
+    goods_nomenclature_group_id    { Forgery(:basic).text(exactly: 2) }
+    goods_nomenclature_item_id     { Forgery(:basic).text(exactly: 2) }
+    productline_suffix             { Forgery(:basic).text(exactly: 2) }
+    validity_start_date            { Date.today.ago(3.years) }
+    validity_end_date              { nil }
+
+    trait :xml do
+      validity_end_date            { Date.today.ago(1.years) }
+    end
+  end
 end

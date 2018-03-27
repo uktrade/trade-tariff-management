@@ -7,6 +7,31 @@ module XmlGeneration
       GeographicalAreaDescriptionPeriod,
       GeographicalAreaMembership,
 
+      MonetaryUnit,
+      MonetaryUnitDescription,
+      MonetaryExchangePeriod,
+      MonetaryExchangeRate,
+
+      MeasurementUnitQualifier,
+      MeasurementUnitQualifierDescription,
+      MeasurementUnit,
+      MeasurementUnitDescription,
+      Measurement,
+
+      QuotaOrderNumber,
+      QuotaOrderNumberOrigin,
+      QuotaOrderNumberOriginExclusion,
+      QuotaDefinition,
+      QuotaAssociation,
+      QuotaReopeningEvent,
+      QuotaUnsuspensionEvent,
+      QuotaUnblockingEvent,
+      QuotaBalanceEvent,
+      QuotaCriticalEvent,
+      QuotaExhaustionEvent,
+      QuotaSuspensionPeriod,
+      QuotaBlockingPeriod,
+
       GoodsNomenclatureGroup,
       GoodsNomenclatureGroupDescription,
       GoodsNomenclature,
@@ -15,6 +40,7 @@ module XmlGeneration
       GoodsNomenclatureIndent,
       GoodsNomenclatureOrigin,
       GoodsNomenclatureSuccessor,
+      NomenclatureGroupMembership,
 
       MeasureTypeSeries,
       MeasureTypeSeriesDescription,
@@ -35,6 +61,13 @@ module XmlGeneration
       AdditionalCode,
       AdditionalCodeDescription,
       AdditionalCodeDescriptionPeriod,
+
+      MeursingAdditionalCode,
+      MeursingTablePlan,
+      MeursingTableCellComponent,
+      MeursingHeading,
+      MeursingHeadingText,
+      MeursingSubheading,
 
       DutyExpression,
       DutyExpressionDescription,
@@ -76,7 +109,8 @@ module XmlGeneration
 
       Language,
       LanguageDescription,
-      TransmissionComment
+      TransmissionComment,
+      PublicationSigle
     ]
 
     attr_accessor :date, :mode

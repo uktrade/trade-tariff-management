@@ -1,4 +1,7 @@
 class QuotaOrderNumberOriginExclusion < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:quota_order_number_origin_sid,
                                :excluded_geographical_area_sid]
   plugin :conformance_validator

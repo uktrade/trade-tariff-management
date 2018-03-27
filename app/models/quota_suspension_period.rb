@@ -1,4 +1,7 @@
 class QuotaSuspensionPeriod < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :quota_suspension_period_sid
   plugin :conformance_validator
 

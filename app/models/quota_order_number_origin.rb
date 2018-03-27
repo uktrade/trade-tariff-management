@@ -1,4 +1,7 @@
 class QuotaOrderNumberOrigin < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :quota_order_number_origin_sid
   plugin :conformance_validator
 

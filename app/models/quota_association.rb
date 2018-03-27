@@ -1,4 +1,7 @@
 class QuotaAssociation < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: [:main_quota_definition_sid,
                                :sub_quota_definition_sid]
   plugin :conformance_validator

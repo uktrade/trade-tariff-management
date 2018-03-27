@@ -1,4 +1,7 @@
 class MonetaryUnit < Sequel::Model
+
+  include ::XmlGeneration::BaseHelper
+
   plugin :oplog, primary_key: :monetary_unit_code
   plugin :time_machine
   plugin :conformance_validator
