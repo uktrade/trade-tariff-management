@@ -1,4 +1,9 @@
 class MeasuresController < ApplicationController
+
+  expose(:measure_saver) do
+    ::MeasureSaver.new(params[:measure])
+  end
+
   def index
     @measures = Measure.paginate(params[:page] || 1, 25)
   end
@@ -8,14 +13,14 @@ class MeasuresController < ApplicationController
   end
 
   def create
-    Rails.logger.info ""
-    Rails.logger.info "-" * 100
-    Rails.logger.info ""
-    Rails.logger.info " #{params[:measure].to_yaml}"
-    Rails.logger.info ""
-    Rails.logger.info "-" * 100
-    Rails.logger.info ""
+    if measure_form.valid?
+      measure_form.persist!
 
-    render nothing: true
+      render json: { measure_sid: measure_form.measure_sid },
+             status: :ok
+    else
+      render json: { errors: measure_form.errors },
+             status: :unprocessable_entity
+    end
   end
 end
