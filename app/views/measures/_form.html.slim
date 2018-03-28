@@ -4,9 +4,34 @@
 = render "shared/vue_templates/quota_period"
 = render "shared/vue_templates/date_select"
 = render "shared/vue_templates/measure_component"
+= render "shared/vue_templates/measure_condition_component"
 = render "shared/vue_templates/footnote"
 
 = simple_form_for @form, url: measures_path, html: { class: "measure-form", data: { measure: @form.measure.to_json, measure_condition_attributes: @form.measure.measure_conditions.to_json } } do |f|
+
+  fieldset
+    h3.heading-medium
+      | Specify the measure's validity period
+
+    .form-group
+      label.form-label
+        | Start date
+        span.form-hint
+          | The measure will take effect (once approved) from this date.
+
+      .row
+        .col-md-6
+          = content_tag "date-select", "", ":value.sync" => "measure.validity_start_date"
+
+    .form-group
+      label.form-label
+        | End date
+        span.form-hint
+          | By default this is set to the end date of the regulation giving force to this measure. You can optionally bring it forward, but it cannot be later than the regulation's end date.
+
+      .row
+        .col-md-6
+          = content_tag "date-select", "", ":value.sync" => "measure.validity_end_date"
 
   fieldset
     h3.heading-medium
@@ -21,31 +46,7 @@
 
     .row
       .col-md-5
-        = content_tag "custom-select", "", url: "/regulations", labelField: "description", valueField: "regulation_id", placeholder: "― start typing ―", minLength: 2, "v-model" => "measure.regulation_id"
-
-  fieldset
-    h3.heading-medium
-      | Specify the measure's validity period
-
-    .form-group
-      label.form-label
-        | Start date
-        span.form-hint
-          | The measure will take effect (once approved) from this date.
-
-      .row
-        .col-md-6
-          = content_tag "date-select", "", "v-model" => "measure.validity_start_date"
-
-    .form-group
-      label.form-label
-        | End date
-        span.form-hint
-          | By default this is set to the end date of the regulation giving force to this measure. You can optionally bring it forward, but it cannot be later than the regulation's end date.
-
-      .row
-        .col-md-6
-          = content_tag "date-select", "", "v-model" => "measure.validity_end_date"
+        = content_tag "custom-select", "", { url: "/regulations", labelField: "description", valueField: "regulation_id", placeholder: "― start typing ―", minLength: 2, "v-model" => "measure.regulation_id", "date-sensitive" => true }
 
   fieldset
     h3.heading-medium

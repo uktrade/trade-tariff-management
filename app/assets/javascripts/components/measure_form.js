@@ -183,11 +183,14 @@ $(document).ready(function() {
       "valueField",
       "searchField",
       "codeField",
-      "minLength"
+      "minLength",
+      "dateSensitive"
     ],
     data: function() {
       return {
-        condition: {}
+        condition: {},
+        start_date: null,
+        end_date: null,
       }
     },
     template: "#selectize-template",
@@ -233,7 +236,9 @@ $(document).ready(function() {
           $.ajax({
             url: vm.url,
             data: {
-              q: query
+              q: query,
+              start_date: vm.start_date,
+              end_date: vm.end_date
             },
             type: 'GET',
             error: function() {
@@ -262,6 +267,34 @@ $(document).ready(function() {
       $(this.$el).selectize(options).val(this.value).trigger('change').on('change', function () {
         vm.$emit('input', this.value)
       });
+
+      if (this.dateSensitive) {
+        this.handleDateSentitivity = function(event, start_date, end_date) {
+          vm.start_date = start_date;
+          vm.end_date = end_date;
+
+          vm.$el.selectize.clear(true);
+          vm.$el.selectize.load(function(callback) {
+            $.ajax({
+              url: vm.url,
+              data: {
+                q: vm.$el.selectize.query,
+                start_date: start_date,
+                end_date: end_date
+              },
+              type: 'GET',
+              error: function() {
+                callback();
+              },
+              success: function(res) {
+                callback(res);
+              }
+            });
+          });
+        };
+
+        $(".measure-form").on("dates:changed", this.handleDateSentitivity);
+      }
     },
     watch: {
       value: function (value) {
@@ -275,6 +308,10 @@ $(document).ready(function() {
     },
     destroyed: function () {
       $(this.$el).off()[0].selectize.destroy();
+
+      if (this.dateSensitive) {
+        $(".measure-form").off("dates:changed", this.handleDateSentitivity);
+      }
     }
   });
 
@@ -331,25 +368,27 @@ $(document).ready(function() {
       days: function() {
         var days = [];
         for (var i = 1; i <= 31; i++) {
-          days.push({ value: i, label: i });
+          var v = this.leftPad(i + "", 2, "0");
+
+          days.push({ value: v, label: v });
         }
 
         return days;
       },
       months: function() {
         return [
-          { value: 0, label: "January" },
-          { value: 1, label: "February" },
-          { value: 2, label: "March" },
-          { value: 3, label: "April" },
-          { value: 4, label: "May" },
-          { value: 5, label: "June" },
-          { value: 6, label: "July" },
-          { value: 7, label: "August" },
-          { value: 8, label: "September" },
-          { value: 9, label: "October" },
-          { value: 10, label: "November" },
-          { value: 11, label: "December" }
+          { value: "01", label: "January" },
+          { value: "02", label: "February" },
+          { value: "03", label: "March" },
+          { value: "04", label: "April" },
+          { value: "05", label: "May" },
+          { value: "06", label: "June" },
+          { value: "07", label: "July" },
+          { value: "08", label: "August" },
+          { value: "09", label: "September" },
+          { value: "10", label: "October" },
+          { value: "11", label: "November" },
+          { value: "12", label: "December" }
         ];
       },
       years: function() {
@@ -362,55 +401,98 @@ $(document).ready(function() {
 
         return years;
       }
+    },
+    methods: {
+      leftPad: function(val, length, pad) {
+        while (val.length < length) {
+          val = pad + val;
+        }
+
+        return val;
+      },
+      updateValue: function() {
+        if (this.day && this.month && this.year) {
+          this.$emit("update:value", this.day + "/" + this.month + "/" + this.year);
+        }
+      }
+    },
+    watch: {
+      year: function() {
+        this.updateValue();
+      },
+      day: function() {
+        this.updateValue();
+      },
+      month: function() {
+        this.updateValue();
+      }
     }
   });
 
-  Vue.component("measure-component", {
-    template: "#measure-component-template",
-    props: ["measureComponent"],
+  var componentCommonFunctionality = {
     computed: {
       showDutyAmountOrPercentage: function() {
         var ids = ["01", "02", "04", "19", "20"];
 
-        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
       showDutyAmountPercentage: function() {
         var ids = ["23"];
 
-        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
       showDutyAmountNegativePercentage: function() {
         var ids = ["36"];
 
-        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
       showDutyAmountNumber: function() {
         var ids = ["06", "07", "09", "11", "12", "13", "14", "21", "25", "27", "29", "31"];
 
-        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
       showDutyAmountMinimum: function() {
         var ids = ["15"];
 
-        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
       showDutyAmountMaximum: function() {
         var ids = ["17", "35"];
 
-        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
       showDutyRefundAmount: function() {
         var ids = ["40", "41", "42", "43", "44"];
 
-        return ids.indexOf(this.measureComponent.duty_expression_id) > -1;
+        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
       showMeasurementUnit: function() {
         var ids = ["23", "36", "37"];
 
-        return this.measureComponent.duty_expression_id && ids.indexOf(this.measureComponent.duty_expression_id) === -1;
+        return this[this.thing].duty_expression_id && ids.indexOf(this.measureComponent.duty_expression_id) === -1;
       }
     }
-  });
+  };
+
+  Vue.component("measure-component", $.extend({}, {
+    template: "#measure-component-template",
+    props: ["measureComponent"],
+    data: function() {
+      return {
+        thing: "measureComponent"
+      };
+    }
+  }, componentCommonFunctionality));
+
+  Vue.component("measure-condition-component", $.extend({}, {
+    template: "#measure-condition-component-template",
+    props: ["measureConditionComponent"],
+    data: function() {
+      return {
+        thing: "measureConditionComponent"
+      };
+    }
+  }, componentCommonFunctionality));
 
   Vue.component("foot-note", {
     template: "#footnote-template",
@@ -480,6 +562,9 @@ $(document).ready(function() {
 
         return codes.indexOf(this.condition.condition_code) > -1;
       },
+      showConditionComponents: function() {
+        return !!this.condition.action_code;
+      },
       showMinimumPrice: function() {
         var codes = [];
 
@@ -524,7 +609,6 @@ $(document).ready(function() {
           measure_components: [],
           footnotes: []
         },
-        id: null,
         goods_nomenclature_code: "",
         additional_code: "",
         goods_nomenclature_code_description: "",
@@ -602,11 +686,17 @@ $(document).ready(function() {
     methods: {
       addCondition: function() {
         this.measure.conditions.push({
-          _destroy: null,
           id: null,
-          action_id: null,
+          action_code: null,
           certificate_type_id: null,
-          certificate_id: null
+          certificate_id: null,
+          measure_components: [
+            {
+            duty_expression_id: null,
+            amount: null,
+            measurement_unit_code: null,
+            measurement_unit_qualifier_code: null
+          }]
         });
       },
       addQuotaPeriod: function() {
@@ -667,6 +757,21 @@ $(document).ready(function() {
           self[description] = "";
           self.measure[code] = null;
         }
+      },
+      preparePayload: function() {
+        var payload = {
+          goods_nomenclature_code: this.measure.goods_nomenclature_code,
+          additional_code: this.measure.additional_code,
+          goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
+          additional_code_description: this.measure.additional_code_description,
+          measure_components: this.measure.measure_components,
+          footnotes: this.measure.footnotes,
+          conditions: this.measure.conditions
+        };
+
+
+
+        return payload;
       }
     },
     computed: {
@@ -704,6 +809,12 @@ $(document).ready(function() {
       },
       additional_code: function() {
         this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
+      },
+      "measure.validity_start_date": function() {
+        $(".measure-form").trigger("dates:changed", [this.measure.validity_start_date, this.measure.validity_end_date]);
+      },
+      "measure.validity_end_date": function() {
+        $(".measure-form").trigger("dates:changed", [this.measure.validity_start_date, this.measure.validity_end_date]);
       }
     }
   });
@@ -786,9 +897,7 @@ $(document).ready(function() {
     measureType[0].selectize.refreshOptions(false);
   });
 
-  $("#measure_form_validity_start_date").on("change", function() {
-    var start_date = $("#measure_form_validity_start_date").val();
-
+  $(".measure-form").on("dates:changed", function(event, start_date, end_date) {
     $("#measure_form_measure_type_id").val("");
     $("#measure_form_measure_type_id").trigger("change");
 
@@ -798,7 +907,8 @@ $(document).ready(function() {
     $.ajax({
       url: "/measure_types",
       data: {
-        as_of: start_date
+        start_date: start_date,
+        end_date: end_date
       },
       success: function(data) {
         window.measure_types_json = data;
@@ -811,7 +921,8 @@ $(document).ready(function() {
     $.ajax({
       url: "/measure_type_series",
       data: {
-        as_of: start_date
+        start_date: start_date,
+        end_date: end_date
       },
       success: function(data) {
         window.measure_types_series_json = data;

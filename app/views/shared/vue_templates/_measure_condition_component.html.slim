@@ -1,10 +1,10 @@
-script type="text/x-template" id="measure-component-template"
+script type="text/x-template" id="measure-condition-component-template"
   .row
     .col-md-3
       .form-group
         label.form-label
           | Duty expression
-        = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_id", "v-model" => "measureComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
+        = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_id", "v-model" => "measureComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―" }
 
     .col-md-3 v-if="showDutyAmountOrPercentage"
       .form-group

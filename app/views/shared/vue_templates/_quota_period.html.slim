@@ -12,13 +12,13 @@ script type="text/x-template" id="quota-period-template"
           label
             | Starting on
 
-          = content_tag "date-select", "", "v-model" => "quotaPeriod.start_date"
+          = content_tag "date-select", "", ":value.sync" => "quotaPeriod.start_date"
 
         .form-group v-if="isCustom"
           label
             | Ending on
 
-          = content_tag "date-select", "", "v-model" => "quotaPeriod.end_date"
+          = content_tag "date-select", "", ":value.sync" => "quotaPeriod.end_date"
 
     div v-if="isBiAnnual"
       .row
@@ -130,10 +130,10 @@ script type="text/x-template" id="quota-period-template"
         .form-group
           label
             | Measurement unit
-          = content_tag "custom-select", "", url: "/measurement_units", placeholder: "― select measurement unit ―", labelField: "description", valueField: "measurement_unit_id", "v-model" => "quotaPeriod.measurement_unit_id"
+          = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "quotaPeriod.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
       .col-md-5
         .form-group
           label
             | Measurement unit qualifier
-          = content_tag "custom-select", "", url: "/measurement_unit_qualifiers", placeholder: "― select measurement unit qualifier ―", labelField: "description", valueField: "measurement_unit_qualifier_id", "v-model" => "quotaPeriod.measurement_unit_qualifier_id"
+          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "quotaPeriod.measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
 
