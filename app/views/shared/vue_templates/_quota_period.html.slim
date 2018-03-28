@@ -26,12 +26,12 @@ script type="text/x-template" id="quota-period-template"
           .form-group
             label
               | Amount (1st semester)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.bi_annual.amount1"
         .col-md-3
           .form-group
             label
               | Amount (2nd semester)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.bi_annual.amount2"
 
     div v-if="isQuarterly"
       .row
@@ -39,22 +39,22 @@ script type="text/x-template" id="quota-period-template"
           .form-group
             label
               | Amount (1st quarter)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.quarterly.amount1"
         .col-md-3
           .form-group
             label
               | Amount (2nd quarter)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.quarterly.amount2"
         .col-md-3
           .form-group
             label
               | Amount (3rd quarter)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.quarterly.amount3"
         .col-md-3
           .form-group
             label
               | Amount (4th quarter)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.quarterly.amount4"
 
     div v-if="isMonthly"
       .row
@@ -62,70 +62,75 @@ script type="text/x-template" id="quota-period-template"
           .form-group
             label
               | Amount (1st month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount1"
         .col-md-3
           .form-group
             label
               | Amount (2nd month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount2"
         .col-md-3
           .form-group
             label
               | Amount (3rd month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount3"
         .col-md-3
           .form-group
             label
               | Amount (4th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount4"
       .row
         .col-md-3
           .form-group
             label
               | Amount (5th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount5"
         .col-md-3
           .form-group
             label
               | Amount (6th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount6"
         .col-md-3
           .form-group
             label
               | Amount (7th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount7"
         .col-md-3
           .form-group
             label
               | Amount (8th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount8"
       .row
         .col-md-3
           .form-group
             label
               | Amount (9th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount9"
         .col-md-3
           .form-group
             label
               | Amount (10th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount10"
         .col-md-3
           .form-group
             label
               | Amount (11th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount11"
         .col-md-3
           .form-group
             label
               | Amount (12th month)
-            input.form-control type="text"
+            input.form-control type="text" v-model="quotaPeriod.monthly.amount12"
     .row
-      .col-md-2 v-if="isAnnualOrCustom"
+      .col-md-2 v-if="isAnnual"
         .form-group
           label
             | Amount
-          input.form-control type="text" v-model="quotaPeriod.amount"
+          input.form-control type="text" v-model="quotaPeriod.annual.amount1"
+      .col-md-2 v-if="isCustom"
+        .form-group
+          label
+            | Amount
+          input.form-control type="text" v-model="quotaPeriod.custom.amount1"
       .col-md-5
         .form-group
           label

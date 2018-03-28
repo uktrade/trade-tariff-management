@@ -619,14 +619,7 @@ $(document).ready(function() {
       var self = this;
 
       if (this.measure.quota_periods.length === 0) {
-        this.measure.quota_periods.push({
-          type: null,
-          amount: null,
-          start_date: null,
-          end_date: null,
-          measurement_unit_id: null,
-          measurement_unit_qualifier_id: null
-        });
+        this.addQuotaPeriod(true);
       }
 
       if (this.measure.footnotes.length === 0) {
@@ -670,7 +663,7 @@ $(document).ready(function() {
           url: "/measures",
           type: "POST",
           data: {
-            measure: self.measure
+            measure: self.preparePayload()
           },
           success: function() {
             window.location = "/measures";
@@ -699,10 +692,39 @@ $(document).ready(function() {
           }]
         });
       },
-      addQuotaPeriod: function() {
+      addQuotaPeriod: function(first) {
         this.measure.quota_periods.push({
-          type: "custom",
-          amount: null,
+          type: first === true ? null : "custom",
+          monthly: {
+            amount1: null,
+            amount2: null,
+            amount3: null,
+            amount4: null,
+            amount5: null,
+            amount6: null,
+            amount7: null,
+            amount8: null,
+            amount9: null,
+            amount10: null,
+            amount11: null,
+            amount12: null,
+          },
+          quarterly: {
+            amount1: null,
+            amount2: null,
+            amount3: null,
+            amount4: null
+          },
+          bi_annual: {
+            amount1: null,
+            amount2: null
+          },
+          annual: {
+            amount1: null
+          },
+          custom: {
+            amount1: null
+          },
           start_date: null,
           end_date: null,
           measurement_unit_id: null,
@@ -769,7 +791,40 @@ $(document).ready(function() {
           conditions: this.measure.conditions
         };
 
+        if (this.measure.quota_periods.length > 0) {
+          var periodPayload = {};
 
+          switch (this.measure.quota_periods[0].type) {
+            case "custom":
+              var t = this.measure.quota_periods[0].type;
+
+              periodPayload[t] = this.measure.quota_periods.map(function(period) {
+                return {
+                  amount1: period.custom.amount1,
+                  start_date: period.start_date,
+                  end_date: period.end_date,
+                  measurement_unit_code: period.measurement_unit_code,
+                  measurement_unit_qualifier_code: period.measurement_unit_qualifier_code
+                };
+              });
+
+              break;
+            default:
+              var t = this.measure.quota_periods[0].type;
+
+              periodPayload[t] = this.measure.quota_periods[0][t];
+              periodPayload[t].start_date = this.measure.quota_periods[0].start_date;
+              periodPayload[t].end_date = this.measure.quota_periods[0].end_date;
+              periodPayload[t].measurement_unit_code = this.measure.quota_periods[0].measurement_unit_code;
+              periodPayload[t].measurement_unit_qualifier_code = this.measure.quota_periods[0].measurement_unit_qualifier_code;
+
+              break;
+          }
+
+          payload.quota_periods = periodPayload;
+        } else {
+          payload.quota_periods = {};
+        }
 
         return payload;
       }
