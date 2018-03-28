@@ -1,5 +1,7 @@
 module XmlGeneration
-  class NodeTransaction
+  class NodeTransaction < Sequel::Model
+
+    extend ActiveModel::Naming
 
     attr_accessor :messages
 

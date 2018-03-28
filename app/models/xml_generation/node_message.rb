@@ -1,5 +1,7 @@
 module XmlGeneration
-  class NodeMessage
+  class NodeMessage < Sequel::Model
+
+    extend ActiveModel::Naming
 
     GEOGRAPHICAL_AREAS = [
       GeographicalArea,

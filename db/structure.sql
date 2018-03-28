@@ -4858,6 +4858,105 @@ ALTER SEQUENCE monetary_units_oid_seq OWNED BY monetary_units_oplog.oid;
 
 
 --
+-- Name: node_envelopes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE node_envelopes (
+    id integer NOT NULL,
+    type character varying(11),
+    node_id character varying(10),
+    xml_export_file_id integer,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: node_envelopes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE node_envelopes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: node_envelopes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE node_envelopes_id_seq OWNED BY node_envelopes.id;
+
+
+--
+-- Name: node_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE node_messages (
+    id integer NOT NULL,
+    type character varying(11),
+    node_id character varying(10),
+    node_transaction_id integer,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: node_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE node_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: node_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE node_messages_id_seq OWNED BY node_messages.id;
+
+
+--
+-- Name: node_transactions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE node_transactions (
+    id integer NOT NULL,
+    type character varying(11),
+    node_id character varying(10),
+    node_envelope_id integer,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: node_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE node_transactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: node_transactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE node_transactions_id_seq OWNED BY node_transactions.id;
+
+
+--
 -- Name: nomenclature_group_memberships_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6961,6 +7060,27 @@ ALTER TABLE ONLY monetary_units_oplog ALTER COLUMN oid SET DEFAULT nextval('mone
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY node_envelopes ALTER COLUMN id SET DEFAULT nextval('node_envelopes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY node_messages ALTER COLUMN id SET DEFAULT nextval('node_messages_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY node_transactions ALTER COLUMN id SET DEFAULT nextval('node_transactions_id_seq'::regclass);
+
+
+--
 -- Name: oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7832,6 +7952,30 @@ ALTER TABLE ONLY monetary_unit_descriptions_oplog
 
 ALTER TABLE ONLY monetary_units_oplog
     ADD CONSTRAINT monetary_units_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: node_envelopes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY node_envelopes
+    ADD CONSTRAINT node_envelopes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: node_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY node_messages
+    ADD CONSTRAINT node_messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: node_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY node_transactions
+    ADD CONSTRAINT node_transactions_pkey PRIMARY KEY (id);
 
 
 --
@@ -9722,6 +9866,27 @@ CREATE INDEX ngmo_nomgromemopl_ureoupipslog_operation_date ON nomenclature_group
 
 
 --
+-- Name: node_envelopes_xml_export_file_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX node_envelopes_xml_export_file_id_index ON node_envelopes USING btree (xml_export_file_id);
+
+
+--
+-- Name: node_messages_node_transaction_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX node_messages_node_transaction_id_index ON node_messages USING btree (node_transaction_id);
+
+
+--
+-- Name: node_transactions_node_envelope_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX node_transactions_node_envelope_id_index ON node_transactions USING btree (node_envelope_id);
+
+
+--
 -- Name: nom_grp_member_pk; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10124,4 +10289,7 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_dat
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180305221434_remove_filename_from_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224610_add_relevant_date_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224900_add_issue_date_in_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180328135527_create_node_envelopes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144030_create_node_transactions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144132_create_node_messages.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
