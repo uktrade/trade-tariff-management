@@ -73,7 +73,7 @@
           | This is the code an importer would need to enter into their customs declaration to benefit from this tariff quota.
       .row
         .col-md-5
-          input.form-control v-model="measure.ordernumber"
+          input.form-control v-model="measure.quota_ordernumber"
 
     .form-group
       label.form-label
@@ -89,7 +89,7 @@
 
       .row
         .col-md-2
-          input.form-control
+          input.form-control v-model="measure.quota_criticality_threshold"
         .col-md-1
           span.input-suffix
             | %
@@ -101,7 +101,7 @@
         span.form-hint
           | Optional.
 
-      textarea.form-control rows="3"
+      textarea.form-control rows="3" v-model="measure.quota_description"
 
     h3.heading-medium
       | Set the quota opening balance
@@ -124,8 +124,8 @@
       |.
 
     .controls.origins-region
-      = f.hidden_field :geographical_area_id, value: @form.geographical_area_id
-      = f.collection_select(:excluded_geographical_areas, GeographicalArea.all, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true})
+      = f.hidden_field :geographical_area_id, value: @form.geographical_area_id, "v-model" => "measure.geographical_area_id"
+      = f.collection_select(:excluded_geographical_areas, GeographicalArea.all, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true, "v-model" => "measure.excluded_geographical_areas" })
 
       .multiple-choice
         = f.radio_button :geographical_area_type, :country, value: @form.geographical_area_type, class: "radio-inline-group"
@@ -160,8 +160,8 @@
 
 
       .multiple-choice
-        = f.radio_button :geographical_area_type, :erga_omnes, value: @form.geographical_area_type, class: "radio-inline-group"
-        label
+        = f.radio_button :geographical_area_type, :erga_omnes, value: @form.geographical_area_type, class: "radio-inline-group", id: "erga-omnes-radio"
+        label for="erga-omnes-radio"
           | ERGA OMNES (all origins)
 
       .panel.panel-border-narrow.js-hidden#exclusions-for-erga-omnes

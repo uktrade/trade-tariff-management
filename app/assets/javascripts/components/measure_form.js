@@ -604,6 +604,11 @@ $(document).ready(function() {
           regulation_id: null,
           measure_type_series_id: null,
           measure_type_id: null,
+          quota_ordernumber: null,
+          quota_criticality_threshold: null,
+          quota_description: null,
+          geographical_area_id: null,
+          excluded_geographical_areas: [],
           conditions: [],
           quota_periods: [],
           measure_components: [],
@@ -625,8 +630,7 @@ $(document).ready(function() {
       if (this.measure.footnotes.length === 0) {
         this.measure.footnotes.push({
           footnote_type_id: null,
-          footnote_id: null,
-          text: null
+          description: null
         });
       }
 
@@ -674,6 +678,14 @@ $(document).ready(function() {
             button.prop("disabled", false);
           }
         });
+      });
+
+      $(".measure-form").on("geoarea:changed", function(e, id) {
+        self.measure.geographical_area_id = id;
+      });
+
+      $(".measure-form").on("exclusions:changed", function(e, ids) {
+        self.measure.excluded_geographical_areas = ids;
       });
     },
     methods: {
@@ -742,8 +754,7 @@ $(document).ready(function() {
       addFootnote: function() {
         this.measure.footnotes.push({
           footnote_type_id: null,
-          footnote_id: null,
-          text: null
+          description: null
         });
       },
       fetchNomenclatureCode: function(url, length, code, description, type, description_field) {
@@ -782,16 +793,27 @@ $(document).ready(function() {
       },
       preparePayload: function() {
         var payload = {
+          start_date: this.measure.validity_start_date,
+          end_date: this.measure.validity_end_date,
+          measure_type_series_id: this.measure.measure_type_series_id,
+          measure_type_id: this.measure.measure_type_id,
           goods_nomenclature_code: this.measure.goods_nomenclature_code,
           additional_code: this.measure.additional_code,
           goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
           additional_code_description: this.measure.additional_code_description,
+
           measure_components: this.measure.measure_components,
           footnotes: this.measure.footnotes,
-          conditions: this.measure.conditions
+          conditions: this.measure.conditions,
+
+          quota_ordernumber: this.measure.quota_ordernumber,
+          quota_criticality_threshold: this.measure.quota_criticality_threshold,
+          quota_description: this.measure.quota_description,
+          geographical_area_id: this.measure.geographical_area_id,
+          excluded_geographical_areas: this.measure.excluded_geographical_areas
         };
 
-        if (this.measure.quota_periods.length > 0) {
+        if (this.measure.quota_periods.length > 0 && this.measure.quota_periods[0].type) {
           var periodPayload = {};
 
           switch (this.measure.quota_periods[0].type) {
@@ -997,11 +1019,15 @@ $(document).ready(function() {
       }
     });
 
+    $(".measure-form").trigger("geoarea:changed", [obj.geographical_area_id]);
+    $(".measure-form").trigger("exclusions:changed", [[]]);
+
     $("#measure_form_excluded_geographical_areas").val([]);
   };
 
   var handleUpdate = function(ids) {
     $("#measure_form_excluded_geographical_areas").val(ids);
+    $(".measure-form").trigger("exclusions:changed", [ids]);
   };
 
   $(".origins-region .multiple-choice").each(function() {
