@@ -1,7 +1,19 @@
 class MeasuresController < ApplicationController
 
   expose(:measure_saver) do
-    ::MeasureSaver.new(params[:measure])
+    measure_ops = params[:measure]
+    measure_ops.send("permitted=", true)
+    measure_ops = measure_ops.to_h
+
+    p ""
+    p "-" * 100
+    p ""
+    p " CONTROLLER PARAMS: #{measure_ops.inspect}"
+    p ""
+    p "-" * 100
+    p ""
+
+    ::MeasureSaver.new(measure_ops)
   end
 
   def index
@@ -13,13 +25,13 @@ class MeasuresController < ApplicationController
   end
 
   def create
-    if measure_form.valid?
-      measure_form.persist!
+    if measure_saver.valid?
+      measure_saver.persist!
 
-      render json: { measure_sid: measure_form.measure_sid },
+      render json: { measure_sid: measure_saver.measure_sid },
              status: :ok
     else
-      render json: { errors: measure_form.errors },
+      render json: { errors: measure_saver.errors },
              status: :unprocessable_entity
     end
   end

@@ -1,3 +1,27 @@
+class MeasureParamsNormalizer
+
+  ALIASES = {
+    start_date: :validity_start_date,
+    end_date: :validity_end_date
+  }
+
+  attr_accessor :normalized_params
+
+  def initialize(measure_params)
+    @normalized_params = {}
+
+    measure_params.map do |k, v|
+      if ALIASES.keys.include?(k.to_sym)
+        @normalized_params[ALIASES[k.to_sym]] = v
+      else
+        @normalized_params[k] = v
+      end
+    end
+
+    @normalized_params
+  end
+end
+
 class MeasureSaver
 
   attr_accessor :measure_params,
@@ -5,8 +29,26 @@ class MeasureSaver
                 :measure_sid,
                 :errors
 
-  def initialize(measure_params=nil)
-    @measure_params = measure_params
+  def initialize(measure_params={})
+    p ""
+    p "-" * 100
+    p ""
+    p " measure_params: #{measure_params.inspect}"
+    p ""
+    p "-" * 100
+    p ""
+
+    @measure_params = ::MeasureParamsNormalizer.new(measure_params).normalized_params
+
+    p ""
+    p "-" * 100
+    p ""
+    p " normalized_params: #{@measure_params.inspect}"
+    p ""
+    p "-" * 100
+    p ""
+
+
     @errors = {}
   end
 
