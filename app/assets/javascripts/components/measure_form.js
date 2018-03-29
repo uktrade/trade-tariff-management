@@ -469,7 +469,7 @@ $(document).ready(function() {
       showMeasurementUnit: function() {
         var ids = ["23", "36", "37"];
 
-        return this[this.thing].duty_expression_id && ids.indexOf(this.measureComponent.duty_expression_id) === -1;
+        return this[this.thing].duty_expression_id && ids.indexOf(this[this.thing].duty_expression_id) === -1;
       }
     }
   };
@@ -556,14 +556,14 @@ $(document).ready(function() {
     props: ["condition"],
     computed: {
       showAction: function() {
-        var codes = ["A"];
+        var codes = ["K", "P", "S", "W", "Y"];
 
-        return true;
-
-        return codes.indexOf(this.condition.condition_code) > -1;
+        return this.condition.condition_code && codes.indexOf(this.condition.condition_code) === -1;
       },
       showConditionComponents: function() {
-        return !!this.condition.action_code;
+        var codes = ["01", "02", "03", "11", "12", "13", "15", "27", "34", "36"];
+
+        return codes.indexOf(this.condition.action_code) > -1;
       },
       showMinimumPrice: function() {
         var codes = [];
@@ -582,16 +582,50 @@ $(document).ready(function() {
       certificateActionHint: function() {
         var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z"];
 
-        return true;
-
         return codes.indexOf(this.condition.condition_code) > -1;
       },
       noCertificateActionHint: function() {
         var codes = ["D", "F", "G", "L", "M", "N", "R", "U", "V", "E"];
 
-        return true;
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      showCertificateType: function() {
+        var codes = ["B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
 
         return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      showCertificate: function() {
+        var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      showAddMoreCertificates: function() {
+        var codes = ["A", "Z"];
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      }
+    },
+    watch: {
+      showAction: function() {
+        if (!this.showAction) {
+          this.condition.action_code = null;
+          this.condition.measure_condition_components = [{
+            duty_expression_id: null,
+            amount: null,
+            measurement_unit_code: null,
+            measurement_unit_qualifier_code: null
+          }];
+        }
+      }
+    },
+    methods: {
+      addMeasureConditionComponent: function() {
+        this.condition.measure_condition_components.push({
+          duty_expression_id: null,
+          amount: null,
+          measurement_unit_code: null,
+          measurement_unit_qualifier_code: null
+        });
       }
     }
   });
@@ -625,6 +659,10 @@ $(document).ready(function() {
 
       if (this.measure.quota_periods.length === 0) {
         this.addQuotaPeriod(true);
+      }
+
+      if (this.measure.conditions.length === 0) {
+        this.addCondition();
       }
 
       if (this.measure.footnotes.length === 0) {
@@ -695,13 +733,14 @@ $(document).ready(function() {
           action_code: null,
           certificate_type_id: null,
           certificate_id: null,
-          measure_components: [
+          measure_condition_components: [
             {
-            duty_expression_id: null,
-            amount: null,
-            measurement_unit_code: null,
-            measurement_unit_qualifier_code: null
-          }]
+              duty_expression_id: null,
+              amount: null,
+              measurement_unit_code: null,
+              measurement_unit_qualifier_code: null
+            }
+          ]
         });
       },
       addQuotaPeriod: function(first) {

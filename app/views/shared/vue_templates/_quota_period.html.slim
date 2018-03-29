@@ -3,19 +3,19 @@ script type="text/x-template" id="quota-period-template"
     .row
       .col-md-5
         .form-group v-if="isFirst"
-          label
+          label.form-label
             | Quota period
 
-          = content_tag "custom-select", "", ":options" => "quotaOptions", "labelField" => "label", "valueField" => "value", "v-model" => "quotaPeriod.type"
+          = content_tag "custom-select", "", ":options" => "quotaOptions", "labelField" => "label.form-label", "valueField" => "value", "v-model" => "quotaPeriod.type"
       .col-md-7
         .form-group
-          label
+          label.form-label
             | Starting on
 
           = content_tag "date-select", "", ":value.sync" => "quotaPeriod.start_date"
 
         .form-group v-if="isCustom"
-          label
+          label.form-label
             | Ending on
 
           = content_tag "date-select", "", ":value.sync" => "quotaPeriod.end_date"
@@ -24,12 +24,12 @@ script type="text/x-template" id="quota-period-template"
       .row
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (1st semester)
             input.form-control type="text" v-model="quotaPeriod.bi_annual.amount1"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (2nd semester)
             input.form-control type="text" v-model="quotaPeriod.bi_annual.amount2"
 
@@ -37,22 +37,22 @@ script type="text/x-template" id="quota-period-template"
       .row
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (1st quarter)
             input.form-control type="text" v-model="quotaPeriod.quarterly.amount1"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (2nd quarter)
             input.form-control type="text" v-model="quotaPeriod.quarterly.amount2"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (3rd quarter)
             input.form-control type="text" v-model="quotaPeriod.quarterly.amount3"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (4th quarter)
             input.form-control type="text" v-model="quotaPeriod.quarterly.amount4"
 
@@ -60,85 +60,85 @@ script type="text/x-template" id="quota-period-template"
       .row
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (1st month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount1"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (2nd month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount2"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (3rd month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount3"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (4th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount4"
       .row
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (5th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount5"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (6th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount6"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (7th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount7"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (8th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount8"
       .row
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (9th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount9"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (10th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount10"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (11th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount11"
         .col-md-3
           .form-group
-            label
+            label.form-label
               | Amount (12th month)
             input.form-control type="text" v-model="quotaPeriod.monthly.amount12"
     .row
       .col-md-2 v-if="isAnnual"
         .form-group
-          label
+          label.form-label
             | Amount
           input.form-control type="text" v-model="quotaPeriod.annual.amount1"
       .col-md-2 v-if="isCustom"
         .form-group
-          label
+          label.form-label
             | Amount
           input.form-control type="text" v-model="quotaPeriod.custom.amount1"
       .col-md-5
         .form-group
-          label
+          label.form-label
             | Measurement unit
-          = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "quotaPeriod.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
+          = content_tag "custom-select", "", { url: "/measurement_units", "label.form-label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "quotaPeriod.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
       .col-md-5
         .form-group
-          label
+          label.form-label
             | Measurement unit qualifier
-          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "quotaPeriod.measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
+          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label.form-label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "quotaPeriod.measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
 

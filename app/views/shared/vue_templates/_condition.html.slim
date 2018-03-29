@@ -21,6 +21,20 @@ script type="text/x-template" id="condition-template"
             | Specify the price (in £) at or above which this condition will apply.
         input.form-control type="text" v-model="condition.amount"
 
+      = content_tag :div, class: "col-3", "v-if" => "showCertificateType" do
+        label.form-label
+          | Certificate type
+          span.form-hint
+            | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
+        = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true }
+
+      = content_tag :div, class: "col-3", "v-if" => "showCertificate" do
+        label.form-label
+          | Certificate
+          span.form-hint
+            | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
+        = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true }
+
       = content_tag :div, { class: "col-3", "v-if" => "showAction" } do
         label.form-label
           | Action
@@ -35,5 +49,5 @@ script type="text/x-template" id="condition-template"
           = content_tag "measure-condition-component", "", { ":measure-condition-component" => "measureConditionComponent", ":index" => "index" }
 
       p
-        a href="#" v-on:click.prevent="addMeasureComponent"
+        a href="#" v-on:click.prevent="addMeasureConditionComponent"
           | Add another duty expression
