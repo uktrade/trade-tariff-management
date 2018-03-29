@@ -19,20 +19,21 @@ Rails.application.routes.draw do
     resources :exports, only: [:index, :show, :create]
   end
 
-  resources :measures
-
-  resources :regulations, only: [:index]
-  resources :measure_types, only: [:index]
-  resources :measure_type_series, only: [:index]
-  resources :measure_condition_codes, only: [:index]
-  resources :goods_nomenclatures, only: [:index]
-  resources :additional_codes, only: [:index]
-  resources :duty_expressions, only: [:index]
-  resources :measurement_actions, only: [:index]
-  resources :measurement_units, only: [:index]
-  resources :measurement_unit_qualifiers, only: [:index]
-  resources :footnote_types, only: [:index]
-  resources :footnotes, only: [:index]
+  scope module: :measures do
+    resources :measures
+    resources :regulations, only: [:index]
+    resources :measure_types, only: [:index]
+    resources :measure_type_series, only: [:index]
+    resources :measure_condition_codes, only: [:index]
+    resources :goods_nomenclatures, only: [:index]
+    resources :additional_codes, only: [:index]
+    resources :duty_expressions, only: [:index]
+    resources :measurement_actions, only: [:index]
+    resources :measurement_units, only: [:index]
+    resources :measurement_unit_qualifiers, only: [:index]
+    resources :footnote_types, only: [:index]
+    resources :footnotes, only: [:index]
+  end
 
   root to: 'home#index'
 end

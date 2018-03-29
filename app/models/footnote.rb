@@ -62,6 +62,16 @@ class Footnote < Sequel::Model
     def national
       where(national: true)
     end
+
+    def q_search(footnote_type_id, keyword)
+      join_table(
+        :inner,
+        :footnote_descriptions,
+        footnote_id: Sequel[:footnotes][:footnote_id],
+        footnote_type_id: footnote_type_id
+      ).where(Sequel[:footnotes][:footnote_type_id] => footnote_type_id)
+       .where(Sequel.ilike(:description, "#{keyword}%"))
+    end
   end
 
     # FO4
@@ -87,5 +97,13 @@ class Footnote < Sequel::Model
 
   def subrecord_code
     "00".freeze
+  end
+
+  def json_mapping
+    {
+      footnote_type_id: footnote_type_id,
+      footnote_id: footnote_id,
+      description: description
+    }
   end
 end

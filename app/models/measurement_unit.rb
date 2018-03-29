@@ -38,4 +38,12 @@ class MeasurementUnit < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      measurement_unit_code: measurement_unit_code,
+      description: description,
+      abbreviation: abbreviation
+    }
+  end
 end
