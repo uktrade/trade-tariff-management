@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
   resources :measures
 
+  resources :regulations, only: [:index]
   resources :measure_types, only: [:index]
   resources :measure_type_series, only: [:index]
   resources :measure_condition_codes, only: [:index]
