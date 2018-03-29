@@ -20,4 +20,11 @@ class MeasureAction < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      action_code: action_code,
+      description: description
+    }
+  end
 end

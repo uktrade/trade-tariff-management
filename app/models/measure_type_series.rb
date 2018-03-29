@@ -20,4 +20,14 @@ class MeasureTypeSeries < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      oid: oid,
+      measure_type_series_id: measure_type_series_id,
+      validity_start_date: validity_start_date,
+      validity_end_date: validity_end_date,
+      description: description
+    }
+  end
 end

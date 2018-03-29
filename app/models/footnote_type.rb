@@ -20,4 +20,11 @@ class FootnoteType < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      footnote_type_id: footnote_type_id,
+      description: description
+    }
+  end
 end
