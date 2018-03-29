@@ -3,6 +3,7 @@ class MeasureTypeSeries < Sequel::Model
   include ::XmlGeneration::BaseHelper
 
   set_primary_key [:measure_type_series_id]
+  plugin :time_machine
   plugin :oplog, primary_key: :measure_type_series_id
   plugin :conformance_validator
 

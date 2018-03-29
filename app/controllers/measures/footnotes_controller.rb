@@ -3,7 +3,7 @@ module Measures
 
     def collection
       Footnote.actual
-              .q_search(params[:description])
+              .q_search(params[:footnote_type_id], params[:description])
               .limit(20)
     end
   end
