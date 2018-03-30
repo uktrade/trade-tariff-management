@@ -2,7 +2,7 @@ module Measures
   class CertificateTypesController < ::Measures::BaseController
 
     def collection
-      CertificateType.actual
+      CertificateType.actual.limit(100)
     end
   end
 end

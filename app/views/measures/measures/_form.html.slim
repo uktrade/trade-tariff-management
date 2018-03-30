@@ -60,9 +60,9 @@
 
     .row
       .col-md-5
-        = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id, input_html: { "v-model" => "measure.measure_type_series_id" }
+        = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id, input_html: { "v-model" => "measure.measure_type_series_id" }, label_html: { class: "form-label" }
       .col-md-5
-        = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id, input_html: { "v-model" => "measure.measure_type_id" }
+        = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id, input_html: { "v-model" => "measure.measure_type_id" }, label_html: { class: "form-label" }
 
   fieldset
     h3.heading-medium
