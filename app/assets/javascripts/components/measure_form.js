@@ -236,13 +236,21 @@ $(document).ready(function() {
       if (this.url) {
         options["load"] = function(query, callback) {
           if (vm.minLength && query.length < vm.minLength) return callback();
+          if (vm.drilldownRequired && !vm.drilldownValue) return callback();
+
+          var data = {
+            q: query,
+            start_date: vm.start_date,
+            end_date: vm.end_date
+          };
+
+          if (vm.drilldownName && vm.drilldownValue) {
+            data[vm.drilldownName] = vm.drilldownValue;
+          }
+
           $.ajax({
             url: vm.url,
-            data: {
-              q: query,
-              start_date: vm.start_date,
-              end_date: vm.end_date
-            },
+            data: data,
             type: 'GET',
             error: function() {
               callback();
@@ -276,15 +284,21 @@ $(document).ready(function() {
           vm.start_date = start_date;
           vm.end_date = end_date;
 
+          var data = {
+            q: vm.$el.selectize.query,
+            start_date: start_date,
+            end_date: end_date
+          };
+
+          if (vm.drilldownName && vm.drilldownValue) {
+            data[vm.drilldownName] = vm.drilldownValue;
+          }
+
           vm.$el.selectize.clear(true);
           vm.$el.selectize.load(function(callback) {
             $.ajax({
               url: vm.url,
-              data: {
-                q: vm.$el.selectize.query,
-                start_date: start_date,
-                end_date: end_date
-              },
+              data: data,
               type: 'GET',
               error: function() {
                 callback();
@@ -307,6 +321,13 @@ $(document).ready(function() {
         $(this.$el)[0].selectize.clearOptions();
         $(this.$el)[0].selectize.addOption(options);
         $(this.$el)[0].selectize.refreshOptions(false);
+      },
+      drilldownValue: function(newVal, oldVal) {
+        if (newVal == oldVal) {
+          return;
+        }
+
+        this.handleDateSentitivity({}, this.start_date, this.end_date);
       }
     },
     destroyed: function () {
@@ -625,6 +646,14 @@ $(document).ready(function() {
             measurement_unit_qualifier_code: null
           }];
         }
+      },
+      "condition.certificate_type_id": function() {
+        this.certificate_id = null;
+      },
+      showCertificateType: function(newVal, oldVal) {
+        if (oldVal === false && newVal === true) {
+          this.certificate_id = null;
+        }
       }
     },
     methods: {
@@ -648,6 +677,7 @@ $(document).ready(function() {
           measure_type_series_id: null,
           measure_type_id: null,
           quota_ordernumber: null,
+          quota_status: "open",
           quota_criticality_threshold: null,
           quota_description: null,
           geographical_area_id: null,
@@ -660,7 +690,15 @@ $(document).ready(function() {
         goods_nomenclature_code: "",
         additional_code: "",
         goods_nomenclature_code_description: "",
-        additional_code_description: ""
+        additional_code_description: "",
+        quota_statuses: [
+          { value: "open", label: "Open" },
+          { value: "exhausted", label: "Exhausted" },
+          { value: "critical", label: "Critical" },
+          { value: "unblocked", label: "Unblocked" },
+          { value: "unsuspended", label: "Unsuspended" },
+          { value: "reopened", label: "Reopened" }
+        ]
       };
     },
     mounted: function() {
@@ -854,6 +892,7 @@ $(document).ready(function() {
           footnotes: this.measure.footnotes,
           conditions: this.measure.conditions,
 
+          quota_status: this.measure.quota_status,
           quota_ordernumber: this.measure.quota_ordernumber,
           quota_criticality_threshold: this.measure.quota_criticality_threshold,
           quota_description: this.measure.quota_description,
