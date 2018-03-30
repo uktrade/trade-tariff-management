@@ -207,7 +207,7 @@ $(document).ready(function() {
         valueField: this.valueField,
         labelField: this.labelField,
         searchField: [this.valueField, this.codeField, this.labelField],
-        sortField: this.codeField || null,
+
         onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
         onChange: function(){ this.$dropdown_content.removeHighlight(); }
       };
