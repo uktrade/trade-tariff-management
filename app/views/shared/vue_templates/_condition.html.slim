@@ -46,7 +46,7 @@ script type="text/x-template" id="condition-template"
           | Certificate
           span.form-hint
             | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
-        = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", "drilldown-value" => "condition.certificate_type_code", "drilldown-required" => true }
+        = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType" }
 
       = content_tag :div, { class: "col-3", "v-if" => "showAction" } do
         label.form-label

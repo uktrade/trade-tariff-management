@@ -236,13 +236,21 @@ $(document).ready(function() {
       if (this.url) {
         options["load"] = function(query, callback) {
           if (vm.minLength && query.length < vm.minLength) return callback();
+          if (vm.drilldownRequired && !vm.drilldownValue) return callback();
+
+          var data = {
+            q: query,
+            start_date: vm.start_date,
+            end_date: vm.end_date
+          };
+
+          if (vm.drilldownName && vm.drilldownValue) {
+            data[vm.drilldownName] = vm.drilldownValue;
+          }
+
           $.ajax({
             url: vm.url,
-            data: {
-              q: query,
-              start_date: vm.start_date,
-              end_date: vm.end_date
-            },
+            data: data,
             type: 'GET',
             error: function() {
               callback();
@@ -276,15 +284,21 @@ $(document).ready(function() {
           vm.start_date = start_date;
           vm.end_date = end_date;
 
+          var data = {
+            q: vm.$el.selectize.query,
+            start_date: start_date,
+            end_date: end_date
+          };
+
+          if (vm.drilldownName && vm.drilldownValue) {
+            data[vm.drilldownName] = vm.drilldownValue;
+          }
+
           vm.$el.selectize.clear(true);
           vm.$el.selectize.load(function(callback) {
             $.ajax({
               url: vm.url,
-              data: {
-                q: vm.$el.selectize.query,
-                start_date: start_date,
-                end_date: end_date
-              },
+              data: data,
               type: 'GET',
               error: function() {
                 callback();
@@ -307,6 +321,13 @@ $(document).ready(function() {
         $(this.$el)[0].selectize.clearOptions();
         $(this.$el)[0].selectize.addOption(options);
         $(this.$el)[0].selectize.refreshOptions(false);
+      },
+      drilldownValue: function(newVal, oldVal) {
+        if (newVal == oldVal) {
+          return;
+        }
+
+        this.handleDateSentitivity({}, this.start_date, this.end_date);
       }
     },
     destroyed: function () {
@@ -624,6 +645,14 @@ $(document).ready(function() {
             measurement_unit_code: null,
             measurement_unit_qualifier_code: null
           }];
+        }
+      },
+      "condition.certificate_type_id": function() {
+        this.certificate_id = null;
+      },
+      showCertificateType: function(newVal, oldVal) {
+        if (oldVal === false && newVal === true) {
+          this.certificate_id = null;
         }
       }
     },
