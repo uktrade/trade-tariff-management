@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   scope module: :measures do
     resources :measures
+    resources :certificates, only: [:index]
+    resources :certificate_types, only: [:index]
     resources :regulations, only: [:index]
     resources :measure_types, only: [:index]
     resources :measure_type_series, only: [:index]
@@ -28,7 +30,7 @@ Rails.application.routes.draw do
     resources :goods_nomenclatures, only: [:index]
     resources :additional_codes, only: [:index]
     resources :duty_expressions, only: [:index]
-    resources :measurement_actions, only: [:index]
+    resources :measure_actions, only: [:index]
     resources :measurement_units, only: [:index]
     resources :measurement_unit_qualifiers, only: [:index]
     resources :footnote_types, only: [:index]

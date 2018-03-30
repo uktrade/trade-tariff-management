@@ -4,6 +4,7 @@ module Measures
     def collection
       BaseRegulation.actual
                     .q_search(params[:q])
+                    .limit(100)
     end
   end
 end

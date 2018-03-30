@@ -184,7 +184,10 @@ $(document).ready(function() {
       "searchField",
       "codeField",
       "minLength",
-      "dateSensitive"
+      "dateSensitive",
+      "drilldownName",
+      "drilldownValue",
+      "drilldownRequired"
     ],
     data: function() {
       return {
@@ -204,7 +207,7 @@ $(document).ready(function() {
         valueField: this.valueField,
         labelField: this.labelField,
         searchField: [this.valueField, this.codeField, this.labelField],
-        sortField: this.codeField || this.labelField,
+        sortField: this.codeField || null,
         onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
         onChange: function(){ this.$dropdown_content.removeHighlight(); }
       };
@@ -232,7 +235,7 @@ $(document).ready(function() {
 
       if (this.url) {
         options["load"] = function(query, callback) {
-          if (options.minLength && query.length < options.minLength) return callback();
+          if (vm.minLength && query.length < vm.minLength) return callback();
           $.ajax({
             url: vm.url,
             data: {
@@ -566,16 +569,22 @@ $(document).ready(function() {
         return codes.indexOf(this.condition.action_code) > -1;
       },
       showMinimumPrice: function() {
-        var codes = [];
-
-        return true;
+        var codes = ["F", "G", "L", "N"];
 
         return codes.indexOf(this.condition.condition_code) > -1;
       },
-      showReferencePrice: function() {
-        var codes = [];
+      showRatio: function() {
+        var codes = ["R", "U"];
 
-        return true;
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      showEntryPrice: function() {
+        var codes = ["V"];
+
+        return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      showAmount: function() {
+        var codes = ["E", "I", "M"];
 
         return codes.indexOf(this.condition.condition_code) > -1;
       },
@@ -585,7 +594,7 @@ $(document).ready(function() {
         return codes.indexOf(this.condition.condition_code) > -1;
       },
       noCertificateActionHint: function() {
-        var codes = ["D", "F", "G", "L", "M", "N", "R", "U", "V", "E"];
+        var codes = ["D", "F", "G", "L", "M", "N", "R", "U", "V"];
 
         return codes.indexOf(this.condition.condition_code) > -1;
       },
