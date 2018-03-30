@@ -24,12 +24,12 @@ $single: 100% / 12;
 
 @each $col in $cols {
   .col-#{$col} {
-    width: calc(#{$single * $col} - 30px);
+    max-width: calc(#{$single * $col} - 30px);
     flex: 0 0 calc(#{$single * $col} - 30px);
   }
 
   .col-xs-#{$col} {
-    width: calc(#{$single * $col} - 30px);
+    max-width: calc(#{$single * $col} - 30px);
     flex: 0 0 calc(#{$single * $col} - 30px);
   }
 }
@@ -37,7 +37,7 @@ $single: 100% / 12;
 @media (min-width: 768px) {
   @each $col in $cols {
     .col-sm-#{$col} {
-      width: calc(#{$single * $col} - 30px);
+      max-width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
@@ -46,7 +46,7 @@ $single: 100% / 12;
 @media (min-width: 992px) {
   @each $col in $cols {
     .col-md-#{$col} {
-      width: calc(#{$single * $col} - 30px);
+      max-width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
@@ -55,7 +55,7 @@ $single: 100% / 12;
 @media (min-width: 1024px) {
   @each $col in $cols {
     .col-lg-#{$col} {
-      width: calc(#{$single * $col} - 30px);
+      max-width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
@@ -64,7 +64,7 @@ $single: 100% / 12;
 @media (min-width: 1600px) {
   @each $col in $cols {
     .col-xl-#{$col} {
-      width: calc(#{$single * $col} - 30px);
+      max-width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
