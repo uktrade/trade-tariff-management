@@ -31,10 +31,6 @@ class MeasureForm
     end
   end
 
-  def measure_type_series_collection
-    @series ||= MeasureTypeSeries.all
-  end
-
   def measure_types_series_json
     series = measure_type_series_collection
     json = []
@@ -52,9 +48,9 @@ class MeasureForm
     json
   end
 
-  #TODO: cache this
   def measure_types_json
-    types = MeasureType.all
+    types = all_measure_types
+
     json = []
 
     types.each do |type|
@@ -76,22 +72,14 @@ class MeasureForm
     if measure_type_series_id.present?
       MeasureType.where(measure_type_series_id: measure_type_series_id)
     else
-      MeasureType.all
+      all_measure_types
     end
-  end
-
-  def geographical_groups_except_erga_omnes
-    GeographicalArea.groups.exclude(geographical_area_id: GeographicalArea::ERGA_OMNES)
-  end
-
-  def geographical_area_erga_omnes
-    GeographicalArea.where(geographical_area_id: GeographicalArea::ERGA_OMNES).first
   end
 
   def geographical_areas_json
     json = {}
 
-    GeographicalArea.all.each do |group|
+    all_geographical_areas.each do |group|
       json[group.geographical_area_id] = []
 
       group.contained_geographical_areas.each do |child|
@@ -104,4 +92,41 @@ class MeasureForm
 
     json
   end
+
+  def all_measure_types
+    @all_mt ||= Rails.cache.fetch(:measures_form_measure_types, expires_in: 8.hours) do
+      MeasureType.all
+    end
+  end
+
+  def measure_type_series_collection
+    @series ||= Rails.cache.fetch(:measures_form_measure_type_series, expires_in: 8.hours) do
+      MeasureTypeSeries.all
+    end
+  end
+
+  def all_geographical_areas
+    @all_ga ||= Rails.cache.fetch(:measures_form_geographical_areas, expires_in: 8.hours) do
+      GeographicalArea.all
+    end
+  end
+
+  def all_geographical_countries
+    @all_gc ||= Rails.cache.fetch(:measures_form_geographical_countries, expires_in: 8.hours) do
+      GeographicalArea.countries.all
+    end
+  end
+
+  def geographical_groups_except_erga_omnes
+    @ggeeo ||= Rails.cache.fetch(:measures_form_geographical_groups_except_erga_omnes, expires_in: 8.hours) do
+      GeographicalArea.groups.exclude(geographical_area_id: GeographicalArea::ERGA_OMNES).all
+    end
+  end
+
+  def geographical_area_erga_omnes
+    @gaeo ||= Rails.cache.fetch(:measures_form_geographical_area_erga_omnes, expires_in: 8.hours) do
+      GeographicalArea.where(geographical_area_id: GeographicalArea::ERGA_OMNES).first
+    end
+  end
 end
+

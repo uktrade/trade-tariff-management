@@ -1,4 +1,6 @@
-= render "js_variables"
+- cache [ "b-landing-contact-form", expires_in: 8.hours ] do
+  = render "js_variables"
+
 = render "shared/vue_templates/condition"
 = render "shared/vue_templates/selectize"
 = render "shared/vue_templates/quota_period"
@@ -125,12 +127,12 @@
 
     .controls.origins-region
       = f.hidden_field :geographical_area_id, value: @form.geographical_area_id, "v-model" => "measure.geographical_area_id"
-      = f.collection_select(:excluded_geographical_areas, GeographicalArea.all, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true, "v-model" => "measure.excluded_geographical_areas" })
+      = f.collection_select(:excluded_geographical_areas, @form.all_geographical_areas, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true, "v-model" => "measure.excluded_geographical_areas" })
 
       .multiple-choice
         = f.radio_button :geographical_area_type, :country, value: @form.geographical_area_type, class: "radio-inline-group"
         label
-          = f.collection_select(:geographical_area_proxy, GeographicalArea.countries, :geographical_area_id, :description, { include_blank: true, prompt: "― select a country or region ―" }, {class: "origin-select", "data-placeholder" => "― select a country or region ―"})
+          = f.collection_select(:geographical_area_proxy, @form.all_geographical_countries, :geographical_area_id, :description, { include_blank: true, prompt: "― select a country or region ―" }, {class: "origin-select", "data-placeholder" => "― select a country or region ―"})
 
       .panel.panel-border-narrow.js-hidden#exclusions-for-country-region
         label.form-label
