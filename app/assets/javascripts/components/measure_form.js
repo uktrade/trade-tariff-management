@@ -677,6 +677,7 @@ $(document).ready(function() {
           measure_type_series_id: null,
           measure_type_id: null,
           quota_ordernumber: null,
+          quota_status: "open",
           quota_criticality_threshold: null,
           quota_description: null,
           geographical_area_id: null,
@@ -689,7 +690,15 @@ $(document).ready(function() {
         goods_nomenclature_code: "",
         additional_code: "",
         goods_nomenclature_code_description: "",
-        additional_code_description: ""
+        additional_code_description: "",
+        quota_statuses: [
+          { value: "open", label: "Open" },
+          { value: "exhausted", label: "Exhausted" },
+          { value: "critical", label: "Critical" },
+          { value: "unblocked", label: "Unblocked" },
+          { value: "unsuspended", label: "Unsuspended" },
+          { value: "reopened", label: "Reopened" }
+        ]
       };
     },
     mounted: function() {
@@ -883,6 +892,7 @@ $(document).ready(function() {
           footnotes: this.measure.footnotes,
           conditions: this.measure.conditions,
 
+          quota_status: this.measure.quota_status,
           quota_ordernumber: this.measure.quota_ordernumber,
           quota_criticality_threshold: this.measure.quota_criticality_threshold,
           quota_description: this.measure.quota_description,
