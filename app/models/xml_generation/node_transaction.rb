@@ -8,5 +8,10 @@ module XmlGeneration
 
     one_to_many :messages, class_name: "XmlGeneration::NodeMessage",
                            key: :node_transaction_id
+
+    validates do
+      uniqueness_of :node_id
+      presence_of :node_envelope_id
+    end
   end
 end

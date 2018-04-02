@@ -147,6 +147,11 @@ module XmlGeneration
     many_to_one :transaction, class_name: "XmlGeneration::NodeTransaction",
                               key: :node_transaction_id
 
+    validates do
+      uniqueness_of :node_id
+      presence_of :record_id, :record_type, :node_transaction_id
+    end
+
     def record_class
       record_type.constantize
     end
