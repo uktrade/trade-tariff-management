@@ -1,5 +1,7 @@
 module XmlGeneration
-  class NodeMessage < XmlGeneration::NodeBase
+  class NodeMessage < Sequel::Model
+
+    include ::XmlGeneration::NodeBase
 
     GEOGRAPHICAL_AREAS = [
       GeographicalArea,
@@ -142,16 +144,15 @@ module XmlGeneration
       PublicationSigle
     ]
 
-    many_to_one :xml_generation_node_transaction, key: :node_transaction_id
+    many_to_one :transaction, class_name: "XmlGeneration::NodeTransaction",
+                              key: :node_transaction_id
 
-    attr_accessor :record
-
-    def initialize(record)
-      @record = record
+    def record_class
+      record_type.constantize
     end
 
-    def partial_path
-      "#{base_partial_path}/#{partial_folder_name}/#{record_class}.builder"
+    def record
+      record_class.filter(record_class.primary_key => record_id).first
     end
 
     def record_code
@@ -180,9 +181,13 @@ module XmlGeneration
       end
     end
 
+    def partial_path
+      "#{base_partial_path}/#{partial_folder_name}/#{record_class_to_underscore}.builder"
+    end
+
     private
 
-      def record_class
+      def record_class_to_underscore
         record.class
               .name
               .titleize

@@ -1,15 +1,12 @@
 module XmlGeneration
-  class NodeTransaction < XmlGeneration::NodeBase
+  class NodeTransaction < Sequel::Model
 
-    one_to_many :xml_generation_node_messages, key: :node_transaction_id
-    many_to_one :xml_generation_node_envelope, key: :node_envelope_id
+    include ::XmlGeneration::NodeBase
 
-    attr_accessor :messages
+    many_to_one :envelope, class_name: "XmlGeneration::NodeEnvelope",
+                           key: :node_envelope_id
 
-    def initialize(records)
-      @messages = Array.wrap(records).map do |record|
-        ::XmlGeneration::NodeMessage.new(record)
-      end
-    end
+    one_to_many :messages, class_name: "XmlGeneration::NodeMessage",
+                           key: :node_transaction_id
   end
 end
