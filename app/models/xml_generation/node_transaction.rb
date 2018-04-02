@@ -10,13 +10,5 @@ module XmlGeneration
         ::XmlGeneration::NodeMessage.new(record)
       end
     end
-
-    def id
-      # TODO
-      #
-      # Emulation:
-      #
-      Time.now.to_i - 1515111000
-    end
   end
 end

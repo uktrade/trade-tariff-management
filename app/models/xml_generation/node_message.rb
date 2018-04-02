@@ -150,10 +150,6 @@ module XmlGeneration
       @record = record
     end
 
-    def id
-      rand(2..999)
-    end
-
     def partial_path
       "#{base_partial_path}/#{partial_folder_name}/#{record_class}.builder"
     end
