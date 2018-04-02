@@ -4899,8 +4899,8 @@ CREATE TABLE node_messages (
     node_transaction_id integer,
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
-    record_id text,
-    record_type text
+    record_type text,
+    record_filter_ops text
 );
 
 
@@ -10293,4 +10293,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144030_create_node
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144132_create_node_messages.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180402091320_remove_type_from_xml_nodes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180402142849_add_record_to_node_messages.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180402154232_change_record_id_to_record_filter_ops_in_node_messages.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');

@@ -3,6 +3,10 @@ module XmlGeneration
 
     include ::XmlGeneration::NodeBase
 
+    plugin :serialization
+
+    serialize_attributes :json, :record_filter_ops
+
     GEOGRAPHICAL_AREAS = [
       GeographicalArea,
       GeographicalAreaDescription,
@@ -149,7 +153,7 @@ module XmlGeneration
 
     validates do
       uniqueness_of :node_id
-      presence_of :record_id, :record_type, :node_transaction_id
+      presence_of :record_filter_ops, :record_type, :node_transaction_id
     end
 
     def record_class
@@ -157,7 +161,7 @@ module XmlGeneration
     end
 
     def record
-      record_class.filter(record_class.primary_key => record_id).first
+      record_class.where(record_filter_ops.symbolize_keys).first
     end
 
     def record_code
