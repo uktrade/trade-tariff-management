@@ -1,4 +1,3 @@
-$site-width: 1100px;
 
 // From GDS's alphagov/govuk_frontend_toolkit
 @import 'colours';
@@ -6,7 +5,7 @@ $site-width: 1100px;
 @import 'measurements';
 @import 'conditionals';
 @import 'device-pixels';
-@import 'grid_layout';
+@import 'my_grid_layout';
 @import 'typography';
 @import 'shims';
 
@@ -23,7 +22,7 @@ $site-width: 1100px;
 @import 'elements/buttons';
 // @import 'elements/icons'
 @import 'elements/lists';
-// @import 'elements/tables'
+@import 'elements/tables';
 @import 'elements/details';
 @import 'elements/panels';
 @import 'elements/forms';

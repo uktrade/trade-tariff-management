@@ -1,8 +1,8 @@
 script type="text/x-template" id="date-select-template"
   .row
-    .col-md-4
+    .col-xs-12.col-sm-4.date-part
       custom-select v-model="day" placeholder="― day ―" labelField="label" valueField="value" :options="days"
-    .col-md-4
+    .col-xs-12.col-sm-4.date-part
       custom-select v-model="month" placeholder="― month ―" labelField="label" valueField="value" :options="months"
-    .col-md-4
+    .col-xs-12.col-sm-4.date-part
       custom-select v-model="year" placeholder="― year ―" labelField="label" valueField="value" :options="years"

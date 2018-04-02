@@ -8,6 +8,7 @@ input.datepicker {
 
 .multiple-choice + .panel {
   margin-left: 3.2em;
+  max-width: calc(100% - 3.2em);
 }
 
 .exclusions-target {
@@ -32,6 +33,18 @@ input.datepicker {
   position: relative;
   top: -4px;
   left: -20px;
+
+  @media (max-width: 991px) {
+    top: 10px;
+  }
+}
+
+.date-part {
+  @media (max-width: 767px) {
+    & + .date-part {
+      margin-top: 20px;
+    }
+  }
 }
 
 .condition {
@@ -64,4 +77,14 @@ input.datepicker {
 
 .measure-condition-components {
   margin-top: 20px;
+}
+
+.search-form {
+  background: $grey-4;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  .form-actions {
+    margin-bottom: 1em;
+  }
 }

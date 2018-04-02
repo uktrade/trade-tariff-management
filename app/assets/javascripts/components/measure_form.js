@@ -671,22 +671,7 @@ $(document).ready(function() {
   var app = new Vue({
     el: form,
     data: function() {
-      return {
-        measure: {
-          regulation_id: null,
-          measure_type_series_id: null,
-          measure_type_id: null,
-          quota_ordernumber: null,
-          quota_status: "open",
-          quota_criticality_threshold: null,
-          quota_description: null,
-          geographical_area_id: null,
-          excluded_geographical_areas: [],
-          conditions: [],
-          quota_periods: [],
-          measure_components: [],
-          footnotes: []
-        },
+      var data = {
         goods_nomenclature_code: "",
         additional_code: "",
         goods_nomenclature_code_description: "",
@@ -700,6 +685,28 @@ $(document).ready(function() {
           { value: "reopened", label: "Reopened" }
         ]
       };
+
+      if (window.__measure) {
+        this.parseMeasure(window.__measure);
+      } else {
+        data.measure = {
+          regulation_id: null,
+          measure_type_series_id: null,
+          measure_type_id: null,
+          quota_ordernumber: null,
+          quota_status: "open",
+          quota_criticality_threshold: null,
+          quota_description: null,
+          geographical_area_id: null,
+          excluded_geographical_areas: [],
+          conditions: [],
+          quota_periods: [],
+          measure_components: [],
+          footnotes: []
+        };
+      }
+
+      return data;
     },
     mounted: function() {
       var self = this;
@@ -774,6 +781,27 @@ $(document).ready(function() {
       });
     },
     methods: {
+      parseMeasure: function(raw) {
+        var actual = {
+          measure_id: raw.measure_id,
+          regulation_id: raw.regulation_id,
+          measure_type_series_id: raw.measure_type_series_id,
+          measure_type_id: raw.measure_type_id,
+          quota_ordernumber: raw.quota_ordernumber,
+          quota_status: raw.quota_status,
+          quota_criticality_threshold: raw.quota_criticality_threshold,
+          quota_description: raw.quota_description,
+          geographical_area_id: raw.geographical_area_id,
+          excluded_geographical_areas: raw.excluded_geographical_areas,
+          conditions: [],
+          quota_periods: [],
+          measure_components: [],
+          footnotes: raw.footnotes
+        };
+
+
+        return actual;
+      },
       addCondition: function() {
         this.measure.conditions.push({
           id: null,
