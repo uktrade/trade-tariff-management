@@ -1,4 +1,9 @@
-table.table.table-bordered.table-striped.table-condensed.table-footnotes
+table.table
+  colgroup
+    col width="180"
+    col width="220"
+    col width="130"
+    col width="*"
   thead
     tr
       th.span2 Date of Export
@@ -8,13 +13,13 @@ table.table.table-bordered.table-striped.table-condensed.table-footnotes
   tbody
     - xml_export_files.map do |export_item|
       tr
-        td width="15%"
+        td
           = export_item.date_of_export
-        td width="15%"
+        td
           = export_item.issue_date
-        td width="10%"
+        td
           = export_item.status
-        td width="*"
+        td
           - if export_item.xml.present?
             =<> link_to "Review in XML Browser", export_item.xml.url, target: "_blank"
             span
