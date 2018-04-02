@@ -1,9 +1,0 @@
-h3.heading-medium Goods Nomenclature - Demo (example) page
-
-= simple_form_for :search, url: root_path, html: {class: 'search-form', method: :get} do |f|
-  .row
-    .col-sm-6
-      = f.input :code, input_html: { value: params[:search].present? && params[:search][:code].present? ? params[:search][:code] : "9010", class: 'form-control' }
-  .form-actions
-    = f.button :submit, 'Search', class: 'button', data: { 'disable-with' => 'Searching' }
-    = link_to "Back", :back, class: 'secondary-button'

@@ -18,7 +18,13 @@ module Measures
     end
 
     def index
-      @measures = Measure.page(params[:page] || 1).per(25)
+      if params[:search].present? && params[:search][:code].present?
+        @measures = Measure.where(Sequel.like(:goods_nomenclature_item_id, params[:search][:code] + '%'))
+                           .page(params[:page] || 1)
+                           .per(25)
+      else
+        @measures = Measure.page(params[:page] || 1).per(25)
+      end
     end
 
     def new
