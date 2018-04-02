@@ -18,7 +18,7 @@ module Measures
     end
 
     def index
-      @measures = Measure.paginate(params[:page] || 1, 25)
+      @measures = Measure.page(params[:page] || 1).per(25)
     end
 
     def new
