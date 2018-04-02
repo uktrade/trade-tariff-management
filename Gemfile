@@ -28,6 +28,8 @@ gem 'govuk_elements_rails'
 gem 'govuk_frontend_toolkit', :git => "https://github.com/alphagov/govuk_frontend_toolkit_gem.git", :submodules => true
 gem 'bootstrap-sass', '~> 3.3.7'
 gem "bootstrap-datepicker-rails", "~> 1.7.1.1"
+gem 'momentjs-rails'
+gem "pikaday-gem"
 gem "selectize-rails"
 
 # File uploads and AWS
