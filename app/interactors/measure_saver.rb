@@ -2,17 +2,35 @@ class MeasureParamsNormalizer
 
   ALIASES = {
     start_date: :validity_start_date,
-    end_date: :validity_end_date
+    end_date: :validity_end_date,
+    goods_nomenclature_code: :goods_nomenclature_item_id,
+    additional_code: :method_additional_code_values
   }
+
+  WHITELIST_PARAMS = %w(
+    start_date
+    end_date
+    goods_nomenclature_code
+
+  )
 
   attr_accessor :normalized_params
 
   def initialize(measure_params)
     @normalized_params = {}
 
-    measure_params.map do |k, v|
+    measure_params.select do |k, v|
+      WHITELIST_PARAMS.include?(k)
+    end.map do |k, v|
       if ALIASES.keys.include?(k.to_sym)
-        @normalized_params[ALIASES[k.to_sym]] = v
+        if v.to_s.starts_with?("method_")
+          @normalized_params.merge!(
+            send(ALIASES[k.to_sym], measure_params[k])
+          )
+        else
+          @normalized_params[ALIASES[k.to_sym]] = v
+        end
+
       else
         @normalized_params[k] = v
       end
@@ -20,6 +38,18 @@ class MeasureParamsNormalizer
 
     @normalized_params
   end
+
+  private
+
+    def method_additional_code_values(additional_code_id)
+      additional_code = AdditionalCode.filter(additional_code: additional_code_id).first
+
+      {
+        additional_code_type_id: additional_code.additional_code_type_id,
+        additional_code_sid: additional_code.additional_code_sid,
+        additional_code_id: additional_code_id
+      }
+    end
 end
 
 class MeasureSaver
@@ -61,9 +91,21 @@ class MeasureSaver
       @errors[:validity_start_date] = "can't be blank!"
       return false
     else
+      p ""
+      p " --------------------0---measure_params: #{measure_params.inspect}---------------------------"
+      p ""
+
       @measure = Measure.new(measure_params)
 
+      p ""
+      p " --------------------1------------------------------"
+      p ""
+
       validate!
+
+      p ""
+      p " ---------------------2-----------------------------"
+      p ""
       errors.blank?
     end
   end
