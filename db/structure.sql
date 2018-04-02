@@ -4863,7 +4863,6 @@ ALTER SEQUENCE monetary_units_oid_seq OWNED BY monetary_units_oplog.oid;
 
 CREATE TABLE node_envelopes (
     id integer NOT NULL,
-    type character varying(11),
     node_id character varying(10),
     xml_export_file_id integer,
     updated_at timestamp without time zone,
@@ -4896,7 +4895,6 @@ ALTER SEQUENCE node_envelopes_id_seq OWNED BY node_envelopes.id;
 
 CREATE TABLE node_messages (
     id integer NOT NULL,
-    type character varying(11),
     node_id character varying(10),
     node_transaction_id integer,
     updated_at timestamp without time zone,
@@ -4929,7 +4927,6 @@ ALTER SEQUENCE node_messages_id_seq OWNED BY node_messages.id;
 
 CREATE TABLE node_transactions (
     id integer NOT NULL,
-    type character varying(11),
     node_id character varying(10),
     node_envelope_id integer,
     updated_at timestamp without time zone,
@@ -10292,4 +10289,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224900_add_issue_d
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180328135527_create_node_envelopes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144030_create_node_transactions.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144132_create_node_messages.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180402091320_remove_type_from_xml_nodes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');

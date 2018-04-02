@@ -1,7 +1,5 @@
 module XmlGeneration
-  class NodeMessage < Sequel::Model
-
-    extend ActiveModel::Naming
+  class NodeMessage < XmlGeneration::NodeBase
 
     GEOGRAPHICAL_AREAS = [
       GeographicalArea,
@@ -143,6 +141,8 @@ module XmlGeneration
       TransmissionComment,
       PublicationSigle
     ]
+
+    many_to_one :xml_generation_node_transaction, key: :node_transaction_id
 
     attr_accessor :record
 

@@ -1,7 +1,8 @@
 module XmlGeneration
-  class NodeTransaction < Sequel::Model
+  class NodeTransaction < XmlGeneration::NodeBase
 
-    extend ActiveModel::Naming
+    one_to_many :xml_generation_node_messages, key: :node_transaction_id
+    many_to_one :xml_generation_node_envelope, key: :node_envelope_id
 
     attr_accessor :messages
 
