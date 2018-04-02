@@ -736,7 +736,7 @@ $(document).ready(function() {
       }
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
-      this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
+      this.fetchNomenclatureCode("/additional_codes", 3, "additional_code", "additional_code_description", "json", "description");
 
       $("#measure_form_measure_type_series_id").on("change", function() {
         self.measure.measure_type_series_id = $("#measure_form_measure_type_series_id").val();
@@ -1000,7 +1000,7 @@ $(document).ready(function() {
         this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
       },
       additional_code: function() {
-        this.fetchNomenclatureCode("/additional_codes", 4, "additional_code", "additional_code_description", "json", "description");
+        this.fetchNomenclatureCode("/additional_codes", 3, "additional_code", "additional_code_description", "json", "description");
       },
       "measure.validity_start_date": function() {
         $(".measure-form").trigger("dates:changed", [this.measure.validity_start_date, this.measure.validity_end_date]);
