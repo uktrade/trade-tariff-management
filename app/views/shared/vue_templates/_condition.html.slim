@@ -1,61 +1,69 @@
 script type="text/x-template" id="condition-template"
   div
     .row
-      .col-4
-        label.form-label
-          | Condition
-          span.form-hint
-            | You can optionally select conditions that will determine the customs treatment of the goods this measure applies to.
-        = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select condition ―" }
+      .col-xs-12.col-sm-6.col-md-4
+        .form-group
+          label.form-label
+            | Condition
+            span.form-hint
+              | You can optionally select conditions that will determine the customs treatment of the goods this measure applies to.
+          = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select condition ―" }
 
-      = content_tag :div, class: "col-3", "v-if" => "showMinimumPrice" do
-        label.form-label
-          | Minimum Price (£)
-          span.form-hint
-            | Specify the price (in £) at or above which this condition will apply.
-        input.form-control type="text" v-model="condition.amount"
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showMinimumPrice" do
+        .form-group
+          label.form-label
+            | Minimum Price (£)
+            span.form-hint
+              | Specify the price (in £) at or above which this condition will apply.
+          input.form-control type="text" v-model="condition.amount"
 
-      = content_tag :div, class: "col-3", "v-if" => "showRatio" do
-        label.form-label
-          | Ratio
-          span.form-hint
-            | Specify the ratio at or above which this condition will apply.
-        input.form-control type="text" v-model="condition.amount"
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showRatio" do
+        .form-group
+          label.form-label
+            | Ratio
+            span.form-hint
+              | Specify the ratio at or above which this condition will apply.
+          input.form-control type="text" v-model="condition.amount"
 
-      = content_tag :div, class: "col-3", "v-if" => "showEntryPrice" do
-        label.form-label
-          | Entry Price (£)
-          span.form-hint
-            | Specify the price (in £) above which this condition will apply.
-        input.form-control type="text" v-model="condition.amount"
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showEntryPrice" do
+        .form-group
+          label.form-label
+            | Entry Price (£)
+            span.form-hint
+              | Specify the price (in £) above which this condition will apply.
+          input.form-control type="text" v-model="condition.amount"
 
-      = content_tag :div, class: "col-3", "v-if" => "showAmount" do
-        label.form-label
-          | Amount
-        input.form-control type="text" v-model="condition.amount"
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showAmount" do
+        .form-group
+          label.form-label
+            | Amount
+          input.form-control type="text" v-model="condition.amount"
 
-      = content_tag :div, class: "col-3", "v-if" => "showCertificateType" do
-        label.form-label
-          | Certificate type
-          span.form-hint
-            | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
-        = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate type ―" }
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showCertificateType" do
+        .form-group
+          label.form-label
+            | Certificate type
+            span.form-hint
+              | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
+          = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate type ―" }
 
-      = content_tag :div, class: "col-3", "v-if" => "showCertificate" do
-        label.form-label
-          | Certificate
-          span.form-hint
-            | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
-        = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType" }
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showCertificate" do
+        .form-group
+          label.form-label
+            | Certificate
+            span.form-hint
+              | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
+          = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType" }
 
-      = content_tag :div, { class: "col-3", "v-if" => "showAction" } do
-        label.form-label
-          | Action
-          = content_tag :span, { class: "form-hint", "v-if" => "certificateActionHint" } do
-            | Define the action to take when the specified certificate (or no certificate) is presented.
-          = content_tag :span, { class: "form-hint", "v-if" => "noCertificateActionHint" } do
-            | Define the action to take if the condition is met.
-        = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true }
+      = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showAction" } do
+        .form-group
+          label.form-label
+            | Action
+            = content_tag :span, { class: "form-hint", "v-if" => "certificateActionHint" } do
+              | Define the action to take when the specified certificate (or no certificate) is presented.
+            = content_tag :span, { class: "form-hint", "v-if" => "noCertificateActionHint" } do
+              | Define the action to take if the condition is met.
+          = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true }
     = content_tag :div, { "v-if" => "showConditionComponents" } do
       .measure-condition-components
         div.measure-condition-component v-for="(measureConditionComponent, index) in condition.measure_condition_components"
