@@ -50,6 +50,7 @@ class AdditionalCode < Sequel::Model
   def json_mapping
     {
       additional_code: additional_code,
+      type_id: additional_code_type_id,
       description: description
     }
   end
