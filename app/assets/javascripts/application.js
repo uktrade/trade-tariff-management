@@ -1,7 +1,7 @@
 //= require jquery
 //= require jquery_ujs
-//= require bootstrap-sprockets
-//= require bootstrap-datepicker
+//= require moment
+//= require pikaday
 //= require selectize
 //= require_tree .
 

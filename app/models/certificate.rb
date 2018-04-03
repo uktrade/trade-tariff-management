@@ -37,4 +37,11 @@ class Certificate < Sequel::Model
   def subrecord_code
    "00".freeze
   end
+
+  def json_mapping
+    {
+      certificate_code: certificate_code,
+      description: description
+    }
+  end
 end

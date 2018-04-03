@@ -1,21 +1,14 @@
 module XmlGeneration
-  class NodeEnvelope
+  class NodeEnvelope < Sequel::Model
+
+    include ::XmlGeneration::NodeBase
     include ::XmlGeneration::BaseHelper
 
-    attr_accessor :transactions
+    one_to_many :transactions, class_name: "XmlGeneration::NodeTransaction",
+                               key: :node_envelope_id
 
-    def initialize(records)
-      @transactions = records.map do |transaction_block|
-        ::XmlGeneration::NodeTransaction.new(transaction_block)
-      end
-    end
-
-    def id
-      # TODO
-      #
-      # Emulation:
-      #
-      Time.now.to_i - 1519999000
+    validates do
+      uniqueness_of :node_id
     end
   end
 end

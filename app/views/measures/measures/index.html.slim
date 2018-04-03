@@ -1,0 +1,58 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management Application", root_url
+
+    li aria-current="page"
+      | Measures
+
+h2.heading-large
+  | Measures
+
+= simple_form_for :search, url: measures_path, html: {class: 'search-form', method: :get} do |f|
+  .row
+    .col-sm-6
+      = f.input :code, label: "Commodity code", input_html: { value: params[:search].present? && params[:search][:code].present? ? params[:search][:code] : "", class: 'form-control' }
+  .form-actions
+    = f.button :submit, 'Search', class: 'button', data: { 'disable-with' => 'Searching' }
+    = link_to "Clear", measures_path, class: 'secondary-button'
+
+
+table.table
+  thead
+    tr
+      th
+        | Measure ID
+      th
+        | Measure type
+      th
+        | Geographical area
+      th
+        | Commodity code
+      th
+        | Add. code
+      th
+        | Regulation
+      th
+        | Dates of validity
+  tbody
+    - @measures.each do |measure|
+      tr
+        td
+          = measure.measure_sid
+        td
+          = measure.measure_type.description
+        td
+          = measure.geographical_area.description
+        td
+          = measure.goods_nomenclature_item_id
+        td
+          = measure.additional_code_id
+        td
+          = measure.base_regulation.base_regulation_id
+        td
+          = measure.validity_start_date.strftime("%d/%m/%Y")
+          | &ndash;
+          = measure.validity_end_date.try(:strftime, "%d/%m/%Y") || "unspecified"
+
+= paginate @measures

@@ -1,9 +1,32 @@
-h1.heading-large Welcome, #{current_user.name}
+.dashboard-page
+  header
+    h1.heading-large
+      = "Welcome, #{current_user.name}"
+    p.font-xsmall
+      | Sed eget augue et nunc tincidunt varius sit amet a nisl. Nam tincidunt leo sem. Pellentesque quis libero ex. Etiam in ante vestibulum, accumsan quam nec, volutpat nunc. Nulla ac massa vitae nunc commodo suscipit. Suspendisse dapibus aliquam nulla nec volutpat. Aenean ante felis, accumsan a massa et, pellentesque venenatis tortor.</p>
 
-h2.heading-small Measures
+  h2.heading-small.nl
+    | Measures
 
-div
-  h3.heading-small
-    = link_to new_measure_path do
-      = "Create new measure"
-	p.font-xsmall Create a single measures and assign to a regulation
+  .clearfix
+    .w30.mt1
+      h3.heading-small style="margin:0px"
+        = link_to "Create a measure", new_measure_path
+      p.font-xsmall
+        | Create a single or multiple measures and assign to a regulation
+
+    .w30.mt1
+      h3.heading-small style="margin:0px"
+        = link_to "Find a measure", measures_path
+      p.font-xsmall
+        | Search for an existing measure on the database to view or make changes
+
+  h2.heading-small.nl
+    | Reports
+
+  .clearfix
+    .w30.mt1
+      h3.heading-small style="margin:0px"
+        = link_to "XML generation", xml_generation_exports_path
+      p.font-xsmall
+        | consectetur adipiscing elit. Donec erat leo, pharetra at velit in, congue consequat ipsum. Donec consequat tellus nec finibus laoreet. Ut vel congue
