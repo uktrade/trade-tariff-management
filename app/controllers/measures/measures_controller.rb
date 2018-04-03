@@ -6,37 +6,33 @@ module Measures
       measure_ops.send("permitted=", true)
       measure_ops = measure_ops.to_h
 
-      p ""
-      p "-" * 100
-      p ""
-      p " CONTROLLER PARAMS: #{measure_ops.inspect}"
-      p ""
-      p "-" * 100
-      p ""
-
       ::MeasureSaver.new(measure_ops)
     end
 
-    def index
-      if params[:search].present? && params[:search][:code].present?
-        @measures = Measure.where(Sequel.like(:goods_nomenclature_item_id, params[:search][:code] + '%'))
-                           .page(params[:page] || 1)
-                           .per(25)
-      else
-        @measures = Measure.page(params[:page] || 1).per(25)
-      end
+    expose(:measure) do
+      measure_saver.measure
     end
 
-    def new
-      @form = MeasureForm.new(Measure.new)
+    expose(:measures) do
+      scope = Measure
+      scope = scope.q_search(params[:code]) if params[:code].present?
+
+      scope.page(params[:page] || 1)
+           .per(25)
+    end
+
+    expose(:form) do
+      MeasureForm.new(Measure.new)
     end
 
     def create
       if measure_saver.valid?
         measure_saver.persist!
 
-        render json: { measure_sid: measure_saver.measure_sid },
-               status: :ok
+        render json: {
+          measure_sid: measure.measure_sid,
+          goods_nomenclature_item_id: measure.goods_nomenclature_item_id
+        }, status: :ok
       else
         render json: { errors: measure_saver.errors },
                status: :unprocessable_entity

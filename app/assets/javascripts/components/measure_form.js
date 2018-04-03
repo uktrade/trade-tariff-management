@@ -780,9 +780,9 @@ $(document).ready(function() {
           data: {
             measure: self.preparePayload()
           },
-          success: function() {
+          success: function(response) {
             $(".js-measure-form-errors-container").empty().addClass("hidden");
-            window.location = "/measures";
+            window.location = "/measures?code=" + response.goods_nomenclature_item_id;
           },
           error: function(response) {
             //TODO: handle errors

@@ -12,7 +12,7 @@ h2.heading-large
 = simple_form_for :search, url: measures_path, html: {class: 'search-form', method: :get} do |f|
   .row
     .col-sm-6
-      = f.input :code, label: "Commodity code", input_html: { value: params[:search].present? && params[:search][:code].present? ? params[:search][:code] : "", class: 'form-control' }
+      = f.input :code, label: "Commodity code", input_html: { name: :code, value: params[:code] || "", class: 'form-control' }
   .form-actions
     = f.button :submit, 'Search', class: 'button', data: { 'disable-with' => 'Searching' }
     = link_to "Clear", measures_path, class: 'secondary-button'
@@ -36,23 +36,7 @@ table.table
       th
         | Dates of validity
   tbody
-    - @measures.each do |measure|
-      tr
-        td
-          = measure.measure_sid
-        td
-          = measure.measure_type.description
-        td
-          = measure.geographical_area.description
-        td
-          = measure.goods_nomenclature_item_id
-        td
-          = measure.additional_code_id
-        td
-          = measure.base_regulation.try(:base_regulation_id)
-        td
-          = measure.validity_start_date.strftime("%d/%m/%Y")
-          | &ndash;
-          = measure.validity_end_date.try(:strftime, "%d/%m/%Y") || "unspecified"
+    - measures.each do |measure|
+      = render "measure", measure: measure
 
-= paginate @measures
+= paginate measures

@@ -1,0 +1,17 @@
+tr
+  td
+    = measure.measure_sid
+  td
+    = measure.measure_type.description
+  td
+    = measure.geographical_area.description
+  td
+    = measure.goods_nomenclature_item_id
+  td
+    = measure.additional_code_id
+  td
+    = measure.base_regulation.try(:base_regulation_id)
+  td
+    = measure.validity_start_date.strftime("%d/%m/%Y")
+    | &ndash;
+    = measure.validity_end_date.try(:strftime, "%d/%m/%Y") || "unspecified"
