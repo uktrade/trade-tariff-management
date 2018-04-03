@@ -3,7 +3,9 @@ module Measures
     respond_to :json
 
     def index
-      @nomenclature = GoodsNomenclature.where(goods_nomenclature_item_id: params[:q]).first.try(:sti_instance)
+      @nomenclature = GoodsNomenclature.actual
+                                       .where(goods_nomenclature_item_id: params[:q])
+                                       .first.try(:sti_instance)
 
       if @nomenclature.present?
         render partial: "shared/tariff_breadcrumbs"

@@ -7,4 +7,3 @@ module Measures
     end
   end
 end
-
