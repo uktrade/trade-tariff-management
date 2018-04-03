@@ -20,6 +20,10 @@ class BaseRegulation < Sequel::Model
         Sequel.ilike(:information_text, "#{keyword}%")
       }
     end
+
+    def fully_replaced
+      where(replacement_indicator: 1)
+    end
   end
 
   def not_completely_abrogated?
