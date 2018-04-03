@@ -703,7 +703,8 @@ $(document).ready(function() {
           { value: "unblocked", label: "Unblocked" },
           { value: "unsuspended", label: "Unsuspended" },
           { value: "reopened", label: "Reopened" }
-        ]
+        ],
+        errors: []
       };
 
       if (window.__measure) {
@@ -769,10 +770,12 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
 
-        var button = $("button[type='submit']");
-        button.attr("data-text", button.text());
-        button.text("Saving...");
+        var button = $("input[type='submit']");
+        button.attr("data-text", button.val());
+        button.val("Saving...");
         button.prop("disabled", true);
+
+        self.errors = [];
 
         $.ajax({
           url: "/measures",
@@ -781,22 +784,22 @@ $(document).ready(function() {
             measure: self.preparePayload()
           },
           success: function() {
-            $(".js-measure-form-errors-container").empty().addClass("hidden");
             window.location = "/measures";
           },
           error: function(response) {
             //TODO: handle errors
-            button.text(button.attr("data-text"));
+            button.val(button.attr("data-text"));
             button.prop("disabled", false);
 
-            errors = "<h3 class='measure-form-errors-header'>Errors:</h3><ul>";
             $.each( response.responseJSON.errors, function( key, value ) {
-              error = "<li>" + value + "</li>";
-              errors += error;
+              if (value.constructor === Array) {
+                value.forEach(function(innerError) {
+                  self.errors.push(innerError);
+                });
+              } else {
+                self.errors.push(value);
+              }
             });
-            errors += "</ul>";
-
-            $(".js-measure-form-errors-container").html(errors).removeClass("hidden");
           }
         });
       });
@@ -1005,6 +1008,28 @@ $(document).ready(function() {
 
         return this.measure.quota_periods[0].type === "custom";
       },
+      showDuties: function() {
+        var series = ["A", "B", "M", "N"];
+
+        return this.measure.measure_type_series_id && series.indexOf(this.measure.measure_type_series_id) === -1;
+      },
+      showQuota: function() {
+        if (!this.measure.measure_type_series_id || !this.measure.measure_type_id ) {
+          return false;
+        }
+
+        if (this.measure.measure_type_series_id == "N") {
+          return true;
+        }
+
+        var ids = ["122", "123", "143", "144", "146", "147", "907"];
+
+        if (this.measure.measure_type_series_id == "C" && ids.indexOf(this.measure.measure_type_id) > -1) {
+          return true;
+        }
+
+        return false;
+      },
       showStandardImportValue: function() {
         return this.measure.measure_type_id === "490";
       },
@@ -1019,6 +1044,9 @@ $(document).ready(function() {
       },
       noCondition: function() {
         return this.measure.conditions.length === 0;
+      },
+      hasErrors: function() {
+        return this.errors.length > 0;
       }
     },
     watch: {
