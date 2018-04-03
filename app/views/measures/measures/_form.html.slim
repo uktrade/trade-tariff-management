@@ -49,7 +49,7 @@
 
       .row
         .col-md-5
-          = content_tag "custom-select", "", { url: "/regulations", "label-field" => "description", "value-field" => "regulation_id", placeholder: "― start typing ―", "min-length" => 2, "v-model" => "measure.regulation_id" }
+          = content_tag "custom-select", "", { url: "/regulations", "label-field" => "description", "value-field" => "regulation_id", placeholder: "― start typing ―", "min-length" => 2, "v-model" => "measure.regulation_id", "date-sensitive" => true }
 
   fieldset
     h3.heading-medium
@@ -65,7 +65,7 @@
       .col-md-5
         = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id, input_html: { "v-model" => "measure.measure_type_id" }, label_html: { class: "form-label" }
 
-  fieldset
+  fieldset v-if="showQuota"
     h3.heading-medium
       | Configure the quota
 
@@ -230,7 +230,7 @@
 
             = content_tag "custom-select", "", { url: "/additional_codes", "label-field" => "description", "value-field" => "additional_code", "code-field" => "additional_code", placeholder: "― start typing ―", "min-length" => 3, "v-model" => "measure.additional_code", "drilldown-name" => "additional_code_type_id", ":drilldown-value" => "measure.additional_code_type_id", "drilldown-required" => true, "date-sensitive" => true }
 
-  fieldset
+  fieldset v-if="showDuties"
     h3.heading-medium
       | Specify duties
 
@@ -322,7 +322,12 @@
       a href="#" v-on:click.prevent="addFootnote"
         | Add another footnote
 
-  .js-measure-form-errors-container.alert.alert-danger.hidden
+  .js-measure-form-errors-container.alert.alert-danger v-if="hasErrors"
+    h3.measure-form-errors-header
+      | Errors:
+    ul
+      li v-for="error in errors"
+        span v-html="error"
 
   .form-actions
     = f.button :submit, "Create measure", class: "button"
