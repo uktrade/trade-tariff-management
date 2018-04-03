@@ -20,9 +20,11 @@ class MeasureParamsNormalizer
   def initialize(measure_params)
     @normalized_params = {}
 
-    measure_params.select do |k, v|
-      WHITELIST_PARAMS.include?(k)
-    end.map do |k, v|
+    whitelist = measure_params.select do |k, v|
+      WHITELIST_PARAMS.include?(k) && v.present?
+    end
+
+    whitelist.map do |k, v|
       if ALIASES.keys.include?(k.to_sym)
         if v.to_s.starts_with?("method_")
           @normalized_params.merge!(
@@ -31,7 +33,6 @@ class MeasureParamsNormalizer
         else
           @normalized_params[ALIASES[k.to_sym]] = v
         end
-
       else
         @normalized_params[k] = v
       end
@@ -104,6 +105,7 @@ class MeasureSaver
       p ""
       p " --------------------0---measure_params: #{measure_params.inspect}---------------------------"
       p ""
+      measure_params[:validity_start_date] = Date.current
 
       @measure = Measure.new(measure_params)
 
