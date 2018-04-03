@@ -49,7 +49,7 @@ table.table
         td
           = measure.additional_code_id
         td
-          = measure.base_regulation.base_regulation_id
+          = measure.base_regulation.try(:base_regulation_id)
         td
           = measure.validity_start_date.strftime("%d/%m/%Y")
           | &ndash;

@@ -130,10 +130,6 @@ class MeasureSaver
     @errors = {}
   end
 
-  def persist!
-    # TODO
-  end
-
   def valid?
     if measure_params[:validity_start_date].blank?
       @errors[:validity_start_date] = "Start date can't be blank!"
@@ -165,6 +161,23 @@ class MeasureSaver
       p ""
       errors.blank?
     end
+  end
+
+  def persist!
+    #
+    # Cleaning up previously assigned `measure_sid` above ^
+    #
+    measure.operation_date = Date.current
+    measure.measure_sid = nil
+    measure.save
+
+    p ""
+    p "-" * 100
+    p ""
+    p " measure SAVED: #{measure.inspect}"
+    p ""
+    p "-" * 100
+    p ""
   end
 
   private
