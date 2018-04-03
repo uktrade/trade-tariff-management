@@ -4,16 +4,20 @@ class MeasureParamsNormalizer
     start_date: :validity_start_date,
     end_date: :validity_end_date,
     goods_nomenclature_code: :goods_nomenclature_item_id,
+    quota_ordernumber: :ordernumber,
     additional_code: :method_additional_code_values,
-    regulation_id: :method_regulation_values
+    regulation_id: :method_regulation_values,
+    geographical_area_id: :method_geographical_area_values
   }
 
   WHITELIST_PARAMS = %w(
     start_date
     end_date
     goods_nomenclature_code
+    quota_ordernumber
     measure_type_id
     regulation_id
+    geographical_area_id
   )
 
   attr_accessor :normalized_params
@@ -79,12 +83,19 @@ class MeasureParamsNormalizer
                                  .not_replaced_and_partially_replaced
                                  .where(base_regulation_id: base_regulation_id).first
 
-      p ""
-      p "REGULATION: #{regulation.inspect}, fully_replaced: #{}"
-
       {
         measure_generating_regulation_role: regulation.base_regulation_role,
         measure_generating_regulation_id: base_regulation_id
+      }
+    end
+
+    def method_geographical_area_values(geographical_area_id)
+      geographical_area = GeographicalArea.actual
+                                          .where(geographical_area_id: geographical_area_id).first
+
+      {
+        geographical_area_id: geographical_area_id,
+        geographical_area_sid: geographical_area.geographical_area_sid
       }
     end
 end
@@ -133,6 +144,15 @@ class MeasureSaver
       p ""
 
       @measure = Measure.new(measure_params)
+      #
+      # We need to assign `measure_sid` Measure before assign Geographical Area or Measure Type
+      # Otherwise, we are getting
+      # Sequel::Error `does not have a primary key`
+      #
+      # This is because MeasureValidator class is tend to work with already persisted
+      # database record.
+      #
+      measure.measure_sid = Measure.max(:measure_sid) + 1
 
       p ""
       p " --------------------1------------------------------"
