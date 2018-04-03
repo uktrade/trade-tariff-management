@@ -919,6 +919,7 @@ $(document).ready(function() {
         var payload = {
           start_date: this.measure.validity_start_date,
           end_date: this.measure.validity_end_date,
+          regulation_id: this.measure.regulation_id,
           measure_type_series_id: this.measure.measure_type_series_id,
           measure_type_id: this.measure.measure_type_id,
           goods_nomenclature_code: this.measure.goods_nomenclature_code,
