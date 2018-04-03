@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     resources :measure_condition_codes, only: [:index]
     resources :goods_nomenclatures, only: [:index]
     resources :additional_codes, only: [:index]
+    resources :additional_code_types, only: [:index]
     resources :duty_expressions, only: [:index]
     resources :measure_actions, only: [:index]
     resources :measurement_units, only: [:index]
