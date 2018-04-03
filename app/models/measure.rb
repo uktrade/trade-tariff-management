@@ -111,6 +111,8 @@ class Measure < Sequel::Model
                                 key: [:measure_generating_regulation_id,
                                       :measure_generating_regulation_role]
 
+  attr_accessor :manual_add
+
   def validity_start_date
     if self[:validity_start_date].present?
       self[:validity_start_date]

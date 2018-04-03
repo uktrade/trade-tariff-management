@@ -3,8 +3,8 @@ class MeasureParamsNormalizer
   ALIASES = {
     start_date: :validity_start_date,
     end_date: :validity_end_date,
-    goods_nomenclature_code: :goods_nomenclature_item_id,
     quota_ordernumber: :ordernumber,
+    goods_nomenclature_code: :method_goods_nomenclature_item_values,
     additional_code: :method_additional_code_values,
     regulation_id: :method_regulation_values,
     geographical_area_id: :method_geographical_area_values
@@ -30,27 +30,8 @@ class MeasureParamsNormalizer
     end
 
     whitelist.map do |k, v|
-      p "+" * 100
-      p ""
-      p " #{k} : #{v}"
-      p ""
-
       if ALIASES.keys.include?(k.to_sym)
-        p ""
-        p " v.to_s.starts_with?('method_'): #{v.to_s.starts_with?('method_')}"
-        p ""
-
         if ALIASES[k.to_sym].to_s.starts_with?("method_")
-
-          p " ALIASES[k.to_sym]: #{ALIASES[k.to_sym]}"
-          p ""
-          p " measure_params[k]: #{measure_params[k]}"
-          p ""
-          p " send(ALIASES[k.to_sym], measure_params[k]): #{send(ALIASES[k.to_sym], measure_params[k])}"
-          p ""
-          p "+" * 100
-          p ""
-
           @normalized_params.merge!(
             send(ALIASES[k.to_sym], measure_params[k])
           )
@@ -98,6 +79,17 @@ class MeasureParamsNormalizer
         geographical_area_sid: geographical_area.geographical_area_sid
       }
     end
+
+    def method_goods_nomenclature_item_values(goods_nomenclature_item_id)
+      commodity = Commodity.actual
+                           .declarable
+                           .where(goods_nomenclature_item_id: goods_nomenclature_item_id).first
+
+      {
+        goods_nomenclature_item_id: goods_nomenclature_item_id,
+        goods_nomenclature_sid: commodity.goods_nomenclature_sid
+      }
+    end
 end
 
 class MeasureSaver
@@ -108,14 +100,6 @@ class MeasureSaver
                 :errors
 
   def initialize(measure_params={})
-    p ""
-    p "-" * 100
-    p ""
-    p " measure_params: #{measure_params.inspect}"
-    p ""
-    p "-" * 100
-    p ""
-
     @measure_params = ::MeasureParamsNormalizer.new(measure_params).normalized_params
 
     p ""
@@ -126,7 +110,6 @@ class MeasureSaver
     p "-" * 100
     p ""
 
-
     @errors = {}
   end
 
@@ -135,10 +118,6 @@ class MeasureSaver
       @errors[:validity_start_date] = "Start date can't be blank!"
       return false
     else
-      p ""
-      p " --------------------0---measure_params: #{measure_params.inspect}---------------------------"
-      p ""
-
       @measure = Measure.new(measure_params)
       #
       # We need to assign `measure_sid` Measure before assign Geographical Area or Measure Type
@@ -148,36 +127,33 @@ class MeasureSaver
       # This is because MeasureValidator class is tend to work with already persisted
       # database record.
       #
-      measure.measure_sid = Measure.max(:measure_sid) + 1
-
-      p ""
-      p " --------------------1------------------------------"
-      p ""
+      generate_measure_sid
 
       validate!
-
-      p ""
-      p " ---------------------2-----------------------------"
-      p ""
       errors.blank?
     end
   end
 
   def persist!
-    #
-    # Cleaning up previously assigned `measure_sid` above ^
-    #
+    generate_measure_sid
+    measure.manual_add = true
+    measure.operation = "C"
     measure.operation_date = Date.current
-    measure.measure_sid = nil
-    measure.save
 
-    p ""
-    p "-" * 100
-    p ""
-    p " measure SAVED: #{measure.inspect}"
-    p ""
-    p "-" * 100
-    p ""
+    attempts = 5
+
+    begin
+      measure.save
+    rescue Exception => e
+      attempts -= 1
+      generate_measure_sid
+
+      if attempts > 0
+        retry
+      else
+        raise "Can't save measure: #{e.message.inspect}"
+      end
+    end
   end
 
   private
@@ -190,18 +166,7 @@ class MeasureSaver
       @base_validator = base_validator.validate(measure)
 
       if measure.conformance_errors.present?
-        p ""
-        p " measure.conformance_errors: #{measure.conformance_errors.inspect}"
-        p ""
-
         measure.conformance_errors.map do |error_code, error_details_list|
-
-          p ""
-          p " error_code: #{error_code}"
-          p ""
-          p " error_details_list: #{error_details_list.inspect}"
-          p ""
-
           @errors[get_error_area(error_code)] = error_details_list
         end
       end
@@ -215,5 +180,9 @@ class MeasureSaver
       base_validator.detect do |v|
         v.identifiers == error_code
       end.validation_options[:of]
+    end
+
+    def generate_measure_sid
+      measure.measure_sid = Measure.max(:measure_sid) + 1
     end
 end
