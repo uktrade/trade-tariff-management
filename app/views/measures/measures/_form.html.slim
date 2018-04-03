@@ -9,7 +9,7 @@
 = render "shared/vue_templates/measure_condition_component"
 = render "shared/vue_templates/footnote"
 
-= simple_form_for @form, url: measures_path, html: { class: "measure-form", data: { measure: @form.measure.to_json, measure_condition_attributes: @form.measure.measure_conditions.to_json } } do |f|
+= simple_form_for form, url: measures_path, html: { class: "measure-form", data: { measure: form.measure.to_json, measure_condition_attributes: form.measure.measure_conditions.to_json } } do |f|
 
   fieldset
     h3.heading-medium
@@ -61,9 +61,9 @@
 
     .row
       .col-md-5
-        = f.input :measure_type_series_id, as: :select, collection: @form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id, input_html: { "v-model" => "measure.measure_type_series_id" }, label_html: { class: "form-label" }
+        = f.input :measure_type_series_id, as: :select, collection: form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id, input_html: { "v-model" => "measure.measure_type_series_id" }, label_html: { class: "form-label" }
       .col-md-5
-        = f.input :measure_type_id, as: :select, collection: @form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id, input_html: { "v-model" => "measure.measure_type_id" }, label_html: { class: "form-label" }
+        = f.input :measure_type_id, as: :select, collection: form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id, input_html: { "v-model" => "measure.measure_type_id" }, label_html: { class: "form-label" }
 
   fieldset v-if="showQuota"
     h3.heading-medium
@@ -127,13 +127,13 @@
       |.
 
     .controls.origins-region
-      = f.hidden_field :geographical_area_id, value: @form.geographical_area_id, "v-model" => "measure.geographical_area_id"
-      = f.collection_select(:excluded_geographical_areas, @form.all_geographical_areas, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true, "v-model" => "measure.excluded_geographical_areas" })
+      = f.hidden_field :geographical_area_id, value: form.geographical_area_id, "v-model" => "measure.geographical_area_id"
+      = f.collection_select(:excluded_geographical_areas, form.all_geographical_areas, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true, "v-model" => "measure.excluded_geographical_areas" })
 
       .multiple-choice
-        = f.radio_button :geographical_area_type, :country, value: @form.geographical_area_type, class: "radio-inline-group"
+        = f.radio_button :geographical_area_type, :country, value: form.geographical_area_type, class: "radio-inline-group"
         label
-          = f.collection_select(:geographical_area_proxy, @form.all_geographical_countries, :geographical_area_id, :description, { include_blank: true, prompt: "― select a country or region ―" }, {class: "origin-select", "data-placeholder" => "― select a country or region ―"})
+          = f.collection_select(:geographical_area_proxy, form.all_geographical_countries, :geographical_area_id, :description, { include_blank: true, prompt: "― select a country or region ―" }, {class: "origin-select", "data-placeholder" => "― select a country or region ―"})
 
       .panel.panel-border-narrow.js-hidden#exclusions-for-country-region
         label.form-label
@@ -147,9 +147,9 @@
 
 
       .multiple-choice
-        = f.radio_button :geographical_area_type, :group, value: @form.geographical_area_type, class: "radio-inline-group"
+        = f.radio_button :geographical_area_type, :group, value: form.geographical_area_type, class: "radio-inline-group"
         label
-          = f.collection_select(:geographical_area_proxy, @form.geographical_groups_except_erga_omnes, :geographical_area_id, :description, { include_blank: true, prompt: "― select a group of countries ―" }, { class: "origin-select", "data-placeholder" => "― select a group of countries ―" })
+          = f.collection_select(:geographical_area_proxy, form.geographical_groups_except_erga_omnes, :geographical_area_id, :description, { include_blank: true, prompt: "― select a group of countries ―" }, { class: "origin-select", "data-placeholder" => "― select a group of countries ―" })
 
       .panel.panel-border-narrow.js-hidden#exclusions-for-groups
         label.form-label
@@ -163,7 +163,7 @@
 
 
       .multiple-choice
-        = f.radio_button :geographical_area_type, :erga_omnes, value: @form.geographical_area_type, class: "radio-inline-group", id: "erga-omnes-radio"
+        = f.radio_button :geographical_area_type, :erga_omnes, value: form.geographical_area_type, class: "radio-inline-group", id: "erga-omnes-radio"
         label for="erga-omnes-radio"
           | ERGA OMNES (all origins)
 

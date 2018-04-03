@@ -96,7 +96,6 @@ class MeasureSaver
 
   attr_accessor :measure_params,
                 :measure,
-                :measure_sid,
                 :errors
 
   def initialize(measure_params={})
@@ -154,6 +153,10 @@ class MeasureSaver
         raise "Can't save measure: #{e.message.inspect}"
       end
     end
+
+    p ""
+    p "[SAVED MEASURE] sid: #{measure.measure_sid} | #{measure.inspect}"
+    p ""
   end
 
   private
