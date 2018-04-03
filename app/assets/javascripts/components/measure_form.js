@@ -209,7 +209,9 @@ $(document).ready(function() {
         searchField: [this.valueField, this.codeField, this.labelField],
 
         onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
-        onChange: function(){ this.$dropdown_content.removeHighlight(); }
+        onChange: function(){
+          vm.$dropdown_content.removeHighlight();
+        }
       };
 
       if (this.options) {
@@ -276,7 +278,7 @@ $(document).ready(function() {
       }
 
       $(this.$el).selectize(options).val(this.value).trigger('change').on('change', function () {
-        vm.$emit('input', this.value)
+        vm.$emit('input', this.value);
       });
 
       if (this.dateSensitive) {
@@ -673,7 +675,7 @@ $(document).ready(function() {
     data: function() {
       var data = {
         goods_nomenclature_code: "",
-        additional_code: "",
+        additional_code: null,
         goods_nomenclature_code_description: "",
         additional_code_description: "",
         quota_statuses: [
@@ -924,6 +926,7 @@ $(document).ready(function() {
           measure_type_id: this.measure.measure_type_id,
           goods_nomenclature_code: this.measure.goods_nomenclature_code,
           additional_code: this.measure.additional_code,
+          additional_code_type_id: this.measure.additional_code_type_id,
           goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
           additional_code_description: this.measure.additional_code_description,
 
@@ -1018,6 +1021,11 @@ $(document).ready(function() {
       },
       "measure.validity_end_date": function() {
         $(".measure-form").trigger("dates:changed", [this.measure.validity_start_date, this.measure.validity_end_date]);
+      },
+      "measure.additional_code_type_id": function(newVal, oldVal) {
+        if (oldVal && !newVal) {
+          this.measure.additional_code = null;
+        }
       }
     }
   });
