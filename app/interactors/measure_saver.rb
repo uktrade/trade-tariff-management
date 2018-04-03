@@ -117,10 +117,21 @@ class MeasureSaver
     end
 
     def measure_base_validation!
-      base_validator.validate(measure)
+      @base_validator = base_validator.validate(measure)
 
       if measure.conformance_errors.present?
+        p ""
+        p " measure.conformance_errors: #{measure.conformance_errors.inspect}"
+        p ""
+
         measure.conformance_errors.map do |error_code, error_details_list|
+
+          p ""
+          p " error_code: #{error_code}"
+          p ""
+          p " error_details_list: #{error_details_list.inspect}"
+          p ""
+
           @errors[get_error_area(error_code)] = error_details_list
         end
       end

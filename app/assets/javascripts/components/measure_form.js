@@ -762,12 +762,22 @@ $(document).ready(function() {
             measure: self.preparePayload()
           },
           success: function() {
+            $(".js-measure-form-errors-container").empty().addClass("hidden");
             window.location = "/measures";
           },
-          error: function() {
+          error: function(response) {
             //TODO: handle errors
             button.text(button.attr("data-text"));
             button.prop("disabled", false);
+
+            errors = "<h3 class='measure-form-errors-header'>Errors:</h3><ul>";
+            $.each( response.responseJSON.errors, function( key, value ) {
+              error = "<li>" + value + "</li>";
+              errors += error;
+            });
+            errors += "</ul>";
+
+            $(".js-measure-form-errors-container").html(errors).removeClass("hidden");
           }
         });
       });
