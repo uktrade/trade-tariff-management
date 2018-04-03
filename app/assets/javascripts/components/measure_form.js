@@ -214,6 +214,10 @@ $(document).ready(function() {
         }
       };
 
+      if (this.codeField) {
+        options.sortField = this.codeField;
+      }
+
       if (this.options) {
         options["options"] = this.options;
       }
@@ -308,19 +312,22 @@ $(document).ready(function() {
           vm.$el.selectize.refreshOptions();
           vm.$el.selectize.renderCache['option'] = {};
           vm.$el.selectize.renderCache['item'] = {};
-          vm.$el.selectize.load(function(callback) {
-            $.ajax({
-              url: vm.url,
-              data: data,
-              type: 'GET',
-              error: function() {
-                callback();
-              },
-              success: function(res) {
-                callback(res);
-              }
+
+          if (!vm.minLength) {
+            vm.$el.selectize.load(function(callback) {
+              $.ajax({
+                url: vm.url,
+                data: data,
+                type: 'GET',
+                error: function() {
+                  callback();
+                },
+                success: function(res) {
+                  callback(res);
+                }
+              });
             });
-          });
+          }
         };
 
         $(".measure-form").on("dates:changed", this.handleDateSentitivity);
