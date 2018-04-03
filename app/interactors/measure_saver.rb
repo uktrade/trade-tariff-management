@@ -5,7 +5,7 @@ class MeasureParamsNormalizer
     end_date: :validity_end_date,
     goods_nomenclature_code: :goods_nomenclature_item_id,
     additional_code: :method_additional_code_values,
-    regulation: :method_regulation_values
+    regulation_id: :method_regulation_values
   }
 
   WHITELIST_PARAMS = %w(
@@ -99,13 +99,12 @@ class MeasureSaver
 
   def valid?
     if measure_params[:validity_start_date].blank?
-      @errors[:validity_start_date] = "can't be blank!"
+      @errors[:validity_start_date] = "Start date can't be blank!"
       return false
     else
       p ""
       p " --------------------0---measure_params: #{measure_params.inspect}---------------------------"
       p ""
-      measure_params[:validity_start_date] = Date.current
 
       @measure = Measure.new(measure_params)
 
