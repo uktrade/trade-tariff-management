@@ -60,10 +60,12 @@ module Sequel
         # will be called by https://github.com/jeremyevans/sequel/blob/5afb0d0e28a89e68f1823d77d23cfa57d6b88dad/lib/sequel/model/base.rb#L1549
         # @note fixes `NotImplementedError: You should be inserting model instances`
         def _insert_select_raw(ds)
-          false
+          return super if manual_add
         end
 
         def _insert_raw(ds)
+          return super if manual_add
+
           self.operation = :create
 
           operation_klass.insert(self.values.except(:oid))
