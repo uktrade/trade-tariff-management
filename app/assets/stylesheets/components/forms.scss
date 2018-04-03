@@ -6,6 +6,10 @@ input.datepicker {
   width: 100% !important;
 }
 
+.condition .form-group {
+  margin-bottom: 0;
+}
+
 .multiple-choice + .panel {
   margin-left: 3.2em;
   max-width: calc(100% - 3.2em);
@@ -48,8 +52,15 @@ input.datepicker {
 }
 
 .condition {
-  margin: 15px 0;
   padding: 15px 0 15px;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 
   & + .condition {
     border-top: 1px solid #000;
@@ -57,8 +68,15 @@ input.datepicker {
 }
 
 .quota-period {
-  margin: 15px 0;
   padding: 15px 0 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 
   & + .quota-period {
     border-top: 1px solid #000;
@@ -79,6 +97,22 @@ input.datepicker {
   margin-top: 20px;
 }
 
+.measure-condition-component {
+  padding: 15px 0 15px;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  & + .condition {
+    border-top: 1px solid #000;
+  }
+}
+
 .search-form {
   background: $grey-4;
   padding: 20px;
@@ -87,4 +121,19 @@ input.datepicker {
   .form-actions {
     margin-bottom: 1em;
   }
+}
+
+.measure-form {
+  .form-actions {
+    margin-top: 3em;
+  }
+
+  .js-measure-form-errors-container {
+    position: relative;
+    top: 2em;
+  }
+}
+
+.add-another-wrapper {
+  margin-bottom: 0;
 }

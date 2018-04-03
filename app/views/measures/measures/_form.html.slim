@@ -112,11 +112,11 @@
     div.quota-period v-for="(quotaPeriod, index) in measure.quota_periods"
       = content_tag "quota-period", "", { ":quota-period" => "quotaPeriod", ":index" => "index" }
 
-    p v-if="showAddMoreQuotaPeriods"
+    p.add-another-wrapper v-if="showAddMoreQuotaPeriods"
       a href="#" v-on:click.prevent="addQuotaPeriod"
         | Add another quota period
 
-  .form-group
+  fieldset
     h3.heading-medium
       | Specify the origin the measure will apply to
 
@@ -141,7 +141,7 @@
 
         .exclusions-target
 
-        p
+        p.add-another-wrapper
           a href="#" class="js-add-country-exclusion"
             | Add another exclusion
 
@@ -157,7 +157,7 @@
 
         .exclusions-target
 
-        p
+        p.add-another-wrapper
           a href="#" class="js-add-country-exclusion"
             | Add another exclusion
 
@@ -173,23 +173,10 @@
 
         .exclusions-target
 
-        p
+        p.add-another-wrapper
           a href="#" class="js-add-country-exclusion"
             | Add another exclusion
 
-  .form-group
-    h3.heading-medium
-      | Specify conditions
-
-    .conditions-target
-      .condition v-for='condition in measure.conditions'
-        = content_tag "measure-condition", "", ":condition" => "condition"
-
-      p
-        a href="#" v-on:click.prevent="addCondition" v-if="atLeastOneCondition"
-          | Add another condition
-        a href="#" v-on:click.prevent="addCondition" v-if="noCondition"
-          | Add condition
   fieldset
     h3.heading-medium
       | Specify the goods the measure will apply to
@@ -221,7 +208,7 @@
           .form-group
             label.form-label
               | Additional code type
-            = content_tag "custom-select", "", { url: "/additional_code_types", "label-field" => "description", "value-field" => "additional_code_type_id", "code-field" => "additional_code_type_id", placeholder: "― select additional code type ―", "v-model" => "measure.additional_code_type_id", "date-sensitive" => true }
+            = content_tag "custom-select", "", { url: "/additional_code_types", "label-field" => "description", "value-field" => "additional_code_type_id", "code-field" => "additional_code_type_id", placeholder: "― select additional code type ―", "v-model" => "measure.additional_code_type_id", "drilldown-name" => "measure_type_id", ":drilldown-value" => "measure.measure_type_id", "drilldown-required" => false, "date-sensitive" => true }
 
         .col-md-5 v-if="measure.additional_code_type_id"
           .form-group
@@ -238,7 +225,7 @@
       div.measure-component v-for="(measureComponent, index) in measure.measure_components"
         = content_tag "measure-component", "", { ":measure-component" => "measureComponent", ":index" => "index" }
 
-    p
+    p.add-another-wrapper
       a href="#" v-on:click.prevent="addMeasureComponent"
         | Add another duty expression
 
@@ -312,22 +299,37 @@
 
   fieldset
     h3.heading-medium
+      | Specify conditions
+
+    .conditions-target
+      .condition v-for='condition in measure.conditions'
+        = content_tag "measure-condition", "", ":condition" => "condition"
+
+      p.add-another-wrapper
+        a href="#" v-on:click.prevent="addCondition" v-if="atLeastOneCondition"
+          | Add another condition
+        a href="#" v-on:click.prevent="addCondition" v-if="noCondition"
+          | Add condition
+
+  fieldset
+    h3.heading-medium
       | Add footnotes
 
     .footnotes
       div.footnote v-for="(footnote, index) in measure.footnotes"
         = content_tag "foot-note", "", { ":footnote" => "footnote", ":index" => "index" }
 
-    p
+    p.add-another-wrapper
       a href="#" v-on:click.prevent="addFootnote"
         | Add another footnote
 
   .js-measure-form-errors-container.alert.alert-danger v-if="hasErrors"
     h3.measure-form-errors-header
-      | Errors:
+      | Please, review the following errors:
     ul
       li v-for="error in errors"
         span v-html="error"
 
   .form-actions
     = f.button :submit, "Create measure", class: "button"
+    = link_to "Exit(return to workbasket)", root_url, class: "secondary-button"
