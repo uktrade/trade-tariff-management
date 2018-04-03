@@ -210,7 +210,7 @@ $(document).ready(function() {
 
         onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
         onChange: function(){
-          vm.$dropdown_content.removeHighlight();
+          this.$dropdown_content.removeHighlight();
         }
       };
 
@@ -237,6 +237,12 @@ $(document).ready(function() {
 
       if (this.url) {
         options["load"] = function(query, callback) {
+          vm.$el.selectize.clearOptions();
+          vm.$el.selectize.clearCache();
+          vm.$el.selectize.refreshOptions();
+          vm.$el.selectize.renderCache['option'] = {};
+          vm.$el.selectize.renderCache['item'] = {};
+
           if (vm.minLength && query.length < vm.minLength) return callback();
           if (vm.drilldownRequired && !vm.drilldownValue) return callback();
 
@@ -297,6 +303,11 @@ $(document).ready(function() {
           }
 
           vm.$el.selectize.clear(true);
+          vm.$el.selectize.clearOptions();
+          vm.$el.selectize.clearCache();
+          vm.$el.selectize.refreshOptions();
+          vm.$el.selectize.renderCache['option'] = {};
+          vm.$el.selectize.renderCache['item'] = {};
           vm.$el.selectize.load(function(callback) {
             $.ajax({
               url: vm.url,
@@ -738,7 +749,6 @@ $(document).ready(function() {
       }
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
-      this.fetchNomenclatureCode("/additional_codes", 3, "additional_code", "additional_code_description", "json", "description");
 
       $("#measure_form_measure_type_series_id").on("change", function() {
         self.measure.measure_type_series_id = $("#measure_form_measure_type_series_id").val();
@@ -1012,9 +1022,6 @@ $(document).ready(function() {
       },
       goods_nomenclature_code: function() {
         this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
-      },
-      additional_code: function() {
-        this.fetchNomenclatureCode("/additional_codes", 3, "additional_code", "additional_code_description", "json", "description");
       },
       "measure.validity_start_date": function() {
         $(".measure-form").trigger("dates:changed", [this.measure.validity_start_date, this.measure.validity_end_date]);
