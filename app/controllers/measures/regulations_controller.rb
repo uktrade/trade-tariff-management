@@ -3,7 +3,7 @@ module Measures
 
     def collection
       BaseRegulation.actual
-                    .fully_replaced
+                    .not_replaced_and_partially_replaced
                     .q_search(params[:q])
                     .limit(100)
     end

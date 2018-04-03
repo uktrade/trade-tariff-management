@@ -13,6 +13,7 @@ class MeasureParamsNormalizer
     end_date
     goods_nomenclature_code
     measure_type_id
+    regulation_id
   )
 
   attr_accessor :normalized_params
@@ -25,8 +26,27 @@ class MeasureParamsNormalizer
     end
 
     whitelist.map do |k, v|
+      p "+" * 100
+      p ""
+      p " #{k} : #{v}"
+      p ""
+
       if ALIASES.keys.include?(k.to_sym)
-        if v.to_s.starts_with?("method_")
+        p ""
+        p " v.to_s.starts_with?('method_'): #{v.to_s.starts_with?('method_')}"
+        p ""
+
+        if ALIASES[k.to_sym].to_s.starts_with?("method_")
+
+          p " ALIASES[k.to_sym]: #{ALIASES[k.to_sym]}"
+          p ""
+          p " measure_params[k]: #{measure_params[k]}"
+          p ""
+          p " send(ALIASES[k.to_sym], measure_params[k]): #{send(ALIASES[k.to_sym], measure_params[k])}"
+          p ""
+          p "+" * 100
+          p ""
+
           @normalized_params.merge!(
             send(ALIASES[k.to_sym], measure_params[k])
           )
@@ -44,7 +64,8 @@ class MeasureParamsNormalizer
   private
 
     def method_additional_code_values(additional_code_id)
-      additional_code = AdditionalCode.filter(additional_code: additional_code_id).first
+      additional_code = AdditionalCode.actual
+                                      .where(additional_code: additional_code_id).first
 
       {
         additional_code_type_id: additional_code.additional_code_type_id,
@@ -54,7 +75,12 @@ class MeasureParamsNormalizer
     end
 
     def method_regulation_values(base_regulation_id)
-      regulation = BaseRegulation.filter(base_regulation_id: base_regulation_id).first
+      regulation = BaseRegulation.actual
+                                 .not_replaced_and_partially_replaced
+                                 .where(base_regulation_id: base_regulation_id).first
+
+      p ""
+      p "REGULATION: #{regulation.inspect}, fully_replaced: #{}"
 
       {
         measure_generating_regulation_role: regulation.base_regulation_role,

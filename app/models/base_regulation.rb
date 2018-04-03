@@ -21,8 +21,8 @@ class BaseRegulation < Sequel::Model
       }
     end
 
-    def fully_replaced
-      where(replacement_indicator: 1)
+    def not_replaced_and_partially_replaced
+      where("replacement_indicator = 0 OR replacement_indicator = 2")
     end
   end
 
