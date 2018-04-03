@@ -3,7 +3,7 @@ module Measures
 
     def collection
       AdditionalCode.actual
-                    .q_search(params[:q])
+                    .q_search(params[:q], params[:additional_code_type_id])
     end
   end
 end
