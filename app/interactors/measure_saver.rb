@@ -4,14 +4,15 @@ class MeasureParamsNormalizer
     start_date: :validity_start_date,
     end_date: :validity_end_date,
     goods_nomenclature_code: :goods_nomenclature_item_id,
-    additional_code: :method_additional_code_values
+    additional_code: :method_additional_code_values,
+    regulation: :method_regulation_values
   }
 
   WHITELIST_PARAMS = %w(
     start_date
     end_date
     goods_nomenclature_code
-
+    measure_type_id
   )
 
   attr_accessor :normalized_params
@@ -48,6 +49,15 @@ class MeasureParamsNormalizer
         additional_code_type_id: additional_code.additional_code_type_id,
         additional_code_sid: additional_code.additional_code_sid,
         additional_code_id: additional_code_id
+      }
+    end
+
+    def method_regulation_values(base_regulation_id)
+      regulation = BaseRegulation.filter(base_regulation_id: base_regulation_id).first
+
+      {
+        measure_generating_regulation_role: regulation.base_regulation_role,
+        measure_generating_regulation_id: base_regulation_id
       }
     end
 end
