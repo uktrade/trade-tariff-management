@@ -63,6 +63,17 @@ class GeographicalArea < Sequel::Model
     def groups
       exclude(geographical_code: COUNTRIES_CODES)
     end
+
+    def except_erga_omnes
+      exclude(geographical_area_id: GeographicalArea::ERGA_OMNES)
+    end
+  end
+
+  class << self
+    def erga_omnes_group
+      actual.where(geographical_area_id: GeographicalArea::ERGA_OMNES)
+            .first
+    end
   end
 
   delegate :description, to: :geographical_area_description

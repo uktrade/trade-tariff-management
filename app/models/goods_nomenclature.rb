@@ -31,6 +31,15 @@ class GoodsNomenclature < Sequel::Model
     end
   end
 
+  def sti_instance
+    if child_class_name == self.class.to_s
+      return self
+    else
+      klass = Object.const_get child_class_name
+      klass.find(goods_nomenclature_item_id: goods_nomenclature_item_id)
+    end
+  end
+
   one_to_many :goods_nomenclature_indents, key: :goods_nomenclature_sid,
                                            primary_key: :goods_nomenclature_sid do |ds|
     ds.with_actual(GoodsNomenclatureIndent, self)
@@ -130,6 +139,28 @@ class GoodsNomenclature < Sequel::Model
 
   def bti_url
     "http://ec.europa.eu/taxation_customs/dds2/ebti/ebti_consultation.jsp?Lang=en&nomenc=#{code}&Expand=true"
+  end
+
+  def chapter?
+    gono_id = goods_nomenclature_item_id.to_s
+
+    gono_id.ends_with?('00000000')
+  end
+
+  def heading?
+    gono_id = goods_nomenclature_item_id.to_s
+
+    gono_id.ends_with?('000000') && gono_id.slice(2,2) != '00'
+  end
+
+  def commodity?
+    gono_id = goods_nomenclature_item_id.to_s
+
+    !gono_id.ends_with?('000000')
+  end
+
+  def good_nomenclature?
+    !(chapter? || heading? || commodity?)
   end
 
   def record_code

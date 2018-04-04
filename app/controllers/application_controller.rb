@@ -19,9 +19,11 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # NOTE: if we ever decide to bring time travel like tariff backend, it's best if we keep this method to determine the "current date"
   def actual_date
-    Date.current
+    Date.parse(params[:start_date].to_s)
+
+    rescue ArgumentError
+      Date.current
   end
   helper_method :actual_date
 

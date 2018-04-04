@@ -20,4 +20,11 @@ class MeasurementUnitQualifier < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      measurement_unit_qualifier_code: measurement_unit_qualifier_code,
+      description: description
+    }
+  end
 end

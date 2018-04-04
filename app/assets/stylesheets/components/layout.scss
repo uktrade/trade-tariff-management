@@ -1,13 +1,87 @@
 #wrapper {
-  max-width: 960px;
+  max-width: 1100px;
   padding: 0 15px;
   margin: 0 auto;
 }
 
 .header-global {
   width: 70%;
+  float: left;
+
+  @media (max-width: 767px) {
+    width: 30%;
+  }
 }
 
 .header-logo {
   width: 100% !important;
+}
+
+html {
+  background: #fff !important;
+}
+
+#global-header-bar, #global-cookie-message p, #footer .footer-wrapper {
+  max-width: 1100px !important;
+}
+
+.header-wrapper {
+  max-width: 1100px !important;
+}
+
+.desktop-title {
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.mobile-title {
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.tma_header {
+  float: right;
+  margin-right: 10px;
+  margin-top: 6px;
+}
+
+.tma_header li {
+  float: left;
+  display: block;
+  margin: 0px 10px;
+}
+
+.tma_header li a {
+    color: #fff;
+}
+
+.w30 {
+  width: 30%;
+  margin-right: 3.3%;
+  float: left;
+}
+
+.mt1 {
+  margin-top: 16px;
+}
+
+.nl {
+  clear: both;
+  padding-top: 32px;
+  display: block;
+}
+
+.clearfix {
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+    zoom: 1;
+  }
+}
+
+.dashboard-page {
+  padding-bottom: 3em;
 }

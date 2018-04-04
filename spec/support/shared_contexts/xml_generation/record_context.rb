@@ -4,6 +4,18 @@ shared_context "xml_generation_record_context" do
 
   include_context "xml_generation_base_context"
 
+  let(:record_class) do
+    db_record.class.to_s
+  end
+
+  let!(:xml_message) do
+    create(:xml_generation_node_message,
+      transaction: xml_transaction,
+      record_filter_ops: record_filter_ops(record_class, db_record),
+      record_type: record_class
+    )
+  end
+
   let(:xml_record) do
     hash_xml["env:envelope"]["env:transaction"]["env:app.message"]["oub:transmission"]["oub:record"]
   end

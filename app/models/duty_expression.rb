@@ -21,4 +21,12 @@ class DutyExpression < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      duty_expression_id: duty_expression_id,
+      abbreviation: abbreviation,
+      description: description
+    }
+  end
 end

@@ -15,6 +15,18 @@ class AdditionalCode < Sequel::Model
                                                 ds.with_actual(AdditionalCodeDescriptionPeriod)
                                               end
 
+  dataset_module do
+    def q_search(keyword, additional_code_type_id=nil)
+      q_rule = Sequel.ilike(:additional_code, "#{keyword}%")
+
+      if additional_code_type_id.present?
+        where(q_rule, Sequel.ilike(:additional_code_type_id, additional_code_type_id))
+      else
+        where(q_rule)
+      end
+    end
+  end
+
   def additional_code_description
     additional_code_descriptions(reload: true).first
   end
@@ -37,5 +49,13 @@ class AdditionalCode < Sequel::Model
 
   def subrecord_code
     "00".freeze
+  end
+
+  def json_mapping
+    {
+      additional_code: additional_code,
+      type_id: additional_code_type_id,
+      description: description
+    }
   end
 end

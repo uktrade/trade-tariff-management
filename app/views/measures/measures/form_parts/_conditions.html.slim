@@ -1,0 +1,13 @@
+fieldset
+  h3.heading-medium
+    | Specify conditions
+
+  .conditions-target
+    .condition v-for='condition in measure.conditions'
+      = content_tag "measure-condition", "", ":condition" => "condition"
+
+    p.add-another-wrapper
+      a href="#" v-on:click.prevent="addCondition" v-if="atLeastOneCondition"
+        | Add another condition
+      a href="#" v-on:click.prevent="addCondition" v-if="noCondition"
+        | Add condition

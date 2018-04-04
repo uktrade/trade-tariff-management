@@ -6,8 +6,13 @@ input.datepicker {
   width: 100% !important;
 }
 
+.condition .form-group {
+  margin-bottom: 0;
+}
+
 .multiple-choice + .panel {
   margin-left: 3.2em;
+  max-width: calc(100% - 3.2em);
 }
 
 .exclusions-target {
@@ -30,13 +35,32 @@ input.datepicker {
 .input-suffix {
   display: inline-block;
   position: relative;
-  top: 8px;
+  top: -4px;
   left: -20px;
+
+  @media (max-width: 991px) {
+    top: 10px;
+  }
+}
+
+.date-part {
+  @media (max-width: 767px) {
+    & + .date-part {
+      margin-top: 20px;
+    }
+  }
 }
 
 .condition {
-  margin: 15px 0;
   padding: 15px 0 15px;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 
   & + .condition {
     border-top: 1px solid #000;
@@ -44,10 +68,72 @@ input.datepicker {
 }
 
 .quota-period {
-  margin: 15px 0;
   padding: 15px 0 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 
   & + .quota-period {
     border-top: 1px solid #000;
   }
+}
+
+.after-field {
+  display: block;
+  margin-top: 1em !important;
+  margin-bottom: 0;
+}
+
+.form-actions {
+  margin: 1em 0 3em;
+}
+
+.measure-condition-components {
+  margin-top: 20px;
+}
+
+.measure-condition-component {
+  padding: 15px 0 15px;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  & + .condition {
+    border-top: 1px solid #000;
+  }
+}
+
+.search-form {
+  background: $grey-4;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  .form-actions {
+    margin-bottom: 1em;
+  }
+}
+
+.measure-form {
+  .form-actions {
+    margin-top: 3em;
+  }
+
+  .js-measure-form-errors-container {
+    position: relative;
+    top: 2em;
+  }
+}
+
+.add-another-wrapper {
+  margin-bottom: 0;
 }

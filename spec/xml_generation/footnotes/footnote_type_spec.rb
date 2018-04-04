@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "FootnoteType XML generation" do
 
-  let(:db_record) do
+  let!(:db_record) do
     create(:footnote_type, :xml)
   end
 

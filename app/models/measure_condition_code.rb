@@ -20,4 +20,12 @@ class MeasureConditionCode < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      condition_code: condition_code,
+      description: description,
+      valid: false # TODO: it seems that it just for testing purposes
+    }
+  end
 end

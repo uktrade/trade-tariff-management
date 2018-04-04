@@ -1,12 +1,28 @@
 .row {
   position: relative;
   margin: 0 -15px;
+
+  @media (min-width: 992px) {
+    display: flex;
+  }
 }
 
-.row [class^="col"] {
+[class^="col"] {
   float: left;
   padding: 0 15px;
   min-height: 0.125rem;
+  width: 100%;
+  width: calc(100% - 30px);
+
+  @media (min-width: 992px) {
+    width: auto;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-width: 100%;
+    flex: 0 0 calc(100% - 30px);
+  }
 }
 
 .row::after {
@@ -15,16 +31,19 @@
   clear: both;
 }
 
-$cols: 1 2 3 4 5 6 7 8 9 10 11;
+$cols: 1 2 3 4 5 6 7 8 9 10 11 12;
 $single: 100% / 12;
 
 @each $col in $cols {
   .col-#{$col} {
-    width: calc(#{$single * $col} - 30px);
+    max-width: calc(#{$single * $col} - 30px);
+    flex: 0 0 calc(#{$single * $col} - 30px);
   }
 
   .col-xs-#{$col} {
     width: calc(#{$single * $col} - 30px);
+    max-width: calc(#{$single * $col} - 30px);
+    flex: 0 0 calc(#{$single * $col} - 30px);
   }
 }
 
@@ -32,6 +51,8 @@ $single: 100% / 12;
   @each $col in $cols {
     .col-sm-#{$col} {
       width: calc(#{$single * $col} - 30px);
+      max-width: calc(#{$single * $col} - 30px);
+      flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
 }
@@ -39,7 +60,9 @@ $single: 100% / 12;
 @media (min-width: 992px) {
   @each $col in $cols {
     .col-md-#{$col} {
-      width: calc(#{$single * $col} - 30px);
+      width: auto;
+      max-width: calc(#{$single * $col} - 30px);
+      flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
 }
@@ -47,7 +70,9 @@ $single: 100% / 12;
 @media (min-width: 1024px) {
   @each $col in $cols {
     .col-lg-#{$col} {
-      width: calc(#{$single * $col} - 30px);
+      width: auto;
+      max-width: calc(#{$single * $col} - 30px);
+      flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
 }
@@ -55,7 +80,9 @@ $single: 100% / 12;
 @media (min-width: 1600px) {
   @each $col in $cols {
     .col-xl-#{$col} {
-      width: calc(#{$single * $col} - 30px);
+      width: auto;
+      max-width: calc(#{$single * $col} - 30px);
+      flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
 }

@@ -23,12 +23,22 @@ class AdditionalCodeType < Sequel::Model
 
   delegate :present?, to: :meursing_table_plan, prefix: true, allow_nil: true
 
+  delegate :description, :formatted_description, to: :additional_code_type_description
+
   APPLICATION_CODES = {
     0 => "Export refund nomencalture",
     1 => "Additional Codes",
     3 => "Meursing addition codes",
     4 => "Export refund for processed agricultural goods"
   }
+
+  dataset_module do
+    def q_search(keyword)
+      where {
+        Sequel.ilike(:additional_code_type_id, "#{keyword}%")
+      }
+    end
+  end
 
   def meursing?
     application_code.in?("3")
@@ -52,5 +62,12 @@ class AdditionalCodeType < Sequel::Model
 
   def subrecord_code
     "00".freeze
+  end
+
+  def json_mapping
+    {
+      additional_code_type_id: additional_code_type_id,
+      description: description
+    }
   end
 end
