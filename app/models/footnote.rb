@@ -70,7 +70,10 @@ class Footnote < Sequel::Model
         footnote_id: Sequel[:footnotes][:footnote_id],
         footnote_type_id: footnote_type_id
       ).where(Sequel[:footnotes][:footnote_type_id] => footnote_type_id)
-       .where(Sequel.ilike(:description, "#{keyword}%"))
+       .where{
+         Sequel.ilike(:description, "#{keyword}%") |
+         Sequel.ilike(:footnote_id, "#{keyword}%")
+       }
     end
   end
 
