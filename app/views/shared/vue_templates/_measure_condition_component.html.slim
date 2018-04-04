@@ -9,7 +9,7 @@ script type="text/x-template" id="measure-condition-component-template"
     .col-md-3 v-if="showDutyAmountOrPercentage"
       .form-group
         label.form-label
-          | Duty amount (% or £)
+          | Duty amount (% or €)
         input.form-control v-model="measureConditionComponent.amount"
 
     .col-md-3 v-if="showDutyAmountPercentage"
@@ -27,25 +27,25 @@ script type="text/x-template" id="measure-condition-component-template"
     .col-md-3 v-if="showDutyAmountNumber"
       .form-group
         label.form-label
-          | Duty amount (£)
+          | Duty amount (€)
         input.form-control v-model="measureConditionComponent.amount"
 
     .col-md-3 v-if="showDutyAmountMinimum"
       .form-group
         label.form-label
-          | Duty amount (at least £)
+          | Duty amount (at least €)
         input.form-control v-model="measureConditionComponent.amount"
 
     .col-md-3 v-if="showDutyAmountMaximum"
       .form-group
         label.form-label
-          | Duty amount (not more than £)
+          | Duty amount (not more than €)
         input.form-control v-model="measureConditionComponent.amount"
 
     .col-md-3 v-if="showDutyRefundAmount"
       .form-group
         label.form-label
-          | Refund amount (£)
+          | Refund amount (€)
         input.form-control v-model="measureConditionComponent.amount"
 
     .col-md-3 v-if="showMeasurementUnit"
