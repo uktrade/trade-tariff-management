@@ -3,6 +3,24 @@ class MeasureForm
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
+  MEASURE_TYPE_MAPPING = %w(
+    oid
+    measure_type_id
+    measure_type_series_id
+    validity_start_date
+    validity_end_date
+    measure_type_acronym
+    description
+  )
+
+  MEASURE_TYPE_SERIES_MAPPING = %w(
+    oid
+    measure_type_series_id
+    validity_start_date
+    validity_end_date
+    description
+  )
+
   attr_accessor :validity_start_date,
                 :validity_end_date,
                 :measure_type_series_id,
@@ -41,60 +59,30 @@ class MeasureForm
 
   def measure_types_json
     @mt_json ||= Rails.cache.fetch(:measures_form_measure_types_json, expires_in: 8.hours) do
-      types = all_measure_types
-      json = []
-
-      types.each do |type|
-        json << {
-          oid: type.oid,
-          measure_type_id: type.measure_type_id,
-          measure_type_series_id: type.measure_type_series_id,
-          validity_start_date: type.validity_start_date,
-          validity_end_date: type.validity_end_date,
-          measure_type_acronym: type.measure_type_acronym,
-          description: type.description
-        }
-      end
-
-      json
+      hash_collection(all_measure_types, MEASURE_TYPE_MAPPING)
     end
   end
 
   def measure_types_series_json
     @mtypes_series_json ||= Rails.cache.fetch(:measures_form_measure_types_series_json, expires_in: 8.hours) do
-      series = measure_type_series_collection
-      json = []
-
-      series.each do |serie|
-        json << {
-          oid: serie.oid,
-          measure_type_series_id: serie.measure_type_series_id,
-          validity_start_date: serie.validity_start_date,
-          validity_end_date: serie.validity_end_date,
-          description: serie.description
-        }
-      end
-
-      json
+      hash_collection(measure_type_series_collection, MEASURE_TYPE_SERIES_MAPPING)
     end
   end
 
   def geographical_areas_json
     @ga_json ||= Rails.cache.fetch(:measures_form_geographical_areas_json, expires_in: 8.hours) do
-      json = {}
+      list = {}
 
       all_geographical_areas.each do |group|
-        json[group.geographical_area_id] = []
-
-        group.contained_geographical_areas.each do |child|
-          json[group.geographical_area_id] << {
+        list[group.geographical_area_id] = group.contained_geographical_areas.map do |child|
+          {
             geographical_area_id: child.geographical_area_id,
             description: child.description
           }
         end
       end
 
-      json
+      list
     end
   end
 
@@ -139,6 +127,22 @@ class MeasureForm
     @gaeo ||= Rails.cache.fetch(:measures_form_geographical_area_erga_omnes, expires_in: 8.hours) do
       GeographicalArea.erga_omnes_group
     end
+  end
+
+  def hash_collection(items, mapping)
+    list = []
+
+    items.each do |item|
+      item_hash = {}
+
+      mapping.each do |k|
+        item_hash[k] = item.public_send(k)
+      end
+
+      list << item_hash
+    end
+
+    list
   end
 end
 
