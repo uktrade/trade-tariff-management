@@ -11,18 +11,18 @@
 
 = simple_form_for form, url: measures_path, html: { class: "measure-form", data: { measure: form.measure.to_json, measure_condition_attributes: form.measure.measure_conditions.to_json } } do |f|
 
-  = render "form_parts/main"
-  = render "form_parts/regulation"
-  = render "form_parts/measure_type"
-  = render "form_parts/quota"
-  = render "form_parts/geographical_area"
-  = render "form_parts/goods_nomenclature"
-  = render "form_parts/duty_expression"
-  = render "form_parts/standart_import_value"
-  = render "form_parts/reference_price"
-  = render "form_parts/unit_price"
-  = render "form_parts/conditions"
-  = render "form_parts/footnotes"
+  = render "measures/measures/form_parts/main", f: f
+  = render "measures/measures/form_parts/regulation", f: f
+  = render "measures/measures/form_parts/measure_type", f: f
+  = render "measures/measures/form_parts/quota", f: f
+  = render "measures/measures/form_parts/geographical_area", f: f
+  = render "measures/measures/form_parts/goods_nomenclature", f: f
+  = render "measures/measures/form_parts/duty_expression", f: f
+  = render "measures/measures/form_parts/standart_import_value", f: f
+  = render "measures/measures/form_parts/reference_price", f: f
+  = render "measures/measures/form_parts/unit_price", f: f
+  = render "measures/measures/form_parts/conditions", f: f
+  = render "measures/measures/form_parts/footnotes", f: f
 
   .js-measure-form-errors-container.alert.alert-danger v-if="hasErrors"
     h3.measure-form-errors-header
