@@ -1,5 +1,5 @@
 module Measures
-  class MeasureTypesController < ::Measures::BaseController
+  class MeasureTypesController < ::BaseController
 
     def collection
       MeasureType.actual

@@ -1,5 +1,5 @@
 module Measures
-  class MeasureActionsController < ::Measures::BaseController
+  class MeasureActionsController < ::BaseController
 
     def collection
       MeasureAction.actual
