@@ -56,6 +56,8 @@ module Sequel
           end
         end
 
+        attr_accessor :manual_add
+
         ##
         # will be called by https://github.com/jeremyevans/sequel/blob/5afb0d0e28a89e68f1823d77d23cfa57d6b88dad/lib/sequel/model/base.rb#L1549
         # @note fixes `NotImplementedError: You should be inserting model instances`
