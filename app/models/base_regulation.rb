@@ -16,8 +16,8 @@ class BaseRegulation < Sequel::Model
   dataset_module do
     def q_search(keyword)
       where {
-        Sequel.ilike(:base_regulation_id, "#{keyword}%") |
-        Sequel.ilike(:information_text, "#{keyword}%")
+        Sequel.ilike(:base_regulation_id, "%#{keyword}%") |
+        Sequel.ilike(:information_text, "%#{keyword}%")
       }
     end
 
