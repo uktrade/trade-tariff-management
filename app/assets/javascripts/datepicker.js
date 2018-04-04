@@ -2,7 +2,7 @@ $(document).ready(function(){
   $('[data-behaviour~=datepicker]').each(function() {
     var picker = new Pikaday({
       field: $(this)[0],
-      format: "YYYY/MM/DD",
+      format: "DD/MM/YYYY",
       blurFieldOnSelect: true
     });
 
@@ -16,7 +16,7 @@ $(document).ready(function(){
   $('.datepicker').each(function() {
     new Pikaday({
       field: $(this)[0],
-      format: "YYYY/MM/DD",
+      format: "DD/MM/YYYY",
       blurFieldOnSelect: true
     });
   });
