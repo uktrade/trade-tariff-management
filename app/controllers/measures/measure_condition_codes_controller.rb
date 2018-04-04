@@ -1,5 +1,5 @@
 module Measures
-  class MeasureConditionCodesController < ::Measures::BaseController
+  class MeasureConditionCodesController < ::BaseController
 
     def collection
       MeasureConditionCode.actual

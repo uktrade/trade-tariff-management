@@ -1,5 +1,5 @@
-module Measures
-  class AdditionalCodesController < ::Measures::BaseController
+module AdditionalCodes
+  class AdditionalCodesController < ::BaseController
 
     def collection
       AdditionalCode.actual

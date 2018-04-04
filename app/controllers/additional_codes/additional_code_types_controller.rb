@@ -1,5 +1,5 @@
-module Measures
-  class AdditionalCodeTypesController < ::Measures::BaseController
+module AdditionalCodes
+  class AdditionalCodeTypesController < ::BaseController
 
     def collection
       AdditionalCodeType.actual.q_search(params[:q])
