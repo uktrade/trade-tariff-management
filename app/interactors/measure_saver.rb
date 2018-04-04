@@ -94,11 +94,13 @@ end
 
 class MeasureSaver
 
-  attr_accessor :measure_params,
+  attr_accessor :original_params,
+                :measure_params,
                 :measure,
                 :errors
 
   def initialize(measure_params={})
+    @original_params = measure_params
     @measure_params = ::MeasureParamsNormalizer.new(measure_params).normalized_params
 
     p ""
@@ -154,6 +156,8 @@ class MeasureSaver
       end
     end
 
+    post_saving_updates!
+
     p ""
     p "[SAVED MEASURE] sid: #{measure.measure_sid} | #{measure.inspect}"
     p ""
@@ -187,5 +191,34 @@ class MeasureSaver
 
     def generate_measure_sid
       measure.measure_sid = Measure.max(:measure_sid) + 1
+    end
+
+    def post_saving_updates!
+      add_excluded_geographical_areas!
+    end
+
+    def add_excluded_geographical_areas!
+      excluded_areas = original_params[:excluded_geographical_areas]
+
+      if excluded_areas.present?
+        excluded_areas.map do |area_code|
+          add_excluded_geographical_area!(area_code)
+        end
+      end
+    end
+
+    def add_excluded_geographical_area!(area_code)
+      area = GeographicalArea.actual
+                             .where(geographical_area_id: area_code)
+                             .first
+
+      excluded_area = MeasureExcludedGeographicalArea.new(
+        excluded_geographical_area: area_code
+      )
+
+      excluded_area.geographical_area_sid = area.geographical_area_sid
+      excluded_area.measure_sid = measure.measure_sid
+      excluded_area.manual_add = true
+      excluded_area.save
     end
 end
