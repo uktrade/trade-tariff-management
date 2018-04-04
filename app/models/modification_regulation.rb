@@ -13,6 +13,19 @@ class ModificationRegulation < Sequel::Model
   one_to_one :base_regulation, key: [:base_regulation_id, :base_regulation_role],
                                primary_key: [:base_regulation_id, :base_regulation_role]
 
+
+  dataset_module do
+    def q_search(keyword)
+      where {
+       Sequel.ilike(:modification_regulation_id, "%#{keyword}%") |
+       Sequel.ilike(:information_text, "%#{keyword}%")
+      }
+    end
+
+    def not_replaced_and_partially_replaced
+      where("replacement_indicator = 0 OR replacement_indicator = 2")
+    end
+  end
   # TODO confirm this assumption
   # 0 not replaced
   # 1 fully replaced
@@ -27,5 +40,12 @@ class ModificationRegulation < Sequel::Model
 
   def subrecord_code
     "00".freeze
+  end
+
+  def json_mapping
+    {
+      regulation_id: modification_regulation_id,
+      description: "#{modification_regulation_id}. #{information_text}"
+    }
   end
 end
