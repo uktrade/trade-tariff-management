@@ -2,9 +2,9 @@ tr
   td
     = measure.measure_sid
   td
-    = measure.measure_type.description
+    = measure.measure_type.try(:description)
   td
-    = measure.geographical_area.description
+    = measure.geographical_area.try(:description)
   td
     = measure.goods_nomenclature_item_id
   td
