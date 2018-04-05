@@ -29,13 +29,13 @@ module Measures
       if measure_saver.valid?
         measure_saver.persist!
 
-        render json: { errors: measure_saver.errors },
-               status: :unprocessable_entity
+        # render json: { errors: measure_saver.errors },
+        #        status: :unprocessable_entity
 
-        # render json: {
-        #   measure_sid: measure.measure_sid,
-        #   goods_nomenclature_item_id: measure.goods_nomenclature_item_id
-        # }, status: :ok
+        render json: {
+          measure_sid: measure.measure_sid,
+          goods_nomenclature_item_id: measure.goods_nomenclature_item_id
+        }, status: :ok
       else
         render json: { errors: measure_saver.errors },
                status: :unprocessable_entity

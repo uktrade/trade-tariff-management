@@ -145,7 +145,7 @@ class MeasureSaver
   def persist!
     generate_measure_sid
     measure.manual_add = true
-    measure.operation = "C"
+    measure.operation = "I"
     measure.operation_date = Date.current
 
     attempts = 5
@@ -173,7 +173,7 @@ class MeasureSaver
   private
 
     def validate!
-      #measure_base_validation!
+      measure_base_validation!
     end
 
     def measure_base_validation!
@@ -240,10 +240,8 @@ class MeasureSaver
         p ""
         p "-" * 100
 
-        quota_definition = QuotaDefinition.new(
-          quota_ops(mode, data, k)
-        )
-        persist_quota_definition!(quota_definition)
+        quota_definition = QuotaDefinition.new(quota_ops(mode, data, k))
+        set_oplog_attrs_and_save!(quota_definition)
       end
     end
 
@@ -258,10 +256,8 @@ class MeasureSaver
         p "+" * 100
         p ""
 
-        quota_definition = QuotaDefinition.new(
-          custom_quota_ops(v)
-        )
-        persist_quota_definition!(quota_definition)
+        quota_definition = QuotaDefinition.new(custom_quota_ops(v))
+        set_oplog_attrs_and_save!(quota_definition)
       end
     end
 
@@ -321,14 +317,6 @@ class MeasureSaver
       ops
     end
 
-    def persist_quota_definition!(quota_definition)
-      quota_definition.operation = "I"
-      quota_definition.operation_date = Date.current
-      quota_definition.manual_add = true
-
-      quota_definition.save
-    end
-
     def add_excluded_geographical_areas!
       excluded_areas = original_params[:excluded_geographical_areas]
 
@@ -350,9 +338,14 @@ class MeasureSaver
 
       excluded_area.geographical_area_sid = area.geographical_area_sid
       excluded_area.measure_sid = measure.measure_sid
-      excluded_area.operation_date = Date.current
-      excluded_area.manual_add = true
+      set_oplog_attrs_and_save!(excluded_area)
+    end
 
-      excluded_area.save
+    def set_oplog_attrs_and_save!(record)
+      record.operation = "I"
+      record.operation_date = Date.current
+      record.manual_add = true
+
+      record.save
     end
 end
