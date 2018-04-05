@@ -166,7 +166,7 @@ class MeasureSaver
   private
 
     def validate!
-      measure_base_validation!
+      #measure_base_validation!
     end
 
     def measure_base_validation!
@@ -201,36 +201,51 @@ class MeasureSaver
     def add_quota_definitions!
       if measure.ordernumber.present?
         periods_ops = original_params["quota_periods"]
+        mode = periods_ops.keys.first
+        target_ops = periods_ops[mode]
 
-        if periods_ops.present?
-          if periods_ops["annual"].present?
-            add_quota_definition!(:annual, periods_ops["annual"])
-          elsif periods_ops["bi_annual"].present?
-            add_quota_definition!(:bi_annual, periods_ops["bi_annual"])
-          elsif periods_ops["quarterly"].present?
-            add_quota_definition!(:quarterly, periods_ops["quarterly"])
-          elsif periods_ops["monthly"].present?
-            add_quota_definition!(:monthly, periods_ops["monthly"])
-          elsif periods_ops["custom"].present?
-            add_custom_quota_definition!(:custom, periods_ops["custom"])
+        p "-" * 100
+        p ""
+        p " mode: #{mode}, target_ops: #{target_ops.inspect}"
+        p ""
+        p "-" * 100
+
+        if target_ops.present? && target_ops[:start_date].present?
+          case mode
+          when "annual", "bi_annual", "quarterly", "monthly"
+            add_quota_definition!(mode, target_ops)
+          else
+            add_custom_quota_definition!(target_ops)
           end
         end
       end
     end
 
     def add_quota_definition!(mode, data)
-      data.keys.select do |k, v|
+      data.keys.select do |k|
         k.starts_with?("amount")
-      end.map do |k, volume|
+      end.map do |k|
+        p "-" * 100
+        p ""
+        p " add_quota_definition! - k: #{k}"
+        p ""
+        p " ops: #{quota_ops(mode, data, k).inspect}"
+        p ""
+        p "-" * 100
+
         quota_definition = QuotaDefinition.new(
-          {
-            volume: volume,
-            measurement_unit_code: data[:measurement_unit_code],
-            measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
-          }.merge(quota_definition_main_ops)
-           .merge(quota_definition_start_and_date_ops(mode, data))
+          quota_ops(mode, data, k)
         )
       end
+    end
+
+    def quota_ops(mode, data, k)
+      {
+        volume: data[k],
+        measurement_unit_code: data[:measurement_unit_code],
+        measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
+      }.merge(quota_definition_main_ops)
+       .merge(quota_definition_start_and_date_ops(mode, data, k))
     end
 
     def quota_definition_main_ops
@@ -241,13 +256,88 @@ class MeasureSaver
         quota_order_number_sid: quota_order_number.quota_order_number_sid,
         critical_threshold: original_params[:quota_criticality_threshold],
         critical_state: original_params[:quota_status] == "critical" ? "Y" : "N",
-        description: original_params[:description],
+        description: original_params[:quota_description],
       }
     end
 
-    def quota_definition_start_and_date_ops(mode, data)
-      ops = { validity_start_date: data[:start_date].to_date }
-      ops[:validity_end_date] = data[:end_date].to_date if data[:end_date].present?
+    def quota_definition_start_and_date_ops(mode, data, k)
+      #
+      # TODO: refactor it please!
+      #
+
+      ops = {}
+
+      case mode
+      when "annual"
+        ops[:validity_start_date] = data[:start_date].to_date
+        ops[:validity_end_date] = ops[:validity_start_date] + 1.year
+
+      when "bi_annual"
+        if k == "amount1"
+          ops[:validity_start_date] = data[:start_date].to_date
+          ops[:validity_end_date] = ops[:validity_start_date] + 6.months
+        elsif k == "amount2"
+          ops[:validity_start_date] = ops[:validity_start_date] + 6.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 12.months
+        end
+
+      when "monthly"
+        if k == "amount1"
+          ops[:validity_start_date] = data[:start_date].to_date
+          ops[:validity_end_date] = ops[:validity_start_date] + 1.months
+        elsif k == "amount2"
+          ops[:validity_start_date] = ops[:validity_start_date] + 1.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 2.months
+        elsif k == "amount3"
+          ops[:validity_start_date] = ops[:validity_start_date] + 2.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 3.months
+        elsif k == "amount4"
+          ops[:validity_start_date] = ops[:validity_start_date] + 3.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 4.months
+        elsif k == "amount5"
+          ops[:validity_start_date] = ops[:validity_start_date] + 4.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 5.months
+        elsif k == "amount6"
+          ops[:validity_start_date] = ops[:validity_start_date] + 5.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 6.months
+        elsif k == "amount7"
+          ops[:validity_start_date] = ops[:validity_start_date] + 6.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 7.months
+        elsif k == "amount8"
+          ops[:validity_start_date] = ops[:validity_start_date] + 7.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 8.months
+        elsif k == "amount9"
+          ops[:validity_start_date] = ops[:validity_start_date] + 8.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 9.months
+        elsif k == "amount10"
+          ops[:validity_start_date] = ops[:validity_start_date] + 9.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 10.months
+        elsif k == "amount11"
+          ops[:validity_start_date] = ops[:validity_start_date] + 10.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 11.months
+        elsif k == "amount12"
+          ops[:validity_start_date] = ops[:validity_start_date] + 11.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 12.months
+        end
+
+      when "quarterly"
+        if k == "amount1"
+          ops[:validity_start_date] = data[:start_date].to_date
+          ops[:validity_end_date] = ops[:validity_start_date] + 3.months
+        elsif k == "amount2"
+          ops[:validity_start_date] = ops[:validity_start_date] + 3.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 6.months
+        elsif k == "amount3"
+          ops[:validity_start_date] = ops[:validity_start_date] + 6.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 9.months
+        elsif k == "amount4"
+          ops[:validity_start_date] = ops[:validity_start_date] + 9.months
+          ops[:validity_end_date] = ops[:validity_start_date] + 12.months
+        end
+
+      when "custom"
+        # TODO
+      end
 
       ops
     end
