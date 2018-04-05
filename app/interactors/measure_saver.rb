@@ -7,7 +7,7 @@ class MeasureParamsNormalizer
     goods_nomenclature_code: :method_goods_nomenclature_item_values,
     additional_code: :method_additional_code_values,
     regulation_id: :method_regulation_values,
-    geographical_area_id: :method_geographical_area_values
+    geographical_area_id: :method_geographical_area_values,
   }
 
   WHITELIST_PARAMS = %w(
@@ -100,7 +100,7 @@ class MeasureSaver
                 :errors
 
   def initialize(measure_params={})
-    @original_params = measure_params
+    @original_params = ActiveSupport::HashWithIndifferentAccess.new(measure_params)
     @measure_params = ::MeasureParamsNormalizer.new(measure_params).normalized_params
 
     p ""
@@ -194,7 +194,66 @@ class MeasureSaver
     end
 
     def post_saving_updates!
+      add_quota_definitions!
       add_excluded_geographical_areas!
+    end
+
+    def add_quota_definitions!
+      if measure.ordernumber.present?
+        periods_ops = original_params["quota_periods"]
+
+        if periods_ops.present?
+          if periods_ops["annual"].present?
+            add_quota_definition!(:annual, periods_ops["annual"])
+          elsif periods_ops["bi_annual"].present?
+            add_quota_definition!(:bi_annual, periods_ops["bi_annual"])
+          elsif periods_ops["quarterly"].present?
+            add_quota_definition!(:quarterly, periods_ops["quarterly"])
+          elsif periods_ops["monthly"].present?
+            add_quota_definition!(:monthly, periods_ops["monthly"])
+          elsif periods_ops["custom"].present?
+            add_custom_quota_definition!(:custom, periods_ops["custom"])
+          end
+        end
+      end
+    end
+
+    def add_quota_definition!(mode, data)
+      data.keys.select do |k, v|
+        k.starts_with?("amount")
+      end.map do |k, volume|
+        quota_definition = QuotaDefinition.new(
+          {
+            volume: volume,
+            measurement_unit_code: data[:measurement_unit_code],
+            measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
+          }.merge(quota_definition_main_ops)
+           .merge(quota_definition_start_and_date_ops(mode, data))
+        )
+      end
+    end
+
+    def quota_definition_main_ops
+      quota_order_number = measure.order_number
+
+      {
+        quota_order_number_id: quota_order_number.quota_order_number_id,
+        quota_order_number_sid: quota_order_number.quota_order_number_sid,
+        critical_threshold: original_params[:quota_criticality_threshold],
+        critical_state: original_params[:quota_status] == "critical" ? "Y" : "N",
+        description: original_params[:description],
+      }
+    end
+
+    def quota_definition_start_and_date_ops(mode, data)
+      ops = { validity_start_date: data[:start_date].to_date }
+      ops[:validity_end_date] = data[:end_date].to_date if data[:end_date].present?
+
+      ops
+    end
+
+    def add_custom_quota_definition!(data)
+      # TODO
     end
 
     def add_excluded_geographical_areas!
@@ -218,7 +277,9 @@ class MeasureSaver
 
       excluded_area.geographical_area_sid = area.geographical_area_sid
       excluded_area.measure_sid = measure.measure_sid
+      excluded_area.operation_date = Date.current
       excluded_area.manual_add = true
+
       excluded_area.save
     end
 end
