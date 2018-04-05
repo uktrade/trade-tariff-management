@@ -200,9 +200,9 @@ class MeasureSaver
 
     def add_quota_definitions!
       if measure.ordernumber.present?
-        periods_ops = original_params["quota_periods"]
-        mode = periods_ops.keys.first
-        target_ops = periods_ops[mode]
+        quota_def_ops = original_params["quota_periods"]
+        mode = quota_def_ops.keys.first
+        target_ops = quota_def_ops[mode]
 
         p "-" * 100
         p ""
@@ -236,6 +236,25 @@ class MeasureSaver
         quota_definition = QuotaDefinition.new(
           quota_ops(mode, data, k)
         )
+        persist_quota_definition!(quota_definition)
+      end
+    end
+
+    def add_custom_quota_definition!(data)
+      data.map do |k, v|
+
+        p ""
+        p "+" * 100
+        p ""
+        p " [CUSTOM] k: #{k}, data: #{custom_quota_ops(v)}"
+        p ""
+        p "+" * 100
+        p ""
+
+        quota_definition = QuotaDefinition.new(
+          custom_quota_ops(v)
+        )
+        persist_quota_definition!(quota_definition)
       end
     end
 
@@ -246,6 +265,16 @@ class MeasureSaver
         measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
       }.merge(quota_definition_main_ops)
        .merge(quota_definition_start_and_date_ops(mode, data, k))
+    end
+
+    def custom_quota_ops(data)
+      {
+        volume: data["amount1"],
+        validity_start_date: data[:start_date].to_date,
+        validity_end_date: data[:end_date].try(:to_date),
+        measurement_unit_code: data[:measurement_unit_code],
+        measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
+      }.merge(quota_definition_main_ops)
     end
 
     def quota_definition_main_ops
@@ -269,16 +298,13 @@ class MeasureSaver
       when "annual"
         ops[:validity_start_date] = start_date
         ops[:validity_end_date] = start_date + 1.year
-
       when "bi_annual"
         step_range = amount_number * 6
         ops[:validity_start_date] = start_date + (step_range - 6).months
         ops[:validity_end_date] = start_date + step_range.months
-
       when "monthly"
         ops[:validity_start_date] = start_date + (amount_number - 1).months
         ops[:validity_end_date] = start_date + amount_number.months
-
       when "quarterly"
         step_range = amount_number * 3
         ops[:validity_start_date] = start_date + (step_range - 3).months
@@ -288,31 +314,12 @@ class MeasureSaver
       ops
     end
 
-    def add_custom_quota_definition!(data)
-      data.map do |k, v|
+    def persist_quota_definition!(quota_definition)
+      quota_definition.operation = "I"
+      quota_definition.operation_date = Date.current
+      quota_definition.manual_add = true
 
-        p ""
-        p "+" * 100
-        p ""
-        p " [CUSTOM] k: #{k}, data: #{custom_quota_ops(v)}"
-        p ""
-        p "+" * 100
-        p ""
-
-        quota_definition = QuotaDefinition.new(
-          custom_quota_ops(v)
-        )
-      end
-    end
-
-    def custom_quota_ops(data)
-      {
-        volume: data["amount1"],
-        validity_start_date: data[:start_date].to_date,
-        validity_end_date: data[:end_date].try(:to_date),
-        measurement_unit_code: data[:measurement_unit_code],
-        measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
-      }.merge(quota_definition_main_ops)
+      quota_definition.save
     end
 
     def add_excluded_geographical_areas!
