@@ -210,11 +210,11 @@ class MeasureSaver
         p ""
         p "-" * 100
 
-        if target_ops.present? && target_ops[:start_date].present?
+        if target_ops.present?
           case mode
           when "annual", "bi_annual", "quarterly", "monthly"
-            add_quota_definition!(mode, target_ops)
-          else
+            add_quota_definition!(mode, target_ops) if target_ops[:start_date].present?
+          when "custom"
             add_custom_quota_definition!(target_ops)
           end
         end
@@ -283,16 +283,36 @@ class MeasureSaver
         step_range = amount_number * 3
         ops[:validity_start_date] = start_date + (step_range - 3).months
         ops[:validity_end_date] = start_date + step_range.months
-
-      when "custom"
-        # TODO
       end
 
       ops
     end
 
     def add_custom_quota_definition!(data)
-      # TODO
+      data.map do |k, v|
+
+        p ""
+        p "+" * 100
+        p ""
+        p " [CUSTOM] k: #{k}, data: #{custom_quota_ops(v)}"
+        p ""
+        p "+" * 100
+        p ""
+
+        quota_definition = QuotaDefinition.new(
+          custom_quota_ops(v)
+        )
+      end
+    end
+
+    def custom_quota_ops(data)
+      {
+        volume: data["amount1"],
+        validity_start_date: data[:start_date].to_date,
+        validity_end_date: data[:end_date].try(:to_date),
+        measurement_unit_code: data[:measurement_unit_code],
+        measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
+      }.merge(quota_definition_main_ops)
     end
 
     def add_excluded_geographical_areas!
