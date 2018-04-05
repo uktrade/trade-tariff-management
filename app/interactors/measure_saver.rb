@@ -342,10 +342,23 @@ class MeasureSaver
     end
 
     def set_oplog_attrs_and_save!(record)
+      p_key = record.primary_key
+      p_key = p_key.is_a?(Array) ? p_key.first : p_key
+      sid = record.class.max(p_key) + 1
+
+      record.public_send("#{p_key}=", sid)
       record.operation = "C"
       record.operation_date = Date.current
       record.manual_add = true
 
       record.save
+
+      p ""
+      p "-" * 100
+      p ""
+      p " [SAVED - #{record.class.name}] #{p_key}: #{record.send(p_key)}, inspect: #{record.inspect}"
+      p ""
+      p "-" * 100
+      p ""
     end
 end
