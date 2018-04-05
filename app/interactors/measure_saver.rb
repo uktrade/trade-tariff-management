@@ -261,79 +261,28 @@ class MeasureSaver
     end
 
     def quota_definition_start_and_date_ops(mode, data, k)
-      #
-      # TODO: refactor it please!
-      #
-
       ops = {}
+      start_date = data[:start_date].to_date
+      amount_number = k.gsub("amount", "").to_i
 
       case mode
       when "annual"
-        ops[:validity_start_date] = data[:start_date].to_date
-        ops[:validity_end_date] = ops[:validity_start_date] + 1.year
+        ops[:validity_start_date] = start_date
+        ops[:validity_end_date] = start_date + 1.year
 
       when "bi_annual"
-        if k == "amount1"
-          ops[:validity_start_date] = data[:start_date].to_date
-          ops[:validity_end_date] = ops[:validity_start_date] + 6.months
-        elsif k == "amount2"
-          ops[:validity_start_date] = ops[:validity_start_date] + 6.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 12.months
-        end
+        step_range = amount_number * 6
+        ops[:validity_start_date] = start_date + (step_range - 6).months
+        ops[:validity_end_date] = start_date + step_range.months
 
       when "monthly"
-        if k == "amount1"
-          ops[:validity_start_date] = data[:start_date].to_date
-          ops[:validity_end_date] = ops[:validity_start_date] + 1.months
-        elsif k == "amount2"
-          ops[:validity_start_date] = ops[:validity_start_date] + 1.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 2.months
-        elsif k == "amount3"
-          ops[:validity_start_date] = ops[:validity_start_date] + 2.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 3.months
-        elsif k == "amount4"
-          ops[:validity_start_date] = ops[:validity_start_date] + 3.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 4.months
-        elsif k == "amount5"
-          ops[:validity_start_date] = ops[:validity_start_date] + 4.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 5.months
-        elsif k == "amount6"
-          ops[:validity_start_date] = ops[:validity_start_date] + 5.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 6.months
-        elsif k == "amount7"
-          ops[:validity_start_date] = ops[:validity_start_date] + 6.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 7.months
-        elsif k == "amount8"
-          ops[:validity_start_date] = ops[:validity_start_date] + 7.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 8.months
-        elsif k == "amount9"
-          ops[:validity_start_date] = ops[:validity_start_date] + 8.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 9.months
-        elsif k == "amount10"
-          ops[:validity_start_date] = ops[:validity_start_date] + 9.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 10.months
-        elsif k == "amount11"
-          ops[:validity_start_date] = ops[:validity_start_date] + 10.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 11.months
-        elsif k == "amount12"
-          ops[:validity_start_date] = ops[:validity_start_date] + 11.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 12.months
-        end
+        ops[:validity_start_date] = start_date + (amount_number - 1).months
+        ops[:validity_end_date] = start_date + amount_number.months
 
       when "quarterly"
-        if k == "amount1"
-          ops[:validity_start_date] = data[:start_date].to_date
-          ops[:validity_end_date] = ops[:validity_start_date] + 3.months
-        elsif k == "amount2"
-          ops[:validity_start_date] = ops[:validity_start_date] + 3.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 6.months
-        elsif k == "amount3"
-          ops[:validity_start_date] = ops[:validity_start_date] + 6.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 9.months
-        elsif k == "amount4"
-          ops[:validity_start_date] = ops[:validity_start_date] + 9.months
-          ops[:validity_end_date] = ops[:validity_start_date] + 12.months
-        end
+        step_range = amount_number * 3
+        ops[:validity_start_date] = start_date + (step_range - 3).months
+        ops[:validity_end_date] = start_date + step_range.months
 
       when "custom"
         # TODO
