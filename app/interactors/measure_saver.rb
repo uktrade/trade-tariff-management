@@ -7,7 +7,7 @@ class MeasureParamsNormalizer
     goods_nomenclature_code: :method_goods_nomenclature_item_values,
     additional_code: :method_additional_code_values,
     regulation_id: :method_regulation_values,
-    geographical_area_id: :method_geographical_area_values,
+    geographical_area_id: :method_geographical_area_values
   }
 
   WHITELIST_PARAMS = %w(
@@ -100,6 +100,12 @@ class MeasureParamsNormalizer
 end
 
 class MeasureSaver
+
+  PRIMARY_KEYS = {
+    "QuotaDefinition" => :quota_definition_sid,
+    "Footnote" => :footnote_id,
+    "FootnoteDescriptionPeriod" => :footnote_description_period_sid
+  }
 
   attr_accessor :original_params,
                 :measure_params,
@@ -203,6 +209,7 @@ class MeasureSaver
     def post_saving_updates!
       add_quota_definitions!
       add_excluded_geographical_areas!
+      add_footnotes!
     end
 
     def add_quota_definitions!
@@ -341,22 +348,62 @@ class MeasureSaver
       set_oplog_attrs_and_save!(excluded_area)
     end
 
-    def set_oplog_attrs_and_save!(record)
-      p_key = record.primary_key
-      p_key = p_key.is_a?(Array) ? p_key.first : p_key
-      sid = record.class.max(p_key) + 1
+    def add_footnotes!
+      footnotes_list = normalized_params[:footnotes]
 
-      record.public_send("#{p_key}=", sid)
+      if footnotes_list.present?
+        footnotes_list.map do |f_ops|
+          if f_ops[:footnote_type_id].present? &&
+             f_ops[:description].present?
+
+            footnote = Footnote.new(
+              footnote_type_id: f_ops[:footnote_type_id],
+              validity_start_date: measure.validity_start_date,
+              validity_end_date: measure.validity_end_date
+            )
+
+            set_oplog_attrs_and_save!(footnote)
+
+            fd_period = FootnoteDescriptionPeriod.new(
+              footnote_type_id: footnote.footnote_type_id,
+              footnote_id: footnote.footnote_id,
+              validity_start_date: footnote.validity_start_date,
+              validity_end_date: footnote.validity_end_date
+            )
+
+            set_oplog_attrs_and_save!(fd_period)
+
+            fd = FootnoteDescription.new(
+              footnote_description_period_sid: fd_period.footnote_description_period_sid,
+              footnote_type_id: footnote.footnote_type_id,
+              footnote_id: footnote.footnote_id,
+              language_id: "EN",
+              description: f_ops[:description]
+            )
+
+            set_oplog_attrs_and_save!(fd)
+          end
+        end
+      end
+    end
+
+    def set_oplog_attrs_and_save!(record)
+      p_key = PRIMARY_KEYS[record.class.name]
+
+      if p_key.present?
+        sid = record.class.max(p_key) + 1
+        record.public_send("#{p_key}=", sid)
+      end
+
       record.operation = "C"
       record.operation_date = Date.current
       record.manual_add = true
-
       record.save
 
       p ""
       p "-" * 100
       p ""
-      p " [SAVED - #{record.class.name}] #{p_key}: #{record.send(p_key)}, inspect: #{record.inspect}"
+      p " [SAVED - #{record.class.name}] #{record.inspect}"
       p ""
       p "-" * 100
       p ""
