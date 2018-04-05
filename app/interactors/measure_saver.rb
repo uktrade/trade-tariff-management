@@ -70,8 +70,8 @@ class MeasureParamsNormalizer
       }
 
       if normalized_params[:validity_end_date].present?
-        ops[:justification_regulation_id] = regulation.base_regulation_role
-        ops[:justification_regulation_role] = base_regulation_id
+        ops[:justification_regulation_id] = base_regulation_id
+        ops[:justification_regulation_role] = regulation.base_regulation_role
       end
 
       ops
