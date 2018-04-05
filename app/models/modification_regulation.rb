@@ -43,9 +43,15 @@ class ModificationRegulation < Sequel::Model
   end
 
   def json_mapping
+    description = if effective_end_date.present?
+      "#{modification_regulation_id}: #{information_text} (#{validity_start_date.to_formatted_s(:uk)} to #{effective_end_date.to_formatted_s(:uk)})"
+    else
+      "#{modification_regulation_id}: #{information_text} (#{validity_start_date.to_formatted_s(:uk)})"
+    end
+
     {
       regulation_id: modification_regulation_id,
-      description: "#{modification_regulation_id}. #{information_text}"
+      description: description
     }
   end
 end
