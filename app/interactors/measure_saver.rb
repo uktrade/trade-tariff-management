@@ -64,10 +64,17 @@ class MeasureParamsNormalizer
                                  .not_replaced_and_partially_replaced
                                  .where(base_regulation_id: base_regulation_id).first
 
-      {
+      ops = {
         measure_generating_regulation_role: regulation.base_regulation_role,
         measure_generating_regulation_id: base_regulation_id
       }
+
+      if normalized_params[:validity_end_date].present?
+        ops[:justification_regulation_id] = regulation.base_regulation_role
+        ops[:justification_regulation_role] = base_regulation_id
+      end
+
+      ops
     end
 
     def method_geographical_area_values(geographical_area_id)
