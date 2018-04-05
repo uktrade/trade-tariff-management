@@ -358,38 +358,35 @@ class MeasureSaver
     end
 
     def add_footnotes!
-      footnotes_list = normalized_params[:footnotes]
+      footnotes_list = original_params[:footnotes]
 
       if footnotes_list.present?
-        footnotes_list.map do |f_ops|
+        footnotes_list.each do |k, f_ops|
           if f_ops[:footnote_type_id].present? &&
              f_ops[:description].present?
 
             footnote = Footnote.new(
-              footnote_type_id: f_ops[:footnote_type_id],
               validity_start_date: measure.validity_start_date,
               validity_end_date: measure.validity_end_date
             )
-
+            footnote.footnote_type_id = f_ops[:footnote_type_id]
             set_oplog_attrs_and_save!(footnote)
 
             fd_period = FootnoteDescriptionPeriod.new(
-              footnote_type_id: footnote.footnote_type_id,
-              footnote_id: footnote.footnote_id,
               validity_start_date: footnote.validity_start_date,
               validity_end_date: footnote.validity_end_date
             )
-
+            fd_period.footnote_id = footnote.footnote_id
+            fd_period.footnote_type_id = f_ops[:footnote_type_id]
             set_oplog_attrs_and_save!(fd_period)
 
             fd = FootnoteDescription.new(
-              footnote_description_period_sid: fd_period.footnote_description_period_sid,
-              footnote_type_id: footnote.footnote_type_id,
-              footnote_id: footnote.footnote_id,
               language_id: "EN",
               description: f_ops[:description]
             )
-
+            fd.footnote_id = footnote.footnote_id
+            fd.footnote_type_id = f_ops[:footnote_type_id]
+            fd.footnote_description_period_sid = fd_period.footnote_description_period_sid
             set_oplog_attrs_and_save!(fd)
           end
         end
@@ -400,7 +397,15 @@ class MeasureSaver
       p_key = PRIMARY_KEYS[record.class.name]
 
       if p_key.present?
-        sid = record.class.max(p_key) + 1
+        p ""
+        p "-" * 100
+        p ""
+        p " [p_key] #{p_key}, record.class.max(p_key): #{record.class.max(p_key)}"
+        p ""
+        p "-" * 100
+        p ""
+
+        sid = record.class.max(p_key).to_i + 1
         record.public_send("#{p_key}=", sid)
       end
 
