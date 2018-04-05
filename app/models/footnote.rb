@@ -63,17 +63,14 @@ class Footnote < Sequel::Model
       where(national: true)
     end
 
-    def q_search(footnote_type_id, keyword)
-      join_table(
+    def q_search(f_type_id, keyword)
+       join_table(
         :inner,
         :footnote_descriptions,
         footnote_id: Sequel[:footnotes][:footnote_id],
-        footnote_type_id: footnote_type_id
-      ).where(Sequel[:footnotes][:footnote_type_id] => footnote_type_id)
-       .where{
-         Sequel.ilike(:description, "#{keyword}%") |
-         Sequel.ilike(:footnote_id, "#{keyword}%")
-       }
+        footnote_type_id: f_type_id
+      ).where(Sequel[:footnotes][:footnote_type_id] => f_type_id)
+       .where(Sequel.like(:description, keyword + "%"))
     end
   end
 
