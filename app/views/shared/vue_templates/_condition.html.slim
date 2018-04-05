@@ -12,9 +12,9 @@ script type="text/x-template" id="condition-template"
       = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showMinimumPrice" do
         .form-group
           label.form-label
-            | Minimum Price (£)
+            | Minimum Price (€)
             span.form-hint
-              | Specify the price (in £) at or above which this condition will apply.
+              | Specify the price (in €) at or above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
 
       = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showRatio" do
@@ -28,9 +28,9 @@ script type="text/x-template" id="condition-template"
       = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showEntryPrice" do
         .form-group
           label.form-label
-            | Entry Price (£)
+            | Entry Price (€)
             span.form-hint
-              | Specify the price (in £) above which this condition will apply.
+              | Specify the price (in €) above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
 
       = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showAmount" do
