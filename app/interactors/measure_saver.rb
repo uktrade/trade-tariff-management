@@ -145,7 +145,7 @@ class MeasureSaver
   def persist!
     generate_measure_sid
     measure.manual_add = true
-    measure.operation = "I"
+    measure.operation = "C"
     measure.operation_date = Date.current
 
     attempts = 5
@@ -342,7 +342,7 @@ class MeasureSaver
     end
 
     def set_oplog_attrs_and_save!(record)
-      record.operation = "I"
+      record.operation = "C"
       record.operation_date = Date.current
       record.manual_add = true
 
