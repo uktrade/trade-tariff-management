@@ -64,14 +64,23 @@ class MeasureParamsNormalizer
                                  .not_replaced_and_partially_replaced
                                  .where(base_regulation_id: base_regulation_id).first
 
+      if regulation.present?
+        role = regulation.base_regulation_role
+      else
+        regulation = ModificationRegulation.actual
+                                           .not_replaced_and_partially_replaced
+                                           .where(modification_regulation_id: base_regulation_id).first
+        role = regulation.modification_regulation_role
+      end
+
       ops = {
-        measure_generating_regulation_role: regulation.base_regulation_role,
-        measure_generating_regulation_id: base_regulation_id
+        measure_generating_regulation_id: base_regulation_id,
+        measure_generating_regulation_role: role
       }
 
       if normalized_params[:validity_end_date].present?
         ops[:justification_regulation_id] = base_regulation_id
-        ops[:justification_regulation_role] = regulation.base_regulation_role
+        ops[:justification_regulation_role] = role
       end
 
       ops
