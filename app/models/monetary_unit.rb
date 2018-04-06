@@ -24,4 +24,12 @@ class MonetaryUnit < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def json_mapping
+    {
+      monetary_unit_code: monetary_unit_code,
+      description: description,
+      abbreviation: abbreviation
+    }
+  end
 end
