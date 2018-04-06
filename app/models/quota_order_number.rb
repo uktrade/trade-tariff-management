@@ -17,11 +17,25 @@ class QuotaOrderNumber < Sequel::Model
 
   delegate :present?, to: :quota_order_number_origin, prefix: true, allow_nil: true
 
+  dataset_module do
+    def q_search(keyword)
+      where {
+        Sequel.ilike(:quota_order_number_id, "#{keyword}%")
+      }
+    end
+  end
+
   def record_code
     "360".freeze
   end
 
   def subrecord_code
     "00".freeze
+  end
+
+  def json_mapping
+    {
+      quota_order_number_id: quota_order_number_id
+    }
   end
 end
