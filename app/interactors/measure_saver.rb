@@ -371,6 +371,12 @@ class MeasureSaver
             footnote.footnote_type_id = f_ops[:footnote_type_id]
             set_oplog_attrs_and_save!(footnote)
 
+            f_m = FootnoteAssociationMeasure.new
+            f_m.measure_sid = measure.measure_sid
+            f_m.footnote_id = footnote.footnote_id
+            f_m.footnote_type_id = f_ops[:footnote_type_id]
+            set_oplog_attrs_and_save!(f_m)
+
             fd_period = FootnoteDescriptionPeriod.new(
               validity_start_date: footnote.validity_start_date,
               validity_end_date: footnote.validity_end_date
@@ -404,9 +410,55 @@ class MeasureSaver
         p "-" * 100
         p ""
 
-        sid = record.class.max(p_key).to_i + 1
+        sid = if record.is_a?(Footnote)
+          #
+          # TODO:
+          #
+          # Footnote, FootnoteDescription, FootnoteDescriptionPeriod
+          # in current db having:
+          #
+          #   footnote_id character varying(5)
+          #
+          # but in FootnoteAssociationMeasure
+          #
+          #   footnote_id character varying(3)
+          #
+          # This is wrong and break saving of FootnoteAssociationMeasure
+          # if footnote_id is longer than 3 symbols
+          #
+          # Also, then we are trying to fix it via:
+          #
+          #     alter_table :footnote_association_measures_oplog do
+          #       set_column_type :footnote_id, String, size: 5
+          #     end
+          #
+          # System raises error:
+          #
+          # PG::FeatureNotSupported: ERROR:  cannot alter type of a column used by a view or rule
+          # DETAIL:  rule _RETURN on view footnote_association_measures depends on column "footnote_id"
+          #
+          # So, we fix it later!
+
+          f_max_id = Footnote.where { Sequel.ilike(:footnote_id, "F%") }
+                             .order(Sequel.desc(:footnote_id))
+                             .first
+                             .try(:footnote_id)
+
+          f_max_id.present? ? "F#{f_max_id.gsub("F", "").to_i + 1}" : "F01"
+        else
+          record.class.max(p_key).to_i + 1
+        end
+
         record.public_send("#{p_key}=", sid)
       end
+
+      p ""
+      p "-" * 100
+      p ""
+      p " [ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}"
+      p ""
+      p "-" * 100
+      p ""
 
       record.operation = "C"
       record.operation_date = Date.current
