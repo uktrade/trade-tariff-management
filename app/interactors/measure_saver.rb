@@ -98,7 +98,6 @@ class MeasureParamsNormalizer
 
     def method_goods_nomenclature_item_values(goods_nomenclature_item_id)
       commodity = Commodity.actual
-                           .declarable
                            .where(goods_nomenclature_item_id: goods_nomenclature_item_id).first
 
       {
