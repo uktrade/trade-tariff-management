@@ -40,9 +40,7 @@ Origin.prototype.init = function () {
     create: false,
     valueField: 'geographical_area_id',
     labelField: 'description',
-    searchField: ["description", "text"],
-    onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
-    onChange: function(){ this.$dropdown_content.removeHighlight(); }
+    searchField: ["description", "text"]
   });
 };
 
@@ -129,20 +127,8 @@ Origin.prototype.addExclusion = function () {
     create: false,
     valueField: 'geographical_area_id',
     labelField: 'description',
-    searchField: ["geographical_area_id", "description", "text"],
-    onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
-    onChange: function(){ this.$dropdown_content.removeHighlight(); }
+    searchField: ["geographical_area_id", "description", "text"]
   });
-
-  var selectize = html.find("select")[0].selectize;
-  var checkMinLength = function() {
-    if (selectize.$control_input.val().length < 2) {
-      selectize.close();
-    }
-  };
-
-  selectize.on('dropdown_open', checkMinLength);
-  selectize.$control_input.on('input', checkMinLength);
 
   this.target.find(".exclusions-target").append(html);
 };
@@ -192,8 +178,8 @@ $(document).ready(function() {
     data: function() {
       return {
         condition: {},
-        start_date: null,
-        end_date: null,
+        start_date: window.measure_start_date,
+        end_date: window.measure_end_date,
       }
     },
     template: "#selectize-template",
@@ -248,7 +234,7 @@ $(document).ready(function() {
           vm.$el.selectize.renderCache['item'] = {};
 
           if (vm.minLength && query.length < vm.minLength) return callback();
-          if (vm.drilldownRequired && !vm.drilldownValue) return callback();
+          if (vm.drilldownRequired === "true" && !vm.drilldownValue) return callback();
 
           var data = {
             q: query,
@@ -1060,9 +1046,13 @@ $(document).ready(function() {
         this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
       },
       "measure.validity_start_date": function() {
+        window.measure_start_date = this.measure.validity_start_date;
+
         $(".measure-form").trigger("dates:changed", [this.measure.validity_start_date, this.measure.validity_end_date]);
       },
       "measure.validity_end_date": function() {
+        window.measure_end_date = this.measure.validity_end_date;
+
         $(".measure-form").trigger("dates:changed", [this.measure.validity_start_date, this.measure.validity_end_date]);
       },
       "measure.additional_code_type_id": function(newVal, oldVal) {
@@ -1128,8 +1118,6 @@ $(document).ready(function() {
     valueField: 'measure_type_id',
     labelField: 'description',
     searchField: ["measure_type_id", "description"],
-    onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
-    onChange: function(){ this.$dropdown_content.removeHighlight(); },
     render: {
       option: function(data) {
         return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--type'>" + data.measure_type_id + "</span> " + data.description + "</span>";

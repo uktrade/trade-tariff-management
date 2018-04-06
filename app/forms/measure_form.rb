@@ -101,32 +101,24 @@ class MeasureForm
   end
 
   def all_geographical_areas
-    @all_ga ||= Rails.cache.fetch(:measures_form_geographical_areas, expires_in: 8.hours) do
-      GeographicalArea.actual
+    @all_ga ||= GeographicalArea.actual
                       .all
-    end
   end
 
   def all_geographical_countries
-    @all_gc ||= Rails.cache.fetch(:measures_form_geographical_countries, expires_in: 8.hours) do
-      GeographicalArea.actual
+    @all_gc ||= GeographicalArea.actual
                       .countries
                       .all
-    end
   end
 
   def geographical_groups_except_erga_omnes
-    @ggeeo ||= Rails.cache.fetch(:measures_form_geographical_groups_except_erga_omnes, expires_in: 8.hours) do
-      GeographicalArea.actual.groups
+    @ggeeo ||= GeographicalArea.actual.groups
                       .except_erga_omnes
                       .all
-    end
   end
 
   def geographical_area_erga_omnes
-    @gaeo ||= Rails.cache.fetch(:measures_form_geographical_area_erga_omnes, expires_in: 8.hours) do
-      GeographicalArea.erga_omnes_group
-    end
+    @gaeo ||= GeographicalArea.erga_omnes_group
   end
 
   def hash_collection(items, mapping)
