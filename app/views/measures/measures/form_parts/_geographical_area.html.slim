@@ -9,52 +9,6 @@ fieldset
     |.
 
   .controls.origins-region
-    = f.hidden_field :geographical_area_id, value: form.geographical_area_id, "v-model" => "measure.geographical_area_id"
-    = f.collection_select(:excluded_geographical_areas, form.all_geographical_areas, :geographical_area_id, :description, { include_blank: true, multiple: true }, {class: "js-hidden", multiple: true, "v-model" => "measure.excluded_geographical_areas" })
-
-    .multiple-choice
-      = f.radio_button :geographical_area_type, :country, value: form.geographical_area_type, class: "radio-inline-group"
-      label
-        = f.collection_select(:geographical_area_proxy, form.all_geographical_countries, :geographical_area_id, :description, { include_blank: true, prompt: "― select a country or region ―" }, {class: "origin-select", "data-placeholder" => "― select a country or region ―"})
-
-    .panel.panel-border-narrow.js-hidden#exclusions-for-country-region
-      label.form-label
-        | If you want to exclude countries from this measure, enter them here:
-
-      .exclusions-target
-
-      p.add-another-wrapper
-        a href="#" class="js-add-country-exclusion"
-          | Add another exclusion
-
-
-    .multiple-choice
-      = f.radio_button :geographical_area_type, :group, value: form.geographical_area_type, class: "radio-inline-group"
-      label
-        = f.collection_select(:geographical_area_proxy, form.geographical_groups_except_erga_omnes, :geographical_area_id, :description, { include_blank: true, prompt: "― select a group of countries ―" }, { class: "origin-select", "data-placeholder" => "― select a group of countries ―" })
-
-    .panel.panel-border-narrow.js-hidden#exclusions-for-groups
-      label.form-label
-        | If you want to exclude countries from this measure, enter them here:
-
-      .exclusions-target
-
-      p.add-another-wrapper
-        a href="#" class="js-add-country-exclusion"
-          | Add another exclusion
-
-
-    .multiple-choice
-      = f.radio_button :geographical_area_type, :erga_omnes, value: form.geographical_area_type, class: "radio-inline-group", id: "erga-omnes-radio"
-      label for="erga-omnes-radio"
-        | ERGA OMNES (all origins)
-
-    .panel.panel-border-narrow.js-hidden#exclusions-for-erga-omnes
-      label.form-label
-        | If you want to exclude countries from this measure, enter them here:
-
-      .exclusions-target
-
-      p.add-another-wrapper
-        a href="#" class="js-add-country-exclusion"
-          | Add another exclusion
+    = content_tag "measure-origin", "", { kind: "country", placeholder: "― select a country or region ―", ":origin" => "origins.country" }
+    = content_tag "measure-origin", "", { kind: "group", placeholder: "― select a group of countries ―", ":origin" => "origins.group" }
+    = content_tag "measure-origin", "", { kind: "erga_omnes", placeholder: "― select a country or region ―", ":origin" => "origins.erga_omnes" }

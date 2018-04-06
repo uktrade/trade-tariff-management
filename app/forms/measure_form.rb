@@ -104,6 +104,7 @@ class MeasureForm
     @all_ga ||= Rails.cache.fetch(:measures_form_geographical_areas, expires_in: 8.hours) do
       GeographicalArea.actual
                       .all
+                      .map { |area| { geographical_area_id: area.geographical_area_id, description: area.description } }
     end
   end
 
@@ -112,6 +113,7 @@ class MeasureForm
       GeographicalArea.actual
                       .countries
                       .all
+                      .map { |area| { geographical_area_id: area.geographical_area_id, description: area.description } }
     end
   end
 
@@ -120,12 +122,13 @@ class MeasureForm
       GeographicalArea.actual.groups
                       .except_erga_omnes
                       .all
+                      .map { |area| { geographical_area_id: area.geographical_area_id, description: area.description } }
     end
   end
 
   def geographical_area_erga_omnes
     @gaeo ||= Rails.cache.fetch(:measures_form_geographical_area_erga_omnes, expires_in: 8.hours) do
-      GeographicalArea.erga_omnes_group
+      GeographicalArea.erga_omnes_group.to_hash.slice(:geographical_area_id, :description)
     end
   end
 
