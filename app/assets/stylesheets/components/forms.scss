@@ -1,5 +1,6 @@
-input.datepicker {
-  max-width: 110px;
+input.datepicker,
+input.date-picker {
+  max-width: 140px;
 }
 
 .form-control {
@@ -18,6 +19,10 @@ input.datepicker {
 .exclusion-select {
   width: 300px;
   max-width: 100%;
+}
+
+.exclusion + .exclusion {
+  margin-top: 20px;
 }
 
 .form-hint {
