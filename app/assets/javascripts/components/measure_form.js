@@ -582,6 +582,9 @@ $(document).ready(function() {
         var codes = ["A", "Z"];
 
         return codes.indexOf(this.condition.condition_code) > -1;
+      },
+      canRemoveComponent: function() {
+        return this.measure_condition_components.length > 1;
       }
     },
     watch: {
@@ -603,6 +606,15 @@ $(document).ready(function() {
         if (oldVal === false && newVal === true) {
           this.certificate_id = null;
         }
+      },
+      removeMeasureConditionComponent: function(measureConditionComponent) {
+        var idx = this.condition.measure_condition_components.indexOf(measureConditionComponent);
+
+        if (idx === -1) {
+          return;
+        }
+
+        this.condition.measure_condition_components.splice(idx, 1);
       }
     },
     methods: {
@@ -960,6 +972,42 @@ $(document).ready(function() {
         }
 
         return payload;
+      },
+      removeQuotaPeriod: function(quotaPeriod) {
+        var index = this.measure.quota_periods.indexOf(quotaPeriod);
+
+        if (index === -1) {
+          return;
+        }
+
+        this.measure.quota_periods.splice(index, 1);
+      },
+      removeFootnote: function(footnote) {
+        var index = this.measure.footnotes.indexOf(footnote);
+
+        if (index === -1) {
+          return;
+        }
+
+        this.measure.footnotes.splice(index, 1);
+      },
+      removeMeasureComponent: function(measureComponent) {
+        var index = this.measure.measure_components.indexOf(measureComponent);
+
+        if (index === -1) {
+          return;
+        }
+
+        this.measure.measure_components.splice(index, 1);
+      },
+      removeCondition: function(condition) {
+        var index = this.measure.conditions.indexOf(condition);
+
+        if (index === -1) {
+          return;
+        }
+
+        this.measure.conditions.splice(index, 1);
       }
     },
     computed: {
@@ -1009,6 +1057,18 @@ $(document).ready(function() {
       },
       hasErrors: function() {
         return this.errors.length > 0;
+      },
+      canRemoveQuota: function() {
+        return this.measure.quota_periods.length > 1;
+      },
+      canRemoveFootnote: function() {
+        return this.measure.footnotes.length > 1;
+      },
+      canRemoveCondition: function() {
+        return this.measure.conditions.length > 1;
+      },
+      canRemoveMeasureComponent: function() {
+        return this.measure.measure_components.length > 1;
       }
     },
     watch: {

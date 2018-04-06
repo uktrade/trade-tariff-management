@@ -48,17 +48,43 @@ input.datepicker {
 }
 
 .condition {
-  padding: 15px 0 15px;
+  padding: 15px 0 0;
 
   &:first-of-type {
     padding-top: 0;
   }
 
   &:last-of-type {
-    padding-bottom: 0;
+    padding-bottom: 15px;
+  }
+
+  &:first-of-type:last-of-type {
+    padding-bottom: 0 !important;
   }
 
   & + .condition {
+    margin-top: 15px;
+    border-top: 1px solid #000;
+  }
+}
+
+.footnote {
+  padding: 15px 0 0;
+
+  &:first-of-type {
+    padding-top: 0;
+  }
+
+  &:last-of-type {
+    padding-bottom: 15px;
+  }
+
+  &:first-of-type:last-of-type {
+    padding-bottom: 0 !important;
+  }
+
+  & + .footnote {
+    margin-top: 15px;
     border-top: 1px solid #000;
   }
 }
@@ -66,12 +92,16 @@ input.datepicker {
 .quota-period {
   padding: 15px 0 0;
 
-  &:first-child {
+  &:first-of-type {
     padding-top: 0;
   }
 
-  &:last-child {
-    padding-bottom: 0;
+  &:last-of-type {
+    padding-bottom: 15px;
+  }
+
+  &:first-of-type:last-of-type {
+    padding-bottom: 0 !important;
   }
 
   & + .quota-period {
@@ -87,6 +117,10 @@ input.datepicker {
 
 .form-actions {
   margin: 1em 0 3em;
+}
+
+.condition-components-wrapper {
+  padding-bottom: 15px;
 }
 
 .measure-condition-component {

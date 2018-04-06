@@ -64,11 +64,15 @@ script type="text/x-template" id="condition-template"
             = content_tag :span, { class: "form-hint", "v-if" => "noCertificateActionHint" } do
               | Define the action to take if the condition is met.
           = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true }
-    = content_tag :div, { "v-if" => "showConditionComponents" } do
+    = content_tag :div, { class: "condition-components-wrapper", "v-if" => "showConditionComponents" } do
       .measure-condition-components
         div.measure-condition-component v-for="(measureConditionComponent, index) in condition.measure_condition_components"
           = content_tag "measure-condition-component", "", { ":measure-condition-component" => "measureConditionComponent", ":index" => "index" }
 
-      p
+          div v-if="canRemoveComponent"
+            a.text-danger href="#" v-on:click.prevent="removeMeasureConditionComponent(measureConditionComponent)"
+              | Remove duty expression
+
+      div
         a href="#" v-on:click.prevent="addMeasureConditionComponent"
           | Add another duty expression
