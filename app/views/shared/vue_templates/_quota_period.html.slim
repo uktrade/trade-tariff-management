@@ -7,14 +7,14 @@ script type="text/x-template" id="quota-period-template"
             | Quota period
 
           = content_tag "custom-select", "", ":options" => "quotaOptions", "labelField" => "label", "valueField" => "value", "v-model" => "quotaPeriod.type"
-      .col-md-7
+      .col-md-3.col-lg-2
         .form-group
           label.form-label
             | Starting on
 
           = content_tag "date-select", "", ":value.sync" => "quotaPeriod.start_date"
-
-        .form-group v-if="isCustom"
+      .col-md-3.col-lg-2 v-if="isCustom"
+        .form-group
           label.form-label
             | Ending on
 

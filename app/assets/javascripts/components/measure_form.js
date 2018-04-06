@@ -635,7 +635,8 @@ $(document).ready(function() {
           conditions: [],
           quota_periods: [],
           measure_components: [],
-          footnotes: []
+          footnotes: [],
+          existing_quota: null
         };
       }
 
@@ -869,6 +870,7 @@ $(document).ready(function() {
           footnotes: this.measure.footnotes,
           conditions: this.measure.conditions,
 
+          existing_quota: this.measure.existing_quota === "existing",
           quota_status: this.measure.quota_status,
           quota_ordernumber: this.measure.quota_ordernumber,
           quota_criticality_threshold: this.measure.quota_criticality_threshold,
@@ -1025,6 +1027,12 @@ $(document).ready(function() {
       },
       canRemoveMeasureComponent: function() {
         return this.measure.measure_components.length > 1;
+      },
+      creatingNewQuota: function() {
+        return this.measure.existing_quota === "new";
+      },
+      usingExistingQuota: function() {
+        return this.measure.existing_quota === "existing";
       }
     },
     watch: {
