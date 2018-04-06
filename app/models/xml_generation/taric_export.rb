@@ -2,14 +2,12 @@ module XmlGeneration
   class TaricExport
 
     attr_accessor :record,
-                  :mode,
                   :data,
                   :data_in_xml,
                   :tmp_file
 
-    def initialize(record, mode)
+    def initialize(record)
       @record = record
-      @mode = mode
     end
 
     def run
@@ -35,8 +33,7 @@ module XmlGeneration
 
       def fetch_relevant_data
         @data = ::XmlGeneration::Search.new(
-          record.relevant_date,
-          mode
+          record.relevant_date
         ).result
       end
 
