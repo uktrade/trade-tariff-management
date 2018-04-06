@@ -669,6 +669,7 @@ $(document).ready(function() {
         this.parseMeasure(window.__measure);
       } else {
         data.measure = {
+          operation_date: null,
           regulation_id: null,
           measure_type_series_id: null,
           measure_type_id: null,
@@ -898,6 +899,8 @@ $(document).ready(function() {
       },
       preparePayload: function() {
         var payload = {
+          operation_date: this.measure.operation_date,
+
           start_date: this.measure.validity_start_date,
           end_date: this.measure.validity_end_date,
           regulation_id: this.measure.regulation_id,
