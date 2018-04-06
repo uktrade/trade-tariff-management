@@ -9,7 +9,7 @@ module XmlGeneration
     end
 
     expose(:mode) do
-      params[:mode]
+      params[:mode] || "standart"
     end
 
     def create

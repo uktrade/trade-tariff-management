@@ -1,11 +1,11 @@
 module XmlGeneration
-  class NodeMessage < Sequel::Model
+  class NodeMessage #< Sequel::Model
 
-    include ::XmlGeneration::NodeBase
+    #include ::XmlGeneration::NodeBase
 
-    plugin :serialization
+    #plugin :serialization
 
-    serialize_attributes :json, :record_filter_ops
+    #serialize_attributes :json, :record_filter_ops
 
     GEOGRAPHICAL_AREAS = [
       GeographicalArea,
@@ -148,20 +148,22 @@ module XmlGeneration
       PublicationSigle
     ]
 
-    many_to_one :transaction, class_name: "XmlGeneration::NodeTransaction",
-                              key: :node_transaction_id
+    # many_to_one :transaction, class_name: "XmlGeneration::NodeTransaction",
+    #                           key: :node_transaction_id
 
-    validates do
-      uniqueness_of :node_id
-      presence_of :record_filter_ops, :record_type, :node_transaction_id
+    # validates do
+    #   uniqueness_of :node_id
+    #   presence_of :record_filter_ops, :record_type, :node_transaction_id
+    # end
+
+    attr_accessor :record
+
+    def initialize(record)
+      @record = record
     end
 
-    def record_class
-      record_type.constantize
-    end
-
-    def record
-      record_class.where(record_filter_ops.symbolize_keys).first
+    def node_id
+      rand(2..999)
     end
 
     def record_code
@@ -191,12 +193,12 @@ module XmlGeneration
     end
 
     def partial_path
-      "#{base_partial_path}/#{partial_folder_name}/#{record_class_to_underscore}.builder"
+      "#{base_partial_path}/#{partial_folder_name}/#{record_class}.builder"
     end
 
     private
 
-      def record_class_to_underscore
+      def record_class
         record.class
               .name
               .titleize

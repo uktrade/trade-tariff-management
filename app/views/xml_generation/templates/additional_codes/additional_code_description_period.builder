@@ -20,6 +20,6 @@ xml.tag!("oub:additional.code.description.period") do |additional_code_descripti
   end
 
   additional_code_description_period.tag!("oub:validity.end.date") do additional_code_description_period
-    xml_data_item(additional_code_description_period, self.validity_end_date.strftime("%Y-%m-%d"))
+    xml_data_item(additional_code_description_period, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
   end
 end

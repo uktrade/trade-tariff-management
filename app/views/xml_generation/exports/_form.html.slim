@@ -9,5 +9,5 @@
       = f.button :submit, 'Schedule Export', class: 'button', data: { 'disable-with' => 'Scheduling' }
       = link_to 'Refresh Page', xml_generation_exports_path, class: 'secondary-button'
 
-  = simple_form_for :export, url: xml_generation_exports_path(mode: :samples), html: {method: :post} do |f|
-    = f.button :submit, 'Generate Sample XML', class: 'button', data: { 'disable-with' => 'Generating' }
+  / = simple_form_for :export, url: xml_generation_exports_path(mode: :samples), html: {method: :post} do |f|
+  /   = f.button :submit, 'Generate Sample XML', class: 'button', data: { 'disable-with' => 'Generating' }

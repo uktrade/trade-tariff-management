@@ -16,6 +16,6 @@ xml.tag!("oub:footnote.description.period") do |footnote_description_period|
   end
 
   footnote_description_period.tag!("oub:validity.end.date") do footnote_description_period
-    xml_data_item(footnote_description_period, self.validity_end_date.strftime("%Y-%m-%d"))
+    xml_data_item(footnote_description_period, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
   end
 end

@@ -160,7 +160,7 @@ class MeasureSaver
     generate_measure_sid
     measure.manual_add = true
     measure.operation = "C"
-    measure.operation_date = Date.current
+    measure.operation_date = original_params[:start_date].to_date
 
     attempts = 5
 
@@ -485,7 +485,7 @@ class MeasureSaver
       p ""
 
       record.operation = "C"
-      record.operation_date = Date.current
+      record.operation_date = original_params[:start_date].to_date
       record.manual_add = true
       record.save
 
