@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :goods_nomenclatures, only: [:index]
   resources :regulations, only: [:index]
   resources :duty_expressions, only: [:index]
+  resources :quota_order_numbers, only: [:index]
 
   scope module: :additional_codes do
     resources :additional_codes, only: [:index]

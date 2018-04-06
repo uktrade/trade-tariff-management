@@ -160,7 +160,7 @@ class MeasureSaver
     generate_measure_sid
     measure.manual_add = true
     measure.operation = "C"
-    measure.operation_date = Date.current
+    measure.operation_date = original_params[:start_date].to_date
 
     attempts = 5
 
@@ -282,7 +282,7 @@ class MeasureSaver
 
     def quota_ops(mode, data, k)
       {
-        volume: data[k],
+        initial_volume: data[k],
         measurement_unit_code: data[:measurement_unit_code],
         measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
       }.merge(quota_definition_main_ops)
@@ -291,7 +291,7 @@ class MeasureSaver
 
     def custom_quota_ops(data)
       {
-        volume: data["amount1"],
+        initial_volume: data["amount1"],
         validity_start_date: data[:start_date].to_date,
         validity_end_date: data[:end_date].try(:to_date),
         measurement_unit_code: data[:measurement_unit_code],
@@ -485,7 +485,7 @@ class MeasureSaver
       p ""
 
       record.operation = "C"
-      record.operation_date = Date.current
+      record.operation_date = original_params[:start_date].to_date
       record.manual_add = true
       record.save
 

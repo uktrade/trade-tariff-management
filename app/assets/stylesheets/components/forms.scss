@@ -6,10 +6,6 @@ input.datepicker {
   width: 100% !important;
 }
 
-.condition .form-group {
-  margin-bottom: 0;
-}
-
 .multiple-choice + .panel {
   margin-left: 3.2em;
   max-width: calc(100% - 3.2em);
@@ -54,11 +50,11 @@ input.datepicker {
 .condition {
   padding: 15px 0 15px;
 
-  &:first-child {
+  &:first-of-type {
     padding-top: 0;
   }
 
-  &:last-child {
+  &:last-of-type {
     padding-bottom: 0;
   }
 
@@ -91,10 +87,6 @@ input.datepicker {
 
 .form-actions {
   margin: 1em 0 3em;
-}
-
-.measure-condition-components {
-  margin-top: 20px;
 }
 
 .measure-condition-component {

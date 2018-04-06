@@ -36,4 +36,4 @@ fieldset
           label.form-label
             | Additional code
 
-          = content_tag "custom-select", "", { url: "/additional_codes", "label-field" => "description", "value-field" => "additional_code", "code-field" => "additional_code", placeholder: "― start typing ―", "min-length" => 3, "v-model" => "measure.additional_code", "drilldown-name" => "additional_code_type_id", ":drilldown-value" => "measure.additional_code_type_id", "drilldown-required" => true, "date-sensitive" => true }
+          = content_tag "custom-select", "", { url: "/additional_codes", "label-field" => "description", "value-field" => "additional_code", "code-field" => "additional_code", placeholder: "― start typing ―", "min-length" => 1, "v-model" => "measure.additional_code", "drilldown-name" => "additional_code_type_id", ":drilldown-value" => "measure.additional_code_type_id", "drilldown-required" => true, "date-sensitive" => true }

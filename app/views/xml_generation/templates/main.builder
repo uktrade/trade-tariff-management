@@ -11,7 +11,7 @@ xml.tag!("env:envelope", xmlns: "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
                                            "xmlns:env" => "urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0") do |transmission_node|
             transmission_node.tag!("oub:record") do |record|
               record.tag!("oub:transaction.id") do record
-                xml_data_item(record, transaction.id)
+                xml_data_item(record, transaction.node_id)
               end
 
               record.tag!("oub:record.code") do record
