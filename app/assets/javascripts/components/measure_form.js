@@ -329,75 +329,28 @@ $(document).ready(function() {
 
   Vue.component('date-select', {
     template: "#date-select-template",
-    props: ["value", "minYear"],
+    props: ["value"],
     data: function() {
       return {
-        day: "",
-        month: "",
-        year: ""
+        vproxy: this.value
       }
     },
-    computed: {
-      days: function() {
-        var days = [];
-        for (var i = 1; i <= 31; i++) {
-          var v = this.leftPad(i + "", 2, "0");
+    mounted: function() {
+      var self = this;
 
-          days.push({ value: v, label: v });
-        }
+      new Pikaday({
+        field: $(this.$el)[0],
+        format: "DD/MM/YYYY",
+        blurFieldOnSelect: true
+      });
 
-        return days;
-      },
-      months: function() {
-        return [
-          { value: "01", label: "January" },
-          { value: "02", label: "February" },
-          { value: "03", label: "March" },
-          { value: "04", label: "April" },
-          { value: "05", label: "May" },
-          { value: "06", label: "June" },
-          { value: "07", label: "July" },
-          { value: "08", label: "August" },
-          { value: "09", label: "September" },
-          { value: "10", label: "October" },
-          { value: "11", label: "November" },
-          { value: "12", label: "December" }
-        ];
-      },
-      years: function() {
-        var minYear = this.minYear || (new Date()).getFullYear();
-        var years = [];
-
-        for (var i = 0; i < 80; i++) {
-          years.push({ value: minYear + i, label: minYear + i });
-        }
-
-        return years;
-      }
-    },
-    methods: {
-      leftPad: function(val, length, pad) {
-        while (val.length < length) {
-          val = pad + val;
-        }
-
-        return val;
-      },
-      updateValue: function() {
-        if (this.day && this.month && this.year) {
-          this.$emit("update:value", this.day + "/" + this.month + "/" + this.year);
-        }
-      }
+      $(this.$el).on("change", function() {
+        self.vproxy = $(self.$el).val();
+      });
     },
     watch: {
-      year: function() {
-        this.updateValue();
-      },
-      day: function() {
-        this.updateValue();
-      },
-      month: function() {
-        this.updateValue();
+      vproxy: function() {
+        this.$emit("update:value", this.vproxy);
       }
     }
   });
