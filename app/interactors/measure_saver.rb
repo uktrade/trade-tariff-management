@@ -217,27 +217,31 @@ class MeasureSaver
     def post_saving_updates!
       add_quota_definitions!
       add_excluded_geographical_areas!
+      add_duty_expressions!
       add_footnotes!
     end
 
     def add_quota_definitions!
       if measure.ordernumber.present?
         quota_def_ops = original_params["quota_periods"]
-        mode = quota_def_ops.keys.first
-        target_ops = quota_def_ops[mode]
 
-        p "-" * 100
-        p ""
-        p " mode: #{mode}, target_ops: #{target_ops.inspect}"
-        p ""
-        p "-" * 100
+        if quota_def_ops.present?
+          mode = quota_def_ops.keys.first
+          target_ops = quota_def_ops[mode]
 
-        if target_ops.present?
-          case mode
-          when "annual", "bi_annual", "quarterly", "monthly"
-            add_quota_definition!(mode, target_ops) if target_ops[:start_date].present?
-          when "custom"
-            add_custom_quota_definition!(target_ops)
+          p "-" * 100
+          p ""
+          p " mode: #{mode}, target_ops: #{target_ops.inspect}"
+          p ""
+          p "-" * 100
+
+          if target_ops.present?
+            case mode
+            when "annual", "bi_annual", "quarterly", "monthly"
+              add_quota_definition!(mode, target_ops) if target_ops[:start_date].present?
+            when "custom"
+              add_custom_quota_definition!(target_ops)
+            end
           end
         end
       end
@@ -354,6 +358,26 @@ class MeasureSaver
       excluded_area.geographical_area_sid = area.geographical_area_sid
       excluded_area.measure_sid = measure.measure_sid
       set_oplog_attrs_and_save!(excluded_area)
+    end
+
+    def add_duty_expressions!
+      measure_components = original_params[:measure_components]
+
+      if measure_components.present?
+        measure_components.each do |k, d_ops|
+          if d_ops[:duty_expression_id].present?
+            m_component = MeasureComponent.new(
+              duty_amount: d_ops[:amount],
+              measurement_unit_code: d_ops[:measurement_unit_code],
+              measurement_unit_qualifier_code: d_ops[:measurement_unit_qualifier_code],
+            )
+            m_component.measure_sid = measure.measure_sid
+            m_component.duty_expression_id = d_ops[:duty_expression_id]
+
+            set_oplog_attrs_and_save!(m_component)
+          end
+        end
+      end
     end
 
     def add_footnotes!
