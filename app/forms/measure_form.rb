@@ -73,7 +73,7 @@ class MeasureForm
     @ga_json ||= Rails.cache.fetch(:measures_form_geographical_areas_json, expires_in: 8.hours) do
       list = {}
 
-      all_geographical_areas.each do |group|
+      GeographicalArea.actual.all.each do |group|
         list[group.geographical_area_id] = group.contained_geographical_areas.map do |child|
           {
             geographical_area_id: child.geographical_area_id,
