@@ -1,11 +1,5 @@
 module XmlGeneration
-  class NodeMessage #< Sequel::Model
-
-    #include ::XmlGeneration::NodeBase
-
-    #plugin :serialization
-
-    #serialize_attributes :json, :record_filter_ops
+  class NodeMessage
 
     GEOGRAPHICAL_AREAS = [
       GeographicalArea,
@@ -147,14 +141,6 @@ module XmlGeneration
       TransmissionComment,
       PublicationSigle
     ]
-
-    # many_to_one :transaction, class_name: "XmlGeneration::NodeTransaction",
-    #                           key: :node_transaction_id
-
-    # validates do
-    #   uniqueness_of :node_id
-    #   presence_of :record_filter_ops, :record_type, :node_transaction_id
-    # end
 
     attr_accessor :record
 
