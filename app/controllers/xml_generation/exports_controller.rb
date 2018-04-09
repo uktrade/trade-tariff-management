@@ -1,5 +1,5 @@
 module XmlGeneration
-  class ExportsController < BaseController
+  class ExportsController < ::XmlGeneration::BaseController
 
     expose(:xml_export_files) do
       XmlExport::FileDecorator.decorate_collection(

@@ -109,10 +109,18 @@ end
 
 class MeasureSaver
 
+  REQUIRED_PARAMS = {
+    start_date: :validity_start_date,
+    operation_date: :operation_date
+  }
+
   PRIMARY_KEYS = {
     "QuotaDefinition" => :quota_definition_sid,
     "Footnote" => :footnote_id,
-    "FootnoteDescriptionPeriod" => :footnote_description_period_sid
+    "FootnoteDescriptionPeriod" => :footnote_description_period_sid,
+    "QuotaOrderNumber" => :quota_order_number_sid,
+    "QuotaOrderNumberOrigin" => :quota_order_number_origin_sid,
+    "MeasureCondition" => :measure_condition_sid
   }
 
   attr_accessor :original_params,
@@ -136,31 +144,29 @@ class MeasureSaver
   end
 
   def valid?
-    if measure_params[:validity_start_date].blank?
-      @errors[:validity_start_date] = "Start date can't be blank!"
-      return false
-    else
-      @measure = Measure.new(measure_params)
-      #
-      # We need to assign `measure_sid` Measure before assign Geographical Area or Measure Type
-      # Otherwise, we are getting
-      # Sequel::Error `does not have a primary key`
-      #
-      # This is because MeasureValidator class is tend to work with already persisted
-      # database record.
-      #
-      generate_measure_sid
+    check_required_params!
+    return false if @errors.present?
 
-      validate!
-      errors.blank?
-    end
+    @measure = Measure.new(measure_params)
+    #
+    # We need to assign `measure_sid` Measure before assign Geographical Area or Measure Type
+    # Otherwise, we are getting
+    # Sequel::Error `does not have a primary key`
+    #
+    # This is because MeasureValidator class is tend to work with already persisted
+    # database record.
+    #
+    generate_measure_sid
+
+    validate!
+    errors.blank?
   end
 
   def persist!
     generate_measure_sid
     measure.manual_add = true
     measure.operation = "C"
-    measure.operation_date = original_params[:start_date].to_date
+    measure.operation_date = operation_date
 
     attempts = 5
 
@@ -185,6 +191,14 @@ class MeasureSaver
   end
 
   private
+
+    def check_required_params!
+      REQUIRED_PARAMS.map do |k, v|
+        if original_params[k.to_s].blank?
+          @errors[v.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+        end
+      end
+    end
 
     def validate!
       measure_base_validation!
@@ -215,25 +229,21 @@ class MeasureSaver
     end
 
     def post_saving_updates!
-      add_quota_definitions!
       add_excluded_geographical_areas!
+      add_quota_definitions!
       add_duty_expressions!
+      add_conditions!
       add_footnotes!
     end
 
     def add_quota_definitions!
-      if measure.ordernumber.present?
+      if measure.ordernumber.present? && original_params["existing_quota"].to_s != 'true'
         quota_def_ops = original_params["quota_periods"]
 
         if quota_def_ops.present?
+          add_quota_order_number!
           mode = quota_def_ops.keys.first
           target_ops = quota_def_ops[mode]
-
-          p "-" * 100
-          p ""
-          p " mode: #{mode}, target_ops: #{target_ops.inspect}"
-          p ""
-          p "-" * 100
 
           if target_ops.present?
             case mode
@@ -247,18 +257,39 @@ class MeasureSaver
       end
     end
 
+    def add_quota_order_number!
+      quota_order_number = QuotaOrderNumber.new(
+        quota_order_number_id: measure.ordernumber,
+        validity_start_date: order_start_date
+      )
+      set_oplog_attrs_and_save!(quota_order_number)
+
+      if measure.geographical_area_id.present?
+        quota_order_number_origin = QuotaOrderNumberOrigin.new(
+          validity_start_date: quota_order_number.validity_start_date
+        )
+        quota_order_number_origin.quota_order_number_sid = quota_order_number.quota_order_number_sid
+        quota_order_number_origin.geographical_area_id = measure.geographical_area_id
+        quota_order_number_origin.geographical_area_sid = measure.geographical_area_sid
+
+        set_oplog_attrs_and_save!(quota_order_number_origin)
+      end
+
+      if measure.excluded_geographical_areas.present?
+        measure.excluded_geographical_areas.map do |excluded_area|
+          quota_order_number_origin_exclusion = QuotaOrderNumberOriginExclusion.new
+          quota_order_number_origin_exclusion.quota_order_number_origin_sid = quota_order_number_origin.quota_order_number_origin_sid
+          quota_order_number_origin_exclusion.excluded_geographical_area_sid = excluded_area.geographical_area_sid
+
+          set_oplog_attrs_and_save!(quota_order_number_origin_exclusion)
+        end
+      end
+    end
+
     def add_quota_definition!(mode, data)
       data.keys.select do |k|
         k.starts_with?("amount")
       end.map do |k|
-        p "-" * 100
-        p ""
-        p " add_quota_definition! - k: #{k}"
-        p ""
-        p " ops: #{quota_ops(mode, data, k).inspect}"
-        p ""
-        p "-" * 100
-
         quota_definition = QuotaDefinition.new(quota_ops(mode, data, k))
         set_oplog_attrs_and_save!(quota_definition)
       end
@@ -266,48 +297,63 @@ class MeasureSaver
 
     def add_custom_quota_definition!(data)
       data.map do |k, v|
-
-        p ""
-        p "+" * 100
-        p ""
-        p " [CUSTOM] k: #{k}, data: #{custom_quota_ops(v)}"
-        p ""
-        p "+" * 100
-        p ""
-
         quota_definition = QuotaDefinition.new(custom_quota_ops(v))
         set_oplog_attrs_and_save!(quota_definition)
       end
     end
 
+    def quota_period_asc
+      original_params["quota_periods"].values
+                                      .first
+                                      .values
+                                      .sort do |a, b|
+        a['start_date'] <=> b['start_date']
+      end
+    end
+
+    def order_start_date
+      if original_params["quota_periods"].keys.first == "custom"
+        quota_period_asc.first['start_date']
+                        .to_date
+      else
+        original_params['quota_periods'].values.first['start_date']
+      end
+    end
+
     def quota_ops(mode, data, k)
       {
-        initial_volume: data[k],
-        measurement_unit_code: data[:measurement_unit_code],
-        measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
+        initial_volume: data[k]
       }.merge(quota_definition_main_ops)
        .merge(quota_definition_start_and_date_ops(mode, data, k))
+       .merge(unit_ops(data))
     end
 
     def custom_quota_ops(data)
       {
         initial_volume: data["amount1"],
         validity_start_date: data[:start_date].to_date,
-        validity_end_date: data[:end_date].try(:to_date),
+        validity_end_date: data[:end_date].try(:to_date)
+      }.merge(quota_definition_main_ops)
+       .merge(unit_ops(data))
+    end
+
+    def unit_ops(data)
+      {
+        monetary_unit_code: data[:monetary_unit_code],
         measurement_unit_code: data[:measurement_unit_code],
         measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
-      }.merge(quota_definition_main_ops)
+      }
     end
 
     def quota_definition_main_ops
-      quota_order_number = measure.order_number
+      quota_order_number = QuotaOrderNumber.where(quota_order_number_id: measure.ordernumber).first
 
       {
         quota_order_number_id: quota_order_number.quota_order_number_id,
         quota_order_number_sid: quota_order_number.quota_order_number_sid,
         critical_threshold: original_params[:quota_criticality_threshold],
         critical_state: original_params[:quota_status] == "critical" ? "Y" : "N",
-        description: original_params[:quota_description],
+        description: original_params[:quota_description]
       }
     end
 
@@ -337,12 +383,16 @@ class MeasureSaver
     end
 
     def add_excluded_geographical_areas!
-      excluded_areas = original_params[:excluded_geographical_areas]
-
       if excluded_areas.present?
         excluded_areas.map do |area_code|
           add_excluded_geographical_area!(area_code)
         end
+      end
+    end
+
+    def excluded_areas
+      original_params[:excluded_geographical_areas].reject do |a|
+        a.blank?
       end
     end
 
@@ -367,9 +417,7 @@ class MeasureSaver
         measure_components.each do |k, d_ops|
           if d_ops[:duty_expression_id].present?
             m_component = MeasureComponent.new(
-              duty_amount: d_ops[:amount],
-              measurement_unit_code: d_ops[:measurement_unit_code],
-              measurement_unit_qualifier_code: d_ops[:measurement_unit_qualifier_code],
+              { duty_amount: d_ops[:amount] }.merge(unit_ops(d_ops))
             )
             m_component.measure_sid = measure.measure_sid
             m_component.duty_expression_id = d_ops[:duty_expression_id]
@@ -378,6 +426,48 @@ class MeasureSaver
           end
         end
       end
+    end
+
+    def add_conditions!
+      conditions = original_params[:conditions]
+
+      if conditions.present?
+        conditions.select do |k, v|
+          v[:condition_code].present?
+        end.map do |k, v|
+          add_condition!(k, v)
+        end
+      end
+    end
+
+    def add_condition!(component_sequence_number, data)
+      condition = MeasureCondition.new(
+        action_code: data[:action_code],
+        condition_code: data[:condition_code],
+        condition_duty_amount: data[:amount],
+        certificate_type_code: data[:certificate_type_code],
+        certificate_code: data[:certificate_code]
+      )
+      condition.measure_sid = measure.measure_sid
+
+      set_oplog_attrs_and_save!(condition)
+
+      data[:measure_condition_components].select do |k, v|
+        v[:duty_expression_id].present?
+      end.map do |k, v|
+        add_measure_condition_component!(condition, v)
+      end
+    end
+
+    def add_measure_condition_component!(condition, data)
+      mc_component = MeasureConditionComponent.new(
+        { duty_amount: data[:amount] }.merge(unit_ops(data))
+      )
+
+      mc_component.measure_condition_sid = condition.measure_condition_sid
+      mc_component.duty_expression_id = data[:duty_expression_id]
+
+      set_oplog_attrs_and_save!(mc_component)
     end
 
     def add_footnotes!
@@ -426,14 +516,6 @@ class MeasureSaver
       p_key = PRIMARY_KEYS[record.class.name]
 
       if p_key.present?
-        p ""
-        p "-" * 100
-        p ""
-        p " [p_key] #{p_key}, record.class.max(p_key): #{record.class.max(p_key)}"
-        p ""
-        p "-" * 100
-        p ""
-
         sid = if record.is_a?(Footnote)
           #
           # TODO:
@@ -485,7 +567,7 @@ class MeasureSaver
       p ""
 
       record.operation = "C"
-      record.operation_date = original_params[:start_date].to_date
+      record.operation_date = operation_date
       record.manual_add = true
       record.save
 
@@ -496,5 +578,9 @@ class MeasureSaver
       p ""
       p "-" * 100
       p ""
+    end
+
+    def operation_date
+      original_params[:operation_date].to_date
     end
 end
