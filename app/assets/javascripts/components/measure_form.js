@@ -559,15 +559,6 @@ $(document).ready(function() {
         if (oldVal === false && newVal === true) {
           this.certificate_id = null;
         }
-      },
-      removeMeasureConditionComponent: function(measureConditionComponent) {
-        var idx = this.condition.measure_condition_components.indexOf(measureConditionComponent);
-
-        if (idx === -1) {
-          return;
-        }
-
-        this.condition.measure_condition_components.splice(idx, 1);
       }
     },
     methods: {
@@ -578,6 +569,15 @@ $(document).ready(function() {
           measurement_unit_code: null,
           measurement_unit_qualifier_code: null
         });
+      },
+      removeMeasureConditionComponent: function(measureConditionComponent) {
+        var idx = this.condition.measure_condition_components.indexOf(measureConditionComponent);
+
+        if (idx === -1) {
+          return;
+        }
+
+        this.condition.measure_condition_components.splice(idx, 1);
       }
     }
   });

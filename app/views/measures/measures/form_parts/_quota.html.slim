@@ -72,4 +72,6 @@ fieldset v-if="showQuota"
         | Quota number
         span.form-hint
           | Start typing in the field to see available quotas. If the quota you need is not in the list, change the option above to create a new one instead.
-      = content_tag "custom-select", "", { url: "/quota_order_numbers", "label-field" => "quota_order_number_id", "value-field" => "quota_order_number_id", placeholder: "― start typing ―", "min-length" => 1, "v-model" => "measure.quota_ordernumber", "date-sensitive" => true }
+      .row
+        .col-3
+          = content_tag "custom-select", "", { url: "/quota_order_numbers", "label-field" => "quota_order_number_id", "value-field" => "quota_order_number_id", placeholder: "― start typing ―", "min-length" => 1, "v-model" => "measure.quota_ordernumber", "date-sensitive" => true }
