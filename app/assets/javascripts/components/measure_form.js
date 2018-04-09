@@ -537,7 +537,7 @@ $(document).ready(function() {
         return codes.indexOf(this.condition.condition_code) > -1;
       },
       canRemoveComponent: function() {
-        return this.measure_condition_components.length > 1;
+        return this.condition.measure_condition_components.length > 1;
       }
     },
     watch: {
