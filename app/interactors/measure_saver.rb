@@ -444,8 +444,7 @@ class MeasureSaver
       condition = MeasureCondition.new(
         action_code: data[:action_code],
         condition_code: data[:condition_code],
-        component_sequence_number: component_sequence_number + 1,
-        condition_duty_amount: data[:condition_duty_amount],
+        condition_duty_amount: data[:amount],
         certificate_type_code: data[:certificate_type_code],
         certificate_code: data[:certificate_code]
       )
