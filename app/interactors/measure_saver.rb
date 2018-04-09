@@ -117,7 +117,9 @@ class MeasureSaver
   PRIMARY_KEYS = {
     "QuotaDefinition" => :quota_definition_sid,
     "Footnote" => :footnote_id,
-    "FootnoteDescriptionPeriod" => :footnote_description_period_sid
+    "FootnoteDescriptionPeriod" => :footnote_description_period_sid,
+    "QuotaOrderNumber" => :quota_order_number_sid,
+    "QuotaOrderNumberOrigin" => :quota_order_number_origin_sid
   }
 
   attr_accessor :original_params,
@@ -226,8 +228,8 @@ class MeasureSaver
     end
 
     def post_saving_updates!
-      add_quota_definitions!
       add_excluded_geographical_areas!
+      add_quota_definitions!
       add_duty_expressions!
       add_footnotes!
     end
@@ -237,6 +239,7 @@ class MeasureSaver
         quota_def_ops = original_params["quota_periods"]
 
         if quota_def_ops.present?
+          add_quota_order_number!
           mode = quota_def_ops.keys.first
           target_ops = quota_def_ops[mode]
 
@@ -254,6 +257,37 @@ class MeasureSaver
               add_custom_quota_definition!(target_ops)
             end
           end
+        end
+      end
+    end
+
+    def add_quota_order_number!
+      quota_order_number = QuotaOrderNumber.new(
+        quota_order_number_id: measure.ordernumber,
+        validity_start_date: order_date(:first),
+        validity_end_date: order_date(:last)
+      )
+      set_oplog_attrs_and_save!(quota_order_number)
+
+      if measure.geographical_area_id.present?
+        quota_order_number_origin = QuotaOrderNumberOrigin.new(
+          validity_start_date: quota_order_number.validity_start_date,
+          validity_end_date: quota_order_number.validity_end_date
+        )
+        quota_order_number_origin.quota_order_number_sid = quota_order_number.quota_order_number_sid
+        quota_order_number_origin.geographical_area_id = measure.geographical_area_id
+        quota_order_number_origin.geographical_area_sid = measure.geographical_area_sid
+
+        set_oplog_attrs_and_save!(quota_order_number_origin)
+      end
+
+      if measure.excluded_geographical_areas.present?
+        measure.excluded_geographical_areas.map do |excluded_area|
+          quota_order_number_origin_exclusion = QuotaOrderNumberOriginExclusion.new
+          quota_order_number_origin_exclusion.quota_order_number_origin_sid = quota_order_number_origin.quota_order_number_origin_sid
+          quota_order_number_origin_exclusion.excluded_geographical_area_sid = excluded_area.geographical_area_sid
+
+          set_oplog_attrs_and_save!(quota_order_number_origin_exclusion)
         end
       end
     end
@@ -289,6 +323,20 @@ class MeasureSaver
         quota_definition = QuotaDefinition.new(custom_quota_ops(v))
         set_oplog_attrs_and_save!(quota_definition)
       end
+    end
+
+    def quota_period_asc
+      original_params["quota_periods"].values
+                                      .first
+                                      .values
+                                      .sort do |a, b|
+        a['start_date'] <=> b['start_date']
+      end
+    end
+
+    def order_date(mode)
+      get_quota_period_asc.send(mode)['start_date']
+                          .to_date
     end
 
     def quota_ops(mode, data, k)
@@ -354,14 +402,16 @@ class MeasureSaver
     end
 
     def add_excluded_geographical_areas!
-      excluded_areas = original_params[:excluded_geographical_areas].reject do |a|
-        a.blank?
-      end
-
       if excluded_areas.present?
         excluded_areas.map do |area_code|
           add_excluded_geographical_area!(area_code)
         end
+      end
+    end
+
+    def excluded_areas
+      original_params[:excluded_geographical_areas].reject do |a|
+        a.blank?
       end
     end
 
