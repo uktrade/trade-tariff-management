@@ -119,7 +119,8 @@ class MeasureSaver
     "Footnote" => :footnote_id,
     "FootnoteDescriptionPeriod" => :footnote_description_period_sid,
     "QuotaOrderNumber" => :quota_order_number_sid,
-    "QuotaOrderNumberOrigin" => :quota_order_number_origin_sid
+    "QuotaOrderNumberOrigin" => :quota_order_number_origin_sid,
+    "MeasureCondition" => :measure_condition_sid
   }
 
   attr_accessor :original_params,
@@ -231,6 +232,7 @@ class MeasureSaver
       add_excluded_geographical_areas!
       add_quota_definitions!
       add_duty_expressions!
+      add_conditions!
       add_footnotes!
     end
 
@@ -424,6 +426,49 @@ class MeasureSaver
           end
         end
       end
+    end
+
+    def add_conditions!
+      conditions = original_params[:conditions]
+
+      if conditions.present?
+        conditions.select do |k, v|
+          v[:condition_code].present?
+        end.map do |k, v|
+          add_condition!(k, v)
+        end
+      end
+    end
+
+    def add_condition!(component_sequence_number, data)
+      condition = MeasureCondition.new(
+        action_code: data[:action_code],
+        condition_code: data[:condition_code],
+        component_sequence_number: component_sequence_number + 1,
+        condition_duty_amount: data[:condition_duty_amount],
+        certificate_type_code: data[:certificate_type_code],
+        certificate_code: data[:certificate_code]
+      )
+      condition.measure_sid = measure.measure_sid
+
+      set_oplog_attrs_and_save!(condition)
+
+      data[:measure_condition_components].select do |k, v|
+        v[:duty_expression_id].present?
+      end.map do |k, v|
+        add_measure_condition_component!(condition, v)
+      end
+    end
+
+    def add_measure_condition_component!(condition, data)
+      mc_component = MeasureConditionComponent.new(
+        { duty_amount: data[:amount] }.merge(unit_ops(data))
+      )
+
+      mc_component.measure_condition_sid = condition.measure_condition_sid
+      mc_component.duty_expression_id = data[:duty_expression_id]
+
+      set_oplog_attrs_and_save!(m_component)
     end
 
     def add_footnotes!
