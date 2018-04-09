@@ -344,14 +344,14 @@ class MeasureSaver
     end
 
     def quota_definition_main_ops
-      quota_order_number = measure.order_number
+      quota_order_number = QuotaOrderNumber.where(quota_order_number_id: measure.ordernumber).first
 
       {
         quota_order_number_id: quota_order_number.quota_order_number_id,
         quota_order_number_sid: quota_order_number.quota_order_number_sid,
         critical_threshold: original_params[:quota_criticality_threshold],
         critical_state: original_params[:quota_status] == "critical" ? "Y" : "N",
-        description: original_params[:quota_description],
+        description: original_params[:quota_description]
       }
     end
 
