@@ -467,7 +467,7 @@ class MeasureSaver
       mc_component.measure_condition_sid = condition.measure_condition_sid
       mc_component.duty_expression_id = data[:duty_expression_id]
 
-      set_oplog_attrs_and_save!(m_component)
+      set_oplog_attrs_and_save!(mc_component)
     end
 
     def add_footnotes!
