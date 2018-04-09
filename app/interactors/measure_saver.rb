@@ -109,6 +109,11 @@ end
 
 class MeasureSaver
 
+  REQUIRED_PARAMS = {
+    start_date: :validity_start_date,
+    operation_date: :operation_date
+  }
+
   PRIMARY_KEYS = {
     "QuotaDefinition" => :quota_definition_sid,
     "Footnote" => :footnote_id,
@@ -136,31 +141,29 @@ class MeasureSaver
   end
 
   def valid?
-    if measure_params[:validity_start_date].blank?
-      @errors[:validity_start_date] = "Start date can't be blank!"
-      return false
-    else
-      @measure = Measure.new(measure_params)
-      #
-      # We need to assign `measure_sid` Measure before assign Geographical Area or Measure Type
-      # Otherwise, we are getting
-      # Sequel::Error `does not have a primary key`
-      #
-      # This is because MeasureValidator class is tend to work with already persisted
-      # database record.
-      #
-      generate_measure_sid
+    check_required_params!
+    return false if @errors.present?
 
-      validate!
-      errors.blank?
-    end
+    @measure = Measure.new(measure_params)
+    #
+    # We need to assign `measure_sid` Measure before assign Geographical Area or Measure Type
+    # Otherwise, we are getting
+    # Sequel::Error `does not have a primary key`
+    #
+    # This is because MeasureValidator class is tend to work with already persisted
+    # database record.
+    #
+    generate_measure_sid
+
+    validate!
+    errors.blank?
   end
 
   def persist!
     generate_measure_sid
     measure.manual_add = true
     measure.operation = "C"
-    measure.operation_date = original_params[:start_date].to_date
+    measure.operation_date = operation_date
 
     attempts = 5
 
@@ -185,6 +188,14 @@ class MeasureSaver
   end
 
   private
+
+    def check_required_params!
+      REQUIRED_PARAMS.map do |k, v|
+        if original_params[k.to_s].blank?
+          @errors[v.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+        end
+      end
+    end
 
     def validate!
       measure_base_validation!
@@ -222,7 +233,7 @@ class MeasureSaver
     end
 
     def add_quota_definitions!
-      if measure.ordernumber.present?
+      if measure.ordernumber.present? && original_params["existing_quota"].to_s != 'true'
         quota_def_ops = original_params["quota_periods"]
 
         if quota_def_ops.present?
@@ -337,7 +348,9 @@ class MeasureSaver
     end
 
     def add_excluded_geographical_areas!
-      excluded_areas = original_params[:excluded_geographical_areas]
+      excluded_areas = original_params[:excluded_geographical_areas].reject do |a|
+        a.blank?
+      end
 
       if excluded_areas.present?
         excluded_areas.map do |area_code|
@@ -485,7 +498,7 @@ class MeasureSaver
       p ""
 
       record.operation = "C"
-      record.operation_date = original_params[:start_date].to_date
+      record.operation_date = operation_date
       record.manual_add = true
       record.save
 
@@ -496,5 +509,9 @@ class MeasureSaver
       p ""
       p "-" * 100
       p ""
+    end
+
+    def operation_date
+      original_params[:operation_date].to_date
     end
 end
