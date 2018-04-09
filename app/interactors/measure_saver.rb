@@ -293,21 +293,27 @@ class MeasureSaver
 
     def quota_ops(mode, data, k)
       {
-        initial_volume: data[k],
-        measurement_unit_code: data[:measurement_unit_code],
-        measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
+        initial_volume: data[k]
       }.merge(quota_definition_main_ops)
        .merge(quota_definition_start_and_date_ops(mode, data, k))
+       .merge(unit_ops(data))
     end
 
     def custom_quota_ops(data)
       {
         initial_volume: data["amount1"],
         validity_start_date: data[:start_date].to_date,
-        validity_end_date: data[:end_date].try(:to_date),
+        validity_end_date: data[:end_date].try(:to_date)
+      }.merge(quota_definition_main_ops)
+       .merge(unit_ops(data))
+    end
+
+    def unit_ops(data)
+      {
+        monetary_unit_code: data[:monetary_unit_code],
         measurement_unit_code: data[:measurement_unit_code],
         measurement_unit_qualifier_code: data[:measurement_unit_qualifier_code],
-      }.merge(quota_definition_main_ops)
+      }
     end
 
     def quota_definition_main_ops
@@ -380,9 +386,7 @@ class MeasureSaver
         measure_components.each do |k, d_ops|
           if d_ops[:duty_expression_id].present?
             m_component = MeasureComponent.new(
-              duty_amount: d_ops[:amount],
-              measurement_unit_code: d_ops[:measurement_unit_code],
-              measurement_unit_qualifier_code: d_ops[:measurement_unit_qualifier_code],
+              { duty_amount: d_ops[:amount] }.merge(unit_ops(d_ops))
             )
             m_component.measure_sid = measure.measure_sid
             m_component.duty_expression_id = d_ops[:duty_expression_id]
