@@ -16,141 +16,6 @@ function debounce(func, wait, immediate) {
   };
 };
 
-function Origin(el) {
-  this.choice = el;
-  this.select = el.find("select");
-  this.radio = el.find("input[type='radio']");
-  this.target = el.next();
-
-  this.onSelect = undefined;
-  this.onExclusionsUpdate = undefined;
-
-  this.deselect = this.deselect.bind(this);
-
-  this.geographical_area_id = null;
-  this.selected = [];
-
-  this.init();
-  this.bindEvents();
-}
-
-Origin.prototype.init = function () {
-  this.select.selectize({
-    placeholder: this.select.data("placeholder"),
-    create: false,
-    valueField: 'geographical_area_id',
-    labelField: 'description',
-    searchField: ["description", "text"]
-  });
-};
-
-Origin.prototype.bindEvents = function () {
-  var self = this;
-
-  this.select.on("change", function() {
-    var val = self.select.val();
-
-    if (val)  {
-      self.radio.prop("checked", true).trigger("change");
-      self.geographical_area_id = val;
-
-      if (window.geographical_areas_json[self.geographical_area_id].length > 0) {
-        self.target.find(".exclusions-target").empty();
-        self.addExclusion();
-        self.openExclusions();
-      }
-
-      if (self.onSelect !== undefined) {
-        self.onSelect(self);
-      }
-    }
-  });
-
-  this.radio.on("change", function() {
-    var checked = self.radio[0].checked;
-
-    if (checked) {
-      if (self.select.length <= 0) {
-        self.geographical_area_id = '1011';
-
-        if (window.geographical_areas_json[self.geographical_area_id].length > 0) {
-          self.target.find(".exclusions-target").empty();
-          self.addExclusion();
-          self.openExclusions();
-        }
-      }
-
-      if (self.onSelect !== undefined) {
-        self.onSelect(self);
-      }
-    }
-  });
-
-  this.target.on("click", ".js-add-country-exclusion", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    self.addExclusion();
-  });
-
-  this.target.on("change", "select", function() {
-    self.updateSelectedValues();
-  })
-};
-
-Origin.prototype.openExclusions = function () {
-  this.target.removeClass("js-hidden");
-};
-
-Origin.prototype.closeExclusions = function () {
-  this.target.addClass("js-hidden");
-  this.target.find(".exclusions-target").empty();
-};
-
-Origin.prototype.deselect = function () {
-  this.closeExclusions();
-
-  if (this.select.length > 0) {
-    this.select[0].selectize.clear(true);
-  }
-
-  this.geographical_area_id = null;
-  this.selected = [];
-};
-
-Origin.prototype.addExclusion = function () {
-  var html = $("<p><select class='exclusion-select'></select></p>");
-
-  html.find("select").selectize({
-    options: window.geographical_areas_json[this.geographical_area_id],
-    placeholder: "― start typing ―",
-    create: false,
-    valueField: 'geographical_area_id',
-    labelField: 'description',
-    searchField: ["geographical_area_id", "description", "text"]
-  });
-
-  this.target.find(".exclusions-target").append(html);
-};
-
-Origin.prototype.updateSelectedValues = function () {
-  var values = [];
-
-  this.target.find("select").each(function() {
-    var val = $(this).val();
-
-    if (val) {
-      values.push(val);
-    }
-  });
-
-  this.selected = values;
-
-  if (this.onExclusionsUpdate !== undefined) {
-    this.onExclusionsUpdate(values);
-  }
-}
-
 $(document).ready(function() {
 
   var form = document.querySelector(".measure-form");
@@ -158,6 +23,84 @@ $(document).ready(function() {
   if (!form) {
     return;
   }
+
+  Vue.component("measure-origin", {
+    template: "#measure-origin-template",
+    props: [
+      "placeholder",
+      "kind",
+      "origin"
+    ],
+    mounted: function() {
+      var self = this;
+      var radio = $(this.$el).find("input[type='radio']");
+
+      radio.on("change", function() {
+        $(".measure-form").trigger("origin:changed");
+      });
+
+      $(".measure-form").on("origin:changed", function() {
+        self.origin.selected = radio.is(":checked");
+      });
+    },
+    computed: {
+      radioID: function() {
+        return "measure-origin-" + this.kind;
+      },
+      notErgaOmnes: function() {
+        return this.kind !== "erga_omnes";
+      },
+      optionsForSelect: function() {
+        if (this.kind === "group") {
+          return window.geographical_groups_except_erga_omnes;
+        } else if (this.kind === "country") {
+          return window.all_geographical_countries;
+        }
+      },
+      showExclusions: function() {
+        return this.kind !== "country" && !!this.origin.geographical_area_id;
+      }
+    },
+    watch: {
+      "origin.geographical_area_id": function(newVal) {
+        this.origin.exclusions.splice(0, 999);
+
+        if (newVal) {
+          this.origin.selected = true;
+          $(this.$el).find("input[type='radio']").prop("checked", true).trigger("change");
+          this.origin.exclusions.slice(0, 999);
+          this.addExclusion();
+        }
+      },
+      "origin.selected": function(newVal, oldVal) {
+        if (newVal) {
+          if (this.kind === "erga_omnes") {
+            this.origin.geographical_area_id = '1011';
+            this.addExclusion();
+          }
+        } else {
+          this.origin.geographical_area_id = null;
+        }
+      }
+    },
+    methods: {
+      addExclusion: function() {
+        this.origin.exclusions.push({
+          geographical_area_id: null,
+          options: window.geographical_areas_json[this.origin.geographical_area_id]
+        });
+      },
+      removeExclusion: function(exclusion) {
+        var index = this.origin.exclusions.indexOf(exclusion);
+
+        if (index === -1) {
+          return;
+        }
+
+        this.origin.exclusions.splice(index, 1);
+      }
+    }
+  });
 
   Vue.component('custom-select', {
     props: [
@@ -690,6 +633,23 @@ $(document).ready(function() {
           { value: "unsuspended", label: "Unsuspended" },
           { value: "reopened", label: "Reopened" }
         ],
+        origins: {
+          country: {
+            geographical_area_id: null,
+            exclusions: [],
+            selected: false
+          },
+          group: {
+            geographical_area_id: null,
+            exclusions: [],
+            selected: false
+          },
+          erga_omnes: {
+            geographical_area_id: null,
+            exclusions: [],
+            selected: false
+          }
+        },
         errors: []
       };
 
@@ -944,10 +904,25 @@ $(document).ready(function() {
           quota_status: this.measure.quota_status,
           quota_ordernumber: this.measure.quota_ordernumber,
           quota_criticality_threshold: this.measure.quota_criticality_threshold,
-          quota_description: this.measure.quota_description,
-          geographical_area_id: this.measure.geographical_area_id,
-          excluded_geographical_areas: this.measure.excluded_geographical_areas
+          quota_description: this.measure.quota_description
         };
+
+        if (this.origins.country.selected) {
+          payload.geographical_area_id = this.origins.country.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.group.selected) {
+          payload.geographical_area_id = this.origins.group.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.erga_omnes.selected) {
+          payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        }
 
         if (this.measure.quota_periods.length > 0 && this.measure.quota_periods[0].type) {
           var periodPayload = {};
@@ -1173,33 +1148,5 @@ $(document).ready(function() {
         measureTypeSeries[0].selectize.refreshOptions(false);
       }
     });
-  });
-
-  var origins = [];
-
-  var handleOnSelect = function(obj) {
-    origins.forEach(function(origin) {
-      if (origin !== obj) {
-        origin.deselect();
-      }
-    });
-
-    $(".measure-form").trigger("geoarea:changed", [obj.geographical_area_id]);
-    $(".measure-form").trigger("exclusions:changed", [[]]);
-
-    $("#measure_form_excluded_geographical_areas").val([]);
-  };
-
-  var handleUpdate = function(ids) {
-    $("#measure_form_excluded_geographical_areas").val(ids);
-    $(".measure-form").trigger("exclusions:changed", [ids]);
-  };
-
-  $(".origins-region .multiple-choice").each(function() {
-    var origin = new Origin($(this));
-    origin.onSelect = handleOnSelect;
-    origin.onExclusionsUpdate = handleUpdate;
-
-    origins.push(origin);
   });
 });

@@ -129,3 +129,28 @@ input.datepicker {
 .add-another-wrapper {
   margin-bottom: 0;
 }
+
+.exclusion {
+  & + .exclusion {
+    margin-top: 20px;
+  }
+}
+
+.exclusion-select {
+  display: inline-block;
+}
+
+.exclusion-actions {
+  display: inline-block;
+  margin-left: 20px;
+
+  a {
+    position: relative;
+    top: -18px;
+  }
+}
+
+.remove-link {
+  color: $red;
+  text-decoration: underline;
+}

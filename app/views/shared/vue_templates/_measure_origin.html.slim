@@ -1,0 +1,24 @@
+script type="text/x-template" id="measure-origin-template"
+  .measure-origin
+    .multiple-choice
+      input type='radio' :id="radioID" class="radio-inline-group" name="geographical_area_type" :checked="origin.selected"
+      label v-if="notErgaOmnes"
+        = content_tag "custom-select", "", { ":options" => "optionsForSelect", "label-field" => "description", "value-field" => "geographical_area_id", ":placeholder": "placeholder", "v-model" => "origin.geographical_area_id", class: "origin-select" }
+      label :for="radioID" v-else=""
+        | ERGA OMNES (all origins)
+
+    .panel.panel-border-narrow v-if="showExclusions"
+      label.form-label
+        | If you want to exclude countries from this measure, enter them here:
+
+      .exclusions-target
+        .exclusion v-for="exclusion in origin.exclusions"
+          .exclusion-select
+            = content_tag "custom-select", "", { ":options" => "exclusion.options", "label-field" => "description", "value-field" => "geographical_area_id", "placeholder": "― start typing ―", "min-length" => 1, "v-model" => "exclusion.geographical_area_id", class: "origin-select" }
+          .exclusion-actions v-if="origin.exclusions.length > 1"
+            a.remove-link v-on:click.prevent="removeExclusion(exclusion)"
+               | Remove
+
+      p.add-another-wrapper
+        a href="#" v-on:click.prevent="addExclusion"
+          | Add another exclusion
