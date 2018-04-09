@@ -243,12 +243,6 @@ class MeasureSaver
           mode = quota_def_ops.keys.first
           target_ops = quota_def_ops[mode]
 
-          p "-" * 100
-          p ""
-          p " mode: #{mode}, target_ops: #{target_ops.inspect}"
-          p ""
-          p "-" * 100
-
           if target_ops.present?
             case mode
             when "annual", "bi_annual", "quarterly", "monthly"
@@ -264,15 +258,13 @@ class MeasureSaver
     def add_quota_order_number!
       quota_order_number = QuotaOrderNumber.new(
         quota_order_number_id: measure.ordernumber,
-        validity_start_date: order_date(:first),
-        validity_end_date: order_date(:last)
+        validity_start_date: order_start_date
       )
       set_oplog_attrs_and_save!(quota_order_number)
 
       if measure.geographical_area_id.present?
         quota_order_number_origin = QuotaOrderNumberOrigin.new(
-          validity_start_date: quota_order_number.validity_start_date,
-          validity_end_date: quota_order_number.validity_end_date
+          validity_start_date: quota_order_number.validity_start_date
         )
         quota_order_number_origin.quota_order_number_sid = quota_order_number.quota_order_number_sid
         quota_order_number_origin.geographical_area_id = measure.geographical_area_id
@@ -296,14 +288,6 @@ class MeasureSaver
       data.keys.select do |k|
         k.starts_with?("amount")
       end.map do |k|
-        p "-" * 100
-        p ""
-        p " add_quota_definition! - k: #{k}"
-        p ""
-        p " ops: #{quota_ops(mode, data, k).inspect}"
-        p ""
-        p "-" * 100
-
         quota_definition = QuotaDefinition.new(quota_ops(mode, data, k))
         set_oplog_attrs_and_save!(quota_definition)
       end
@@ -311,15 +295,6 @@ class MeasureSaver
 
     def add_custom_quota_definition!(data)
       data.map do |k, v|
-
-        p ""
-        p "+" * 100
-        p ""
-        p " [CUSTOM] k: #{k}, data: #{custom_quota_ops(v)}"
-        p ""
-        p "+" * 100
-        p ""
-
         quota_definition = QuotaDefinition.new(custom_quota_ops(v))
         set_oplog_attrs_and_save!(quota_definition)
       end
@@ -334,9 +309,13 @@ class MeasureSaver
       end
     end
 
-    def order_date(mode)
-      get_quota_period_asc.send(mode)['start_date']
-                          .to_date
+    def order_start_date
+      if original_params["quota_periods"].keys.first == "custom"
+        quota_period_asc.first['start_date']
+                        .to_date
+      else
+        original_params['quota_periods'].values.first['start_date']
+      end
     end
 
     def quota_ops(mode, data, k)
@@ -493,14 +472,6 @@ class MeasureSaver
       p_key = PRIMARY_KEYS[record.class.name]
 
       if p_key.present?
-        p ""
-        p "-" * 100
-        p ""
-        p " [p_key] #{p_key}, record.class.max(p_key): #{record.class.max(p_key)}"
-        p ""
-        p "-" * 100
-        p ""
-
         sid = if record.is_a?(Footnote)
           #
           # TODO:
