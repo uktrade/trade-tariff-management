@@ -131,16 +131,13 @@ $(document).ready(function() {
 
       var options = {
         create: false,
+        allowEmptyOption: true,
         items: [this.value],
         placeholder: this.placeholder,
         valueField: this.valueField,
         labelField: this.labelField,
         searchField: [this.valueField, this.codeField, this.labelField],
-
-        onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
-        onChange: function(){
-          this.$dropdown_content.removeHighlight();
-        }
+        allowClear: true
       };
 
       if (this.codeField) {
@@ -1098,9 +1095,7 @@ $(document).ready(function() {
     valueField: 'measure_type_series_id',
     labelField: 'description',
     searchField: ["measure_type_series_id", "description"],
-    onType: function(str) { str || this.$dropdown_content.removeHighlight(); },
-    onChange: function(){
-      this.$dropdown_content.removeHighlight(); },
+    allowClear: true,
     render: {
       option: function(data) {
         return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--series'>" + data.measure_type_series_id + "</span> " + data.description + "</span>";
@@ -1117,6 +1112,7 @@ $(document).ready(function() {
     valueField: 'measure_type_id',
     labelField: 'description',
     searchField: ["measure_type_id", "description"],
+    allowClear: true,
     render: {
       option: function(data) {
         return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--type'>" + data.measure_type_id + "</span> " + data.description + "</span>";
@@ -1132,9 +1128,12 @@ $(document).ready(function() {
 
     $("#measure_form_measure_type_id").val("");
     measureType[0].selectize.clearOptions();
-    measureType[0].selectize.addOption(window.measure_types_json.filter(function(d) {
+
+    var newOptions = window.measure_types_json.filter(function(d) {
       return !v || (v && d.measure_type_series_id == v);
-    }));
+    });
+
+    measureType[0].selectize.addOption(newOptions);
     measureType[0].selectize.refreshOptions(false);
   });
 
