@@ -1,8 +1,2 @@
 script type="text/x-template" id="date-select-template"
-  .row
-    .col-xs-12.col-sm-4.date-part
-      custom-select v-model="day" placeholder="― day ―" labelField="label" valueField="value" :options="days"
-    .col-xs-12.col-sm-4.date-part
-      custom-select v-model="month" placeholder="― month ―" labelField="label" valueField="value" :options="months"
-    .col-xs-12.col-sm-4.date-part
-      custom-select v-model="year" placeholder="― year ―" labelField="label" valueField="value" :options="years"
+  input.date-picker.form-control v-model="vproxy"

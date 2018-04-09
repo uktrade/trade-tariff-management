@@ -42,9 +42,14 @@ fieldset v-if="showQuota"
   h3.heading-medium
     | Set the quota opening balance
 
-  div.quota-period v-for="(quotaPeriod, index) in measure.quota_periods"
-    = content_tag "quota-period", "", { ":quota-period" => "quotaPeriod", ":index" => "index" }
+  .quota-periods
+    div.quota-period v-for="(quotaPeriod, index) in measure.quota_periods"
+      = content_tag "quota-period", "", { ":quota-period" => "quotaPeriod", ":index" => "index" }
 
-  p.add-another-wrapper v-if="showAddMoreQuotaPeriods"
+      div v-if="canRemoveQuota && index > 0"
+        a.text-danger href="#" v-on:click.prevent="removeQuotaPeriod(quotaPeriod)"
+          | Remove
+
+  div v-if="showAddMoreQuotaPeriods"
     a href="#" v-on:click.prevent="addQuotaPeriod"
       | Add another quota period
