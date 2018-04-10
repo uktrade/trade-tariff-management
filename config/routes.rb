@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   namespace :xml_generation do
     resources :exports, only: [:index, :show, :create]
   end
+  namespace :db do
+    resources :rollbacks, only: [:index, :create]
+  end
 
   resources :goods_nomenclatures, only: [:index]
   resources :regulations, only: [:index]

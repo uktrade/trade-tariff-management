@@ -1,0 +1,18 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li aria-current="page"
+      | Rollbacks
+
+h2.heading-large Rollbacks
+
+p Clear all data from the db from an operational date
+
+= render "form"
+
+- if rollbacks.present?
+  = render "table"
+- else
+  p Nothing found!
