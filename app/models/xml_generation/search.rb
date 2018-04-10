@@ -54,6 +54,8 @@ module XmlGeneration
       MeasureConditionCodeDescription,
       MeasureCondition,
       MeasureConditionComponent,
+      MeasurePartialTemporaryStop,
+      MeasureExcludedGeographicalArea,
 
       AdditionalCodeType,
       AdditionalCodeTypeDescription,
@@ -101,6 +103,7 @@ module XmlGeneration
       FootnoteAssociationGoodsNomenclature,
       FootnoteAssociationMeasure,
       FootnoteAssociationMeursingHeading,
+      FootnoteAssociationErn,
 
       ExportRefundNomenclature,
       ExportRefundNomenclatureDescription,
