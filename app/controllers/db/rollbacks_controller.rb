@@ -19,7 +19,7 @@ module Db
         ::Db::RollbackWorker.perform_async(record.id) unless Rails.env.test?
 
         redirect_to db_rollbacks_path,
-                    notice: "Rollback was successfully scheduled for #{record.clear_date.strftime("%e %b %Y")}. Please wait!"
+                    notice: "Rollback was successfully scheduled for #{record.clear_date.to_formatted_s(:uk)}. Please wait!"
       else
         redirect_to db_rollbacks_path,
                     notice: "Something wrong!"
