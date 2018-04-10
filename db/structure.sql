@@ -1232,6 +1232,39 @@ CREATE TABLE data_migrations (
 
 
 --
+-- Name: db_rollbacks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE db_rollbacks (
+    id integer NOT NULL,
+    state character varying(1),
+    issue_date timestamp without time zone,
+    clear_date date,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: db_rollbacks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE db_rollbacks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: db_rollbacks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE db_rollbacks_id_seq OWNED BY db_rollbacks.id;
+
+
+--
 -- Name: duty_expression_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6513,6 +6546,13 @@ ALTER TABLE ONLY complete_abrogation_regulations_oplog ALTER COLUMN oid SET DEFA
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY db_rollbacks ALTER COLUMN id SET DEFAULT nextval('db_rollbacks_id_seq'::regclass);
+
+
+--
 -- Name: oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7320,6 +7360,14 @@ ALTER TABLE ONLY complete_abrogation_regulations_oplog
 
 ALTER TABLE ONLY data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (filename);
+
+
+--
+-- Name: db_rollbacks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY db_rollbacks
+    ADD CONSTRAINT db_rollbacks_pkey PRIMARY KEY (id);
 
 
 --
@@ -10131,4 +10179,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180402091320_remove_type
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180402142849_add_record_to_node_messages.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180402154232_change_record_id_to_record_filter_ops_in_node_messages.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180406152439_remove_xml_nodes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180410100532_create_db_rollbacks.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');

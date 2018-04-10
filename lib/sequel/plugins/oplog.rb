@@ -74,6 +74,8 @@ module Sequel
         end
 
         def _destroy_delete
+          return super if manual_add
+
           self.operation = :destroy
 
           operation_klass.insert(self.values.except(:oid))
@@ -111,10 +113,6 @@ module Sequel
 
         def insert
           raise NotImplementedError.new("You should be inserting model instances.")
-        end
-
-        def delete
-          raise NotImplementedError.new("You should be *destroying* model instances.")
         end
       end
     end

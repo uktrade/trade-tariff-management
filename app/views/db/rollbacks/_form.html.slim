@@ -1,0 +1,10 @@
+.search-form
+  = simple_form_for :rollback, url: db_rollbacks_path, html: {method: :post} do |f|
+
+    .row
+      .col-sm-2
+        = f.input :date, as: :string, label: 'Select date',  input_html: { name: :clear_date, class: 'form-control', 'data-behaviour' => 'datepicker' }
+
+    .form-actions
+      = f.button :submit, 'Schedule Rollback', class: 'button', data: { 'disable-with' => 'Scheduling' }
+      = link_to 'Refresh Page', db_rollbacks_path, class: 'secondary-button'
