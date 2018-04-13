@@ -5,4 +5,8 @@ class RegulationsController < ::BaseController
     mod_regs = ModificationRegulation.actual.not_replaced_and_partially_replaced.q_search(params[:q])
     base_regs.to_a.concat mod_regs.to_a
   end
+
+  def new
+    @form = RegulationForm.new
+  end
 end

@@ -1,0 +1,36 @@
+h4.heading-small
+  | Specify the regulation type
+= f.input :regulation_type, as: :select, collection: RegulationForm.regulation_roles, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select regulation type -"
+
+h4.heading-small
+  | Specify the base regulation
+= f.input :base_regulation_id, as: :select, collection: RegulationForm.base_regulations, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select base regulation -"
+
+h4.heading-small
+  | Specify the regulation identifier
+
+.row
+  .col-md-3
+    = f.input :prefix, as: :select, collection: RegulationForm.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -"
+  .col-md-2
+    = f.input :publication_year, label: "Publication year", input_html: { placeholder: "YY" }
+  .col-md-2
+    = f.input :regulation_number, label: "Regulation number", input_html: { placeholder: "########" }
+  .col-md-2
+    = f.input :publication_year, label: "Number suffix", input_html: { placeholder: "Optional" }
+
+h4.heading-small
+  | Give the regulation name
+
+= f.input :information_text, as: :text, input_html: { rows: 4 }
+
+h4.heading-small
+  | Specify the validity period
+
+= f.input :validity_start_date, label: "Start date", input_html: { class: "datepicker" }
+= f.input :validity_end_date, label: "End date", hint: "Optional - leave blank if the regulation will remain in force indefinitely.", input_html: { class: "datepicker" }
+
+h4.heading-small
+  | Upload the regulation
+
+= f.input :file, as: :file, hint: "Upload the regulation document itself, in PDF format.", label: false

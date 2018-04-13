@@ -3,8 +3,17 @@ input.date-picker {
   max-width: 140px;
 }
 
+.form-group.text {
+  max-width: 100% !important;
+}
+
 .form-control {
   width: 100% !important;
+  max-width: 100%;
+
+  &[type="file"] {
+    border: none;
+  }
 }
 
 .multiple-choice + .panel {
