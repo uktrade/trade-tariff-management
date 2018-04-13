@@ -100,10 +100,12 @@ class MeasureParamsNormalizer
       commodity = Commodity.actual
                            .where(goods_nomenclature_item_id: goods_nomenclature_item_id).first
 
-      {
-        goods_nomenclature_item_id: goods_nomenclature_item_id,
-        goods_nomenclature_sid: commodity.goods_nomenclature_sid
-      }
+      if commodity.present?
+        {
+          goods_nomenclature_item_id: goods_nomenclature_item_id,
+          goods_nomenclature_sid: commodity.goods_nomenclature_sid
+        }
+      end
     end
 end
 
@@ -145,6 +147,7 @@ class MeasureSaver
 
   def valid?
     check_required_params!
+    check_goods_nomenclature!
     return false if @errors.present?
 
     @measure = Measure.new(measure_params)
@@ -197,6 +200,16 @@ class MeasureSaver
         if original_params[k.to_s].blank?
           @errors[v.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
         end
+      end
+    end
+
+    def check_goods_nomenclature!
+      goods_nomenclature_code = original_params[:goods_nomenclature_code].to_s.strip
+
+      if goods_nomenclature_code.present? &&
+         normalized_params[:goods_nomenclature_sid].blank?
+
+        @errors[:goods_nomenclature_code] = "There are no goods nomenclature for code: '#{goods_nomenclature_code}'!"
       end
     end
 
