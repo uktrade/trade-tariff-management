@@ -18,6 +18,7 @@ class MeasureParamsNormalizer
     measure_type_id
     regulation_id
     geographical_area_id
+    additional_code
   )
 
   attr_accessor :normalized_params
@@ -105,6 +106,8 @@ class MeasureParamsNormalizer
           goods_nomenclature_item_id: goods_nomenclature_item_id,
           goods_nomenclature_sid: commodity.goods_nomenclature_sid
         }
+      else
+        {}
       end
     end
 end
