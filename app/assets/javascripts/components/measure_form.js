@@ -228,6 +228,8 @@ $(document).ready(function() {
             end_date: end_date
           };
 
+          if (vm.drilldownRequired === "true" && !vm.drilldownValue) return callback();
+
           if (vm.drilldownName && vm.drilldownValue) {
             data[vm.drilldownName] = vm.drilldownValue;
           }
@@ -258,6 +260,17 @@ $(document).ready(function() {
 
         $(".measure-form").on("dates:changed", this.handleDateSentitivity);
       }
+
+
+      vm.$watch("drilldownValue", function(newVal, oldVal) {
+        $(vm.$el)[0].selectize.clear();
+
+        if (newVal == oldVal) {
+          return;
+        }
+
+        vm.handleDateSentitivity({}, vm.start_date, vm.end_date);
+      })
     },
     watch: {
       value: function (value) {
@@ -267,13 +280,6 @@ $(document).ready(function() {
         $(this.$el)[0].selectize.clearOptions();
         $(this.$el)[0].selectize.addOption(options);
         $(this.$el)[0].selectize.refreshOptions(false);
-      },
-      drilldownValue: function(newVal, oldVal) {
-        if (newVal == oldVal) {
-          return;
-        }
-
-        this.handleDateSentitivity({}, this.start_date, this.end_date);
       }
     },
     destroyed: function () {
