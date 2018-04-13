@@ -32,14 +32,6 @@ class AdditionalCodeType < Sequel::Model
     4 => "Export refund for processed agricultural goods"
   }
 
-  dataset_module do
-    def q_search(keyword)
-      where {
-        Sequel.ilike(:additional_code_type_id, "#{keyword}%")
-      }
-    end
-  end
-
   def meursing?
     application_code.in?("3")
   end

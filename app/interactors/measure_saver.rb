@@ -18,6 +18,7 @@ class MeasureParamsNormalizer
     measure_type_id
     regulation_id
     geographical_area_id
+    additional_code
   )
 
   attr_accessor :normalized_params
@@ -97,12 +98,14 @@ class MeasureParamsNormalizer
     end
 
     def method_goods_nomenclature_item_values(goods_nomenclature_item_id)
-      commodity = Commodity.actual
-                           .where(goods_nomenclature_item_id: goods_nomenclature_item_id).first
+      goods_nomenclature = GoodsNomenclature.actual
+                                            .where(goods_nomenclature_item_id: goods_nomenclature_item_id)
+                                            .first
+                                            .try(:sti_instance)
 
       {
         goods_nomenclature_item_id: goods_nomenclature_item_id,
-        goods_nomenclature_sid: commodity.goods_nomenclature_sid
+        goods_nomenclature_sid: goods_nomenclature.goods_nomenclature_sid
       }
     end
 end
