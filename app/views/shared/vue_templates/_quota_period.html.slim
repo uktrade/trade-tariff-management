@@ -13,8 +13,8 @@ script type="text/x-template" id="quota-period-template"
             | Starting on
 
           = content_tag "date-select", "", ":value.sync" => "quotaPeriod.start_date"
-      .col-md-3.col-lg-2 v-if="isCustom"
-        .form-group
+      .col-md-2
+        .form-group v-if="isCustom"
           label.form-label
             | Ending on
 
@@ -131,12 +131,18 @@ script type="text/x-template" id="quota-period-template"
           label.form-label
             | Amount
           input.form-control type="text" v-model="quotaPeriod.custom.amount1"
-      .col-md-5
+
+      .col-md-3
+        .form-group
+          label.form-label
+            | Monetary unit
+          = content_tag "custom-select", "", { url: "/monetary_units", "label-field" => "description", "value-field" => "monetary_unit_code", "code-field" => "monetary_unit_code", "v-model" => "quotaPeriod.monetary_unit_code", "placeholder" => "― select the monetary unit or blank for EURO ―", "date-sensitive" => true }
+      .col-md-3
         .form-group
           label.form-label
             | Measurement unit
           = content_tag "custom-select", "", { url: "/measurement_units", "labelField" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "quotaPeriod.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true }
-      .col-md-5
+      .col-md-4
         .form-group
           label.form-label
             | Measurement unit qualifier

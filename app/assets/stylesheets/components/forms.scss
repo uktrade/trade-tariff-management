@@ -73,6 +73,27 @@ input.date-picker {
   }
 }
 
+.measure-component {
+  padding: 15px 0 0;
+
+  &:first-of-type {
+    padding-top: 0;
+  }
+
+  &:last-of-type {
+    padding-bottom: 15px;
+  }
+
+  &:first-of-type:last-of-type {
+    padding-bottom: 0 !important;
+  }
+
+  & + .measure-component {
+    margin-top: 15px;
+    border-top: 1px solid #000;
+  }
+}
+
 .footnote {
   padding: 15px 0 0;
 

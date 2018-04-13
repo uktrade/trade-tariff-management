@@ -395,6 +395,13 @@ $(document).ready(function() {
 
         return ids.indexOf(this[this.thing].duty_expression_id) > -1;
       },
+      showMonetaryUnit: function() {
+        return this.showDutyAmountOrPercentage ||
+               this.showDutyAmountNumber ||
+               this.showDutyAmountMinimum ||
+               this.showDutyAmountMaximum ||
+               this.showDutyRefundAmount;
+      },
       showMeasurementUnit: function() {
         var ids = ["23", "36", "37"];
 

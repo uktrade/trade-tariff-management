@@ -48,6 +48,12 @@ script type="text/x-template" id="measure-condition-component-template"
           | Refund amount (€)
         input.form-control v-model="measureConditionComponent.amount"
 
+    .col-md-3 v-if="showMonetaryUnit"
+      .form-group
+        label.form-label
+          | Monetary unit
+        = content_tag "custom-select", "", { url: "/monetary_units", "label-field" => "description", "value-field" => "monetary_unit_code", "code-field" => "monetary_unit_code", "v-model" => "measureConditionComponent.monetary_unit_code", "placeholder" => "― select the monetary unit or blank for EURO ―", "date-sensitive" => true }
+
     .col-md-3 v-if="showMeasurementUnit"
       .form-group
         label.form-label
