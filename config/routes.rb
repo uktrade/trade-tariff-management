@@ -42,4 +42,6 @@ Rails.application.routes.draw do
     resources :measurement_unit_qualifiers, only: [:index]
     resources :monetary_units, only: [:index]
   end
+
+  resources :regulations
 end
