@@ -17,7 +17,10 @@ $(document).ready(function(){
     new Pikaday({
       field: $(this)[0],
       format: "DD/MM/YYYY",
-      blurFieldOnSelect: true
+      blurFieldOnSelect: true,
+      onSelect: function() {
+        $(this).trigger("change");
+      }
     });
   });
 });

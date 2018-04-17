@@ -13,7 +13,10 @@ header
   h1.heading-large
     | Create a regulation
 
-= simple_form_for @form, url: regulations_url, method: :post do |f|
+javascript:
+  window.__regulation_json = #{safe_json(@form.to_json)};
+
+= simple_form_for @form, url: regulations_url, method: :post, html: { class: "regulation-form" } do |f|
   = render "form", f: f
 
   .form-actions

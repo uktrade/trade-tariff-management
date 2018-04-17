@@ -9,4 +9,12 @@ class RegulationsController < ::BaseController
   def new
     @form = RegulationForm.new
   end
+
+  def create
+    puts params
+
+    @form = RegulationForm.new params.require(:regulation_form)
+
+    render :new
+  end
 end

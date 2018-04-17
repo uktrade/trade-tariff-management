@@ -44,4 +44,5 @@ Rails.application.routes.draw do
   end
 
   resources :regulations
+  resources :base_regulations
 end

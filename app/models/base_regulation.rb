@@ -55,6 +55,7 @@ class BaseRegulation < Sequel::Model
 
     {
       regulation_id: base_regulation_id,
+      role: base_regulation_role,
       description: description
     }
   end
