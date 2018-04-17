@@ -18,7 +18,7 @@ module Db
 
       def fetch_relevant_data
         @data = ::XmlGeneration::Search.new(
-          record.clear_date
+          record.date_filters
         ).send(:data)
       end
 

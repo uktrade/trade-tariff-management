@@ -5,7 +5,7 @@
       .col-sm-3.col-md-2.col-lg-2
         = f.input :start_date, as: :string, label: 'Start date',  input_html: { name: :start_date, class: 'form-control datepicker', pattern: "[0-9]{2}/[0-9]{2}/[0-9]{4}" }, hint: "(eg: 16/04/2018)", required: true
       .col-sm-3.col-md-2.col-lg-2
-        = f.input :end_date, as: :string, label: 'End date'.html_safe,  input_html: { name: :end_date, class: 'form-control datepicker', pattern: "[0-9]{2}/[0-9]{2}/[0-9]{4}" }, hint: "(eg: 16/04/2018)"
+        = f.input :end_date, as: :string, label: 'End date'.html_safe,  input_html: { name: :end_date, class: 'form-control datepicker', pattern: "[0-9]{2}/[0-9]{2}/[0-9]{4}" }, hint: "(eg: 17/04/2018)"
 
     .form-actions
       = f.button :submit, "Schedule #{record_name}", class: 'button', data: { 'disable-with' => 'Scheduling' }

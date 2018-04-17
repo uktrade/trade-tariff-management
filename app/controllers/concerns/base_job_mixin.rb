@@ -21,7 +21,7 @@ module BaseJobMixin
       worker_klass.perform_async(record.id) unless Rails.env.test?
 
       redirect_to redirect_url,
-                  notice: "#{record_name} was successfully scheduled for #{record.clear_date.to_formatted_s(:uk)}. Please wait!"
+                  notice: "#{record_name} was successfully scheduled. Please wait!"
     else
       redirect_to redirect_url,
                   notice: "Something wrong!"
