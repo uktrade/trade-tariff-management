@@ -170,6 +170,12 @@ input.date-picker {
   padding: 20px;
   margin-bottom: 20px;
 
+  .help-block {
+    margin-bottom: 0;
+    font-size: 0.9em;
+    color: #666;
+  }
+
   .form-actions {
     margin-bottom: 1em;
   }
