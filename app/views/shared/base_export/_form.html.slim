@@ -1,0 +1,14 @@
+.search-form
+  = simple_form_for record_name.downcase, url: redirect_url, html: {method: :post} do |f|
+
+    .row
+      .col-sm-2
+        = f.input :date, as: :string, label: 'Select date (previous datepicker)',  input_html: { name: :export_date, class: 'form-control', 'data-behaviour' => 'datepicker' }
+
+        = f.input :start_date, as: :string, label: 'Start date (eg: 06/04/2018)',  input_html: { name: :start_date, class: 'form-control' }
+
+        = f.input :end_date, as: :string, label: 'End date (eg: 16/04/2018)',  input_html: { name: :end_date, class: 'form-control' }
+
+    .form-actions
+      = f.button :submit, "Schedule #{record_name}", class: 'button', data: { 'disable-with' => 'Scheduling' }
+      = link_to 'Refresh Page', redirect_url, class: 'secondary-button'

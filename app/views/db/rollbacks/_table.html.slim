@@ -1,18 +1,18 @@
 table.table
   colgroup
-    col width="180"
+    col width="200"
     col width="130"
     col width="*"
   thead
     tr
-      th.span2 Clear date
+      th.span2 Date / Range
       th.span2 Scheduled at
       th.span2 Status
   tbody
-    - rollbacks.map do |export_item|
+    - collection.map do |export_item|
       tr
         td
-          = export_item.clear_date
+          = export_item.date_range
         td
           = export_item.issue_date
         td

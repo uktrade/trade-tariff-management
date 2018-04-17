@@ -2,10 +2,6 @@ class ApplicationDecorator < Draper::Decorator
 
   delegate_all
 
-  def to_readable_date(field_name)
-    object.public_send(field_name).to_formatted_s(:uk)
-  end
-
   def to_readable_date_time(field_name)
     object.public_send(field_name).strftime("%e %b %Y, %H:%M")
   end

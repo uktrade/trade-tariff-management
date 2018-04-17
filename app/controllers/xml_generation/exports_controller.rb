@@ -1,35 +1,22 @@
 module XmlGeneration
   class ExportsController < ::XmlGeneration::BaseController
 
-    expose(:xml_export_files) do
-      XmlExport::FileDecorator.decorate_collection(
-        XmlExport::File.reverse_order(:issue_date)
-                       .page(params[:page])
-      )
+    include ::BaseJobMixin
+
+    expose(:record_name) do
+      "Export"
     end
 
-    def create
-      record = ::XmlExport::File.new(
-        relevant_date: date_for_export,
-        issue_date: Time.zone.now,
-        state: "P"
-      )
-
-      if record.save
-        ::XmlGeneration::ExportWorker.perform_async(record.id) unless Rails.env.test?
-
-        redirect_to xml_generation_exports_path,
-                    notice: "XML Export was successfully scheduled. Please wait!"
-      else
-        redirect_to xml_generation_exports_path,
-                    notice: "Something wrong!"
-      end
+    expose(:klass) do
+      ::XmlExport::File
     end
 
-    private
+    expose(:worker_klass) do
+      ::XmlGeneration::ExportWorker
+    end
 
-      def date_for_export
-        params[:export_date].try(:to_date) || Date.today
-      end
+    expose(:redirect_url) do
+      xml_generation_exports_path
+    end
   end
 end

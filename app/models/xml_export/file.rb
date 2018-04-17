@@ -3,6 +3,10 @@ module XmlExport
 
     include XmlDataUploader::Attachment.new(:xml)
 
+    plugin :serialization
+
+    serialize_attributes :yaml, :date_filters
+
     class << self
       def max_per_page
         15
