@@ -179,6 +179,22 @@ input.date-picker {
   .form-actions {
     margin-bottom: 1em;
   }
+
+  [class^="col"] {
+    justify-content: flex-start;
+  }
+
+  .form-control.parsley-error {
+    border: 2px solid $red;
+    background: #fff;
+    color: #000;
+  }
+
+  .parsley-errors-list.filled {
+    color: $red;
+    font-size: 1em;
+    margin: 0.5em 0 0.2em;
+  }
 }
 
 .measure-form {
