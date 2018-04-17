@@ -33,3 +33,6 @@ REVISION
 public/assets/*
 public/uploads/*
 
+dev_server/*
+beta_server/*
+
