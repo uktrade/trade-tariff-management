@@ -779,6 +779,8 @@ GEM
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
     ox (2.8.2)
+    parsley-rails (2.7.0.0)
+      railties (>= 3.0.0)
     pg (0.18.4)
     pikaday-gem (1.4.0)
       railties (>= 3.1)
@@ -1009,6 +1011,7 @@ DEPENDENCIES
   multi_json (~> 1.11)
   nokogiri (~> 1.8.1)
   ox (>= 2.8.1)
+  parsley-rails
   pg (= 0.18.4)
   pikaday-gem
   plek (~> 1.11)

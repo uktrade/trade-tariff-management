@@ -33,7 +33,7 @@ module XmlGeneration
 
       def fetch_relevant_data
         @data = ::XmlGeneration::Search.new(
-          record.relevant_date
+          record.date_filters
         ).result
       end
 

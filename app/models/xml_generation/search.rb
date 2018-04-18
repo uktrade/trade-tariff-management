@@ -116,10 +116,12 @@ module XmlGeneration
       PublicationSigle
     ]
 
-    attr_accessor :date
+    attr_accessor :start_date,
+                  :end_date
 
-    def initialize(date)
-      @date = date.strftime("%Y-%m-%d")
+    def initialize(date_filters)
+      @start_date = date_filters[:start_date].strftime("%Y-%m-%d")
+      @end_date = date_filters[:end_date].strftime("%Y-%m-%d") if date_filters[:end_date].present?
     end
 
     def result
@@ -130,8 +132,15 @@ module XmlGeneration
 
       def data
         SEQUENCE_OF_DATA_FETCH.map do |record_class|
-          record_class.where("operation_date = ?", date)
-                      .all
+          if end_date.present?
+            record_class.where(
+              "operation_date >= ? AND operation_date <= ?", start_date, end_date
+            )
+          else
+            record_class.where(
+              "operation_date = ?", start_date
+            )
+          end.all
         end.flatten
       end
   end

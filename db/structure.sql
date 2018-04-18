@@ -27,6 +27,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -44,7 +58,7 @@ CREATE FUNCTION reassign_owned() RETURNS event_trigger
 		END IF;
 
 		-- do not execute if not member of manager role
-		IF NOT pg_has_role(current_user, 'rdsbroker_266a9334_2e5d_4234_b2bf_5f5ebf7d973d_manager', 'member') THEN
+		IF NOT pg_has_role(current_user, 'rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager', 'member') THEN
 			RETURN;
 		END IF;
 
@@ -53,7 +67,7 @@ CREATE FUNCTION reassign_owned() RETURNS event_trigger
 			RETURN;
 		END IF;
 
-		EXECUTE 'reassign owned by "' || current_user || '" to "rdsbroker_266a9334_2e5d_4234_b2bf_5f5ebf7d973d_manager"';
+		EXECUTE 'reassign owned by "' || current_user || '" to "rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager"';
 	end
 	$$;
 
@@ -1239,9 +1253,9 @@ CREATE TABLE db_rollbacks (
     id integer NOT NULL,
     state character varying(1),
     issue_date timestamp without time zone,
-    clear_date date,
     updated_at timestamp without time zone,
-    created_at timestamp without time zone
+    created_at timestamp without time zone,
+    date_filters text
 );
 
 
@@ -6395,8 +6409,8 @@ CREATE TABLE xml_export_files (
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
     xml_data text,
-    relevant_date date,
-    issue_date timestamp without time zone
+    issue_date timestamp without time zone,
+    date_filters text
 );
 
 
@@ -10167,6 +10181,7 @@ CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
 --
 
 SET search_path TO "$user", public;
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180305221434_remove_filename_from_xml_export_files.rb');
@@ -10180,4 +10195,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180402142849_add_record_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180402154232_change_record_id_to_record_filter_ops_in_node_messages.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180406152439_remove_xml_nodes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180410100532_create_db_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180417135500_change_relevant_date_in_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180417141804_change_clear_date_in_db_rollbacks.rb');

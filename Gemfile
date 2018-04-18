@@ -31,6 +31,7 @@ gem "bootstrap-datepicker-rails", "~> 1.7.1.1"
 gem 'momentjs-rails'
 gem "pikaday-gem"
 gem "selectize-rails"
+gem "parsley-rails"
 
 # File uploads and AWS
 gem "shrine"
