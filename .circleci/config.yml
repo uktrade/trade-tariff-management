@@ -66,3 +66,8 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ];
               then CF_SPACE=dit-alpha CF_APP=tariff-management-dev CF_APP_WORKER=tariff-management-worker-dev ./bin/deploy
             fi
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "staging" ];
+              then CF_SPACE=dit-beta CF_APP=tariff-management-beta CF_APP_WORKER=tariff-management-worker-beta ./bin/deploy
+            fi
