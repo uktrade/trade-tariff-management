@@ -26,20 +26,32 @@ module FormApiHelpers
         description: details
       }
 
-      res[:role] = base_regulation_role if res[:regulation_id] == :base_regulation_id
+      res[:role] = base_regulation_role if primary_key[0] == :base_regulation_id
 
       res
     end
 
     def details
-      res = "#{public_send(primary_key[0])}: #{information_text} (#{date_to_uk(validity_start_date)})"
-      res = "#{res} to #{date_to_uk(effective_end_date)})" if effective_end_date.present?
+      res = "#{public_send(primary_key[0])}: #{information_text}"
+      res += " (#{date_to_uk(reg_date)})" if reg_date.present?
+      res = "#{res} to #{date_to_uk(effective_end_date)})" if try(:effective_end_date).present?
 
       res
     end
 
+    def reg_date
+      case self.class.name
+      when "CompleteAbrogationRegulation"
+        published_date
+      when "ExplicitAbrogationRegulation"
+        published_date || abrogation_date
+      else
+        validity_start_date
+      end
+    end
+
     def date_to_uk(date)
-      date.to_formatted_s(:uk)
+      date.try(:to_formatted_s, :uk)
     end
   end
 end
