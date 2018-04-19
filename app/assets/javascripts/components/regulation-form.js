@@ -10,7 +10,9 @@ $(document).ready(function() {
   var app = new Vue({
     el: form,
     data: function() {
-      var data = {};
+      var data = {
+        antidumpingRoles: ["2", "3"]
+      };
 
       if (window.__regulation_json) {
         data.regulation = this.parseRegulationPayload(window.__regulation_json);
@@ -24,6 +26,8 @@ $(document).ready(function() {
       dependentOnBaseRegulation: function() {
         var roles = ["1", "7", "6", "8", "5"];
 
+        console.log(this.regulation.role)
+
         return this.regulation.role && roles.indexOf(this.regulation.role) === -1;
       },
       canHaveCompleteAbrogationLink: function() {
@@ -36,6 +40,11 @@ $(document).ready(function() {
 
         return roles.indexOf(this.regulation.role) > -1;
       },
+      canHaveRelatedAntidumpingLink: function() {
+        var roles = ["2", "3"];
+
+        return roles.indexOf(this.regulation.role) > -1;
+      },
       canAbrogate: function() {
         var roles = ["1", "2", "3"];
 
@@ -44,6 +53,8 @@ $(document).ready(function() {
     },
     methods: {
       parseRegulationPayload: function(payload) {
+        payload.role = payload.role ? payload.role + "" : payload.role;
+
         return payload;
       },
       emptyRegulation: function() {

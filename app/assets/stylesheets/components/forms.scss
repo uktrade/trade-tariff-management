@@ -16,6 +16,10 @@ input.date-picker {
   }
 }
 
+label abbr {
+  display: none !important;
+}
+
 .multiple-choice + .panel {
   margin-left: 3.2em;
   max-width: calc(100% - 3.2em);
