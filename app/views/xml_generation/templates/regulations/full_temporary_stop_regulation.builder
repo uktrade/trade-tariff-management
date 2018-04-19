@@ -8,7 +8,7 @@ xml.tag!("oub:full.temporary.stop.regulation") do |full_temporary_stop_regulatio
   end
 
   full_temporary_stop_regulation.tag!("oub:published.date") do full_temporary_stop_regulation
-    xml_data_item(full_temporary_stop_regulation, self.published_date.strftime("%Y-%m-%d"))
+    xml_data_item(full_temporary_stop_regulation, self.published_date.try(:strftime, "%Y-%m-%d"))
   end
 
   full_temporary_stop_regulation.tag!("oub:officialjournal.number") do full_temporary_stop_regulation

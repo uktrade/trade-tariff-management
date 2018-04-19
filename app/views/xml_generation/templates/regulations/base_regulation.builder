@@ -8,7 +8,7 @@ xml.tag!("oub:base.regulation") do |base_regulation|
   end
 
   base_regulation.tag!("oub:published.date") do base_regulation
-    xml_data_item(base_regulation, self.published_date.strftime("%Y-%m-%d"))
+    xml_data_item(base_regulation, self.published_date.try(:strftime, "%Y-%m-%d"))
   end
 
   base_regulation.tag!("oub:officialjournal.number") do base_regulation
