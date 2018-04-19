@@ -22,7 +22,7 @@ module FormApiHelpers
 
     def json_mapping
       res = {
-        regulation_id: primary_key[0],
+        regulation_id: public_send(primary_key[0]),
         description: details
       }
 
@@ -32,7 +32,7 @@ module FormApiHelpers
     end
 
     def details
-      res = "#{primary_key[0]}: #{information_text} (#{date_to_uk(validity_start_date)})"
+      res = "#{public_send(primary_key[0])}: #{information_text} (#{date_to_uk(validity_start_date)})"
       res = "#{res} to #{date_to_uk(effective_end_date)})" if effective_end_date.present?
 
       res
