@@ -7,8 +7,13 @@ module FormApiHelpers
         def q_search(primary_key, keyword)
           q_rule = "#{keyword}%"
 
-          actual.not_replaced_and_partially_replaced
-                .where(
+          scope = if %w(base_regulation_id modification_regulation_id).include?(primary_key.to_s)
+            actual.not_replaced_and_partially_replaced
+          else
+            not_replaced_and_partially_replaced
+          end
+
+          scope.where(
             "#{primary_key} ilike ? OR information_text ilike ?",
             q_rule, q_rule
           )
