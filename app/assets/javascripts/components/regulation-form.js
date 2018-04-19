@@ -59,13 +59,16 @@ $(document).ready(function() {
         }
       },
       onBaseRegulationChange: function(item) {
-        console.log(item)
+        this.regulation.base_regulation_role = item.role;
       },
       onCompleteAbrogationRegulationChange: function(item) {
-        console.log(item)
+        this.regulation.complete_abrogation_regulation_role = item.role;
       },
       onExplicitAbrogationRegulationChange: function(item) {
-        console.log(item)
+        this.regulation.explicit_abrogation_regulation_role = item.role;
+      },
+      onRelatedAntidumpingRegulationChange: function(item) {
+        this.regulation.antidumping_regulation_role = item.role;
       }
     }
   });

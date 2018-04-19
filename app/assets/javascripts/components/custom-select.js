@@ -63,7 +63,7 @@ Vue.component('custom-select', {
 
       options.onLoad = function(data) {
         if (vm.url && !vm.minLength && vm.value && !vm.firstLoadSelected) {
-          $(vm.$el).find("select").selectize.setValue(vm.value.toString());
+          $(vm.$el).find("select")[0].selectize.setValue(vm.value.toString());
           vm.firstLoadSelected = true;
         }
       };
@@ -181,7 +181,8 @@ Vue.component('custom-select', {
     }
   },
   destroyed: function () {
-    $(this.$el).find("select")[0].off().selectize.destroy();
+    $(this.$el).find("select").off();
+    $(this.$el).find("select")[0].selectize.destroy();
 
     if (this.dateSensitive) {
       $(".measure-form").off("dates:changed", this.handleDateSentitivity);
