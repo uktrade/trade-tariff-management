@@ -8,7 +8,7 @@ xml.tag!("oub:prorogation.regulation") do |prorogation_regulation|
   end
 
   prorogation_regulation.tag!("oub:published.date") do prorogation_regulation
-    xml_data_item(prorogation_regulation, self.published_date.strftime("%Y-%m-%d"))
+    xml_data_item(prorogation_regulation, self.published_date.try(:strftime, "%Y-%m-%d"))
   end
 
   prorogation_regulation.tag!("oub:officialjournal.number") do prorogation_regulation
