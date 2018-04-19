@@ -16,7 +16,7 @@ module FormApiHelpers
           scope.where(
             "#{primary_key} ilike ? OR information_text ilike ?",
             q_rule, q_rule
-          )
+          ).limit(100)
         end
 
         def not_replaced_and_partially_replaced
@@ -31,8 +31,14 @@ module FormApiHelpers
         description: details
       }
 
-      res[:role] = base_regulation_role if primary_key[0] == :base_regulation_id
+      case self.class.name
+      when "CompleteAbrogationRegulation"
+        res[:complete_abrogation_regulation_id] = res[:regulation_id]
+      when "ExplicitAbrogationRegulation"
+        res[:explicit_abrogation_regulation_id] = res[:regulation_id]
+      end
 
+      res[:role] = base_regulation_role if primary_key[0] == :base_regulation_id
       res
     end
 
