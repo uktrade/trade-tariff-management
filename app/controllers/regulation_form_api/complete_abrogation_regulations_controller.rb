@@ -2,7 +2,8 @@ module RegulationFormApi
   class CompleteAbrogationRegulationsController < ::BaseController
 
     def collection
-      CompleteAbrogationRegulation.q_search(:complete_abrogation_regulation_id, params[:q])
+      CompleteAbrogationRegulation.actual
+                                  .q_search(params[:q])
     end
   end
 end
