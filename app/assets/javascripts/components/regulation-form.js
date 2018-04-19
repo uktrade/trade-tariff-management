@@ -59,15 +59,31 @@ $(document).ready(function() {
         }
       },
       onBaseRegulationChange: function(item) {
+        if (!item) {
+          return;
+        }
+
         this.regulation.base_regulation_role = item.role;
       },
       onCompleteAbrogationRegulationChange: function(item) {
+        if (!item) {
+          return;
+        }
+
         this.regulation.complete_abrogation_regulation_role = item.role;
       },
       onExplicitAbrogationRegulationChange: function(item) {
+        if (!item) {
+          return;
+        }
+
         this.regulation.explicit_abrogation_regulation_role = item.role;
       },
       onRelatedAntidumpingRegulationChange: function(item) {
+        if (!item) {
+          return;
+        }
+
         this.regulation.antidumping_regulation_role = item.role;
       }
     }
