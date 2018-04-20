@@ -25,9 +25,13 @@ module FormApiHelpers
       end
     end
 
+    def regulation_id
+      public_send(primary_key[0])
+    end
+
     def json_mapping
       res = {
-        regulation_id: public_send(primary_key[0]),
+        regulation_id: regulation_id,
         description: details
       }
 
@@ -43,7 +47,7 @@ module FormApiHelpers
     end
 
     def details
-      res = "#{public_send(primary_key[0])}: #{information_text}"
+      res = "#{regulation_id}: #{information_text}"
       res += " (#{date_to_uk(reg_date)})" if reg_date.present?
       res = "#{res} to #{date_to_uk(effective_end_date)})" if try(:effective_end_date).present?
 

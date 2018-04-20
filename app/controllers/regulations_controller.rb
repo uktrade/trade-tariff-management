@@ -1,5 +1,17 @@
 class RegulationsController < ::BaseController
 
+  expose(:regulation_saver) do
+    regulation_ops = params[:regulation_form]
+    regulation_ops.send("permitted=", true)
+    regulation_ops = regulation_ops.to_h
+
+    ::RegulationSaver.new(regulation_ops)
+  end
+
+  expose(:regulation) do
+    regulation_saver.regulation
+  end
+
   def collection
     base_regs = BaseRegulation.q_search(:base_regulation_id, params[:q])
     mod_regs = ModificationRegulation.q_search(:modification_regulation_id, params[:q])
@@ -11,10 +23,15 @@ class RegulationsController < ::BaseController
   end
 
   def create
-    puts params
+    if regulation_saver.valid?
+      regulation_saver.persist!
 
-    @form = RegulationForm.new params.require(:regulation_form)
-
-    render :new
+      render json: {
+        regulation_id: measure.regulation_id
+      }, status: :ok
+    else
+      render json: { errors: regulation_saver.errors },
+             status: :unprocessable_entity
+    end
   end
 end
