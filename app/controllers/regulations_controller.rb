@@ -28,7 +28,7 @@ class RegulationsController < ::BaseController
 
       redirect_to root_url
     else
-      @form = RegulationForm.new nil, params.require(:regulation_form).permit
+      @form = RegulationForm.new nil, params[:regulation_form]
       regulation_saver.errors.each do |k,v|
         @form.errors.add(k, v)
       end
