@@ -27,7 +27,8 @@ h4.heading-small
   | Specify the community code
 .row
   .col-md-3
-    = f.input :community_code, label: false, input_html: { "v-model" => "regulation.community_code" }
+    = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code" } do
+      = f.input :community_code, as: :select, collection: RegulationForm.community_codes, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select community code -"
 
 h4.heading-small
   | Specify the regulation identifier
@@ -45,10 +46,13 @@ h4.heading-small
 
 .row
   .col-md-4
-    .form-group v-bind:class="{ 'form-group-error': regulation.errors.replacement_indicator }"
-      span.error-message v-if="regulation.errors.replacement_indicator" v-html="regulation.errors.replacement_indicator[0]"
+    .form-group v-bind:class="{ 'form-group-error': errors.replacement_indicator }"
+      label.form-label
+        | Replacement indicator
+      span.error-message v-if="errors.replacement_indicator" v-html="errors.replacement_indicator"
+
       = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.replacement_indicator" } do
-        = f.input :replacement_indicator, as: :select, collection: RegulationForm::REPLACEMENT_INDICATORS, value_method: :first, label_method: :last, label: "Replacement indicator", include_blank: true, prompt: "- select replacement indicator -"
+        = f.input :replacement_indicator, as: :select, collection: RegulationForm::REPLACEMENT_INDICATORS, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select replacement indicator -"
 
 
 h4.heading-small
@@ -74,8 +78,8 @@ h4.heading-small
 
 .row
   .col-md-6
-    .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
-      span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
+    .form-group v-bind:class="{ 'form-group-error': errors.regulation_group_id }"
+      span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
       = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id", placeholder: "- select regulation group -", "allow-clear" => true }
 
 

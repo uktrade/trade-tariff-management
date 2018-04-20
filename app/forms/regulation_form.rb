@@ -36,16 +36,10 @@ class RegulationForm
                 :file,
                 :community_code,
                 :replacement_indicator,
-                :abrogation_date,
                 :officialjournal_number,
                 :officialjournal_page,
-                :complete_abrogation_regulation_role,
-                :complete_abrogation_regulation_id,
-                :explicit_abrogation_regulation_role,
-                :explicit_abrogation_regulation_id,
                 :antidumping_regulation_role,
                 :related_antidumping_regulation_id,
-                :national,
                 :regulation
 
   def initialize(thing = nil, params = {})
@@ -81,6 +75,15 @@ class RegulationForm
     ]
   end
 
+  def self.community_codes
+    [
+      [ "1", "Economic" ],
+      [ "2", "Atomic" ],
+      [ "3", "Coal" ],
+      [ "4", "Economic/Coal" ]
+    ]
+  end
+
   def self.regulation_roles
     RegulationRoleTypeDescription.all.map do |role|
       [ role.regulation_role_type_id, role.description ]
@@ -104,7 +107,6 @@ class RegulationForm
       validity_start_date: validity_start_date,
       validity_end_date: validity_end_date,
       effective_end_date: effective_end_date,
-      abrogation_date: abrogation_date,
       regulation_group_id: regulation_group_id,
       base_regulation_id: base_regulation_id,
       base_regulation_role: base_regulation_role,
@@ -112,10 +114,6 @@ class RegulationForm
       community_code: community_code,
       officialjournal_number: officialjournal_number,
       officialjournal_page: officialjournal_page,
-      complete_abrogation_regulation_role: complete_abrogation_regulation_role,
-      complete_abrogation_regulation_id: complete_abrogation_regulation_id,
-      explicit_abrogation_regulation_role: explicit_abrogation_regulation_role,
-      explicit_abrogation_regulation_id: explicit_abrogation_regulation_id,
       antidumping_regulation_role: antidumping_regulation_role,
       related_antidumping_regulation_id: related_antidumping_regulation_id,
       errors: errors

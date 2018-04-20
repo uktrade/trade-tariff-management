@@ -11,7 +11,17 @@ $(document).ready(function() {
     el: form,
     data: function() {
       var data = {
-        antidumpingRoles: ["2", "3"]
+        antidumpingRoles: ["2", "3"],
+        prefixes: [
+          { id: "C", label: "Draft" },
+          { id: "D", label: "Decision" },
+          { id: "A", label: "Agreement" },
+          { id: "I", label: "Information" },
+          { id: "J", label: "Judgement" },
+          { id: "R", label: "Regulation" }
+        ],
+        errors: {},
+        saving: false
       };
 
       if (window.__regulation_json) {
@@ -32,6 +42,23 @@ $(document).ready(function() {
         return roles.indexOf(this.regulation.role) > -1;
       }
     },
+    // mounted: function() {
+    //   var self = this;
+
+    //   $(".regulation-form").on("submit", function(e) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+
+    //     self.saving = true;
+
+    //     self.save($(".regulation-form").attr("action"), function() {
+    //       window.location = "/regulations";
+    //     }, function(errors) {
+    //       self.saving = false;
+    //       self.errors = errors;
+    //     });
+    //   })
+    // },
     methods: {
       parseRegulationPayload: function(payload) {
         payload.role = payload.role ? payload.role + "" : payload.role;
@@ -40,14 +67,24 @@ $(document).ready(function() {
       },
       emptyRegulation: function() {
         return {
-          type: null,
-          base_regulation_id: null,
-          base_regulation_role: null,
+          role: null,
+          prefix: null,
+          publication_year: null,
+          regulation_number: null,
+          number_suffix: null,
+          information_text: null,
           validity_start_date: null,
           validity_end_date: null,
-          effective_enddate: null,
-          validity_start_date: null,
-          validity_start_date: null,
+          effective_end_date: null,
+          regulation_group_id: null,
+          base_regulation_id: null,
+          base_regulation_role: null,
+          replacement_indicator: null,
+          community_code: null,
+          officialjournal_number: null,
+          officialjournal_page: null,
+          antidumping_regulation_role: null,
+          related_antidumping_regulation_id: null
         }
       },
       onBaseRegulationChange: function(item) {
@@ -63,6 +100,19 @@ $(document).ready(function() {
         }
 
         this.regulation.antidumping_regulation_role = item.role;
+      },
+      save: function(url, success, error) {
+        $.ajax({
+          url: url,
+          type: "POST",
+          data: {
+            regulation_form: this.regulation
+          },
+          success: success,
+          error: function(response) {
+            error(response.responseJSON.errors);
+          }
+        })
       }
     }
   });
