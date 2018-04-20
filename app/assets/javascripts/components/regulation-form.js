@@ -11,17 +11,7 @@ $(document).ready(function() {
     el: form,
     data: function() {
       var data = {
-        antidumpingRoles: ["2", "3"],
-        prefixes: [
-          { id: "C", label: "Draft" },
-          { id: "D", label: "Decision" },
-          { id: "A", label: "Agreement" },
-          { id: "I", label: "Information" },
-          { id: "J", label: "Judgement" },
-          { id: "R", label: "Regulation" }
-        ],
-        errors: {},
-        saving: false
+        antidumpingRoles: ["2", "3"]
       };
 
       if (window.__regulation_json) {
