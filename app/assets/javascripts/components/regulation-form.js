@@ -42,23 +42,6 @@ $(document).ready(function() {
         return roles.indexOf(this.regulation.role) > -1;
       }
     },
-    // mounted: function() {
-    //   var self = this;
-
-    //   $(".regulation-form").on("submit", function(e) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-
-    //     self.saving = true;
-
-    //     self.save($(".regulation-form").attr("action"), function() {
-    //       window.location = "/regulations";
-    //     }, function(errors) {
-    //       self.saving = false;
-    //       self.errors = errors;
-    //     });
-    //   })
-    // },
     methods: {
       parseRegulationPayload: function(payload) {
         payload.role = payload.role ? payload.role + "" : payload.role;
