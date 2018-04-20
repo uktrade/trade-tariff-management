@@ -1,16 +1,6 @@
 = render "shared/vue_templates/selectize"
 
 h4.heading-small
-  | Specify the regulation group
-
-.row
-  .col-md-6
-    .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
-      span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
-      = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id", placeholder: "- select regulation group -", "allow-clear" => true }
-
-
-h4.heading-small
   | Specify the regulation type
 .row
   .col-md-6
@@ -31,23 +21,13 @@ div v-if="canHaveRelatedAntidumpingLink"
   .row
     .col-md-6
       = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
-      = content_tag "custom-select", "", { url: "/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select complete abrogation regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles" }
+      = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles" }
 
-div v-if="canHaveCompleteAbrogationLink"
-  h4.heading-small
-    | Specify the complete abrogation regulation
-  .row
-    .col-md-6
-      = f.input :complete_abrogation_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.complete_abrogation_regulation_role" }
-      = content_tag "custom-select", "", { url: "/regulation_form_api/complete_abrogation_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.complete_abrogation_regulation_id", placeholder: "- select complete abrogation regulation -", ":on-change" => "onCompleteAbrogationRegulationChange", "name" => "regulation_form[complete_abrogation_regulation_id]" }
-
-div v-if="canHaveExplicitAbrogationLink"
-  h4.heading-small
-    | Specify the explicit abrogation regulation
-  .row
-    .col-md-6
-      = f.input :explicit_abrogation_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.explicit_abrogation_regulation_role" }
-      = content_tag "custom-select", "", { url: "/regulation_form_api/explicit_abrogation_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.explicit_abrogation_regulation_id", placeholder: "- select explicit abrogation regulation -", ":on-change" => "onExplicitAbrogationRegulationChange", "name" => "regulation_form[explicit_abrogation_regulation_id]" }
+h4.heading-small
+  | Specify the community code
+.row
+  .col-md-3
+    = f.input :community_code, label: false, input_html: { "v-model" => "regulation.community_code" }
 
 h4.heading-small
   | Specify the regulation identifier
@@ -76,7 +56,7 @@ h4.heading-small
 
 .row
   .col-md-9
-    = f.input :information_text, as: :text, input_html: { rows: 4, "v-model" => "regulation.information_text" }
+    = f.input :information_text, as: :text, label: false, input_html: { rows: 4, "v-model" => "regulation.information_text" }
 
 h4.heading-small
   | Specify the validity period
@@ -89,34 +69,20 @@ h4.heading-small
 
 = f.input :effective_end_date, label: false, input_html: { class: "datepicker", "v-model" => "regulation.effective_end_date" }
 
-div v-if="canAbrogate"
-  h4.heading-small
-    | Abrogation
+h4.heading-small
+  | Specify the regulation group
 
-  .row
-    .col-md-6
-      .form-group
-        label.form-label
-          | Complete abrogation regulation
-        = content_tag "custom-select", "", { url: "/regulation_form_api/complete_abrogation_regulations", "label-field" => "description", "code-field" => "complete_abrogation_regulation_id", "value-field" => "complete_abrogation_regulation_id", placeholder: "- select complete regulation abrogation -", "allow-clear" => true, ":on-change" => "onCompleteAbrogationRegulationChange" }
+.row
+  .col-md-6
+    .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
+      span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
+      = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id", placeholder: "- select regulation group -", "allow-clear" => true }
 
-  .row
-    .col-md-6
-      .form-group
-        label.form-label
-          | Explicit abrogation regulation
-        = content_tag "custom-select", "", { url: "/regulation_form_api/explicit_abrogation_regulations", "label-field" => "description", "code-field" => "explicit_abrogation_regulation_id", "value-field" => "explicit_abrogation_regulation_id", placeholder: "- select explicit regulation abrogation -", "allow-clear" => true, ":on-change" => "onExplicitAbrogationRegulationChange" }
-
-  = f.input :abrogation_date, label: "Abrogation date", input_html: { class: "datepicker", "v-model" => "regulation.abrogation_date" }
 
 h4.heading-small
   | Upload the regulation
 
 = f.input :file, as: :file, hint: "Upload the regulation document itself, in PDF format.", label: false
-
-.row
-  .col-md-3
-    = f.input :community_code, label: "Community code", input_html: { "v-model" => "regulation.community_code" }
 
 .row
   .col-md-3

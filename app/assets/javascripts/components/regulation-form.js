@@ -24,29 +24,10 @@ $(document).ready(function() {
     },
     computed: {
       dependentOnBaseRegulation: function() {
-        var roles = ["1", "7", "6", "8", "5"];
-
-        console.log(this.regulation.role)
-
-        return this.regulation.role && roles.indexOf(this.regulation.role) === -1;
-      },
-      canHaveCompleteAbrogationLink: function() {
-        var roles = ["1", "4"];
-
-        return roles.indexOf(this.regulation.role) > -1;
-      },
-      canHaveExplicitAbrogationLink: function() {
-        var roles = ["1", "8", "4"];
-
-        return roles.indexOf(this.regulation.role) > -1;
+        return this.regulation.role === "4";
       },
       canHaveRelatedAntidumpingLink: function() {
         var roles = ["2", "3"];
-
-        return roles.indexOf(this.regulation.role) > -1;
-      },
-      canAbrogate: function() {
-        var roles = ["1", "2", "3"];
 
         return roles.indexOf(this.regulation.role) > -1;
       }
@@ -75,20 +56,6 @@ $(document).ready(function() {
         }
 
         this.regulation.base_regulation_role = item.role;
-      },
-      onCompleteAbrogationRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.complete_abrogation_regulation_role = item.role;
-      },
-      onExplicitAbrogationRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.explicit_abrogation_regulation_role = item.role;
       },
       onRelatedAntidumpingRegulationChange: function(item) {
         if (!item) {

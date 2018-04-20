@@ -2,9 +2,7 @@ module RegulationFormApi
   class BaseRegulationsController < ::BaseController
 
     def collection
-      BaseRegulation.actual
-                    .not_replaced_and_partially_replaced
-                    .q_search(params[:q])
+      BaseRegulation.q_search(:base_regulation_id, params[:q])
     end
   end
 end

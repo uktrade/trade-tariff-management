@@ -20,8 +20,6 @@ class RegulationForm
     "2" => "Partially Replaced"
   }
 
-  validates_presence_of :role, :prefix, :publication_year, :regulation_number, :validity_start_date, :regulation_group_id
-
   attr_accessor :id,
                 :role,
                 :prefix,
