@@ -1,8 +1,8 @@
 class RegulationsController < ::BaseController
 
   expose(:regulation_saver) do
-    regulation_ops = params[:regulation_form]
-    regulation_ops.send("permitted=", true)
+    regulation_ops = params.require(:regulation_form).permit
+    regulation_ops[:permitted] = true
     regulation_ops = regulation_ops.to_h
 
     ::RegulationSaver.new(regulation_ops)
@@ -26,12 +26,14 @@ class RegulationsController < ::BaseController
     if regulation_saver.valid?
       regulation_saver.persist!
 
-      render json: {
-        regulation_id: measure.regulation_id
-      }, status: :ok
+      redirect_to root_url
     else
-      render json: { errors: regulation_saver.errors },
-             status: :unprocessable_entity
+      @form = RegulationForm.new nil, params[:regulation_form]
+      regulation_saver.errors.each do |k,v|
+        @form.errors.add(k, v)
+      end
+
+      render :new
     end
   end
 end

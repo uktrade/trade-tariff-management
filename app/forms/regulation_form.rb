@@ -20,7 +20,8 @@ class RegulationForm
     "2" => "Partially Replaced"
   }
 
-  attr_accessor :role,
+  attr_accessor :id,
+                :role,
                 :prefix,
                 :publication_year,
                 :regulation_number,
@@ -35,16 +36,23 @@ class RegulationForm
                 :file,
                 :community_code,
                 :replacement_indicator,
-                :abrogation_date,
                 :officialjournal_number,
                 :officialjournal_page,
-                :complete_abrogation_regulation_role,
-                :complete_abrogation_regulation_id,
-                :explicit_abrogation_regulation_role,
-                :explicit_abrogation_regulation_id,
-                :national,
+                :antidumping_regulation_role,
+                :related_antidumping_regulation_id,
+                :regulation
 
-  def initialize(params = {})
+  def initialize(thing = nil, params = {})
+    if thing.present?
+      self.regulation = thing
+
+      thing.normalize.each do |k,v|
+        self.public_send("#{k}=", v) if self.respond_to?("#{k}=")
+      end
+
+      parse_id if self.id.present?
+    end
+
     params.each do |k,v|
       self.public_send("#{k}=", v) if self.respond_to?("#{k}=")
     end
@@ -63,6 +71,16 @@ class RegulationForm
       [ "A", "Agreement" ],
       [ "I", "Information" ],
       [ "J", "Judgement" ],
+      [ "R", "Regulation" ]
+    ]
+  end
+
+  def self.community_codes
+    [
+      [ "1", "Economic" ],
+      [ "2", "Atomic" ],
+      [ "3", "Coal" ],
+      [ "4", "Economic/Coal" ]
     ]
   end
 
@@ -91,8 +109,24 @@ class RegulationForm
       effective_end_date: effective_end_date,
       regulation_group_id: regulation_group_id,
       base_regulation_id: base_regulation_id,
-      file: file
+      base_regulation_role: base_regulation_role,
+      replacement_indicator: replacement_indicator,
+      community_code: community_code,
+      officialjournal_number: officialjournal_number,
+      officialjournal_page: officialjournal_page,
+      antidumping_regulation_role: antidumping_regulation_role,
+      related_antidumping_regulation_id: related_antidumping_regulation_id,
+      errors: errors
     }
+  end
+
+  private
+
+  def parse_id(id)
+    @prefix = @id[0]
+    @publication_year = @id[1,2]
+    @regulation_number = @id[3,4]
+    @number_suffix = @id[7, 100]
   end
 end
 

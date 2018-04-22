@@ -10,7 +10,9 @@ $(document).ready(function() {
   var app = new Vue({
     el: form,
     data: function() {
-      var data = {};
+      var data = {
+        antidumpingRoles: ["2", "3"]
+      };
 
       if (window.__regulation_json) {
         data.regulation = this.parseRegulationPayload(window.__regulation_json);
@@ -22,40 +24,40 @@ $(document).ready(function() {
     },
     computed: {
       dependentOnBaseRegulation: function() {
-        var roles = ["1", "7", "6", "8", "5"];
-
-        return this.regulation.role && roles.indexOf(this.regulation.role) === -1;
+        return this.regulation.role === "4";
       },
-      canHaveCompleteAbrogationLink: function() {
-        var roles = ["1", "4"];
-
-        return roles.indexOf(this.regulation.role) > -1;
-      },
-      canHaveExplicitAbrogationLink: function() {
-        var roles = ["1", "8", "4"];
-
-        return roles.indexOf(this.regulation.role) > -1;
-      },
-      canAbrogate: function() {
-        var roles = ["1", "2", "3"];
+      canHaveRelatedAntidumpingLink: function() {
+        var roles = ["2", "3"];
 
         return roles.indexOf(this.regulation.role) > -1;
       }
     },
     methods: {
       parseRegulationPayload: function(payload) {
+        payload.role = payload.role ? payload.role + "" : payload.role;
+
         return payload;
       },
       emptyRegulation: function() {
         return {
-          type: null,
-          base_regulation_id: null,
-          base_regulation_role: null,
+          role: null,
+          prefix: null,
+          publication_year: null,
+          regulation_number: null,
+          number_suffix: null,
+          information_text: null,
           validity_start_date: null,
           validity_end_date: null,
-          effective_enddate: null,
-          validity_start_date: null,
-          validity_start_date: null,
+          effective_end_date: null,
+          regulation_group_id: null,
+          base_regulation_id: null,
+          base_regulation_role: null,
+          replacement_indicator: null,
+          community_code: null,
+          officialjournal_number: null,
+          officialjournal_page: null,
+          antidumping_regulation_role: null,
+          related_antidumping_regulation_id: null
         }
       },
       onBaseRegulationChange: function(item) {
@@ -65,26 +67,25 @@ $(document).ready(function() {
 
         this.regulation.base_regulation_role = item.role;
       },
-      onCompleteAbrogationRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.complete_abrogation_regulation_role = item.role;
-      },
-      onExplicitAbrogationRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.explicit_abrogation_regulation_role = item.role;
-      },
       onRelatedAntidumpingRegulationChange: function(item) {
         if (!item) {
           return;
         }
 
         this.regulation.antidumping_regulation_role = item.role;
+      },
+      save: function(url, success, error) {
+        $.ajax({
+          url: url,
+          type: "POST",
+          data: {
+            regulation_form: this.regulation
+          },
+          success: success,
+          error: function(response) {
+            error(response.responseJSON.errors);
+          }
+        })
       }
     }
   });

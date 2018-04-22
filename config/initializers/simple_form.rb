@@ -35,22 +35,22 @@ SimpleForm.setup do |config|
     ## Inputs
     b.use :label, class: "form-label"
     b.use :hint,  wrap_with: { tag: :span, class: :hint }
+    b.use :error, wrap_with: { tag: :span, class: "error-message" }
     b.use :input, class: "form-control"
-    b.use :error, wrap_with: { tag: :span, class: :error }
   end
 
-  config.wrappers :bootstrap, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
+  config.wrappers :bootstrap, tag: 'div', class: 'form-group', error_class: 'form-group-error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label, class: 'form-label'
     b.wrapper tag: 'div' do |ba|
       ba.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+      ba.use :error, wrap_with: { tag: 'span', class: "error-message" }
       ba.use :input, class: "form-control"
-      ba.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     end
   end
 
-  config.wrappers :prepend, tag: 'div', class: "form-group", error_class: 'has-error' do |b|
+  config.wrappers :prepend, tag: 'div', class: "form-group", error_class: 'form-group-error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
@@ -59,11 +59,11 @@ SimpleForm.setup do |config|
         prepend.use :input, class: "form-control"
       end
       input.use :hint,  wrap_with: { tag: 'span', class: 'help-block' }
-      input.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
+      input.use :error, wrap_with: { tag: 'span', class: "error-message" }
     end
   end
 
-  config.wrappers :append, tag: 'div', class: "form-group", error_class: 'has-error' do |b|
+  config.wrappers :append, tag: 'div', class: "form-group", error_class: 'form-group-error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
@@ -72,7 +72,7 @@ SimpleForm.setup do |config|
         append.use :input, class: "form-control"
       end
       input.use :hint,  wrap_with: { tag: 'span', class: 'help-block' }
-      input.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
+      input.use :error, wrap_with: { tag: 'span', class: "error-message" }
     end
   end
 

@@ -3,20 +3,20 @@ class RegulationParamsNormalizer
   ALIASES = {
     start_date: :validity_start_date,
 
-    role: '1'
-    prefix: ''
-    publication_year: ''
-    regulation_number: ''
-    number_suffix: ''
-    replacement_indicator: ''
-    information_text: ''
-    validity_start_date: ''
-    validity_end_date: ''
-    effective_end_date: ''
-    abrogation_date: ''
-    community_code: ''
-    officialjournal_number: ''
-    officialjournal_page:
+    role: '1',
+    prefix: '',
+    publication_year: '',
+    regulation_number: '',
+    number_suffix: '',
+    replacement_indicator: '',
+    information_text: '',
+    validity_start_date: '',
+    validity_end_date: '',
+    effective_end_date: '',
+    abrogation_date: '',
+    community_code: '',
+    officialjournal_number: '',
+    officialjournal_page: ''
   }
 
   WHITELIST_PARAMS = %w(
