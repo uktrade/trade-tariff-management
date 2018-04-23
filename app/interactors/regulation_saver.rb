@@ -221,7 +221,11 @@ class RegulationSaver
 
       if regulation.conformance_errors.present?
         regulation.conformance_errors.map do |error_code, error_details_list|
-          @errors[get_error_area(error_code)] = error_details_list
+          error_key = get_error_area(error_code)
+          error_key = error_key[0] if error_key.is_a?(Array)
+          error_key = :regulation_number if error_key == regulation.primary_key[0]
+
+          @errors[error_key] = error_details_list.is_a?(Array) ? error_details_list[0] : error_details_list
         end
       end
     end
