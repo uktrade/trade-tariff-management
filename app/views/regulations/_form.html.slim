@@ -1,4 +1,5 @@
 = render "shared/vue_templates/selectize"
+= render "shared/vue_templates/date_select"
 
 .row
   .col-xs-12.col-md-11.col-lg-9
@@ -60,13 +61,31 @@
     h4.heading-small
       | Specify the regulation's validity period
 
-    = f.input :validity_start_date, label: "Start date", input_html: { class: "datepicker", "v-model" => "regulation.validity_start_date" }
-    = f.input :validity_end_date, label: "End date", hint: "Optional - leave blank if the regulation will remain in force indefinitely.", input_html: { class: "datepicker", "v-model" => "regulation.validity_end_date" }
+    = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "regulation.validity_start_date" }
+    = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "regulation.validity_end_date" }
+    .form-group v-bind:class="{ 'form-group-error': regulation.errors.validity_start_date }"
+      label.form-label
+        | End date
+        span.form-hint
+          | Optional - leave blank if the regulation will remain in force indefinitely.
+      span.error-message v-if="regulation.errors.validity_start_date" v-html="regulation.errors.validity_start_date[0]"
+      = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_start_date"  }
+
+    .form-group v-bind:class="{ 'form-group-error': regulation.errors.validity_end_date }"
+      label.form-label
+        | End date
+        span.form-hint
+          | Optional - leave blank if the regulation will remain in force indefinitely.
+      span.error-message v-if="regulation.errors.validity_end_date" v-html="regulation.errors.validity_end_date[0]"
+      = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_end_date"  }
 
     h4.heading-small
       | Specify the effective end date
 
-    = f.input :effective_end_date, label: false, input_html: { class: "datepicker", "v-model" => "regulation.effective_end_date" }
+    = f.input :effective_end_date, as: :hidden, input_html: { "v-model" => "regulation.effective_end_date" }
+    .form-group v-bind:class="{ 'form-group-error': regulation.errors.effective_end_date }"
+      span.error-message v-if="regulation.errors.effective_end_date" v-html="regulation.errors.effective_end_date[0]"
+      = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.effective_end_date"  }
 
     h4.heading-small
       | Specify the regulation group
@@ -92,4 +111,7 @@
     h4.heading-small
       | Specify the operation date
 
-    = f.input :operation_date, label: false, input_html: { class: "datepicker", "v-model" => "regulation.operation_date" }
+    = f.input :operation_date, as: :hidden, input_html: { "v-model" => "regulation.operation_date" }
+    .form-group v-bind:class="{ 'form-group-error': regulation.errors.operation_date }"
+      span.error-message v-if="regulation.errors.operation_date" v-html="regulation.errors.operation_date[0]"
+      = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.operation_date"  }
