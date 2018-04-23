@@ -14,6 +14,7 @@ Vue.component('custom-select', {
     "drilldownValue",
     "drilldownRequired",
     "onChange",
+    "allowClear",
     "name"
   ],
   data: function() {
@@ -33,6 +34,7 @@ Vue.component('custom-select', {
       placeholder: this.placeholder,
       valueField: this.valueField,
       labelField: this.labelField,
+      allowClear: this.allowClear || false,
       searchField: [this.valueField, this.codeField, this.labelField]
     };
 

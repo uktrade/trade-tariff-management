@@ -20,9 +20,6 @@ $(document).ready(function() {
         data.regulation = this.emptyRegulation();
       }
 
-      // TODO: fix me
-      data.errors = {};
-
       return data;
     },
     computed: {
@@ -76,19 +73,6 @@ $(document).ready(function() {
         }
 
         this.regulation.antidumping_regulation_role = item.role;
-      },
-      save: function(url, success, error) {
-        $.ajax({
-          url: url,
-          type: "POST",
-          data: {
-            regulation_form: this.regulation
-          },
-          success: success,
-          error: function(response) {
-            error(response.responseJSON.errors);
-          }
-        })
       }
     }
   });
