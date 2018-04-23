@@ -16,6 +16,15 @@ input.date-picker {
   }
 }
 
+.help-block {
+  color: $secondary-text-colour;
+  margin: 0 0 0.3em;
+
+  @media (min-width: 641px) {
+    font-size: 19px;
+  }
+}
+
 label abbr {
   display: none !important;
 }
