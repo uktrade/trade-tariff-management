@@ -120,13 +120,20 @@ class RegulationSaver
     operation_date
   )
 
-  attr_accessor :target_class,
+  ADVANCED_VALIDATION_MODELS = %w(
+    BaseRegulation
+    ModificationRegulation
+  )
+
+  attr_accessor :current_admin,
+                :target_class,
                 :original_params,
                 :regulation_params,
                 :regulation,
                 :errors
 
-  def initialize(regulation_params={})
+  def initialize(current_admin, regulation_params={})
+    @current_admin = current_admin
     @original_params = ActiveSupport::HashWithIndifferentAccess.new(regulation_params)
 
     Rails.logger.info ""
@@ -164,6 +171,8 @@ class RegulationSaver
     regulation.manual_add = true
     regulation.operation = "C"
     regulation.operation_date = operation_date
+    regulation.added_by_id = current_admin.id
+    regulation.added_at = Time.zone.now
 
     attempts = 5
 
@@ -197,11 +206,13 @@ class RegulationSaver
     end
 
     def validate!
-      regulation_base_validation!
+      if ADVANCED_VALIDATION_MODELS.include?(target_class.to_s)
+        regulation_advanced_validation!
+      end
     end
 
-    def regulation_base_validation!
-      @base_validator = base_validator.validate(regulation)
+    def regulation_advanced_validation!
+      @advanced_validator = advanced_validator.validate(regulation)
 
       if regulation.conformance_errors.present?
         regulation.conformance_errors.map do |error_code, error_details_list|
@@ -210,12 +221,12 @@ class RegulationSaver
       end
     end
 
-    def base_validator
-      @base_validator ||= "#{target_class}Validator".constantize.new
+    def advanced_validator
+      @advanced_validator ||= "#{target_class}Validator".constantize.new
     end
 
     def get_error_area(error_code)
-      base_validator.detect do |v|
+      advanced_validator.detect do |v|
         v.identifiers == error_code
       end.validation_options[:of]
     end

@@ -5,7 +5,7 @@ class RegulationsController < ::BaseController
     regulation_ops.send("permitted=", true)
     regulation_ops = regulation_ops.to_h
 
-    ::RegulationSaver.new(regulation_ops)
+    ::RegulationSaver.new(current_user, regulation_ops)
   end
 
   expose(:regulation) do
@@ -19,6 +19,14 @@ class RegulationsController < ::BaseController
   end
 
   def new
+    Rails.logger.info ""
+    Rails.logger.info "-" * 100
+    Rails.logger.info ""
+    Rails.logger.info " current_user: #{current_user.inspect} "
+    Rails.logger.info ""
+    Rails.logger.info "-" * 100
+    Rails.logger.info ""
+
     @form = RegulationForm.new
   end
 

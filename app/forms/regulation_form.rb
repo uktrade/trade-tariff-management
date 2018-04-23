@@ -40,7 +40,8 @@ class RegulationForm
                 :officialjournal_page,
                 :antidumping_regulation_role,
                 :related_antidumping_regulation_id,
-                :regulation
+                :regulation,
+                :operation_date
 
   def initialize(thing = nil, params = {})
     if thing.present?
@@ -116,6 +117,7 @@ class RegulationForm
       officialjournal_page: officialjournal_page,
       antidumping_regulation_role: antidumping_regulation_role,
       related_antidumping_regulation_id: related_antidumping_regulation_id,
+      operation_date: operation_date,
       errors: errors
     }
   end
