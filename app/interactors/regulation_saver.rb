@@ -221,7 +221,21 @@ class RegulationSaver
     end
 
     def post_saving_updates!
-      # TODO
+      save_pdf_document!
+    end
+
+    def save_pdf_document!
+      if original_params[:pdf_data].present?
+        doc = RegulationDocument.new(
+          regulation_id: regulation.public_send(primary_key[0]),
+          regulation_role: regulation.public_send(primary_key[1]),
+          regulation_id_key: target_class.primary_key[0],
+          regulation_role_key: target_class.primary_key[1]
+        )
+
+        doc.pdf = original_params[:pdf_data]
+        doc.save
+      end
     end
 
     def operation_date
