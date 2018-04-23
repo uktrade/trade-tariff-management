@@ -2,6 +2,7 @@ class ModificationRegulation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::FormApiHelpers::RegulationSearch
+  include ::RegulationDocumentContext
 
   plugin :oplog, primary_key: [:modification_regulation_id,
                                :modification_regulation_role]

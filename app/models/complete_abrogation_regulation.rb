@@ -2,6 +2,7 @@ class CompleteAbrogationRegulation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::FormApiHelpers::RegulationSearch
+  include ::RegulationDocumentContext
 
   set_primary_key [:complete_abrogation_regulation_id, :complete_abrogation_regulation_role]
 
