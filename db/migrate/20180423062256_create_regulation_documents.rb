@@ -7,6 +7,8 @@ Sequel.migration do
       String :regulation_id_key
       String :regulation_role_key
       Text :pdf_data
+      Time :updated_at
+      Time :created_at
     end
   end
 end

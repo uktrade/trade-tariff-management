@@ -5850,6 +5850,41 @@ ALTER SEQUENCE quota_unsuspension_events_oid_seq OWNED BY quota_unsuspension_eve
 
 
 --
+-- Name: regulation_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE regulation_documents (
+    id integer NOT NULL,
+    regulation_id text,
+    regulation_role text,
+    regulation_id_key text,
+    regulation_role_key text,
+    pdf_data text,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: regulation_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE regulation_documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: regulation_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE regulation_documents_id_seq OWNED BY regulation_documents.id;
+
+
+--
 -- Name: regulation_group_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7134,6 +7169,13 @@ ALTER TABLE ONLY quota_unsuspension_events_oplog ALTER COLUMN oid SET DEFAULT ne
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY regulation_documents ALTER COLUMN id SET DEFAULT nextval('regulation_documents_id_seq'::regclass);
+
+
+--
 -- Name: oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8030,6 +8072,14 @@ ALTER TABLE ONLY quota_unblocking_events_oplog
 
 ALTER TABLE ONLY quota_unsuspension_events_oplog
     ADD CONSTRAINT quota_unsuspension_events_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: regulation_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY regulation_documents
+    ADD CONSTRAINT regulation_documents_pkey PRIMARY KEY (id);
 
 
 --
@@ -10197,3 +10247,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180406152439_remove_xml_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180410100532_create_db_rollbacks.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180417135500_change_relevant_date_in_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180417141804_change_clear_date_in_db_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180423062256_create_regulation_documents.rb');
