@@ -1,2 +1,4 @@
 script type="text/x-template" id="selectize-template"
-  select v-model="value"
+  div
+    slot
+      select v-model="value" :name="name"

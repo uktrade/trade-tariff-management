@@ -21,7 +21,7 @@ $(document).ready(function(){
       format: "DD/MM/YYYY",
       blurFieldOnSelect: true,
       onSelect: function() {
-        field.trigger("change");
+        $(this).trigger("change");
       }
     });
   });

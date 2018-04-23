@@ -1,0 +1,95 @@
+= render "shared/vue_templates/selectize"
+
+h4.heading-small
+  | Specify the regulation type
+.row
+  .col-md-6
+    = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.role" } do
+      = f.input :role, as: :select, collection: RegulationForm.regulation_roles, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select regulation type -"
+
+div v-if="dependentOnBaseRegulation"
+  h4.heading-small
+    | Specify the base regulation
+  .row
+    .col-md-6
+      = f.input :base_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.base_regulation_role" }
+      = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.base_regulation_id", placeholder: "- select base regulation -", ":on-change" => "onBaseRegulationChange", "name" => "regulation_form[base_regulation_id]" }
+
+div v-if="canHaveRelatedAntidumpingLink"
+  h4.heading-small
+    | Specify a related antidumping regulation
+  .row
+    .col-md-6
+      = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
+      = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles" }
+
+h4.heading-small
+  | Specify the community code
+.row
+  .col-md-3
+    = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code" } do
+      = f.input :community_code, as: :select, collection: RegulationForm.community_codes, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select community code -"
+
+h4.heading-small
+  | Specify the regulation identifier
+
+.row
+  .col-md-3
+    = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.prefix" } do
+      = f.input :prefix, as: :select, collection: RegulationForm.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -"
+  .col-md-3
+    = f.input :publication_year, label: "Publication year", input_html: { placeholder: "YY", "v-model" => "regulation.publication_year" }
+  .col-md-3
+    = f.input :regulation_number, label: "Regulation number", input_html: { placeholder: "####", "v-model" => "regulation.regulation_number" }
+  .col-md-3
+    = f.input :number_suffix, label: "Number suffix", input_html: { placeholder: "Optional", "v-model" => "regulation.number_suffix" }
+
+.row
+  .col-md-4
+    .form-group v-bind:class="{ 'form-group-error': errors.replacement_indicator }"
+      label.form-label
+        | Replacement indicator
+      span.error-message v-if="errors.replacement_indicator" v-html="errors.replacement_indicator"
+
+      = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.replacement_indicator" } do
+        = f.input :replacement_indicator, as: :select, collection: RegulationForm::REPLACEMENT_INDICATORS, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select replacement indicator -"
+
+
+h4.heading-small
+  | Give the regulation name
+
+.row
+  .col-md-9
+    = f.input :information_text, as: :text, label: false, input_html: { rows: 4, "v-model" => "regulation.information_text" }
+
+h4.heading-small
+  | Specify the validity period
+
+= f.input :validity_start_date, label: "Start date", input_html: { class: "datepicker", "v-model" => "regulation.validity_start_date" }
+= f.input :validity_end_date, label: "End date", hint: "Optional - leave blank if the regulation will remain in force indefinitely.", input_html: { class: "datepicker", "v-model" => "regulation.validity_end_date" }
+
+h4.heading-small
+  | Specify the effective end date
+
+= f.input :effective_end_date, label: false, input_html: { class: "datepicker", "v-model" => "regulation.effective_end_date" }
+
+h4.heading-small
+  | Specify the regulation group
+
+.row
+  .col-md-6
+    .form-group v-bind:class="{ 'form-group-error': errors.regulation_group_id }"
+      span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
+      = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id", placeholder: "- select regulation group -", "allow-clear" => true }
+
+
+h4.heading-small
+  | Upload the regulation
+
+= f.input :file, as: :file, hint: "Upload the regulation document itself, in PDF format.", label: false
+
+.row
+  .col-md-3
+    = f.input :officialjournal_number, label: "Official journal number", input_html: { "v-model" => "regulation.officialjournal_number" }
+  .col-md-3
+    = f.input :officialjournal_page, label: "Official journal page", input_html: { "v-model" => "regulation.officialjournal_page" }
