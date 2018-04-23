@@ -20,6 +20,10 @@ $(document).ready(function() {
         data.regulation = this.emptyRegulation();
       }
 
+      if (!data.regulation.replacement_indicator) {
+        data.regulation.replacement_indicator = "0";
+      }
+
       return data;
     },
     computed: {
@@ -52,7 +56,7 @@ $(document).ready(function() {
           regulation_group_id: null,
           base_regulation_id: null,
           base_regulation_role: null,
-          replacement_indicator: null,
+          replacement_indicator: "0",
           community_code: null,
           officialjournal_number: null,
           officialjournal_page: null,

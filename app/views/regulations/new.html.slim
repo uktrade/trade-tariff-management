@@ -7,11 +7,11 @@
       = link_to "Regulations", regulations_url
 
     li aria-current="page"
-      | Create a regulation
+      | Create a new regulation
 
 header
-  h1.heading-large
-    | Create a regulation
+  h1.heading-xlarge
+    | Create a new regulation
 
 javascript:
   window.__regulation_json = #{safe_json(@form.to_json)};
