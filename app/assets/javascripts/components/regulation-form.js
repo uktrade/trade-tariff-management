@@ -20,6 +20,9 @@ $(document).ready(function() {
         data.regulation = this.emptyRegulation();
       }
 
+      // TODO: fix me
+      data.errors = {};
+
       return data;
     },
     computed: {
