@@ -23,6 +23,14 @@ class RegulationsController < ::BaseController
   end
 
   def create
+    Rails.logger.info ""
+    Rails.logger.info "-" * 100
+    Rails.logger.info ""
+    Rails.logger.info "regulation_form: #{params[:regulation_form].inspect}"
+    Rails.logger.info ""
+    Rails.logger.info "-" * 100
+    Rails.logger.info ""
+
     if regulation_saver.valid?
       regulation_saver.persist!
 

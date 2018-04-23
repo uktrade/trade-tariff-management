@@ -2,7 +2,6 @@ class RegulationParamsNormalizer
 
   ALIASES = {
     start_date: :validity_start_date,
-
     role: '1',
     prefix: '',
     publication_year: '',
