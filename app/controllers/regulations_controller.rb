@@ -22,6 +22,13 @@ class RegulationsController < ::BaseController
     base_regs.to_a.concat mod_regs.to_a
   end
 
+  def index
+    respond_to do |format|
+      format.html
+      format.json { render json: json_list, status: :ok }
+    end
+  end
+
   def new
     @form = RegulationForm.new
   end
