@@ -1,52 +1,47 @@
 class RegulationParamsNormalizer
 
   ALIASES = {
-    start_date: :validity_start_date,
-    role: '1',
-    prefix: '',
-    publication_year: '',
-    regulation_number: '',
-    number_suffix: '',
-    replacement_indicator: '',
-    information_text: '',
-    validity_start_date: '',
-    validity_end_date: '',
-    effective_end_date: '',
-    abrogation_date: '',
-    community_code: '',
-    officialjournal_number: '',
-    officialjournal_page: ''
+    role: :method_regulation_role
   }
 
   WHITELIST_PARAMS = %w(
-    regulation_group_id
     role
+    community_code
     prefix
     publication_year
     regulation_number
+    number_suffix
     replacement_indicator
     information_text
     validity_start_date
     validity_end_date
     abrogation_date
     effective_end_date
-    base_regulation_id
-    base_regulation_role
+    regulation_group_id
+    officialjournal_number
+    officialjournal_page
+
     antidumping_regulation_role
     related_antidumping_regulation_id
     complete_abrogation_regulation_role
     complete_abrogation_regulation_id
     explicit_abrogation_regulation_role
     explicit_abrogation_regulation_id
-    community_code
-    officialjournal_number
-    officialjournal_page
+
     operation_date
   )
 
-  attr_accessor :normalized_params
+  REQUIRED_NUMBER_COMPONENTS = %w(
+    prefix
+    publication_year
+    regulation_number
+  )
+
+  attr_accessor :reg_params,
+                :normalized_params
 
   def initialize(regulation_params)
+    @reg_params = regulation_params
     @normalized_params = {}
 
     whitelist = regulation_params.select do |k, v|
@@ -69,27 +64,64 @@ class RegulationParamsNormalizer
 
     @normalized_params
   end
+
+  def method_regulation_role(role)
+    ops = {}
+
+    case role
+    when "1", "2", "3"
+      BaseRegulation
+    when "4"
+      ModificationRegulation
+    when "5"
+      ProrogationRegulation
+    when "6"
+      CompleteAbrogationRegulation
+    when "7"
+      ExplicitAbrogationRegulation
+    when "8"
+      FullTemporaryStopRegulation
+    end
+
+    @normalized_params[:target_class] = target_class
+
+    ops[target_class.primary_key[1]] = role
+    ops[target_class.primary_key[0]] = fetch_regulation_number
+
+    ops
+  end
+
+  def fetch_regulation_number
+    missing_component = REQUIRED_NUMBER_COMPONENTS.any? do |component_name|
+      reg_params[component_name].blank?
+    end
+
+    return nil if missing_component
+
+    base = "#{reg_params[:prefix]}#{reg_params[:publication_year]}#{reg_params[:regulation_number]}"
+    base += reg_params[:number_suffix]
+
+    base.delete(' ')
+  end
 end
 
 class RegulationSaver
 
-  REQUIRED_PARAMS = {
-    regulation_group_id: :regulation_group_id,
-    role: :method_role,
-    prefix: :prefix,
-    publication_year: :publication_year,
-    regulation_number: :regulation_number,
-    replacement_indicator: :replacement_indicator,
-    information_text: :information_text,
-    validity_start_date: :validity_start_date,
-    operation_date: :operation_date
-  }
+  REQUIRED_PARAMS = %w(
+    role
+    prefix
+    publication_year
+    regulation_number
+    number_suffix
+    replacement_indicator
+    information_text
+    validity_start_date
+    regulation_group_id
+    operation_date
+  )
 
-  PRIMARY_KEYS = {
-    "QuotaDefinition" => :quota_definition_sid
-  }
-
-  attr_accessor :original_params,
+  attr_accessor :target_class,
+                :original_params,
                 :regulation_params,
                 :regulation,
                 :errors
@@ -106,6 +138,7 @@ class RegulationSaver
     Rails.logger.info ""
 
     @regulation_params = ::RegulationParamsNormalizer.new(regulation_params).normalized_params
+    @target_class = @regulation_params[:target_class]
 
     p ""
     p "-" * 100
@@ -138,7 +171,6 @@ class RegulationSaver
       regulation.save
     rescue Exception => e
       attempts -= 1
-      generate_regulation_sid
 
       if attempts > 0
         retry
@@ -150,23 +182,11 @@ class RegulationSaver
     post_saving_updates!
 
     p ""
-    p "[SAVED REGULATION] id: #{regulation.regulation_id} | #{regulation.inspect}"
+    p "[SAVED REGULATION OPS] #{regulation.inspect}"
     p ""
   end
 
   private
-
-    def modification_regulation?
-      original_params[:role] == "4"
-    end
-
-    def target_class
-      if modification_regulation?
-        ModificationRegulationValidator
-      else
-        BaseRegulationValidator
-      end
-    end
 
     def check_required_params!
       REQUIRED_PARAMS.map do |k, v|

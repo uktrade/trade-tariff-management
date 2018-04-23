@@ -86,10 +86,15 @@ h4.heading-small
 h4.heading-small
   | Upload the regulation
 
-= f.input :file, as: :file, hint: "Upload the regulation document itself, in PDF format.", label: false
+= f.input :pdf_data, as: :file, hint: "Upload the regulation document itself, in PDF format.", label: false
 
 .row
   .col-md-3
     = f.input :officialjournal_number, label: "Official journal number", input_html: { "v-model" => "regulation.officialjournal_number" }
   .col-md-3
     = f.input :officialjournal_page, label: "Official journal page", input_html: { "v-model" => "regulation.officialjournal_page" }
+
+h4.heading-small
+  | Specify the operation date
+
+= f.input :operation_date, label: false, input_html: { class: "datepicker", "v-model" => "regulation.operation_date" }
