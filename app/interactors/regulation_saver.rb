@@ -107,7 +107,6 @@ class RegulationSaver
     :prefix,
     :publication_year,
     :regulation_number,
-    :number_suffix,
     :replacement_indicator,
     :information_text,
     :validity_start_date,
