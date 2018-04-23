@@ -3,7 +3,7 @@ script type="text/x-template" id="measure-origin-template"
     .multiple-choice
       input type='radio' :id="radioID" class="radio-inline-group" name="geographical_area_type" :checked="origin.selected"
       label v-if="notErgaOmnes"
-        = content_tag "custom-select", "", { ":options" => "optionsForSelect", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", ":placeholder": "placeholder", "v-model" => "origin.geographical_area_id", class: "origin-select" }
+        = content_tag "custom-select", "", { ":options" => "optionsForSelect", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", ":placeholder": "placeholder", "v-model" => "origin.geographical_area_id", class: "origin-select", "code-class-name" => "prefix--region" }
       label :for="radioID" v-else=""
         | ERGA OMNES (all origins)
 
@@ -14,7 +14,7 @@ script type="text/x-template" id="measure-origin-template"
       .exclusions-target
         .exclusion v-for="exclusion in origin.exclusions"
           .exclusion-select
-            = content_tag "custom-select", "", { ":options" => "exclusion.options", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", "placeholder": "― start typing ―", "min-length" => 1, "v-model" => "exclusion.geographical_area_id", class: "origin-select" }
+            = content_tag "custom-select", "", { ":options" => "exclusion.options", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", "placeholder": "― start typing ―", "min-length" => 1, "v-model" => "exclusion.geographical_area_id", class: "origin-select", "code-class-name" => "prefix--country" }
           .exclusion-actions v-if="origin.exclusions.length > 1"
             a.remove-link v-on:click.prevent="removeExclusion(exclusion)"
                | Remove

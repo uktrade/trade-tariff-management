@@ -7,7 +7,7 @@
       | Specify the regulation type
     .row
       .col-md-6
-        = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.role" } do
+        = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.role", "code-class-name" => "prefix--l1" } do
           = f.input :role, as: :select, collection: RegulationForm.regulation_roles, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select regulation type -"
 
     div v-if="dependentOnBaseRegulation"
@@ -16,7 +16,7 @@
       .row
         .col-md-6
           = f.input :base_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.base_regulation_role" }
-          = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.base_regulation_id", placeholder: "- select base regulation -", ":on-change" => "onBaseRegulationChange", "name" => "regulation_form[base_regulation_id]" }
+          = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.base_regulation_id", placeholder: "- select base regulation -", ":on-change" => "onBaseRegulationChange", "name" => "regulation_form[base_regulation_id]", "code-class-name" => "prefix--regulation" }
 
     div v-if="canHaveRelatedAntidumpingLink"
       h4.heading-small
@@ -24,13 +24,13 @@
       .row
         .col-md-6
           = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
-          = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles" }
+          = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles", "code-class-name" => "prefix--regulation" }
 
     h4.heading-small
       | Specify the community code
     .row
       .col-md-4
-        = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code" } do
+        = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code", "code-class-name" => "prefix--l1" } do
           = f.input :community_code, as: :select, collection: RegulationForm.community_codes, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select community code -"
 
     h4.heading-small
@@ -39,7 +39,7 @@
     .row
       .col-md-3
         = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.prefix" } do
-          = f.input :prefix, as: :select, collection: RegulationForm.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -"
+          = f.input :prefix, as: :select, collection: RegulationForm.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -", "code-class-name" => "prefix--l1"
       .col-md-3
         = f.input :publication_year, label: "Publication year", input_html: { placeholder: "YY", "v-model" => "regulation.publication_year" }
       .col-md-3
@@ -49,7 +49,7 @@
 
     .row
       .col-md-4
-        = content_tag "custom-select", { "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.replacement_indicator" } do
+        = content_tag "custom-select", { "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.replacement_indicator", "code-class-name" => "prefix--l1" } do
           = f.input :replacement_indicator, as: :select, collection: RegulationForm::REPLACEMENT_INDICATORS, value_method: :first, label_method: :last, label: "Replacement indicator", include_blank: true, prompt: "- select replacement indicator -"
 
 
@@ -92,7 +92,7 @@
       .col-md-6
         .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
           span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
-          = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true }
+          = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }
 
 
     h4.heading-small
