@@ -1,8 +1,8 @@
 class RegulationsController < ::BaseController
 
   expose(:regulation_saver) do
-    regulation_ops = params.require(:regulation_form).permit
-    regulation_ops[:permitted] = true
+    regulation_ops = params[:regulation_form]
+    regulation_ops.send("permitted=", true)
     regulation_ops = regulation_ops.to_h
 
     ::RegulationSaver.new(regulation_ops)
@@ -23,14 +23,6 @@ class RegulationsController < ::BaseController
   end
 
   def create
-    Rails.logger.info ""
-    Rails.logger.info "-" * 100
-    Rails.logger.info ""
-    Rails.logger.info "regulation_form: #{params[:regulation_form].inspect}"
-    Rails.logger.info ""
-    Rails.logger.info "-" * 100
-    Rails.logger.info ""
-
     if regulation_saver.valid?
       regulation_saver.persist!
 

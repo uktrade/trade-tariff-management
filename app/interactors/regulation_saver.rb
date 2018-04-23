@@ -96,6 +96,15 @@ class RegulationSaver
 
   def initialize(regulation_params={})
     @original_params = ActiveSupport::HashWithIndifferentAccess.new(regulation_params)
+
+    Rails.logger.info ""
+    Rails.logger.info "-" * 100
+    Rails.logger.info ""
+    Rails.logger.info "regulation_params: #{regulation_params.inspect}"
+    Rails.logger.info ""
+    Rails.logger.info "-" * 100
+    Rails.logger.info ""
+
     @regulation_params = ::RegulationParamsNormalizer.new(regulation_params).normalized_params
 
     p ""
