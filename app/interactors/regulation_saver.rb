@@ -247,8 +247,8 @@ class RegulationSaver
     def save_pdf_document!
       if original_params[:pdf_data].present?
         doc = RegulationDocument.new(
-          regulation_id: regulation.public_send(primary_key[0]),
-          regulation_role: regulation.public_send(primary_key[1]),
+          regulation_id: regulation.public_send(target_class.primary_key[0]),
+          regulation_role: regulation.public_send(target_class.primary_key[1]),
           regulation_id_key: target_class.primary_key[0],
           regulation_role_key: target_class.primary_key[1]
         )

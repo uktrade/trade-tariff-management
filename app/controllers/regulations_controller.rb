@@ -12,6 +12,10 @@ class RegulationsController < ::BaseController
     regulation_saver.regulation
   end
 
+  expose(:pdf_document) do
+    regulation.pdf_document_record
+  end
+
   def collection
     base_regs = BaseRegulation.q_search(:base_regulation_id, params[:q])
     mod_regs = ModificationRegulation.q_search(:modification_regulation_id, params[:q])
