@@ -7,4 +7,10 @@ class ModificationRegulationValidator < TradeTariffBackend::Validator
   validation :ROIMM5, 'The start date must be less than or equal to the end date if the end date is explicit.' do
     validates :validity_dates
   end
+
+  validation :on_officialjournal_page, 'Official journal page should be a number', on: [:create, :update] do
+    validates :integer, of: :officialjournal_page,
+                        allow_nil: true,
+                        allow_blank: true
+  end
 end
