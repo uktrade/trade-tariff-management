@@ -7,10 +7,6 @@ class RegulationParamsNormalizer
   WHITELIST_PARAMS = %w(
     role
     community_code
-    prefix
-    publication_year
-    regulation_number
-    number_suffix
     replacement_indicator
     information_text
     validity_start_date
@@ -38,7 +34,8 @@ class RegulationParamsNormalizer
   )
 
   attr_accessor :reg_params,
-                :normalized_params
+                :normalized_params,
+                :target_class
 
   def initialize(regulation_params)
     @reg_params = regulation_params
@@ -68,7 +65,7 @@ class RegulationParamsNormalizer
   def method_regulation_role(role)
     ops = {}
 
-    case role
+    @target_class = case role
     when "1", "2", "3"
       BaseRegulation
     when "4"
@@ -82,8 +79,6 @@ class RegulationParamsNormalizer
     when "8"
       FullTemporaryStopRegulation
     end
-
-    @normalized_params[:target_class] = target_class
 
     ops[target_class.primary_key[1]] = role
     ops[target_class.primary_key[0]] = fetch_regulation_number
@@ -107,18 +102,18 @@ end
 
 class RegulationSaver
 
-  REQUIRED_PARAMS = %w(
-    role
-    prefix
-    publication_year
-    regulation_number
-    number_suffix
-    replacement_indicator
-    information_text
-    validity_start_date
-    regulation_group_id
-    operation_date
-  )
+  REQUIRED_PARAMS = [
+    :role,
+    :prefix,
+    :publication_year,
+    :regulation_number,
+    :number_suffix,
+    :replacement_indicator,
+    :information_text,
+    :validity_start_date,
+    :regulation_group_id,
+    :operation_date
+  ]
 
   ADVANCED_VALIDATION_MODELS = %w(
     BaseRegulation
@@ -130,6 +125,7 @@ class RegulationSaver
                 :original_params,
                 :regulation_params,
                 :regulation,
+                :normalizer,
                 :errors
 
   def initialize(current_admin, regulation_params={})
@@ -144,8 +140,9 @@ class RegulationSaver
     Rails.logger.info "-" * 100
     Rails.logger.info ""
 
-    @regulation_params = ::RegulationParamsNormalizer.new(regulation_params).normalized_params
-    @target_class = @regulation_params[:target_class]
+    @normalizer = ::RegulationParamsNormalizer.new(regulation_params)
+    @regulation_params = normalizer.normalized_params
+    @target_class = normalizer.target_class
 
     p ""
     p "-" * 100
@@ -162,7 +159,15 @@ class RegulationSaver
     check_required_params!
     return false if @errors.present?
 
-    @regulation = target_class.new(regulation_params)
+    @regulation = target_class.new(
+      regulation_params.reject do |k ,v|
+        k == target_class.primary_key[0] ||
+        k == target_class.primary_key[1]
+      end
+    )
+    regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
+    regulation.public_send("#{target_class.primary_key[1]}=", regulation_params[target_class.primary_key[1]])
+
     validate!
     errors.blank?
   end
@@ -198,9 +203,9 @@ class RegulationSaver
   private
 
     def check_required_params!
-      REQUIRED_PARAMS.map do |k, v|
+      REQUIRED_PARAMS.map do |k|
         if original_params[k.to_s].blank?
-          @errors[v.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+          @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
         end
       end
     end
