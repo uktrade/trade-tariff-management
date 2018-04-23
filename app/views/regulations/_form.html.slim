@@ -65,9 +65,7 @@
     = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "regulation.validity_end_date" }
     .form-group v-bind:class="{ 'form-group-error': regulation.errors.validity_start_date }"
       label.form-label
-        | End date
-        span.form-hint
-          | Optional - leave blank if the regulation will remain in force indefinitely.
+        | Start date
       span.error-message v-if="regulation.errors.validity_start_date" v-html="regulation.errors.validity_start_date[0]"
       = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_start_date"  }
 
