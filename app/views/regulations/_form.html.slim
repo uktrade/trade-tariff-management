@@ -28,7 +28,7 @@
     h4.heading-small
       | Specify the community code
     .row
-      .col-md-3
+      .col-md-4
         = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code" } do
           = f.input :community_code, as: :select, collection: RegulationForm.community_codes, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select community code -"
 
