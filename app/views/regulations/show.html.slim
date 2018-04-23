@@ -1,0 +1,27 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Regulations", regulations_url
+
+    li aria-current="page"
+      = regulation.class
+
+header
+  h1.heading-large
+    = "#{regulation.class} #{regulation.public_send(regulation.class.primary_key[0])}"
+
+ul
+  - regulation.db_schema.keys.map do |k|
+    - title = k.to_s.upcase
+    - title = title.gsub('_', ' ') if title.include?('_')
+
+    li
+      strong style="font-weight: bold"
+        = "#{title} :"
+      =<> regulation.public_send(k)
+
+br
+br

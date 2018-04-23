@@ -22,11 +22,20 @@ class RegulationsController < ::BaseController
     @form = RegulationForm.new
   end
 
+  def show
+    self.regulation = params[:target_class].constantize.filter(
+      oid: params[:id]
+    ).first
+  end
+
   def create
     if regulation_saver.valid?
       regulation_saver.persist!
 
-      redirect_to root_url
+      redirect_to regulation_url(
+        regulation.oid,
+        target_class: regulation.class.to_s
+      )
     else
       @form = RegulationForm.new nil, params[:regulation_form]
       regulation_saver.errors.each do |k,v|
