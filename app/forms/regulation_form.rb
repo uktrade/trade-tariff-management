@@ -41,7 +41,9 @@ class RegulationForm
                 :antidumping_regulation_role,
                 :related_antidumping_regulation_id,
                 :regulation,
-                :operation_date
+                :operation_date,
+                :published_date,
+                :abrogation_date
 
   def initialize(thing = nil, params = {})
     if thing.present?

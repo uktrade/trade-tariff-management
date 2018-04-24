@@ -26,12 +26,21 @@ $(document).ready(function() {
     },
     computed: {
       dependentOnBaseRegulation: function() {
-        return this.regulation.role === "4";
+        return $.inArray(this.regulation.role, ['4', '6', '7']) !== -1;
       },
       canHaveRelatedAntidumpingLink: function() {
         var roles = ["2", "3"];
 
         return roles.indexOf(this.regulation.role) > -1;
+      },
+      notAbrogationType: function() {
+        return this.regulation.role !== "6" && this.regulation.role !== "7";
+      },
+      isAbrogation: function() {
+        return this.regulation.role === "6" || this.regulation.role === "7";
+      },
+      isExplicitAbrogation: function() {
+        return this.regulation.role === "7";
       }
     },
     methods: {

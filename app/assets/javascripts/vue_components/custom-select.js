@@ -139,45 +139,45 @@ Vue.component('custom-select', {
       vm.$emit('input', this.value);
     });
 
-    if (this.dateSensitive) {
-      this.handleDateSentitivity = function(event, start_date, end_date) {
-        vm.start_date = start_date;
-        vm.end_date = end_date;
+    this.handleDateSentitivity = function(event, start_date, end_date) {
+      vm.start_date = start_date;
+      vm.end_date = end_date;
 
-        var data = {
-          q: $(vm.$el).find("select")[0].selectize.query,
-          start_date: start_date,
-          end_date: end_date
-        };
-
-        if (vm.drilldownName && vm.drilldownValue) {
-          data[vm.drilldownName] = vm.drilldownValue;
-        }
-
-        $(vm.$el).find("select")[0].selectize.clear(true);
-        $(vm.$el).find("select")[0].selectize.clearOptions();
-        $(vm.$el).find("select")[0].selectize.clearCache();
-        $(vm.$el).find("select")[0].selectize.refreshOptions();
-        $(vm.$el).find("select")[0].selectize.renderCache['option'] = {};
-        $(vm.$el).find("select")[0].selectize.renderCache['item'] = {};
-
-        if (!vm.minLength) {
-          $(vm.$el).find("select")[0].selectize.load(function(callback) {
-            $.ajax({
-              url: vm.url,
-              data: data,
-              type: 'GET',
-              error: function() {
-                callback();
-              },
-              success: function(res) {
-                callback(res);
-              }
-            });
-          });
-        }
+      var data = {
+        q: $(vm.$el).find("select")[0].selectize.query,
+        start_date: start_date,
+        end_date: end_date
       };
 
+      if (vm.drilldownName && vm.drilldownValue) {
+        data[vm.drilldownName] = vm.drilldownValue;
+      }
+
+      $(vm.$el).find("select")[0].selectize.clear(true);
+      $(vm.$el).find("select")[0].selectize.clearOptions();
+      $(vm.$el).find("select")[0].selectize.clearCache();
+      $(vm.$el).find("select")[0].selectize.refreshOptions();
+      $(vm.$el).find("select")[0].selectize.renderCache['option'] = {};
+      $(vm.$el).find("select")[0].selectize.renderCache['item'] = {};
+
+      if (!vm.minLength) {
+        $(vm.$el).find("select")[0].selectize.load(function(callback) {
+          $.ajax({
+            url: vm.url,
+            data: data,
+            type: 'GET',
+            error: function() {
+              callback();
+            },
+            success: function(res) {
+              callback(res);
+            }
+          });
+        });
+      }
+    };
+
+    if (this.dateSensitive) {
       $(".measure-form").on("dates:changed", this.handleDateSentitivity);
     }
   },
