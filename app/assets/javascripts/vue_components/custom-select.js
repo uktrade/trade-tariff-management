@@ -44,7 +44,10 @@ Vue.component('custom-select', {
       options.onChange = function(value) {
         var item = this.options[value];
 
-        vm.onChange(item);
+        try {
+          vm.onChange(item);
+        } catch (e) {
+        }
       }
     }
 

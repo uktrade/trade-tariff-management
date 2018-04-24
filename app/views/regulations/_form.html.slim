@@ -28,8 +28,10 @@
         | Specify the community code
       .row
         .col-md-4
-          = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code", "code-class-name" => "prefix--l1" } do
-            = f.input :community_code, as: :select, collection: RegulationForm.community_codes, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select community code -"
+          .form-group v-bind:class="{ 'form-group-error': regulation.errors.community_code }"
+            span.error-message v-if="regulation.errors.community_code" v-html="regulation.errors.community_code[0]"
+            = f.input :community_code, as: :hidden, input_html: { "v-model" => "regulation.community_code" }
+            = content_tag "custom-select", "", { ":options" => "communityCodes", "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code", "code-class-name" => "prefix--l1", "placeholder" => "- select community code -" }
 
     h4.heading-small
       | Specify the regulation identifier

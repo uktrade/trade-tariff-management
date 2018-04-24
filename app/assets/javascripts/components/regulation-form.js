@@ -9,7 +9,13 @@ $(document).ready(function() {
     el: form,
     data: function() {
       var data = {
-        antidumpingRoles: ["2", "3"]
+        antidumpingRoles: ["2", "3"],
+        communityCodes: [
+          { value: "1", text: "Economic" },
+          { value: "2", text: "Atomic" },
+          { value: "3", text: "Coal" },
+          { value: "4", text: "Economic/Coal"}
+        ]
       };
 
       if (window.__regulation_json) {
