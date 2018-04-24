@@ -894,7 +894,7 @@ $(document).ready(function() {
     allowClear: true,
     render: {
       option: function(data) {
-        return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--series'>" + data.measure_type_series_id + "</span> " + data.description + "</span>";
+        return "<span class='selection'><span class='option-prefix option-prefix--series'>" + data.measure_type_series_id + "</span> " + data.description + "</span>";
       },
       item: function(data) {
         return "<div class='item'>" + data.measure_type_series_id + " - " + data.description + "</div>";
@@ -911,7 +911,7 @@ $(document).ready(function() {
     allowClear: true,
     render: {
       option: function(data) {
-        return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--type'>" + data.measure_type_id + "</span> " + data.description + "</span>";
+        return "<span class='selection'><span class='option-prefix option-prefix--type'>" + data.measure_type_id + "</span> " + data.description + "</span>";
       },
       item: function(data) {
         return "<div class='item'>" + data.measure_type_id + " - " + data.description + "</div>";

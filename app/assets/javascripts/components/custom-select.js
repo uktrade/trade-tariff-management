@@ -15,7 +15,9 @@ Vue.component('custom-select', {
     "drilldownRequired",
     "onChange",
     "allowClear",
-    "name"
+    "name",
+    "codeClassName",
+    "abbreviationClassName"
   ],
   data: function() {
     return {
@@ -35,7 +37,7 @@ Vue.component('custom-select', {
       valueField: this.valueField,
       labelField: this.labelField,
       allowClear: this.allowClear || false,
-      searchField: [this.valueField, this.codeField, this.labelField]
+      searchField: [this.valueField, this.codeField, "abbreviation", this.labelField]
     };
 
     if (this.onChange) {
@@ -107,14 +109,28 @@ Vue.component('custom-select', {
     }
 
     var codeField = this.codeField;
+    var codeClassName = this.codeClassName || "";
+    var abbreviationClassName = this.abbreviationClassName || "";
 
     if (codeField) {
       options["render"] = {
         option: function(data) {
-          return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--series'>" + data[codeField] + "</span> " + data[options.labelField] + "</span>";
+          var abbreviationSpan = "";
+
+          if (abbreviationClassName) {
+            abbreviationSpan = "<span class='abbreviation " + abbreviationClassName + "'>" + (data.abbreviation || "&nbsp;") + "</span>";
+          }
+
+          return "<span class='selection'><span class='option-prefix " + codeClassName + "'>" + data[codeField] + "</span>" + abbreviationSpan + "<span>" + data[options.labelField] + "</span></span>";
         },
         item: function(data) {
-          return "<div class='item'>" + data[codeField] + " - " + data[options.labelField] + "</div>";
+          var abbreviation = "";
+
+          if (abbreviationClassName && data.abbreviation) {
+            abbreviation = data.abbreviation + " - ";
+          }
+
+          return "<div class='item'>" + data[codeField] + " - " + abbreviation + data[options.labelField] + "</div>";
         }
       };
     }

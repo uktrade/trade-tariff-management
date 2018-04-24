@@ -28,10 +28,10 @@ fieldset
       .col-md-5
           label.form-label
             | Additional code type
-          = content_tag "custom-select", "", { url: "/additional_code_types", "label-field" => "description", "value-field" => "additional_code_type_id", "code-field" => "additional_code_type_id", placeholder: "― select additional code type ―", "v-model" => "measure.additional_code_type_id", "drilldown-name" => "measure_type_id", "v-bind:drilldown-value.sync" => "measure.measure_type_id", "drilldown-required" => true, "date-sensitive" => true }
+          = content_tag "custom-select", "", { url: "/additional_code_types", "label-field" => "description", "value-field" => "additional_code_type_id", "code-field" => "additional_code_type_id", placeholder: "― select additional code type ―", "v-model" => "measure.additional_code_type_id", "drilldown-name" => "measure_type_id", "v-bind:drilldown-value.sync" => "measure.measure_type_id", "drilldown-required" => true, "date-sensitive" => true, "code-class-name" => "prefix--additional-code-type" }
 
       .col-md-5 v-if="measure.additional_code_type_id"
         label.form-label
           | Additional code
 
-          = content_tag "custom-select", "", { url: "/additional_codes", "label-field" => "description", "value-field" => "additional_code", "code-field" => "additional_code", placeholder: "― start typing ―", "min-length" => 1, "v-model" => "measure.additional_code", "drilldown-name" => "additional_code_type_id", "v-bind:drilldown-value.sync" => "measure.additional_code_type_id", "drilldown-required" => true, "date-sensitive" => true }
+          = content_tag "custom-select", "", { url: "/additional_codes", "label-field" => "description", "value-field" => "additional_code", "code-field" => "additional_code", placeholder: "― start typing ―", "min-length" => 1, "v-model" => "measure.additional_code", "drilldown-name" => "additional_code_type_id", "v-bind:drilldown-value.sync" => "measure.additional_code_type_id", "drilldown-required" => true, "date-sensitive" => true, "code-class-name" => "prefix--additional-code" }
