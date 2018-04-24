@@ -1,6 +1,3 @@
-//= require ./custom-select
-//= require ./date-select
-
 $(document).ready(function() {
   var form = document.querySelector(".regulation-form");
 
