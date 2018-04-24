@@ -17,6 +17,8 @@ class RegulationParamsNormalizer
     officialjournal_number
     officialjournal_page
 
+    base_regulation_role
+    base_regulation_id
     antidumping_regulation_role
     related_antidumping_regulation_id
     complete_abrogation_regulation_role
@@ -31,6 +33,8 @@ class RegulationParamsNormalizer
     prefix
     publication_year
     regulation_number
+    base_regulation_role
+    base_regulation_id
   )
 
   attr_accessor :reg_params,
@@ -102,7 +106,7 @@ end
 
 class RegulationSaver
 
-  REQUIRED_PARAMS = [
+  BASE_REGULATION_REQUIRED_PARAMS = [
     :role,
     :prefix,
     :publication_year,
@@ -112,6 +116,11 @@ class RegulationSaver
     :validity_start_date,
     :regulation_group_id,
     :operation_date
+  ]
+
+  MODIFICATION_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
+    :base_regulation_role,
+    :base_regulation_id
   ]
 
   ADVANCED_VALIDATION_MODELS = %w(
@@ -202,11 +211,21 @@ class RegulationSaver
   private
 
     def check_required_params!
-      REQUIRED_PARAMS.map do |k|
+      target_class_required_params.map do |k|
         if original_params[k.to_s].blank?
           @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
         end
       end
+    end
+
+    def target_class_required_params
+      name = target_class.to_s
+                         .titleize
+                         .split
+                         .join('_')
+                         .upcase
+
+      self.class.const_get("#{name}_REQUIRED_PARAMS")
     end
 
     def validate!
