@@ -12,4 +12,4 @@ fieldset
 
     .row
       .col-md-5
-        = content_tag "custom-select", "", { url: "/regulations", "label-field" => "description", "value-field" => "regulation_id", placeholder: "― start typing ―", "min-length" => 2, "v-model" => "measure.regulation_id", "date-sensitive" => true }
+        = content_tag "custom-select", "", { url: "/regulations.json", "label-field" => "description", "value-field" => "regulation_id", placeholder: "― start typing ―", "min-length" => 2, "v-model" => "measure.regulation_id", "date-sensitive" => true }

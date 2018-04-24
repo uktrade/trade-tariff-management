@@ -45,4 +45,13 @@ Rails.application.routes.draw do
     resources :measurement_unit_qualifiers, only: [:index]
     resources :monetary_units, only: [:index]
   end
+
+  namespace :regulation_form_api do
+    resources :regulation_groups, only: [:index]
+    resources :base_regulations, only: [:index]
+    resources :complete_abrogation_regulations, only: [:index]
+    resources :explicit_abrogation_regulations, only: [:index]
+  end
+
+  resources :regulations
 end

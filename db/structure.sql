@@ -477,7 +477,9 @@ CREATE TABLE base_regulations_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -509,7 +511,9 @@ CREATE VIEW base_regulations AS
     base_regulations1."national",
     base_regulations1.oid,
     base_regulations1.operation,
-    base_regulations1.operation_date
+    base_regulations1.operation_date,
+    base_regulations1.added_by_id,
+    base_regulations1.added_at
    FROM base_regulations_oplog base_regulations1
   WHERE ((base_regulations1.oid IN ( SELECT max(base_regulations2.oid) AS max
            FROM base_regulations_oplog base_regulations2
@@ -1191,7 +1195,9 @@ CREATE TABLE complete_abrogation_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -1210,7 +1216,9 @@ CREATE VIEW complete_abrogation_regulations AS
     complete_abrogation_regulations1.approved_flag,
     complete_abrogation_regulations1.oid,
     complete_abrogation_regulations1.operation,
-    complete_abrogation_regulations1.operation_date
+    complete_abrogation_regulations1.operation_date,
+    complete_abrogation_regulations1.added_by_id,
+    complete_abrogation_regulations1.added_at
    FROM complete_abrogation_regulations_oplog complete_abrogation_regulations1
   WHERE ((complete_abrogation_regulations1.oid IN ( SELECT max(complete_abrogation_regulations2.oid) AS max
            FROM complete_abrogation_regulations_oplog complete_abrogation_regulations2
@@ -1403,7 +1411,9 @@ CREATE TABLE explicit_abrogation_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -1423,7 +1433,9 @@ CREATE VIEW explicit_abrogation_regulations AS
     explicit_abrogation_regulations1.approved_flag,
     explicit_abrogation_regulations1.oid,
     explicit_abrogation_regulations1.operation,
-    explicit_abrogation_regulations1.operation_date
+    explicit_abrogation_regulations1.operation_date,
+    explicit_abrogation_regulations1.added_by_id,
+    explicit_abrogation_regulations1.added_at
    FROM explicit_abrogation_regulations_oplog explicit_abrogation_regulations1
   WHERE ((explicit_abrogation_regulations1.oid IN ( SELECT max(explicit_abrogation_regulations2.oid) AS max
            FROM explicit_abrogation_regulations_oplog explicit_abrogation_regulations2
@@ -2341,7 +2353,9 @@ CREATE TABLE full_temporary_stop_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2365,7 +2379,9 @@ CREATE VIEW full_temporary_stop_regulations AS
     full_temporary_stop_regulations1.approved_flag,
     full_temporary_stop_regulations1.oid,
     full_temporary_stop_regulations1.operation,
-    full_temporary_stop_regulations1.operation_date
+    full_temporary_stop_regulations1.operation_date,
+    full_temporary_stop_regulations1.added_by_id,
+    full_temporary_stop_regulations1.added_at
    FROM full_temporary_stop_regulations_oplog full_temporary_stop_regulations1
   WHERE ((full_temporary_stop_regulations1.oid IN ( SELECT max(full_temporary_stop_regulations2.oid) AS max
            FROM full_temporary_stop_regulations_oplog full_temporary_stop_regulations2
@@ -4643,7 +4659,9 @@ CREATE TABLE modification_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -4672,7 +4690,9 @@ CREATE VIEW modification_regulations AS
     modification_regulations1.complete_abrogation_regulation_id,
     modification_regulations1.oid,
     modification_regulations1.operation,
-    modification_regulations1.operation_date
+    modification_regulations1.operation_date,
+    modification_regulations1.added_by_id,
+    modification_regulations1.added_at
    FROM modification_regulations_oplog modification_regulations1
   WHERE ((modification_regulations1.oid IN ( SELECT max(modification_regulations2.oid) AS max
            FROM modification_regulations_oplog modification_regulations2
@@ -5034,7 +5054,9 @@ CREATE TABLE prorogation_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -5053,7 +5075,9 @@ CREATE VIEW prorogation_regulations AS
     prorogation_regulations1.approved_flag,
     prorogation_regulations1.oid,
     prorogation_regulations1.operation,
-    prorogation_regulations1.operation_date
+    prorogation_regulations1.operation_date,
+    prorogation_regulations1.added_by_id,
+    prorogation_regulations1.added_at
    FROM prorogation_regulations_oplog prorogation_regulations1
   WHERE ((prorogation_regulations1.oid IN ( SELECT max(prorogation_regulations2.oid) AS max
            FROM prorogation_regulations_oplog prorogation_regulations2
@@ -5847,6 +5871,41 @@ CREATE SEQUENCE quota_unsuspension_events_oid_seq
 --
 
 ALTER SEQUENCE quota_unsuspension_events_oid_seq OWNED BY quota_unsuspension_events_oplog.oid;
+
+
+--
+-- Name: regulation_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE regulation_documents (
+    id integer NOT NULL,
+    regulation_id text,
+    regulation_role text,
+    regulation_id_key text,
+    regulation_role_key text,
+    pdf_data text,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: regulation_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE regulation_documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: regulation_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE regulation_documents_id_seq OWNED BY regulation_documents.id;
 
 
 --
@@ -7134,6 +7193,13 @@ ALTER TABLE ONLY quota_unsuspension_events_oplog ALTER COLUMN oid SET DEFAULT ne
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY regulation_documents ALTER COLUMN id SET DEFAULT nextval('regulation_documents_id_seq'::regclass);
+
+
+--
 -- Name: oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8030,6 +8096,14 @@ ALTER TABLE ONLY quota_unblocking_events_oplog
 
 ALTER TABLE ONLY quota_unsuspension_events_oplog
     ADD CONSTRAINT quota_unsuspension_events_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: regulation_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY regulation_documents
+    ADD CONSTRAINT regulation_documents_pkey PRIMARY KEY (id);
 
 
 --
@@ -10197,3 +10271,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180406152439_remove_xml_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180410100532_create_db_rollbacks.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180417135500_change_relevant_date_in_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180417141804_change_clear_date_in_db_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180423062256_create_regulation_documents.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180423084717_add_added_by_id_and_added_at_to_managing_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180423085320_update_regulation_related_bd_views.rb');

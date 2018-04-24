@@ -1,6 +1,8 @@
 class ExplicitAbrogationRegulation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::FormApiHelpers::RegulationSearch
+  include ::RegulationDocumentContext
 
   plugin :oplog, primary_key: [:oid, :explicit_abrogation_regulation_id, :explicit_abrogation_regulation_role]
   plugin :conformance_validator

@@ -5,6 +5,7 @@ require 'trade_tariff_backend/validations/presence_validation'
 require 'trade_tariff_backend/validations/uniqueness_validation'
 require 'trade_tariff_backend/validations/validity_date_span_validation'
 require 'trade_tariff_backend/validations/validity_dates_validation'
+require 'trade_tariff_backend/validations/integer_validation'
 
 module TradeTariffBackend
   class Validator
