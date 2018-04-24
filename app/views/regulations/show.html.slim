@@ -1,3 +1,5 @@
+- r_title = regulation_title(regulation)
+
 .breadcrumbs
   ol
     li
@@ -7,11 +9,11 @@
       = link_to "Regulations", regulations_url
 
     li aria-current="page"
-      = regulation.class
+      = r_title
 
 header
   h1.heading-large
-    = "#{regulation.class} #{regulation.public_send(regulation.class.primary_key[0])}"
+    = "#{r_title} #{regulation.public_send(regulation.class.primary_key[0])}"
 
 - if pdf_document.present?
   p

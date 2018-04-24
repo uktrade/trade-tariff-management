@@ -29,14 +29,6 @@ class RegulationParamsNormalizer
     operation_date
   )
 
-  REQUIRED_NUMBER_COMPONENTS = %w(
-    prefix
-    publication_year
-    regulation_number
-    base_regulation_role
-    base_regulation_id
-  )
-
   attr_accessor :reg_params,
                 :normalized_params,
                 :target_class
@@ -91,14 +83,8 @@ class RegulationParamsNormalizer
   end
 
   def fetch_regulation_number
-    missing_component = REQUIRED_NUMBER_COMPONENTS.any? do |component_name|
-      reg_params[component_name].blank?
-    end
-
-    return nil if missing_component
-
     base = "#{reg_params[:prefix]}#{reg_params[:publication_year]}#{reg_params[:regulation_number]}"
-    base += reg_params[:number_suffix]
+    base += reg_params[:number_suffix].to_s
 
     base.delete(' ')
   end
@@ -121,6 +107,13 @@ class RegulationSaver
   MODIFICATION_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
     :base_regulation_role,
     :base_regulation_id
+  ]
+
+  ANTIDUMPING_REGULATION_ROLES = %w(2 3)
+
+  ANTIDUMPING_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
+    :antidumping_regulation_role,
+    :related_antidumping_regulation_id
   ]
 
   ADVANCED_VALIDATION_MODELS = %w(
@@ -219,13 +212,16 @@ class RegulationSaver
     end
 
     def target_class_required_params
-      name = target_class.to_s
-                         .titleize
-                         .split
-                         .join('_')
-                         .upcase
-
-      self.class.const_get("#{name}_REQUIRED_PARAMS")
+      if ANTIDUMPING_REGULATION_ROLES.include?(original_params[:role].to_s)
+        ANTIDUMPING_REGULATION_REQUIRED_PARAMS
+      else
+        name = target_class.to_s
+                           .titleize
+                           .split
+                           .join('_')
+                           .upcase
+        self.class.const_get("#{name}_REQUIRED_PARAMS")
+      end
     end
 
     def validate!
