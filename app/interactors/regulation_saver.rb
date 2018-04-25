@@ -13,6 +13,7 @@ class RegulationParamsNormalizer
     validity_end_date
     abrogation_date
     effective_end_date
+    published_date
     regulation_group_id
     officialjournal_number
     officialjournal_page
@@ -92,28 +93,70 @@ end
 
 class RegulationSaver
 
-  BASE_REGULATION_REQUIRED_PARAMS = [
+  REQUIRED_PARAMS = [
     :role,
     :prefix,
     :publication_year,
     :regulation_number,
     :replacement_indicator,
     :information_text,
-    :validity_start_date,
-    :regulation_group_id,
     :operation_date
   ]
+
+  OPTIONAL_PARAMS = [
+    :number_suffix,
+    :officialjournal_number,
+    :officialjournal_page,
+    :pdf_data
+  ]
+
+  BASE_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
+    :validity_start_date,
+    :regulation_group_id
+  ]
+
+  BASE_OPTIONAL_PARAMS = OPTIONAL_PARAMS + [
+    :community_code,
+    :validity_end_date,
+    :effective_end_date
+  ]
+
+  BASE_REGULATION_WHITELIST_PARAMS = BASE_REGULATION_REQUIRED_PARAMS +
+                                     BASE_OPTIONAL_PARAMS
 
   MODIFICATION_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
     :base_regulation_role,
     :base_regulation_id
   ]
 
+  MODIFICATION_REGULATION_WHITELIST_PARAMS = MODIFICATION_REGULATION_REQUIRED_PARAMS +
+                                             BASE_OPTIONAL_PARAMS
+
   ANTIDUMPING_REGULATION_ROLES = %w(2 3)
 
   ANTIDUMPING_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
     :antidumping_regulation_role,
     :related_antidumping_regulation_id
+  ]
+
+  ANTIDUMPING_REGULATION_WHITELIST_PARAMS = ANTIDUMPING_REGULATION_REQUIRED_PARAMS +
+                                            BASE_OPTIONAL_PARAMS
+
+  COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
+    :base_regulation_role,
+    :base_regulation_id,
+    :published_date
+  ]
+
+  COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS = COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS +
+                                                    OPTIONAL_PARAMS
+
+  EXPLICIT_ABROGATION_REGULATION_REQUIRED_PARAMS = COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS + [
+    :abrogation_date
+  ]
+
+  EXPLICIT_ABROGATION_REGULATION_WHITELIST_PARAMS = COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS + [
+    :abrogation_date
   ]
 
   ADVANCED_VALIDATION_MODELS = %w(
@@ -162,8 +205,8 @@ class RegulationSaver
 
     @regulation = target_class.new(
       regulation_params.reject do |k ,v|
-        k == target_class.primary_key[0] ||
-        k == target_class.primary_key[1]
+        !whitelist_params.include?(k) ||
+        target_class.primary_key.include?(k)
       end
     )
     regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
@@ -222,6 +265,10 @@ class RegulationSaver
                            .upcase
         self.class.const_get("#{name}_REQUIRED_PARAMS")
       end
+    end
+
+    def whitelist_params
+      self.class.const_get("#{name}_WHITELIST_PARAMS")
     end
 
     def validate!
