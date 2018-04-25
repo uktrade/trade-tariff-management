@@ -162,6 +162,23 @@ class RegulationSaver
     :abrogation_date
   ]
 
+  PROROGATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
+    :published_date
+  ]
+
+  PROROGATION_REGULATION_WHITELIST_PARAMS = PROROGATION_REGULATION_REQUIRED_PARAMS + OPTIONAL_PARAMS
+
+  FULL_TEMPORARY_STOP_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
+    :validity_start_date,
+    :published_date
+  ]
+
+  FULL_TEMPORARY_STOP_REGULATION_WHITELIST_PARAMS = FULL_TEMPORARY_STOP_REGULATION_REQUIRED_PARAMS +
+                                                    OPTIONAL_PARAMS + [
+    :validity_end_date,
+    :effective_end_date
+  ]
+
   ADVANCED_VALIDATION_MODELS = %w(
     BaseRegulation
     ModificationRegulation
