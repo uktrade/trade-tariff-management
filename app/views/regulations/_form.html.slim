@@ -23,7 +23,7 @@
           = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
           = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles", "code-class-name" => "prefix--regulation" }
 
-    div v-if="notAbrogationType"
+    div v-if="showCommunityCode"
       h4.heading-small
         | Specify the community code
       .row
@@ -58,7 +58,7 @@
 
     = f.input :information_text, as: :text, label: false, input_html: { rows: 4, "v-model" => "regulation.information_text" }
 
-    div v-if="notAbrogationType"
+    div v-if="showValidityPeriod"
       h4.heading-small
         | Specify the regulation's validity period
 
@@ -86,16 +86,17 @@
         span.error-message v-if="regulation.errors.effective_end_date" v-html="regulation.errors.effective_end_date[0]"
         = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.effective_end_date"  }
 
-      h4.heading-small
-        | Specify the regulation group
+      div v-if="showRegulationGroup"
+        h4.heading-small
+          | Specify the regulation group
 
-      .row
-        .col-md-6
-          .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
-            span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
-            = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }
+        .row
+          .col-md-6
+            .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
+              span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
+              = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }
 
-    div v-if="isAbrogation"
+    div v-if="showPublishedDate"
       h4.heading-small
         | Specify the published date
       = f.input :published_date, as: :hidden, input_html: { "v-model" => "regulation.published_date" }

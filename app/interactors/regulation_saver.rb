@@ -132,8 +132,10 @@ class RegulationSaver
     :base_regulation_id
   ]
 
-  MODIFICATION_REGULATION_WHITELIST_PARAMS = MODIFICATION_REGULATION_REQUIRED_PARAMS +
-                                             BASE_OPTIONAL_PARAMS
+  MODIFICATION_REGULATION_WHITELIST_PARAMS = MODIFICATION_REGULATION_REQUIRED_PARAMS + [
+    :validity_end_date,
+    :effective_end_date
+  ]
 
   ANTIDUMPING_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
     :antidumping_regulation_role,

@@ -39,11 +39,17 @@ $(document).ready(function() {
 
         return roles.indexOf(this.regulation.role) > -1;
       },
-      notAbrogationType: function() {
-        return this.regulation.role !== "6" && this.regulation.role !== "7";
+      showCommunityCode: function() {
+        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
       },
-      isAbrogation: function() {
-        return this.regulation.role === "6" || this.regulation.role === "7";
+      showValidityPeriod: function() {
+        return $.inArray(this.regulation.role, ["1", "2", "3", "4", "8"]) !== -1;
+      },
+      showRegulationGroup: function() {
+        return $.inArray(this.regulation.role, ["1", "2", "3", "4"]) !== -1;
+      },
+      showPublishedDate: function() {
+        return $.inArray(this.regulation.role, ["5", "6", "7", "8"]) !== -1;
       },
       isExplicitAbrogation: function() {
         return this.regulation.role === "7";
