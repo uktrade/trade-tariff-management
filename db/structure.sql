@@ -3317,7 +3317,10 @@ CREATE TABLE measure_components_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -3334,7 +3337,10 @@ CREATE VIEW measure_components AS
     measure_components1.measurement_unit_qualifier_code,
     measure_components1.oid,
     measure_components1.operation,
-    measure_components1.operation_date
+    measure_components1.operation_date,
+    measure_components1.added_by_id,
+    measure_components1.added_at,
+    measure_components1."national"
    FROM measure_components_oplog measure_components1
   WHERE ((measure_components1.oid IN ( SELECT max(measure_components2.oid) AS max
            FROM measure_components_oplog measure_components2
@@ -3476,7 +3482,10 @@ CREATE TABLE measure_condition_components_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -3493,7 +3502,10 @@ CREATE VIEW measure_condition_components AS
     measure_condition_components1.measurement_unit_qualifier_code,
     measure_condition_components1.oid,
     measure_condition_components1.operation,
-    measure_condition_components1.operation_date
+    measure_condition_components1.operation_date,
+    measure_condition_components1.added_by_id,
+    measure_condition_components1.added_at,
+    measure_condition_components1."national"
    FROM measure_condition_components_oplog measure_condition_components1
   WHERE ((measure_condition_components1.oid IN ( SELECT max(measure_condition_components2.oid) AS max
            FROM measure_condition_components_oplog measure_condition_components2
@@ -3538,7 +3550,10 @@ CREATE TABLE measure_conditions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -3560,7 +3575,10 @@ CREATE VIEW measure_conditions AS
     measure_conditions1.certificate_code,
     measure_conditions1.oid,
     measure_conditions1.operation,
-    measure_conditions1.operation_date
+    measure_conditions1.operation_date,
+    measure_conditions1.added_by_id,
+    measure_conditions1.added_at,
+    measure_conditions1."national"
    FROM measure_conditions_oplog measure_conditions1
   WHERE ((measure_conditions1.oid IN ( SELECT max(measure_conditions2.oid) AS max
            FROM measure_conditions_oplog measure_conditions2
@@ -3597,7 +3615,10 @@ CREATE TABLE measure_excluded_geographical_areas_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -3611,7 +3632,10 @@ CREATE VIEW measure_excluded_geographical_areas AS
     measure_excluded_geographical_areas1.geographical_area_sid,
     measure_excluded_geographical_areas1.oid,
     measure_excluded_geographical_areas1.operation,
-    measure_excluded_geographical_areas1.operation_date
+    measure_excluded_geographical_areas1.operation_date,
+    measure_excluded_geographical_areas1.added_by_id,
+    measure_excluded_geographical_areas1.added_at,
+    measure_excluded_geographical_areas1."national"
    FROM measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas1
   WHERE ((measure_excluded_geographical_areas1.oid IN ( SELECT max(measure_excluded_geographical_areas2.oid) AS max
            FROM measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas2
@@ -5414,7 +5438,10 @@ CREATE TABLE quota_definitions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -5439,7 +5466,10 @@ CREATE VIEW quota_definitions AS
     quota_definitions1.description,
     quota_definitions1.oid,
     quota_definitions1.operation,
-    quota_definitions1.operation_date
+    quota_definitions1.operation_date,
+    quota_definitions1.added_by_id,
+    quota_definitions1.added_at,
+    quota_definitions1."national"
    FROM quota_definitions_oplog quota_definitions1
   WHERE ((quota_definitions1.oid IN ( SELECT max(quota_definitions2.oid) AS max
            FROM quota_definitions_oplog quota_definitions2
@@ -5526,7 +5556,10 @@ CREATE TABLE quota_order_number_origin_exclusions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -5539,7 +5572,10 @@ CREATE VIEW quota_order_number_origin_exclusions AS
     quota_order_number_origin_exclusions1.excluded_geographical_area_sid,
     quota_order_number_origin_exclusions1.oid,
     quota_order_number_origin_exclusions1.operation,
-    quota_order_number_origin_exclusions1.operation_date
+    quota_order_number_origin_exclusions1.operation_date,
+    quota_order_number_origin_exclusions1.added_by_id,
+    quota_order_number_origin_exclusions1.added_at,
+    quota_order_number_origin_exclusions1."national"
    FROM quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions1
   WHERE ((quota_order_number_origin_exclusions1.oid IN ( SELECT max(quota_order_number_origin_exclusions2.oid) AS max
            FROM quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions2
@@ -5579,7 +5615,10 @@ CREATE TABLE quota_order_number_origins_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -5596,7 +5635,10 @@ CREATE VIEW quota_order_number_origins AS
     quota_order_number_origins1.geographical_area_sid,
     quota_order_number_origins1.oid,
     quota_order_number_origins1.operation,
-    quota_order_number_origins1.operation_date
+    quota_order_number_origins1.operation_date,
+    quota_order_number_origins1.added_by_id,
+    quota_order_number_origins1.added_at,
+    quota_order_number_origins1."national"
    FROM quota_order_number_origins_oplog quota_order_number_origins1
   WHERE ((quota_order_number_origins1.oid IN ( SELECT max(quota_order_number_origins2.oid) AS max
            FROM quota_order_number_origins_oplog quota_order_number_origins2
@@ -5634,7 +5676,10 @@ CREATE TABLE quota_order_numbers_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -5649,7 +5694,10 @@ CREATE VIEW quota_order_numbers AS
     quota_order_numbers1.validity_end_date,
     quota_order_numbers1.oid,
     quota_order_numbers1.operation,
-    quota_order_numbers1.operation_date
+    quota_order_numbers1.operation_date,
+    quota_order_numbers1.added_by_id,
+    quota_order_numbers1.added_at,
+    quota_order_numbers1."national"
    FROM quota_order_numbers_oplog quota_order_numbers1
   WHERE ((quota_order_numbers1.oid IN ( SELECT max(quota_order_numbers2.oid) AS max
            FROM quota_order_numbers_oplog quota_order_numbers2
@@ -10287,3 +10335,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180423084717_add_added_b
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180423085320_update_regulation_related_bd_views.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425165312_add_national_flag_to_regulation_related_db_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171028_add_national_flag_to_regulation_documents.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171418_add_national_flag_to_measure_related_db_tables.rb');
