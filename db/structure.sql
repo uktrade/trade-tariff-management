@@ -1197,7 +1197,8 @@ CREATE TABLE complete_abrogation_regulations_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -1218,7 +1219,8 @@ CREATE VIEW complete_abrogation_regulations AS
     complete_abrogation_regulations1.operation,
     complete_abrogation_regulations1.operation_date,
     complete_abrogation_regulations1.added_by_id,
-    complete_abrogation_regulations1.added_at
+    complete_abrogation_regulations1.added_at,
+    complete_abrogation_regulations1."national"
    FROM complete_abrogation_regulations_oplog complete_abrogation_regulations1
   WHERE ((complete_abrogation_regulations1.oid IN ( SELECT max(complete_abrogation_regulations2.oid) AS max
            FROM complete_abrogation_regulations_oplog complete_abrogation_regulations2
@@ -1413,7 +1415,8 @@ CREATE TABLE explicit_abrogation_regulations_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -1435,7 +1438,8 @@ CREATE VIEW explicit_abrogation_regulations AS
     explicit_abrogation_regulations1.operation,
     explicit_abrogation_regulations1.operation_date,
     explicit_abrogation_regulations1.added_by_id,
-    explicit_abrogation_regulations1.added_at
+    explicit_abrogation_regulations1.added_at,
+    explicit_abrogation_regulations1."national"
    FROM explicit_abrogation_regulations_oplog explicit_abrogation_regulations1
   WHERE ((explicit_abrogation_regulations1.oid IN ( SELECT max(explicit_abrogation_regulations2.oid) AS max
            FROM explicit_abrogation_regulations_oplog explicit_abrogation_regulations2
@@ -2355,7 +2359,8 @@ CREATE TABLE full_temporary_stop_regulations_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -2381,7 +2386,8 @@ CREATE VIEW full_temporary_stop_regulations AS
     full_temporary_stop_regulations1.operation,
     full_temporary_stop_regulations1.operation_date,
     full_temporary_stop_regulations1.added_by_id,
-    full_temporary_stop_regulations1.added_at
+    full_temporary_stop_regulations1.added_at,
+    full_temporary_stop_regulations1."national"
    FROM full_temporary_stop_regulations_oplog full_temporary_stop_regulations1
   WHERE ((full_temporary_stop_regulations1.oid IN ( SELECT max(full_temporary_stop_regulations2.oid) AS max
            FROM full_temporary_stop_regulations_oplog full_temporary_stop_regulations2
@@ -4661,7 +4667,8 @@ CREATE TABLE modification_regulations_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -4692,7 +4699,8 @@ CREATE VIEW modification_regulations AS
     modification_regulations1.operation,
     modification_regulations1.operation_date,
     modification_regulations1.added_by_id,
-    modification_regulations1.added_at
+    modification_regulations1.added_at,
+    modification_regulations1."national"
    FROM modification_regulations_oplog modification_regulations1
   WHERE ((modification_regulations1.oid IN ( SELECT max(modification_regulations2.oid) AS max
            FROM modification_regulations_oplog modification_regulations2
@@ -5056,7 +5064,8 @@ CREATE TABLE prorogation_regulations_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -5077,7 +5086,8 @@ CREATE VIEW prorogation_regulations AS
     prorogation_regulations1.operation,
     prorogation_regulations1.operation_date,
     prorogation_regulations1.added_by_id,
-    prorogation_regulations1.added_at
+    prorogation_regulations1.added_at,
+    prorogation_regulations1."national"
    FROM prorogation_regulations_oplog prorogation_regulations1
   WHERE ((prorogation_regulations1.oid IN ( SELECT max(prorogation_regulations2.oid) AS max
            FROM prorogation_regulations_oplog prorogation_regulations2
@@ -5885,7 +5895,8 @@ CREATE TABLE regulation_documents (
     regulation_role_key text,
     pdf_data text,
     updated_at timestamp without time zone,
-    created_at timestamp without time zone
+    created_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -10274,3 +10285,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180417141804_change_clea
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180423062256_create_regulation_documents.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180423084717_add_added_by_id_and_added_at_to_managing_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180423085320_update_regulation_related_bd_views.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180425165312_add_national_flag_to_regulation_related_db_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171028_add_national_flag_to_regulation_documents.rb');

@@ -231,6 +231,7 @@ class RegulationSaver
     )
     regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
     regulation.public_send("#{target_class.primary_key[1]}=", regulation_params[target_class.primary_key[1]])
+    regulation.national = true
 
     validate!
     errors.blank?
@@ -337,8 +338,8 @@ class RegulationSaver
           regulation_id_key: target_class.primary_key[0],
           regulation_role_key: target_class.primary_key[1]
         )
-
         doc.pdf = original_params[:pdf_data]
+        doc.national = true
         doc.save
       end
     end
@@ -351,7 +352,6 @@ class RegulationSaver
 
       target_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0])
       target_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1])
-
       target_regulation.save
 
       p ""
