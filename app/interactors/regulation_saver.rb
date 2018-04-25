@@ -93,6 +93,9 @@ end
 
 class RegulationSaver
 
+  ANTIDUMPING_REGULATION_ROLES = %w(2 3)
+  ABROGATION_REGULATION_ROLES = %w(6 7)
+
   REQUIRED_PARAMS = [
     :role,
     :prefix,
@@ -131,8 +134,6 @@ class RegulationSaver
 
   MODIFICATION_REGULATION_WHITELIST_PARAMS = MODIFICATION_REGULATION_REQUIRED_PARAMS +
                                              BASE_OPTIONAL_PARAMS
-
-  ANTIDUMPING_REGULATION_ROLES = %w(2 3)
 
   ANTIDUMPING_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
     :antidumping_regulation_role,
@@ -303,6 +304,10 @@ class RegulationSaver
 
     def post_saving_updates!
       save_pdf_document!
+
+      if ABROGATION_REGULATION_ROLES.include?(original_params[:role].to_s)
+        set_abrogation_regulation_for_base_regulation!
+      end
     end
 
     def save_pdf_document!
@@ -317,6 +322,22 @@ class RegulationSaver
         doc.pdf = original_params[:pdf_data]
         doc.save
       end
+    end
+
+    def set_abrogation_regulation_for_base_regulation!
+      target_regulation = BaseRegulation.where(
+        base_regulation_role: original_params[:base_regulation_role],
+        base_regulation_id: original_params[:base_regulation_id],
+      ).first
+
+      target_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0])
+      target_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1])
+
+      target_regulation.save
+
+      p ""
+      p "[SAVED ABROGATION REGULATION FOR BASE] #{target_regulation.inspect}"
+      p ""
     end
 
     def operation_date
