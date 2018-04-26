@@ -13,4 +13,8 @@ module RegulationsHelper
 
     base
   end
+
+  def antidumping_regulation?
+    ::RegulationSaver::ABROGATION_MODELS.include?(regulation.class.name)
+  end
 end

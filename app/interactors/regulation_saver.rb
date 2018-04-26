@@ -95,6 +95,10 @@ class RegulationSaver
 
   ANTIDUMPING_REGULATION_ROLES = %w(2 3)
   ABROGATION_REGULATION_ROLES = %w(6 7)
+  ABROGATION_MODELS = %w(
+    CompleteAbrogationRegulation
+    ExplicitAbrogationRegulation
+  )
 
   REQUIRED_PARAMS = [
     :role,

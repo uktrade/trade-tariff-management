@@ -21,15 +21,8 @@ header
     =<> ' | '
     =<> link_to "Add new regulation", new_regulation_url, style: "margin-left: 15px;"
 
-ul
-  - regulation.db_schema.keys.map do |k|
-    - title = k.to_s.upcase
-    - title = title.gsub('_', ' ') if title.include?('_')
+= render "regulations/regulation_db_fields", record: regulation
 
-    li
-      strong style="font-weight: bold"
-        = "#{title} :"
-      =<> regulation.public_send(k)
+- if antidumping_regulation?
+  = render "regulations/regulation_db_fields", record: regulation.antidumping_regulation_for
 
-br
-br
