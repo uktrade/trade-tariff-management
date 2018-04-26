@@ -3,6 +3,7 @@ class ModificationRegulation < Sequel::Model
   include ::XmlGeneration::BaseHelper
   include ::FormApiHelpers::RegulationSearch
   include ::RegulationDocumentContext
+  include ::RegulationAntidumpingContext
 
   plugin :oplog, primary_key: [:modification_regulation_id,
                                :modification_regulation_role]
