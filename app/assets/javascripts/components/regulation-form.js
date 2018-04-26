@@ -46,7 +46,7 @@ $(document).ready(function() {
         return $.inArray(this.regulation.role, ["1", "2", "3", "4", "8"]) !== -1;
       },
       showRegulationGroup: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3", "4"]) !== -1;
+        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
       },
       showPublishedDate: function() {
         return $.inArray(this.regulation.role, ["5", "6", "7", "8"]) !== -1;

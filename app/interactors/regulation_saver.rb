@@ -141,14 +141,24 @@ class RegulationSaver
     :operation_date
   ]
 
-  MODIFICATION_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
+  MODIFICATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
     :base_regulation_role,
-    :base_regulation_id
+    :base_regulation_id,
+    :validity_start_date
   ]
 
-  MODIFICATION_REGULATION_WHITELIST_PARAMS = MODIFICATION_REGULATION_REQUIRED_PARAMS + [
+  MODIFICATION_REGULATION_WHITELIST_PARAMS = [
+    :base_regulation_role,
+    :base_regulation_id,
+    :community_code,
+    :replacement_indicator,
+    :information_text,
+    :validity_start_date,
     :validity_end_date,
-    :effective_end_date
+    :effective_end_date,
+    :officialjournal_number,
+    :officialjournal_page,
+    :operation_date
   ]
 
   ANTIDUMPING_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
