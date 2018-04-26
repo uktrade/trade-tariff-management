@@ -166,8 +166,20 @@ class RegulationSaver
     :related_antidumping_regulation_id
   ]
 
-  ANTIDUMPING_REGULATION_WHITELIST_PARAMS = ANTIDUMPING_REGULATION_REQUIRED_PARAMS +
-                                            BASE_OPTIONAL_PARAMS
+  ANTIDUMPING_REGULATION_WHITELIST_PARAMS = [
+    :antidumping_regulation_role,
+    :related_antidumping_regulation_id,
+    :community_code,
+    :replacement_indicator,
+    :information_text,
+    :validity_start_date,
+    :validity_end_date,
+    :effective_end_date,
+    :regulation_group_id,
+    :officialjournal_number,
+    :officialjournal_page,
+    :operation_date
+  ]
 
   COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
     :base_regulation_role,
@@ -387,7 +399,11 @@ class RegulationSaver
     end
 
     def whitelist_params
-      self.class.const_get("#{target_class_name_in_upcase}_WHITELIST_PARAMS")
+      if ANTIDUMPING_REGULATION_ROLES.include?(original_params[:role].to_s)
+        ANTIDUMPING_REGULATION_WHITELIST_PARAMS
+      else
+        self.class.const_get("#{target_class_name_in_upcase}_WHITELIST_PARAMS")
+      end
     end
 
     def target_class_name_in_upcase
