@@ -150,7 +150,6 @@ class RegulationSaver
   MODIFICATION_REGULATION_WHITELIST_PARAMS = [
     :base_regulation_role,
     :base_regulation_id,
-    :community_code,
     :replacement_indicator,
     :information_text,
     :validity_start_date,

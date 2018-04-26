@@ -29,10 +29,10 @@ module FormApiHelpers
       public_send(primary_key[0])
     end
 
-    def json_mapping
+    def json_mapping(details_with_code=false)
       res = {
         regulation_id: regulation_id,
-        description: details
+        description: details(details_with_code)
       }
 
       case self.class.name
@@ -46,8 +46,12 @@ module FormApiHelpers
       res
     end
 
-    def details
-      res = "#{regulation_id}: #{information_text}"
+    def details(details_with_code)
+      res = if details_with_code.present?
+        "#{regulation_id}: #{information_text}"
+      else
+        information_text
+      end
       res += " (#{date_to_uk(reg_date)})" if reg_date.present?
       res = "#{res} to #{date_to_uk(effective_end_date)})" if try(:effective_end_date).present?
 

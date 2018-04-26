@@ -1,5 +1,15 @@
 class RegulationsController < ::BaseController
 
+  expose(:json_list) do
+    list = []
+
+    collection.map do |record|
+      list << record.json_mapping(true)
+    end
+
+    list
+  end
+
   expose(:regulation_saver) do
     regulation_ops = params[:regulation_form]
     regulation_ops.send("permitted=", true)
