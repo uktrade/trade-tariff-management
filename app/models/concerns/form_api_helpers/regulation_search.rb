@@ -42,7 +42,7 @@ module FormApiHelpers
         res[:explicit_abrogation_regulation_id] = res[:regulation_id]
       end
 
-      res[:role] = base_regulation_role if primary_key[0] == :base_regulation_id
+      res[:role] = public_send(primary_key[1])
       res
     end
 
