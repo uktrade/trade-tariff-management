@@ -17,7 +17,7 @@ class RegulationsController < ::BaseController
   end
 
   def collection
-    ::BaseOrModificationRegulationSearch,new(params[:q]).result
+    ::BaseOrModificationRegulationSearch.new(params[:q]).result
   end
 
   def index
