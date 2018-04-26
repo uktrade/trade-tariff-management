@@ -1,7 +1,8 @@
 class RegulationParamsNormalizer
 
   ALIASES = {
-    role: :method_regulation_role
+    role: :method_regulation_role,
+    effective_end_date: :effective_enddate,
   }
 
   WHITELIST_PARAMS = %w(
@@ -227,10 +228,16 @@ class RegulationSaver
     :published_date
   ]
 
-  FULL_TEMPORARY_STOP_REGULATION_WHITELIST_PARAMS = FULL_TEMPORARY_STOP_REGULATION_REQUIRED_PARAMS +
-                                                    OPTIONAL_PARAMS + [
+  FULL_TEMPORARY_STOP_REGULATION_WHITELIST_PARAMS = [
+    :replacement_indicator,
+    :information_text,
+    :officialjournal_number,
+    :officialjournal_page,
+    :validity_start_date,
     :validity_end_date,
-    :effective_end_date
+    :effective_enddate,
+    :published_date,
+    :operation_date
   ]
 
   BASE_OR_MODIFICATION = %w(
