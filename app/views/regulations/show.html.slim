@@ -13,7 +13,7 @@
 
 header
   h1.heading-large
-    = "#{r_title} #{regulation.public_send(regulation.class.primary_key[0])}"
+    = "Created new #{r_title} #{regulation.public_send(regulation.class.primary_key[0])}"
 
 - if pdf_document.present?
   p
@@ -24,5 +24,10 @@ header
 = render "regulations/regulation_db_fields", record: regulation
 
 - if antidumping_regulation?
+  - antidumping_regulation_for = regulation.antidumping_regulation_for
+
+  h1.heading-large
+    = "Also updated #{antidumping_regulation_for.class.name} #{antidumping_regulation_for.public_send(antidumping_regulation_for.class.primary_key[0])}"
+
   = render "regulations/regulation_db_fields", record: regulation.antidumping_regulation_for
 

@@ -1,10 +1,10 @@
-module RegulationAntidumpingContext
+module RegulationAbrogationContext
   extend ActiveSupport::Concern
 
   def antidumping_regulation_for_filter_ops
     {
-      antidumping_regulation_role: public_send(primary_key[1]),
-      related_antidumping_regulation_id: public_send(primary_key[0])
+      primary_key[0] => public_send(primary_key[0]),
+      primary_key[1] => public_send(primary_key[1])
     }
   end
 

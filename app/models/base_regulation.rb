@@ -2,7 +2,6 @@ class BaseRegulation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::RegulationDocumentContext
-  include ::RegulationAntidumpingContext
 
   plugin :oplog, primary_key: [:base_regulation_id, :base_regulation_role]
   plugin :time_machine, period_start_column: :base_regulations__validity_start_date,

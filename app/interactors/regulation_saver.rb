@@ -303,17 +303,20 @@ class RegulationSaver
       if ANTIDUMPING_REGULATION_ROLES.include?(original_params[:role].to_s)
         ANTIDUMPING_REGULATION_REQUIRED_PARAMS
       else
-        name = target_class.to_s
-                           .titleize
-                           .split
-                           .join('_')
-                           .upcase
-        self.class.const_get("#{name}_REQUIRED_PARAMS")
+        self.class.const_get("#{target_class_name_in_upcase}_REQUIRED_PARAMS")
       end
     end
 
     def whitelist_params
-      self.class.const_get("#{name}_WHITELIST_PARAMS")
+      self.class.const_get("#{target_class_name_in_upcase}_WHITELIST_PARAMS")
+    end
+
+    def target_class_name_in_upcase
+      target_class.to_s
+                  .titleize
+                  .split
+                  .join('_')
+                  .upcase
     end
 
     def validate!
@@ -369,8 +372,8 @@ class RegulationSaver
     end
 
     def set_abrogation_regulation_for_base_regulation!
-      base_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0])
-      base_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1])
+      base_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0]))
+      base_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1]))
       base_regulation.save
 
       p ""
