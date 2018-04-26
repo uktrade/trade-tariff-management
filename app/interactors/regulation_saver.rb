@@ -282,6 +282,8 @@ class RegulationSaver
     regulation.operation_date = operation_date
     regulation.added_by_id = current_admin.id
     regulation.added_at = Time.zone.now
+    regulation.try("approved_flag=", true)
+    regulation.try("stopped_flag=", false)
 
     attempts = 5
 

@@ -588,6 +588,8 @@ class MeasureSaver
       record.added_by_id = current_admin.id
       record.added_at = Time.zone.now
       record.national = true
+      record.try("approved_flag=", true)
+      record.try("stopped_flag=", false)
     end
 
     def operation_date
