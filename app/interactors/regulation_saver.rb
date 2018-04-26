@@ -188,6 +188,7 @@ class RegulationSaver
                 :target_class,
                 :original_params,
                 :regulation_params,
+                :base_regulation,
                 :regulation,
                 :normalizer,
                 :errors
@@ -233,6 +234,9 @@ class RegulationSaver
     regulation.public_send("#{target_class.primary_key[1]}=", regulation_params[target_class.primary_key[1]])
     regulation.national = true
 
+    set_base_regulation
+    set_validity_end_date if modification_regulation_and_end_period_not_set?
+
     validate!
     errors.blank?
   end
@@ -266,6 +270,22 @@ class RegulationSaver
   end
 
   private
+
+    def set_base_regulation
+      @base_regulation = BaseRegulation.where(
+        base_regulation_role: original_params[:base_regulation_role],
+        base_regulation_id: original_params[:base_regulation_id],
+      ).first
+    end
+
+    def modification_regulation_and_end_period_not_set?
+      regulation.is_a?(ModificationRegulation) &&
+      original_params[:validity_end_date].blank?
+    end
+
+    def set_validity_end_date
+      regulation.validity_end_date = base_regulation.validity_end_date
+    end
 
     def check_required_params!
       target_class_required_params.map do |k|
@@ -345,17 +365,12 @@ class RegulationSaver
     end
 
     def set_abrogation_regulation_for_base_regulation!
-      target_regulation = BaseRegulation.where(
-        base_regulation_role: original_params[:base_regulation_role],
-        base_regulation_id: original_params[:base_regulation_id],
-      ).first
-
-      target_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0])
-      target_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1])
-      target_regulation.save
+      base_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0])
+      base_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1])
+      base_regulation.save
 
       p ""
-      p "[SAVED ABROGATION REGULATION FOR BASE] #{target_regulation.inspect}"
+      p "[SAVED ABROGATION REGULATION FOR BASE] #{base_regulation.inspect}"
       p ""
     end
 
