@@ -56,7 +56,7 @@ class RegulationParamsNormalizer
       end
     end
 
-    @normalized_params
+    @normalized_params = ActiveSupport::HashWithIndifferentAccess.new(normalized_params)
   end
 
   def method_regulation_role(role)
@@ -128,8 +128,18 @@ class RegulationSaver
     :effective_end_date
   ]
 
-  BASE_REGULATION_WHITELIST_PARAMS = BASE_REGULATION_REQUIRED_PARAMS +
-                                     BASE_OPTIONAL_PARAMS
+  BASE_REGULATION_WHITELIST_PARAMS = [
+    :community_code,
+    :replacement_indicator,
+    :information_text,
+    :validity_start_date,
+    :validity_end_date,
+    :effective_end_date,
+    :regulation_group_id,
+    :officialjournal_number,
+    :officialjournal_page,
+    :operation_date
+  ]
 
   MODIFICATION_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
     :base_regulation_role,
@@ -199,7 +209,7 @@ class RegulationSaver
     :effective_end_date
   ]
 
-  ADVANCED_VALIDATION_MODELS = %w(
+  BASE_OR_MODIFICATION = %w(
     BaseRegulation
     ModificationRegulation
   )
@@ -225,7 +235,7 @@ class RegulationSaver
     Rails.logger.info "-" * 100
     Rails.logger.info ""
 
-    @normalizer = ::RegulationParamsNormalizer.new(regulation_params)
+    @normalizer = ::RegulationParamsNormalizer.new(original_params)
     @regulation_params = normalizer.normalized_params
     @target_class = normalizer.target_class
 
@@ -272,6 +282,13 @@ class RegulationSaver
     set_base_regulation
     set_validity_end_date if modification_regulation_and_end_period_not_set?
 
+    p "!" * 100
+    p "need_to_bump_published_date?: #{need_to_bump_published_date?}, BASE_OR_MODIFICATION.include?(target_class.to_s): #{BASE_OR_MODIFICATION.include?(target_class.to_s)}"
+    p "regulation_params[:published_date].blank?: #{regulation_params[:published_date].blank?}, regulation_params[:validity_start_date].present?: #{regulation_params['validity_start_date'].present?}"
+    p "!" * 100
+
+    set_published_date if need_to_bump_published_date?
+
     validate!
     errors.blank?
   end
@@ -307,6 +324,16 @@ class RegulationSaver
   end
 
   private
+
+    def set_published_date
+      regulation.published_date = regulation_params[:validity_start_date]
+    end
+
+    def need_to_bump_published_date?
+      BASE_OR_MODIFICATION.include?(target_class.to_s) &&
+      regulation_params[:published_date].blank? &&
+      regulation_params[:validity_start_date].present?
+    end
 
     def filtered_ops
       ops = regulation_params.select do |k ,v|
@@ -350,8 +377,7 @@ class RegulationSaver
     end
 
     def whitelist_params
-      self.class.const_get("#{target_class_name_in_upcase}_WHITELIST_PARAMS") +
-      target_class.primary_key
+      self.class.const_get("#{target_class_name_in_upcase}_WHITELIST_PARAMS")
     end
 
     def target_class_name_in_upcase
@@ -363,7 +389,7 @@ class RegulationSaver
     end
 
     def validate!
-      if ADVANCED_VALIDATION_MODELS.include?(target_class.to_s)
+      if BASE_OR_MODIFICATION.include?(target_class.to_s)
         regulation_advanced_validation!
       end
     end
