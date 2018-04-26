@@ -187,8 +187,6 @@ class RegulationSaver
   ]
 
   COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS = [
-    :complete_abrogation_regulation_id,
-    :complete_abrogation_regulation_role,
     :replacement_indicator,
     :information_text,
     :officialjournal_number,
@@ -202,8 +200,6 @@ class RegulationSaver
   ]
 
   EXPLICIT_ABROGATION_REGULATION_WHITELIST_PARAMS = [
-    :explicit_abrogation_regulation_id,
-    :explicit_abrogation_regulation_role,
     :replacement_indicator,
     :information_text,
     :officialjournal_number,
@@ -373,10 +369,17 @@ class RegulationSaver
     end
 
     def set_base_regulation
-      @base_regulation = BaseRegulation.where(
-        base_regulation_role: original_params[:base_regulation_role],
-        base_regulation_id: original_params[:base_regulation_id],
-      ).first
+      @base_regulation = if original_params[:base_regulation_role] == "4"
+        ModificationRegulation.where(
+          modification_regulation_role: original_params[:base_regulation_role],
+          modification_regulation_id: original_params[:base_regulation_id],
+        ).first
+      else
+        BaseRegulation.where(
+          base_regulation_role: original_params[:base_regulation_role],
+          base_regulation_id: original_params[:base_regulation_id],
+        ).first
+      end
     end
 
     def modification_regulation_and_end_period_not_set?
