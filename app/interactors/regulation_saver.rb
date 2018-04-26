@@ -217,7 +217,14 @@ class RegulationSaver
     :published_date
   ]
 
-  PROROGATION_REGULATION_WHITELIST_PARAMS = PROROGATION_REGULATION_REQUIRED_PARAMS + OPTIONAL_PARAMS
+  PROROGATION_REGULATION_WHITELIST_PARAMS = [
+    :replacement_indicator,
+    :information_text,
+    :officialjournal_number,
+    :officialjournal_page,
+    :published_date,
+    :operation_date
+  ]
 
   FULL_TEMPORARY_STOP_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
     :validity_start_date,
