@@ -120,6 +120,8 @@ class RegulationForm
       antidumping_regulation_role: antidumping_regulation_role,
       related_antidumping_regulation_id: related_antidumping_regulation_id,
       operation_date: operation_date,
+      published_date: published_date,
+      abrogation_date: abrogation_date,
       errors: errors
     }
   end

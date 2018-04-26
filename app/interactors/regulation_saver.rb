@@ -155,15 +155,31 @@ class RegulationSaver
     :published_date
   ]
 
-  COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS = COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS +
-                                                    OPTIONAL_PARAMS
+  COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS = [
+    :complete_abrogation_regulation_id,
+    :complete_abrogation_regulation_role,
+    :replacement_indicator,
+    :information_text,
+    :officialjournal_number,
+    :officialjournal_page,
+    :published_date,
+    :operation_date
+  ]
 
   EXPLICIT_ABROGATION_REGULATION_REQUIRED_PARAMS = COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS + [
     :abrogation_date
   ]
 
-  EXPLICIT_ABROGATION_REGULATION_WHITELIST_PARAMS = COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS + [
-    :abrogation_date
+  EXPLICIT_ABROGATION_REGULATION_WHITELIST_PARAMS = [
+    :explicit_abrogation_regulation_id,
+    :explicit_abrogation_regulation_role,
+    :replacement_indicator,
+    :information_text,
+    :officialjournal_number,
+    :officialjournal_page,
+    :published_date,
+    :abrogation_date,
+    :operation_date
   ]
 
   PROROGATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
@@ -226,14 +242,29 @@ class RegulationSaver
 
   def valid?
     check_required_params!
+
+    p ""
+    p "VVV" * 40
+    p ""
+    p " errors: #{errors.inspect}"
+    p ""
+    p "VVV" * 40
+    p ""
+
     return false if @errors.present?
 
-    @regulation = target_class.new(
-      regulation_params.reject do |k ,v|
-        !whitelist_params.include?(k) ||
-        target_class.primary_key.include?(k)
-      end
-    )
+    p ""
+    p "+" * 100
+    p ""
+    p " regulation_params: #{regulation_params.inspect}"
+    p ""
+    p " whitelist_params: #{whitelist_params.inspect}"
+    p ""
+    p " filtered_ops: #{filtered_ops.inspect}"
+    p ""
+    p "+" * 100
+
+    @regulation = target_class.new(filtered_ops)
     regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
     regulation.public_send("#{target_class.primary_key[1]}=", regulation_params[target_class.primary_key[1]])
     regulation.national = true
@@ -275,6 +306,15 @@ class RegulationSaver
 
   private
 
+    def filtered_ops
+      ops = regulation_params.select do |k ,v|
+        whitelist_params.include?(k.to_sym) &&
+        !target_class.primary_key.include?(k)
+      end
+
+      ops
+    end
+
     def set_base_regulation
       @base_regulation = BaseRegulation.where(
         base_regulation_role: original_params[:base_regulation_role],
@@ -308,7 +348,8 @@ class RegulationSaver
     end
 
     def whitelist_params
-      self.class.const_get("#{target_class_name_in_upcase}_WHITELIST_PARAMS")
+      self.class.const_get("#{target_class_name_in_upcase}_WHITELIST_PARAMS") +
+      target_class.primary_key
     end
 
     def target_class_name_in_upcase
