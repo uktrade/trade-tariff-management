@@ -70,9 +70,9 @@ class RegulationParamsNormalizer
   end
 
   def stab_some_attributes
-    @normalized_params[:officialjournal_number] = Time.now.to_i.to_s
-    @normalized_params[:officialjournal_page] = rand(1..99)
-    @normalized_params[:community_code] = rand(1..4)
+    @normalized_params[:officialjournal_number] = '00'
+    @normalized_params[:officialjournal_page] = 0
+    @normalized_params[:community_code] = 1
   end
 
   def method_regulation_role(role)
