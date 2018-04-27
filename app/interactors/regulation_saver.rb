@@ -57,7 +57,22 @@ class RegulationParamsNormalizer
       end
     end
 
+    # TODO: Remove me later
+    #       Added because of
+    #       `on create set dummy values for the OJ page and number e.g. 00 00 and hide from the form`
+    #       and
+    #       `On create set the community code to 1 and hide the field`
+    #       from https://trello.com/c/EbZmbJYu/158-create-regulation-phase-1
+    #
+    stab_some_attributes
+
     @normalized_params = ActiveSupport::HashWithIndifferentAccess.new(normalized_params)
+  end
+
+  def stab_some_attributes
+    @normalized_params[:officialjournal_number] = Time.now.to_i.to_s
+    @normalized_params[:officialjournal_page] = rand(1..99)
+    @normalized_params[:community_code] = rand(1..4)
   end
 
   def method_regulation_role(role)

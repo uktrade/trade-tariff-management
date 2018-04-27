@@ -23,15 +23,22 @@
           = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
           = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles", "code-class-name" => "prefix--regulation" }
 
-    div v-if="showCommunityCode"
-      h4.heading-small
-        | Specify the community code
-      .row
-        .col-md-4
-          .form-group v-bind:class="{ 'form-group-error': regulation.errors.community_code }"
-            span.error-message v-if="regulation.errors.community_code" v-html="regulation.errors.community_code[0]"
-            = f.input :community_code, as: :hidden, input_html: { "v-model" => "regulation.community_code" }
-            = content_tag "custom-select", "", { ":options" => "communityCodes", "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code", "code-class-name" => "prefix--l1", "placeholder" => "- select community code -" }
+
+    / TODO: Return me back later
+    /       Hidden because of
+    /       `On create set the community code to 1 and hide the field`
+    /       from https://trello.com/c/EbZmbJYu/158-create-regulation-phase-1
+    /
+    - if false
+      div v-if="showCommunityCode"
+        h4.heading-small
+          | Specify the community code
+        .row
+          .col-md-4
+            .form-group v-bind:class="{ 'form-group-error': regulation.errors.community_code }"
+              span.error-message v-if="regulation.errors.community_code" v-html="regulation.errors.community_code[0]"
+              = f.input :community_code, as: :hidden, input_html: { "v-model" => "regulation.community_code" }
+              = content_tag "custom-select", "", { ":options" => "communityCodes", "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code", "code-class-name" => "prefix--l1", "placeholder" => "- select community code -" }
 
     h4.heading-small
       | Specify the regulation identifier
@@ -117,11 +124,17 @@
 
     = f.input :pdf_data, as: :file, hint: "Upload the regulation document itself, in PDF format.", label: false
 
-    .row
-      .col-md-4
-        = f.input :officialjournal_number, label: "Official journal number", input_html: { "v-model" => "regulation.officialjournal_number" }
-      .col-md-4
-        = f.input :officialjournal_page, label: "Official journal page", input_html: { "v-model" => "regulation.officialjournal_page" }
+    / TODO: Return me back later
+    /       Hidden because of
+    /       `on create set dummy values for the OJ page and number e.g. 00 00 and hide from the form`
+    /       from https://trello.com/c/EbZmbJYu/158-create-regulation-phase-1
+    /
+    - if false
+      .row
+        .col-md-4
+          = f.input :officialjournal_number, label: "Official journal number", input_html: { "v-model" => "regulation.officialjournal_number" }
+        .col-md-4
+          = f.input :officialjournal_page, label: "Official journal page", input_html: { "v-model" => "regulation.officialjournal_page" }
 
     h4.heading-small
       | Specify the operation date
