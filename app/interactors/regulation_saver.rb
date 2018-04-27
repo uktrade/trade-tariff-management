@@ -58,12 +58,12 @@ class RegulationParamsNormalizer
     #       `On create set the community code to 1 and hide the field`
     #       from https://trello.com/c/EbZmbJYu/158-create-regulation-phase-1
     #
-    stab_some_attributes
+    stub_some_attributes
 
     @normalized_params = ActiveSupport::HashWithIndifferentAccess.new(normalized_params)
   end
 
-  def stab_some_attributes
+  def stub_some_attributes
     @normalized_params[:officialjournal_number] = '00'
     @normalized_params[:officialjournal_page] = 0
     @normalized_params[:community_code] = 1
