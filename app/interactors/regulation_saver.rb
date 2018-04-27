@@ -2,7 +2,7 @@ class RegulationParamsNormalizer
 
   ALIASES = {
     role: :method_regulation_role,
-    effective_end_date: :effective_enddate,
+    effective_end_date: :method_effective_end_date,
   }
 
   WHITELIST_PARAMS = %w(
@@ -80,6 +80,18 @@ class RegulationParamsNormalizer
 
     ops[target_class.primary_key[1]] = role
     ops[target_class.primary_key[0]] = fetch_regulation_number
+
+    ops
+  end
+
+  def method_effective_end_date(effective_end_date)
+    ops = {}
+
+    if reg_params[:role] == "8"
+      ops[:effective_enddate] = effective_end_date
+    else
+      ops[:effective_end_date] = effective_end_date
+    end
 
     ops
   end
