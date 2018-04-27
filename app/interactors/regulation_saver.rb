@@ -18,16 +18,10 @@ class RegulationParamsNormalizer
     regulation_group_id
     officialjournal_number
     officialjournal_page
-
     base_regulation_role
     base_regulation_id
     antidumping_regulation_role
     related_antidumping_regulation_id
-    complete_abrogation_regulation_role
-    complete_abrogation_regulation_id
-    explicit_abrogation_regulation_role
-    explicit_abrogation_regulation_id
-
     operation_date
   )
 

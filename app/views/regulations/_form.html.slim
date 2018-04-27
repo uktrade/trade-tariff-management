@@ -20,8 +20,10 @@
         | Specify a related antidumping regulation
       .row
         .col-md-6
-          = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
-          = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles", "code-class-name" => "prefix--regulation" }
+          .form-group v-bind:class="{ 'form-group-error': regulation.errors.related_antidumping_regulation_id }"
+            span.error-message v-if="regulation.errors.related_antidumping_regulation_id" v-html="regulation.errors.related_antidumping_regulation_id[0]"
+            = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
+            = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles", "code-class-name" => "prefix--regulation" }
 
 
     / TODO: Return me back later
