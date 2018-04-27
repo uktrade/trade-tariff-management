@@ -49,8 +49,6 @@ Rails.application.routes.draw do
   namespace :regulation_form_api do
     resources :regulation_groups, only: [:index]
     resources :base_regulations, only: [:index]
-    resources :complete_abrogation_regulations, only: [:index]
-    resources :explicit_abrogation_regulations, only: [:index]
   end
 
   resources :regulations

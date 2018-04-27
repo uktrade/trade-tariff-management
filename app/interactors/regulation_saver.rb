@@ -278,15 +278,6 @@ class RegulationSaver
   def initialize(current_admin, regulation_params={})
     @current_admin = current_admin
     @original_params = ActiveSupport::HashWithIndifferentAccess.new(regulation_params)
-
-    Rails.logger.info ""
-    Rails.logger.info "-" * 100
-    Rails.logger.info ""
-    Rails.logger.info "regulation_params: #{regulation_params.inspect}"
-    Rails.logger.info ""
-    Rails.logger.info "-" * 100
-    Rails.logger.info ""
-
     @normalizer = ::RegulationParamsNormalizer.new(original_params)
     @regulation_params = normalizer.normalized_params
     @target_class = normalizer.target_class
@@ -304,27 +295,7 @@ class RegulationSaver
 
   def valid?
     check_required_params!
-
-    p ""
-    p "VVV" * 40
-    p ""
-    p " errors: #{errors.inspect}"
-    p ""
-    p "VVV" * 40
-    p ""
-
     return false if @errors.present?
-
-    p ""
-    p "+" * 100
-    p ""
-    p " regulation_params: #{regulation_params.inspect}"
-    p ""
-    p " whitelist_params: #{whitelist_params.inspect}"
-    p ""
-    p " filtered_ops: #{filtered_ops.inspect}"
-    p ""
-    p "+" * 100
 
     @regulation = target_class.new(filtered_ops)
     regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
@@ -333,12 +304,6 @@ class RegulationSaver
 
     set_base_regulation
     set_validity_end_date if modification_regulation_and_end_period_not_set?
-
-    p "!" * 100
-    p "need_to_bump_published_date?: #{need_to_bump_published_date?}, BASE_OR_MODIFICATION.include?(target_class.to_s): #{BASE_OR_MODIFICATION.include?(target_class.to_s)}"
-    p "regulation_params[:published_date].blank?: #{regulation_params[:published_date].blank?}, regulation_params[:validity_start_date].present?: #{regulation_params['validity_start_date'].present?}"
-    p "!" * 100
-
     set_published_date if need_to_bump_published_date?
 
     validate!
@@ -369,10 +334,6 @@ class RegulationSaver
     end
 
     post_saving_updates!
-
-    p ""
-    p "[SAVED REGULATION OPS] #{regulation.inspect}"
-    p ""
   end
 
   private
@@ -507,10 +468,6 @@ class RegulationSaver
       base_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0]))
       base_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1]))
       base_regulation.save
-
-      p ""
-      p "[SAVED ABROGATION REGULATION FOR BASE] #{base_regulation.inspect}"
-      p ""
     end
 
     def operation_date

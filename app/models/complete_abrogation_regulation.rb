@@ -1,7 +1,6 @@
 class CompleteAbrogationRegulation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
-  include ::FormApiHelpers::RegulationSearch
   include ::RegulationDocumentContext
   include ::RegulationAbrogationContext
 
