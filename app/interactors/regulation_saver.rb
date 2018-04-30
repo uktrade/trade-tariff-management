@@ -64,9 +64,10 @@ class RegulationParamsNormalizer
   end
 
   def stub_some_attributes
-    @normalized_params[:officialjournal_number] = '00' if reg_params[:officialjournal_number].blank?
-    @normalized_params[:officialjournal_page] = 0 if reg_params[:officialjournal_page].blank?
-    @normalized_params[:community_code] = 1 if reg_params[:community_code].blank?
+    @normalized_params[:officialjournal_number] = '00'
+    @normalized_params[:officialjournal_page] = 0
+
+    @normalized_params[:community_code] = 1 if target_class == BaseRegulation
   end
 
   def method_regulation_role(role)
@@ -132,22 +133,9 @@ class RegulationSaver
     :operation_date
   ]
 
-  OPTIONAL_PARAMS = [
-    :number_suffix,
-    :officialjournal_number,
-    :officialjournal_page,
-    :pdf_data
-  ]
-
   BASE_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
     :validity_start_date,
     :regulation_group_id
-  ]
-
-  BASE_OPTIONAL_PARAMS = OPTIONAL_PARAMS + [
-    :community_code,
-    :validity_end_date,
-    :effective_end_date
   ]
 
   BASE_REGULATION_WHITELIST_PARAMS = [
