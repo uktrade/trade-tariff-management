@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe RegulationSaver do
+describe "Saving of BaseRegulation" do
 
   include_context "regulation_saver_base_context"
 

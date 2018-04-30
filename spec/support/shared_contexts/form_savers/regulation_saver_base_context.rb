@@ -61,9 +61,17 @@ shared_context "regulation_saver_base_context" do
       end
 
       it "should create new record" do
-        expect(regulation_class.count).to be_eql(1)
+        expect(regulation.reload.new?).to be_falsey
 
         regulation_saver.regulation_params.map do |k, v|
+
+          p ""
+          p "!" * 100
+          p ""
+          p " #{k}: #{v}"
+          p ""
+          p "!" * 100
+
           expect(value_by_type(regulation.public_send(k)).to_s).to be_eql(v.to_s)
         end
       end
