@@ -43,9 +43,6 @@ shared_context "regulation_saver_base_context" do
         number_suffix: "5",
         replacement_indicator: "0",
         information_text: "Info text",
-        officialjournal_number: "1234",
-        officialjournal_page: 1234,
-        community_code: 2,
         operation_date: date_to_s(operation_date)
       }
     end
