@@ -2,106 +2,18 @@ require "rails_helper"
 
 describe RegulationSaver do
 
-  let(:user) do
-    create(:user)
-  end
+  include_context "regulation_saver_base_context"
 
-  let(:regulation_saver) do
-    ::RegulationSaver.new(user, ops)
-  end
+  let(:regulation_role) { "1" }
+  let(:regulation_class) { BaseRegulation }
 
-  let(:regulation) do
-    regulation_saver.regulation
-  end
-
-  describe "BaseRegulation" do
-    describe "Successful saving" do
-
-      let(:validity_start_date) do
-        1.day.from_now
-      end
-
-      let(:validity_end_date) do
-        validity_start_date + 1.year
-      end
-
-      let(:effective_end_date) do
-        validity_end_date + 1.day
-      end
-
-      let(:operation_date) do
-        validity_start_date
-      end
-
-      let(:regulation_group) do
-        create(:regulation_group)
-      end
-
-      let(:ops) do
-        {
-          role: "1",
-          prefix: "A",
-          publication_year: "18",
-          regulation_number: "1234",
-          number_suffix: "5",
-          replacement_indicator: "0",
-          information_text: "Info text",
-          validity_start_date: date_to_s(validity_start_date),
-          validity_end_date: date_to_s(validity_end_date),
-          effective_end_date: date_to_s(effective_end_date),
-          regulation_group_id: regulation_group.regulation_group_id,
-          officialjournal_number: "1234",
-          officialjournal_page: 1234,
-          community_code: 2,
-          operation_date: date_to_s(operation_date)
-        }
-      end
-
-      it "should be valid" do
-        expect(regulation_saver.valid?).to be_truthy
-      end
-
-      describe "Persist" do
-        before do
-          regulation_saver.valid?
-          regulation_saver.persist!
-        end
-
-        it "should create new BaseRegulation" do
-          expect(BaseRegulation.count).to be_eql(1)
-
-          regulation_saver.regulation_params.map do |k, v|
-            expect(value_by_type(regulation.public_send(k)).to_s).to be_eql(v.to_s)
-          end
-        end
-      end
-    end
-
-    describe "Validations" do
-      describe "Submit blank form" do
-        let(:ops) do
-          {
-            role: "1"
-          }
-        end
-
-        it "should NOT be valid" do
-          expect(regulation_saver.valid?).to be_falsey
-        end
-      end
-    end
-  end
-
-  def value_by_type(value)
-    case value.class.name
-    when "Time", "DateTime", "Date"
-      date_to_s(value)
-    else
-      value
-    end
-  end
-
-  def date_to_s(date)
-    date.strftime("%d/%m/%Y")
+  let(:ops) do
+    base_ops.merge(
+      role: regulation_role,
+      validity_start_date: date_to_s(validity_start_date),
+      validity_end_date: date_to_s(validity_end_date),
+      effective_end_date: date_to_s(effective_end_date),
+      regulation_group_id: regulation_group.regulation_group_id
+    )
   end
 end
