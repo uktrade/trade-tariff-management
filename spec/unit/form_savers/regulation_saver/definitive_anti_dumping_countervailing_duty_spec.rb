@@ -1,16 +1,16 @@
 require "rails_helper"
 
-describe "Saving of Provisional anti-dumping/countervailing duty regulation" do
+describe "Saving of Definitive anti-dumping/countervailing duty regulation" do
 
   include_context "regulation_saver_base_context"
 
-  let(:regulation_role) { "2" }
+  let(:regulation_role) { "3" }
   let(:regulation_class) { BaseRegulation }
 
   let!(:base_regulation) do
     create(:base_regulation,
       base_regulation_role: "1",
-      base_regulation_id: "D9402622"
+      base_regulation_id: "R7512740"
     )
   end
 
