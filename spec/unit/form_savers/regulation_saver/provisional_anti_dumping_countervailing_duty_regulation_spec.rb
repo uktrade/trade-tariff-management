@@ -7,13 +7,6 @@ describe "Saving of Provisional anti-dumping/countervailing duty regulation" do
   let(:regulation_role) { "2" }
   let(:regulation_class) { BaseRegulation }
 
-  let!(:base_regulation) do
-    create(:base_regulation,
-      base_regulation_role: "1",
-      base_regulation_id: "D9402622"
-    )
-  end
-
   let(:ops) do
     base_ops.merge(
       role: regulation_role,

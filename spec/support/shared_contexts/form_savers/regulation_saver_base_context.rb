@@ -14,39 +14,46 @@ shared_context "regulation_saver_base_context" do
     regulation_saver.regulation
   end
 
+  let(:validity_start_date) do
+    1.day.from_now
+  end
+
+  let(:validity_end_date) do
+    validity_start_date + 1.year
+  end
+
+  let(:effective_end_date) do
+    validity_end_date + 1.day
+  end
+
+  let(:operation_date) do
+    validity_start_date
+  end
+
+  let(:regulation_group) do
+    create(:regulation_group)
+  end
+
+  let!(:base_regulation) do
+    create(:base_regulation,
+      base_regulation_role: "1",
+      base_regulation_id: "D9402622"
+    )
+  end
+
+  let(:base_ops) do
+    {
+      prefix: "A",
+      publication_year: "18",
+      regulation_number: "1234",
+      number_suffix: "5",
+      replacement_indicator: "0",
+      information_text: "Info text",
+      operation_date: date_to_s(operation_date)
+    }
+  end
+
   describe "Successful saving" do
-    let(:validity_start_date) do
-      1.day.from_now
-    end
-
-    let(:validity_end_date) do
-      validity_start_date + 1.year
-    end
-
-    let(:effective_end_date) do
-      validity_end_date + 1.day
-    end
-
-    let(:operation_date) do
-      validity_start_date
-    end
-
-    let(:regulation_group) do
-      create(:regulation_group)
-    end
-
-    let(:base_ops) do
-      {
-        prefix: "A",
-        publication_year: "18",
-        regulation_number: "1234",
-        number_suffix: "5",
-        replacement_indicator: "0",
-        information_text: "Info text",
-        operation_date: date_to_s(operation_date)
-      }
-    end
-
     it "should be valid" do
       expect(regulation_saver.valid?).to be_truthy
     end
@@ -60,7 +67,7 @@ shared_context "regulation_saver_base_context" do
       it "should create new record" do
         expect(regulation.reload.new?).to be_falsey
 
-        regulation_saver.regulation_params.map do |k, v|
+        attributes_to_check.map do |k, v|
 
           p ""
           p "!" * 100
@@ -90,6 +97,19 @@ shared_context "regulation_saver_base_context" do
   end
 
   private
+
+    def attributes_to_check
+      attrs = regulation_saver.regulation_params
+
+      if [ "CompleteAbrogationRegulation",
+           "ExplicitAbrogationRegulation" ].include?(regulation.class.name)
+        attrs = attrs.select do |k, v|
+          !%w(base_regulation_id base_regulation_role).include?(k)
+        end
+      end
+
+      attrs
+    end
 
     def value_by_type(value)
       case value.class.name
