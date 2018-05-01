@@ -16,6 +16,10 @@ input.date-picker {
   }
 }
 
+.measure-form [class*="col-"] {
+  justify-content: flex-end;
+}
+
 .help-block {
   color: $secondary-text-colour;
   margin: 0 0 0.3em;

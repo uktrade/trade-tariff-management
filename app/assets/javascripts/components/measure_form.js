@@ -13,6 +13,10 @@ function debounce(func, wait, immediate) {
   };
 };
 
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 $(document).ready(function() {
 
   var form = document.querySelector(".measure-form");
@@ -109,14 +113,6 @@ $(document).ready(function() {
       }
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
-
-      // $("#measure_form_measure_type_series_id").on("change", function() {
-      //   self.measure.measure_type_series_id = $("#measure_form_measure_type_series_id").val();
-      // });
-
-      // $("#measure_form_measure_type_id").on("change", function() {
-      //   self.measure.measure_type_id = $("#measure_form_measure_type_id").val();
-      // });
 
       $(".measure-form").on("submit", function(e) {
         e.preventDefault();
@@ -303,10 +299,7 @@ $(document).ready(function() {
           additional_code_type_id: this.measure.additional_code_type_id,
           goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
           additional_code_description: this.measure.additional_code_description,
-
-          measure_components: this.measure.measure_components,
           footnotes: this.measure.footnotes,
-          conditions: this.measure.conditions,
 
           existing_quota: this.measure.existing_quota === "existing",
           quota_status: this.measure.quota_status,
@@ -314,6 +307,32 @@ $(document).ready(function() {
           quota_criticality_threshold: this.measure.quota_criticality_threshold,
           quota_description: this.measure.quota_description
         };
+
+        try {
+          payload.measure_components = this.measure.measure_components.map(function(component) {
+            var c = clone(component);
+            // to ignore A and B
+            c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+
+            return c;
+          });
+
+          payload.conditions = this.measure.conditions.map(function(condition) {
+            var c = clone(condition);
+
+            c.measure_condition_components = c.measure_condition_components.map(function(component) {
+              var c = clone(component);
+              // to ignore A and B
+              c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+
+              return c;
+            });
+
+            return c;
+          });
+        } catch (e) {
+
+        }
 
         if (this.origins.country.selected) {
           payload.geographical_area_id = this.origins.country.geographical_area_id;

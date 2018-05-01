@@ -1,10 +1,10 @@
 script type="text/x-template" id="measure-condition-component-template"
   .row
-    .col-md-3
+    .col-md-4
       .form-group
         label.form-label
           | Duty expression
-        = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_id", "v-model" => "measureConditionComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―", "code-class-name" => "prefix--duty-expression", "abbreviation-class-name" => "abbreviation--duty-expression" }
+        = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_code", "v-model" => "measureConditionComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―", "code-class-name" => "prefix--duty-expression", "abbreviation-class-name" => "abbreviation--duty-expression", ":options-filter" => "expressionsFriendlyDuplicate" }
 
     .col-md-3 v-if="showDutyAmountOrPercentage"
       .form-group
@@ -28,6 +28,12 @@ script type="text/x-template" id="measure-condition-component-template"
       .form-group
         label.form-label
           | Duty amount (€)
+        input.form-control v-model="measureConditionComponent.amount"
+
+    .col-md-3 v-if="showDutyAmountNegativeNumber"
+      .form-group
+        label.form-label
+          | Duty amount (-€)
         input.form-control v-model="measureConditionComponent.amount"
 
     .col-md-3 v-if="showDutyAmountMinimum"

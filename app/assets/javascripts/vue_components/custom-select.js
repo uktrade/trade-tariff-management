@@ -17,7 +17,8 @@ Vue.component('custom-select', {
     "allowClear",
     "name",
     "codeClassName",
-    "abbreviationClassName"
+    "abbreviationClassName",
+    "optionsFilter"
   ],
   data: function() {
     return {
@@ -56,7 +57,11 @@ Vue.component('custom-select', {
     }
 
     if (this.options) {
-      options["options"] = this.options;
+      try {
+        options["options"] = this.optionsFilter(this.options);
+      } catch (e) {
+        options["options"] = this.options;
+      }
     }
 
     if (this.url && !this.minLength) {
@@ -105,7 +110,11 @@ Vue.component('custom-select', {
             callback();
           },
           success: function(res) {
-            callback(res);
+            try {
+              callback(vm.optionsFilter(res));
+            } catch (e) {
+              callback(res);
+            }
           }
         });
       }
@@ -173,7 +182,11 @@ Vue.component('custom-select', {
               callback();
             },
             success: function(res) {
-              callback(res);
+              try {
+                callback(vm.optionsFilter(res));
+              } catch (e) {
+                callback(res);
+              }
             }
           });
         });
