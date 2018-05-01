@@ -2,9 +2,7 @@ require 'rails_helper'
 
 describe "Regulation Form APIs: Regulation groups", type: :request do
 
-  let!(:user) do
-    create(:user)
-  end
+  include_context "form_apis_regulation_base_context"
 
   let(:actual_group_apl) do
     add_group("APL", "Unit price, standard import value")
@@ -16,12 +14,6 @@ describe "Regulation Form APIs: Regulation groups", type: :request do
 
   let(:not_actual_group_apl) do
     add_group("CIT", "CITES", 3.months.ago)
-  end
-
-  let(:headers) do
-    {
-      "Content-type" => "application/json"
-    }
   end
 
   context "Index" do
@@ -53,23 +45,21 @@ describe "Regulation Form APIs: Regulation groups", type: :request do
     end
   end
 
-  def collection
-    JSON.parse(response.body)
-  end
+  private
 
-  def expecting_group_in_result(position, group)
-    expect(collection[position]["regulation_group_id"]).to be_eql(group.regulation_group_id)
-    expect(collection[position]["description"]).to be_eql(group.description)
-  end
+    def expecting_group_in_result(position, group)
+      expect(collection[position]["regulation_group_id"]).to be_eql(group.regulation_group_id)
+      expect(collection[position]["description"]).to be_eql(group.description)
+    end
 
-  def add_group(regulation_group_id, description, validity_end_date=nil)
-    r_group = create(:regulation_group, regulation_group_id: regulation_group_id,
-                                        validity_start_date: 1.year.ago,
-                                        validity_end_date: validity_end_date)
+    def add_group(regulation_group_id, description, validity_end_date=nil)
+      r_group = create(:regulation_group, regulation_group_id: regulation_group_id,
+                                          validity_start_date: 1.year.ago,
+                                          validity_end_date: validity_end_date)
 
-    create(:regulation_group_description, regulation_group_id: r_group.regulation_group_id,
-                                          description: description)
+      create(:regulation_group_description, regulation_group_id: r_group.regulation_group_id,
+                                            description: description)
 
-    r_group
-  end
+      r_group
+    end
 end
