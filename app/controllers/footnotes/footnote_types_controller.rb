@@ -2,7 +2,7 @@ module Footnotes
   class FootnoteTypesController < ::BaseController
 
     def collection
-      FootnoteType.actual
+      FootnoteType.q_search(params[:q])
     end
   end
 end
