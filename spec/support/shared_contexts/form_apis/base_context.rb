@@ -16,4 +16,9 @@ shared_context "form_apis_base_context" do
     def collection
       JSON.parse(response.body)
     end
+
+    def date_to_format(date_in_string)
+      date_in_string.to_date
+                    .strftime("%d/%m/%Y")
+    end
 end
