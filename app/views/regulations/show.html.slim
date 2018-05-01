@@ -1,3 +1,5 @@
+- r_title = regulation_title(regulation)
+
 .breadcrumbs
   ol
     li
@@ -7,11 +9,11 @@
       = link_to "Regulations", regulations_url
 
     li aria-current="page"
-      = regulation.class
+      = r_title
 
 header
   h1.heading-large
-    = "#{regulation.class} #{regulation.public_send(regulation.class.primary_key[0])}"
+    = "Created new #{r_title} #{regulation.public_send(regulation.class.primary_key[0])}"
 
 - if pdf_document.present?
   p
@@ -19,15 +21,15 @@ header
     =<> ' | '
     =<> link_to "Add new regulation", new_regulation_url, style: "margin-left: 15px;"
 
-ul
-  - regulation.db_schema.keys.map do |k|
-    - title = k.to_s.upcase
-    - title = title.gsub('_', ' ') if title.include?('_')
+= render "regulations/regulation_db_fields", record: regulation
 
-    li
-      strong style="font-weight: bold"
-        = "#{title} :"
-      =<> regulation.public_send(k)
+- if antidumping_regulation?
+  - antidumping_regulation_for = regulation.antidumping_regulation_for
+
+  h1.heading-large
+    = "Also updated #{antidumping_regulation_for.class.name} #{antidumping_regulation_for.public_send(antidumping_regulation_for.class.primary_key[0])}"
+
+  = render "regulations/regulation_db_fields", record: regulation.antidumping_regulation_for
 
 br
 br

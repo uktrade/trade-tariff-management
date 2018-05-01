@@ -2,7 +2,7 @@ module RegulationFormApi
   class BaseRegulationsController < ::BaseController
 
     def collection
-      BaseRegulation.q_search(:base_regulation_id, params[:q])
+      ::BaseOrModificationRegulationSearch.new(params[:q]).result
     end
   end
 end

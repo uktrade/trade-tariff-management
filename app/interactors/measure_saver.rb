@@ -126,12 +126,14 @@ class MeasureSaver
     "MeasureCondition" => :measure_condition_sid
   }
 
-  attr_accessor :original_params,
+  attr_accessor :current_admin,
+                :original_params,
                 :measure_params,
                 :measure,
                 :errors
 
-  def initialize(measure_params={})
+  def initialize(current_admin, measure_params={})
+    @current_admin = current_admin
     @original_params = ActiveSupport::HashWithIndifferentAccess.new(measure_params)
     @measure_params = ::MeasureParamsNormalizer.new(measure_params).normalized_params
 
@@ -167,9 +169,7 @@ class MeasureSaver
 
   def persist!
     generate_measure_sid
-    measure.manual_add = true
-    measure.operation = "C"
-    measure.operation_date = operation_date
+    set_system_attrs(measure)
 
     attempts = 5
 
@@ -569,9 +569,7 @@ class MeasureSaver
       p "-" * 100
       p ""
 
-      record.operation = "C"
-      record.operation_date = operation_date
-      record.manual_add = true
+      set_system_attrs(record)
       record.save
 
       p ""
@@ -581,6 +579,17 @@ class MeasureSaver
       p ""
       p "-" * 100
       p ""
+    end
+
+    def set_system_attrs(record)
+      record.manual_add = true
+      record.operation = "C"
+      record.operation_date = operation_date
+      record.added_by_id = current_admin.id
+      record.added_at = Time.zone.now
+      record.national = true
+      record.try("approved_flag=", true)
+      record.try("stopped_flag=", false)
     end
 
     def operation_date

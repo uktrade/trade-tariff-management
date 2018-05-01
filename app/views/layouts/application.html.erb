@@ -27,5 +27,16 @@
   </div>
 <% end %>
 
+<% content_for :footer_top do %>
+  <%= render "shared/vue_templates/condition" %>
+  <%= render "shared/vue_templates/selectize" %>
+  <%= render "shared/vue_templates/quota_period" %>
+  <%= render "shared/vue_templates/date_select" %>
+  <%= render "shared/vue_templates/measure_component" %>
+  <%= render "shared/vue_templates/measure_condition_component" %>
+  <%= render "shared/vue_templates/measure_origin" %>
+  <%= render "shared/vue_templates/footnote" %>
+<% end %>
+
 <%= render "flashes" %>
 <%= render template: "layouts/govuk_template" %>

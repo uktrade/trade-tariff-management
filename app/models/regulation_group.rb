@@ -3,6 +3,8 @@ class RegulationGroup < Sequel::Model
   include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :regulation_group_id
+  plugin :time_machine, period_start_column: :validity_start_date,
+                        period_end_column: :validity_end_date
   plugin :conformance_validator
 
   set_primary_key [:regulation_group_id]

@@ -1,0 +1,9 @@
+ul
+  - record.db_schema.keys.map do |k|
+    - title = k.to_s.upcase
+    - title = title.gsub('_', ' ') if title.include?('_')
+
+    li
+      strong style="font-weight: bold"
+        = "#{title} :"
+      =<> record.public_send(k)

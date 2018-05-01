@@ -1,6 +1,3 @@
-//= require ./custom-select
-//= require ./date-select
-
 $(document).ready(function() {
   var form = document.querySelector(".regulation-form");
 
@@ -12,7 +9,13 @@ $(document).ready(function() {
     el: form,
     data: function() {
       var data = {
-        antidumpingRoles: ["2", "3"]
+        antidumpingRoles: ["2", "3"],
+        communityCodes: [
+          { value: "1", text: "Economic" },
+          { value: "2", text: "Atomic" },
+          { value: "3", text: "Coal" },
+          { value: "4", text: "Economic/Coal"}
+        ]
       };
 
       if (window.__regulation_json) {
@@ -29,12 +32,27 @@ $(document).ready(function() {
     },
     computed: {
       dependentOnBaseRegulation: function() {
-        return this.regulation.role === "4";
+        return $.inArray(this.regulation.role, ['4', '6', '7']) !== -1;
       },
       canHaveRelatedAntidumpingLink: function() {
         var roles = ["2", "3"];
 
         return roles.indexOf(this.regulation.role) > -1;
+      },
+      showCommunityCode: function() {
+        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
+      },
+      showValidityPeriod: function() {
+        return $.inArray(this.regulation.role, ["1", "2", "3", "4", "8"]) !== -1;
+      },
+      showRegulationGroup: function() {
+        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
+      },
+      showPublishedDate: function() {
+        return $.inArray(this.regulation.role, ["5", "6", "7", "8"]) !== -1;
+      },
+      isExplicitAbrogation: function() {
+        return this.regulation.role === "7";
       }
     },
     methods: {

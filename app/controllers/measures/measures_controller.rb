@@ -6,7 +6,7 @@ module Measures
       measure_ops.send("permitted=", true)
       measure_ops = measure_ops.to_h
 
-      ::MeasureSaver.new(measure_ops)
+      ::MeasureSaver.new(current_user, measure_ops)
     end
 
     expose(:measure) do
