@@ -31,6 +31,32 @@ class MeasureType < Sequel::Model
     def national
       where(national: true)
     end
+
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.join_table(:inner,
+          :measure_type_descriptions,
+          measure_type_id: :measure_type_id
+        ).where("
+          measure_types.measure_type_id ilike ? OR
+          measure_types.measure_type_acronym ilike ? OR
+          measure_type_descriptions.description ilike ?",
+          q_rule, q_rule, q_rule
+        )
+      end
+
+      if filter_ops[:measure_type_series_id].present?
+        scope = scope.where(
+          measure_type_series_id: filter_ops[:measure_type_series_id]
+        )
+      end
+
+      scope
+    end
   end
 
   def id
