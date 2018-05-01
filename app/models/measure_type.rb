@@ -55,7 +55,7 @@ class MeasureType < Sequel::Model
         )
       end
 
-      scope
+      scope.order(Sequel.asc(:measure_types__measure_type_id))
     end
   end
 
