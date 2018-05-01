@@ -45,7 +45,7 @@ describe "Measure Form APIs: Footnote types", type: :request do
       expecting_footnote_type_in_result(1, actual_footnote_type_wr)
     end
 
-    it "should filter footnote_type by keyword" do
+    it "should filter footnote types by keyword" do
       get "/footnote_types.json", params: { q: "Combined Nomen" }, headers: headers
 
       expect(collection.count).to eq(1)
