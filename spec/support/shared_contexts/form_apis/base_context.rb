@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-shared_context "form_apis_regulation_base_context" do
+shared_context "form_apis_base_context" do
   let!(:user) do
     create(:user)
   end

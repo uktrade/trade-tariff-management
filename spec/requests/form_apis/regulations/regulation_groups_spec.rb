@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "Regulation Form APIs: Regulation groups", type: :request do
 
-  include_context "form_apis_regulation_base_context"
+  include_context "form_apis_base_context"
 
   let(:actual_group_apl) do
     add_group("APL", "Unit price, standard import value")
