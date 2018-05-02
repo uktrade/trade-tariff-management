@@ -2,8 +2,7 @@ module AdditionalCodes
   class AdditionalCodesController < ::BaseController
 
     def collection
-      AdditionalCode.actual
-                    .q_search(params[:q], params[:additional_code_type_id])
+      AdditionalCode.q_search(params)
     end
   end
 end
