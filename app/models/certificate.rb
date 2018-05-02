@@ -15,6 +15,34 @@ class Certificate < Sequel::Model
       .order(Sequel.desc(:certificate_description_periods__validity_start_date))
   end
 
+  dataset_module do
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.join_table(:inner,
+          :certificate_descriptions,
+          certificate_type_code: :certificate_type_code,
+          certificate_code: :certificate_code
+        ).where("
+          certificates.certificate_code ilike ? OR
+          certificate_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      if filter_ops[:certificate_type_code].present?
+        scope = scope.where(
+          "certificates.certificate_type_code = ?", filter_ops[:certificate_type_code]
+        )
+      end
+
+      scope.order(Sequel.asc(:certificates__certificate_code))
+    end
+  end
+
   def certificate_description
     certificate_descriptions(reload: true).first
   end
