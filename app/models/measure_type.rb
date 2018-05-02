@@ -23,7 +23,9 @@ class MeasureType < Sequel::Model
   many_to_one :measure_type_series
 
   many_to_many :additional_code_types, join_table: :additional_code_type_measure_types,
-                                       class_name: 'AdditionalCodeType'
+                                       class_name: 'AdditionalCodeType' do |ds|
+                                         ds.with_actual(AdditionalCodeType)
+                                       end
 
   delegate :description, to: :measure_type_description
 
