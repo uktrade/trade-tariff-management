@@ -71,6 +71,7 @@ class Footnote < Sequel::Model
 
         scope = scope.join_table(:inner,
           :footnote_descriptions,
+          footnote_type_id: :footnote_type_id,
           footnote_id: :footnote_id
         ).where("
           footnotes.footnote_id ilike ? OR
@@ -86,6 +87,8 @@ class Footnote < Sequel::Model
       end
 
       scope.order(Sequel.asc(:footnotes__footnote_id))
+           .all
+           .uniq { |item| item.description }
     end
   end
 
