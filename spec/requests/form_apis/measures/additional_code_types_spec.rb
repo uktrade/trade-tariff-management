@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "Measure Form APIs: Additional codes", type: :request do
+describe "Measure Form APIs: Additional code types", type: :request do
 
   include_context "form_apis_base_context"
 
