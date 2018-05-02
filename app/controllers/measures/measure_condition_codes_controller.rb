@@ -2,7 +2,7 @@ module Measures
   class MeasureConditionCodesController < ::BaseController
 
     def collection
-      MeasureConditionCode.actual
+      MeasureConditionCode.q_search(params)
     end
   end
 end
