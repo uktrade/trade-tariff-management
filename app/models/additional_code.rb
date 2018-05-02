@@ -25,6 +25,32 @@ class AdditionalCode < Sequel::Model
         where(q_rule)
       end
     end
+
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.join_table(:inner,
+          :additional_code_descriptions,
+          additional_code_type_id: :additional_code_type_id,
+          additional_code: :additional_code
+        ).where("
+          additional_codes.additional_code ilike ? OR
+          additional_code_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      if filter_ops[:additional_code_type_id].present?
+        scope = scope.where(
+          "additional_codes.additional_code_type_id = ?", filter_ops[:additional_code_type_id]
+        )
+      end
+
+      scope.order(Sequel.asc(:additional_codes__additional_code))
+    end
   end
 
   def additional_code_description
