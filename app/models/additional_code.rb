@@ -16,16 +16,6 @@ class AdditionalCode < Sequel::Model
                                               end
 
   dataset_module do
-    def q_search(keyword, additional_code_type_id=nil)
-      q_rule = Sequel.ilike(:additional_code, "#{keyword}%")
-
-      if additional_code_type_id.present?
-        where(q_rule, Sequel.ilike(:additional_code_type_id, additional_code_type_id))
-      else
-        where(q_rule)
-      end
-    end
-
     def q_search(filter_ops)
       scope = actual
 
