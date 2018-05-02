@@ -44,21 +44,44 @@ describe "Measure Form APIs: Footnotes", type: :request do
 
       expect(collection.count).to eq(2)
 
-      expecting_footnote_in_result(0, actual_footnote_nc)
-      expecting_footnote_in_result(1, actual_footnote_wr)
+      expecting_footnote_in_result(0, actual_footnote_wr)
+      expecting_footnote_in_result(1, actual_footnote_nc)
     end
 
-    # it "should filter footnotes by keyword" do
-    #   get "/footnotes.json", params: { q: "Combined Nomen" }, headers: headers
+    it "should filter footnotes by keyword" do
+      get "/footnotes.json", params: { description: "Combined Nomen" }, headers: headers
 
-    #   expect(collection.count).to eq(1)
-    #   expecting_footnote_in_result(0, actual_footnote_nc)
+      expect(collection.count).to eq(1)
+      expecting_footnote_in_result(0, actual_footnote_nc)
 
-    #   get "/footnotes.json", params: { q: "WR" }, headers: headers
+      get "/footnotes.json", params: { description: "33" }, headers: headers
 
-    #   expect(collection.count).to eq(1)
-    #   expecting_footnote_in_result(0, actual_footnote_wr)
-    # end
+      expect(collection.count).to eq(1)
+      expecting_footnote_in_result(0, actual_footnote_wr)
+    end
+
+    it "should filter footnotes by footnote_type_id" do
+      get "/footnotes.json", params: { footnote_type_id: "NC" }, headers: headers
+
+      expect(collection.count).to eq(1)
+      expecting_footnote_in_result(0, actual_footnote_nc)
+
+      get "/footnotes.json", params: { footnote_type_id: "WR" }, headers: headers
+
+      expect(collection.count).to eq(1)
+      expecting_footnote_in_result(0, actual_footnote_wr)
+    end
+
+    it "should filter footnotes by keyword and footnote_type_id at the same time" do
+      get "/footnotes.json", params: { footnote_type_id: "NC", description: "Combined No" }, headers: headers
+
+      expect(collection.count).to eq(1)
+      expecting_footnote_in_result(0, actual_footnote_nc)
+
+      get "/footnotes.json", params: { footnote_type_id: "NC", description: "NEGATIVE TEST" }, headers: headers
+
+      expect(collection.count).to eq(0)
+    end
   end
 
   private
@@ -71,12 +94,13 @@ describe "Measure Form APIs: Footnotes", type: :request do
     end
 
     def add_description(footnote, description)
-      create(
-        :footnote_description,
+      desc_record = FootnoteDescription.actual.where(
         footnote_type_id: footnote.footnote_type_id,
-        footnote_id: footnote.footnote_id,
-        description: description
-      )
+        footnote_id: footnote.footnote_id
+      ).first
+
+      desc_record.description = description
+      desc_record.save
     end
 
     def expecting_footnote_in_result(position, footnote)
