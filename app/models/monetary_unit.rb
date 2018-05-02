@@ -13,6 +13,27 @@ class MonetaryUnit < Sequel::Model
 
   delegate :description, :abbreviation, to: :monetary_unit_description
 
+  dataset_module do
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.join_table(:inner,
+          :monetary_unit_descriptions,
+          monetary_unit_code: :monetary_unit_code,
+        ).where("
+          monetary_units.monetary_unit_code ilike ? OR
+          monetary_unit_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      scope.order(Sequel.asc(:monetary_units__monetary_unit_code))
+    end
+  end
+
   def to_s
     monetary_unit_code
   end
