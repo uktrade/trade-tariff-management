@@ -17,6 +17,27 @@ class CertificateType < Sequel::Model
 
   delegate :description, to: :certificate_type_description
 
+  dataset_module do
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.join_table(:inner,
+          :certificate_type_descriptions,
+          certificate_type_code: :certificate_type_code,
+        ).where("
+          certificate_types.certificate_type_code ilike ? OR
+          certificate_type_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      scope.order(Sequel.asc(:certificate_types__certificate_type_code))
+    end
+  end
+
   def record_code
     "110".freeze
   end
