@@ -13,6 +13,8 @@ class DutyExpressionsController < ::BaseController
       end
     end
 
-    scope
+    scope.sort do |a, b|
+      a.duty_expression_id <=> b.duty_expression_id
+    end
   end
 end
