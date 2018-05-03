@@ -2,7 +2,7 @@ module Measures
   class MeasurementUnitsController < ::BaseController
 
     def collection
-      MeasurementUnit.actual
+      MeasurementUnit.q_search(params)
     end
   end
 end
