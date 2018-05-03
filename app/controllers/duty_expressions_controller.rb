@@ -1,6 +1,18 @@
 class DutyExpressionsController < ::BaseController
 
   def collection
-    DutyExpression.q_search(params)
+    scope = DutyExpression.actual
+
+    if params[:q].present?
+      q_rule = params[:q].strip.downcase
+
+      scope = scope.all.select do |duty_expression|
+        ilike?(duty_expression.duty_expression_id, q_rule) ||
+        ilike?(duty_expression.abbreviation, q_rule) ||
+        ilike?(duty_expression.description, q_rule)
+      end
+    end
+
+    scope
   end
 end

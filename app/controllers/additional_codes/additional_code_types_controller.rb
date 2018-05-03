@@ -14,8 +14,8 @@ module AdditionalCodes
         q_rule = params[:q].strip.downcase
 
         scope = scope.select do |ac_type|
-          ac_type.additional_code_type_id.downcase.starts_with?(q_rule) ||
-          ac_type.description.downcase.starts_with?(q_rule)
+          ilike?(ac_type.additional_code_type_id, q_rule) ||
+          ilike?(ac_type.description, q_rule)
         end
       end
 

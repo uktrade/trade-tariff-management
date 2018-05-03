@@ -14,27 +14,6 @@ class DutyExpression < Sequel::Model
 
   delegate :abbreviation, :description, to: :duty_expression_description
 
-  dataset_module do
-    def q_search(filter_ops)
-      scope = actual
-
-      if filter_ops[:q].present?
-        q_rule = "#{filter_ops[:q]}%"
-
-        scope = scope.join_table(:inner,
-          :duty_expression_descriptions,
-          duty_expression_id: :duty_expression_id,
-        ).where("
-          duty_expressions.duty_expression_id ilike ? OR
-          duty_expression_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
-      end
-
-      scope.order(Sequel.asc(:duty_expressions__duty_expression_id))
-    end
-  end
-
   def record_code
     "230".freeze
   end
