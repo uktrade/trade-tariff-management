@@ -1,6 +1,6 @@
 class DutyExpressionsController < ::BaseController
 
   def collection
-    DutyExpression.actual
+    DutyExpression.q_search(params)
   end
 end
