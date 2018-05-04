@@ -5,7 +5,7 @@ describe "Measure Form APIs: Measure type series", type: :request do
   include_context "form_apis_base_context"
 
   let(:actual_measure_type_series_a) do
-    add_measure_type({
+    add_measure_type_series({
       measure_type_series_id: "A",
       validity_start_date: 1.year.ago},
       "Importation and/or exportation prohibited"
@@ -13,7 +13,7 @@ describe "Measure Form APIs: Measure type series", type: :request do
   end
 
   let(:actual_measure_type_series_b) do
-    add_measure_type({
+    add_measure_type_series({
       measure_type_series_id: "B",
       validity_start_date: 1.year.ago},
       "Entry into free circulation or exportation subject to conditions"
@@ -21,7 +21,7 @@ describe "Measure Form APIs: Measure type series", type: :request do
   end
 
   let(:not_actual_measure_type_series_c) do
-    add_measure_type({
+    add_measure_type_series({
       measure_type_series_id: "C",
       validity_start_date: 1.year.ago,
       validity_end_date: 3.months.ago},
@@ -60,7 +60,7 @@ describe "Measure Form APIs: Measure type series", type: :request do
 
   private
 
-    def add_measure_type(ops={}, description)
+    def add_measure_type_series(ops={}, description)
       mt = create(:measure_type_series, ops)
       add_description(mt, description)
 
