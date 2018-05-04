@@ -19,7 +19,9 @@ describe "Measure Saver: Saving of Measure" do
   let!(:base_regulation) do
     create(:base_regulation,
       base_regulation_role: "1",
-      base_regulation_id: "D9402622"
+      base_regulation_id: "D9402622",
+      validity_start_date: 1.year.ago,
+      replacement_indicator: 0
     )
   end
 
@@ -97,7 +99,8 @@ describe "Measure Saver: Saving of Measure" do
         goods_nomenclature_code: commodity_code,
         additional_code: additional_code.additional_code,
         additional_code_type_id: additional_code_type.additional_code_type_id,
-        geographical_area_id: geographical_area.geographical_area_id
+        geographical_area_id: geographical_area.geographical_area_id,
+        excluded_geographical_areas: []
       }
     end
 
@@ -108,6 +111,28 @@ describe "Measure Saver: Saving of Measure" do
 
     it "should create new record" do
       expect(measure.reload.new?).to be_falsey
+
+      expect(date_to_s(measure.validity_start_date)).to be_eql(ops[:start_date])
+      expect(date_to_s(measure.validity_end_date)).to be_eql(ops[:end_date])
+      expect(date_to_s(measure.operation_date)).to be_eql(ops[:operation_date])
+
+      expect(measure.measure_type_id).to be_eql(measure_type.measure_type_id)
+
+      expect(measure.measure_generating_regulation_id).to be_eql(base_regulation.base_regulation_id)
+      expect(measure.measure_generating_regulation_role).to be_eql(base_regulation.base_regulation_role)
+
+      expect(measure.justification_regulation_id).to be_eql(base_regulation.base_regulation_id)
+      expect(measure.justification_regulation_role).to be_eql(base_regulation.base_regulation_role)
+
+      expect(measure.goods_nomenclature_item_id).to be_eql(commodity.goods_nomenclature_item_id)
+      expect(measure.goods_nomenclature_sid).to be_eql(commodity.goods_nomenclature_sid)
+
+      expect(measure.additional_code_type_id).to be_eql(additional_code_type.additional_code_type_id)
+      expect(measure.additional_code_sid).to be_eql(additional_code.additional_code_sid)
+      expect(measure.additional_code_id).to be_eql(additional_code.additional_code)
+
+      expect(measure.geographical_area_id).to be_eql(geographical_area.geographical_area_id)
+      expect(measure.geographical_area_sid).to be_eql(geographical_area.geographical_area_sid)
     end
   end
 
