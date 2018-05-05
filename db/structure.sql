@@ -1906,7 +1906,9 @@ CREATE TABLE footnote_association_measures_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -1921,7 +1923,9 @@ CREATE VIEW footnote_association_measures AS
     footnote_association_measures1."national",
     footnote_association_measures1.oid,
     footnote_association_measures1.operation,
-    footnote_association_measures1.operation_date
+    footnote_association_measures1.operation_date,
+    footnote_association_measures1.added_at,
+    footnote_association_measures1.added_by_id
    FROM footnote_association_measures_oplog footnote_association_measures1
   WHERE ((footnote_association_measures1.oid IN ( SELECT max(footnote_association_measures2.oid) AS max
            FROM footnote_association_measures_oplog footnote_association_measures2
@@ -2020,7 +2024,9 @@ CREATE TABLE footnote_description_periods_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2037,7 +2043,9 @@ CREATE VIEW footnote_description_periods AS
     footnote_description_periods1."national",
     footnote_description_periods1.oid,
     footnote_description_periods1.operation,
-    footnote_description_periods1.operation_date
+    footnote_description_periods1.operation_date,
+    footnote_description_periods1.added_at,
+    footnote_description_periods1.added_by_id
    FROM footnote_description_periods_oplog footnote_description_periods1
   WHERE ((footnote_description_periods1.oid IN ( SELECT max(footnote_description_periods2.oid) AS max
            FROM footnote_description_periods_oplog footnote_description_periods2
@@ -2077,7 +2085,9 @@ CREATE TABLE footnote_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2094,7 +2104,9 @@ CREATE VIEW footnote_descriptions AS
     footnote_descriptions1."national",
     footnote_descriptions1.oid,
     footnote_descriptions1.operation,
-    footnote_descriptions1.operation_date
+    footnote_descriptions1.operation_date,
+    footnote_descriptions1.added_at,
+    footnote_descriptions1.added_by_id
    FROM footnote_descriptions_oplog footnote_descriptions1
   WHERE ((footnote_descriptions1.oid IN ( SELECT max(footnote_descriptions2.oid) AS max
            FROM footnote_descriptions_oplog footnote_descriptions2
@@ -10346,3 +10358,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171028_add_nationa
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171418_add_national_flag_to_measure_related_db_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180504143240_add_added_by_id_and_added_at_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180505084755_add_added_at_and_added_by_id_to_footnotes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180505091501_add_added_at_and_added_by_to_footnote_association_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180505092846_add_added_at_and_added_by_id_to_footnote_descriptions.rb');
