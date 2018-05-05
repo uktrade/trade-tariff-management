@@ -87,6 +87,22 @@ shared_context "measure_saver_base_context" do
     )
   end
 
+  let(:base_ops) do
+    {
+      operation_date: date_to_s(operation_date),
+      start_date: date_to_s(validity_start_date),
+      end_date: date_to_s(validity_end_date),
+      regulation_id: base_regulation.base_regulation_id,
+      measure_type_series_id: measure_type_series.measure_type_series_id,
+      measure_type_id: measure_type.measure_type_id,
+      goods_nomenclature_code: commodity_code,
+      additional_code: additional_code.additional_code,
+      additional_code_type_id: additional_code_type.additional_code_type_id,
+      geographical_area_id: geographical_area.geographical_area_id,
+      excluded_geographical_areas: []
+    }
+  end
+
   def add_measure_type_series(ops={}, description)
     mts = create(:measure_type_series, ops)
 
