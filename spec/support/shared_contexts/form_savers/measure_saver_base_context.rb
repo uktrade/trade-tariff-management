@@ -82,7 +82,7 @@ shared_context "measure_saver_base_context" do
 
   let(:geographical_area) do
     create(:geographical_area,
-      geographical_area_id: "NO",
+      geographical_area_id: "1011",
       validity_start_date: 1.year.ago
     )
   end
