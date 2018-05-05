@@ -13,6 +13,27 @@ class MeasurementUnit < Sequel::Model
 
   delegate :description, to: :measurement_unit_description
 
+  dataset_module do
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.join_table(:inner,
+          :measurement_unit_descriptions,
+          measurement_unit_code: :measurement_unit_code,
+        ).where("
+          measurement_units.measurement_unit_code ilike ? OR
+          measurement_unit_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      scope.order(Sequel.asc(:measurement_units__measurement_unit_code))
+    end
+  end
+
   def to_s
     description
   end

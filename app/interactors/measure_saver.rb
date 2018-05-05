@@ -135,7 +135,7 @@ class MeasureSaver
   def initialize(current_admin, measure_params={})
     @current_admin = current_admin
     @original_params = ActiveSupport::HashWithIndifferentAccess.new(measure_params)
-    @measure_params = ::MeasureParamsNormalizer.new(measure_params).normalized_params
+    @measure_params = ::MeasureParamsNormalizer.new(original_params).normalized_params
 
     p ""
     p "-" * 100
@@ -228,7 +228,7 @@ class MeasureSaver
     end
 
     def generate_measure_sid
-      measure.measure_sid = Measure.max(:measure_sid) + 1
+      measure.measure_sid = Measure.max(:measure_sid).to_i + 1
     end
 
     def post_saving_updates!

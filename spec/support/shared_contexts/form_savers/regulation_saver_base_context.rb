@@ -2,9 +2,7 @@ require 'rails_helper'
 
 shared_context "regulation_saver_base_context" do
 
-  let(:user) do
-    create(:user)
-  end
+  include_context "form_savers_base_context"
 
   let(:regulation_saver) do
     ::RegulationSaver.new(user, ops)
@@ -14,20 +12,8 @@ shared_context "regulation_saver_base_context" do
     regulation_saver.regulation
   end
 
-  let(:validity_start_date) do
-    1.day.from_now
-  end
-
-  let(:validity_end_date) do
-    validity_start_date + 1.year
-  end
-
   let(:effective_end_date) do
     validity_end_date + 1.day
-  end
-
-  let(:operation_date) do
-    validity_start_date
   end
 
   let(:regulation_group) do
@@ -101,18 +87,5 @@ shared_context "regulation_saver_base_context" do
       end
 
       attrs
-    end
-
-    def value_by_type(value)
-      case value.class.name
-      when "Time", "DateTime", "Date"
-        date_to_s(value)
-      else
-        value
-      end
-    end
-
-    def date_to_s(date)
-      date.strftime("%d/%m/%Y")
     end
 end

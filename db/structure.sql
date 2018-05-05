@@ -4269,7 +4269,9 @@ CREATE TABLE measures_oplog (
     invalidated_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -4303,7 +4305,9 @@ CREATE VIEW measures AS
     measures1.invalidated_at,
     measures1.oid,
     measures1.operation,
-    measures1.operation_date
+    measures1.operation_date,
+    measures1.added_by_id,
+    measures1.added_at
    FROM measures_oplog measures1
   WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
            FROM measures_oplog measures2
@@ -10336,3 +10340,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180423085320_update_regu
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425165312_add_national_flag_to_regulation_related_db_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171028_add_national_flag_to_regulation_documents.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171418_add_national_flag_to_measure_related_db_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180504143240_add_added_by_id_and_added_at_to_measures.rb');

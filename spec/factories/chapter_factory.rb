@@ -22,4 +22,9 @@ FactoryGirl.define do
 
     content    {   Forgery(:basic).text }
   end
+
+  factory :chapter_section do
+    goods_nomenclature_sid { generate(:goods_nomenclature_sid) }
+    section_id { generate(:sid) }
+  end
 end

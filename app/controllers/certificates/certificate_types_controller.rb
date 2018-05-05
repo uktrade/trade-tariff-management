@@ -2,7 +2,7 @@ module Certificates
   class CertificateTypesController < ::BaseController
 
     def collection
-      CertificateType.actual
+      CertificateType.q_search(params)
     end
   end
 end

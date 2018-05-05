@@ -11,8 +11,11 @@ module AdditionalCodes
       scope = measure_type.additional_code_types
 
       if params[:q].present?
+        q_rule = params[:q].strip.downcase
+
         scope = scope.select do |ac_type|
-          ac_type.additional_code_type_id.starts_with?(params[:q].strip)
+          ilike?(ac_type.additional_code_type_id, q_rule) ||
+          ilike?(ac_type.description, q_rule)
         end
       end
 
