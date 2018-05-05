@@ -2241,7 +2241,9 @@ CREATE TABLE footnotes_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date
+    operation_date date,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2257,7 +2259,9 @@ CREATE VIEW footnotes AS
     footnotes1."national",
     footnotes1.oid,
     footnotes1.operation,
-    footnotes1.operation_date
+    footnotes1.operation_date,
+    footnotes1.added_by_id,
+    footnotes1.added_at
    FROM footnotes_oplog footnotes1
   WHERE ((footnotes1.oid IN ( SELECT max(footnotes2.oid) AS max
            FROM footnotes_oplog footnotes2
@@ -10341,3 +10345,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180425165312_add_nationa
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171028_add_national_flag_to_regulation_documents.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171418_add_national_flag_to_measure_related_db_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180504143240_add_added_by_id_and_added_at_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180505084755_add_added_at_and_added_by_id_to_footnotes.rb');
