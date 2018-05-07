@@ -15,7 +15,8 @@ describe "Measure Saver: Saving of Duty expressions" do
     additional_code
     geographical_area
     commodity
-    duty_expression
+    duty_expression_01
+    duty_expression_04
     monetary_unit
     measurement_unit
     measurement_unit_qualifier
@@ -24,43 +25,43 @@ describe "Measure Saver: Saving of Duty expressions" do
     measure_saver.persist!
   end
 
-  # describe "Invalid params" do
-  #   let(:ops) do
-  #     base_ops.merge(
-  #       duty_expressions: {
-  #         "0" => {
-  #           "duty_expression_type_id"=>"CA",
-  #           "description"=>""
-  #         },
-  #         "1" => {
-  #           "duty_expression_type_id"=>"CG",
-  #           "description"=>""
-  #         }
-  #       }
-  #     )
-  #   end
+  describe "Invalid params" do
+    let(:ops) do
+      base_ops.merge(
+        measure_components: {
+          "0" => {
+            "duty_expression_id"=>"",
+            "amount"=>""
+          },
+          "1" => {
+            "duty_expression_id"=>"",
+            "amount"=>"55"
+          }
+        }
+      )
+    end
 
-  #   it "should not create new duty_expressions" do
-  #     expect(measure.reload.new?).to be_falsey
+    it "should not create new duty_expressions" do
+      expect(measure.reload.new?).to be_falsey
 
-  #     expect(MeasureComponent.count).to be_eql(0)
-  #     expect(duty_expressions.size).to be_eql(0)
-  #   end
-  # end
+      expect(MeasureComponent.count).to be_eql(0)
+      expect(duty_expressions.size).to be_eql(0)
+    end
+  end
 
   let(:measure_components_ops) do
     {
       measure_components: {
         "0" => {
-          duty_expression_id: "01",
+          duty_expression_id: duty_expression_01.duty_expression_id,
           amount: "10"
         },
         "1" => {
-          duty_expression_id: "01",
-          amount: "10",
-          measurement_unit_code: "DTN",
-          measurement_unit_qualifier_code: "X",
-          monetary_unit_code: "EUR"
+          duty_expression_id: duty_expression_04.duty_expression_id,
+          amount: "20",
+          measurement_unit_code: measurement_unit.measurement_unit_code,
+          measurement_unit_qualifier_code: measurement_unit_qualifier.measurement_unit_qualifier_code,
+          monetary_unit_code: monetary_unit.monetary_unit_code
         }
       }
     }
@@ -87,22 +88,22 @@ describe "Measure Saver: Saving of Duty expressions" do
 
     def expect_duty_expression_to_be_valid(position)
       record = duty_expressions[position]
-      ops = measure_components_ops[:measure_components][position]
+      ops = measure_components_ops[:measure_components][position.to_s]
 
-      expect(duty_expression.measure_sid).to be_eql(measure.measure_sid)
-      expect(duty_expression.duty_expression_id).to be_eql(ops[:duty_expression_id])
-      expect(duty_expression.duty_amount.to_f).to be_eql(ops[:amount].to_s)
-      expect(duty_expression.monetary_unit_code).to be_eql(ops[:monetary_unit_code])
-      expect(duty_expression.measurement_unit_code).to be_eql(ops[:measurement_unit_code])
-      expect(duty_expression.measurement_unit_qualifier_code).to be_eql(
+      expect(record.measure_sid).to be_eql(measure.measure_sid)
+      expect(record.duty_expression_id).to be_eql(ops[:duty_expression_id])
+      expect(record.duty_amount.to_i).to be_eql(ops[:amount].to_i)
+      expect(record.monetary_unit_code).to be_eql(ops[:monetary_unit_code])
+      expect(record.measurement_unit_code).to be_eql(ops[:measurement_unit_code])
+      expect(record.measurement_unit_qualifier_code).to be_eql(
         ops[:measurement_unit_qualifier_code]
       )
 
-      expect(date_to_s(duty_expression.operation_date)).to be_eql(
+      expect(date_to_s(record.operation_date)).to be_eql(
         date_to_s(measure.operation_date)
       )
 
-      expect(duty_expression.added_at).not_to be_nil
-      expect(duty_expression.added_by_id).to be_eql(user.id)
+      expect(record.added_at).not_to be_nil
+      expect(record.added_by_id).to be_eql(user.id)
     end
 end

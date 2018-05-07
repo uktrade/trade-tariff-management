@@ -87,7 +87,7 @@ shared_context "measure_saver_base_context" do
     )
   end
 
-  let(:duty_expression) do
+  let(:duty_expression_01) do
     de = create(:duty_expression,
       duty_expression_id: "01",
       duty_amount_applicability_code: 1,
@@ -98,6 +98,22 @@ shared_context "measure_saver_base_context" do
     create(:duty_expression_description,
       duty_expression_id: de.duty_expression_id,
       description: "% or amount"
+    )
+
+    de
+  end
+
+  let(:duty_expression_04) do
+    de = create(:duty_expression,
+      duty_expression_id: "04",
+      duty_amount_applicability_code: 1,
+      measurement_unit_applicability_code: 0,
+      monetary_unit_applicability_code: 0
+    )
+
+    create(:duty_expression_description,
+      duty_expression_id: de.duty_expression_id,
+      description: "+ % or amount"
     )
 
     de
