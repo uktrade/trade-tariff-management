@@ -78,6 +78,13 @@ class GeographicalArea < Sequel::Model
 
   delegate :description, to: :geographical_area_description
 
+  def to_json
+    {
+      geographical_area_id: geographical_area_id,
+      description: description
+    }
+  end
+
   def id
     geographical_area_id
   end

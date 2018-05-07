@@ -1,0 +1,35 @@
+- if @results.present?
+  table.table.regulations-table
+    thead
+      tr
+        th
+          | Legal base
+        th
+          | Start date
+        th
+          | End date
+        th
+          | Publication date
+        th
+          | Official Journal No.
+        th
+          | Official Journal page
+        th
+          | &nbsp;
+    tbody
+      - @results.each do |regulation|
+        tr
+          td
+            = regulation.regulation_id
+          td
+            = regulation.validity_start_date.try(:strftime, "%d/%m/%Y")
+          td
+            = regulation.validity_end_date.try(:strftime, "%d/%m/%Y")
+          td
+            = regulation.published_date.try(:strftime, "%d/%m/%Y")
+          td
+            = regulation.officialjournal_number
+          td
+            = regulation.officialjournal_page
+          td
+            = link_to "[measures]", measures_path({regulation_id: regulation.regulation_id})

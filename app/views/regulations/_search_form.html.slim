@@ -1,0 +1,21 @@
+= simple_form_for :search, url: regulations_path, method: :get, html: { class: "", "data-parsley-validate" => true } do |f|
+  label.form-label
+    span.form-hint
+      | Enter criteria to help locate a regulation
+  .row
+    .col-lg-8.col-md-10.col-sm-12
+      = f.input :regulation_group, as: :select, collection: RegulationGroup.all, label_method: :description, value_method: :regulation_group_id, include_blank: true, prompt: "- select regulation group -", label: "Select the regulation group", input_html: { class: "selectize" }
+
+      .row
+        .col-sm-6.col-md-4.col-lg-3
+          = f.input :start_date, label: "Select date from", input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }
+
+        .col-sm-6.col-md-4.col-lg-3
+          = f.input :end_date, label: "Select date to", input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }
+
+      = f.input :geographical_area, as: :select, collection: GeographicalArea.all, label_method: :description, value_method: :geographical_area_id, include_blank: true, prompt: "- start typing -", input_html: { class: "selectize", "data-min-length" => 1, "data-options" => GeographicalArea.all.map(&:to_json).to_json, "data-value" => "geographical_area_id", "data-code" => "geographical_area_id", "data-label" => "description", "data-code-class" => "prefix--region" }, label: "Select a geographical area to which this regulation's measures apply"
+
+      = f.input :keywords, as: :text, rows: 3, label: "Enter keyword(s)", hint: "If you know the ID of the regulation, then you can enter the ID in the box below. Alternatively, enter any other keyword(s) to help locate the regulation."
+
+      .form-actions
+        = f.button :submit, "Search", class: "button"
