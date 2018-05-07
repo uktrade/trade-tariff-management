@@ -25,23 +25,23 @@ describe "Measure Saver: Saving of Quota definitions" do
     measure_saver.persist!
   end
 
-  # describe "Invalid params (without quota periods)" do
-  #   let(:ops) do
-  #     base_ops.merge(
-  #       order_number_ops
-  #     )
-  #   end
+  describe "Invalid params (without quota periods)" do
+    let(:ops) do
+      base_ops.merge(
+        order_number_ops
+      )
+    end
 
-  #   it "should not create new duty_expressions" do
-  #     expect(measure.reload.new?).to be_falsey
+    it "should not create new duty_expressions" do
+      expect(measure.reload.new?).to be_falsey
 
-  #     expect(QuotaOrderNumber.count).to be_eql(0)
-  #     expect(QuotaDefinition.count).to be_eql(0)
-  #   end
-  # end
+      expect(QuotaOrderNumber.count).to be_eql(0)
+      expect(QuotaDefinition.count).to be_eql(0)
+    end
+  end
 
   describe "Successful saving" do
-    let(:start_period_date) { "08/05/2018" }
+    let(:start_period_date) { date_to_s(1.day.from_now) }
 
     describe "Annual" do
       let(:ops) do
@@ -83,11 +83,11 @@ describe "Measure Saver: Saving of Quota definitions" do
         ).merge(
           quota_periods: {
             bi_annual: {
-              "amount1"=>"10",
-              "amount2"=>"20",
-              "start_date"=>"08/05/2018",
-              "measurement_unit_code"=>"EUR",
-              "measurement_unit_qualifier_code"=>"X"
+              "amount1" => "10",
+              "amount2" => "20",
+              "start_date"=> start_period_date,
+              "measurement_unit_code" => "EUR",
+              "measurement_unit_qualifier_code" => "X"
             }
           }
         )
@@ -125,13 +125,13 @@ describe "Measure Saver: Saving of Quota definitions" do
         ).merge(
           quota_periods: {
             quarterly: {
-              "amount1"=>"10",
-              "amount2"=>"20",
-              "amount3"=>"30",
-              "amount4"=>"40",
-              "start_date"=>"08/05/2018",
-              "measurement_unit_code"=>"EUR",
-              "measurement_unit_qualifier_code"=>"X"
+              "amount1" => "10",
+              "amount2" => "20",
+              "amount3" => "30",
+              "amount4" => "40",
+              "start_date"=> start_period_date,
+              "measurement_unit_code" => "EUR",
+              "measurement_unit_qualifier_code" => "X"
             }
           }
         )
@@ -185,21 +185,21 @@ describe "Measure Saver: Saving of Quota definitions" do
         ).merge(
           quota_periods: {
             monthly: {
-              "amount1"=>"10",
-              "amount2"=>"20",
-              "amount3"=>"30",
-              "amount4"=>"40",
-              "amount5"=>"50",
-              "amount6"=>"60",
-              "amount7"=>"70",
-              "amount8"=>"80",
-              "amount9"=>"90",
-              "amount10"=>"100",
-              "amount11"=>"110",
-              "amount12"=>"120",
-              "start_date"=>"08/05/2018",
-              "measurement_unit_code"=>"EUR",
-              "measurement_unit_qualifier_code"=>"X"
+              "amount1" => "10",
+              "amount2" => "20",
+              "amount3" => "30",
+              "amount4" => "40",
+              "amount5" => "50",
+              "amount6" => "60",
+              "amount7" => "70",
+              "amount8" => "80",
+              "amount9" => "90",
+              "amount10" => "100",
+              "amount11" => "110",
+              "amount12" => "120",
+              "start_date"=> start_period_date,
+              "measurement_unit_code" => "EUR",
+              "measurement_unit_qualifier_code" => "X"
             }
           }
         )
@@ -310,41 +310,56 @@ describe "Measure Saver: Saving of Quota definitions" do
       end
     end
 
-    # describe "Custom" do
-    #   let(:ops) do
-    #     base_ops.merge(
-    #       order_number_ops
-    #     ).merge(
-    #       quota_periods: {
-    #         custom: {
-    #           "0" => {
-    #             "amount1"=>"10",
-    #             "start_date"=>"08/05/2018",
-    #             "end_date"=>"08/05/2019",
-    #             "measurement_unit_code"=>"EUR",
-    #             "measurement_unit_qualifier_code"=>"X"
-    #           },
-    #           "1" => {
-    #             "amount1"=>"20",
-    #             "start_date"=>"08/05/2019",
-    #             "end_date"=>"08/05/2020",
-    #             "measurement_unit_code"=>"EUR",
-    #             "measurement_unit_qualifier_code"=>"X"
-    #           }
-    #         }
-    #       }
-    #     )
-    #   end
+    describe "Custom" do
+      let(:ops) do
+        base_ops.merge(
+          order_number_ops
+        ).merge(
+          quota_periods: {
+            custom: {
+              "0" => {
+                "amount1" => "10",
+                "start_date"=> start_period_date,
+                "end_date" => date_to_s(start_period_date.to_date + 1.year),
+                "measurement_unit_code" => "EUR",
+                "measurement_unit_qualifier_code" => "X"
+              },
+              "1" => {
+                "amount1" => "20",
+                "start_date" => date_to_s(start_period_date.to_date + 1.year),
+                "end_date" => date_to_s(start_period_date.to_date + 2.years),
+                "measurement_unit_code" => "EUR",
+                "measurement_unit_qualifier_code" => "X"
+              }
+            }
+          }
+        )
+      end
 
-    #   it "should create order number and annual quota defition" do
-    #     expect(measure.reload.new?).to be_falsey
+      it "should create order number and custom two quota defitions" do
+        expect(measure.reload.new?).to be_falsey
 
-    #     expect(QuotaOrderNumber.count).to be_eql(1)
-    #     expect(QuotaDefinition.count).to be_eql(2)
+        expect(QuotaOrderNumber.count).to be_eql(1)
+        expect(QuotaDefinition.count).to be_eql(2)
+        expect_order_number_to_be_valid
 
-    #     expect_order_number_to_be_valid
-    #   end
-    # end
+        expect_quota_definition_to_be_valid(
+          quota_definitions[0],
+          10,
+          start_period_date.to_date,
+          start_period_date.to_date + 1.year,
+          ops[:quota_periods][:custom]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[1],
+          20,
+          start_period_date.to_date + 1.year,
+          start_period_date.to_date + 2.years,
+          ops[:quota_periods][:custom]
+        )
+      end
+    end
   end
 
   private
