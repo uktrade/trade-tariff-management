@@ -12,6 +12,8 @@ feature "Regulations listing" do
     group
   end
 
+  let!(:base_regulation){ create(:base_regulation) }
+
   let!(:geographical_area) { create(:geographical_area) }
 
   scenario "Find a regulation page" do
@@ -33,6 +35,7 @@ feature "Regulations listing" do
   scenario "Search params for a regulation" do
     visit regulations_path
     expect(page).to have_content("Find a regulation")
+    expect(page).not_to have_selector(".regulations-table")
 
     select("Various", from: "Select the regulation group")
     fill_in("Select date from", with: Date.today.strftime("%d/%m/%Y"))
@@ -48,13 +51,22 @@ feature "Regulations listing" do
   scenario "Regulations table" do
     visit regulations_path
     expect(page).to have_content("Find a regulation")
+    expect(page).not_to have_selector(".regulations-table")
 
     find(".form-actions .button").click
 
     expect(page).to have_selector(".regulations-table")
 
-    within "table.regulations-table" do
-      expect(find("tbody tr").length).to gt(0)
-    end
+    expect(page).to have_content("Legal base")
+    expect(page).to have_content("Start date")
+    expect(page).to have_content("End date")
+    expect(page).to have_content("Publication date")
+    expect(page).to have_content("Official Journal No.")
+    expect(page).to have_content("Official Journal page")
+
+    expect(page).to have_content(base_regulation.base_regulation_id)
+    expect(page).to have_content(base_regulation.validity_start_date.strftime("%d/%m/%Y"))
+
+    expect(find_all(".regulations-table tbody tr").length).to be > 0
   end
 end

@@ -10,7 +10,7 @@ header
   h1.heading-large
     | Find a regulation
 
-  = simple_form_for :search, url: regulations_path, method: :get, html: { class: "search-form", "data-parsley-validate" => true } do |f|
+  = simple_form_for :search, url: regulations_path, method: :get, html: { class: "", "data-parsley-validate" => true } do |f|
     label.form-label
       span.form-hint
         | Enter criteria to help locate a regulation
