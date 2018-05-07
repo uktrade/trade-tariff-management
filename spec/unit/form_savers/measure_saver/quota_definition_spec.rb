@@ -178,42 +178,137 @@ describe "Measure Saver: Saving of Quota definitions" do
       end
     end
 
-    # describe "Monthly" do
-    #   let(:ops) do
-    #     base_ops.merge(
-    #       order_number_ops
-    #     ).merge(
-    #       quota_periods: {
-    #         monthly: {
-    #           "amount1"=>"10",
-    #           "amount2"=>"20",
-    #           "amount3"=>"30",
-    #           "amount4"=>"40",
-    #           "amount5"=>"50",
-    #           "amount6"=>"60",
-    #           "amount7"=>"70",
-    #           "amount8"=>"80",
-    #           "amount9"=>"90",
-    #           "amount10"=>"100",
-    #           "amount11"=>"110",
-    #           "amount12"=>"120",
-    #           "start_date"=>"08/05/2018",
-    #           "measurement_unit_code"=>"EUR",
-    #           "measurement_unit_qualifier_code"=>"X"
-    #         }
-    #       }
-    #     )
-    #   end
+    describe "Monthly" do
+      let(:ops) do
+        base_ops.merge(
+          order_number_ops
+        ).merge(
+          quota_periods: {
+            monthly: {
+              "amount1"=>"10",
+              "amount2"=>"20",
+              "amount3"=>"30",
+              "amount4"=>"40",
+              "amount5"=>"50",
+              "amount6"=>"60",
+              "amount7"=>"70",
+              "amount8"=>"80",
+              "amount9"=>"90",
+              "amount10"=>"100",
+              "amount11"=>"110",
+              "amount12"=>"120",
+              "start_date"=>"08/05/2018",
+              "measurement_unit_code"=>"EUR",
+              "measurement_unit_qualifier_code"=>"X"
+            }
+          }
+        )
+      end
 
-    #   it "should create order number and 1 quota defition per each month of year" do
-    #     expect(measure.reload.new?).to be_falsey
+      it "should create order number and 1 quota defition per each month of year" do
+        expect(measure.reload.new?).to be_falsey
 
-    #     expect(QuotaOrderNumber.count).to be_eql(1)
-    #     expect(QuotaDefinition.count).to be_eql(12)
+        expect(QuotaOrderNumber.count).to be_eql(1)
+        expect(QuotaDefinition.count).to be_eql(12)
+        expect_order_number_to_be_valid
 
-    #     expect_order_number_to_be_valid
-    #   end
-    # end
+        expect_quota_definition_to_be_valid(
+          quota_definitions[0],
+          10,
+          start_period_date.to_date,
+          start_period_date.to_date + 1.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[1],
+          20,
+          start_period_date.to_date + 1.months,
+          start_period_date.to_date + 2.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[2],
+          30,
+          start_period_date.to_date + 2.months,
+          start_period_date.to_date + 3.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[3],
+          40,
+          start_period_date.to_date + 3.months,
+          start_period_date.to_date + 4.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[4],
+          50,
+          start_period_date.to_date + 4.months,
+          start_period_date.to_date + 5.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[5],
+          60,
+          start_period_date.to_date + 5.months,
+          start_period_date.to_date + 6.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[6],
+          70,
+          start_period_date.to_date + 6.months,
+          start_period_date.to_date + 7.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[7],
+          80,
+          start_period_date.to_date + 7.months,
+          start_period_date.to_date + 8.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[8],
+          90,
+          start_period_date.to_date + 8.months,
+          start_period_date.to_date + 9.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[9],
+          100,
+          start_period_date.to_date + 9.months,
+          start_period_date.to_date + 10.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[10],
+          110,
+          start_period_date.to_date + 10.months,
+          start_period_date.to_date + 11.months,
+          ops[:quota_periods][:monthly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[11],
+          120,
+          start_period_date.to_date + 11.months,
+          start_period_date.to_date + 12.months,
+          ops[:quota_periods][:monthly]
+        )
+      end
+    end
 
     # describe "Custom" do
     #   let(:ops) do
