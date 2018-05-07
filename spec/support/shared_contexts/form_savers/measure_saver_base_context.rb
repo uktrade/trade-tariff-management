@@ -87,6 +87,61 @@ shared_context "measure_saver_base_context" do
     )
   end
 
+  let(:duty_expression) do
+    de = create(:duty_expression,
+      duty_expression_id: "01",
+      duty_amount_applicability_code: 1,
+      measurement_unit_applicability_code: 0,
+      monetary_unit_applicability_code: 0
+    )
+
+    create(:duty_expression_description,
+      duty_expression_id: de.duty_expression_id,
+      description: "% or amount"
+    )
+
+    de
+  end
+
+  let(:monetary_unit) do
+    mu = create(:monetary_unit,
+      monetary_unit_code: "EUR"
+    )
+
+    create(:monetary_unit_description,
+      monetary_unit_code: mu.monetary_unit_code,
+      description: "EURO"
+    )
+
+    mu
+  end
+
+  let(:measurement_unit) do
+    mu = create(:measurement_unit,
+      measurement_unit_code: "DTN"
+    )
+
+    create(:measurement_unit_description,
+      measurement_unit_code: mu.measurement_unit_code,
+      description: "Hectokilogram"
+    )
+
+    mu
+  end
+
+  let(:measurement_unit_qualifier) do
+    muq = create(:measurement_unit_qualifier,
+      measurement_unit_qualifier_code: "X"
+    )
+
+    create(:measurement_unit_qualifier_description,
+      measurement_unit_qualifier_code: muq.measurement_unit_qualifier_code,
+      description: "Hectolitre"
+    )
+
+    muq
+  end
+
   let(:base_ops) do
     {
       operation_date: date_to_s(operation_date),
