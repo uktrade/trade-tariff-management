@@ -216,9 +216,7 @@ describe "Measure Saver: Saving of Quota definitions" do
       expect(date_to_s(order_number.validity_start_date)).to be_eql(
         date_to_s(measure.validity_start_date)
       )
-      expect(date_to_s(order_number.validity_end_date)).to be_eql(
-        date_to_s(measure.validity_end_date)
-      )
+      expect(order_number.validity_end_date).to be_nil
       expect(date_to_s(order_number.operation_date)).to be_eql(
         date_to_s(measure.operation_date)
       )
@@ -233,7 +231,7 @@ describe "Measure Saver: Saving of Quota definitions" do
       expect(record.initial_volume.to_i).to be_eql(ops[:initial_volume])
 
       expect(record.monetary_unit_code).to be_eql(ops[:monetary_unit_code])
-      expect(record.measurement_unit_code).to be_eql(ops[:measurement_unit_code)
+      expect(record.measurement_unit_code).to be_eql(ops[:measurement_unit_code])
       expect(record.measurement_unit_qualifier_code).to be_eql(ops[:measurement_unit_qualifier_code])
 
       expect(date_to_s(record.validity_start_date)).to be_eql(
