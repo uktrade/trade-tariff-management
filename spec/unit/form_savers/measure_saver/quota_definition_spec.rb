@@ -4,13 +4,31 @@ describe "Measure Saver: Saving of Quota definitions" do
 
   include_context "measure_saver_base_context"
 
+  let(:ae_area) do
+    create(:geographical_area,
+      geographical_area_id: "AE",
+      validity_start_date: 1.year.ago
+    )
+  end
+
+  let(:ag_area) do
+    create(:geographical_area,
+      geographical_area_id: "AG",
+      validity_start_date: 1.year.ago
+    )
+  end
+
   let(:order_number_ops) do
     {
       existing_quota: "false",
       quota_status: "open",
       quota_ordernumber: "090716",
       quota_criticality_threshold: "15",
-      quota_description: "Test description"
+      quota_description: "Test description",
+      geographical_area_id: geographical_area.geographical_area_id,
+      excluded_geographical_areas: [
+        ae_area.geographical_area_id, ag_area.geographical_area_id
+      ]
     }
   end
 
@@ -19,6 +37,8 @@ describe "Measure Saver: Saving of Quota definitions" do
     measure_type
     additional_code
     geographical_area
+    ae_area
+    ag_area
     commodity
 
     measure_saver.valid?
@@ -389,6 +409,24 @@ describe "Measure Saver: Saving of Quota definitions" do
 
       expect(order_number.added_at).not_to be_nil
       expect(order_number.added_by_id).to be_eql(user.id)
+
+      expect(order_number_origin.geographical_area_id).to be_eql(geographical_area.geographical_area_id)
+      expect(excluded_order_number_origin_areas[0].excluded_geographical_area_sid).to be_eql(
+        ae_area.geographical_area_sid
+      )
+      expect(excluded_order_number_origin_areas[1].excluded_geographical_area_sid).to be_eql(
+        ag_area.geographical_area_sid
+      )
+    end
+
+    def order_number_origin
+      order_number.quota_order_number_origin
+    end
+
+    def excluded_order_number_origin_areas
+      QuotaOrderNumberOriginExclusion.where(
+        quota_order_number_origin_sid: order_number_origin.quota_order_number_origin_sid
+      ).all
     end
 
     def expect_quota_definition_to_be_valid(record, amount, expected_start_date, expected_end_date, ops)
