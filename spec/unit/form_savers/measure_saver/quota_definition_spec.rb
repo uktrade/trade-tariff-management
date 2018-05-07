@@ -118,34 +118,65 @@ describe "Measure Saver: Saving of Quota definitions" do
       end
     end
 
-    # describe "Quarterly" do
-    #   let(:ops) do
-    #     base_ops.merge(
-    #       order_number_ops
-    #     ).merge(
-    #       quota_periods: {
-    #         quarterly: {
-    #           "amount1"=>"10",
-    #           "amount2"=>"20",
-    #           "amount3"=>"30",
-    #           "amount4"=>"40",
-    #           "start_date"=>"08/05/2018",
-    #           "measurement_unit_code"=>"EUR",
-    #           "measurement_unit_qualifier_code"=>"X"
-    #         }
-    #       }
-    #     )
-    #   end
+    describe "Quarterly" do
+      let(:ops) do
+        base_ops.merge(
+          order_number_ops
+        ).merge(
+          quota_periods: {
+            quarterly: {
+              "amount1"=>"10",
+              "amount2"=>"20",
+              "amount3"=>"30",
+              "amount4"=>"40",
+              "start_date"=>"08/05/2018",
+              "measurement_unit_code"=>"EUR",
+              "measurement_unit_qualifier_code"=>"X"
+            }
+          }
+        )
+      end
 
-    #   it "should create order number and 1 quota defition per each quarter of year" do
-    #     expect(measure.reload.new?).to be_falsey
+      it "should create order number and 1 quota defition per each quarter of year" do
+        expect(measure.reload.new?).to be_falsey
 
-    #     expect(QuotaOrderNumber.count).to be_eql(1)
-    #     expect(QuotaDefinition.count).to be_eql(4)
+        expect(QuotaOrderNumber.count).to be_eql(1)
+        expect(QuotaDefinition.count).to be_eql(4)
+        expect_order_number_to_be_valid
 
-    #     expect_order_number_to_be_valid
-    #   end
-    # end
+        expect_quota_definition_to_be_valid(
+          quota_definitions[0],
+          10,
+          start_period_date.to_date,
+          start_period_date.to_date + 3.months,
+          ops[:quota_periods][:quarterly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[1],
+          20,
+          start_period_date.to_date + 3.months,
+          start_period_date.to_date + 6.months,
+          ops[:quota_periods][:quarterly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[2],
+          30,
+          start_period_date.to_date + 6.months,
+          start_period_date.to_date + 9.months,
+          ops[:quota_periods][:quarterly]
+        )
+
+        expect_quota_definition_to_be_valid(
+          quota_definitions[3],
+          40,
+          start_period_date.to_date + 9.months,
+          start_period_date.to_date + 12.months,
+          ops[:quota_periods][:quarterly]
+        )
+      end
+    end
 
     # describe "Monthly" do
     #   let(:ops) do
@@ -264,7 +295,9 @@ describe "Measure Saver: Saving of Quota definitions" do
         measurement_unit_code
         measurement_unit_qualifier_code
       ).map do |field_name|
-        expect(record.public_send(field_name)).to be_eql(ops[field_name])
+        if ops[field_name].present?
+          expect(record.public_send(field_name)).to be_eql(ops[field_name])
+        end
       end
 
       expect(record.added_at).not_to be_nil
