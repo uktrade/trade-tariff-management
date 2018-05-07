@@ -41,6 +41,8 @@ describe "Measure Saver: Saving of Quota definitions" do
   end
 
   describe "Successful saving" do
+    let(:start_period_date) { "08/05/2018" }
+
     describe "Annual" do
       let(:ops) do
         base_ops.merge(
@@ -49,7 +51,7 @@ describe "Measure Saver: Saving of Quota definitions" do
           quota_periods: {
             annual: {
               "amount1" => "10",
-              "start_date" => "08/05/2018",
+              "start_date" => start_period_date,
               "measurement_unit_code" => "EUR",
               "measurement_unit_qualifier_code" => "X"
             }
@@ -64,137 +66,144 @@ describe "Measure Saver: Saving of Quota definitions" do
         expect(QuotaDefinition.count).to be_eql(1)
 
         expect_order_number_to_be_valid
-      end
-    end
 
-    describe "Bi-Annual" do
-      let(:ops) do
-        base_ops.merge(
-          order_number_ops
-        ).merge(
-          quota_periods: {
-            bi_annual: {
-              "amount1"=>"10",
-              "amount2"=>"20",
-              "start_date"=>"08/05/2018",
-              "measurement_unit_code"=>"EUR",
-              "measurement_unit_qualifier_code"=>"X"
-            }
-          }
+        expect_quota_definition_to_be_valid(
+          quota_definitions[0],
+          10,
+          start_period_date.to_date + 1.year,
+          ops[:quota_periods][:annual]
         )
       end
-
-      it "should create order number and bi-annual quota defitions" do
-        expect(measure.reload.new?).to be_falsey
-
-        expect(QuotaOrderNumber.count).to be_eql(1)
-        expect(QuotaDefinition.count).to be_eql(2)
-
-        expect_order_number_to_be_valid
-      end
     end
 
-    describe "Quarterly" do
-      let(:ops) do
-        base_ops.merge(
-          order_number_ops
-        ).merge(
-          quota_periods: {
-            quarterly: {
-              "amount1"=>"10",
-              "amount2"=>"20",
-              "amount3"=>"30",
-              "amount4"=>"40",
-              "start_date"=>"08/05/2018",
-              "measurement_unit_code"=>"EUR",
-              "measurement_unit_qualifier_code"=>"X"
-            }
-          }
-        )
-      end
+    # describe "Bi-Annual" do
+    #   let(:ops) do
+    #     base_ops.merge(
+    #       order_number_ops
+    #     ).merge(
+    #       quota_periods: {
+    #         bi_annual: {
+    #           "amount1"=>"10",
+    #           "amount2"=>"20",
+    #           "start_date"=>"08/05/2018",
+    #           "measurement_unit_code"=>"EUR",
+    #           "measurement_unit_qualifier_code"=>"X"
+    #         }
+    #       }
+    #     )
+    #   end
 
-      it "should create order number and 1 quota defition per each quarter of year" do
-        expect(measure.reload.new?).to be_falsey
+    #   it "should create order number and bi-annual quota defitions" do
+    #     expect(measure.reload.new?).to be_falsey
 
-        expect(QuotaOrderNumber.count).to be_eql(1)
-        expect(QuotaDefinition.count).to be_eql(4)
+    #     expect(QuotaOrderNumber.count).to be_eql(1)
+    #     expect(QuotaDefinition.count).to be_eql(2)
 
-        expect_order_number_to_be_valid
-      end
-    end
+    #     expect_order_number_to_be_valid
+    #   end
+    # end
 
-    describe "Monthly" do
-      let(:ops) do
-        base_ops.merge(
-          order_number_ops
-        ).merge(
-          quota_periods: {
-            monthly: {
-              "amount1"=>"10",
-              "amount2"=>"20",
-              "amount3"=>"30",
-              "amount4"=>"40",
-              "amount5"=>"50",
-              "amount6"=>"60",
-              "amount7"=>"70",
-              "amount8"=>"80",
-              "amount9"=>"90",
-              "amount10"=>"100",
-              "amount11"=>"110",
-              "amount12"=>"120",
-              "start_date"=>"08/05/2018",
-              "measurement_unit_code"=>"EUR",
-              "measurement_unit_qualifier_code"=>"X"
-            }
-          }
-        )
-      end
+    # describe "Quarterly" do
+    #   let(:ops) do
+    #     base_ops.merge(
+    #       order_number_ops
+    #     ).merge(
+    #       quota_periods: {
+    #         quarterly: {
+    #           "amount1"=>"10",
+    #           "amount2"=>"20",
+    #           "amount3"=>"30",
+    #           "amount4"=>"40",
+    #           "start_date"=>"08/05/2018",
+    #           "measurement_unit_code"=>"EUR",
+    #           "measurement_unit_qualifier_code"=>"X"
+    #         }
+    #       }
+    #     )
+    #   end
 
-      it "should create order number and 1 quota defition per each month of year" do
-        expect(measure.reload.new?).to be_falsey
+    #   it "should create order number and 1 quota defition per each quarter of year" do
+    #     expect(measure.reload.new?).to be_falsey
 
-        expect(QuotaOrderNumber.count).to be_eql(1)
-        expect(QuotaDefinition.count).to be_eql(12)
+    #     expect(QuotaOrderNumber.count).to be_eql(1)
+    #     expect(QuotaDefinition.count).to be_eql(4)
 
-        expect_order_number_to_be_valid
-      end
-    end
+    #     expect_order_number_to_be_valid
+    #   end
+    # end
 
-    describe "Custom" do
-      let(:ops) do
-        base_ops.merge(
-          order_number_ops
-        ).merge(
-          quota_periods: {
-            custom: {
-              "0" => {
-                "amount1"=>"10",
-                "start_date"=>"08/05/2018",
-                "end_date"=>"08/05/2019",
-                "measurement_unit_code"=>"EUR",
-                "measurement_unit_qualifier_code"=>"X"
-              },
-              "1" => {
-                "amount1"=>"20",
-                "start_date"=>"08/05/2019",
-                "end_date"=>"08/05/2020",
-                "measurement_unit_code"=>"EUR",
-                "measurement_unit_qualifier_code"=>"X"
-              }
-            }
-          }
-        )
-      end
+    # describe "Monthly" do
+    #   let(:ops) do
+    #     base_ops.merge(
+    #       order_number_ops
+    #     ).merge(
+    #       quota_periods: {
+    #         monthly: {
+    #           "amount1"=>"10",
+    #           "amount2"=>"20",
+    #           "amount3"=>"30",
+    #           "amount4"=>"40",
+    #           "amount5"=>"50",
+    #           "amount6"=>"60",
+    #           "amount7"=>"70",
+    #           "amount8"=>"80",
+    #           "amount9"=>"90",
+    #           "amount10"=>"100",
+    #           "amount11"=>"110",
+    #           "amount12"=>"120",
+    #           "start_date"=>"08/05/2018",
+    #           "measurement_unit_code"=>"EUR",
+    #           "measurement_unit_qualifier_code"=>"X"
+    #         }
+    #       }
+    #     )
+    #   end
 
-      it "should create order number and annual quota defition" do
-        expect(measure.reload.new?).to be_falsey
+    #   it "should create order number and 1 quota defition per each month of year" do
+    #     expect(measure.reload.new?).to be_falsey
 
-        expect(QuotaOrderNumber.count).to be_eql(1)
-        expect(QuotaDefinition.count).to be_eql(2)
+    #     expect(QuotaOrderNumber.count).to be_eql(1)
+    #     expect(QuotaDefinition.count).to be_eql(12)
 
-        expect_order_number_to_be_valid
-      end
-    end
+    #     expect_order_number_to_be_valid
+    #   end
+    # end
+
+    # describe "Custom" do
+    #   let(:ops) do
+    #     base_ops.merge(
+    #       order_number_ops
+    #     ).merge(
+    #       quota_periods: {
+    #         custom: {
+    #           "0" => {
+    #             "amount1"=>"10",
+    #             "start_date"=>"08/05/2018",
+    #             "end_date"=>"08/05/2019",
+    #             "measurement_unit_code"=>"EUR",
+    #             "measurement_unit_qualifier_code"=>"X"
+    #           },
+    #           "1" => {
+    #             "amount1"=>"20",
+    #             "start_date"=>"08/05/2019",
+    #             "end_date"=>"08/05/2020",
+    #             "measurement_unit_code"=>"EUR",
+    #             "measurement_unit_qualifier_code"=>"X"
+    #           }
+    #         }
+    #       }
+    #     )
+    #   end
+
+    #   it "should create order number and annual quota defition" do
+    #     expect(measure.reload.new?).to be_falsey
+
+    #     expect(QuotaOrderNumber.count).to be_eql(1)
+    #     expect(QuotaDefinition.count).to be_eql(2)
+
+    #     expect_order_number_to_be_valid
+    #   end
+    # end
   end
 
   private
@@ -225,21 +234,26 @@ describe "Measure Saver: Saving of Quota definitions" do
       expect(order_number.added_by_id).to be_eql(user.id)
     end
 
-    def expect_quota_definition_to_be_valid(record, ops)
+    def expect_quota_definition_to_be_valid(record, amount, expected_end_date, ops)
       expect(record.quota_order_number_id).to be_eql(order_number.quota_order_number_id)
       expect(record.quota_order_number_sid).to be_eql(order_number.quota_order_number_sid)
-      expect(record.initial_volume.to_i).to be_eql(ops[:initial_volume])
+      expect(record.initial_volume.to_i).to be_eql(amount)
+      expect(date_to_s(record.validity_start_date)).to be_eql(ops["start_date"])
 
-      expect(record.monetary_unit_code).to be_eql(ops[:monetary_unit_code])
-      expect(record.measurement_unit_code).to be_eql(ops[:measurement_unit_code])
-      expect(record.measurement_unit_qualifier_code).to be_eql(ops[:measurement_unit_qualifier_code])
+      expect(
+        date_to_s(record.validity_end_date)
+      ).to be_eql(
+        date_to_s(expected_end_date)
+      )
 
-      expect(date_to_s(record.validity_start_date)).to be_eql(
-        date_to_s(ops[:start_date])
-      )
-      expect(date_to_s(record.validity_end_date)).to be_eql(
-        date_to_s(ops[:end_date])
-      )
+      %w(
+        monetary_unit_code
+        measurement_unit_code
+        measurement_unit_qualifier_code
+      ).map do |field_name|
+        expect(record.public_send(field_name)).to be_eql(ops[field_name])
+      end
+
       expect(date_to_s(record.operation_date)).to be_eql(
         date_to_s(measure.operation_date)
       )
