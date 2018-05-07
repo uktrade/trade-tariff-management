@@ -309,21 +309,32 @@ $(document).ready(function() {
         };
 
         try {
-          payload.measure_components = this.measure.measure_components.map(function(component) {
-            var c = clone(component);
-            // to ignore A and B
-            c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+          if (this.showDuties) {
+            payload.measure_components = this.measure.measure_components.map(function(component) {
+              var c = clone(component);
 
-            return c;
-          });
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
 
+              return c;
+            });
+          }
+        } catch (e) {
+          console.error(e);
+        }
+
+        try {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);
 
             c.measure_condition_components = c.measure_condition_components.map(function(component) {
               var c = clone(component);
-              // to ignore A and B
-              c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
 
               return c;
             });
@@ -331,7 +342,7 @@ $(document).ready(function() {
             return c;
           });
         } catch (e) {
-
+          console.error(e);
         }
 
         if (this.origins.country.selected) {
