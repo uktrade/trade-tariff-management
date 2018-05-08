@@ -7,6 +7,7 @@ describe "Measure Saver: Saving of Measure conditions" do
   let(:measure_conditions) do
     measure.reload
            .measure_conditions
+           .sort { |a, b| a.added_at <=> b.added_at }
   end
 
   before do
@@ -29,12 +30,11 @@ describe "Measure Saver: Saving of Measure conditions" do
     let(:ops) do
       base_ops.merge(
         conditions: {
-          "0" =>
-            {
-              "condition_code" => "",
-              "certificate_code" => "",
-            },
-          "1" => {}
+          "0" => {
+            "condition_code" => "",
+            "certificate_code" => ""
+          },
+          "1" => {
           }
         }
       )
@@ -74,22 +74,21 @@ describe "Measure Saver: Saving of Measure conditions" do
           {
             "condition_code" => "B",
             "certificate_type_code" => "D",
-            "certificate_code" => "005"
+            "certificate_code" => "005",
             "action_code" => "01",
-            "measure_condition_components" =>  {
+            "measure_condition_components" => {
               "0" => {
                 "duty_expression_id" => duty_expression_01.duty_expression_id,
                 "amount" => "30"
               },
               "1" => {
-                "duty_expression_id" => duty_expression_04.duty_expression_id,,
+                "duty_expression_id" => duty_expression_04.duty_expression_id,
                 "amount" => "40",
                 "measurement_unit_code" => measurement_unit.measurement_unit_code,
                 "measurement_unit_qualifier_code" => measurement_unit_qualifier.measurement_unit_qualifier_code,
                 "monetary_unit_code" => monetary_unit.monetary_unit_code
               }
             }
-          }
         }
       }
     }
@@ -106,6 +105,7 @@ describe "Measure Saver: Saving of Measure conditions" do
       expect(measure.reload.new?).to be_falsey
 
       expect(MeasureCondition.count).to be_eql(2)
+      expect(MeasureConditionComponent.count).to be_eql(4)
 
       expect_measure_condition_to_be_valid(0)
       expect_measure_condition_to_be_valid(1)
@@ -121,7 +121,7 @@ describe "Measure Saver: Saving of Measure conditions" do
       expect(record.measure_sid).to be_eql(measure.measure_sid)
 
       record.measure_condition_components
-            .order(:added_at)
+            .sort { |a, b| a.added_at <=> b.added_at }
             .each_with_index do |measure_condition_component, index|
 
         mc_ops = ops["measure_condition_components"][index.to_s]
