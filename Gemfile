@@ -116,5 +116,6 @@ group :test do
   gem "webmock", "~> 3.0.1"
   gem "database_cleaner", github: "theharq/database_cleaner", branch: "sequel-updates"
   gem 'codeclimate-test-reporter', require: nil
-  gem 'rspec_junit_formatter'
+  gem "rspec_junit_formatter"
+  gem 'capybara'
 end

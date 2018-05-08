@@ -32,7 +32,15 @@ class RegulationsController < ::BaseController
 
   def index
     respond_to do |format|
-      format.html
+      format.html do
+
+        if params[:search].present?
+          # TODO: implement search
+          @results = BaseRegulation.actual.page(params[:search][:page] || 1)
+        end
+      end
+
+
       format.json { render json: json_list, status: :ok }
     end
   end
