@@ -53,6 +53,26 @@ describe "Measure Saver: Saving of Measure conditions" do
       conditions: {
         "0" =>
           {
+            "condition_code" => "B",
+            "certificate_type_code" => "C",
+            "certificate_code" => "001",
+            "action_code" => "01",
+            "measure_condition_components" => {
+              "0" => {
+                "duty_expression_id" => duty_expression_01.duty_expression_id,
+                "amount" => "30"
+              },
+              "1" => {
+                "duty_expression_id" => duty_expression_04.duty_expression_id,
+                "amount" => "40",
+                "measurement_unit_code" => measurement_unit.measurement_unit_code,
+                "measurement_unit_qualifier_code" => measurement_unit_qualifier.measurement_unit_qualifier_code,
+                "monetary_unit_code" => monetary_unit.monetary_unit_code
+              }
+            }
+        },
+        "1" =>
+          {
             "condition_code" => "A",
             "certificate_code" => "001",
             "action_code" => "01",
@@ -70,11 +90,31 @@ describe "Measure Saver: Saving of Measure conditions" do
               }
             }
           },
-        "1" =>
+        "2" =>
           {
             "condition_code" => "B",
             "certificate_type_code" => "D",
             "certificate_code" => "005",
+            "action_code" => "01",
+            "measure_condition_components" => {
+              "0" => {
+                "duty_expression_id" => duty_expression_01.duty_expression_id,
+                "amount" => "30"
+              },
+              "1" => {
+                "duty_expression_id" => duty_expression_04.duty_expression_id,
+                "amount" => "40",
+                "measurement_unit_code" => measurement_unit.measurement_unit_code,
+                "measurement_unit_qualifier_code" => measurement_unit_qualifier.measurement_unit_qualifier_code,
+                "monetary_unit_code" => monetary_unit.monetary_unit_code
+              }
+            }
+        },
+        "3" =>
+          {
+            "condition_code" => "B",
+            "certificate_type_code" => "A",
+            "certificate_code" => "004",
             "action_code" => "01",
             "measure_condition_components" => {
               "0" => {
@@ -104,19 +144,21 @@ describe "Measure Saver: Saving of Measure conditions" do
     it "should create and associate measure conditions with measure" do
       expect(measure.reload.new?).to be_falsey
 
-      expect(MeasureCondition.count).to be_eql(2)
-      expect(MeasureConditionComponent.count).to be_eql(4)
+      expect(MeasureCondition.count).to be_eql(4)
+      expect(MeasureConditionComponent.count).to be_eql(8)
 
-      expect_measure_condition_to_be_valid(0)
-      expect_measure_condition_to_be_valid(1)
+      expect_measure_condition_to_be_valid(0, "0")
+      expect_measure_condition_to_be_valid(1, "2")
+      expect_measure_condition_to_be_valid(2, "3")
+      expect_measure_condition_to_be_valid(3, "1")
     end
   end
 
   private
 
-    def expect_measure_condition_to_be_valid(position)
-      record = measure_conditions[position]
-      ops = measure_conditions_ops[:conditions][position.to_s]
+    def expect_measure_condition_to_be_valid(position_in_db, position_in_ops)
+      record = measure_conditions[position_in_db]
+      ops = measure_conditions_ops[:conditions][position_in_ops]
 
       expect(record.measure_sid).to be_eql(measure.measure_sid)
 
