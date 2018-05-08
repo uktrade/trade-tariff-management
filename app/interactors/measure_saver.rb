@@ -437,19 +437,24 @@ class MeasureSaver
       if conditions.present?
         conditions.select do |k, v|
           v[:condition_code].present?
-        end.map do |k, v|
-          add_condition!(k, v)
+        end.group_by do |k, v|
+          v[:condition_code]
+        end.map do |k, grouped_ops|
+          grouped_ops.each_with_index do |data, index|
+            add_condition!(index, data[1])
+          end
         end
       end
     end
 
-    def add_condition!(component_sequence_number, data)
+    def add_condition!(position, data)
       condition = MeasureCondition.new(
         action_code: data[:action_code],
         condition_code: data[:condition_code],
         condition_duty_amount: data[:amount],
         certificate_type_code: data[:certificate_type_code],
-        certificate_code: data[:certificate_code]
+        certificate_code: data[:certificate_code],
+        component_sequence_number: position + 1
       )
       condition.measure_sid = measure.measure_sid
 

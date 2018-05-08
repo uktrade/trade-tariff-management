@@ -1,5 +1,6 @@
 [![CircleCI](https://circleci.com/gh/bitzesty/trade-tariff-management.svg?style=svg&circle-token=c59552351e30f9d35e32d3a6020929129ddcd91e)](https://circleci.com/gh/bitzesty/trade-tariff-management)
 [![Code Climate](https://codeclimate.com/github/bitzesty/trade-tariff-management/badges/gpa.svg)](https://codeclimate.com/github/bitzesty/trade-tariff-management)
+[![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/a3405aa0455eb23d3939/test_coverage)](https://codeclimate.com/github/bitzesty/trade-tariff-management/test_coverage)
 
 # Trade Tariff Management
 

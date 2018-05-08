@@ -115,5 +115,6 @@ group :test do
   gem "simplecov-rcov", git: 'git@github.com:bitzesty/simplecov-rcov.git' # monkey patch for ruby 2.5.0
   gem "webmock", "~> 3.0.1"
   gem "database_cleaner", github: "theharq/database_cleaner", branch: "sequel-updates"
-  gem "rspec_junit_formatter"
+  gem 'codeclimate-test-reporter', require: nil
+  gem 'rspec_junit_formatter'
 end

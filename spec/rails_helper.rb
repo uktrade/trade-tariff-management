@@ -3,13 +3,15 @@ ENV["RAILS_ENV"] ||= 'test'
 require "spec_helper"
 
 require 'webmock/rspec'
-WebMock.disable_net_connect!(allow_localhost: true)
-
 require 'simplecov'
 require 'simplecov-rcov'
+require "codeclimate-test-reporter"
 
-SimpleCov.start 'rails'
-SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+WebMock.disable_net_connect!(allow: "codeclimate.com", allow_localhost: true)
+
+SimpleCov.add_filter "vendor"
+SimpleCov.formatters = []
+SimpleCov.start CodeClimate::TestReporter.configuration.profile
 
 require File.expand_path("../../config/environment", __FILE__)
 
