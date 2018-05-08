@@ -9,8 +9,9 @@ require "codeclimate-test-reporter"
 
 WebMock.disable_net_connect!(allow: "codeclimate.com", allow_localhost: true)
 
-SimpleCov.start 'rails'
-SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+SimpleCov.add_filter "vendor"
+SimpleCov.formatters = []
+SimpleCov.start CodeClimate::TestReporter.configuration.profile
 
 require File.expand_path("../../config/environment", __FILE__)
 
