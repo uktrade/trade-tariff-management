@@ -81,7 +81,7 @@ class GeographicalArea < Sequel::Model
   def to_json
     {
       geographical_area_id: geographical_area_id,
-      description: description
+      description: description || ''
     }
   end
 

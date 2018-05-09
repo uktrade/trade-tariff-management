@@ -18,6 +18,20 @@ class RegulationsController < ::BaseController
     ::RegulationSaver.new(current_user, regulation_ops)
   end
 
+  expose(:search_ops) { params[:search] || {} }
+
+  expose(:regulation_search_form) do
+    ::RegulationsSearchForm.new(search_ops)
+  end
+
+  expose(:regulation_search) do
+    ::RegulationsSearch.new(search_ops)
+  end
+
+  expose(:search_results) do
+    regulation_search.results
+  end
+
   expose(:regulation) do
     regulation_saver.regulation
   end
@@ -32,15 +46,7 @@ class RegulationsController < ::BaseController
 
   def index
     respond_to do |format|
-      format.html do
-
-        if params[:search].present?
-          # TODO: implement search
-          @results = BaseRegulation.actual.page(params[:search][:page] || 1)
-        end
-      end
-
-
+      format.html
       format.json { render json: json_list, status: :ok }
     end
   end
