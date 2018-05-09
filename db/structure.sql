@@ -6259,6 +6259,90 @@ ALTER SEQUENCE regulation_role_types_oid_seq OWNED BY regulation_role_types_oplo
 
 
 --
+-- Name: regulations_search_pg_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW regulations_search_pg_view AS
+ SELECT concat_ws('_'::text, base_regulations_oplog.oid, 'base_regulation') AS id,
+    base_regulations_oplog.base_regulation_id AS regulation_id,
+    base_regulations_oplog.base_regulation_role AS role,
+    base_regulations_oplog.validity_start_date AS start_date,
+    base_regulations_oplog.validity_end_date AS end_date,
+    base_regulations_oplog.published_date,
+    base_regulations_oplog.officialjournal_number,
+    base_regulations_oplog.officialjournal_page,
+    base_regulations_oplog.created_at,
+    base_regulations_oplog.added_at,
+    base_regulations_oplog.added_by_id
+   FROM base_regulations_oplog
+UNION
+ SELECT concat_ws('_'::text, modification_regulations_oplog.oid, 'modification_regulation') AS id,
+    modification_regulations_oplog.modification_regulation_id AS regulation_id,
+    modification_regulations_oplog.modification_regulation_role AS role,
+    modification_regulations_oplog.validity_start_date AS start_date,
+    modification_regulations_oplog.validity_end_date AS end_date,
+    modification_regulations_oplog.published_date,
+    modification_regulations_oplog.officialjournal_number,
+    modification_regulations_oplog.officialjournal_page,
+    modification_regulations_oplog.created_at,
+    modification_regulations_oplog.added_at,
+    modification_regulations_oplog.added_by_id
+   FROM modification_regulations_oplog
+UNION
+ SELECT concat_ws('_'::text, complete_abrogation_regulations_oplog.oid, 'complete_abrogation_regulation') AS id,
+    complete_abrogation_regulations_oplog.complete_abrogation_regulation_id AS regulation_id,
+    complete_abrogation_regulations_oplog.complete_abrogation_regulation_role AS role,
+    complete_abrogation_regulations_oplog.published_date AS start_date,
+    NULL::timestamp without time zone AS end_date,
+    complete_abrogation_regulations_oplog.published_date,
+    complete_abrogation_regulations_oplog.officialjournal_number,
+    complete_abrogation_regulations_oplog.officialjournal_page,
+    complete_abrogation_regulations_oplog.created_at,
+    complete_abrogation_regulations_oplog.added_at,
+    complete_abrogation_regulations_oplog.added_by_id
+   FROM complete_abrogation_regulations_oplog
+UNION
+ SELECT concat_ws('_'::text, explicit_abrogation_regulations_oplog.oid, 'explicit_abrogation_regulation') AS id,
+    explicit_abrogation_regulations_oplog.explicit_abrogation_regulation_id AS regulation_id,
+    explicit_abrogation_regulations_oplog.explicit_abrogation_regulation_role AS role,
+    explicit_abrogation_regulations_oplog.published_date AS start_date,
+    NULL::timestamp without time zone AS end_date,
+    explicit_abrogation_regulations_oplog.published_date,
+    explicit_abrogation_regulations_oplog.officialjournal_number,
+    explicit_abrogation_regulations_oplog.officialjournal_page,
+    explicit_abrogation_regulations_oplog.created_at,
+    explicit_abrogation_regulations_oplog.added_at,
+    explicit_abrogation_regulations_oplog.added_by_id
+   FROM explicit_abrogation_regulations_oplog
+UNION
+ SELECT concat_ws('_'::text, prorogation_regulations_oplog.oid, 'prorogation_regulation') AS id,
+    prorogation_regulations_oplog.prorogation_regulation_id AS regulation_id,
+    prorogation_regulations_oplog.prorogation_regulation_role AS role,
+    prorogation_regulations_oplog.published_date AS start_date,
+    NULL::timestamp without time zone AS end_date,
+    prorogation_regulations_oplog.published_date,
+    prorogation_regulations_oplog.officialjournal_number,
+    prorogation_regulations_oplog.officialjournal_page,
+    prorogation_regulations_oplog.created_at,
+    prorogation_regulations_oplog.added_at,
+    prorogation_regulations_oplog.added_by_id
+   FROM prorogation_regulations_oplog
+UNION
+ SELECT concat_ws('_'::text, full_temporary_stop_regulations_oplog.oid, 'full_temporary_stop_regulation') AS id,
+    full_temporary_stop_regulations_oplog.full_temporary_stop_regulation_id AS regulation_id,
+    full_temporary_stop_regulations_oplog.full_temporary_stop_regulation_role AS role,
+    full_temporary_stop_regulations_oplog.validity_start_date AS start_date,
+    full_temporary_stop_regulations_oplog.validity_end_date AS end_date,
+    full_temporary_stop_regulations_oplog.published_date,
+    full_temporary_stop_regulations_oplog.officialjournal_number,
+    full_temporary_stop_regulations_oplog.officialjournal_page,
+    full_temporary_stop_regulations_oplog.created_at,
+    full_temporary_stop_regulations_oplog.added_at,
+    full_temporary_stop_regulations_oplog.added_by_id
+   FROM full_temporary_stop_regulations_oplog;
+
+
+--
 -- Name: rollbacks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -10360,3 +10444,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180504143240_add_added_b
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180505084755_add_added_at_and_added_by_id_to_footnotes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180505091501_add_added_at_and_added_by_to_footnote_association_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180505092846_add_added_at_and_added_by_id_to_footnote_descriptions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180509152938_add_regulations_search_pg_view.rb');
