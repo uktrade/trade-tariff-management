@@ -1,7 +1,5 @@
 class RegulationsSearch
 
-  PER_PAGE = 25
-
   ALLOWED_FILTERS = %w(
     role
     regulation_group_id
@@ -27,7 +25,7 @@ class RegulationsSearch
   end
 
   def results
-    @relation = RegulationsSearchPgView.order(:created_at)
+    @relation = RegulationsSearchPgView.order(:start_date)
 
     search_ops.select do |k, v|
       ALLOWED_FILTERS.include?(k.to_s) && v.present?
@@ -37,7 +35,6 @@ class RegulationsSearch
     end
 
     relation.page(page)
-            .per(PER_PAGE)
   end
 
   private

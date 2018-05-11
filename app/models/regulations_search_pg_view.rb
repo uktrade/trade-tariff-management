@@ -21,4 +21,18 @@ class RegulationsSearchPgView  < Sequel::Model(:regulations_search_pg_view)
       where(Sequel.ilike(:keywords, "#{keywords}%"))
     end
   end
+
+  class << self
+    def max_per_page
+      15
+    end
+
+    def default_per_page
+      15
+    end
+
+    def max_pages
+      999
+    end
+  end
 end

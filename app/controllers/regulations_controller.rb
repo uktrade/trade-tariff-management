@@ -18,7 +18,11 @@ class RegulationsController < ::BaseController
     ::RegulationSaver.new(current_user, regulation_ops)
   end
 
-  expose(:search_ops) { params[:search] || {} }
+  expose(:search_ops) {
+    (params[:search] || {}).merge(
+      page: params[:page]
+    )
+  }
 
   expose(:regulation_search_form) do
     ::RegulationsSearchForm.new(search_ops)
@@ -29,9 +33,7 @@ class RegulationsController < ::BaseController
   end
 
   expose(:search_results) do
-    RegulationsSearchPgViewDecorator.decorate_collection(
-      regulation_search.results
-    )
+    regulation_search.results
   end
 
   expose(:regulation) do
