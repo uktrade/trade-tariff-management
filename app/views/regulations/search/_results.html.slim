@@ -2,7 +2,7 @@
   table.table.regulations-table
     thead
       tr
-        th
+        th width="30%"
           | Legal base
         th
           | Type
@@ -25,6 +25,8 @@
         tr
           td
             = item.regulation_id
+            p.regulations_listing_item_description
+              = item.keywords
           td
             = item.regulation_type
           td
@@ -41,3 +43,4 @@
             = item.officialjournal_page
           td
             = link_to "[measures]", measures_path(regulation_id: item.regulation_id)
+

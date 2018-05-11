@@ -16,7 +16,7 @@ Sequel.migration do
              added_by_id,
              regulation_group_id,
              replacement_indicator,
-             concat_ws(' ', base_regulation_id, information_text) AS keywords
+             information_text AS keywords
       FROM base_regulations_oplog
 
       UNION
@@ -34,7 +34,7 @@ Sequel.migration do
              added_by_id,
              NULL AS regulation_group_id,
              replacement_indicator,
-             concat_ws(' ', modification_regulation_id, information_text) AS keywords
+             information_text AS keywords
       FROM modification_regulations_oplog
 
       UNION
@@ -52,7 +52,7 @@ Sequel.migration do
              added_by_id AS added_by_id,
              NULL AS regulation_group_id,
              replacement_indicator,
-             concat_ws(' ', complete_abrogation_regulation_id, information_text) AS keywords
+             information_text AS keywords
       FROM complete_abrogation_regulations_oplog
 
       UNION
@@ -70,7 +70,7 @@ Sequel.migration do
              added_by_id AS added_by_id,
              NULL AS regulation_group_id,
              replacement_indicator,
-             concat_ws(' ', explicit_abrogation_regulation_id, information_text) AS keywords
+             information_text AS keywords
       FROM explicit_abrogation_regulations_oplog
 
       UNION
@@ -88,7 +88,7 @@ Sequel.migration do
              added_by_id AS added_by_id,
              NULL AS regulation_group_id,
              replacement_indicator,
-             concat_ws(' ', prorogation_regulation_id, information_text) AS keywords
+             information_text AS keywords
       FROM prorogation_regulations_oplog
 
       UNION
@@ -106,7 +106,7 @@ Sequel.migration do
              added_by_id AS added_by_id,
              NULL AS regulation_group_id,
              replacement_indicator,
-             concat_ws(' ', full_temporary_stop_regulation_id, information_text) AS keywords
+             information_text AS keywords
       FROM full_temporary_stop_regulations_oplog;
     }
   end

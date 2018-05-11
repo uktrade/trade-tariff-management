@@ -6310,7 +6310,7 @@ CREATE VIEW regulations_search_pg_view AS
     base_regulations_oplog.added_by_id,
     base_regulations_oplog.regulation_group_id,
     base_regulations_oplog.replacement_indicator,
-    concat_ws(' '::text, base_regulations_oplog.base_regulation_id, base_regulations_oplog.information_text) AS keywords
+    base_regulations_oplog.information_text AS keywords
    FROM base_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, modification_regulations_oplog.oid, 'modification_regulation') AS id,
@@ -6326,7 +6326,7 @@ UNION
     modification_regulations_oplog.added_by_id,
     NULL::character varying AS regulation_group_id,
     modification_regulations_oplog.replacement_indicator,
-    concat_ws(' '::text, modification_regulations_oplog.modification_regulation_id, modification_regulations_oplog.information_text) AS keywords
+    modification_regulations_oplog.information_text AS keywords
    FROM modification_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, complete_abrogation_regulations_oplog.oid, 'complete_abrogation_regulation') AS id,
@@ -6342,7 +6342,7 @@ UNION
     complete_abrogation_regulations_oplog.added_by_id,
     NULL::character varying AS regulation_group_id,
     complete_abrogation_regulations_oplog.replacement_indicator,
-    concat_ws(' '::text, complete_abrogation_regulations_oplog.complete_abrogation_regulation_id, complete_abrogation_regulations_oplog.information_text) AS keywords
+    complete_abrogation_regulations_oplog.information_text AS keywords
    FROM complete_abrogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, explicit_abrogation_regulations_oplog.oid, 'explicit_abrogation_regulation') AS id,
@@ -6358,7 +6358,7 @@ UNION
     explicit_abrogation_regulations_oplog.added_by_id,
     NULL::character varying AS regulation_group_id,
     explicit_abrogation_regulations_oplog.replacement_indicator,
-    concat_ws(' '::text, explicit_abrogation_regulations_oplog.explicit_abrogation_regulation_id, explicit_abrogation_regulations_oplog.information_text) AS keywords
+    explicit_abrogation_regulations_oplog.information_text AS keywords
    FROM explicit_abrogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, prorogation_regulations_oplog.oid, 'prorogation_regulation') AS id,
@@ -6374,7 +6374,7 @@ UNION
     prorogation_regulations_oplog.added_by_id,
     NULL::character varying AS regulation_group_id,
     prorogation_regulations_oplog.replacement_indicator,
-    concat_ws(' '::text, prorogation_regulations_oplog.prorogation_regulation_id, prorogation_regulations_oplog.information_text) AS keywords
+    prorogation_regulations_oplog.information_text AS keywords
    FROM prorogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, full_temporary_stop_regulations_oplog.oid, 'full_temporary_stop_regulation') AS id,
@@ -6390,7 +6390,7 @@ UNION
     full_temporary_stop_regulations_oplog.added_by_id,
     NULL::character varying AS regulation_group_id,
     full_temporary_stop_regulations_oplog.replacement_indicator,
-    concat_ws(' '::text, full_temporary_stop_regulations_oplog.full_temporary_stop_regulation_id, full_temporary_stop_regulations_oplog.information_text) AS keywords
+    full_temporary_stop_regulations_oplog.information_text AS keywords
    FROM full_temporary_stop_regulations_oplog;
 
 
