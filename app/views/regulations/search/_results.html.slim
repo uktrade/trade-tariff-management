@@ -5,6 +5,10 @@
         th
           | Legal base
         th
+          | Type
+        th
+          | Regulation Group
+        th
           | Start date
         th
           | End date
@@ -22,11 +26,15 @@
           td
             = item.regulation_id
           td
-            = item.validity_start_date.try(:strftime, "%d/%m/%Y")
+            = item.regulation_type
           td
-            = item.validity_end_date.try(:strftime, "%d/%m/%Y")
+            = item.regulation_group_name
           td
-            = item.published_date.try(:strftime, "%d/%m/%Y")
+            = item.start_date
+          td
+            = item.end_date
+          td
+            = item.published_date
           td
             = item.officialjournal_number
           td

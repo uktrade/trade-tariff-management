@@ -17,6 +17,10 @@ class RegulationGroup < Sequel::Model
   delegate :description, to: :regulation_group_description
 
   dataset_module do
+    def by_group_id(group_id)
+      where(regulation_group_id: group_id)
+    end
+
     def q_search(keyword)
       q_rule = "#{keyword}%"
 

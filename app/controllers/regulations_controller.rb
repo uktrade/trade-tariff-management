@@ -29,7 +29,9 @@ class RegulationsController < ::BaseController
   end
 
   expose(:search_results) do
-    regulation_search.results
+    RegulationsSearchPgViewDecorator.decorate_collection(
+      regulation_search.results
+    )
   end
 
   expose(:regulation) do
