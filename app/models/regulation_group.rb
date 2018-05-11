@@ -17,6 +17,13 @@ class RegulationGroup < Sequel::Model
   delegate :description, to: :regulation_group_description
 
   dataset_module do
+    def by_description
+      join(
+        :regulation_group_descriptions,
+        regulation_group_id: :regulation_group_id
+      ).order(:regulation_group_descriptions__description)
+    end
+
     def by_group_id(group_id)
       where(regulation_group_id: group_id)
     end

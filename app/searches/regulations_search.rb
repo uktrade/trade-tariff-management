@@ -1,5 +1,7 @@
 class RegulationsSearch
 
+  PER_PAGE = 25
+
   ALLOWED_FILTERS = %w(
     role
     regulation_group_id
@@ -16,10 +18,12 @@ class RegulationsSearch
                 :end_date,
                 :keywords,
                 :geographical_area_id,
-                :relation
+                :relation,
+                :page
 
   def initialize(search_ops)
     @search_ops = search_ops
+    @page = search_ops[:page] || 1
   end
 
   def results
@@ -32,7 +36,8 @@ class RegulationsSearch
       send("apply_#{k}_filter")
     end
 
-    relation
+    relation.page(page)
+            .per(PER_PAGE)
   end
 
   private

@@ -18,7 +18,8 @@ class RegulationsSearchForm
   end
 
   def regulation_groups
-    RegulationGroup.all
+    RegulationGroup.by_description
+                   .all
   end
 
   def geographical_areas
