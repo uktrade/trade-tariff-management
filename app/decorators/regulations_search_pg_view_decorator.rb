@@ -1,18 +1,12 @@
 class RegulationsSearchPgViewDecorator < ApplicationDecorator
 
-  TYPES = {
-    1 => "Base regulation",
-    2 => "Provisional anti-dumping/countervailing duty",
-    3 => "Definitive anti-dumping/countervailing duty",
-    4 => "Modification",
-    5 => "Prorogation",
-    6 => "Complete abrogation",
-    7 => "Explicit abrogation",
-    8 => "FTS - Full Temporary Stop"
-  }
-
   def regulation_type
-    TYPES[object.role.to_i]
+    return "Full Temporary Stop" if object.role.to_s == "8"
+
+    RegulationForm.regulation_roles
+                  .detect do |role_ops|
+      role_ops[0] == object.role.to_s
+    end[1]
   end
 
   def regulation_group_name

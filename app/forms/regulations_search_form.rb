@@ -1,17 +1,20 @@
 class RegulationsSearchForm
 
-  attr_accessor :start_date,
-                :end_date,
+  attr_accessor :role,
                 :regulation_group_id,
-                :geographical_area_id,
-                :keywords
+                :start_date,
+                :end_date,
+                :keywords,
+                :geographical_area_id
 
   def initialize(params)
-    @start_date = params[:start_date]
-    @end_date = params[:end_date]
-    @regulation_group_id = params[:regulation_group_id]
-    @geographical_area_id = params[:geographical_area_id]
-    @keywords = params[:keywords]
+    RegulationsSearch::ALLOWED_FILTERS.map do |filter_name|
+      instance_variable_set("@#{filter_name}", params[filter_name])
+    end
+  end
+
+  def roles
+    RegulationForm.regulation_roles
   end
 
   def regulation_groups

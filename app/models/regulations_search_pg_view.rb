@@ -1,6 +1,10 @@
 class RegulationsSearchPgView  < Sequel::Model(:regulations_search_pg_view)
 
   dataset_module do
+    def by_role(role)
+      where(role: role)
+    end
+
     def by_regulation_group_id(regulation_group_id)
       where(regulation_group_id: regulation_group_id)
     end

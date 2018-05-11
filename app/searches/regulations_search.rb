@@ -1,6 +1,7 @@
 class RegulationsSearch
 
   ALLOWED_FILTERS = %w(
+    role
     regulation_group_id
     start_date
     end_date
@@ -9,6 +10,7 @@ class RegulationsSearch
   )
 
   attr_accessor :search_ops,
+                :role,
                 :regulation_group_id,
                 :start_date,
                 :end_date,
@@ -34,6 +36,10 @@ class RegulationsSearch
   end
 
   private
+
+    def apply_role_filter
+      @relation = relation.by_role(role)
+    end
 
     def apply_regulation_group_id_filter
       @relation = relation.by_regulation_group_id(regulation_group_id)
