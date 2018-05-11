@@ -44,6 +44,40 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET search_path = public, pg_catalog;
 
 --
+-- Name: measure_cache_geographical_areas_trigger(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION measure_cache_geographical_areas_trigger() RETURNS trigger
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+DECLARE
+  dic regconfig;
+  regulation_id text;
+  part_a json[];
+BEGIN
+  RAISE LOG '      [CUSTOM TRIGGER] CALLED! ';
+
+  dic := 'simple';
+  regulation_id := new.base_regulation_id;
+
+  RAISE LOG '      [CUSTOM TRIGGER] regulation_id: %', regulation_id;
+
+  SELECT INTO part_a array_to_json (
+    ARRAY (
+      SELECT DISTINCT geographical_area_id
+      FROM measures_oplog
+      WHERE measure_generating_regulation_id = regulation_id
+    )
+  );
+
+  RAISE LOG '      [CUSTOM TRIGGER] part_a: %', part_a;
+
+  RETURN new;
+END;
+$$;
+
+
+--
 -- Name: reassign_owned(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -6273,7 +6307,10 @@ CREATE VIEW regulations_search_pg_view AS
     base_regulations_oplog.officialjournal_page,
     base_regulations_oplog.created_at,
     base_regulations_oplog.added_at,
-    base_regulations_oplog.added_by_id
+    base_regulations_oplog.added_by_id,
+    base_regulations_oplog.regulation_group_id,
+    base_regulations_oplog.replacement_indicator,
+    concat_ws(' '::text, base_regulations_oplog.base_regulation_id, base_regulations_oplog.information_text) AS keywords
    FROM base_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, modification_regulations_oplog.oid, 'modification_regulation') AS id,
@@ -6286,7 +6323,10 @@ UNION
     modification_regulations_oplog.officialjournal_page,
     modification_regulations_oplog.created_at,
     modification_regulations_oplog.added_at,
-    modification_regulations_oplog.added_by_id
+    modification_regulations_oplog.added_by_id,
+    NULL::character varying AS regulation_group_id,
+    modification_regulations_oplog.replacement_indicator,
+    concat_ws(' '::text, modification_regulations_oplog.modification_regulation_id, modification_regulations_oplog.information_text) AS keywords
    FROM modification_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, complete_abrogation_regulations_oplog.oid, 'complete_abrogation_regulation') AS id,
@@ -6299,7 +6339,10 @@ UNION
     complete_abrogation_regulations_oplog.officialjournal_page,
     complete_abrogation_regulations_oplog.created_at,
     complete_abrogation_regulations_oplog.added_at,
-    complete_abrogation_regulations_oplog.added_by_id
+    complete_abrogation_regulations_oplog.added_by_id,
+    NULL::character varying AS regulation_group_id,
+    complete_abrogation_regulations_oplog.replacement_indicator,
+    concat_ws(' '::text, complete_abrogation_regulations_oplog.complete_abrogation_regulation_id, complete_abrogation_regulations_oplog.information_text) AS keywords
    FROM complete_abrogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, explicit_abrogation_regulations_oplog.oid, 'explicit_abrogation_regulation') AS id,
@@ -6312,7 +6355,10 @@ UNION
     explicit_abrogation_regulations_oplog.officialjournal_page,
     explicit_abrogation_regulations_oplog.created_at,
     explicit_abrogation_regulations_oplog.added_at,
-    explicit_abrogation_regulations_oplog.added_by_id
+    explicit_abrogation_regulations_oplog.added_by_id,
+    NULL::character varying AS regulation_group_id,
+    explicit_abrogation_regulations_oplog.replacement_indicator,
+    concat_ws(' '::text, explicit_abrogation_regulations_oplog.explicit_abrogation_regulation_id, explicit_abrogation_regulations_oplog.information_text) AS keywords
    FROM explicit_abrogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, prorogation_regulations_oplog.oid, 'prorogation_regulation') AS id,
@@ -6325,7 +6371,10 @@ UNION
     prorogation_regulations_oplog.officialjournal_page,
     prorogation_regulations_oplog.created_at,
     prorogation_regulations_oplog.added_at,
-    prorogation_regulations_oplog.added_by_id
+    prorogation_regulations_oplog.added_by_id,
+    NULL::character varying AS regulation_group_id,
+    prorogation_regulations_oplog.replacement_indicator,
+    concat_ws(' '::text, prorogation_regulations_oplog.prorogation_regulation_id, prorogation_regulations_oplog.information_text) AS keywords
    FROM prorogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, full_temporary_stop_regulations_oplog.oid, 'full_temporary_stop_regulation') AS id,
@@ -6338,7 +6387,10 @@ UNION
     full_temporary_stop_regulations_oplog.officialjournal_page,
     full_temporary_stop_regulations_oplog.created_at,
     full_temporary_stop_regulations_oplog.added_at,
-    full_temporary_stop_regulations_oplog.added_by_id
+    full_temporary_stop_regulations_oplog.added_by_id,
+    NULL::character varying AS regulation_group_id,
+    full_temporary_stop_regulations_oplog.replacement_indicator,
+    concat_ws(' '::text, full_temporary_stop_regulations_oplog.full_temporary_stop_regulation_id, full_temporary_stop_regulations_oplog.information_text) AS keywords
    FROM full_temporary_stop_regulations_oplog;
 
 
@@ -6529,6 +6581,71 @@ CREATE TABLE tariff_updates (
     exception_queries text,
     exception_class text
 );
+
+
+--
+-- Name: test_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW test_view AS
+ SELECT base_regulations_data.id,
+    base_regulations_data.regulation_id,
+    base_regulations_data.role,
+    base_regulations_data.start_date,
+    base_regulations_data.end_date,
+    base_regulations_data.published_date,
+    base_regulations_data.officialjournal_number,
+    base_regulations_data.officialjournal_page,
+    base_regulations_data.created_at,
+    base_regulations_data.added_at,
+    base_regulations_data.added_by_id,
+    base_regulations_data.regulation_group_id,
+    base_regulations_data.keywords,
+    base_regulations_data.geographical_area_ids
+   FROM ( WITH base_regulations_and_measure_geographical_areas AS (
+                 SELECT second_measures_table.measure_generating_regulation_id,
+                    array_to_json(ARRAY( SELECT DISTINCT first_measures_table.geographical_area_id
+                           FROM measures_oplog first_measures_table
+                          WHERE ((first_measures_table.measure_generating_regulation_id)::text = (second_measures_table.measure_generating_regulation_id)::text)
+                          ORDER BY first_measures_table.geographical_area_id)) AS geographical_area_ids
+                   FROM ( SELECT measures_oplog.measure_generating_regulation_id
+                           FROM measures_oplog
+                          GROUP BY measures_oplog.measure_generating_regulation_id) second_measures_table
+                  ORDER BY second_measures_table.measure_generating_regulation_id
+                )
+         SELECT concat_ws('_'::text, base_regulations_oplog.oid, 'base_regulation') AS id,
+            base_regulations_oplog.base_regulation_id AS regulation_id,
+            base_regulations_oplog.base_regulation_role AS role,
+            base_regulations_oplog.validity_start_date AS start_date,
+            base_regulations_oplog.validity_end_date AS end_date,
+            base_regulations_oplog.published_date,
+            base_regulations_oplog.officialjournal_number,
+            base_regulations_oplog.officialjournal_page,
+            base_regulations_oplog.created_at,
+            base_regulations_oplog.added_at,
+            base_regulations_oplog.added_by_id,
+            base_regulations_oplog.regulation_group_id,
+            concat_ws(' '::text, base_regulations_oplog.base_regulation_id, base_regulations_oplog.information_text) AS keywords,
+            base_regulations_and_measure_geographical_areas.geographical_area_ids
+           FROM (base_regulations_oplog
+             LEFT JOIN base_regulations_and_measure_geographical_areas ON (((base_regulations_oplog.base_regulation_id)::text = (base_regulations_and_measure_geographical_areas.measure_generating_regulation_id)::text)))
+          ORDER BY base_regulations_oplog.base_regulation_id) base_regulations_data
+UNION ALL
+ SELECT concat_ws('_'::text, modification_regulations_oplog.oid, 'modification_regulation') AS id,
+    modification_regulations_oplog.modification_regulation_id AS regulation_id,
+    modification_regulations_oplog.modification_regulation_role AS role,
+    modification_regulations_oplog.validity_start_date AS start_date,
+    modification_regulations_oplog.validity_end_date AS end_date,
+    modification_regulations_oplog.published_date,
+    modification_regulations_oplog.officialjournal_number,
+    modification_regulations_oplog.officialjournal_page,
+    modification_regulations_oplog.created_at,
+    modification_regulations_oplog.added_at,
+    modification_regulations_oplog.added_by_id,
+    NULL::character varying AS regulation_group_id,
+    NULL::text AS keywords,
+    NULL::json AS geographical_area_ids
+   FROM modification_regulations_oplog;
 
 
 --
@@ -10403,6 +10520,13 @@ CREATE INDEX uoq_code_cdu3_index ON chief_comm USING btree (uoq_code_cdu3);
 --
 
 CREATE INDEX user_id ON rollbacks USING btree (user_id);
+
+
+--
+-- Name: measure_cache_geographical_areas_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER measure_cache_geographical_areas_trigger BEFORE INSERT OR UPDATE ON base_regulations_oplog FOR EACH ROW EXECUTE PROCEDURE measure_cache_geographical_areas_trigger();
 
 
 --
