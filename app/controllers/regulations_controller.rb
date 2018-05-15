@@ -18,6 +18,24 @@ class RegulationsController < ::BaseController
     ::RegulationSaver.new(current_user, regulation_ops)
   end
 
+  expose(:search_ops) {
+    (params[:search] || {}).merge(
+      page: params[:page]
+    )
+  }
+
+  expose(:regulation_search_form) do
+    ::RegulationsSearchForm.new(search_ops)
+  end
+
+  expose(:regulation_search) do
+    ::RegulationsSearch.new(search_ops)
+  end
+
+  expose(:search_results) do
+    regulation_search.results
+  end
+
   expose(:regulation) do
     regulation_saver.regulation
   end

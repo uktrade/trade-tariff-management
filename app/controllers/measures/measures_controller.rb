@@ -15,6 +15,7 @@ module Measures
 
     expose(:measures) do
       scope = Measure
+      scope = scope.by_regulation_id(params[:regulation_id]) if params[:regulation_id].present?
       scope = scope.q_search(params[:code]) if params[:code].present?
 
       scope.page(params[:page] || 1)

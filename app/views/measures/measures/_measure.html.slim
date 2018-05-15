@@ -12,6 +12,8 @@ tr
   td
     = measure.base_regulation.try(:base_regulation_id)
   td
+    = measure.justification_regulation_id
+  td
     = measure.validity_start_date.strftime("%d/%m/%Y")
     | &ndash;
     = measure.validity_end_date.try(:strftime, "%d/%m/%Y") || "unspecified"

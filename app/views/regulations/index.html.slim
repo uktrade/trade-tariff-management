@@ -4,8 +4,13 @@
       = link_to "Tariff Management", root_url
 
     li aria-current="page"
-      = link_to "Regulations", regulations_url
+      | Regulations
 
 header
   h1.heading-large
-    | Coming soon
+    | Find a regulation
+
+  = render "regulations/search/form"
+  = render "regulations/search/results"
+
+= paginate search_results

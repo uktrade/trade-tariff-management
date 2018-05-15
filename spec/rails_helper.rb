@@ -21,6 +21,8 @@ require 'json_expressions/rspec'
 require 'fakefs/spec_helpers'
 require 'sidekiq/testing'
 
+require 'capybara/rspec'
+
 require Rails.root.join("spec/support/tariff_validation_matcher.rb")
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 

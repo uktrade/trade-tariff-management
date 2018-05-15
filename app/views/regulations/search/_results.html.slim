@@ -1,0 +1,46 @@
+- if search_results.present?
+  table.table.regulations-table
+    thead
+      tr
+        th width="30%"
+          | Legal base
+        th
+          | Type
+        th
+          | Regulation Group
+        th
+          | Start date
+        th
+          | End date
+        th
+          | Publication date
+        th
+          | Official Journal No.
+        th
+          | Official Journal page
+        th
+          | &nbsp;
+    tbody
+      - RegulationsSearchPgViewDecorator.decorate_collection(search_results).each do |item|
+        tr
+          td
+            = item.regulation_id
+            p.regulations_listing_item_description
+              = item.keywords
+          td
+            = item.regulation_type
+          td
+            = item.regulation_group_name
+          td
+            = item.start_date
+          td
+            = item.end_date
+          td
+            = item.published_date
+          td
+            = item.officialjournal_number
+          td
+            = item.officialjournal_page
+          td
+            = link_to "[measures]", measures_path(regulation_id: item.regulation_id)
+
