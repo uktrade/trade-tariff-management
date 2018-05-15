@@ -12,9 +12,16 @@ feature "Regulations listing" do
     group
   end
 
-  let!(:base_regulation){ create(:base_regulation) }
+  let!(:regulation_role_type_description) do
+    create(:regulation_role_type_description,
+      regulation_role_type_id: 1,
+      description: "Base regulation"
+    )
+  end
 
-  let!(:geographical_area) { create(:geographical_area) }
+  let!(:base_regulation) do
+    create(:base_regulation, validity_start_date: 1.year.ago)
+  end
 
   scenario "Find a regulation page" do
     visit root_url
@@ -27,46 +34,20 @@ feature "Regulations listing" do
     expect(page).to have_content("Select the regulation group")
     expect(page).to have_content("Select date from")
     expect(page).to have_content("Select date to")
-    expect(page).to have_content("Select a geographical area to which this regulation's measures apply")
     expect(page).to have_content("Enter keyword(s)")
     expect(page).to have_content("If you know the ID of the regulation, then you can enter the ID in the box below. Alternatively, enter any other keyword(s) to help locate the regulation.")
   end
 
   scenario "Search params for a regulation" do
     visit regulations_path
-    expect(page).to have_content("Find a regulation")
-    expect(page).not_to have_selector(".regulations-table")
 
     select("Various", from: "Select the regulation group")
     fill_in("Select date from", with: Date.today.strftime("%d/%m/%Y"))
     fill_in("Select date to", with: (Date.today + 2.days).strftime("%d/%m/%Y"))
-    select(geographical_area.description, from: "Select a geographical area to which this regulation's measures apply")
     fill_in("Enter keyword(s)", with: "R901200")
 
     find(".form-actions .button").click
 
-    expect(page).to have_selector(".regulations-table")
-  end
-
-  scenario "Regulations table" do
-    visit regulations_path
-    expect(page).to have_content("Find a regulation")
-    expect(page).not_to have_selector(".regulations-table")
-
-    find(".form-actions .button").click
-
-    expect(page).to have_selector(".regulations-table")
-
-    expect(page).to have_content("Legal base")
-    expect(page).to have_content("Start date")
-    expect(page).to have_content("End date")
-    expect(page).to have_content("Publication date")
-    expect(page).to have_content("Official Journal No.")
-    expect(page).to have_content("Official Journal page")
-
     expect(page).to have_content(base_regulation.base_regulation_id)
-    expect(page).to have_content(base_regulation.validity_start_date.strftime("%d/%m/%Y"))
-
-    expect(find_all(".regulations-table tbody tr").length).to be > 0
   end
 end

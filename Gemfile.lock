@@ -1018,6 +1018,7 @@ DEPENDENCIES
   json_expressions (~> 0.9.0)
   kaminari
   kaminari-sequel
+  launchy
   letter_opener
   lograge (>= 0.3.6)
   logstash-event

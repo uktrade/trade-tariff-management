@@ -1,5 +1,7 @@
 class MeasureParamsNormalizer
 
+  include ::CustomLogger
+
   ALIASES = {
     start_date: :validity_start_date,
     end_date: :validity_end_date,
@@ -112,6 +114,8 @@ end
 
 class MeasureSaver
 
+  include ::CustomLogger
+
   REQUIRED_PARAMS = {
     start_date: :validity_start_date,
     operation_date: :operation_date
@@ -137,13 +141,7 @@ class MeasureSaver
     @original_params = ActiveSupport::HashWithIndifferentAccess.new(measure_params)
     @measure_params = ::MeasureParamsNormalizer.new(original_params).normalized_params
 
-    p ""
-    p "-" * 100
-    p ""
-    p " normalized_params: #{@measure_params.inspect}"
-    p ""
-    p "-" * 100
-    p ""
+    log_it("normalized_params: #{@measure_params.inspect}")
 
     @errors = {}
   end
@@ -188,9 +186,7 @@ class MeasureSaver
 
     post_saving_updates!
 
-    p ""
-    p "[SAVED MEASURE] sid: #{measure.measure_sid} | #{measure.inspect}"
-    p ""
+    log_it("[SAVED MEASURE] sid: #{measure.measure_sid} | #{measure.inspect}")
   end
 
   private
@@ -566,24 +562,12 @@ class MeasureSaver
         record.public_send("#{p_key}=", sid)
       end
 
-      p ""
-      p "-" * 100
-      p ""
-      p " [ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}"
-      p ""
-      p "-" * 100
-      p ""
+      log_it("[ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}")
 
       set_system_attrs(record)
       record.save
 
-      p ""
-      p "-" * 100
-      p ""
-      p " [SAVED - #{record.class.name}] #{record.inspect}"
-      p ""
-      p "-" * 100
-      p ""
+      log_it("[SAVED - #{record.class.name}] #{record.inspect}")
     end
 
     def set_system_attrs(record)

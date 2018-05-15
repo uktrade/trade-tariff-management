@@ -1,5 +1,7 @@
 class RegulationParamsNormalizer
 
+  include ::CustomLogger
+
   ALIASES = {
     role: :method_regulation_role,
     effective_end_date: :method_effective_end_date,
@@ -115,6 +117,8 @@ class RegulationParamsNormalizer
 end
 
 class RegulationSaver
+
+  include ::CustomLogger
 
   ANTIDUMPING_REGULATION_ROLES = %w(2 3)
   ABROGATION_REGULATION_ROLES = %w(6 7)
@@ -270,13 +274,7 @@ class RegulationSaver
     @regulation_params = normalizer.normalized_params
     @target_class = normalizer.target_class
 
-    p ""
-    p "-" * 100
-    p ""
-    p " normalized_params: #{@regulation_params.inspect}"
-    p ""
-    p "-" * 100
-    p ""
+    log_it("normalized_params: #{@regulation_params.inspect}")
 
     @errors = {}
   end
