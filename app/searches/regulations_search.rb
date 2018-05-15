@@ -35,6 +35,7 @@ class RegulationsSearch
     end
 
     relation.page(page)
+            .by_start_date_desc
   end
 
   private

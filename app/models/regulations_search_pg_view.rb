@@ -25,6 +25,10 @@ class RegulationsSearchPgView  < Sequel::Model(:regulations_search_pg_view)
         q_rule, q_rule
       )
     end
+
+    def by_start_date_desc
+      reverse_order(:start_date)
+    end
   end
 
   class << self
