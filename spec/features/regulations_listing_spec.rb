@@ -44,9 +44,11 @@ feature "Regulations listing" do
     select("Various", from: "Select the regulation group")
     fill_in("Select date from", with: Date.today.strftime("%d/%m/%Y"))
     fill_in("Select date to", with: (Date.today + 2.days).strftime("%d/%m/%Y"))
-    fill_in("Enter keyword(s)", with: "R901200")
+    fill_in("Enter keyword(s)", with: base_regulation.base_regulation_id)
 
     find(".form-actions .button").click
+
+    sleep 1
 
     expect(page).to have_content(base_regulation.base_regulation_id)
   end
