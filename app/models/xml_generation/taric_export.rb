@@ -1,14 +1,14 @@
 require 'zip'
 
 module XmlGeneration
-  class TaricExport
+  class TaricExport < ::XmlGeneration::XmlInteractorBase
 
     attr_accessor :record,
-                  :data,
-                  :data_in_xml,
+                  :xml_data,
                   :tmp_xml_file,
                   :tmp_base_64_file,
-                  :tmp_zip_file
+                  :tmp_zip_file,
+                  :tmp_metadata_file
 
     def initialize(record)
       @record = record
@@ -16,20 +16,11 @@ module XmlGeneration
 
     def run
       mark_export_process_as_started!
-      fetch_relevant_data
-      generate_xml
-      attach_xml_file!
-      attach_base_64_version!
-      attach_zip_version!
+      fetch_relevant_data_and_generate_xml
+      attach_files!
       persist!
 
       clean_up_tmp_files!
-    end
-
-    class << self
-      def base_partial_path
-        "#{Rails.root}/app/views/xml_generation/templates"
-      end
     end
 
     private
@@ -38,18 +29,23 @@ module XmlGeneration
         record.update(state: "G")
       end
 
-      def fetch_relevant_data
-        @data = ::XmlGeneration::Search.new(
+      def fetch_relevant_data_and_generate_xml
+        data = ::XmlGeneration::Search.new(
           record.date_filters
         ).result
+
+        @xml_data = renderer.render(data, xml: xml_builder)
       end
 
-      def generate_xml
-        @data_in_xml = renderer.render(data, xml: xml_builder)
+      def attach_files!
+        attach_xml_file!
+        attach_base_64_version!
+        attach_zip_version!
+        attach_metadata_file!
       end
 
       def attach_xml_file!
-        @tmp_xml_file = put_data_into_tempfile!(:xml, data_in_xml)
+        @tmp_xml_file = put_data_into_tempfile!(:xml, xml_data)
         save_xml!(:xml, tmp_xml_file)
       end
 
@@ -63,6 +59,11 @@ module XmlGeneration
         save_xml!(:zip, tmp_zip_file)
       end
 
+      def attach_metadata_file!
+        @tmp_metadata_file = put_data_into_tempfile!(:meta, metadata)
+        save_xml!(:meta, tmp_metadata_file)
+      end
+
       def persist!
         record.update(state: "C")
       end
@@ -71,10 +72,18 @@ module XmlGeneration
         clean_up_tmp_file!(tmp_xml_file)
         clean_up_tmp_file!(tmp_base_64_file)
         clean_up_tmp_file!(tmp_zip_file)
+        clean_up_tmp_file!(tmp_metadata_file)
       end
 
       def base_64_version
-        Base64.encode64(data_in_xml)
+        Base64.encode64(xml_data)
+      end
+
+      def metadata
+        ::XmlGeneration::Metadata.new(
+          tmp_xml_file,
+          tmp_zip_file
+        ).generate
       end
 
       def put_data_into_tempfile!(version_name, content)
@@ -102,7 +111,7 @@ module XmlGeneration
       end
 
       def name_of_xml_file_in_zip_archieve
-        "#{Time.now.to_i}_xml_export.xml"
+        "<Start Date -YYYYMMDD>-<Timestamp - YYYYMMDDHHMMSS>-TARICFileSequence.XML"
       end
 
       def clean_up_tmp_file!(tmp_file)
@@ -110,12 +119,8 @@ module XmlGeneration
         tmp_file.unlink
       end
 
-      def xml_builder
-        Builder::XmlMarkup.new
-      end
-
-      def renderer
-        Tilt.new("#{self.class.base_partial_path}/main.builder")
+      def template_name
+        "main"
       end
   end
 end

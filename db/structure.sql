@@ -6652,7 +6652,8 @@ CREATE TABLE public.xml_export_files (
     issue_date timestamp without time zone,
     date_filters text,
     base_64_data text,
-    zip_data text
+    zip_data text,
+    meta_data text
 );
 
 
@@ -10467,3 +10468,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180505092846_add_added_a
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180509152938_add_regulations_search_pg_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133210_add_base_64_data_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133707_add_zip_data_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180516164658_add_meta_data_to_xml_export_files.rb');
