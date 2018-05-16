@@ -19,7 +19,9 @@ module XmlGeneration
     SOURCE_FILE_ENCODING =
 
     attr_accessor :xml_export,
-                  :record
+                  :record,
+                  :xml_file_path,
+                  :zip_file_path,
                   :extract_start_date_time,
                   :extract_end_date_time,
                   :extract_database_date_time
@@ -27,6 +29,8 @@ module XmlGeneration
     def initialize(xml_export)
       @xml_export = xml_export
       @record = xml_export.record
+      @xml_file_path = xml_export.tmp_xml_file.path
+      @zip_file_path = xml_export.tmp_zip_file.path
 
       @extract_start_date_time = record.extract_start_date_time
       @extract_end_date_time = record.extract_end_date_time
@@ -38,15 +42,15 @@ module XmlGeneration
     end
 
     def xml_file_checksum
-      get_md5_checksum(xml_export.tmp_xml_file.path)
+      get_md5_checksum(xml_file_path)
     end
 
     def xml_file_size
-      "TODO"
+      File.size(xml_file_path)
     end
 
     def compressed_checksum
-      get_md5_checksum(xml_export.tmp_zip_file.path)
+      get_md5_checksum(zip_file_path)
     end
 
     def destinations
