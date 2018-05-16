@@ -84,7 +84,7 @@ xml.tag!("BatchFileInterfaceMetadata", xmlns: "http://www.hmrc.gsi.gov.uk/mdg/ba
   end
 
   env.tag!("sourceFileName") do record
-    self.class::SOURCE_FILE_NAME
+    self.source_file_name
   end
 
   env.tag!("sourceFileEncoding") do record

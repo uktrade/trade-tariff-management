@@ -104,7 +104,7 @@ module XmlGeneration
 
       def generate_zip_file(file_to_include)
         Zip::File.open("#{tmp_file_name(:zip)}.zip", Zip::File::CREATE) do |zipfile|
-          zipfile.add(name_of_xml_file_in_zip_archieve, file_to_include.path)
+          zipfile.add(name_of_xml_file, file_to_include.path)
         end
       end
 
@@ -116,7 +116,7 @@ module XmlGeneration
         "#{Time.now.to_i}_xml_export_#{version_name}_version"
       end
 
-      def name_of_xml_file_in_zip_archieve
+      def name_of_xml_file
         "<Start Date -YYYYMMDD>-<Timestamp - YYYYMMDDHHMMSS>-TARICFileSequence.XML"
       end
 

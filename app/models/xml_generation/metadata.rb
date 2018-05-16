@@ -2,10 +2,10 @@ module XmlGeneration
   class Metadata < ::XmlGeneration::XmlInteractorBase
 
     SOURCE_SYSTEM = "DIT"
-    SOURCE_SYSTEM_TYPE = "AWS"
+    SOURCE_SYSTEM_TYPE = "FTP Server"
     SOURCE_SYSTEM_OS = "Ubuntu"
-    INTERFACE_NAME = "TAQ01"
-    INTERFACE_VERSION = "V1.0"
+    INTERFACE_NAME = "ReceiveTaricFile"
+    INTERFACE_VERSION = "V1.0.0"
     CORRELATION_ID = "8452f702-a7e0-40aa-8d2f-052073d9ca88"
     CONVERSATION_ID = "TODO"
     TRANSACTION_ID = "TODO"
@@ -14,9 +14,8 @@ module XmlGeneration
     COMPRESSED = "false"
     COMPRESSION_ALGORITHM = "ZIP"
     COMPRESSED_CHECKSUM_ALGORITHM = "MD5"
-    SOURCE_LOCATION = "DIT"
-    SOURCE_FILE_NAME =
-    SOURCE_FILE_ENCODING =
+    SOURCE_LOCATION = "DIT FTP Server"
+    SOURCE_FILE_ENCODING = "UTF-8"
 
     attr_accessor :xml_export,
                   :record,
@@ -41,6 +40,10 @@ module XmlGeneration
       renderer.render(self, xml: xml_builder)
     end
 
+    def source_file_name
+      xml_export.name_of_xml_file
+    end
+
     def xml_file_checksum
       get_md5_checksum(xml_file_path)
     end
@@ -56,16 +59,10 @@ module XmlGeneration
     def destinations
       [
         OpenStruct.new(
-          destination_system: "ICMS_SPIRE",
-          destination_location: "TODO",
-          destination_file_name: "TODO",
-          destination_file_encoding: "TODO"
-        ),
-        OpenStruct.new(
-          destination_system: "MDTP",
-          destination_location: "TODO",
-          destination_file_name: "TODO",
-          destination_file_encoding: "TODO"
+          destination_system: "ED-Tariff",
+          destination_location: "ED-Tariff, To Tariff folder",
+          destination_file_name: source_file_name,
+          destination_file_encoding: "BASE64"
         )
       ]
     end
