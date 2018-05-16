@@ -125,115 +125,107 @@ describe "Searches: Regulations search" do
     full_temporary_stop_r9191919
   end
 
-  describe "Index" do
-    it "should return all regulations" do
-      results = search_results({})
-      expect(results.count).to be_eql(10)
-    end
-  end
+  it "should filter regulations" do
+    # No filters
+    #
+    results = search_results({})
+    expect(results.count).to be_eql(10)
 
-  describe "Role filter" do
-    it "should filter by role" do
-      results = search_results(role: 1)
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(base_i1111111.base_regulation_id)
-      expect(results[1].regulation_id).to be_eql(base_i2222222.base_regulation_id)
+    # Role filter
+    #
+    results = search_results(role: 1)
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(base_i1111111.base_regulation_id)
+    expect(results[1].regulation_id).to be_eql(base_i2222222.base_regulation_id)
 
-      results = search_results(role: 2)
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(provisional_anti_dumping_i3333333.base_regulation_id)
+    results = search_results(role: 2)
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(provisional_anti_dumping_i3333333.base_regulation_id)
 
-      results = search_results(role: 3)
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(definitive_anti_dumping_i4444444.base_regulation_id)
+    results = search_results(role: 3)
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(definitive_anti_dumping_i4444444.base_regulation_id)
 
-      results = search_results(role: 4)
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
-      expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
+    results = search_results(role: 4)
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
+    expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
 
-      results = search_results(role: 5)
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(prorogation_r9999999.prorogation_regulation_id)
+    results = search_results(role: 5)
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(prorogation_r9999999.prorogation_regulation_id)
 
-      results = search_results(role: 6)
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(complete_abrogation_r7777777.complete_abrogation_regulation_id)
+    results = search_results(role: 6)
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(complete_abrogation_r7777777.complete_abrogation_regulation_id)
 
-      results = search_results(role: 7)
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(explicit_abrogation_r8888888.explicit_abrogation_regulation_id)
+    results = search_results(role: 7)
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(explicit_abrogation_r8888888.explicit_abrogation_regulation_id)
 
-      results = search_results(role: 8)
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(full_temporary_stop_r9191919.full_temporary_stop_regulation_id)
-    end
-  end
+    results = search_results(role: 8)
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(full_temporary_stop_r9191919.full_temporary_stop_regulation_id)
 
-  describe "Regulation group filter" do
-    it "should filter by regulation_group_id" do
-      results = search_results(regulation_group_id: group_aaa.regulation_group_id)
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(base_i1111111.base_regulation_id)
-      expect(results[1].regulation_id).to be_eql(provisional_anti_dumping_i3333333.base_regulation_id)
+    # Regulation group id filter
+    #
+    results = search_results(regulation_group_id: group_aaa.regulation_group_id)
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(base_i1111111.base_regulation_id)
+    expect(results[1].regulation_id).to be_eql(provisional_anti_dumping_i3333333.base_regulation_id)
 
-      results = search_results(regulation_group_id: group_bbb.regulation_group_id)
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(base_i2222222.base_regulation_id)
-      expect(results[1].regulation_id).to be_eql(definitive_anti_dumping_i4444444.base_regulation_id)
-    end
-  end
+    results = search_results(regulation_group_id: group_bbb.regulation_group_id)
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(base_i2222222.base_regulation_id)
+    expect(results[1].regulation_id).to be_eql(definitive_anti_dumping_i4444444.base_regulation_id)
 
-  describe "Start / End date filter" do
-    it "should filter by start date" do
-      results = search_results(start_date: date_to_format(11.days.ago))
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(prorogation_r9999999.prorogation_regulation_id)
-      expect(results[1].regulation_id).to be_eql(complete_abrogation_r7777777.complete_abrogation_regulation_id)
+    # Start date filter
+    #
+    results = search_results(start_date: date_to_format(11.days.ago))
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(prorogation_r9999999.prorogation_regulation_id)
+    expect(results[1].regulation_id).to be_eql(complete_abrogation_r7777777.complete_abrogation_regulation_id)
 
-      results = search_results(start_date: date_to_format(9.days.ago))
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(complete_abrogation_r7777777.complete_abrogation_regulation_id)
-    end
+    results = search_results(start_date: date_to_format(9.days.ago))
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(complete_abrogation_r7777777.complete_abrogation_regulation_id)
 
-    it "should filter by end date" do
-      results = search_results(end_date: date_to_format(5.days.from_now))
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
-      expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
+    # End date filter
+    #
+    results = search_results(end_date: date_to_format(5.days.from_now))
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
+    expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
 
-      results = search_results(end_date: date_to_format(3.days.from_now))
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
-    end
+    results = search_results(end_date: date_to_format(3.days.from_now))
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
 
-    it "should filter by start date and end date" do
-      results = search_results(
-        start_date: date_to_format(1.year.ago),
-        end_date: date_to_format(5.days.from_now)
-      )
+    # Start and end date filter
+    #
+    results = search_results(
+      start_date: date_to_format(1.year.ago),
+      end_date: date_to_format(5.days.from_now)
+    )
 
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
-      expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
-    end
-  end
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
+    expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
 
-  describe "Keywords filter" do
-    it "should filter by keywords" do
-      results = search_results(keywords: "Modific")
-      expect(results.count).to be_eql(2)
-      expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
-      expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
+    # Keywords filter
+    #
+    results = search_results(keywords: "Modific")
+    expect(results.count).to be_eql(2)
+    expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)
+    expect(results[1].regulation_id).to be_eql(modification_r6666666.modification_regulation_id)
 
-      results = search_results(keywords: "R9999")
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(prorogation_r9999999.prorogation_regulation_id)
+    results = search_results(keywords: "R9999")
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(prorogation_r9999999.prorogation_regulation_id)
 
-      results = search_results(keywords: "Full temporary")
-      expect(results.count).to be_eql(1)
-      expect(results[0].regulation_id).to be_eql(full_temporary_stop_r9191919.full_temporary_stop_regulation_id)
-    end
+    results = search_results(keywords: "Full temporary")
+    expect(results.count).to be_eql(1)
+    expect(results[0].regulation_id).to be_eql(full_temporary_stop_r9191919.full_temporary_stop_regulation_id)
   end
 
   private
