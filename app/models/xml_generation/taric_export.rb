@@ -1,3 +1,5 @@
+require 'zip'
+
 module XmlGeneration
   class TaricExport
 
