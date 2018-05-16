@@ -113,8 +113,6 @@ describe "Searches: Regulations search" do
   end
 
   before do
-    RegulationsSearchPgView.all.map(&:delete)
-
     base_i1111111
     base_i2222222
     provisional_anti_dumping_i3333333
