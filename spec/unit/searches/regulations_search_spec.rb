@@ -2,15 +2,15 @@ require "rails_helper"
 
 describe "Searches: Regulations search" do
 
-  let!(:group_aaa) do
+  let(:group_aaa) do
     create(:regulation_group, regulation_group_id: "AAA")
   end
 
-  let!(:group_bbb) do
+  let(:group_bbb) do
     create(:regulation_group, regulation_group_id: "BBB")
   end
 
-  let!(:base_i1111111) do
+  let(:base_i1111111) do
     create(:base_regulation,
       base_regulation_role: 1,
       base_regulation_id: "I1111111",
@@ -20,7 +20,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:base_i2222222) do
+  let(:base_i2222222) do
     create(:base_regulation,
       base_regulation_role: 1,
       base_regulation_id: "I2222222",
@@ -31,7 +31,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:provisional_anti_dumping_i3333333) do
+  let(:provisional_anti_dumping_i3333333) do
     create(:base_regulation,
       base_regulation_role: 2,
       base_regulation_id: "I3333333",
@@ -43,7 +43,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:definitive_anti_dumping_i4444444) do
+  let(:definitive_anti_dumping_i4444444) do
     create(:base_regulation,
       base_regulation_role: 3,
       base_regulation_id: "I4444444",
@@ -56,7 +56,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:modification_r5555555) do
+  let(:modification_r5555555) do
     create(:modification_regulation,
       modification_regulation_role: 4,
       modification_regulation_id: "R5555555",
@@ -66,7 +66,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:modification_r6666666) do
+  let(:modification_r6666666) do
     create(:modification_regulation,
       modification_regulation_role: 4,
       modification_regulation_id: "R6666666",
@@ -76,7 +76,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:prorogation_r9999999) do
+  let(:prorogation_r9999999) do
     create(:prorogation_regulation,
       prorogation_regulation_role: 5,
       prorogation_regulation_id: "R9999999",
@@ -85,7 +85,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:complete_abrogation_r7777777) do
+  let(:complete_abrogation_r7777777) do
     create(:complete_abrogation_regulation,
       complete_abrogation_regulation_role: 6,
       complete_abrogation_regulation_id: "R7777777",
@@ -94,7 +94,7 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:explicit_abrogation_r8888888) do
+  let(:explicit_abrogation_r8888888) do
     create(:explicit_abrogation_regulation,
       explicit_abrogation_regulation_role: 7,
       explicit_abrogation_regulation_id: "R8888888",
@@ -103,13 +103,26 @@ describe "Searches: Regulations search" do
     )
   end
 
-  let!(:full_temporary_stop_r9191919) do
+  let(:full_temporary_stop_r9191919) do
     create(:fts_regulation,
       full_temporary_stop_regulation_role: 8,
       full_temporary_stop_regulation_id: "R9191919",
       information_text: "Full temporary stop R9191919",
       validity_start_date: 1.year.ago
     )
+  end
+
+  before do
+    base_i1111111
+    base_i2222222
+    provisional_anti_dumping_i3333333
+    definitive_anti_dumping_i4444444
+    modification_r5555555
+    modification_r6666666
+    complete_abrogation_r7777777
+    explicit_abrogation_r8888888
+    prorogation_r9999999
+    full_temporary_stop_r9191919
   end
 
   describe "Index" do
@@ -229,6 +242,9 @@ describe "Searches: Regulations search" do
       ::RegulationsSearch.new(search_ops)
                          .results
                          .all
+                         .sort do |a, b|
+        a.start_date <=> b.start_date
+      end
     end
 
     def date_to_format(date_in_string)

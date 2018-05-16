@@ -1,6 +1,10 @@
 class RegulationsSearchPgView  < Sequel::Model(:regulations_search_pg_view)
 
   dataset_module do
+    def default
+      where("start_date IS NOT NULL")
+    end
+
     def by_role(role)
       where(role: role)
     end
@@ -24,6 +28,10 @@ class RegulationsSearchPgView  < Sequel::Model(:regulations_search_pg_view)
         "regulation_id ilike ? OR keywords ilike ?",
         q_rule, q_rule
       )
+    end
+
+    def by_start_date_desc
+      reverse_order(:start_date)
     end
   end
 
