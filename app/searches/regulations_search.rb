@@ -25,7 +25,7 @@ class RegulationsSearch
   end
 
   def results
-    @relation = RegulationsSearchPgView.order(:start_date)
+    @relation = RegulationsSearchPgView.default
 
     search_ops.select do |k, v|
       ALLOWED_FILTERS.include?(k.to_s) && v.present?
