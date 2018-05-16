@@ -38,7 +38,7 @@ module XmlGeneration
     end
 
     def xml_file_checksum
-      "TODO"
+      get_md5_checksum(xml_export.tmp_xml_file.path)
     end
 
     def xml_file_size
@@ -46,7 +46,7 @@ module XmlGeneration
     end
 
     def compressed_checksum
-      "TODO"
+      get_md5_checksum(xml_export.tmp_zip_file.path)
     end
 
     def destinations
@@ -67,6 +67,11 @@ module XmlGeneration
     end
 
     private
+
+      def get_md5_checksum(file_path)
+        md5 = Digest::MD5.file(file_path)
+        md5.hexdigest
+      end
 
       def template_name
         "metadata"
