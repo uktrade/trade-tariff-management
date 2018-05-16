@@ -14,6 +14,27 @@ class MeasureTypeSeries < Sequel::Model
 
   delegate :description, to: :measure_type_series_description
 
+  dataset_module do
+    def q_search(keyword=nil)
+      scope = actual
+
+      if keyword.present?
+        q_rule = "#{keyword}%"
+
+        scope = scope.join_table(:inner,
+          :measure_type_series_descriptions,
+          measure_type_series_id: :measure_type_series_id
+        ).where("
+          measure_type_series.measure_type_series_id ilike ? OR
+          measure_type_series_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      scope.order(Sequel.asc(:measure_type_series__measure_type_series_id))
+    end
+  end
+
   def record_code
     "140".freeze
   end

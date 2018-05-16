@@ -18,7 +18,6 @@
     width: auto;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     max-width: 100%;
     flex: 0 0 calc(100% - 30px);
   }
@@ -36,14 +35,14 @@ $maxcol: $site-width / 12;
 
 @each $col in $cols {
   .col-#{$col} {
-    width: $maxcol * $col;
-    max-width: calc(#{$single * $col} - 30px);
+    max-width: $maxcol * $col;
+    width: calc(#{$single * $col} - 30px);
     flex: 0 0 calc(#{$single * $col} - 30px);
   }
 
   .col-xs-#{$col} {
-    width: $maxcol * $col;
-    max-width: calc(#{$single * $col} - 30px);
+    max-width: $maxcol * $col;
+    width: calc(#{$single * $col} - 30px);
     flex: 0 0 calc(#{$single * $col} - 30px);
   }
 }
@@ -51,8 +50,8 @@ $maxcol: $site-width / 12;
 @media (min-width: 768px) {
   @each $col in $cols {
     .col-sm-#{$col} {
-      width: $maxcol * $col;
-      max-width: calc(#{$single * $col} - 30px);
+      max-width: $maxcol * $col;
+      width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
@@ -61,8 +60,8 @@ $maxcol: $site-width / 12;
 @media (min-width: 992px) {
   @each $col in $cols {
     .col-md-#{$col} {
-      width: $maxcol * $col;
-      max-width: calc(#{$single * $col} - 30px);
+      max-width: $maxcol * $col;
+      width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
@@ -71,8 +70,8 @@ $maxcol: $site-width / 12;
 @media (min-width: 1024px) {
   @each $col in $cols {
     .col-lg-#{$col} {
-      width: $maxcol * $col;
-      max-width: calc(#{$single * $col} - 30px);
+      max-width: $maxcol * $col;
+      width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }
@@ -81,8 +80,8 @@ $maxcol: $site-width / 12;
 @media (min-width: 1600px) {
   @each $col in $cols {
     .col-xl-#{$col} {
-      width: $maxcol * $col;
-      max-width: calc(#{$single * $col} - 30px);
+      max-width: $maxcol * $col;
+      width: calc(#{$single * $col} - 30px);
       flex: 0 0 calc(#{$single * $col} - 30px);
     }
   }

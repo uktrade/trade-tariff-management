@@ -3,8 +3,34 @@ input.date-picker {
   max-width: 140px;
 }
 
+.form-group.text {
+  max-width: 100% !important;
+}
+
 .form-control {
   width: 100% !important;
+  max-width: 100%;
+
+  &[type="file"] {
+    border: none;
+  }
+}
+
+.measure-form [class*="col-"] {
+  justify-content: flex-end;
+}
+
+.help-block {
+  color: $secondary-text-colour;
+  margin: 0 0 0.3em;
+
+  @media (min-width: 641px) {
+    font-size: 19px;
+  }
+}
+
+label abbr {
+  display: none !important;
 }
 
 .multiple-choice + .panel {

@@ -1,21 +1,8 @@
-[![CircleCI](https://circleci.com/gh/bitzesty/trade-tariff-management/tree/master.svg?style=svg&circle-token=b8a9dd7a0291f0c6c5558c6c5240be5908dbb649)](https://circleci.com/gh/bitzesty/trade-tariff-management/tree/master)
+[![CircleCI](https://circleci.com/gh/bitzesty/trade-tariff-management.svg?style=svg&circle-token=c59552351e30f9d35e32d3a6020929129ddcd91e)](https://circleci.com/gh/bitzesty/trade-tariff-management)
 [![Code Climate](https://codeclimate.com/github/bitzesty/trade-tariff-management/badges/gpa.svg)](https://codeclimate.com/github/bitzesty/trade-tariff-management)
+[![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/a3405aa0455eb23d3939/test_coverage)](https://codeclimate.com/github/bitzesty/trade-tariff-management/test_coverage)
 
 # Trade Tariff Management
-
-## Useful Documents
-
-[TARIC3-Interface Data Specification.pdf](https://drive.google.com/file/d/0B9fpaFVNqUf1dnFTVmJTS25hR28/view)
-
-[20180206 System Functions - WIP.pdf](https://bitzesty.slack.com/messages/C917SKV9V/files/F94T9DJ49/)
-
-[XML DOCS - TARIC3 IDS Technical Message Exchange Specification](https://docs.google.com/document/d/1H5GOHECppTmUXXF444m-0Qce5N85TMFJCVWqYafbCjA/edit?usp=drive_web&ouid=113725455905915898903)
-
-[WIFERAMES of TARIFFSALPHA at uktrade.atlassian.net](https://uktrade.atlassian.net/wiki/spaces/TARIFFSALPHA/pages/294846783/Screen+Concepts)
-
-[Technical documentation for GOV.UK PaaS - all about deployment](https://docs.cloud.service.gov.uk/#technical-documentation-for-gov-uk-paas)
-
-[HOW TO GET AND LOAD DB DUMP](https://github.com/alphagov/paas-cf-conduit/blob/master/README.md)
 
 ## Development
 

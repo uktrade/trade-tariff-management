@@ -2,7 +2,7 @@ module Measures
   class MonetaryUnitsController < ::BaseController
 
     def collection
-      MonetaryUnit.actual
+      MonetaryUnit.q_search(params)
     end
   end
 end

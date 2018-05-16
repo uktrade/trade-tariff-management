@@ -1,13 +1,11 @@
 .selection {
-  display: block;
+  display: flex;
   padding: 0.5em 0.2em !important;
-  padding-left: 3em !important;
-  position: relative !important;
-}
 
-.selection--strikethrough {
-  text-decoration: line-through;
-
+  span {
+    flex: 0 1 auto;
+    align-self: stretch;
+  }
 }
 
 .selectize-input .item {
@@ -17,30 +15,148 @@
   text-overflow: ellipsis !important;
 }
 
+.abbreviation {
+  display: inline-block;
+  margin-right: 0.5em;
+}
+
 .option-prefix {
   display: inline-block;
-  width: 2.3em;
-  position: absolute;
-  top: 0.5em;
-  left: 0.5em;
+  margin-right: 0.5em;
+  padding-left: 0.5em;
+}
 
-  .selection--strikethrough & {
-    position: relative;
-
-    &:after {
-      content: " ";
-      position: absolute;
-      top: calc(50% + 1px);
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: currentColor;
-    }
-  }
+.option-prefix--series {
+  flex-basis: 1.7em;
+  min-width: 1.7em;
+  width: 1.7em;
 }
 
 .option-prefix--type {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
+}
 
+.prefix--country {
+  flex-basis: 2.3em;
+  min-width: 2.3em;
+  width: 2.3em;
+}
+
+.prefix--region {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
+}
+
+.prefix--monetary-unit {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
+}
+
+.prefix--measurement-unit {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
+  flex-shrink: 0;
+}
+
+.prefix--measurement-unit-qualifier {
+  flex-basis: 1.7em;
+  min-width: 1.7em;
+  width: 1.7em;
+}
+
+.prefix--condition {
+  flex-basis: 1.7em;
+  min-width: 1.7em;
+  width: 1.7em;
+}
+
+.prefix--measure-action {
+  flex-basis: 2.1em;
+  min-width: 2.1em;
+  width: 2.1em;
+}
+
+.prefix--certificate-type {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
+}
+
+.prefix--certificate {
+  flex-basis: 2.8em;
+  min-width: 2.8em;
+  width: 2.8em;
+}
+
+.prefix--quota-status {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
+}
+
+.prefix--quota-order-number {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
+}
+
+.prefix--additional-code-type {
+  flex-basis: 1.7em;
+  min-width: 1.7em;
+  width: 1.7em;
+}
+
+.prefix--additional-code {
+  flex-basis: 2.8em;
+  min-width: 2.8em;
+  width: 2.8em;
+}
+
+.prefix--duty-expression {
+  flex-basis: 2.1em;
+  min-width: 2.1em;
+  width: 2.1em;
+}
+
+.abbreviation--measurement-unit {
+  flex-basis: 6.5em;
+  min-width: 6.5em;
+  width: 6.5em;
+}
+
+.abbreviation--duty-expression {
+  flex-basis: 4.5em;
+  min-width: 4.5em;
+  width: 4.5em;
+}
+
+.prefix--footnote-type{
+  flex-basis: 2.3em;
+  min-width: 2.3em;
+  width: 2.3em;
+}
+
+.prefix--l1 {
+  flex-basis: 1.7em;
+  min-width: 1.7em;
+  width: 1.7em;
+}
+
+.prefix--regulation {
+  flex-basis: 5.5em;
+  min-width: 5.5em;
+  width: 5.5em;
+}
+
+.prefix--regulation-group {
+  flex-basis: 3em;
+  min-width: 3em;
+  width: 3em;
 }
 
 .origin-select {

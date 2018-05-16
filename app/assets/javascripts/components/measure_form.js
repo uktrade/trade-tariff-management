@@ -1,6 +1,3 @@
-//= require vue
-//= require vue-resource
-
 function debounce(func, wait, immediate) {
   var timeout;
   return function() {
@@ -16,6 +13,10 @@ function debounce(func, wait, immediate) {
   };
 };
 
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 $(document).ready(function() {
 
   var form = document.querySelector(".measure-form");
@@ -23,574 +24,6 @@ $(document).ready(function() {
   if (!form) {
     return;
   }
-
-  Vue.component("measure-origin", {
-    template: "#measure-origin-template",
-    props: [
-      "placeholder",
-      "kind",
-      "origin"
-    ],
-    mounted: function() {
-      var self = this;
-      var radio = $(this.$el).find("input[type='radio']");
-
-      radio.on("change", function() {
-        $(".measure-form").trigger("origin:changed");
-      });
-
-      $(".measure-form").on("origin:changed", function() {
-        self.origin.selected = radio.is(":checked");
-      });
-    },
-    computed: {
-      radioID: function() {
-        return "measure-origin-" + this.kind;
-      },
-      notErgaOmnes: function() {
-        return this.kind !== "erga_omnes";
-      },
-      optionsForSelect: function() {
-        if (this.kind === "group") {
-          return window.geographical_groups_except_erga_omnes;
-        } else if (this.kind === "country") {
-          return window.all_geographical_countries;
-        }
-      },
-      showExclusions: function() {
-        return this.kind !== "country" && !!this.origin.geographical_area_id;
-      }
-    },
-    watch: {
-      "origin.geographical_area_id": function(newVal) {
-        this.origin.exclusions.splice(0, 999);
-
-        if (newVal) {
-          this.origin.selected = true;
-          $(this.$el).find("input[type='radio']").prop("checked", true).trigger("change");
-          this.origin.exclusions.slice(0, 999);
-          this.addExclusion();
-        }
-      },
-      "origin.selected": function(newVal, oldVal) {
-        if (newVal) {
-          if (this.kind === "erga_omnes") {
-            this.origin.geographical_area_id = '1011';
-            this.addExclusion();
-          }
-        } else {
-          this.origin.geographical_area_id = null;
-        }
-      }
-    },
-    methods: {
-      addExclusion: function() {
-        this.origin.exclusions.push({
-          geographical_area_id: null,
-          options: window.geographical_areas_json[this.origin.geographical_area_id]
-        });
-      },
-      removeExclusion: function(exclusion) {
-        var index = this.origin.exclusions.indexOf(exclusion);
-
-        if (index === -1) {
-          return;
-        }
-
-        this.origin.exclusions.splice(index, 1);
-      }
-    }
-  });
-
-  Vue.component('custom-select', {
-    props: [
-      "url",
-      "value",
-      "options",
-      "placeholder",
-      "labelField",
-      "valueField",
-      "searchField",
-      "codeField",
-      "minLength",
-      "dateSensitive",
-      "drilldownName",
-      "drilldownValue",
-      "drilldownRequired"
-    ],
-    data: function() {
-      return {
-        condition: {},
-        start_date: window.measure_start_date,
-        end_date: window.measure_end_date,
-      }
-    },
-    template: "#selectize-template",
-    mounted: function () {
-      var vm = this;
-
-      var options = {
-        create: false,
-        allowEmptyOption: true,
-        items: [this.value],
-        placeholder: this.placeholder,
-        valueField: this.valueField,
-        labelField: this.labelField,
-        searchField: [this.valueField, this.codeField, this.labelField],
-        allowClear: true
-      };
-
-      if (this.codeField) {
-        options.sortField = this.codeField;
-      }
-
-      if (this.options) {
-        options["options"] = this.options;
-      }
-
-      if (this.url && !this.minLength) {
-        options["onInitialize"] = function() {
-          var self = this;
-          var fn = self.settings.load;
-          self.load(function(callback) {
-            fn.apply(self, ["", callback]);
-          });
-        };
-
-        options.onLoad = function(data) {
-          if (vm.url && !vm.minLength && vm.value && !vm.firstLoadSelected) {
-            $(vm.$el)[0].selectize.setValue(vm.value.toString());
-            vm.firstLoadSelected = true;
-          }
-        };
-      }
-
-      if (this.url) {
-        options["load"] = function(query, callback) {
-          vm.$el.selectize.clearOptions();
-          vm.$el.selectize.clearCache();
-          vm.$el.selectize.refreshOptions();
-          vm.$el.selectize.renderCache['option'] = {};
-          vm.$el.selectize.renderCache['item'] = {};
-
-          if (vm.minLength && query.length < vm.minLength) return callback();
-          if (vm.drilldownRequired === "true" && !vm.drilldownValue) return callback();
-
-          var data = {
-            q: query,
-            start_date: vm.start_date,
-            end_date: vm.end_date
-          };
-
-          if (vm.drilldownName && vm.drilldownValue) {
-            data[vm.drilldownName] = vm.drilldownValue;
-          }
-
-          $.ajax({
-            url: vm.url,
-            data: data,
-            type: 'GET',
-            error: function() {
-              callback();
-            },
-            success: function(res) {
-              callback(res);
-            }
-          });
-        }
-      }
-
-      var codeField = this.codeField;
-
-      if (codeField) {
-        options["render"] = {
-          option: function(data) {
-            return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--series'>" + data[codeField] + "</span> " + data[options.labelField] + "</span>";
-          },
-          item: function(data) {
-            return "<div class='item'>" + data[codeField] + " - " + data[options.labelField] + "</div>";
-          }
-        };
-      }
-
-      $(this.$el).selectize(options).val(this.value).trigger('change').on('change', function () {
-        vm.$emit('input', this.value);
-      });
-
-      if (this.dateSensitive) {
-        this.handleDateSentitivity = function(event, start_date, end_date) {
-          vm.start_date = start_date;
-          vm.end_date = end_date;
-
-          var data = {
-            q: vm.$el.selectize.query,
-            start_date: start_date,
-            end_date: end_date
-          };
-
-          if (vm.drilldownRequired === "true" && !vm.drilldownValue) return callback();
-
-          if (vm.drilldownName && vm.drilldownValue) {
-            data[vm.drilldownName] = vm.drilldownValue;
-          }
-
-          vm.$el.selectize.clear(true);
-          vm.$el.selectize.clearOptions();
-          vm.$el.selectize.clearCache();
-          vm.$el.selectize.refreshOptions();
-          vm.$el.selectize.renderCache['option'] = {};
-          vm.$el.selectize.renderCache['item'] = {};
-
-          if (!vm.minLength) {
-            vm.$el.selectize.load(function(callback) {
-              $.ajax({
-                url: vm.url,
-                data: data,
-                type: 'GET',
-                error: function() {
-                  callback();
-                },
-                success: function(res) {
-                  callback(res);
-                }
-              });
-            });
-          }
-        };
-
-        $(".measure-form").on("dates:changed", this.handleDateSentitivity);
-      }
-
-
-      vm.$watch("drilldownValue", function(newVal, oldVal) {
-        $(vm.$el)[0].selectize.clear();
-
-        if (newVal == oldVal) {
-          return;
-        }
-
-        vm.handleDateSentitivity({}, vm.start_date, vm.end_date);
-      })
-    },
-    watch: {
-      value: function (value) {
-        $(this.$el)[0].selectize.setValue(value, false);
-      },
-      options: function (options) {
-        $(this.$el)[0].selectize.clearOptions();
-        $(this.$el)[0].selectize.addOption(options);
-        $(this.$el)[0].selectize.refreshOptions(false);
-      }
-    },
-    destroyed: function () {
-      $(this.$el).off()[0].selectize.destroy();
-
-      if (this.dateSensitive) {
-        $(".measure-form").off("dates:changed", this.handleDateSentitivity);
-      }
-    }
-  });
-
-  Vue.component('quota-period', {
-    template: "#quota-period-template",
-    props: ["quotaPeriod", "index"],
-    data: function() {
-      return {
-        quotaOptions: [
-          { value: "annual", label: "Annual" },
-          { value: "bi_annual", label: "Bi-Annual" },
-          { value: "quarterly", label: "Quarterly" },
-          { value: "monthly", label: "Monthly" },
-          { value: "custom", label: "Custom" }
-        ]
-      }
-    },
-    computed: {
-      isAnnual: function() {
-        return this.quotaPeriod.type === "annual";
-      },
-      isQuarterly: function() {
-        return this.quotaPeriod.type === "quarterly";
-      },
-      isBiAnnual: function() {
-        return this.quotaPeriod.type === "bi_annual";
-      },
-      isMonthly: function() {
-        return this.quotaPeriod.type === "monthly";
-      },
-      isCustom: function() {
-        return this.quotaPeriod.type === "custom";
-      },
-      isAnnualOrCustom: function() {
-        return this.isCustom || this.isAnnual;
-      },
-      isFirst: function() {
-        return this.index === 0;
-      }
-    }
-  });
-
-  Vue.component('date-select', {
-    template: "#date-select-template",
-    props: ["value"],
-    data: function() {
-      return {
-        vproxy: this.value
-      }
-    },
-    mounted: function() {
-      var self = this;
-
-      new Pikaday({
-        field: $(this.$el)[0],
-        format: "DD/MM/YYYY",
-        blurFieldOnSelect: true
-      });
-
-      $(this.$el).on("change", function() {
-        self.vproxy = $(self.$el).val();
-      });
-    },
-    watch: {
-      vproxy: function() {
-        this.$emit("update:value", this.vproxy);
-      }
-    }
-  });
-
-  var componentCommonFunctionality = {
-    computed: {
-      showDutyAmountOrPercentage: function() {
-        var ids = ["01", "02", "04", "19", "20"];
-
-        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
-      },
-      showDutyAmountPercentage: function() {
-        var ids = ["23"];
-
-        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
-      },
-      showDutyAmountNegativePercentage: function() {
-        var ids = ["36"];
-
-        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
-      },
-      showDutyAmountNumber: function() {
-        var ids = ["06", "07", "09", "11", "12", "13", "14", "21", "25", "27", "29", "31"];
-
-        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
-      },
-      showDutyAmountMinimum: function() {
-        var ids = ["15"];
-
-        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
-      },
-      showDutyAmountMaximum: function() {
-        var ids = ["17", "35"];
-
-        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
-      },
-      showDutyRefundAmount: function() {
-        var ids = ["40", "41", "42", "43", "44"];
-
-        return ids.indexOf(this[this.thing].duty_expression_id) > -1;
-      },
-      showMonetaryUnit: function() {
-        return this.showDutyAmountOrPercentage ||
-               this.showDutyAmountNumber ||
-               this.showDutyAmountMinimum ||
-               this.showDutyAmountMaximum ||
-               this.showDutyRefundAmount;
-      },
-      showMeasurementUnit: function() {
-        var ids = ["23", "36", "37"];
-
-        return this[this.thing].duty_expression_id && ids.indexOf(this[this.thing].duty_expression_id) === -1;
-      }
-    }
-  };
-
-  Vue.component("measure-component", $.extend({}, {
-    template: "#measure-component-template",
-    props: ["measureComponent"],
-    data: function() {
-      return {
-        thing: "measureComponent"
-      };
-    }
-  }, componentCommonFunctionality));
-
-  Vue.component("measure-condition-component", $.extend({}, {
-    template: "#measure-condition-component-template",
-    props: ["measureConditionComponent"],
-    data: function() {
-      return {
-        thing: "measureConditionComponent"
-      };
-    }
-  }, componentCommonFunctionality));
-
-  Vue.component("foot-note", {
-    template: "#footnote-template",
-    props: ["footnote"],
-    data: function() {
-      return {
-        suggestions: [],
-        lastSuggestionUsed: null
-      };
-    },
-    computed: {
-      hasSuggestions: function() {
-        return this.suggestions.length > 0;
-      }
-    },
-    mounted: function() {
-      this.fetchSuggestions = debounce(this.fetchSuggestions.bind(this), 100, false);
-    },
-    methods: {
-      fetchSuggestions: function() {
-        var self = this;
-        var type_id = this.footnote.footnote_type_id;
-        var description =  this.footnote.description.trim();
-
-        this.suggestions.splice(0, 999);
-
-        if (description.length < 1) {
-          return;
-        }
-
-        $.ajax({
-          url: "/footnotes",
-          data: {
-            footnote_type_id: type_id,
-            description: description
-          },
-          success: function(data) {
-            self.suggestions = data;
-          }
-        });
-      },
-      useSuggestion: function(suggestion) {
-        this.lastSuggestionUsed  = suggestion;
-        this.footnote.description = suggestion.description;
-        this.suggestions.splice(0, 999);
-      }
-    },
-    watch: {
-      "footnote.description": function(newVal, oldVal) {
-        if (this.lastSuggestionUsed && newVal === this.lastSuggestionUsed.description) {
-          return;
-        }
-
-        this.fetchSuggestions();
-      }
-    }
-  });
-
-  Vue.component('measure-condition', {
-    template: "#condition-template",
-    props: ["condition"],
-    computed: {
-      showAction: function() {
-        var codes = ["K", "P", "S", "W", "Y"];
-
-        return this.condition.condition_code && codes.indexOf(this.condition.condition_code) === -1;
-      },
-      showConditionComponents: function() {
-        var codes = ["01", "02", "03", "11", "12", "13", "15", "27", "34", "36"];
-
-        return codes.indexOf(this.condition.action_code) > -1;
-      },
-      showMinimumPrice: function() {
-        var codes = ["F", "G", "L", "N"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      showRatio: function() {
-        var codes = ["R", "U"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      showEntryPrice: function() {
-        var codes = ["V"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      showAmount: function() {
-        var codes = ["E", "I", "M"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      certificateActionHint: function() {
-        var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      noCertificateActionHint: function() {
-        var codes = ["D", "F", "G", "L", "M", "N", "R", "U", "V"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      showCertificateType: function() {
-        var codes = ["B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      showCertificate: function() {
-        var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      showAddMoreCertificates: function() {
-        var codes = ["A", "Z"];
-
-        return codes.indexOf(this.condition.condition_code) > -1;
-      },
-      canRemoveComponent: function() {
-        return this.condition.measure_condition_components.length > 1;
-      }
-    },
-    watch: {
-      showAction: function() {
-        if (!this.showAction) {
-          this.condition.action_code = null;
-          this.condition.measure_condition_components = [{
-            duty_expression_id: null,
-            amount: null,
-            measurement_unit_code: null,
-            measurement_unit_qualifier_code: null
-          }];
-        }
-      },
-      "condition.certificate_type_id": function() {
-        this.certificate_id = null;
-      },
-      showCertificateType: function(newVal, oldVal) {
-        if (oldVal === false && newVal === true) {
-          this.certificate_id = null;
-        }
-      }
-    },
-    methods: {
-      addMeasureConditionComponent: function() {
-        this.condition.measure_condition_components.push({
-          duty_expression_id: null,
-          amount: null,
-          measurement_unit_code: null,
-          measurement_unit_qualifier_code: null
-        });
-      },
-      removeMeasureConditionComponent: function(measureConditionComponent) {
-        var idx = this.condition.measure_condition_components.indexOf(measureConditionComponent);
-
-        if (idx === -1) {
-          return;
-        }
-
-        this.condition.measure_condition_components.splice(idx, 1);
-      }
-    }
-  });
 
   var app = new Vue({
     el: form,
@@ -681,14 +114,6 @@ $(document).ready(function() {
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
 
-      $("#measure_form_measure_type_series_id").on("change", function() {
-        self.measure.measure_type_series_id = $("#measure_form_measure_type_series_id").val();
-      });
-
-      $("#measure_form_measure_type_id").on("change", function() {
-        self.measure.measure_type_id = $("#measure_form_measure_type_id").val();
-      });
-
       $(".measure-form").on("submit", function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -711,7 +136,6 @@ $(document).ready(function() {
             window.location = "/measures?code=" + response.goods_nomenclature_item_id;
           },
           error: function(response) {
-            //TODO: handle errors
             button.val(button.attr("data-text"));
             button.prop("disabled", false);
 
@@ -875,10 +299,7 @@ $(document).ready(function() {
           additional_code_type_id: this.measure.additional_code_type_id,
           goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
           additional_code_description: this.measure.additional_code_description,
-
-          measure_components: this.measure.measure_components,
           footnotes: this.measure.footnotes,
-          conditions: this.measure.conditions,
 
           existing_quota: this.measure.existing_quota === "existing",
           quota_status: this.measure.quota_status,
@@ -886,6 +307,43 @@ $(document).ready(function() {
           quota_criticality_threshold: this.measure.quota_criticality_threshold,
           quota_description: this.measure.quota_description
         };
+
+        try {
+          if (this.showDuties) {
+            payload.measure_components = this.measure.measure_components.map(function(component) {
+              var c = clone(component);
+
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
+
+              return c;
+            });
+          }
+        } catch (e) {
+          console.error(e);
+        }
+
+        try {
+          payload.conditions = this.measure.conditions.map(function(condition) {
+            var c = clone(condition);
+
+            c.measure_condition_components = c.measure_condition_components.map(function(component) {
+              var c = clone(component);
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
+
+              return c;
+            });
+
+            return c;
+          });
+        } catch (e) {
+          console.error(e);
+        }
 
         if (this.origins.country.selected) {
           payload.geographical_area_id = this.origins.country.geographical_area_id;
@@ -1070,119 +528,5 @@ $(document).ready(function() {
         }
       }
     }
-  });
-
-  var findMeasureTypeById = function(id) {
-    for (var k in window.measure_types_json) {
-      if (!window.measure_types_json.hasOwnProperty(k)) {
-        continue;
-      }
-
-      for (var i = 0; i < window.measure_types_json[k].length; i++) {
-        var type = window.measure_types_json[k][i];
-
-        if (type.measure_type_id == id) {
-          return type;
-        }
-      }
-    }
-
-    return null;
-  };
-
-  var findMeasureTypeSeriesById = function(id) {
-    for (var i = 0; i < window.measure_types_series_json.length; i++) {
-      var type = window.measure_types_series_json[i];
-
-      if (type.measure_type_series_id == id) {
-        return type;
-      }
-    }
-
-    return null;
-  }
-
-  var measureTypeSeries = $("#measure_form_measure_type_series_id").selectize({
-    create: false,
-    placeholder: "― optionally filter by measure series ―",
-    valueField: 'measure_type_series_id',
-    labelField: 'description',
-    searchField: ["measure_type_series_id", "description"],
-    allowClear: true,
-    render: {
-      option: function(data) {
-        return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--series'>" + data.measure_type_series_id + "</span> " + data.description + "</span>";
-      },
-      item: function(data) {
-        return "<div class='item'>" + data.measure_type_series_id + " - " + data.description + "</div>";
-      }
-    }
-  });
-
-  var measureType = $("#measure_form_measure_type_id").selectize({
-    placeholder: "― select measure type ―",
-    create: false,
-    valueField: 'measure_type_id',
-    labelField: 'description',
-    searchField: ["measure_type_id", "description"],
-    allowClear: true,
-    render: {
-      option: function(data) {
-        return "<span class='selection" + (data.disabled ? ' selection--strikethrough' : '') + "'><span class='option-prefix option-prefix--type'>" + data.measure_type_id + "</span> " + data.description + "</span>";
-      },
-      item: function(data) {
-        return "<div class='item'>" + data.measure_type_id + " - " + data.description + "</div>";
-      }
-    }
-  });
-
-  $("#measure_form_measure_type_series_id").on("change", function() {
-    var v = $("#measure_form_measure_type_series_id").val();
-
-    $("#measure_form_measure_type_id").val("");
-    measureType[0].selectize.clearOptions();
-
-    var newOptions = window.measure_types_json.filter(function(d) {
-      return !v || (v && d.measure_type_series_id == v);
-    });
-
-    measureType[0].selectize.addOption(newOptions);
-    measureType[0].selectize.refreshOptions(false);
-  });
-
-  $(".measure-form").on("dates:changed", function(event, start_date, end_date) {
-    $("#measure_form_measure_type_id").val("");
-    $("#measure_form_measure_type_id").trigger("change");
-
-    $("#measure_form_measure_type_series_id").val("");
-    $("#measure_form_measure_type_series_id").trigger("change");
-
-    $.ajax({
-      url: "/measure_types",
-      data: {
-        start_date: start_date,
-        end_date: end_date
-      },
-      success: function(data) {
-        window.measure_types_json = data;
-        measureType[0].selectize.clearOptions();
-        measureType[0].selectize.addOption(data);
-        measureType[0].selectize.refreshOptions(false);
-      }
-    });
-
-    $.ajax({
-      url: "/measure_type_series",
-      data: {
-        start_date: start_date,
-        end_date: end_date
-      },
-      success: function(data) {
-        window.measure_types_series_json = data;
-        measureTypeSeries[0].selectize.clearOptions();
-        measureTypeSeries[0].selectize.addOption(data);
-        measureTypeSeries[0].selectize.refreshOptions(false);
-      }
-    });
   });
 });

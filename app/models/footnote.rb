@@ -63,14 +63,32 @@ class Footnote < Sequel::Model
       where(national: true)
     end
 
-    def q_search(f_type_id, keyword)
-       join_table(
-        :inner,
-        :footnote_descriptions,
-        footnote_id: Sequel[:footnotes][:footnote_id],
-        footnote_type_id: f_type_id
-      ).where(Sequel[:footnotes][:footnote_type_id] => f_type_id)
-       .where(Sequel.ilike(:description, keyword + "%"))
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:description].present?
+        q_rule = "#{filter_ops[:description]}%"
+
+        scope = scope.join_table(:inner,
+          :footnote_descriptions,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        ).where("
+          footnotes.footnote_id ilike ? OR
+          footnote_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      if filter_ops[:footnote_type_id].present?
+        scope = scope.where(
+          "footnotes.footnote_type_id = ?", filter_ops[:footnote_type_id]
+        )
+      end
+
+      scope.order(Sequel.asc(:footnotes__footnote_id))
+           .all
+           .uniq { |item| item.description }
     end
   end
 

@@ -15,4 +15,10 @@ class BaseController < ApplicationController
   def index
     render json: json_list, status: :ok
   end
+
+  private
+
+    def ilike?(str, q_rule)
+      str.downcase.starts_with?(q_rule)
+    end
 end

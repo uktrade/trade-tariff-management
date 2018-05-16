@@ -1,5 +1,7 @@
 class MeasureParamsNormalizer
 
+  include ::CustomLogger
+
   ALIASES = {
     start_date: :validity_start_date,
     end_date: :validity_end_date,
@@ -112,6 +114,8 @@ end
 
 class MeasureSaver
 
+  include ::CustomLogger
+
   REQUIRED_PARAMS = {
     start_date: :validity_start_date,
     operation_date: :operation_date
@@ -126,22 +130,18 @@ class MeasureSaver
     "MeasureCondition" => :measure_condition_sid
   }
 
-  attr_accessor :original_params,
+  attr_accessor :current_admin,
+                :original_params,
                 :measure_params,
                 :measure,
                 :errors
 
-  def initialize(measure_params={})
+  def initialize(current_admin, measure_params={})
+    @current_admin = current_admin
     @original_params = ActiveSupport::HashWithIndifferentAccess.new(measure_params)
-    @measure_params = ::MeasureParamsNormalizer.new(measure_params).normalized_params
+    @measure_params = ::MeasureParamsNormalizer.new(original_params).normalized_params
 
-    p ""
-    p "-" * 100
-    p ""
-    p " normalized_params: #{@measure_params.inspect}"
-    p ""
-    p "-" * 100
-    p ""
+    log_it("normalized_params: #{@measure_params.inspect}")
 
     @errors = {}
   end
@@ -167,9 +167,7 @@ class MeasureSaver
 
   def persist!
     generate_measure_sid
-    measure.manual_add = true
-    measure.operation = "C"
-    measure.operation_date = operation_date
+    set_system_attrs(measure)
 
     attempts = 5
 
@@ -188,9 +186,7 @@ class MeasureSaver
 
     post_saving_updates!
 
-    p ""
-    p "[SAVED MEASURE] sid: #{measure.measure_sid} | #{measure.inspect}"
-    p ""
+    log_it("[SAVED MEASURE] sid: #{measure.measure_sid} | #{measure.inspect}")
   end
 
   private
@@ -228,7 +224,7 @@ class MeasureSaver
     end
 
     def generate_measure_sid
-      measure.measure_sid = Measure.max(:measure_sid) + 1
+      measure.measure_sid = Measure.max(:measure_sid).to_i + 1
     end
 
     def post_saving_updates!
@@ -437,19 +433,24 @@ class MeasureSaver
       if conditions.present?
         conditions.select do |k, v|
           v[:condition_code].present?
-        end.map do |k, v|
-          add_condition!(k, v)
+        end.group_by do |k, v|
+          v[:condition_code]
+        end.map do |k, grouped_ops|
+          grouped_ops.each_with_index do |data, index|
+            add_condition!(index, data[1])
+          end
         end
       end
     end
 
-    def add_condition!(component_sequence_number, data)
+    def add_condition!(position, data)
       condition = MeasureCondition.new(
         action_code: data[:action_code],
         condition_code: data[:condition_code],
         condition_duty_amount: data[:amount],
         certificate_type_code: data[:certificate_type_code],
-        certificate_code: data[:certificate_code]
+        certificate_code: data[:certificate_code],
+        component_sequence_number: position + 1
       )
       condition.measure_sid = measure.measure_sid
 
@@ -561,26 +562,23 @@ class MeasureSaver
         record.public_send("#{p_key}=", sid)
       end
 
-      p ""
-      p "-" * 100
-      p ""
-      p " [ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}"
-      p ""
-      p "-" * 100
-      p ""
+      log_it("[ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}")
 
-      record.operation = "C"
-      record.operation_date = operation_date
-      record.manual_add = true
+      set_system_attrs(record)
       record.save
 
-      p ""
-      p "-" * 100
-      p ""
-      p " [SAVED - #{record.class.name}] #{record.inspect}"
-      p ""
-      p "-" * 100
-      p ""
+      log_it("[SAVED - #{record.class.name}] #{record.inspect}")
+    end
+
+    def set_system_attrs(record)
+      record.manual_add = true
+      record.operation = "C"
+      record.operation_date = operation_date
+      record.added_by_id = current_admin.id
+      record.added_at = Time.zone.now
+      record.national = true
+      record.try("approved_flag=", true)
+      record.try("stopped_flag=", false)
     end
 
     def operation_date

@@ -14,6 +14,12 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
     end
   end
 
+  validation :on_officialjournal_page, 'Official journal page should be a number', on: [:create, :update] do
+    validates :integer, of: :officialjournal_page,
+                        allow_nil: true,
+                        allow_blank: true
+  end
+
   # TODO: ROIMB5
   # TODO: ROIMB6
   # TODO: ROIMB7

@@ -21,10 +21,21 @@
 <% content_for :before_content do %>
   <div class="phase-banner">
     <p>
-      <strong class="phase-tag">ALPHA</strong>
+      <strong class="phase-tag">BETA</strong>
       <span>This is a new service – your <a href="mailto:support@bitzesty.com?Subject=DIT%20Tariff%20Management">feedback</a> will help us to improve it.</span>
     </p>
   </div>
+<% end %>
+
+<% content_for :footer_top do %>
+  <%= render "shared/vue_templates/condition" %>
+  <%= render "shared/vue_templates/selectize" %>
+  <%= render "shared/vue_templates/quota_period" %>
+  <%= render "shared/vue_templates/date_select" %>
+  <%= render "shared/vue_templates/measure_component" %>
+  <%= render "shared/vue_templates/measure_condition_component" %>
+  <%= render "shared/vue_templates/measure_origin" %>
+  <%= render "shared/vue_templates/footnote" %>
 <% end %>
 
 <%= render "flashes" %>

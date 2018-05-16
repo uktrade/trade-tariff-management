@@ -8,7 +8,7 @@ xml.tag!("oub:complete.abrogation.regulation") do |complete_abrogation_regulatio
   end
 
   complete_abrogation_regulation.tag!("oub:published.date") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.published_date.strftime("%Y-%m-%d"))
+    xml_data_item(complete_abrogation_regulation, self.published_date.try(:strftime, "%Y-%m-%d"))
   end
 
   complete_abrogation_regulation.tag!("oub:officialjournal.number") do complete_abrogation_regulation

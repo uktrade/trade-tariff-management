@@ -1,0 +1,27 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Regulations", regulations_url
+
+    li aria-current="page"
+      | Create a new regulation
+
+header
+  h1.heading-xlarge
+    | Create a new regulation
+
+javascript:
+  window.__regulation_json = #{safe_json(@form.to_json)};
+
+= simple_form_for @form, url: regulations_url, method: :post, html: { class: "regulation-form" } do |f|
+  = render "form", f: f
+
+  h4.heading-small
+    | Finish
+
+  .form-actions
+    = f.button :submit, "Create regulation", class: "button"
+    = link_to "Exit (return to workbasket)", root_url, class: "secondary-button"

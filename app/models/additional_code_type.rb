@@ -2,6 +2,8 @@ class AdditionalCodeType < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
 
+  plugin :time_machine, period_start_column: :additional_code_types__validity_start_date,
+                        period_end_column:   :additional_code_types__validity_end_date
   plugin :oplog, primary_key: :additional_code_type_id
   plugin :conformance_validator
 
