@@ -113,6 +113,8 @@ describe "Searches: Regulations search" do
   end
 
   before do
+    DatabaseCleaner.start
+
     base_i1111111
     base_i2222222
     provisional_anti_dumping_i3333333
