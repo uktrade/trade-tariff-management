@@ -229,6 +229,9 @@ describe "Searches: Regulations search" do
       ::RegulationsSearch.new(search_ops)
                          .results
                          .all
+                         .sort do |a, b|
+        a.start_date <=> b.start_date
+      end
     end
 
     def date_to_format(date_in_string)
