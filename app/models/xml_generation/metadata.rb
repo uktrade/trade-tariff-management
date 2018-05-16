@@ -4,9 +4,9 @@ module XmlGeneration
     SOURCE_SYSTEM = "DIT"
     SOURCE_SYSTEM_TYPE = "AWS"
     SOURCE_SYSTEM_OS = "Ubuntu"
-    INTERFACE_NAME = "TODO"
-    INTERFACE_VERSION = "TODO"
-    CORRELATION_ID = "TODO"
+    INTERFACE_NAME = "TAQ01"
+    INTERFACE_VERSION = "V1.0"
+    CORRELATION_ID = "8452f702-a7e0-40aa-8d2f-052073d9ca88"
     CONVERSATION_ID = "TODO"
     TRANSACTION_ID = "TODO"
     MESSAGE_ID = "TODO"
@@ -14,30 +14,27 @@ module XmlGeneration
     COMPRESSED = "false"
     COMPRESSION_ALGORITHM = "ZIP"
     COMPRESSED_CHECKSUM_ALGORITHM = "MD5"
+    SOURCE_LOCATION = "DIT"
+    SOURCE_FILE_NAME =
+    SOURCE_FILE_ENCODING =
 
-    attr_accessor :xml_file,
-                  :zip_file,
-                  :xml_data
+    attr_accessor :xml_export,
+                  :record
+                  :extract_start_date_time,
+                  :extract_end_date_time,
+                  :extract_database_date_time
 
-    def initialize(xml_file, zip_file)
-      @xml_file = xml_file
-      @zip_file = zip_file
+    def initialize(xml_export)
+      @xml_export = xml_export
+      @record = xml_export.record
+
+      @extract_start_date_time = record.extract_start_date_time
+      @extract_end_date_time = record.extract_end_date_time
+      @extract_database_date_time = record.extract_database_date_time
     end
 
     def generate
-      @xml_data = renderer.render(self, xml: xml_builder)
-    end
-
-    def extract_start_date_time
-      "TODO"
-    end
-
-    def extract_end_date_time
-      "TODO"
-    end
-
-    def extract_database_date_time
-      "TODO"
+      renderer.render(self, xml: xml_builder)
     end
 
     def xml_file_checksum

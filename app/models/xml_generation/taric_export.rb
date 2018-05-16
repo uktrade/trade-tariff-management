@@ -4,6 +4,9 @@ module XmlGeneration
   class TaricExport < ::XmlGeneration::XmlInteractorBase
 
     attr_accessor :record,
+                  :extract_start_date_time,
+                  :extract_end_date_time,
+                  :extract_database_date_time,
                   :xml_data,
                   :tmp_xml_file,
                   :tmp_base_64_file,
@@ -16,23 +19,31 @@ module XmlGeneration
 
     def run
       mark_export_process_as_started!
+
       fetch_relevant_data_and_generate_xml
       attach_files!
-      persist!
-
       clean_up_tmp_files!
+
+      mark_export_process_as_completed!
     end
 
     private
 
       def mark_export_process_as_started!
+        @extract_start_date_time = Time.now.utc
         record.update(state: "G")
+      end
+
+      def mark_export_process_as_completed!
+        @extract_end_date_time = Time.now.utc
+        record.update(state: "C")
       end
 
       def fetch_relevant_data_and_generate_xml
         data = ::XmlGeneration::Search.new(
           record.date_filters
         ).result
+        @extract_database_date_time = Time.now.utc
 
         @xml_data = renderer.render(data, xml: xml_builder)
       end
@@ -64,10 +75,6 @@ module XmlGeneration
         save_xml!(:meta, tmp_metadata_file)
       end
 
-      def persist!
-        record.update(state: "C")
-      end
-
       def clean_up_tmp_files!
         clean_up_tmp_file!(tmp_xml_file)
         clean_up_tmp_file!(tmp_base_64_file)
@@ -81,8 +88,7 @@ module XmlGeneration
 
       def metadata
         ::XmlGeneration::Metadata.new(
-          tmp_xml_file,
-          tmp_zip_file
+          self
         ).generate
       end
 
