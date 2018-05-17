@@ -18,7 +18,6 @@ module XmlGeneration
     SOURCE_FILE_ENCODING = "UTF-8"
 
     attr_accessor :xml_export,
-                  :record,
                   :xml_file_path,
                   :zip_file_path,
                   :extract_start_date_time,
@@ -27,13 +26,12 @@ module XmlGeneration
 
     def initialize(xml_export)
       @xml_export = xml_export
-      @record = xml_export.record
       @xml_file_path = xml_export.tmp_xml_file.path
       @zip_file_path = xml_export.tmp_zip_file.path
 
-      @extract_start_date_time = record.extract_start_date_time
-      @extract_end_date_time = record.extract_end_date_time
-      @extract_database_date_time = record.extract_database_date_time
+      @extract_start_date_time = xml_export.extract_start_date_time
+      @extract_end_date_time = xml_export.extract_end_date_time
+      @extract_database_date_time = xml_export.extract_database_date_time
     end
 
     def generate

@@ -103,9 +103,11 @@ module XmlGeneration
       end
 
       def generate_zip_file(file_to_include)
-        Zip::File.open(name_of_zip_file, Zip::File::CREATE) do |zipfile|
+        zip_file_object = Zip::File.open(name_of_zip_file, Zip::File::CREATE) do |zipfile|
           zipfile.add(name_of_base64_file, file_to_include.path)
         end
+
+        File.open(zip_file_object.zipfile)
       end
 
       def save_xml!(uploader_name, tmp_file)
@@ -152,14 +154,5 @@ module XmlGeneration
       def template_name
         "main"
       end
-  end
-end
-
-
-
-
-def generate_zip_file(file_to_include)
-  Zip::File.open("#{Rails.root}/test.zip", Zip::File::CREATE) do |zipfile|
-    zipfile.add("test.rb", file_to_include.path)
   end
 end
