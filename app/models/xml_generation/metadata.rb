@@ -1,9 +1,11 @@
 module XmlGeneration
   class Metadata < ::XmlGeneration::XmlInteractorBase
 
+    include ::XmlGeneration::BaseHelper
+
     SOURCE_SYSTEM = "DIT"
-    SOURCE_SYSTEM_TYPE = "FTP Server"
-    SOURCE_SYSTEM_OS = "Ubuntu"
+    SOURCE_SYSTEM_TYPE = "AWS"
+    SOURCE_SYSTEM_OS = "RedHat_7.3"
     INTERFACE_NAME = "TAQ01"
     INTERFACE_VERSION = "V1.0"
     CORRELATION_ID = "8452f702-a7e0-40aa-8d2f-052073d9ca88"
@@ -29,9 +31,9 @@ module XmlGeneration
       @xml_file_path = xml_export.tmp_xml_file.path
       @zip_file_path = xml_export.tmp_zip_file.path
 
-      @extract_start_date_time = xml_export.extract_start_date_time
-      @extract_end_date_time = xml_export.extract_end_date_time
-      @extract_database_date_time = xml_export.extract_database_date_time
+      @extract_start_date_time = xml_export.extract_start_date_time.xmlschema
+      @extract_end_date_time = xml_export.extract_end_date_time.xmlschema
+      @extract_database_date_time = xml_export.extract_database_date_time.xmlschema
     end
 
     def generate
@@ -57,7 +59,7 @@ module XmlGeneration
     def destinations
       [
         OpenStruct.new(
-          destination_system: "ED-Tariff",
+          destination_system: "DIT",
           destination_location: "ED-Tariff, To Tariff folder",
           destination_file_name: source_file_name,
           destination_file_encoding: "BASE64"

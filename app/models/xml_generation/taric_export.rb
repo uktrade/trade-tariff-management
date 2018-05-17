@@ -22,9 +22,14 @@ module XmlGeneration
 
       fetch_relevant_data_and_generate_xml
       attach_files!
+      attach_metadata_file!
       clean_up_tmp_files!
 
       mark_export_process_as_completed!
+    end
+
+    def name_of_xml_file
+      "#{filename_prefix}-TARICFileSequence.xml"
     end
 
     private
@@ -35,7 +40,6 @@ module XmlGeneration
       end
 
       def mark_export_process_as_completed!
-        @extract_end_date_time = Time.now.utc
         record.update(state: "C")
       end
 
@@ -52,7 +56,8 @@ module XmlGeneration
         attach_xml_file!
         attach_base_64_version!
         attach_zip_version!
-        attach_metadata_file!
+
+        @extract_end_date_time = Time.now.utc
       end
 
       def attach_xml_file!
@@ -78,8 +83,9 @@ module XmlGeneration
       def clean_up_tmp_files!
         clean_up_tmp_file!(tmp_xml_file)
         clean_up_tmp_file!(tmp_base_64_file)
-        clean_up_tmp_file!(tmp_zip_file)
         clean_up_tmp_file!(tmp_metadata_file)
+
+        clean_up_opened_file!(tmp_zip_file)
       end
 
       def base_64_version
@@ -118,10 +124,6 @@ module XmlGeneration
         "#{extract_start_date_time}_#{Time.now.to_i}_xml_export_#{version_name}_version"
       end
 
-      def name_of_xml_file
-        "#{filename_prefix}-TARICFileSequence.xml"
-      end
-
       def name_of_base64_file
         "#{filename_prefix}-TARICFileSequence.B64"
       end
@@ -149,6 +151,11 @@ module XmlGeneration
       def clean_up_tmp_file!(tmp_file)
         tmp_file.close
         tmp_file.unlink
+      end
+
+      def clean_up_opened_file!(opened_file)
+        opened_file.close
+        File.delete(opened_file)
       end
 
       def template_name
