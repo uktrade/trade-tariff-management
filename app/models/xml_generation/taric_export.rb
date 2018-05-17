@@ -117,7 +117,27 @@ module XmlGeneration
       end
 
       def name_of_xml_file
-        "<Start Date -YYYYMMDD>-<Timestamp - YYYYMMDDHHMMSS>-TARICFileSequence.XML"
+        "#{filename_prefix}-TARICFileSequence.xml"
+      end
+
+      def name_of_metadata_file
+        "DIT_TAQ01_V1_#{timestamp}_metadata.xml"
+      end
+
+      def name_of_zip_file
+        "#{filename_prefix}.zip"
+      end
+
+      def filename_prefix
+        "#{start_date}-#{timestamp}"
+      end
+
+      def start_date
+        extract_start_date_time.strftime("%Y%m%d")
+      end
+
+      def timestamp
+        extract_start_date_time.strftime("%Y%m%d%H%M%S")
       end
 
       def clean_up_tmp_file!(tmp_file)
