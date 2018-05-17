@@ -103,8 +103,8 @@ module XmlGeneration
       end
 
       def generate_zip_file(file_to_include)
-        Zip::File.open("#{tmp_file_name(:zip)}.zip", Zip::File::CREATE) do |zipfile|
-          zipfile.add(name_of_xml_file, file_to_include.path)
+        Zip::File.open(name_of_zip_file, Zip::File::CREATE) do |zipfile|
+          zipfile.add(name_of_base64_file, file_to_include.path)
         end
       end
 
@@ -113,11 +113,15 @@ module XmlGeneration
       end
 
       def tmp_file_name(version_name)
-        "#{Time.now.to_i}_xml_export_#{version_name}_version"
+        "#{extract_start_date_time}_#{Time.now.to_i}_xml_export_#{version_name}_version"
       end
 
       def name_of_xml_file
         "#{filename_prefix}-TARICFileSequence.xml"
+      end
+
+      def name_of_base64_file
+        "#{filename_prefix}-TARICFileSequence.B64"
       end
 
       def name_of_metadata_file
