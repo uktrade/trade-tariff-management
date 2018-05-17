@@ -65,8 +65,8 @@ module XmlGeneration
         save_xml!(:base_64, tmp_base_64_file)
       end
 
-      def attach_zip_version!(tmp_file)
-        @tmp_zip_file = generate_zip_file(tmp_file)
+      def attach_zip_version!
+        @tmp_zip_file = generate_zip_file(tmp_xml_file)
         save_xml!(:zip, tmp_zip_file)
       end
 
@@ -152,5 +152,14 @@ module XmlGeneration
       def template_name
         "main"
       end
+  end
+end
+
+
+
+
+def generate_zip_file(file_to_include)
+  Zip::File.open("#{Rails.root}/test.zip", Zip::File::CREATE) do |zipfile|
+    zipfile.add("test.rb", file_to_include.path)
   end
 end
