@@ -1,0 +1,296 @@
+<%= simple_form_for :search, url: measures_path, html: {class: 'find-measures', method: :get} do |f| %>
+  <p>
+    <strong>
+      Find measures where:
+    </strong>
+  </p>
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-group-name" name="search[group_name][enabled]" type="checkbox" value="1" v-model="groupNameEnabled" />
+        <label for="toggle-group-name">
+          Group name
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForGroupName" label-field="label" value-field="value"  v-model="groupNameCondition" v-bind:disabled="groupNameDisabled" name="search[group_name][operator]"></custom-select>
+    </div>
+    <div class="find-measure__long">
+      <input name="search[group_name][value]" class="form-control" v-model="groupName" v-bind:disabled="groupNameDisabled" />
+    </div>
+  </div>
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-status" name="search[status][enabled]" type="checkbox" value="1" v-model="statusEnabled" />
+        <label for="toggle-status">
+          Status
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForStatus" label-field="label" value-field="value"  v-model="statusCondition" v-bind:disabled="statusDisabled" name="search[status][operator]"></custom-select>
+    </div>
+    <div class="find-measure__long">
+      <custom-select :options="statuses" label-field="label" value-field="value" placeholder="― select a status ―" v-model="status" v-bind:disabled="statusDisabled" name="search[status][value]"></custom-select>
+    </div>
+  </div>
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-author" name="search[author][enabled]" type="checkbox" value="1" v-model="authorEnabled" />
+        <label for="toggle-author">
+          Author
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForAuthor" label-field="label" value-field="value"  v-model="authorCondition" v-bind:disabled="authorDisabled" name="search[author][operator]"></custom-select>
+    </div>
+    <div class="find-measure__long">
+      <custom-select url="/users" label-field="name" value-field="id" placeholder="― select a user ―" v-model="author" v-bind:disabled="authorDisabled" name="search[author][value]"></custom-select>
+    </div>
+  </div>
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-date" name="search[date_of][enabled]" type="checkbox" value="1" v-model="dateEnabled" />
+        <label for="toggle-date">
+          Date of
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__type">
+      <custom-select :options="typesForDate" label-field="label" value-field="value"  v-model="dateType" v-bind:disabled="dateDisabled" name="search[date_of][mode]"></custom-select>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForDate" label-field="label" value-field="value"  v-model="dateCondition" v-bind:disabled="dateDisabled" name="search[date_of][operator]"></custom-select>
+    </div>
+    <div class="find-measure__long">
+      <date-select v-model="date" name="search[date_of][value]" v-bind:disabled="dateDisabled" />
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-last-updated-by" name="search[last_updated_by][enabled]" type="checkbox" value="1" v-model="lastUpdatedByEnabled" />
+        <label for="toggle-last-updated-by">
+          Last updated by
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForLastUpdatedBy" label-field="label" value-field="value"  v-model="lastUpdatedByCondition" v-bind:disabled="lastUpdatedByDisabled" name="search[last_updated_by][operator]"></custom-select>
+    </div>
+    <div class="find-measure__long">
+      <custom-select url="/users" label-field="name" value-field="id" placeholder="― select a user ―" v-model="lastUpdatedBy" v-bind:disabled="lastUpdatedByDisabled" name="search[last_updated_by][value]"></custom-select>
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-regulation" name="search[regulation][enabled]" type="checkbox" value="1" v-model="regulationEnabled" />
+        <label for="toggle-regulation">
+          Regulation
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForRegulation" label-field="label" value-field="value"  v-model="regulationCondition" v-bind:disabled="regulationDisabled" name="search[regulation][operator]"></custom-select>
+    </div>
+    <div class="find-measure__short">
+      <input name="search[regulation][value]" class="form-control" v-model="regulation" v-bind:disabled="regulationDisabled" />
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-type" name="search[type][enabled]" type="checkbox" value="1" v-model="typeEnabled" />
+        <label for="toggle-type">
+          Type
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForType" label-field="label" value-field="value"  v-model="typeCondition" v-bind:disabled="typeDisabled" name="search[type][operator]"></custom-select>
+    </div>
+    <div class="find-measure__short">
+      <custom-select url="/measure_types" code-field="measure_type_id" label-field="description" value-field="measure_type_id" code-class-name="prefix--measure-type"  placeholder="― start typing ―" min-length="1" v-model="type" v-bind:disabled="typeDisabled" name="search[type][value]"></custom-select>
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-validity-start-date" name="search[valid_from][enabled]" type="checkbox" value="1" v-model="validityStartDateEnabled" />
+        <label for="toggle-validity-start-date">
+          Valid from
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__type">
+      <custom-select :options="typesForDate" label-field="label" value-field="value"  v-model="validityStartDateType" v-bind:disabled="validityStartDateDisabled" name="search[valid_from][mode]"></custom-select>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForValidityStartDate" label-field="label" value-field="value"  v-model="validityStartDateCondition" v-bind:disabled="validityStartDateDisabled" name="search[valid_from][operator]"></custom-select>
+    </div>
+    <div class="find-measure__long">
+      <date-select v-model="validityStartDate" name="search[valid_from][value]" v-bind:disabled="validityStartDateDisabled" />
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-validity-end-date" name="search[valid_to][enabled]" type="checkbox" value="1" v-model="validityEndDateEnabled" />
+        <label for="toggle-validity-end-date">
+          Valid to
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__type">
+      <custom-select :options="typesForDate" label-field="label" value-field="value"  v-model="validityEndDateType" v-bind:disabled="validityEndDateDisabled" name="search[valid_to][mode]"></custom-select>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForValidityEndDate" label-field="label" value-field="value"  v-model="validityEndDateCondition" v-bind:disabled="validityEndDateDisabled" name="search[valid_to][operator]"></custom-select>
+    </div>
+    <div class="find-measure__long">
+      <date-select v-model="validityEndDate" name="search[valid_to][value]" v-bind:disabled="validityEndDateDisabled" />
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-commodity-code" name="search[commodity_code][enabled]" type="checkbox" value="1" v-model="commodityCodeEnabled" />
+        <label for="toggle-commodity-code">
+          Commodity code
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForCommodityCode" label-field="label" value-field="value"  v-model="commodityCodeCondition" v-bind:disabled="commodityCodeDisabled" name="search[commodity_code][operator]"></custom-select>
+    </div>
+    <div class="find-measure__short">
+      <input name="search[commodity_code][value]" class="form-control" v-model="commodityCode" v-bind:disabled="commodityCodeDisabled" />
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-additional-code" name="search[additional_code][enabled]" type="checkbox" value="1" v-model="additionalCodeEnabled" />
+        <label for="toggle-additional-code">
+          Additional code
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForAdditionalCode" label-field="label" value-field="value"  v-model="additionalCodeCondition" v-bind:disabled="additionalCodeDisabled" name="search[additional_code][operator]"></custom-select>
+    </div>
+    <div class="find-measure__short">
+      <input name="search[additional_code][value]" class="form-control" v-model="additionalCode" v-bind:disabled="additionalCodeDisabled" />
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-origin" name="search[origin][enabled]" type="checkbox" value="1" v-model="originEnabled" />
+        <label for="toggle-origin">
+          Origin
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForOrigin" label-field="label" value-field="value"  v-model="originCondition" v-bind:disabled="originDisabled" name="search[origin][operator]"></custom-select>
+    </div>
+    <div class="find-measure__short">
+      <custom-select url="/origins" label-field="description" value-field="origin_id" placeholder="― start typing ―" min-length="1" v-model="origin" v-bind:disabled="originDisabled" name="search[origin][value]"></custom-select>
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-origin-exclusions" name="search[origin_exclusions][enabled]" type="checkbox" value="1" v-model="originExclusionsEnabled" />
+        <label for="toggle-origin-exclusions">
+          Origin exclusions
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForOriginExclusions" label-field="label" value-field="value"  v-model="originExclusionsCondition" v-bind:disabled="originExclusionsDisabled" name="search[origin_exclusions][operator]"></custom-select>
+    </div>
+    <div class="find-measure__short">
+      <div class='origin-exclusion' v-for="(exclusion, index) in origin_exclusions">
+        <custom-select url="/origins" label-field="description" value-field="origin_id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="originExclusionsDisabled" :name="'search[origin_exclusions][value][' + index + ']'"></custom-select>
+      </div>
+      <p>
+        <a v-on:click.prevent="addOriginExclusion" v-bind:disabled="originExclusionsDisabled">
+          Add another exclusion
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-duties" name="search[duties][enabled]" type="checkbox" value="1" v-model="dutiesEnabled" />
+        <label for="toggle-duties">
+          Duties
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForDuties" label-field="label" value-field="value"  v-model="dutiesCondition" v-bind:disabled="dutiesDisabled" name="search[duties][operator]"></custom-select>
+    </div>
+    <div class="find-measure__flow">
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-conditions" name="search[conditions][enabled]" type="checkbox" value="1" v-model="conditionsEnabled" />
+        <label for="toggle-conditions">
+          Conditions
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForConditions" label-field="label" value-field="value"  v-model="conditionsCondition" v-bind:disabled="conditionsDisabled" name="search[conditions][operator]"></custom-select>
+    </div>
+    <div class="find-measure__flow">
+
+    </div>
+  </div>
+
+  <div class="find-measures__row">
+    <div class="find-measures__checkbox-column">
+      <div class="multiple-choice">
+        <input id="toggle-footnotes" name="search[footnotes][enabled]" type="checkbox" value="1" v-model="footnotesEnabled" />
+        <label for="toggle-footnotes">
+          Footnotes
+        </label>
+      </div>
+    </div>
+    <div class="find-measures__is">
+      <custom-select :options="conditionsForFootnotes" label-field="label" value-field="value"  v-model="footnotesCondition" v-bind:disabled="footnotesDisabled" name="search[footnotes][operator]"></custom-select>
+    </div>
+    <div class="find-measure__flow">
+
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class='button' data-disable-with='Searching'>
+      Search
+    </button>
+  </div>
+<% end %>

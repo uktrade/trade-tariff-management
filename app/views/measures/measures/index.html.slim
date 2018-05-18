@@ -7,15 +7,9 @@
       | Measures
 
 h2.heading-large
-  | Measures
+  | Find measures
 
-= simple_form_for :search, url: measures_path, html: {class: 'search-form', method: :get} do |f|
-  .row
-    .col-sm-6
-      = f.input :code, label: "Commodity code", input_html: { name: :code, value: params[:code] || "", class: 'form-control' }
-  .form-actions
-    = f.button :submit, 'Search', class: 'button', data: { 'disable-with' => 'Searching' }
-    = link_to "Clear", measures_path, class: 'secondary-button'
+= render "search_form"
 
 
 table.table

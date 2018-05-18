@@ -18,7 +18,8 @@ Vue.component('custom-select', {
     "name",
     "codeClassName",
     "abbreviationClassName",
-    "optionsFilter"
+    "optionsFilter",
+    "disabled"
   ],
   data: function() {
     return {
@@ -151,6 +152,10 @@ Vue.component('custom-select', {
       vm.$emit('input', this.value);
     });
 
+    if (this.disabled) {
+      $(this.$el).find("select")[0].selectize.disable();
+    }
+
     this.handleDateSentitivity = function(event, start_date, end_date) {
       vm.start_date = start_date;
       vm.end_date = end_date;
@@ -198,6 +203,13 @@ Vue.component('custom-select', {
     }
   },
   watch: {
+    disabled: function(value) {
+      if (value) {
+        $(this.$el).find("select")[0].selectize.disable();
+      } else {
+        $(this.$el).find("select")[0].selectize.enable();
+      }
+    },
     value: function (value) {
       $(this.$el).find("select")[0].selectize.setValue(value, false);
     },

@@ -1,6 +1,6 @@
 Vue.component('date-select', {
   template: "#date-select-template",
-  props: ["value"],
+  props: ["value", "disabled"],
   data: function() {
     return {
       vproxy: this.value
