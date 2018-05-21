@@ -9,6 +9,20 @@ class Measure < Sequel::Model
     4  # Definitive anti-dumping/countervailing duty
   ]
 
+  STATUS_LIST = [
+    :draft_incomplete,
+    :draft_ready_for_cross_check,
+    :submitted_for_cross_check,
+    :cross_check_rejected,
+    :ready_for_approval,
+    :submitted_for_approval,
+    :approval_rejected,
+    :ready_for_export,
+    :export_pending,
+    :sent_to_cds,
+    :cds_import_error
+  ]
+
   set_primary_key [:measure_sid]
   plugin :time_machine, period_start_column: :effective_start_date,
                         period_end_column: :effective_end_date

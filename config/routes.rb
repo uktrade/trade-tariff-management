@@ -46,6 +46,10 @@ Rails.application.routes.draw do
     resources :monetary_units, only: [:index]
   end
 
+  namespace :temp do
+    resources :measures, only: [:index]
+  end
+
   namespace :regulation_form_api do
     resources :regulation_groups, only: [:index]
     resources :base_regulations, only: [:index]
