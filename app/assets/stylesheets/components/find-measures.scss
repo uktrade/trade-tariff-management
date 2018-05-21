@@ -1,0 +1,29 @@
+$find-measure-gutter: 5px;
+
+.find-measures__row {
+  display: flex;
+  border-bottom: 2px solid $border-colour;
+}
+
+.find-measures__checkbox-column {
+  flex: 0 0 200px;
+  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+}
+
+.find-measures__is,
+.find-measures__type,
+.find-measure__short {
+  flex: 0 0 220px;
+  max-width: 220px;
+  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+}
+
+.find-measure__long {
+  flex: 0 0 365px;
+  max-width: 365px;
+  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+}
+
+.origin-exclusion + .origin-exclusion {
+  margin-top: 5px;
+}
