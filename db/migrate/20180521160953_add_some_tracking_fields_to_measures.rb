@@ -1,7 +1,9 @@
 Sequel.migration do
   up do
     alter_table :measures_oplog do
-      add_column :status, String
+      add_column :last_status_change_at, Time
+      add_column :last_update_by_id, Integer
+      add_column :updated_at, Time
     end
 
     run %Q{
@@ -34,7 +36,10 @@ Sequel.migration do
           measures1.operation_date,
           measures1.added_by_id,
           measures1.added_at,
-          measures1.status
+          measures1.status,
+          measures1.last_status_change_at,
+          measures1.last_update_by_id,
+          measures1.updated_at
          FROM public.measures_oplog measures1
         WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
                  FROM public.measures_oplog measures2
@@ -72,13 +77,16 @@ Sequel.migration do
           measures1.operation,
           measures1.operation_date,
           measures1.added_by_id,
-          measures1.added_at
+          measures1.added_at,
+          measures1.status
          FROM public.measures_oplog measures1
         WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
                  FROM public.measures_oplog measures2
                 WHERE (measures1.measure_sid = measures2.measure_sid))) AND ((measures1.operation)::text <> 'D'::text));
     }
 
-    remove_column :measures_oplog, :status
+    remove_column :measures_oplog, :last_status_change_at
+    remove_column :measures_oplog, :last_update_by_id
+    remove_column :measures_oplog, :updated_at
   end
 end

@@ -286,6 +286,56 @@ class Measure < Sequel::Model
     def non_invalidated
       where(measures__invalidated_at: nil)
     end
+
+    begin :find_measures_section_search_queries
+      def is_or_is_not_search_query(field_name, value, operator)
+        q_rule = if operator == "is"
+          "#{field_name} = ?"
+        else
+          "#{field_name} != ?"
+        end
+
+        where(q_rule, value)
+      end
+
+      def operator_search_by_status(status, operator)
+        is_or_is_not_search_query("status", status, operator)
+      end
+
+      def operator_search_by_measure_type(measure_type_id, operator)
+        is_or_is_not_search_query("measure_type_id", measure_type_id, operator)
+      end
+
+      def operator_search_by_origin(geographical_area_id)
+        is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
+      end
+
+      def operator_search_by_author(user)
+        where(added_by_id: user.id)
+      end
+
+      def operator_search_by_last_updated_by(user)
+        where(last_update_by_id: user.id)
+      end
+
+      def operator_search_by_regulation(regulation, operator)
+        q_rule = case operator
+        when "is"
+          "measure_generating_regulation_id = ? OR justification_regulation_id = ?"
+        when "is_not"
+          "measure_generating_regulation_id != ? AND justification_regulation_id != ?"
+        when "contains"
+          "measure_generating_regulation_id ilike ? OR justification_regulation_id ilike ?"
+        when "does_not_contain"
+          "measure_generating_regulation_id NOT ilike ? OR justification_regulation_id NOT ilike ?"
+        end
+
+        where(
+          q_rule,
+          regulation_id, regulation_id
+        )
+      end
+    end
   end
 
   def_column_accessor :effective_end_date, :effective_start_date

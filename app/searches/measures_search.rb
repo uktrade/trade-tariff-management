@@ -137,67 +137,77 @@ class MeasuresSearch
 
   private
 
-    def apply_status_filter
-      @relation = relation.by_status(status)
+    def apply_group_name_filter
+      # TODO
+      @relation = relation.operator_search_by_group_name(status)
     end
 
-    def apply_group_name_filter
-      @relation = relation.by_group_name(status)
+    def apply_status_filter
+      @relation = relation.operator_search_by_status(status, operator)
     end
 
     def apply_author_filter
-      @relation = relation.by_author(status)
+      @relation = relation.operator_search_by_author(author)
     end
 
     def apply_date_of_filter
-      @relation = relation.by_date_of(date_of)
+      # TODO
+      @relation = relation.operator_search_by_date_of(date_of)
     end
 
     def apply_last_updated_by_filter
-      @relation = relation.by_last_updated_by(last_updated_by)
+      @relation = relation.operator_search_by_last_updated_by(last_updated_by)
     end
 
     def apply_regulation_filter
-      @relation = relation.by_regulation(regulation)
+      @relation = relation.operator_search_by_regulation(regulation, operator)
     end
 
     def apply_type_filter
-      @relation = relation.by_measure_type(type)
+      @relation = relation.operator_search_by_measure_type(type, operator)
     end
 
     def apply_valid_from_filter
-      @relation = relation.by_valid_from(valid_from)
+      # TODO
+      @relation = relation.operator_search_by_valid_from(valid_from)
     end
 
     def apply_valid_to_filter
-      @relation = relation.by_valid_to(valid_to)
+      # TODO
+      @relation = relation.operator_search_by_valid_to(valid_to)
     end
 
     def apply_commodity_code_filter
-      @relation = relation.by_commodity_code(commodity_code)
+      # TODO
+      @relation = relation.operator_search_by_commodity_code(commodity_code)
     end
 
     def apply_additional_code_filter
-      @relation = relation.by_additional_code(additional_code)
+      # TODO
+      @relation = relation.operator_search_by_additional_code(additional_code)
     end
 
     def apply_origin_filter
-      @relation = relation.by_origin(origin)
+      @relation = relation.operator_search_by_origin(origin, operator)
     end
 
     def apply_origin_exclusions_filter
-      @relation = relation.by_origin_exclusions(origin_exclusions)
+      # TODO
+      @relation = relation.operator_search_by_origin_exclusions(origin_exclusions)
     end
 
     def apply_duties_filter
-      @relation = relation.by_duties(duties)
+      # TODO
+      @relation = relation.operator_search_by_duties(duties)
     end
 
     def apply_conditions_filter
-      @relation = relation.by_conditions(conditions)
+      # TODO
+      @relation = relation.operator_search_by_conditions(conditions)
     end
 
     def apply_footnotes_filter
-      @relation = relation.by_footnotes(footnotes)
+      # TODO
+      @relation = relation.operator_search_by_footnotes(footnotes)
     end
 end

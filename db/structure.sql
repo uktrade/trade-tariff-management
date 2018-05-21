@@ -4288,7 +4288,10 @@ CREATE TABLE public.measures_oplog (
     operation_date date,
     added_by_id integer,
     added_at timestamp without time zone,
-    status text
+    status text,
+    last_status_change_at timestamp without time zone,
+    last_update_by_id integer,
+    updated_at timestamp without time zone
 );
 
 
@@ -4325,7 +4328,10 @@ CREATE VIEW public.measures AS
     measures1.operation_date,
     measures1.added_by_id,
     measures1.added_at,
-    measures1.status
+    measures1.status,
+    measures1.last_status_change_at,
+    measures1.last_update_by_id,
+    measures1.updated_at
    FROM public.measures_oplog measures1
   WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
            FROM public.measures_oplog measures2
@@ -10472,3 +10478,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133210_add_base_64
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133707_add_zip_data_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180516164658_add_meta_data_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180521132612_add_status_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180521160953_add_some_tracking_fields_to_measures.rb');
