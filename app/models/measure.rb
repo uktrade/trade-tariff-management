@@ -277,6 +277,14 @@ class Measure < Sequel::Model
     end
 
     begin :find_measures_section_search_queries
+      def default_search
+        where("validity_start_date IS NOT NULL")
+      end
+
+      def operation_search_jsonb_default
+        where("searchable_data::text <> '{}'::text")
+      end
+
       def is_or_is_not_search_query(field_name, value, operator)
         q_rule = if operator == "is"
           "#{field_name} = ?"
@@ -323,6 +331,19 @@ class Measure < Sequel::Model
           q_rule,
           regulation_id, regulation_id
         )
+      end
+
+      def jsonb_operator_search_by_group_name(group_name, operator)
+        case operator
+        when "is"
+          jsonb_rule = "searchable_data #>> '{\"group_name\"}' = ?"
+          value = group_name
+        when "starts_with", "contains"
+          jsonb_rule = "searchable_data #>> '{\"group_name\"}' ilike ?"
+          value = operator == "starts_with" ? "#{group_name}%" : "%#{group_name}%"
+        end
+
+        where(jsonb_rule, value)
       end
     end
   end

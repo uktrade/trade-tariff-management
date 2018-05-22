@@ -122,7 +122,8 @@ class MeasuresSearch
   end
 
   def results
-    @relation = Measure.default
+    @relation = Measure.default_search
+    @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
     search_ops.select do |k, v|
       ALLOWED_FILTERS.include?(k.to_s) && v.present?
@@ -137,9 +138,16 @@ class MeasuresSearch
 
   private
 
+    def jsonb_search_required?
+      group_name ||
+      origin_exclusions ||
+      duties ||
+      conditions ||
+      footnotes
+    end
+
     def apply_group_name_filter
-      # TODO
-      @relation = relation.operator_search_by_group_name(status)
+      @relation = relation.operator_search_by_group_name(group_name, operator)
     end
 
     def apply_status_filter
