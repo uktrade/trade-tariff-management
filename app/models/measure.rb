@@ -360,6 +360,7 @@ class Measure < Sequel::Model
             "(searchable_data #>> '{\"excluded_geographical_areas\"}')::text ilike ?"
           end.join(" OR ")
           values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
+
           q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL AND " +
                     "(#{q_rules})"
 
@@ -374,6 +375,7 @@ class Measure < Sequel::Model
             eos
           end.join(" AND ")
           values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
+
           q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NULL OR " +
                     "(#{q_rules})"
           where(
@@ -381,7 +383,57 @@ class Measure < Sequel::Model
           )
         end
       end
+
+      def operator_search_by_duties(operator, duties_list=[])
+        generate_query_rule = -> (operator) {
+          separator = operator == "include" ? " OR " : " AND "
+
+          q_rules = duties_list.map do |d_id, amount|
+            d_id = d_id.strip
+            q_rule = "searchable_data @> '{\"duty_expressions\": [{\"duty_expression_id\": \"#{d_id}\"}]}'"
+
+            amount = amount.strip
+            if amount.present?
+              q_rule += " AND searchable_data @> '{\"duty_expressions\": [{\"duty_amount\": \"#{amount}\"}]}'"
+            end
+
+            "(#{q_rule})"
+          end.join(separator)
+
+          "(searchable_data -> 'duty_expressions')::text <> '[]'::text AND (#{q_rules})"
+        }
+
+        where(
+          generate_query_rule.call(operator)
+        )
+      end
     end
+  end
+
+  def set_searchable_data!
+    ops = {}
+
+    if measure_group.present?
+      ops[:group_name] = measure_group.name
+    end
+
+    if excluded_geographical_areas.present?
+      joined_areas_str = excluded_geographical_areas.map(&:geographical_area_id).join("_")
+      ops[:excluded_geographical_areas_names] = "_" + joined_areas_str + "_"
+    end
+
+    if measure_components.present?
+      ops[:duty_expressions] = measure_components.map do |m_component|
+        {
+          duty_expression_id: m_component.duty_expression_id,
+          duty_amount: m_component.duty_amount.to_s,
+          monetary_unit_code: m_component.monetary_unit_code.to_s,
+          measurement_unit_code: m_component.measurement_unit_code.to_s
+        }
+      end
+    end
+
+    self.searchable_data = ops.to_json
   end
 
   def_column_accessor :effective_end_date, :effective_start_date

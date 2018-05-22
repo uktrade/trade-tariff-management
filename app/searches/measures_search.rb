@@ -214,8 +214,9 @@ class MeasuresSearch
     end
 
     def apply_duties_filter
-      # TODO
-      @relation = relation.operator_search_by_duties(duties)
+      @relation = relation.operator_search_by_duties(
+        query_ops(duties)
+      )
     end
 
     def apply_conditions_filter
