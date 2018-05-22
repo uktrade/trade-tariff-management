@@ -386,8 +386,6 @@ class Measure < Sequel::Model
 
       def operator_search_by_duties(operator, duties_list=[])
         generate_query_rule = -> (operator) {
-          separator = operator == "include" ? " OR " : " AND "
-
           q_rules = duties_list.map do |duty|
             d_id = duty.keys[0].strip
             q_rule = "searchable_data @> '{\"duty_expressions\": [{\"duty_expression_id\": \"#{d_id}\"}]}'"
@@ -398,9 +396,15 @@ class Measure < Sequel::Model
             end
 
             "(#{q_rule})"
-          end.join(separator)
+          end.join(" AND ")
 
-          "(searchable_data -> 'duty_expressions')::text <> '[]'::text AND (#{q_rules})"
+          sql = "(searchable_data -> 'duty_expressions')::text <> '[]'::text AND (#{q_rules})"
+
+          if operator == "are"
+            sql + " AND searchable_data #>> '{\"duty_expressions_count\"}' = '#{duties_list.count}'"
+          end
+
+          sql
         }
 
         where(
@@ -410,16 +414,24 @@ class Measure < Sequel::Model
 
       def operator_search_by_conditions(operator, conditions_list=[])
         if %w(are include).include?(operator)
+          conditions_list.uniq!
 
           generate_query_rule = -> (operator) {
-            separator = operator == "include" ? " OR " : " AND "
-
             q_rules = conditions_list.map do |code|
               "(searchable_data #>> '{\"measure_conditions\"}')::text ilike ?"
-            end.join(separator)
+            end.join(" AND ")
             values = conditions_list.map { |code| "%_#{code}_%" }
 
-            "searchable_data #>> '{\"measure_conditions\"}' IS NOT NULL AND (#{q_rules})"
+            sql = <<-eos
+              searchable_data #>> '{"measure_conditions"}' IS NOT NULL AND
+              (#{q_rules})
+            eos
+
+            if operator == "are"
+              sql + " AND searchable_data #>> '{\"measure_conditions_count\"}' = '#{conditions_list.count}'"
+            end
+
+            sql
           }
 
           where(
@@ -460,11 +472,13 @@ class Measure < Sequel::Model
           measurement_unit_code: m_component.measurement_unit_code.to_s
         }
       end
+      ops[:duty_expressions_count] = measure_components.count
     end
 
     if measure_conditions.present?
-      joined_conditions_str = measure_conditions.map(&:condition_code).uniq.join("_")
-      ops[:measure_conditions] = "_" + joined_conditions_str + "_"
+      condition_codes = measure_conditions.map(&:condition_code).uniq
+      ops[:measure_conditions] = "_" + condition_codes.join("_") + "_"
+      ops[:measure_conditions_count] = condition_codes.count
     end
 
     self.searchable_data = ops.to_json
