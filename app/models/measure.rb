@@ -357,27 +357,28 @@ class Measure < Sequel::Model
         when "include"
 
           q_rules = origin_list.map do |origin_id|
-            <<-eos
-              (searchable_data #>> '{\"excluded_geographical_areas\"}')::text ilike ?"
-            eos
+            "(searchable_data #>> '{\"excluded_geographical_areas\"}')::text ilike ?"
           end.join(" OR ")
           values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
+          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL AND " +
+                    "(#{q_rules})"
 
           where(
-            "(searchable_data #>> '{\"excluded_geographical_areas\"}') IS NOT NULL AND" + q_rules
-          , *values)
+            q_rules, *values
+          )
         when "do_not_include"
 
           q_rules = origin_list.map do |origin_id|
             <<-eos
-              (searchable_data #>> '{\"excluded_geographical_areas\"}')::text NOT ilike ?
+              (searchable_data #>> '{"excluded_geographical_areas"}')::text NOT ilike ?
             eos
           end.join(" AND ")
           values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
-
+          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NULL OR " +
+                    "(#{q_rules})"
           where(
-            "(searchable_data #>> '{\"excluded_geographical_areas\"}') IS NULL OR" + q_rules
-          , *values)
+            q_rules, *values
+          )
         end
       end
     end
