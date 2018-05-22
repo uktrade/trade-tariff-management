@@ -407,6 +407,35 @@ class Measure < Sequel::Model
           generate_query_rule.call(operator)
         )
       end
+
+      def operator_search_by_conditions(operator, conditions_list=[])
+        if %w(are include).include?(operator)
+
+          generate_query_rule = -> (operator) {
+            separator = operator == "include" ? " OR " : " AND "
+
+            q_rules = conditions_list.map do |code|
+              "(searchable_data #>> '{\"measure_conditions\"}')::text ilike ?"
+            end.join(separator)
+            values = conditions_list.map { |code| "%_#{code}_%" }
+
+            "searchable_data #>> '{\"measure_conditions\"}' IS NOT NULL AND (#{q_rules})"
+          }
+
+          where(
+            generate_query_rule.call(operator)
+          )
+        else
+          case operator
+          when "are_not_specified"
+
+            where("searchable_data #>> '{\"measure_conditions\"}' IS NULL")
+          when "are_not_unspecified"
+
+            where("searchable_data #>> '{\"measure_conditions\"}' IS NOT NULL")
+          end
+        end
+      end
     end
   end
 
@@ -418,7 +447,7 @@ class Measure < Sequel::Model
     end
 
     if excluded_geographical_areas.present?
-      joined_areas_str = excluded_geographical_areas.map(&:geographical_area_id).join("_")
+      joined_areas_str = excluded_geographical_areas.map(&:geographical_area_id).uniq.join("_")
       ops[:excluded_geographical_areas_names] = "_" + joined_areas_str + "_"
     end
 
@@ -431,6 +460,11 @@ class Measure < Sequel::Model
           measurement_unit_code: m_component.measurement_unit_code.to_s
         }
       end
+    end
+
+    if measure_conditions.present?
+      joined_conditions_str = measure_conditions.map(&:condition_code).uniq.join("_")
+      ops[:measure_conditions] = "_" + joined_conditions_str + "_"
     end
 
     self.searchable_data = ops.to_json

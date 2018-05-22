@@ -220,8 +220,9 @@ class MeasuresSearch
     end
 
     def apply_conditions_filter
-      # TODO
-      @relation = relation.operator_search_by_conditions(conditions)
+      @relation = relation.operator_search_by_conditions(
+        query_ops(conditions)
+      )
     end
 
     def apply_footnotes_filter
