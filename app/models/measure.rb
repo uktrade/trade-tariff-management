@@ -333,7 +333,7 @@ class Measure < Sequel::Model
         )
       end
 
-      def jsonb_operator_search_by_group_name(group_name, operator)
+      def jsonb_operator_search_by_group_name(operator, group_name)
         case operator
         when "is"
           jsonb_rule = "searchable_data #>> '{\"group_name\"}' = ?"
@@ -344,6 +344,41 @@ class Measure < Sequel::Model
         end
 
         where(jsonb_rule, value)
+      end
+
+      def operator_search_by_origin_exclusions(operator, origin_list=[])
+        case operator
+        when "are_not_specified"
+
+          where("searchable_data #>> '{\"excluded_geographical_areas\"}' IS NULL")
+        when "are_not_unspecified"
+
+          where("searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL")
+        when "include"
+
+          q_rules = origin_list.map do |origin_id|
+            <<-eos
+              (searchable_data #>> '{\"excluded_geographical_areas\"}')::text ilike ?"
+            eos
+          end.join(" OR ")
+          values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
+
+          where(
+            "(searchable_data #>> '{\"excluded_geographical_areas\"}') IS NOT NULL AND" + q_rules
+          , *values)
+        when "do_not_include"
+
+          q_rules = origin_list.map do |origin_id|
+            <<-eos
+              (searchable_data #>> '{\"excluded_geographical_areas\"}')::text NOT ilike ?
+            eos
+          end.join(" AND ")
+          values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
+
+          where(
+            "(searchable_data #>> '{\"excluded_geographical_areas\"}') IS NULL OR" + q_rules
+          , *values)
+        end
       end
     end
   end

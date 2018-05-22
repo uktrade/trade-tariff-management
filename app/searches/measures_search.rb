@@ -95,6 +95,12 @@ class MeasuresSearch
   #   },
   # }
 
+  #
+  # "are not specified" means IS NULL
+  #
+  # "are not unspecified" means "IS NOT NULL"
+  #
+
   ALLOWED_FILTERS = %w(
     group_name
     status
@@ -147,7 +153,9 @@ class MeasuresSearch
     end
 
     def apply_group_name_filter
-      @relation = relation.operator_search_by_group_name(group_name, operator)
+      @relation = relation.operator_search_by_group_name(
+        query_ops(group_name)
+      )
     end
 
     def apply_status_filter
@@ -200,8 +208,9 @@ class MeasuresSearch
     end
 
     def apply_origin_exclusions_filter
-      # TODO
-      @relation = relation.operator_search_by_origin_exclusions(origin_exclusions)
+      @relation = relation.operator_search_by_origin_exclusions(
+        query_ops(origin_exclusions)
+      )
     end
 
     def apply_duties_filter
@@ -217,5 +226,12 @@ class MeasuresSearch
     def apply_footnotes_filter
       # TODO
       @relation = relation.operator_search_by_footnotes(footnotes)
+    end
+
+    def query_ops(ops)
+      *[
+        ops[:value],
+        ops[:operator]
+      ]
     end
 end
