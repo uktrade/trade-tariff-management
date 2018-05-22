@@ -388,11 +388,11 @@ class Measure < Sequel::Model
         generate_query_rule = -> (operator) {
           separator = operator == "include" ? " OR " : " AND "
 
-          q_rules = duties_list.map do |d_id, amount|
-            d_id = d_id.strip
+          q_rules = duties_list.map do |duty|
+            d_id = duty.keys[0].strip
             q_rule = "searchable_data @> '{\"duty_expressions\": [{\"duty_expression_id\": \"#{d_id}\"}]}'"
 
-            amount = amount.strip
+            amount = duty.values[0].strip
             if amount.present?
               q_rule += " AND searchable_data @> '{\"duty_expressions\": [{\"duty_amount\": \"#{amount}\"}]}'"
             end
