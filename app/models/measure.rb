@@ -401,7 +401,7 @@ class Measure < Sequel::Model
           sql = "(searchable_data -> 'duty_expressions')::text <> '[]'::text AND (#{q_rules})"
 
           if operator == "are"
-            sql + " AND searchable_data #>> '{\"duty_expressions_count\"}' = '#{duties_list.count}'"
+            sql += " AND searchable_data #>> '{\"duty_expressions_count\"}' = '#{duties_list.count}'"
           end
 
           sql
@@ -428,10 +428,10 @@ class Measure < Sequel::Model
             eos
 
             if operator == "are"
-              sql + " AND searchable_data #>> '{\"measure_conditions_count\"}' = '#{conditions_list.count}'"
+              sql += " AND searchable_data #>> '{\"measure_conditions_count\"}' = '#{conditions_list.count}'"
             end
 
-            sql
+            [sql, *values].flatten
           }
 
           where(
