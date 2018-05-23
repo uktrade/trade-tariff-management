@@ -448,6 +448,47 @@ class Measure < Sequel::Model
           end
         end
       end
+
+      def operator_search_by_footnotes(operator, footnotes_list=[])
+        if %w(are include).include?(operator)
+          generate_query_rule = -> (operator) {
+            footnotes_list.uniq!
+
+            q_rules = footnotes_list.map do |footnote|
+              footnote_type_id = footnote.keys[0].strip
+              q_rule = "searchable_data @> '{\"footnotes\": [{\"footnote_type_id\": \"#{footnote_type_id}\"}]}'"
+
+              footnote_id = footnote.values[0].strip
+              if amount.present?
+                q_rule += " AND searchable_data @> '{\"footnotes\": [{\"footnote_id\": \"#{footnote_id}\"}]}'"
+              end
+
+              "(#{q_rule})"
+            end.join(" AND ")
+
+            sql = "(searchable_data -> 'footnotes')::text <> '[]'::text AND (#{q_rules})"
+
+            if operator == "are"
+              sql += " AND searchable_data #>> '{\"footnotes_count\"}' = '#{footnotes_list.count}'"
+            end
+
+            sql
+          }
+
+          where(
+            generate_query_rule.call(operator)
+          )
+        else
+          case operator
+          when "are_not_specified"
+
+            where("searchable_data #>> '{\"footnotes\"}' IS NULL OR (searchable_data -> 'footnotes')::text = '[]'::text")
+          when "are_not_unspecified"
+
+            where("searchable_data #>> '{\"footnotes\"}' IS NOT NULL AND (searchable_data -> 'footnotes')::text <> '[]'::text")
+          end
+        end
+      end
     end
   end
 
@@ -479,6 +520,16 @@ class Measure < Sequel::Model
       condition_codes = measure_conditions.map(&:condition_code).uniq
       ops[:measure_conditions] = "_" + condition_codes.join("_") + "_"
       ops[:measure_conditions_count] = condition_codes.count
+    end
+
+    if footnotes.present?
+      ops[:footnotes] = footnotes.map do |footnote|
+        {
+          footnote_id: footnote.footnote_id,
+          footnote_type_id: footnote.footnote_type_id
+        }
+      end
+      ops[:footnotes_count] = footnotes.count
     end
 
     self.searchable_data = ops.to_json

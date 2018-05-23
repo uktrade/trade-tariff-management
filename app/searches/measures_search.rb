@@ -226,8 +226,9 @@ class MeasuresSearch
     end
 
     def apply_footnotes_filter
-      # TODO
-      @relation = relation.operator_search_by_footnotes(footnotes)
+      @relation = relation.operator_search_by_footnotes(
+        query_ops(footnotes)
+      )
     end
 
     def query_ops(ops)
