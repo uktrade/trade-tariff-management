@@ -159,7 +159,9 @@ class MeasuresSearch
     end
 
     def apply_status_filter
-      @relation = relation.operator_search_by_status(status, operator)
+      @relation = relation.operator_search_by_status(
+        query_ops(status)
+      )
     end
 
     def apply_author_filter
@@ -167,8 +169,9 @@ class MeasuresSearch
     end
 
     def apply_date_of_filter
-      # TODO
-      @relation = relation.operator_search_by_date_of(date_of)
+      @relation = relation.operator_search_by_date_of(
+        query_ops(date_of)
+      )
     end
 
     def apply_last_updated_by_filter
@@ -242,9 +245,13 @@ class MeasuresSearch
     end
 
     def query_ops(ops)
-      *[
+      res = [
         ops[:operator],
         ops[:value]
       ]
+
+      res << ops[:mode] if ops[:mode].present?
+
+      *res
     end
 end

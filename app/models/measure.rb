@@ -330,6 +330,30 @@ class Measure < Sequel::Model
         is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
       end
 
+      def operator_search_by_date_of(operator, date, mode)
+        field_name = case mode
+        when "creation","authoring"
+          "added_at"
+        when "last_status_change"
+          "last_status_change_at"
+        end
+
+        value = date.to_date.strftime("%Y-%m-%d") if date.present?
+
+        case operator
+        when "is"
+          q_rule = "#{field_name}::date = ?"
+        when "is_after"
+          q_rule = "#{field_name}::date > ?"
+        when "is_before"
+          q_rule = "#{field_name}::date < ?"
+        when "is_not"
+          q_rule = "#{field_name} IS NULL OR #{field_name}::date != ?"
+        end
+
+        where(q_rule, value)
+      end
+
       def operator_search_by_valid_from(operator, date)
         date_filter_search_query("validity_start_date", operator, date)
       end
@@ -384,12 +408,12 @@ class Measure < Sequel::Model
         where(q_rule, value)
       end
 
-      def operator_search_by_author(operator, user)
-        where(added_by_id: user.id)
+      def operator_search_by_author(user_id)
+        where(added_by_id: user_id)
       end
 
-      def operator_search_by_last_updated_by(operator, user)
-        where(last_update_by_id: user.id)
+      def operator_search_by_last_updated_by(user_id)
+        where(last_update_by_id: user_id)
       end
 
       def operator_search_by_regulation(operator, regulation_id)
