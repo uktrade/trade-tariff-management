@@ -401,7 +401,7 @@ class Measure < Sequel::Model
         when "contains"
           "measure_generating_regulation_id ilike ? OR justification_regulation_id ilike ?"
         when "does_not_contain"
-          "measure_generating_regulation_id NOT ilike ? OR justification_regulation_id NOT ilike ?"
+          "measure_generating_regulation_id NOT ilike ? AND justification_regulation_id NOT ilike ?"
         end
 
         where(

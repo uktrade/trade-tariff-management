@@ -176,11 +176,15 @@ class MeasuresSearch
     end
 
     def apply_regulation_filter
-      @relation = relation.operator_search_by_regulation(regulation, operator)
+      @relation = relation.operator_search_by_regulation(
+        query_ops(regulation)
+      )
     end
 
     def apply_type_filter
-      @relation = relation.operator_search_by_measure_type(type, operator)
+      @relation = relation.operator_search_by_measure_type(
+        query_ops(type)
+      )
     end
 
     def apply_valid_from_filter
