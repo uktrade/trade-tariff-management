@@ -358,11 +358,10 @@ class Measure < Sequel::Model
 
           q_rules = origin_list.map do |origin_id|
             "(searchable_data #>> '{\"excluded_geographical_areas\"}')::text ilike ?"
-          end.join(" OR ")
+          end.join(" AND ")
           values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
 
-          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL AND " +
-                    "(#{q_rules})"
+          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL AND (#{q_rules})"
 
           where(
             q_rules, *values
