@@ -184,13 +184,15 @@ class MeasuresSearch
     end
 
     def apply_valid_from_filter
-      # TODO
-      @relation = relation.operator_search_by_valid_from(valid_from)
+      @relation = relation.operator_search_by_valid_from(
+        query_ops(valid_from)
+      )
     end
 
     def apply_valid_to_filter
-      # TODO
-      @relation = relation.operator_search_by_valid_to(valid_to)
+      @relation = relation.operator_search_by_valid_to(
+        query_ops(valid_to)
+      )
     end
 
     def apply_commodity_code_filter

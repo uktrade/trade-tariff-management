@@ -295,6 +295,29 @@ class Measure < Sequel::Model
         where(q_rule, value)
       end
 
+      def date_filter_search_query(field_name, operator, date)
+        value = date.to_date.strftime("%Y-%m-%d") if date.present?
+
+        case operator
+        when "is"
+          q_rule = "#{field_name}::date = ?"
+        when "is_after"
+          q_rule = "#{field_name}::date > ?"
+        when "is_before"
+          q_rule = "#{field_name}::date < ?"
+        when "is_not"
+          q_rule = "#{field_name} IS NULL OR #{field_name}::date != ?"
+        when "is_not_specified"
+          q_rule = "#{field_name} IS NULL"
+          value = nil
+        when "is_not_unspecified"
+          q_rule = "#{field_name} IS NOT NULL"
+          value = nil
+        end
+
+        value.present? ? where(q_rule, value) : where(q_rule)
+      end
+
       def operator_search_by_status(operator, status)
         is_or_is_not_search_query("status", status, operator)
       end
@@ -305,6 +328,14 @@ class Measure < Sequel::Model
 
       def operator_search_by_origin(operator, geographical_area_id)
         is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
+      end
+
+      def operator_search_by_valid_from(operator, date)
+        date_filter_search_query("validity_start_date", operator, date)
+      end
+
+      def operator_search_by_valid_to(operator, date)
+        date_filter_search_query("validity_end_date", operator, date)
       end
 
       def operator_search_by_commodity_code(operator, commodity_code)
