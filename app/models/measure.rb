@@ -295,23 +295,38 @@ class Measure < Sequel::Model
         where(q_rule, value)
       end
 
-      def operator_search_by_status(status, operator)
+      def operator_search_by_status(operator, status)
         is_or_is_not_search_query("status", status, operator)
       end
 
-      def operator_search_by_measure_type(measure_type_id, operator)
+      def operator_search_by_measure_type(operator, measure_type_id)
         is_or_is_not_search_query("measure_type_id", measure_type_id, operator)
       end
 
-      def operator_search_by_origin(geographical_area_id, operator)
+      def operator_search_by_origin(operator, geographical_area_id)
         is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
       end
 
-      def operator_search_by_author(user)
+      def operator_search_by_additional_code(operator, additional_code)
+        value = additional_code
+
+        if operator == "is"
+          q_rule = "additional_code_id = ?"
+        elsif operator == "is_not"
+          q_rule = "additional_code_id IS NULL OR additional_code_id != ?"
+        elsif operator == "starts_with"
+          q_rule = "additional_code_id ilike ?"
+          value = "#{additional_code}%"
+        end
+
+        where(q_rule, value)
+      end
+
+      def operator_search_by_author(operator, user)
         where(added_by_id: user.id)
       end
 
-      def operator_search_by_last_updated_by(user)
+      def operator_search_by_last_updated_by(operator, user)
         where(last_update_by_id: user.id)
       end
 

@@ -199,8 +199,9 @@ class MeasuresSearch
     end
 
     def apply_additional_code_filter
-      # TODO
-      @relation = relation.operator_search_by_additional_code(additional_code)
+      @relation = relation.operator_search_by_additional_code(
+        query_ops(additional_code)
+      )
     end
 
     def apply_origin_filter
@@ -235,8 +236,8 @@ class MeasuresSearch
 
     def query_ops(ops)
       *[
-        ops[:value],
-        ops[:operator]
+        ops[:operator],
+        ops[:value]
       ]
     end
 end
