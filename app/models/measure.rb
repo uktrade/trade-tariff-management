@@ -459,7 +459,7 @@ class Measure < Sequel::Model
               q_rule = "searchable_data @> '{\"footnotes\": [{\"footnote_type_id\": \"#{footnote_type_id}\"}]}'"
 
               footnote_id = footnote.values[0].strip
-              if amount.present?
+              if footnote_id.present?
                 q_rule += " AND searchable_data @> '{\"footnotes\": [{\"footnote_id\": \"#{footnote_id}\"}]}'"
               end
 
