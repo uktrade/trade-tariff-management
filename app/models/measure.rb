@@ -289,7 +289,7 @@ class Measure < Sequel::Model
         q_rule = if operator == "is"
           "#{field_name} = ?"
         else
-          "#{field_name} != ?"
+          "#{field_name} IS NULL OR #{field_name} != ?"
         end
 
         where(q_rule, value)
@@ -303,7 +303,7 @@ class Measure < Sequel::Model
         is_or_is_not_search_query("measure_type_id", measure_type_id, operator)
       end
 
-      def operator_search_by_origin(geographical_area_id)
+      def operator_search_by_origin(geographical_area_id, operator)
         is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
       end
 

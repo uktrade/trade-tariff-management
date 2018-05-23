@@ -204,7 +204,9 @@ class MeasuresSearch
     end
 
     def apply_origin_filter
-      @relation = relation.operator_search_by_origin(origin, operator)
+      @relation = relation.operator_search_by_origin(
+        query_ops(origin)
+      )
     end
 
     def apply_origin_exclusions_filter
