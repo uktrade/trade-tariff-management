@@ -392,7 +392,7 @@ class Measure < Sequel::Model
         where(last_update_by_id: user.id)
       end
 
-      def operator_search_by_regulation(regulation, operator)
+      def operator_search_by_regulation(operator, regulation_id)
         q_rule = case operator
         when "is"
           "measure_generating_regulation_id = ? OR justification_regulation_id = ?"
@@ -403,6 +403,8 @@ class Measure < Sequel::Model
         when "does_not_contain"
           "measure_generating_regulation_id NOT ilike ? AND justification_regulation_id NOT ilike ?"
         end
+
+        regulation_id = "%#{regulation_id}%" if %w(contains does_not_contain).include?(operator)
 
         where(
           q_rule,
