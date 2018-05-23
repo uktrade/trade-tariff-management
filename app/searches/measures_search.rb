@@ -194,8 +194,9 @@ class MeasuresSearch
     end
 
     def apply_commodity_code_filter
-      # TODO
-      @relation = relation.operator_search_by_commodity_code(commodity_code)
+      @relation = relation.operator_search_by_commodity_code(
+        query_ops(commodity_code)
+      )
     end
 
     def apply_additional_code_filter

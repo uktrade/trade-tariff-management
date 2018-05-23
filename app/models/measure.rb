@@ -307,14 +307,45 @@ class Measure < Sequel::Model
         is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
       end
 
+      def operator_search_by_commodity_code(operator, commodity_code)
+        value = commodity_code
+
+        case operator
+        when "is"
+
+          q_rule = "goods_nomenclature_item_id = ?"
+        when "is_not"
+
+          q_rule = "goods_nomenclature_item_id IS NULL OR goods_nomenclature_item_id != ?"
+        when "is_not_specified"
+
+          q_rule = "goods_nomenclature_item_id IS NULL"
+          value = nil
+        when "is_not_unspecified"
+
+          q_rule = "goods_nomenclature_item_id IS NOT NULL"
+          value = nil
+        when "starts_with"
+
+          q_rule = "goods_nomenclature_item_id ilike ?"
+          value = "#{commodity_code}%"
+        end
+
+        value.present? ? where(q_rule, value) : where(q_rule)
+      end
+
       def operator_search_by_additional_code(operator, additional_code)
         value = additional_code
 
-        if operator == "is"
+        case operator
+        when "is"
+
           q_rule = "additional_code_id = ?"
-        elsif operator == "is_not"
+        when "is_not"
+
           q_rule = "additional_code_id IS NULL OR additional_code_id != ?"
-        elsif operator == "starts_with"
+        when "starts_with"
+
           q_rule = "additional_code_id ilike ?"
           value = "#{additional_code}%"
         end
