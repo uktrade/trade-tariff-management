@@ -39,5 +39,14 @@ module Measures
                status: :unprocessable_entity
       end
     end
+
+    def bulk_edit
+      @measures = Measure.where(measure_sid: params[:measure_sids])
+
+      respond_to do |format|
+        format.json { render json: @measures.map(&:to_table_json) }
+        format.html
+      end
+    end
   end
 end

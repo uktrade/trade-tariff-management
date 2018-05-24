@@ -1,4 +1,4 @@
-<%= simple_form_for :search, url: measures_path, html: {class: 'find-measures', method: :get} do |f| %>
+<%= simple_form_for :search, url: measures_path, html: {method: :get} do |f| %>
   <p>
     <strong>
       Find measures where:
@@ -231,7 +231,7 @@
         <custom-select url="/origins" label-field="description" value-field="origin_id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="originExclusionsDisabled" :name="'search[origin_exclusions][value][' + index + ']'"></custom-select>
       </div>
       <p>
-        <a v-on:click.prevent="addOriginExclusion" v-bind:disabled="originExclusionsDisabled">
+        <a v-on:click.prevent="addOriginExclusion" v-if="originExclusionsEnabled">
           Add another exclusion
         </a>
       </p>

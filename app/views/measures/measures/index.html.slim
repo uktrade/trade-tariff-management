@@ -9,30 +9,16 @@
 h2.heading-large
   | Find measures
 
-= render "search_form"
+script
+  == "window.__measures = #{measures.map(&:to_table_json).to_json}"
 
+.find-measures
+  = render "search_form"
 
-table.table
-  thead
-    tr
-      th
-        | Measure ID
-      th
-        | Measure type
-      th
-        | Geographical area
-      th
-        | Commodity code
-      th
-        | Add. code
-      th
-        | Base Regulation
-      th
-        | Justification Regulation
-      th
-        | Dates of validity
-  tbody
-    - measures.each do |measure|
-      = render "measure", measure: measure
+  = simple_form_for :search, url: bulk_edit_measures_path, method: :get do |f|
+    = content_tag :input, nil, { type: "hidden", "name" => "measure_sids[]", "v-for" => "(sid, idx) in selectedMeasures", ":value" => "sid" }
+    p
+      = content_tag "button", "Work with selected measures", { class: "button", ":disabled" => "noSelectedMeasures", type: :submit }
+  = render "measures_table"
 
-= paginate measures
+= render "shared/vue_templates/measures_grid"

@@ -1,0 +1,20 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Measures", measures_url
+
+h2.heading-large
+  | Edit measures
+
+p
+  a
+    | Return to search results / amend selection
+
+form.bulk-edit-measures
+  = render "table_top"
+  = render "measures_table"
+
+= render "shared/vue_templates/measures_grid"

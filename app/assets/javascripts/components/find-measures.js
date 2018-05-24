@@ -43,6 +43,25 @@ $(document).ready(function() {
         conditionsEnabled: false,
         footnotesEnabled: false,
 
+        measures: window.__measures || [],
+
+        columns: [
+          {enabled: true, title: "ID", field: "measure_sid"},
+          {enabled: true, title: "Regulation", field: "regulation"},
+          {enabled: true, title: "Type", field: "measure_type_id"},
+          {enabled: true, title: "Valid from", field: "validity_start_date"},
+          {enabled: true, title: "Valid to", field: "validity_end_date"},
+          {enabled: true, title: "Commodity code", field: "goods_nomenclature_id"},
+          {enabled: true, title: "Additional code", field: "additional_code_id"},
+          {enabled: true, title: "Origin", field: "geographical_area"},
+          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas"},
+          {enabled: true, title: "Duties", field: "duties"},
+          {enabled: true, title: "Conditions", field: "conditions"},
+          {enabled: true, title: "Footnotes", field: "footnotes"},
+          {enabled: true, title: "Last updated", field: "last_updated"},
+          {enabled: true, title: "Status", field: "status"}
+        ],
+
         typesForDate: [
           { value: "creation", label: "creation" },
           { value: "authoring", label: "authoring" },
@@ -112,7 +131,9 @@ $(document).ready(function() {
           { value: "export_pending", label: "Export pending" },
           { value: "sent_to_cds", label: "Sent to CDS" },
           { value: "cds_import_error", label: "CDS import error" }
-        ]
+        ],
+
+        selectedMeasures: []
       };
     },
     computed: {
@@ -199,11 +220,17 @@ $(document).ready(function() {
       },
       footnotesDisabled: function() {
         return !this.footnotesEnabled;
+      },
+      noSelectedMeasures: function() {
+        return this.selectedMeasures.length === 0;
       }
     },
     methods: {
       addOriginExclusion: function() {
         this.origin_exclusions.push({ value: '' });
+      },
+      onMeasuresSelected: function(sids) {
+        this.selectedMeasures = sids;
       }
     }
   });

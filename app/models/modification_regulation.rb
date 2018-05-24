@@ -30,4 +30,11 @@ class ModificationRegulation < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  def formatted_id
+    year = Date.strptime(modification_regulation_id.slice(1,2), "%y").strftime("%Y");
+    number = modification_regulation_id.slice(3,4)
+
+    "#{year}/#{number}"
+  end
 end

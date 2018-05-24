@@ -36,7 +36,13 @@ Rails.application.routes.draw do
   end
 
   scope module: :measures do
-    resources :measures
+    resources :measures do
+      collection do
+        get :bulk_edit
+        get :all_measures_data
+      end
+    end
+
     resources :measure_types, only: [:index]
     resources :measure_type_series, only: [:index]
     resources :measure_condition_codes, only: [:index]

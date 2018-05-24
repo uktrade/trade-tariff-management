@@ -445,4 +445,23 @@ class Measure < Sequel::Model
   def self.max_pages
     999
   end
+
+  def to_table_json
+    {
+      measure_sid: measure_sid,
+      regulation: generating_regulation.formatted_id,
+      measure_type_id: measure_type_id,
+      validity_start_date: validity_start_date.strftime("%d %b %Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+      goods_nomenclature_id: goods_nomenclature_item_id,
+      additional_code_id: additional_code_id,
+      geographical_area: geographical_area.try(:geographical_area_id),
+      excluded_geographical_areas: excluded_geographical_areas.map(&:geographical_area_id).join(", ") || "-",
+      duties: "0.0% + £2.75 KGM NET MAX 5.0%",
+      conditions: "B A001 27.B - 06",
+      footnotes: footnotes.map(&:abbreviation).join(", "),
+      last_upated: operation_date.try(:strftime, "%d %b %Y") || "-",
+      status: "For approval"
+    }
+  end
 end
