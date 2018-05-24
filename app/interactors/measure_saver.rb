@@ -23,9 +23,10 @@ class MeasureParamsNormalizer
     additional_code
   )
 
-  attr_accessor :normalized_params
+  attr_accessor :normalized_params, :measure_params
 
   def initialize(measure_params)
+    @measure_params = measure_params
     @normalized_params = {}
 
     whitelist = measure_params.select do |k, v|
@@ -52,8 +53,10 @@ class MeasureParamsNormalizer
   private
 
     def method_additional_code_values(additional_code_id)
-      additional_code = AdditionalCode.actual
-                                      .where(additional_code: additional_code_id).first
+      additional_code = AdditionalCode.actual.where(
+        additional_code: additional_code_id,
+        additional_code_type_id: measure_params[:additional_code_type_id]
+      ).first
 
       {
         additional_code_type_id: additional_code.additional_code_type_id,
