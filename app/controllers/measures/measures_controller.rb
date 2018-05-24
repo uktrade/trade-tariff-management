@@ -13,13 +13,31 @@ module Measures
       measure_saver.measure
     end
 
-    expose(:measures) do
-      scope = Measure
-      scope = scope.by_regulation_id(params[:regulation_id]) if params[:regulation_id].present?
-      scope = scope.q_search(params[:code]) if params[:code].present?
+    expose(:search_ops) {
+      ops = params[:search] || {}
 
-      scope.page(params[:page] || 1)
-           .per(25)
+      if params[:regulation_id].present?
+        ops[:regulation] = {
+          operator: 'is',
+          value: params[:regulation_id]
+        }
+      end
+
+      ops.merge(
+        page: params[:page] || 1
+      )
+    }
+
+    expose(:measures_search_form) do
+      ::MeasuresSearchForm.new(search_ops)
+    end
+
+    expose(:measures_search) do
+      ::MeasuresSearch.new(search_ops)
+    end
+
+    expose(:search_results) do
+      measures_search.results
     end
 
     expose(:form) do
