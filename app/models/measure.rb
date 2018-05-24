@@ -9,26 +9,15 @@ class Measure < Sequel::Model
     4  # Definitive anti-dumping/countervailing duty
   ]
 
-  STATUS_LIST = [
-    :draft_incomplete,
-    :draft_ready_for_cross_check,
-    :submitted_for_cross_check,
-    :cross_check_rejected,
-    :ready_for_approval,
-    :submitted_for_approval,
-    :approval_rejected,
-    :ready_for_export,
-    :export_pending,
-    :sent_to_cds,
-    :cds_import_error
-  ]
-
   set_primary_key [:measure_sid]
   plugin :time_machine, period_start_column: :effective_start_date,
                         period_end_column: :effective_end_date
   plugin :oplog, primary_key: :measure_sid
   plugin :conformance_validator
   plugin :national
+
+  many_to_one :measure_group, key: :measure_group_id,
+                              foreign_key: :id
 
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid,
                                    foreign_key: :goods_nomenclature_sid
@@ -286,6 +275,366 @@ class Measure < Sequel::Model
     def non_invalidated
       where(measures__invalidated_at: nil)
     end
+
+    begin :find_measures_section_search_queries
+      def default_search
+        where("validity_start_date IS NOT NULL")
+      end
+
+      def operation_search_jsonb_default
+        where("searchable_data::text <> '{}'::text")
+      end
+
+      def is_or_is_not_search_query(field_name, value, operator)
+        q_rule = if operator == "is"
+          "#{field_name} = ?"
+        else
+          "#{field_name} IS NULL OR #{field_name} != ?"
+        end
+
+        where(q_rule, value)
+      end
+
+      def date_filter_search_query(field_name, operator, date)
+        value = date.to_date.strftime("%Y-%m-%d") if date.present?
+
+        case operator
+        when "is"
+          q_rule = "#{field_name}::date = ?"
+        when "is_after"
+          q_rule = "#{field_name}::date > ?"
+        when "is_before"
+          q_rule = "#{field_name}::date < ?"
+        when "is_not"
+          q_rule = "#{field_name} IS NULL OR #{field_name}::date != ?"
+        when "is_not_specified"
+          q_rule = "#{field_name} IS NULL"
+          value = nil
+        when "is_not_unspecified"
+          q_rule = "#{field_name} IS NOT NULL"
+          value = nil
+        end
+
+        value.present? ? where(q_rule, value) : where(q_rule)
+      end
+
+      def operator_search_by_status(operator, status)
+        is_or_is_not_search_query("status", status, operator)
+      end
+
+      def operator_search_by_measure_type(operator, measure_type_id)
+        is_or_is_not_search_query("measure_type_id", measure_type_id, operator)
+      end
+
+      def operator_search_by_origin(operator, geographical_area_id)
+        is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
+      end
+
+      def operator_search_by_date_of(operator, date, mode)
+        field_name = case mode
+        when "creation","authoring"
+          "added_at"
+        when "last_status_change"
+          "last_status_change_at"
+        end
+
+        value = date.to_date.strftime("%Y-%m-%d") if date.present?
+
+        case operator
+        when "is"
+          q_rule = "#{field_name}::date = ?"
+        when "is_after"
+          q_rule = "#{field_name}::date > ?"
+        when "is_before"
+          q_rule = "#{field_name}::date < ?"
+        when "is_not"
+          q_rule = "#{field_name} IS NULL OR #{field_name}::date != ?"
+        end
+
+        where(q_rule, value)
+      end
+
+      def operator_search_by_valid_from(operator, date)
+        date_filter_search_query("validity_start_date", operator, date)
+      end
+
+      def operator_search_by_valid_to(operator, date)
+        date_filter_search_query("validity_end_date", operator, date)
+      end
+
+      def operator_search_by_commodity_code(operator, commodity_code)
+        value = commodity_code
+
+        case operator
+        when "is"
+
+          q_rule = "goods_nomenclature_item_id = ?"
+        when "is_not"
+
+          q_rule = "goods_nomenclature_item_id IS NULL OR goods_nomenclature_item_id != ?"
+        when "is_not_specified"
+
+          q_rule = "goods_nomenclature_item_id IS NULL"
+          value = nil
+        when "is_not_unspecified"
+
+          q_rule = "goods_nomenclature_item_id IS NOT NULL"
+          value = nil
+        when "starts_with"
+
+          q_rule = "goods_nomenclature_item_id ilike ?"
+          value = "#{commodity_code}%"
+        end
+
+        value.present? ? where(q_rule, value) : where(q_rule)
+      end
+
+      def operator_search_by_additional_code(operator, additional_code)
+        value = additional_code
+
+        case operator
+        when "is"
+
+          q_rule = "additional_code_id = ?"
+        when "is_not"
+
+          q_rule = "additional_code_id IS NULL OR additional_code_id != ?"
+        when "starts_with"
+
+          q_rule = "additional_code_id ilike ?"
+          value = "#{additional_code}%"
+        end
+
+        where(q_rule, value)
+      end
+
+      def operator_search_by_author(user_id)
+        where(added_by_id: user_id)
+      end
+
+      def operator_search_by_last_updated_by(user_id)
+        where(last_update_by_id: user_id)
+      end
+
+      def operator_search_by_regulation(operator, regulation_id)
+        q_rule = case operator
+        when "is"
+          "measure_generating_regulation_id = ? OR justification_regulation_id = ?"
+        when "is_not"
+          "measure_generating_regulation_id != ? AND justification_regulation_id != ?"
+        when "contains"
+          "measure_generating_regulation_id ilike ? OR justification_regulation_id ilike ?"
+        when "does_not_contain"
+          "measure_generating_regulation_id NOT ilike ? AND justification_regulation_id NOT ilike ?"
+        end
+
+        regulation_id = "%#{regulation_id}%" if %w(contains does_not_contain).include?(operator)
+
+        where(
+          q_rule,
+          regulation_id, regulation_id
+        )
+      end
+
+      def jsonb_operator_search_by_group_name(operator, group_name)
+        case operator
+        when "is"
+          jsonb_rule = "searchable_data #>> '{\"group_name\"}' = ?"
+          value = group_name
+        when "starts_with", "contains"
+          jsonb_rule = "searchable_data #>> '{\"group_name\"}' ilike ?"
+          value = operator == "starts_with" ? "#{group_name}%" : "%#{group_name}%"
+        end
+
+        where(jsonb_rule, value)
+      end
+
+      def operator_search_by_origin_exclusions(operator, origin_list=[])
+        case operator
+        when "are_not_specified"
+
+          where("searchable_data #>> '{\"excluded_geographical_areas\"}' IS NULL")
+        when "are_not_unspecified"
+
+          where("searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL")
+        when "include"
+
+          q_rules = origin_list.map do |origin_id|
+            "(searchable_data #>> '{\"excluded_geographical_areas\"}')::text ilike ?"
+          end.join(" AND ")
+          values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
+
+          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL AND (#{q_rules})"
+
+          where(
+            q_rules, *values
+          )
+        when "do_not_include"
+
+          q_rules = origin_list.map do |origin_id|
+            <<-eos
+              (searchable_data #>> '{"excluded_geographical_areas"}')::text NOT ilike ?
+            eos
+          end.join(" AND ")
+          values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
+
+          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NULL OR " +
+                    "(#{q_rules})"
+          where(
+            q_rules, *values
+          )
+        end
+      end
+
+      def operator_search_by_duties(operator, duties_list=[])
+        generate_query_rule = -> (operator) {
+          q_rules = duties_list.map do |duty|
+            d_id = duty.keys[0].strip
+            q_rule = "searchable_data @> '{\"duty_expressions\": [{\"duty_expression_id\": \"#{d_id}\"}]}'"
+
+            amount = duty.values[0].strip
+            if amount.present?
+              q_rule += " AND searchable_data @> '{\"duty_expressions\": [{\"duty_amount\": \"#{amount}\"}]}'"
+            end
+
+            "(#{q_rule})"
+          end.join(" AND ")
+
+          sql = "(searchable_data -> 'duty_expressions')::text <> '[]'::text AND (#{q_rules})"
+
+          if operator == "are"
+            sql += " AND searchable_data #>> '{\"duty_expressions_count\"}' = '#{duties_list.count}'"
+          end
+
+          sql
+        }
+
+        where(
+          generate_query_rule.call(operator)
+        )
+      end
+
+      def operator_search_by_conditions(operator, conditions_list=[])
+        if %w(are include).include?(operator)
+          conditions_list.uniq!
+
+          generate_query_rule = -> (operator) {
+            q_rules = conditions_list.map do |code|
+              "(searchable_data #>> '{\"measure_conditions\"}')::text ilike ?"
+            end.join(" AND ")
+            values = conditions_list.map { |code| "%_#{code}_%" }
+
+            sql = <<-eos
+              searchable_data #>> '{"measure_conditions"}' IS NOT NULL AND
+              (#{q_rules})
+            eos
+
+            if operator == "are"
+              sql += " AND searchable_data #>> '{\"measure_conditions_count\"}' = '#{conditions_list.count}'"
+            end
+
+            [sql, *values].flatten
+          }
+
+          where(
+            generate_query_rule.call(operator)
+          )
+        else
+          case operator
+          when "are_not_specified"
+
+            where("searchable_data #>> '{\"measure_conditions\"}' IS NULL")
+          when "are_not_unspecified"
+
+            where("searchable_data #>> '{\"measure_conditions\"}' IS NOT NULL")
+          end
+        end
+      end
+
+      def operator_search_by_footnotes(operator, footnotes_list=[])
+        if %w(are include).include?(operator)
+          generate_query_rule = -> (operator) {
+            footnotes_list.uniq!
+
+            q_rules = footnotes_list.map do |footnote|
+              footnote_type_id = footnote.keys[0].strip
+              q_rule = "searchable_data @> '{\"footnotes\": [{\"footnote_type_id\": \"#{footnote_type_id}\"}]}'"
+
+              footnote_id = footnote.values[0].strip
+              if footnote_id.present?
+                q_rule += " AND searchable_data @> '{\"footnotes\": [{\"footnote_id\": \"#{footnote_id}\"}]}'"
+              end
+
+              "(#{q_rule})"
+            end.join(" AND ")
+
+            sql = "(searchable_data -> 'footnotes')::text <> '[]'::text AND (#{q_rules})"
+
+            if operator == "are"
+              sql += " AND searchable_data #>> '{\"footnotes_count\"}' = '#{footnotes_list.count}'"
+            end
+
+            sql
+          }
+
+          where(
+            generate_query_rule.call(operator)
+          )
+        else
+          case operator
+          when "are_not_specified"
+
+            where("searchable_data #>> '{\"footnotes\"}' IS NULL OR (searchable_data -> 'footnotes')::text = '[]'::text")
+          when "are_not_unspecified"
+
+            where("searchable_data #>> '{\"footnotes\"}' IS NOT NULL AND (searchable_data -> 'footnotes')::text <> '[]'::text")
+          end
+        end
+      end
+    end
+  end
+
+  def set_searchable_data!
+    ops = {}
+
+    if measure_group.present?
+      ops[:group_name] = measure_group.name
+    end
+
+    if excluded_geographical_areas.present?
+      joined_areas_str = excluded_geographical_areas.map(&:geographical_area_id).uniq.join("_")
+      ops[:excluded_geographical_areas_names] = "_" + joined_areas_str + "_"
+    end
+
+    if measure_components.present?
+      ops[:duty_expressions] = measure_components.map do |m_component|
+        {
+          duty_expression_id: m_component.duty_expression_id,
+          duty_amount: m_component.duty_amount.to_s,
+          monetary_unit_code: m_component.monetary_unit_code.to_s,
+          measurement_unit_code: m_component.measurement_unit_code.to_s
+        }
+      end
+      ops[:duty_expressions_count] = measure_components.count
+    end
+
+    if measure_conditions.present?
+      condition_codes = measure_conditions.map(&:condition_code).uniq
+      ops[:measure_conditions] = "_" + condition_codes.join("_") + "_"
+      ops[:measure_conditions_count] = condition_codes.count
+    end
+
+    if footnotes.present?
+      ops[:footnotes] = footnotes.map do |footnote|
+        {
+          footnote_id: footnote.footnote_id,
+          footnote_type_id: footnote.footnote_type_id
+        }
+      end
+      ops[:footnotes_count] = footnotes.count
+    end
+
+    self.searchable_data = ops.to_json
   end
 
   def_column_accessor :effective_end_date, :effective_start_date

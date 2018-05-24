@@ -9,7 +9,7 @@ class MeasuresSearchForm
   end
 
   def status_list
-    Measure::STATUS_LIST
+    MeasureGroup::STATUS_LIST
   end
 
   def users

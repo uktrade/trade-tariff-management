@@ -95,6 +95,12 @@ class MeasuresSearch
   #   },
   # }
 
+  #
+  # "are not specified" means IS NULL
+  #
+  # "are not unspecified" means "IS NOT NULL"
+  #
+
   ALLOWED_FILTERS = %w(
     group_name
     status
@@ -122,7 +128,8 @@ class MeasuresSearch
   end
 
   def results
-    @relation = Measure.default
+    @relation = Measure.default_search
+    @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
     search_ops.select do |k, v|
       ALLOWED_FILTERS.include?(k.to_s) && v.present?
@@ -137,67 +144,114 @@ class MeasuresSearch
 
   private
 
-    def apply_status_filter
-      @relation = relation.by_status(status)
+    def jsonb_search_required?
+      group_name ||
+      origin_exclusions ||
+      duties ||
+      conditions ||
+      footnotes
     end
 
     def apply_group_name_filter
-      @relation = relation.by_group_name(status)
+      @relation = relation.operator_search_by_group_name(
+        query_ops(group_name)
+      )
+    end
+
+    def apply_status_filter
+      @relation = relation.operator_search_by_status(
+        query_ops(status)
+      )
     end
 
     def apply_author_filter
-      @relation = relation.by_author(status)
+      @relation = relation.operator_search_by_author(author)
     end
 
     def apply_date_of_filter
-      @relation = relation.by_date_of(date_of)
+      @relation = relation.operator_search_by_date_of(
+        query_ops(date_of)
+      )
     end
 
     def apply_last_updated_by_filter
-      @relation = relation.by_last_updated_by(last_updated_by)
+      @relation = relation.operator_search_by_last_updated_by(last_updated_by)
     end
 
     def apply_regulation_filter
-      @relation = relation.by_regulation(regulation)
+      @relation = relation.operator_search_by_regulation(
+        query_ops(regulation)
+      )
     end
 
     def apply_type_filter
-      @relation = relation.by_measure_type(type)
+      @relation = relation.operator_search_by_measure_type(
+        query_ops(type)
+      )
     end
 
     def apply_valid_from_filter
-      @relation = relation.by_valid_from(valid_from)
+      @relation = relation.operator_search_by_valid_from(
+        query_ops(valid_from)
+      )
     end
 
     def apply_valid_to_filter
-      @relation = relation.by_valid_to(valid_to)
+      @relation = relation.operator_search_by_valid_to(
+        query_ops(valid_to)
+      )
     end
 
     def apply_commodity_code_filter
-      @relation = relation.by_commodity_code(commodity_code)
+      @relation = relation.operator_search_by_commodity_code(
+        query_ops(commodity_code)
+      )
     end
 
     def apply_additional_code_filter
-      @relation = relation.by_additional_code(additional_code)
+      @relation = relation.operator_search_by_additional_code(
+        query_ops(additional_code)
+      )
     end
 
     def apply_origin_filter
-      @relation = relation.by_origin(origin)
+      @relation = relation.operator_search_by_origin(
+        query_ops(origin)
+      )
     end
 
     def apply_origin_exclusions_filter
-      @relation = relation.by_origin_exclusions(origin_exclusions)
+      @relation = relation.operator_search_by_origin_exclusions(
+        query_ops(origin_exclusions)
+      )
     end
 
     def apply_duties_filter
-      @relation = relation.by_duties(duties)
+      @relation = relation.operator_search_by_duties(
+        query_ops(duties)
+      )
     end
 
     def apply_conditions_filter
-      @relation = relation.by_conditions(conditions)
+      @relation = relation.operator_search_by_conditions(
+        query_ops(conditions)
+      )
     end
 
     def apply_footnotes_filter
-      @relation = relation.by_footnotes(footnotes)
+      @relation = relation.operator_search_by_footnotes(
+        query_ops(footnotes)
+      )
+    end
+
+    def query_ops(ops)
+      res = [
+        ops[:operator],
+        ops[:value]
+      ]
+
+      res << ops[:mode] if ops[:mode].present?
+
+      *res
     end
 end
