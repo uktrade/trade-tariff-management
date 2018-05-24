@@ -6,7 +6,7 @@
     display: inline-block;
     padding: 0.5em 1.2em;
     padding-right: 2.5em;
-    border: 2px solid $text-colour;
+    border: 2px solid currentColor;
     color: $text-colour;
     font-size: 1em;
     position: relative;
@@ -18,9 +18,14 @@
       top: 50%;
       right: 1em;
       transform: translateY(-50%);
-      border-color: $text-colour transparent transparent transparent;
+      border-color: currentColor transparent transparent transparent;
       border-width: 8px 5px 0 5px;
       border-style: solid;
+    }
+
+    &[disabled] {
+      color: $secondary-text-colour;
+      background: $highlight-colour;
     }
   }
 
@@ -47,9 +52,11 @@
   }
 
   &.open {
-    button:after {
-      border-color: transparent transparent $text-colour transparent;
-      border-width: 0 5px 8px 5px;
+    button {
+      &:after {
+        border-color: transparent transparent currentColor transparent;
+        border-width: 0 5px 8px 5px;
+      }
     }
 
     ul {

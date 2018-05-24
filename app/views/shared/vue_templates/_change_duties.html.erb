@@ -1,0 +1,38 @@
+<script type="text/x-template" id="change-duties-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Change duties
+    </template>
+
+    <div v-if="multiple">
+      <warning-message>
+        You are bulk-changing {{measures.length}} measures. Please check your inputs carefully!
+      </warning-message>
+    </div>
+
+    <div v-if="replacing">
+      <info-message>
+        The selection contains different duty expressions.
+        <br />
+        These will be replaced with the duties you configure here
+      </info-message>
+    </div>
+
+    <div class="duty-expression" v-for="(measureComponent, index) in measureComponents">
+      <measure-component :measure-component="measureComponent" :index="index"></measure-component>
+    </div>
+
+    <p>
+      <a href="#" v-on:click.prevent="addDutyExpression">Add another duty expression</a>
+    </p>
+
+    <div class="form-actions">
+      <button type="submit" class="button">
+        Update
+      </button>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>

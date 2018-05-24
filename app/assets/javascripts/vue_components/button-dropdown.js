@@ -1,6 +1,6 @@
 var template = [
   "<div class='button-dropdown' :class='{ open: open}'>",
-    "<button v-on:click.prevent='toggle'>",
+    "<button v-on:click.prevent='toggle' :disabled='disabled'>",
       "<slot name='text'>Default text</slot>",
     "</button>",
     "<slot></slot>",
@@ -9,6 +9,7 @@ var template = [
 
 Vue.component("button-dropdown", {
   template: template,
+  props: ["disabled"],
   data: function() {
     return {
       open: false
@@ -27,7 +28,7 @@ Vue.component("button-dropdown", {
     var self = this;
 
     this.handleOutsideClick = function(e) {
-      if (!e.target.matches("a") && $(e.target).closest($(el)).length < 1) {
+      if (e.target.matches("a") || $(e.target).closest($(el)).length < 1) {
         this.close();
       }
     }.bind(this);

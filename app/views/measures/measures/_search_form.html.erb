@@ -45,9 +45,6 @@
         </label>
       </div>
     </div>
-    <div class="find-measures__is">
-      <custom-select :options="conditionsForAuthor" label-field="label" value-field="value"  v-model="authorCondition" v-bind:disabled="authorDisabled" name="search[author][operator]"></custom-select>
-    </div>
     <div class="find-measure__long">
       <custom-select url="/users" label-field="name" value-field="id" placeholder="― select a user ―" v-model="author" v-bind:disabled="authorDisabled" name="search[author][value]"></custom-select>
     </div>
@@ -80,9 +77,6 @@
           Last updated by
         </label>
       </div>
-    </div>
-    <div class="find-measures__is">
-      <custom-select :options="conditionsForLastUpdatedBy" label-field="label" value-field="value"  v-model="lastUpdatedByCondition" v-bind:disabled="lastUpdatedByDisabled" name="search[last_updated_by][operator]"></custom-select>
     </div>
     <div class="find-measure__long">
       <custom-select url="/users" label-field="name" value-field="id" placeholder="― select a user ―" v-model="lastUpdatedBy" v-bind:disabled="lastUpdatedByDisabled" name="search[last_updated_by][value]"></custom-select>

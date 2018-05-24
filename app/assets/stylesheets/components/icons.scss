@@ -3,3 +3,15 @@
   width: 0.85em;
   height: 0.85em;
 }
+
+.icon {
+  width: 1.2em;
+  height: auto;
+  margin-right: 10px;
+  position: relative;
+  top: -5px;
+
+  path {
+    fill: currentColor;
+  }
+}

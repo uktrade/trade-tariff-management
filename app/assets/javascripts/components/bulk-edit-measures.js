@@ -43,19 +43,36 @@ $(document).ready(function() {
           { value: 'change_status', label: 'Change status...' },
           { value: 'delete', label: 'Delete...' },
         ],
-        measures: []
+        measures: [],
+        changingDuties: false
       };
     },
     mounted: function() {
       var self = this;
 
       $.get(window.location.href, function(data) {
-        self.measures = data;
+        self.measures = data.map(function(measure) {
+          measure.visible = true;
+
+          return measure;
+        });
       });
     },
     computed: {
       noSelectedMeasures: function() {
         return this.selectedMeasures.length === 0;
+      },
+      visibleMeasures: function() {
+        return this.measures.filter(function(measure) {
+          return measure.visible;
+        });
+      },
+      selectedMeasureObjects: function() {
+        var selectedSids = this.selectedMeasures;
+
+        return this.measures.filter(function(measure) {
+          return selectedSids.indexOf(measure.measure_sid) > -1;
+        });
       }
     },
     methods: {
@@ -68,10 +85,10 @@ $(document).ready(function() {
       toggleUnselected: function() {
         var selected = this.selectedMeasures;
 
-        this.measures.filter(function(measure) {
-          selected.indexOf(measure.measure_sid) > -1;
-        }).forEach(function(measure) {
-          measure.visible = !measure.visible;
+        this.measures.forEach(function(measure) {
+          if (selected.indexOf(measure.measure_sid) === -1) {
+            measure.visible = !measure.visible;
+          }
         });
       },
       makeCopies: function() {
@@ -96,7 +113,7 @@ $(document).ready(function() {
 
       },
       changeDuties: function() {
-
+        this.changingDuties = true;
       },
       changeConditions: function() {
 
@@ -111,6 +128,7 @@ $(document).ready(function() {
 
       },
       triggerAction: function(val) {
+
         switch(val) {
           case 'toggle_unselected':
             this.toggleUnselected();
@@ -152,6 +170,9 @@ $(document).ready(function() {
             this.deleteSelected();
             break;
         }
+      },
+      closeAllPopups: function() {
+        this.changingDuties = false;
       }
     }
   });

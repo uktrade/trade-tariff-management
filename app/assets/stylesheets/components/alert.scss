@@ -1,0 +1,26 @@
+.alert {
+  display: block;
+  margin-bottom: 20px;
+  position: relative;
+  padding-left: 40px;
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 1.5em;
+
+    path {
+      fill: currentColor;
+    }
+  }
+}
+
+.alert--warning {
+  color: $yellow-orange;
+}
+
+.alert--info {
+  color: $light-blue;
+}
