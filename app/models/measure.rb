@@ -779,6 +779,14 @@ class Measure < Sequel::Model
      .order(Sequel.desc(:operation_date, nulls: :last))
   end
 
+  def status_title
+    if status.present?
+      I18n.t(:measures)[:states][status.to_sym]
+    else
+      "Already in system DB"
+    end
+  end
+
   def record_code
     "430".freeze
   end
@@ -813,8 +821,8 @@ class Measure < Sequel::Model
       duties: duty_expression,
       conditions: conditions_short_list,
       footnotes: footnotes.map(&:abbreviation).join(", "),
-      last_upated: operation_date.try(:strftime, "%d %b %Y") || "-",
-      status: "For approval"
+      last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
+      status: status_title
     }
   end
 end
