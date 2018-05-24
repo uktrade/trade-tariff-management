@@ -70,6 +70,24 @@ class MeasureCondition < Sequel::Model
     "#{certificate_type_code}#{certificate_code}"
   end
 
+  def short_abbreviation
+    res = if component_sequence_number.present?
+      [ "#{condition_code}#{component_sequence_number}" ]
+    else
+      [ condition_code ]
+    end
+
+    cert_info = document_code.strip
+    res << cert_info if cert_info.present?
+    res << action_code if action_code.present?
+
+    if res.size == 2
+      res.join(" - ")
+    else
+      res.join(" ")
+    end
+  end
+
   # TODO presenter?
   def requirement
     case requirement_type

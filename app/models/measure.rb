@@ -728,6 +728,10 @@ class Measure < Sequel::Model
     measure_components.map(&:formatted_duty_expression).join(" ")
   end
 
+  def conditions_short_list
+    measure_conditions.map(&:short_abbreviation).join(", ")
+  end
+
   def national_measurement_units_for(declarable)
     if excise? && declarable && declarable.national_measurement_unit_set.present?
       declarable.national_measurement_unit_set
@@ -806,8 +810,8 @@ class Measure < Sequel::Model
       additional_code_id: additional_code_id,
       geographical_area: geographical_area.try(:geographical_area_id),
       excluded_geographical_areas: excluded_geographical_areas.map(&:geographical_area_id).join(", ") || "-",
-      duties: "0.0% + £2.75 KGM NET MAX 5.0%",
-      conditions: "B A001 27.B - 06",
+      duties: duty_expression,
+      conditions: conditions_short_list,
       footnotes: footnotes.map(&:abbreviation).join(", "),
       last_upated: operation_date.try(:strftime, "%d %b %Y") || "-",
       status: "For approval"

@@ -1,6 +1,8 @@
 module Measures
   class MeasuresController < ApplicationController
 
+    skip_around_action :configure_time_machine, only: [:index]
+
     expose(:measure_saver) do
       measure_ops = params[:measure]
       measure_ops.send("permitted=", true)
