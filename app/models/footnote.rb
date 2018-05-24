@@ -109,6 +109,10 @@ class Footnote < Sequel::Model
     "#{footnote_type_id}#{footnote_id}"
   end
 
+  def abbreviation
+    "#{footnote_type_id} - #{footnote_id}"
+  end
+
   def record_code
     "200".freeze
   end

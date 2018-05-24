@@ -1,19 +1,31 @@
 tr
   td
+    input type="checkbox" name="measures[]" value=measure.measure_sid
+  td
     = measure.measure_sid
   td
-    = measure.measure_type.try(:description)
+    = measure.base_regulation.try(:base_regulation_id)
   td
-    = measure.geographical_area.try(:description)
+    = measure.measure_type_id
+  td
+    = measure.validity_start_date.strftime("%d/%m/%Y")
+  td
+    = measure.validity_end_date.try(:strftime, "%d/%m/%Y") || "-"
   td
     = measure.goods_nomenclature_item_id
   td
     = measure.additional_code_id
   td
-    = measure.base_regulation.try(:base_regulation_id)
+    = measure.geographical_area.try(:geographical_area_id)
   td
-    = measure.justification_regulation_id
+    = measure.excluded_geographical_areas.map(&:geographical_area_id).join(", ") || "-"
   td
-    = measure.validity_start_date.strftime("%d/%m/%Y")
-    | &ndash;
-    = measure.validity_end_date.try(:strftime, "%d/%m/%Y") || "unspecified"
+    | Render duties here
+  td
+    | Render conditions here
+  td
+    = measure.footnotes.map(&:abbreviation).join(", ")
+  td
+    = measure.operation_date.try(:strftime, "%d/%m/%Y")
+  td
+    | For approval

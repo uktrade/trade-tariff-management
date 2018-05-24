@@ -31,6 +31,7 @@
 
 $cols: 1 2 3 4 5 6 7 8 9 10 11 12;
 $single: 100% / 12;
+$site-width: 1100px;
 $maxcol: $site-width / 12;
 
 @each $col in $cols {

@@ -3,3 +3,34 @@ table {
     max-width: 400px;
   }
 }
+
+.measures-table {
+  margin-bottom: 80px;
+  min-width: 1660px;
+
+  td, th {
+    font-size: 14px;
+    padding: 6px;
+    position: relative;
+
+
+    .arrow-down,
+    .arrow-up {
+      position: absolute;
+      right: 4px;
+      top: 2px;
+    }
+
+    a {
+      color: $link-colour !important;
+      position: relative;
+      display: inline-block;
+      padding-right: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+.table-top {
+  margin-bottom: 20px;
+}

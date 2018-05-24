@@ -85,3 +85,12 @@ html {
 .dashboard-page {
   padding-bottom: 3em;
 }
+
+.text-right {
+  text-align: right;
+
+  .multiple-choice {
+    float: none;
+    margin-left: auto;
+  }
+}
