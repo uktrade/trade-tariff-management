@@ -436,17 +436,17 @@ class Measure < Sequel::Model
         )
       end
 
-      def jsonb_operator_search_by_group_name(operator, group_name)
+      def operator_search_by_group_name(operator, group_name)
         case operator
         when "is"
-          jsonb_rule = "searchable_data #>> '{\"group_name\"}' = ?"
+          q_rule = "searchable_data #>> '{\"group_name\"}' = ?"
           value = group_name
         when "starts_with", "contains"
-          jsonb_rule = "searchable_data #>> '{\"group_name\"}' ilike ?"
+          q_rule = "searchable_data #>> '{\"group_name\"}' ilike ?"
           value = operator == "starts_with" ? "#{group_name}%" : "%#{group_name}%"
         end
 
-        where(jsonb_rule, value)
+        where(q_rule, value)
       end
 
       def operator_search_by_origin_exclusions(operator, origin_list=[])
