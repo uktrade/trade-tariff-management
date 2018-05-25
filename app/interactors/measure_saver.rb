@@ -188,6 +188,7 @@ class MeasureSaver
     end
 
     post_saving_updates!
+    measure.set_searchable_data!
 
     log_it("[SAVED MEASURE] sid: #{measure.measure_sid} | #{measure.inspect}")
   end

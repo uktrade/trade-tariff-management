@@ -17,13 +17,7 @@ module Measures
 
     expose(:search_ops) {
       ops = params[:search] || {}
-
-      if params[:regulation_id].present?
-        ops[:regulation] = {
-          operator: 'is',
-          value: params[:regulation_id]
-        }
-      end
+      ops = setup_advanced_filters(ops)
 
       ops.merge(
         page: params[:page] || 1
@@ -68,5 +62,25 @@ module Measures
         format.html
       end
     end
+
+    private
+
+      def setup_advanced_filters(ops)
+        if params[:regulation_id].present?
+          ops[:regulation] = {
+            operator: 'is',
+            value: params[:regulation_id]
+          }
+        end
+
+        if params[:code].present?
+          ops[:commodity_code] = {
+            operator: 'is',
+            value: params[:code]
+          }
+        end
+
+        ops
+      end
   end
 end

@@ -635,6 +635,7 @@ class Measure < Sequel::Model
     end
 
     self.searchable_data = ops.to_json
+    save
   end
 
   def_column_accessor :effective_end_date, :effective_start_date
@@ -808,6 +809,11 @@ class Measure < Sequel::Model
   end
 
   def to_table_json
+    #
+    # TODO: remove status_title_line after testing and leave just `status_title`
+    #
+    status_title_line = status_title + " " + JSON.parse(searchable_data).to_s
+
     {
       measure_sid: measure_sid,
       regulation: generating_regulation.formatted_id + " (#{measure_generating_regulation_id})",
@@ -822,7 +828,7 @@ class Measure < Sequel::Model
       conditions: conditions_short_list,
       footnotes: footnotes.map(&:abbreviation).join(", "),
       last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
-      status: status_title
+      status: status_title_line
     }
   end
 end
