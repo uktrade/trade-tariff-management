@@ -487,30 +487,10 @@ class Measure < Sequel::Model
       end
 
       def operator_search_by_duties(operator, duties_list=[])
-        generate_query_rule = -> (operator) {
-          q_rules = duties_list.map do |duty|
-            d_id = duty.keys[0].strip
-            q_rule = "searchable_data @> '{\"duty_expressions\": [{\"duty_expression_id\": \"#{d_id}\"}]}'"
-
-            amount = duty.values[0].strip
-            if amount.present?
-              q_rule += " AND searchable_data @> '{\"duty_expressions\": [{\"duty_amount\": \"#{amount}\"}]}'"
-            end
-
-            "(#{q_rule})"
-          end.join(" AND ")
-
-          sql = "(searchable_data -> 'duty_expressions')::text <> '[]'::text AND (#{q_rules})"
-
-          if operator == "are"
-            sql += " AND searchable_data #>> '{\"duty_expressions_count\"}' = '#{duties_list.count}'"
-          end
-
-          sql
-        }
-
         where(
-          generate_query_rule.call(operator)
+          ::Measures::SearchFilters::Duties.new(
+            operator, duties_list
+          ).sql_rules
         )
       end
 

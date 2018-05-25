@@ -29,7 +29,7 @@ module Measures
     end
 
     expose(:measures_search) do
-      ::MeasuresSearch.new(search_ops)
+      ::Measures::Search.new(search_ops)
     end
 
     expose(:search_results) do
