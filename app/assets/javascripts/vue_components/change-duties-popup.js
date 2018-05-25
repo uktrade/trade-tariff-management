@@ -54,7 +54,15 @@ Vue.component("change-duties-popup", {
   },
   methods: {
     confirmChanges: function() {
-      this.onConfirm(this.measureComponents);
+      var components = this.measureComponents;
+
+      if (this.replacing) {
+        this.measures.forEach(function(measure) {
+          
+        })
+      }
+
+      this.onClose();
     },
     triggerClose: function() {
       this.onClose();
