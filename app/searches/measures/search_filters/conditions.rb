@@ -38,10 +38,10 @@ module Measures
       def sql_rules
         if %w(are include).include?(operator)
 
-          sql = "#{initial_filter_sql} AND (#{condition_collection_sql_rules})"
+          sql = "#{initial_filter_sql} AND (#{collection_sql_rules})"
           sql += " AND #{count_comparison_sql_rule}" if operator == "are"
 
-          [sql, *condition_collection_compare_values].flatten
+          [sql, *collection_compare_values].flatten
         else
           case operator
           when "are_not_specified"
@@ -62,7 +62,7 @@ module Measures
           eos
         end
 
-        def condition_collection_sql_rules
+        def collection_sql_rules
           conditions_list.map do |code|
             <<-eos
               (searchable_data #>> '{"measure_conditions"}')::text ilike ?
@@ -70,7 +70,7 @@ module Measures
           end.join(" AND ")
         end
 
-        def condition_collection_compare_values
+        def collection_compare_values
           conditions_list.map do |code|
             "%_#{code}_%"
           end

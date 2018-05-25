@@ -34,7 +34,7 @@ module Measures
       end
 
       def sql_rules
-        sql = "#{initial_filter_sql} AND (#{duty_expression_collection_sql_rules})"
+        sql = "#{initial_filter_sql} AND (#{collection_sql_rules})"
         sql += " AND #{count_comparison_sql_rule}" if operator == "are"
 
         sql
@@ -46,14 +46,12 @@ module Measures
           "(searchable_data -> 'duty_expressions')::text <> '[]'::text"
         end
 
-        def duty_expression_collection_sql_rules
+        def collection_sql_rules
           duties_list.map do |duty_ops|
-            q_rule = duty_expression_id_sql_rule(duty_ops)
+            q_rule = item_id_sql_rule(duty_ops)
 
-            amount = duty_expression_amount(duty_ops)
-            if amount.present?
-              q_rule += "AND #{duty_expression_amount_sql_rule(amount)}"
-            end
+            amount = item_amount(duty_ops)
+            q_rule += "AND #{item_amount_sql_rule(amount)}" if amount.present?
 
             "(#{q_rule})"
           end.join(" AND ")
@@ -65,26 +63,26 @@ module Measures
           eos
         end
 
-        def duty_expression_id_sql_rule(duty_ops)
-          d_id = duty_expression_id(duty_ops)
+        def item_id_sql_rule(ops)
+          d_id = item_id(ops)
 
           <<-eos
-            searchable_data @> '{"duty_expressions": [{"duty_expression_id": "#{d_id}"}]}'"
+            searchable_data @> '{"duty_expressions": [{"duty_expression_id": "#{d_id}"}]}'
           eos
         end
 
-        def duty_expression_amount_sql_rule(amount)
+        def item_amount_sql_rule(amount)
           <<-eos
-            searchable_data @> '{"duty_expressions": [{"duty_amount": "#{amount}"}]}'"
+            searchable_data @> '{"duty_expressions": [{"duty_amount": "#{amount}"}]}'
           eos
         end
 
-        def duty_expression_id(duty_ops)
+        def item_id(duty_ops)
           duty_ops.keys[0]
                   .strip
         end
 
-        def duty_expression_amount(duty_ops)
+        def item_amount(duty_ops)
           duty_ops.values[0]
                   .strip
         end

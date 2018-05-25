@@ -503,44 +503,11 @@ class Measure < Sequel::Model
       end
 
       def operator_search_by_footnotes(operator, footnotes_list=[])
-        if %w(are include).include?(operator)
-          generate_query_rule = -> (operator) {
-            footnotes_list.uniq!
-
-            q_rules = footnotes_list.map do |footnote|
-              footnote_type_id = footnote.keys[0].strip
-              q_rule = "searchable_data @> '{\"footnotes\": [{\"footnote_type_id\": \"#{footnote_type_id}\"}]}'"
-
-              footnote_id = footnote.values[0].strip
-              if footnote_id.present?
-                q_rule += " AND searchable_data @> '{\"footnotes\": [{\"footnote_id\": \"#{footnote_id}\"}]}'"
-              end
-
-              "(#{q_rule})"
-            end.join(" AND ")
-
-            sql = "(searchable_data -> 'footnotes')::text <> '[]'::text AND (#{q_rules})"
-
-            if operator == "are"
-              sql += " AND searchable_data #>> '{\"footnotes_count\"}' = '#{footnotes_list.count}'"
-            end
-
-            sql
-          }
-
-          where(
-            generate_query_rule.call(operator)
-          )
-        else
-          case operator
-          when "are_not_specified"
-
-            where("searchable_data #>> '{\"footnotes\"}' IS NULL OR (searchable_data -> 'footnotes')::text = '[]'::text")
-          when "are_not_unspecified"
-
-            where("searchable_data #>> '{\"footnotes\"}' IS NOT NULL AND (searchable_data -> 'footnotes')::text <> '[]'::text")
-          end
-        end
+        where(
+          ::Measures::SearchFilters::Footnotes.new(
+            operator, footnotes_list
+          ).sql_rules
+        )
       end
     end
   end
