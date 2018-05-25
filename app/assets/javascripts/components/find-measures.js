@@ -130,7 +130,8 @@ $(document).ready(function() {
           { value: "ready_for_export", label: "Ready for export" },
           { value: "export_pending", label: "Export pending" },
           { value: "sent_to_cds", label: "Sent to CDS" },
-          { value: "cds_import_error", label: "CDS import error" }
+          { value: "cds_import_error", label: "CDS import error" },
+          { value: "already_in_cds", label: "Already in CDS" }
         ],
 
         selectedMeasures: []

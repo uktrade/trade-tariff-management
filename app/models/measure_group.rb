@@ -11,7 +11,8 @@ class MeasureGroup < Sequel::Model
     :ready_for_export,
     :export_pending,
     :sent_to_cds,
-    :cds_import_error
+    :cds_import_error,
+    :already_in_cds
   ]
 
   one_to_many :measures, key: :measure_group_id

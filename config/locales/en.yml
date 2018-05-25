@@ -35,3 +35,4 @@ en:
       export_pending: "Export pending"
       sent_to_cds: "Sent to CDS"
       cds_import_error: "CDS import error"
+      already_in_cds: "Already in CDS"
