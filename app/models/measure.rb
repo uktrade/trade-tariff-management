@@ -495,40 +495,11 @@ class Measure < Sequel::Model
       end
 
       def operator_search_by_conditions(operator, conditions_list=[])
-        if %w(are include).include?(operator)
-          conditions_list.uniq!
-
-          generate_query_rule = -> (operator) {
-            q_rules = conditions_list.map do |code|
-              "(searchable_data #>> '{\"measure_conditions\"}')::text ilike ?"
-            end.join(" AND ")
-            values = conditions_list.map { |code| "%_#{code}_%" }
-
-            sql = <<-eos
-              searchable_data #>> '{"measure_conditions"}' IS NOT NULL AND
-              (#{q_rules})
-            eos
-
-            if operator == "are"
-              sql += " AND searchable_data #>> '{\"measure_conditions_count\"}' = '#{conditions_list.count}'"
-            end
-
-            [sql, *values].flatten
-          }
-
-          where(
-            generate_query_rule.call(operator)
-          )
-        else
-          case operator
-          when "are_not_specified"
-
-            where("searchable_data #>> '{\"measure_conditions\"}' IS NULL")
-          when "are_not_unspecified"
-
-            where("searchable_data #>> '{\"measure_conditions\"}' IS NOT NULL")
-          end
-        end
+        where(
+          ::Measures::SearchFilters::Conditions.new(
+            operator, conditions_list
+          ).sql_rules
+        )
       end
 
       def operator_search_by_footnotes(operator, footnotes_list=[])
