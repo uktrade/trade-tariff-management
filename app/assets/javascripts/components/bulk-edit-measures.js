@@ -44,13 +44,28 @@ $(document).ready(function() {
           { value: 'delete', label: 'Delete...' },
         ],
         measures: [],
-        changingDuties: false
+        changingDuties: false,
+        changingConditions: false,
+        deleting: false,
+        changingFootnotes: false,
+        changingAdditionalCode: false,
+        changingCommunityCode: false,
+        changingOrigin: false,
+        makingCopies: false,
+        changingRegulation: false,
+        changingValidityPeriod: false,
+        changingQuota: false,
+        changingStatus: false
       };
     },
     mounted: function() {
       var self = this;
 
-      $.get(window.location.href, function(data) {
+      var data = {
+        measure_sids: window.__measure_sids
+      };
+
+      $.get("/measures/bulks/info", data, function(data) {
         self.measures = data.map(function(measure) {
           measure.visible = true;
 
@@ -91,42 +106,7 @@ $(document).ready(function() {
           }
         });
       },
-      makeCopies: function() {
 
-      },
-      changeRegulation: function() {
-
-      },
-      changeValidityPeriod: function() {
-
-      },
-      changeOrigin: function() {
-
-      },
-      changeCommunityCode: function() {
-
-      },
-      changeAdditionalCode: function() {
-
-      },
-      changeQuota: function() {
-
-      },
-      changeDuties: function() {
-        this.changingDuties = true;
-      },
-      changeConditions: function() {
-
-      },
-      changeFootnotes: function() {
-
-      },
-      changeStatus: function() {
-
-      },
-      deleteSelected: function() {
-
-      },
       triggerAction: function(val) {
 
         switch(val) {
@@ -134,45 +114,56 @@ $(document).ready(function() {
             this.toggleUnselected();
             break;
           case 'make_copies':
-            this.makeCopies();
+            this.makingCopies = true;
             break;
           case 'change_regulation':
-            this.changeRegulation();
+            this.changingRegulation = true;
             break;
           case 'change_validity_period':
-            this.changeValidityPeriod();
+            this.changingValidityPeriod = true;
             break;
           case 'change_origin':
-            this.changeOrigin();
+            this.changingOrigin = true;
             break;
           case 'change_community_code':
-            this.changeCommunityCode();
+            this.changingCommunityCode = true;
             break;
           case 'change_additional_code':
-            this.changeAdditionalCode();
+            this.changingAdditionalCode = true;
             break;
           case 'change_quota':
-            this.changeQuota();
+            this.changingQuota = true;
             break;
           case 'change_duties':
-            this.changeDuties();
+            this.changingDuties = true;
             break;
           case 'change_conditions':
-            this.changeConditions();
+            this.changingConditions = true;
             break;
           case 'change_footnotes':
-            this.changeFootnotes();
+            this.changingFootnotes = true;
             break;
           case 'change_status':
-            this.changeStatus();
+            this.changingStatus = true;
             break;
           case 'delete':
-            this.deleteSelected();
+            this.deleting = true;
             break;
         }
       },
       closeAllPopups: function() {
         this.changingDuties = false;
+        this.changingConditions = false;
+        this.deleting = false;
+        this.changingFootnotes = false;
+        this.changingAdditionalCodes= false;
+        this.changingCommunityCode = false;
+        this.changingOrigin = false;
+        this.makingCopies = false;
+        this.changingRegulation = false;
+        this.changingValidityPeriod = false;
+        this.changingQuota = false;
+        this.changingStatus = false;
       }
     }
   });

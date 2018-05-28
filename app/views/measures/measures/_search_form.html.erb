@@ -126,9 +126,6 @@
         </label>
       </div>
     </div>
-    <div class="find-measures__type">
-      <custom-select :options="typesForDate" label-field="label" value-field="value"  v-model="validity_start_date.mode" v-bind:disabled="validityStartDateDisabled" name="search[valid_from][mode]"></custom-select>
-    </div>
     <div class="find-measures__is">
       <custom-select :options="conditionsForValidityStartDate" label-field="label" value-field="value"  v-model="validity_start_date.operator" v-bind:disabled="validityStartDateDisabled" name="search[valid_from][operator]"></custom-select>
     </div>
@@ -145,9 +142,6 @@
           Valid to
         </label>
       </div>
-    </div>
-    <div class="find-measures__type">
-      <custom-select :options="typesForDate" label-field="label" value-field="value"  v-model="validity_end_date.mode" v-bind:disabled="validityEndDateDisabled" name="search[valid_to][mode]"></custom-select>
     </div>
     <div class="find-measures__is">
       <custom-select :options="conditionsForValidityEndDate" label-field="label" value-field="value"  v-model="validity_end_date.operator" v-bind:disabled="validityEndDateDisabled" name="search[valid_to][operator]"></custom-select>
