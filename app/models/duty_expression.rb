@@ -29,4 +29,12 @@ class DutyExpression < Sequel::Model
       description: description
     }
   end
+
+  def to_builder
+    Jbuilder.new do |d|
+      d.duty_expression_id duty_expression_id
+      d.abbreviation abbreviation
+      d.description description
+    end
+  end
 end

@@ -55,6 +55,15 @@ class MeasureComponent < Sequel::Model
     "05".freeze
   end
 
+  def to_builder
+    Jbuilder.new do |mc|
+      mc.duty_expression duty_expression.to_builder
+      mc.measurement_unit measurement_unit.to_builder
+      mc.monetary_unit monetary_unit.to_builder
+      mc.measurement_unit_qualifier measurement_unit_qualifier.to_builder
+    end
+  end
+
   private
 
   def duty_expression_formatter_options

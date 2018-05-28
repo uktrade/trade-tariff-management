@@ -67,7 +67,7 @@ module Measures
     def bulk_info
       @measures = Measure.where(measure_sid: params[:measure_sids])
 
-      render json: @measures.map(&:to_full_json)
+      render json: @measures.map { |m| m.to_builder.target! }
     end
 
     private

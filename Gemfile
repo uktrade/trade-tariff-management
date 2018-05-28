@@ -54,6 +54,7 @@ gem 'slim-rails'
 gem 'kaminari'
 gem 'kaminari-sequel'
 gem "simple_form", "~> 3.5"
+gem "jbuilder"
 
 # Decorators & Exposing named methods
 gem 'draper'

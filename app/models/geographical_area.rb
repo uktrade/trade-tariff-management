@@ -85,6 +85,13 @@ class GeographicalArea < Sequel::Model
     }
   end
 
+  def to_builder
+    Jbuilder.new do |g|
+      g.geographical_area_id geographical_area_id
+      g.description description || ''
+    end
+  end
+
   def id
     geographical_area_id
   end
