@@ -11,17 +11,25 @@
 # - is
 # - is_not
 # - starts_with
+# - is_not_specified
+# - is_not_unspecified
 #
 # Exxample:
 #
 # ::Measures::SearchFilters::CommodityCode.new(
-#   "is", "238"
+#   "is", "3802900011"
 # ).sql_rules
 #
 
 module Measures
   module SearchFilters
     class CommodityCode
+
+      OPERATORS_WITH_REQUIRED_PARAMS = %w(
+        is
+        is_not
+        starts_with
+      )
 
       attr_accessor :operator,
                     :commodity_code
@@ -31,52 +39,36 @@ module Measures
         @commodity_code = commodity_code
       end
 
-
-        value = commodity_code
-
-        case operator
-        when "is"
-
-          q_rule = "goods_nomenclature_item_id = ?"
-        when "is_not"
-
-          q_rule = "goods_nomenclature_item_id IS NULL OR goods_nomenclature_item_id != ?"
-        when "is_not_specified"
-
-          q_rule = "goods_nomenclature_item_id IS NULL"
-          value = nil
-        when "is_not_unspecified"
-
-          q_rule = "goods_nomenclature_item_id IS NOT NULL"
-          value = nil
-        when "starts_with"
-
-          q_rule = "goods_nomenclature_item_id ilike ?"
-          value = "#{commodity_code}%"
-        end
-
-         value.present? ? where(q_rule, value) : where(q_rule)
-
-
       def sql_rules
-        return nil if commodity_code.blank?
+        return nil if required_options_are_blank?
 
-        [ clause, value ]
+        clause
       end
 
       private
+
+        def required_options_are_blank?
+          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+          commodity_code.blank?
+        end
 
         def clause
           case operator
           when "is"
 
-            is_clause
+            [ is_clause, value ]
           when "is_not"
 
-            is_not_clause
+            [ is_not_clause, value ]
+          when "is_not_specified"
+
+            is_not_specified_clause
+          when "is_not_unspecified"
+
+            is_not_unspecified_clause
           when "starts_with"
 
-            starts_with_clause
+            [ starts_with_clause, value ]
           end
         end
 
@@ -89,15 +81,23 @@ module Measures
         end
 
         def is_clause
-          "commodity_code_id = ?"
+          "goods_nomenclature_item_id = ?"
         end
 
         def is_not_clause
-          "commodity_code_id IS NULL OR commodity_code_id != ?"
+          "goods_nomenclature_item_id IS NULL OR goods_nomenclature_item_id != ?"
         end
 
         def starts_with_clause
-          "commodity_code_id ilike ?"
+          "goods_nomenclature_item_id ilike ?"
+        end
+
+        def is_not_specified_clause
+          "goods_nomenclature_item_id IS NULL"
+        end
+
+        def is_not_unspecified_clause
+          "goods_nomenclature_item_id IS NOT NULL"
         end
     end
   end
