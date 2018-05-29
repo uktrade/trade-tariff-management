@@ -56,4 +56,14 @@ class MeasureConditionComponent < Sequel::Model
   def subrecord_code
     "11".freeze
   end
+
+  def to_json(options = {})
+    {
+      duty_amount: duty_amount,
+      duty_expression: duty_expression.to_json,
+      measurement_unit: measurement_unit.to_json,
+      monetary_unit: monetary_unit.to_json,
+      measurement_unit_qualifier: measurement_unit_qualifier.to_json,
+    }
+  end
 end

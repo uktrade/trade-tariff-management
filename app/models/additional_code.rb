@@ -74,4 +74,12 @@ class AdditionalCode < Sequel::Model
       description: description
     }
   end
+
+  def to_json(options = {})
+    {
+      additional_code: additional_code,
+      type_id: additional_code_type_id,
+      description: description
+    }
+  end
 end

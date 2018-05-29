@@ -750,27 +750,26 @@ class Measure < Sequel::Model
     }
   end
 
-  def to_builder
+  def to_json(options = {})
     #
     # TODO: remove status_title_line after testing and leave just `status_title`
     #
     status_title_line = status_title + " " + JSON.parse(searchable_data).to_s
-    Jbuilder.new do |m|
-      m.measure_sid measure_sid
-      m.regulation generating_regulation.to_builder
-      m.measure_type measure_type
-      m.measure_type_series measure_type_series
-      m.validity_start_date validity_start_date.strftime("%d %b %Y")
-      m.validity_end_date validity_end_date.try(:strftime, "%d %b %Y") || "-"
-      m.goods_nomenclature_item goods_nomenclature_item.to_builder
-      m.additional_code additional_code.to_builder
-      m.geographical_area geographical_area.to_builder
-      m.excluded_geographical_areas excluded_geographical_areas.map(&:to_builder)
-      m.measure_components measure_components.map(&:to_builder)
-      m.measure_conditions measure_conditions.map(&:to_builder)
-      m.footnotes footnotes.map(&:to_builder)
-      m.last_updated (updated_at || added_at).try(:strftime, "%d %b %Y") || "-"
-      m.status status_title_line
-    end
+    {
+      measure_sid: measure_sid,
+      regulation: generating_regulation.to_json,
+      measure_type: measure_type.to_json,
+      validity_start_date: validity_start_date.strftime("%d %b %Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+      goods_nomenclature: goods_nomenclature.try(:to_json),
+      additional_code: additional_code.try(:to_json),
+      geographical_area: geographical_area.try(:to_json),
+      excluded_geographical_areas: excluded_geographical_areas.map(&:to_json),
+      measure_components: measure_components.map(&:to_json),
+      measure_conditions: measure_conditions.map(&:to_json),
+      footnotes: footnotes.map(&:to_json),
+      last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
+      status: status_title_line
+    }
   end
 end

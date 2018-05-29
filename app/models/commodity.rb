@@ -178,4 +178,10 @@ class Commodity < GoodsNomenclature
   def root
     parent_sid.blank?
   end
+
+  def to_json(options = {})
+    {
+      goods_nomenclature_item_id: code
+    }
+  end
 end

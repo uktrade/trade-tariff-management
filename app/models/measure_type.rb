@@ -98,16 +98,14 @@ class MeasureType < Sequel::Model
     }
   end
 
-  def to_builder
-    Jbuilder.new do |mt|
-      mt.oid oid
-      mt.measure_type_id measure_type_id
-      mt.measure_type_series measure_type_series.to_builder
-      mt.validity_start_date validity_start_date
-      mt.validity_end_date validity_end_date
-      mt.valid false
-      mt.measure_type_acronym measure_type_acronym
-      mt.description description
-    end
+  def to_json(options = {})
+    {
+      measure_type_id: measure_type_id,
+      measure_type_series: measure_type_series.to_json,
+      validity_start_date: validity_start_date,
+      validity_end_date: validity_end_date,
+      measure_type_acronym: measure_type_acronym,
+      description: description
+    }
   end
 end

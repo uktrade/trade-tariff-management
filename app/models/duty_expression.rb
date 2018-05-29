@@ -30,11 +30,11 @@ class DutyExpression < Sequel::Model
     }
   end
 
-  def to_builder
-    Jbuilder.new do |d|
-      d.duty_expression_id duty_expression_id
-      d.abbreviation abbreviation
-      d.description description
-    end
+  def to_json(options = {})
+    {
+      duty_expression_id: duty_expression_id,
+      abbreviation: abbreviation,
+      description: description
+    }
   end
 end
