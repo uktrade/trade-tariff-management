@@ -8,6 +8,7 @@ Vue.component("change-duties-popup", {
     };
   },
   mounted: function() {
+    var self = this;
     var equal = true;
     var n = this.measures.length;
     var dtCount = this.measures[0].measure_components.length;
@@ -44,23 +45,62 @@ Vue.component("change-duties-popup", {
     this.replacing = !equal;
 
     if (equal) {
-      this.measureComponents = this.measures[0].measure_components;
+      this.measureComponents = this.measures[0].measure_components.map(function(component) {
+        return {
+          duty_expression_id: self.getDutyExpressionId(component),
+          amount: component.duty_amount,
+          measurement_unit_code: component.measurement_unit ? component.measurement_unit.measurement_unit_code : null,
+          measurement_unit_qualifier_code: component.measurement_unit_qualifier ? component.measurement_unit_qualifier.measurement_unit_qualifier_code : null,
+          duty_expression: component.duty_expression,
+          measurement_unit: component.measurement_unit,
+          measurement_unit_qualifier: component.measurement_unit_qualifier,
+          monetary_unit: component.monetary_unit,
+          monetary_unit_code: component.monetary_unit ? component.monetary_unit.monetary_unit_code : null
+        };
+      });
+    } else {
+      this.addDutyExpression();
     }
   },
   computed: {
     multiple: function() {
       return this.measures.length > 1;
+    },
+    canRemoveMeasureComponent: function() {
+      return this.measureComponents.length > 1;
     }
   },
   methods: {
+    getDutyExpressionId: function(component) {
+      var ids = ["01","02","04","19","20"];
+      var id = component.duty_expression.duty_expression_id;
+
+      if (ids.indexOf(component.duty_expression.duty_expression_id) === -1) {
+        return id;
+      }
+
+      if (component.monetary_unit) {
+        return id + "B";
+      }
+
+      return id + "A";
+    },
     confirmChanges: function() {
       var components = this.measureComponents;
 
-      if (this.replacing) {
-        this.measures.forEach(function(measure) {
-          
-        })
-      }
+      this.measures.forEach(function(measure) {
+        measure.measure_components.splice(0, 999);
+
+        components.forEach(function(component) {
+          measure.measure_components.push({
+            duty_amount: component.amount,
+            duty_expression: component.duty_expression,
+            measurement_unit: component.measurement_unit,
+            measurement_unit_qualifier: component.measurement_unit_qualifier,
+            monetary_unit: component.monetary_unit
+          });
+        });
+      });
 
       this.onClose();
     },
@@ -71,9 +111,17 @@ Vue.component("change-duties-popup", {
       this.measureComponents.push({
         duty_expression_id: null,
         amount: null,
+        monetary_unit_code: null,
         measurement_unit_code: null,
-        measurement_unit_qualifier_code: null
+        measurement_unit_qualifier_code: null,
+        duty_expression: null,
+        measurement_unit: null,
+        measurement_unit_qualifier: null,
+        monetary_unit: null
       });
+    },
+    removeMeasureComponent: function(measureComponent, index) {
+      this.measureComponents.splice(index, 1);
     }
   }
 });

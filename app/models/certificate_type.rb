@@ -52,4 +52,8 @@ class CertificateType < Sequel::Model
       description: description
     }
   end
+
+  def to_json(options = {})
+    json_mapping
+  end
 end

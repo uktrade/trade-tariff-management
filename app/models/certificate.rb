@@ -74,9 +74,6 @@ class Certificate < Sequel::Model
   end
 
   def to_json(options = {})
-    {
-      certificate_code: certificate_code,
-      description: description
-    }
+    json_mapping
   end
 end

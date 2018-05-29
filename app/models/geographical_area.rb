@@ -81,7 +81,8 @@ class GeographicalArea < Sequel::Model
   def to_json
     {
       geographical_area_id: geographical_area_id,
-      description: description || ''
+      description: description || '',
+      is_country: is_country?
     }
   end
 
@@ -95,5 +96,9 @@ class GeographicalArea < Sequel::Model
 
   def subrecord_code
     "00".freeze
+  end
+
+  def is_country?
+    COUNTRIES_CODES.include?(geographical_code)
   end
 end

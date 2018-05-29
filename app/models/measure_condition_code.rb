@@ -51,9 +51,6 @@ class MeasureConditionCode < Sequel::Model
   end
 
   def to_json(options = {})
-    {
-      condition_code: condition_code,
-      description: description
-    }
+    json_mapping
   end
 end

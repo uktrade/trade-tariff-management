@@ -1,10 +1,12 @@
+//= require ./duty-expression-formatter
+//= require ./measure-condition-formatter
+
 $(document).ready(function() {
   var form = document.querySelector(".bulk-edit-measures");
 
   if (!form) {
     return;
   }
-
 
   var app = new Vue({
     el: form,
@@ -18,8 +20,8 @@ $(document).ready(function() {
           {enabled: true, title: "Type", field: "measure_type_id"},
           {enabled: true, title: "Valid from", field: "validity_start_date"},
           {enabled: true, title: "Valid to", field: "validity_end_date"},
-          {enabled: true, title: "Commodity code", field: "goods_nomenclature_id"},
-          {enabled: true, title: "Additional code", field: "additional_code_id"},
+          {enabled: true, title: "Commodity code", field: "goods_nomenclature"},
+          {enabled: true, title: "Additional code", field: "additional_code"},
           {enabled: true, title: "Origin", field: "geographical_area"},
           {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas"},
           {enabled: true, title: "Duties", field: "duties"},
@@ -78,7 +80,7 @@ $(document).ready(function() {
         return this.selectedMeasures.length === 0;
       },
       visibleMeasures: function() {
-        return this.measures.filter(function(measure) {
+        return this.measuresForTable.filter(function (measure) {
           return measure.visible;
         });
       },
@@ -87,6 +89,66 @@ $(document).ready(function() {
 
         return this.measures.filter(function(measure) {
           return selectedSids.indexOf(measure.measure_sid) > -1;
+        });
+      },
+      measuresForTable: function() {
+        return this.measures.map(function(measure) {
+          var formatted_exclusions = measure.excluded_geographical_areas.map(function (ega) {
+            if (ega.geographical_area.is_country) {
+              return ega.geographical_area.geographical_area_id;
+            }
+
+            return ega.geographical_area.description;
+          }).join("<br />") || "-";
+
+          var formatted_components = measure.measure_components.map(function (mc) {
+            return DutyExpressionFormatter.format({
+              duty_expression_id: mc.duty_expression.duty_expression_id,
+              duty_expression_description: mc.duty_expression.description,
+              duty_expression_abbreviation: mc.duty_expression.abbreviation,
+              duty_amount: mc.duty_amount,
+              monetary_unit: mc.monetary_unit,
+              monetary_unit_abbreviation: mc.monetary_unit ? mc.monetary_unit.abbreviation : null,
+              measurement_unit: mc.measurement_unit,
+              measurement_unit_qualifier: mc.measurement_unit_qualifier
+            });
+          }).join(" ");
+
+          var formatted_conditions = measure.measure_conditions.map(function(mc) {
+            return MeasureConditionFormatter.format(mc);
+          }).join("<br />") || "-";
+
+          var formatted_footnotes = measure.footnotes.map(function (ft) {
+            return ft.footnote_type_id + " - " + ft.footnote_id;
+          }).join("<br />") || "-";
+
+          var origin = "-";
+
+          if (measure.geographical_area) {
+            if (measure.geographical_area.is_country) {
+              origin = measure.geographical_area.geographical_area_id;
+            } else {
+              origin = measure.geographical_area.description;
+            }
+          }
+
+          return {
+            measure_sid: measure.measure_sid,
+            regulation: measure.regulation.base_regulation_id,
+            measure_type_id: measure.measure_type.measure_type_id,
+            goods_nomenclature: measure.goods_nomenclature.goods_nomenclature_item_id,
+            additional_code: "-",
+            geographical_area: origin,
+            excluded_geographical_areas: formatted_exclusions,
+            duties: formatted_components,
+            conditions: formatted_conditions,
+            footnotes: formatted_footnotes,
+            last_updated: measure.operation_date,
+            status: measure.status,
+            visible: measure.visible,
+            validity_start_date: measure.validity_start_date,
+            validity_end_date: measure.validity_end_date
+          }
         });
       }
     },

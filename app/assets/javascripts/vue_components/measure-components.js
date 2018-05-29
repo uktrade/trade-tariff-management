@@ -127,13 +127,37 @@ var componentCommonFunctionality = {
 
 
       return newOptions;
+    },
+    dutyExpressionSelected: function(item) {
+      this[this.thing].duty_expression = item;
+
+      if (!this.showMonetaryUnit) {
+        this[this.thing].monetary_unit = null;
+        this[this.thing].monetary_unit_code = null;
+      }
+
+      if (!this.showMeasurementUnit) {
+        this[this.thing].measurement_unit_code = null;
+        this[this.thing].measurement_unit_qualifier_code = null;
+        this[this.thing].measurement_unit = null;
+        this[this.thing].measurement_unit_qualifier = null;
+      }
+    },
+    monetaryUnitSelected: function(item) {
+      this[this.thing].monetary_unit = item;
+    },
+    measurementUnitSelected: function(item) {
+      this[this.thing].measurement_unit = item;
+    },
+    measurementUnitQualifierSelected: function(item) {
+      this[this.thing].measurement_unit_qualifier = item;
     }
   }
 };
 
 Vue.component("measure-component", $.extend({}, {
   template: "#measure-component-template",
-  props: ["measureComponent"],
+  props: ["measureComponent", "index"],
   data: function() {
     return {
       thing: "measureComponent"
@@ -143,7 +167,7 @@ Vue.component("measure-component", $.extend({}, {
 
 Vue.component("measure-condition-component", $.extend({}, {
   template: "#measure-condition-component-template",
-  props: ["measureConditionComponent"],
+  props: ["measureConditionComponent", "index"],
   data: function() {
     return {
       thing: "measureConditionComponent"

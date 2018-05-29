@@ -146,6 +146,7 @@ class MeasureCondition < Sequel::Model
       measurement_unit_qualifier: measurement_unit_qualifier.try(:to_json),
       measure_condition_code: measure_condition_code.try(:to_json),
       measure_condition_components: measure_condition_components.try(:to_json),
+      component_sequence_number: component_sequence_number
     }
   end
 end

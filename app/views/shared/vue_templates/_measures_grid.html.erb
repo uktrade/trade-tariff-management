@@ -22,8 +22,7 @@
         <td>
           <input type="checkbox" name="measures[]" :value="row.measure_sid" v-model="selectedRows" />
         </td>
-        <td v-for="column in enabledColumns">
-          {{row[column.field]}}
+        <td v-for="column in enabledColumns" v-html="row[column.field]">
         </td>
       </tr>
     </tbody>

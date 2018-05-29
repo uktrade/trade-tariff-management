@@ -19,7 +19,15 @@
     </div>
 
     <div class="duty-expression" v-for="(measureComponent, index) in measureComponents">
-      <measure-component :measure-component="measureComponent" :index="index"></measure-component>
+      <measure-component :measure-component="measureComponent" :index="index">
+        <div class="col-md-2">
+          <div class="form-group">
+            <a class="secondary-button text-danger" href="#" v-on:click.prevent="removeMeasureComponent(measureComponent, index)" v-if="canRemoveMeasureComponent">
+              remove
+            </a>
+          </div>
+        </div>
+      </measure-component>
     </div>
 
     <p>
@@ -27,7 +35,7 @@
     </p>
 
     <div class="form-actions">
-      <button type="submit" class="button">
+      <button class="button" v-on:click.prevent="confirmChanges">
         Update
       </button>
       <a href="#" class="secondary-button" v-on:click.prevent="onClose">
