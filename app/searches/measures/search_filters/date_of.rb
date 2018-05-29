@@ -33,6 +33,8 @@ module Measures
   module SearchFilters
     class DateOf
 
+      include ::Measures::SharedMethods::Date
+
       attr_accessor :operator,
                     :mode,
                     :value
@@ -75,21 +77,21 @@ module Measures
           end
         end
 
-        def is_clause
-          "#{field_name}::date = ?"
-        end
+        # def is_clause
+        #   "#{field_name}::date = ?"
+        # end
 
-        def is_not_clause
-          "#{field_name} IS NULL OR #{field_name}::date != ?"
-        end
+        # def is_not_clause
+        #   "#{field_name} IS NULL OR #{field_name}::date != ?"
+        # end
 
-        def is_before_clause
-          "#{field_name}::date < ?"
-        end
+        # def is_before_clause
+        #   "#{field_name}::date < ?"
+        # end
 
-        def is_after_clause
-          "#{field_name}::date > ?"
-        end
+        # def is_after_clause
+        #   "#{field_name}::date > ?"
+        # end
 
         def field_name
           case mode

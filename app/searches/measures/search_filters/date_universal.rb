@@ -34,6 +34,8 @@ module Measures
   module SearchFilters
     class DateUniversal
 
+      include ::Measures::SharedMethods::Date
+
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         is
         is_not
@@ -89,21 +91,21 @@ module Measures
           end
         end
 
-        def is_clause
-          "#{field_name}::date = ?"
-        end
+        # def is_clause
+        #   "#{field_name}::date = ?"
+        # end
 
-        def is_not_clause
-          "#{field_name} IS NULL OR #{field_name}::date != ?"
-        end
+        # def is_not_clause
+        #   "#{field_name} IS NULL OR #{field_name}::date != ?"
+        # end
 
-        def is_before_clause
-          "#{field_name}::date < ?"
-        end
+        # def is_before_clause
+        #   "#{field_name}::date < ?"
+        # end
 
-        def is_after_clause
-          "#{field_name}::date > ?"
-        end
+        # def is_after_clause
+        #   "#{field_name}::date > ?"
+        # end
 
         def is_not_specified_clause
           "#{field_name} IS NULL"
