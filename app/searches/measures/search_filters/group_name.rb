@@ -32,6 +32,8 @@ module Measures
       end
 
       def sql_rules
+        return nil if group_name.blank?
+
         case operator
         when "is"
 

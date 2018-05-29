@@ -23,12 +23,6 @@ module Measures
   module SearchFilters
     class CommodityCode
 
-      OPERATORS_WITH_REQUIRED_PARAMS = %w(
-        is
-        is_not
-        starts_with
-      )
-
       attr_accessor :operator,
                     :commodity_code
 
@@ -65,17 +59,12 @@ module Measures
 
 
       def sql_rules
-        return nil if required_options_are_blank?
+        return nil if commodity_code.blank?
 
         [ clause, value ]
       end
 
       private
-
-        def required_options_are_blank?
-          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
-          commodity_code.blank?
-        end
 
         def clause
           case operator
