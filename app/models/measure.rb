@@ -437,16 +437,11 @@ class Measure < Sequel::Model
       end
 
       def operator_search_by_group_name(operator, group_name)
-        case operator
-        when "is"
-          q_rule = "searchable_data #>> '{\"group_name\"}' = ?"
-          value = group_name
-        when "starts_with", "contains"
-          q_rule = "searchable_data #>> '{\"group_name\"}' ilike ?"
-          value = operator == "starts_with" ? "#{group_name}%" : "%#{group_name}%"
-        end
-
-        where(q_rule, value)
+        where(
+          ::Measures::SearchFilters::GroupName.new(
+            operator, group_name
+          ).sql_rules
+        )
       end
 
       def operator_search_by_origin_exclusions(operator, exclusions_list=[])
