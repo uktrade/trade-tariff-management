@@ -73,7 +73,7 @@ module Measures
 
       def apply_date_of_filter
         @relation = relation.operator_search_by_date_of(
-          *query_ops(date_of)
+          query_ops(date_of)
         )
       end
 
@@ -148,14 +148,14 @@ module Measures
       end
 
       def query_ops(ops)
-        res = [
-          ops[:operator],
-          ops[:value]
-        ]
-
-        res << ops[:mode] if ops[:mode].present?
-
-        res
+        if ops[:mode].present?
+          ops
+        else
+          [
+            ops[:operator],
+            ops[:value]
+          ]
+        end
       end
   end
 end

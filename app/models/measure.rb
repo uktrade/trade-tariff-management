@@ -330,28 +330,9 @@ class Measure < Sequel::Model
         is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
       end
 
-      def operator_search_by_date_of(operator, date, mode)
-        field_name = case mode
-        when "creation","authoring"
-          "added_at"
-        when "last_status_change"
-          "last_status_change_at"
-        end
-
-        value = date.to_date.strftime("%Y-%m-%d") if date.present?
-
-        case operator
-        when "is"
-          q_rule = "#{field_name}::date = ?"
-        when "is_after"
-          q_rule = "#{field_name}::date > ?"
-        when "is_before"
-          q_rule = "#{field_name}::date < ?"
-        when "is_not"
-          q_rule = "#{field_name} IS NULL OR #{field_name}::date != ?"
-        end
-
-        where(q_rule, value)
+      def operator_search_by_date_of(ops={})
+        q_rules = ::Measures::SearchFilters::DateOf.new(ops).sql_rules
+        where(q_rules) if q_rules.present?
       end
 
       def operator_search_by_valid_from(operator, date)
