@@ -362,33 +362,6 @@ class Measure < Sequel::Model
         date_filter_search_query("validity_end_date", operator, date)
       end
 
-      def operator_search_by_commodity_code(operator, commodity_code)
-        value = commodity_code
-
-        case operator
-        when "is"
-
-          q_rule = "goods_nomenclature_item_id = ?"
-        when "is_not"
-
-          q_rule = "goods_nomenclature_item_id IS NULL OR goods_nomenclature_item_id != ?"
-        when "is_not_specified"
-
-          q_rule = "goods_nomenclature_item_id IS NULL"
-          value = nil
-        when "is_not_unspecified"
-
-          q_rule = "goods_nomenclature_item_id IS NOT NULL"
-          value = nil
-        when "starts_with"
-
-          q_rule = "goods_nomenclature_item_id ilike ?"
-          value = "#{commodity_code}%"
-        end
-
-        value.present? ? where(q_rule, value) : where(q_rule)
-      end
-
       def operator_search_by_author(user_id)
         where(added_by_id: user_id)
       end
@@ -397,60 +370,44 @@ class Measure < Sequel::Model
         where(last_update_by_id: user_id)
       end
 
-      def operator_search_by_additional_code(operator, additional_code)
-        where(
-          ::Measures::SearchFilters::AdditionalCode.new(
-            operator, additional_code
-          ).sql_rules
-        )
+      def operator_search_by_commodity_code(operator, commodity_code=nil)
+        operator_search_where_clause("CommodityCode", operator, commodity_code)
       end
 
-      def operator_search_by_regulation(operator, regulation_id)
-        where(
-          ::Measures::SearchFilters::Regulation.new(
-            operator, regulation_id
-          ).sql_rules
-        )
+      def operator_search_by_additional_code(operator, additional_code=nil)
+        operator_search_where_clause("AdditionalCode", operator, additional_code)
       end
 
-      def operator_search_by_group_name(operator, group_name)
-        where(
-          ::Measures::SearchFilters::GroupName.new(
-            operator, group_name
-          ).sql_rules
-        )
+      def operator_search_by_regulation(operator, regulation_id=nil)
+        operator_search_where_clause("Regulation", operator, regulation_id)
+      end
+
+      def operator_search_by_group_name(operator, group_name=nil)
+        operator_search_where_clause("GroupName", operator, group_name)
       end
 
       def operator_search_by_origin_exclusions(operator, exclusions_list=[])
-        where(
-          ::Measures::SearchFilters::OriginExclusions.new(
-            operator, exclusions_list
-          ).sql_rules
-        )
+        operator_search_where_clause("OriginExclusions", operator, exclusions_list)
       end
 
       def operator_search_by_duties(operator, duties_list=[])
-        where(
-          ::Measures::SearchFilters::Duties.new(
-            operator, duties_list
-          ).sql_rules
-        )
+        operator_search_where_clause("Duties", operator, duties_list)
       end
 
       def operator_search_by_conditions(operator, conditions_list=[])
-        where(
-          ::Measures::SearchFilters::Conditions.new(
-            operator, conditions_list
-          ).sql_rules
-        )
+        operator_search_where_clause("Conditions", operator, conditions_list)
       end
 
       def operator_search_by_footnotes(operator, footnotes_list=[])
-        where(
-          ::Measures::SearchFilters::Footnotes.new(
-            operator, footnotes_list
-          ).sql_rules
-        )
+        operator_search_where_clause("Footnotes", operator, footnotes_list)
+      end
+
+      def conditional_where_clause(klass_name, operator, value=nil)
+        q_rules = "::Measures::SearchFilters::#{klass_name}".constantize.new(
+          operator, value
+        ).sql_rules
+
+        where(q_rules) if q_rules.present?
       end
     end
   end

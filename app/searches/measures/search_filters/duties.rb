@@ -34,6 +34,8 @@ module Measures
       end
 
       def sql_rules
+        return nil if duties_list.size.zero?
+
         sql = "#{initial_filter_sql} AND (#{collection_sql_rules})"
         sql += " AND #{count_comparison_sql_rule}" if operator == "are"
 

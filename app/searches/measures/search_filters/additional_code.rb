@@ -26,12 +26,14 @@ module Measures
       attr_accessor :operator,
                     :additional_code
 
-      def initialize(operator, additional_code)
+      def initialize(operator, additional_code=nil)
         @operator = operator
         @additional_code = additional_code
       end
 
       def sql_rules
+        return nil if additional_code.blank?
+
         [ clause, value ]
       end
 

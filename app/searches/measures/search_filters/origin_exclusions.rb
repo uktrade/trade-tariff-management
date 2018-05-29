@@ -27,6 +27,11 @@ module Measures
   module SearchFilters
     class OriginExclusions
 
+      OPERATORS_WITH_REQUIRED_PARAMS = %w(
+        include
+        do_not_include
+      )
+
       attr_accessor :operator,
                     :exclusions_list
 
@@ -36,6 +41,8 @@ module Measures
       end
 
       def sql_rules
+        return nil if required_options_are_blank?
+
         case operator
         when "include", "do_not_include"
           main_operator = operator == "include" ? "AND" : "OR"
@@ -52,6 +59,11 @@ module Measures
       end
 
       private
+
+        def required_options_are_blank?
+          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+          exclusions_list.size.zero?
+        end
 
         def initial_sql_rule
           case operator

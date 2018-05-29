@@ -27,6 +27,11 @@ module Measures
   module SearchFilters
     class Conditions
 
+      OPERATORS_WITH_REQUIRED_PARAMS = %w(
+        are
+        include
+      )
+
       attr_accessor :operator,
                     :conditions_list
 
@@ -36,6 +41,8 @@ module Measures
       end
 
       def sql_rules
+        return nil if required_options_are_blank?
+
         if %w(are include).include?(operator)
 
           sql = "#{initial_filter_sql} AND (#{collection_sql_rules})"
@@ -55,6 +62,11 @@ module Measures
       end
 
       private
+
+        def required_options_are_blank?
+          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+          conditions_list.size.zero?
+        end
 
         def initial_filter_sql
           <<-eos

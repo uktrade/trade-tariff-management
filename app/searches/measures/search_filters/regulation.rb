@@ -27,12 +27,14 @@ module Measures
       attr_accessor :operator,
                     :regulation_id
 
-      def initialize(operator, regulation_id)
+      def initialize(operator, regulation_id=nil)
         @operator = operator
         @regulation_id = regulation_id
       end
 
       def sql_rules
+        return nil if regulation_id.blank?
+
         [
           query_rule, value, value
         ]
