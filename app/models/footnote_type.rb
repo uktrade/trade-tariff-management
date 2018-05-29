@@ -49,4 +49,11 @@ class FootnoteType < Sequel::Model
       description: description
     }
   end
+
+  def to_json(options = {})
+    {
+      footnote_type_id: footnote_type_id,
+      description: description
+    }
+  end
 end

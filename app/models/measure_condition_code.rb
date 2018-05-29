@@ -49,4 +49,11 @@ class MeasureConditionCode < Sequel::Model
       valid: false # TODO: it seems that it just for testing purposes
     }
   end
+
+  def to_json(options = {})
+    {
+      condition_code: condition_code,
+      description: description
+    }
+  end
 end

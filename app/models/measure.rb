@@ -720,4 +720,27 @@ class Measure < Sequel::Model
       status: status_title_line
     }
   end
+
+  def to_json(options = {})
+    #
+    # TODO: remove status_title_line after testing and leave just `status_title`
+    #
+    status_title_line = status_title + " " + JSON.parse(searchable_data).to_s
+    {
+      measure_sid: measure_sid,
+      regulation: generating_regulation.to_json,
+      measure_type: measure_type.to_json,
+      validity_start_date: validity_start_date.strftime("%d %b %Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+      goods_nomenclature: goods_nomenclature.try(:to_json),
+      additional_code: additional_code.try(:to_json),
+      geographical_area: geographical_area.try(:to_json),
+      excluded_geographical_areas: excluded_geographical_areas.map(&:to_json),
+      measure_components: measure_components.map(&:to_json),
+      measure_conditions: measure_conditions.map(&:to_json),
+      footnotes: footnotes.map(&:to_json),
+      last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
+      status: status_title_line
+    }
+  end
 end

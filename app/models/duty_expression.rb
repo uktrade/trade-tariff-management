@@ -29,4 +29,12 @@ class DutyExpression < Sequel::Model
       description: description
     }
   end
+
+  def to_json(options = {})
+    {
+      duty_expression_id: duty_expression_id,
+      abbreviation: abbreviation,
+      description: description
+    }
+  end
 end

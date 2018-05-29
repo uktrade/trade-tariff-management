@@ -40,6 +40,8 @@ Rails.application.routes.draw do
       collection do
         get :bulk_edit
         get :all_measures_data
+
+        get '/bulks/info', to: 'measures#bulk_info', as: :bulk_info
       end
     end
 

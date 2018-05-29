@@ -20,4 +20,10 @@ class MeasureExcludedGeographicalArea < Sequel::Model
   def subrecord_code
     "15".freeze
   end
+
+  def to_json(options = {})
+    {
+      geographical_area: geographical_area.to_json
+    }
+  end
 end

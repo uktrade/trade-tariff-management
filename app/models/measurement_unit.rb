@@ -67,4 +67,8 @@ class MeasurementUnit < Sequel::Model
       abbreviation: abbreviation
     }
   end
+
+  def to_json(options = {})
+    json_mapping
+  end
 end

@@ -97,4 +97,15 @@ class MeasureType < Sequel::Model
       description: description
     }
   end
+
+  def to_json(options = {})
+    {
+      measure_type_id: measure_type_id,
+      measure_type_series: measure_type_series.to_json,
+      validity_start_date: validity_start_date,
+      validity_end_date: validity_end_date,
+      measure_type_acronym: measure_type_acronym,
+      description: description
+    }
+  end
 end

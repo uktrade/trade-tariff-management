@@ -55,6 +55,15 @@ class MeasureComponent < Sequel::Model
     "05".freeze
   end
 
+  def to_json(options = {})
+    {
+      duty_expression: duty_expression.try(:to_json),
+      measurement_unit: measurement_unit.try(:to_json),
+      monetary_unit: monetary_unit.try(:to_json),
+      measurement_unit_qualifier: measurement_unit_qualifier.try(:to_json),
+    }
+  end
+
   private
 
   def duty_expression_formatter_options

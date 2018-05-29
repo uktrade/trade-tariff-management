@@ -63,6 +63,13 @@ module Measures
       end
     end
 
+    # TODO: mockup implementation so I don't stay stuck. REWRITE THIS LATER
+    def bulk_info
+      @measures = Measure.where(measure_sid: params[:measure_sids]).to_a
+
+      render json: @measures.map(&:to_json).to_json
+    end
+
     private
 
       def setup_advanced_filters(ops)

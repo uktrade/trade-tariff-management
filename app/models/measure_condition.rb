@@ -135,4 +135,17 @@ class MeasureCondition < Sequel::Model
   def subrecord_code
     "10".freeze
   end
+
+  def to_json(options = {})
+    {
+      measure_action: measure_action.to_json,
+      certificate: certificate.try(:to_json),
+      certificate_type: certificate_type.try(:to_json),
+      measurement_unit: measurement_unit.try(:to_json),
+      monetary_unit: monetary_unit.try(:to_json),
+      measurement_unit_qualifier: measurement_unit_qualifier.try(:to_json),
+      measure_condition_code: measure_condition_code.try(:to_json),
+      measure_condition_components: measure_condition_components.try(:to_json),
+    }
+  end
 end

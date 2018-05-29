@@ -10,7 +10,8 @@ h2.heading-large
   | Find measures
 
 script
-  == "window.__measures = #{search_results.map(&:to_table_json).to_json}"
+  == "window.__measures = #{search_results.map(&:to_table_json).to_json};"
+  == "window.__search_params = #{params.to_json};"
 
 .find-measures
   = render "search_form"
