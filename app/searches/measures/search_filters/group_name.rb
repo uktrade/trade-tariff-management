@@ -39,7 +39,7 @@ module Measures
         when "starts_with", "contains"
 
           [ equal_clause, equal_value ]
-        end.flatten
+        end
       end
 
       private

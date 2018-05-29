@@ -389,31 +389,20 @@ class Measure < Sequel::Model
         value.present? ? where(q_rule, value) : where(q_rule)
       end
 
-      def operator_search_by_additional_code(operator, additional_code)
-        value = additional_code
-
-        case operator
-        when "is"
-
-          q_rule = "additional_code_id = ?"
-        when "is_not"
-
-          q_rule = "additional_code_id IS NULL OR additional_code_id != ?"
-        when "starts_with"
-
-          q_rule = "additional_code_id ilike ?"
-          value = "#{additional_code}%"
-        end
-
-        where(q_rule, value)
-      end
-
       def operator_search_by_author(user_id)
         where(added_by_id: user_id)
       end
 
       def operator_search_by_last_updated_by(user_id)
         where(last_update_by_id: user_id)
+      end
+
+      def operator_search_by_additional_code(operator, additional_code)
+        where(
+          ::Measures::SearchFilters::AdditionalCode.new(
+            operator, additional_code
+          ).sql_rules
+        )
       end
 
       def operator_search_by_regulation(operator, regulation_id)
