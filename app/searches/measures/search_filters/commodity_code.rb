@@ -14,7 +14,7 @@
 # - is_not_specified
 # - is_not_unspecified
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::CommodityCode.new(
 #   "is", "3802900011"

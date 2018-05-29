@@ -12,7 +12,7 @@
 # - is_not
 # - starts_with
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::AdditionalCode.new(
 #   "is", "238"

@@ -14,7 +14,7 @@
 # - are
 # - include
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::Duties.new(
 #   "include", [ {'99' => '10'}, { '01' => '15' } ]

@@ -20,7 +20,7 @@
 # - is_after
 # - is_before
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::DateOf.new(
 #   operator: 'is',

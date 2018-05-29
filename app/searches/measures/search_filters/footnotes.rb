@@ -17,7 +17,7 @@
 # - are_not_specified
 # - are_not_unspecified
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::Footnotes.new(
 #   "include", [ { 'WR' => '101' }, { 'AR' => '234' } ]

@@ -16,7 +16,7 @@
 # - are_not_specified
 # - are_not_unspecified
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::Conditions.new(
 #   "include", [ 'A', 'B' ]

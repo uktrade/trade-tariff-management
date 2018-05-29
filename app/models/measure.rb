@@ -296,26 +296,11 @@ class Measure < Sequel::Model
       end
 
       def date_filter_search_query(field_name, operator, date)
-        value = date.to_date.strftime("%Y-%m-%d") if date.present?
+        q_rules = ::Measures::SearchFilters::DateUniversal.new(
+          field_name, operator, date
+        ).sql_rules
 
-        case operator
-        when "is"
-          q_rule = "#{field_name}::date = ?"
-        when "is_after"
-          q_rule = "#{field_name}::date > ?"
-        when "is_before"
-          q_rule = "#{field_name}::date < ?"
-        when "is_not"
-          q_rule = "#{field_name} IS NULL OR #{field_name}::date != ?"
-        when "is_not_specified"
-          q_rule = "#{field_name} IS NULL"
-          value = nil
-        when "is_not_unspecified"
-          q_rule = "#{field_name} IS NOT NULL"
-          value = nil
-        end
-
-        value.present? ? where(q_rule, value) : where(q_rule)
+        where(q_rules) if q_rules.present?
       end
 
       def operator_search_by_status(operator, status)
@@ -335,11 +320,11 @@ class Measure < Sequel::Model
         where(q_rules) if q_rules.present?
       end
 
-      def operator_search_by_valid_from(operator, date)
+      def operator_search_by_valid_from(operator, date=nil)
         date_filter_search_query("validity_start_date", operator, date)
       end
 
-      def operator_search_by_valid_to(operator, date)
+      def operator_search_by_valid_to(operator, date=nil)
         date_filter_search_query("validity_end_date", operator, date)
       end
 

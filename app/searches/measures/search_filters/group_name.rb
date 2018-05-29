@@ -12,7 +12,7 @@
 # - starts_with
 # - contains
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::GroupName.new(
 #   "is", "Test group"

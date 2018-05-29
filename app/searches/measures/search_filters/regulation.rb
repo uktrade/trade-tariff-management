@@ -13,7 +13,7 @@
 # - contains
 # - does_not_contain
 #
-# Exxample:
+# Example:
 #
 # ::Measures::SearchFilters::Regulation.new(
 #   "is", "R2131244"
