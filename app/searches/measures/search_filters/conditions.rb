@@ -63,7 +63,7 @@ module Measures
         end
 
         def collection_sql_rules
-          conditions_list.map do |code|
+          conditions_list.map do
             <<-eos
               (searchable_data #>> '{"measure_conditions"}')::text ilike ?
             eos

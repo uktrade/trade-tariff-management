@@ -450,40 +450,11 @@ class Measure < Sequel::Model
       end
 
       def operator_search_by_origin_exclusions(operator, origin_list=[])
-        case operator
-        when "are_not_specified"
-
-          where("searchable_data #>> '{\"excluded_geographical_areas\"}' IS NULL")
-        when "are_not_unspecified"
-
-          where("searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL")
-        when "include"
-
-          q_rules = origin_list.map do |origin_id|
-            "(searchable_data #>> '{\"excluded_geographical_areas\"}')::text ilike ?"
-          end.join(" AND ")
-          values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
-
-          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NOT NULL AND (#{q_rules})"
-
-          where(
-            q_rules, *values
-          )
-        when "do_not_include"
-
-          q_rules = origin_list.map do |origin_id|
-            <<-eos
-              (searchable_data #>> '{"excluded_geographical_areas"}')::text NOT ilike ?
-            eos
-          end.join(" AND ")
-          values = origin_list.map { |origin_id| "%_#{origin_id}_%" }
-
-          q_rules = "searchable_data #>> '{\"excluded_geographical_areas\"}' IS NULL OR " +
-                    "(#{q_rules})"
-          where(
-            q_rules, *values
-          )
-        end
+        where(
+          ::Measures::SearchFilters::OriginExclusions.new(
+            operator, origin_list
+          ).sql_rules
+        )
       end
 
       def operator_search_by_duties(operator, duties_list=[])
