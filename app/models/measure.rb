@@ -417,22 +417,10 @@ class Measure < Sequel::Model
       end
 
       def operator_search_by_regulation(operator, regulation_id)
-        q_rule = case operator
-        when "is"
-          "measure_generating_regulation_id = ? OR justification_regulation_id = ?"
-        when "is_not"
-          "measure_generating_regulation_id != ? AND justification_regulation_id != ?"
-        when "contains"
-          "measure_generating_regulation_id ilike ? OR justification_regulation_id ilike ?"
-        when "does_not_contain"
-          "measure_generating_regulation_id NOT ilike ? AND justification_regulation_id NOT ilike ?"
-        end
-
-        regulation_id = "%#{regulation_id}%" if %w(contains does_not_contain).include?(operator)
-
         where(
-          q_rule,
-          regulation_id, regulation_id
+          ::Measures::SearchFilters::Regulation.new(
+            operator, regulation_id
+          ).sql_rules
         )
       end
 
