@@ -449,10 +449,10 @@ class Measure < Sequel::Model
         where(q_rule, value)
       end
 
-      def operator_search_by_origin_exclusions(operator, origin_list=[])
+      def operator_search_by_origin_exclusions(operator, exclusions_list=[])
         where(
           ::Measures::SearchFilters::OriginExclusions.new(
-            operator, origin_list
+            operator, exclusions_list
           ).sql_rules
         )
       end
