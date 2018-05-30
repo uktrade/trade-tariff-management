@@ -17,9 +17,13 @@ module Measures
 
     expose(:search_ops) {
       ops = params[:search]
-      ops.send("permitted=", true)
 
-      ops = ops.to_h || {}
+      if ops.present?
+        ops.send("permitted=", true)
+        ops = ops.to_h
+      else
+        ops = {}
+      end
       ops = setup_advanced_filters(ops)
 
       ops.merge(
