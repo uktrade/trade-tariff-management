@@ -1,21 +1,24 @@
 require "rails_helper"
 
-describe "Measure search: additional code filter" do
+describe "Measure search: regulation filter" do
 
-  include_context "measures_search_is_or_is_not_context"
+  include_context "measures_search_base_context"
 
-  let(:search_key) { "additional_code" }
+  let(:search_key) { "regulation" }
 
   let(:a_measure) do
-    create(:measure, additional_code_id: "333")
+    create(:measure, measure_generating_regulation_id: "R3333333")
   end
 
   let(:b_measure) do
-    create(:measure, additional_code_id: "334")
+    create(:measure, measure_generating_regulation_id: "R3344444")
   end
 
   let(:c_measure) do
-    create(:measure, additional_code_id: "555")
+    create(:measure,
+      measure_generating_regulation_id: "A1232222",
+      justification_regulation_id: "R5555555"
+    )
   end
 
   before do
@@ -25,13 +28,13 @@ describe "Measure search: additional code filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by additional_code_id with operator" do
+    it "should filter by regulation with 'is' operator" do
       #
       # 'is' filter
       #
       res = search_results(
         operator: 'is',
-        value: "333"
+        value: "R3333333"
       )
 
       expect(res.count).to be_eql(1)
@@ -39,7 +42,7 @@ describe "Measure search: additional code filter" do
 
       res = search_results(
         operator: 'is',
-        value: "555"
+        value: "R5555555"
       )
 
       expect(res.count).to be_eql(1)
@@ -50,7 +53,7 @@ describe "Measure search: additional code filter" do
       #
       res = search_results(
         operator: 'is_not',
-        value: "334"
+        value: "R3344444"
       )
 
       expect(res.count).to be_eql(2)
@@ -58,16 +61,27 @@ describe "Measure search: additional code filter" do
       expect(measure_sids).not_to include(b_measure.measure_sid)
 
       #
-      # 'starts_with' filter
+      # 'contains' filter
       #
       res = search_results(
-        operator: 'starts_with',
+        operator: 'contains',
         value: "33"
       )
 
       expect(res.count).to be_eql(2)
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).not_to include(c_measure.measure_sid)
+
+      #
+      # 'does_not_contain' filter
+      #
+      res = search_results(
+        operator: 'does_not_contain',
+        value: "33"
+      )
+
+      expect(res.count).to be_eql(1)
+      expect(res[0].measure_sid).to be_eql(c_measure.measure_sid)
     end
   end
 end

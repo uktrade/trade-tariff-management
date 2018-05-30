@@ -25,7 +25,7 @@ describe "Measure search: commodity code filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by commodity_code with 'is' operator" do
+    it "should filter by commodity_code with operator" do
       #
       # 'is' filter
       #
