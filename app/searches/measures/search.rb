@@ -78,17 +78,19 @@ module Measures
       end
 
       def apply_author_filter
-        @relation = relation.operator_search_by_author(author)
+        val = just_value(author)
+        @relation = relation.operator_search_by_author(val) if val.present?
+      end
+
+      def apply_last_updated_by_filter
+        val = just_value(last_updated_by)
+        @relation = relation.operator_search_by_last_updated_by(val) if val.present?
       end
 
       def apply_date_of_filter
         @relation = relation.operator_search_by_date_of(
           query_ops(date_of)
         )
-      end
-
-      def apply_last_updated_by_filter
-        @relation = relation.operator_search_by_last_updated_by(last_updated_by)
       end
 
       def apply_regulation_filter
@@ -166,6 +168,10 @@ module Measures
             ops[:value]
           ]
         end
+      end
+
+      def just_value(ops)
+        ops[:value]
       end
   end
 end
