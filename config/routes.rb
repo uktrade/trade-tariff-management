@@ -60,4 +60,5 @@ Rails.application.routes.draw do
   end
 
   resources :regulations
+  resources :users, only: [:index]
 end
