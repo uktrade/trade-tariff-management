@@ -9,8 +9,8 @@ class User < Sequel::Model
     def q_search(filter_ops)
       q_rule = "#{filter_ops[:q]}%"
 
-      where("
-        name ilike ? OR email ilike ?",
+      where(
+        "name ilike ? OR email ilike ?",
         q_rule, q_rule
       ).order(:name)
     end
