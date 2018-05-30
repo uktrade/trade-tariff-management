@@ -16,7 +16,10 @@ module Measures
     end
 
     expose(:search_ops) {
-      ops = params[:search] || {}
+      ops = params[:search]
+      ops.send("permitted=", true)
+
+      ops = ops.to_h || {}
       ops = setup_advanced_filters(ops)
 
       ops.merge(
