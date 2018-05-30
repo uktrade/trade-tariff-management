@@ -53,4 +53,6 @@ describe "Measure search: valid_from filter" do
       expect(measure_sids).not_to include(d_measure.measure_sid)
     end
   end
+
+  include_context "measures_search_valid_to_from_blank_ops_context"
 end
