@@ -9,16 +9,16 @@ module Measures
         where("searchable_data::text <> '{}'::text")
       end
 
-      def operator_search_by_status(operator, status)
-        is_or_is_not_search_query("status", status, operator)
+      def operator_search_by_status(operator, status=nil)
+        is_or_is_not_search_query("status", operator, status)
       end
 
-      def operator_search_by_measure_type(operator, measure_type_id)
-        is_or_is_not_search_query("measure_type_id", measure_type_id, operator)
+      def operator_search_by_measure_type(operator, measure_type_id=nil)
+        is_or_is_not_search_query("measure_type_id", operator, measure_type_id)
       end
 
-      def operator_search_by_origin(operator, geographical_area_id)
-        is_or_is_not_search_query("geographical_area_id", geographical_area_id, operator)
+      def operator_search_by_origin(operator, geographical_area_id=nil)
+        is_or_is_not_search_query("geographical_area_id", operator,  geographical_area_id)
       end
 
       def operator_search_by_date_of(ops={})
@@ -92,7 +92,9 @@ module Measures
           where(q_rules) if q_rules.present?
         end
 
-        def is_or_is_not_search_query(field_name, value, operator)
+        def is_or_is_not_search_query(field_name, operator, value=nil)
+          return self if value.blank?
+
           q_rule = if operator == "is"
             "#{field_name} = ?"
           else
