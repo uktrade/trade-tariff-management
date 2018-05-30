@@ -1,21 +1,21 @@
 require "rails_helper"
 
-describe "Measure search: commodity code filter" do
+describe "Measure search: additional code filter" do
 
   include_context "measures_search_is_or_is_not_context"
 
-  let(:search_key) { "commodity_code" }
+  let(:search_key) { "additional_code" }
 
   let(:a_measure) do
-    create(:measure, goods_nomenclature_item_id: "3333333333")
+    create(:measure, additional_code_id: "333")
   end
 
   let(:b_measure) do
-    create(:measure, goods_nomenclature_item_id: "3333444444")
+    create(:measure, additional_code_id: "334")
   end
 
   let(:c_measure) do
-    create(:measure, goods_nomenclature_item_id: "5555555555")
+    create(:measure, additional_code_id: "555")
   end
 
   before do
@@ -25,13 +25,13 @@ describe "Measure search: commodity code filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by commodity_code with 'is' operator" do
+    it "should filter by additional_code_id with 'is' operator" do
       #
       # 'is' filter
       #
       res = search_results(
         operator: 'is',
-        value: "3333333333"
+        value: "333"
       )
 
       expect(res.count).to be_eql(1)
@@ -39,7 +39,7 @@ describe "Measure search: commodity code filter" do
 
       res = search_results(
         operator: 'is',
-        value: "5555555555"
+        value: "555"
       )
 
       expect(res.count).to be_eql(1)
@@ -50,7 +50,7 @@ describe "Measure search: commodity code filter" do
       #
       res = search_results(
         operator: 'is_not',
-        value: "3333444444"
+        value: "334"
       )
 
       expect(res.count).to be_eql(2)
@@ -62,21 +62,12 @@ describe "Measure search: commodity code filter" do
       #
       res = search_results(
         operator: 'starts_with',
-        value: "3333"
+        value: "33"
       )
 
       expect(res.count).to be_eql(2)
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).not_to include(c_measure.measure_sid)
-
-      #
-      # 'is_not_unspecified' filter
-      #
-      res = search_results(
-        operator: 'is_not_unspecified'
-      )
-
-      expect(res.count).to be_eql(3)
     end
   end
 end
