@@ -23,7 +23,7 @@ module Measures
 
       def operator_search_by_date_of(ops={})
         q_rules = ::Measures::SearchFilters::DateOf.new(ops).sql_rules
-        where(q_rules) if q_rules.present?
+        q_rules.present? ? where(q_rules) : self
       end
 
       def operator_search_by_valid_from(operator, date=nil)
@@ -81,7 +81,7 @@ module Measures
             operator, value
           ).sql_rules
 
-          where(q_rules) if q_rules.present?
+          q_rules.present? ? where(q_rules) : self
         end
 
         def date_filter_search_query(field_name, operator, date)
@@ -89,7 +89,7 @@ module Measures
             field_name, operator, date
           ).sql_rules
 
-          where(q_rules) if q_rules.present?
+          q_rules.present? ? where(q_rules) : self
         end
 
         def is_or_is_not_search_query(field_name, operator, value=nil)
