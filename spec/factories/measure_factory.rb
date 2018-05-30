@@ -24,19 +24,19 @@ FactoryGirl.define do
     f.validity_end_date   { nil }
 
     # mandatory valid associations
-    f.goods_nomenclature { create :goods_nomenclature, validity_start_date: validity_start_date - 1.day,
+    f.goods_nomenclature { create :goods_nomenclature, validity_start_date: (validity_start_date || Date.today) - 1.day,
                                                        goods_nomenclature_item_id: goods_nomenclature_item_id,
                                                        goods_nomenclature_sid: goods_nomenclature_sid,
                                                        producline_suffix: gono_producline_suffix,
                                                        indents: gono_number_indents }
     f.measure_type { create :measure_type, measure_type_id: measure_type_id,
-                                   validity_start_date: validity_start_date - 1.day,
+                                   validity_start_date: (validity_start_date || Date.today) - 1.day,
                                    measure_explosion_level: type_explosion_level,
                                    order_number_capture_code: order_number_capture_code }
     f.geographical_area {
       create(:geographical_area, geographical_area_sid: geographical_area_sid,
                                  geographical_area_id: geographical_area_id,
-                                 validity_start_date: validity_start_date - 1.day)
+                                 validity_start_date: (validity_start_date || Date.today) - 1.day)
     }
     f.base_regulation {
       create(:base_regulation, base_regulation_id: measure_generating_regulation_id,
