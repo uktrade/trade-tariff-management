@@ -31,7 +31,7 @@ module Measures
       #
       # TODO: remove .where("added_at IS NOT NULL") after testing
       #
-      @relation = Measure.default_search.where("added_at IS NOT NULL")
+      @relation = Measure.default_search #.where("added_at IS NOT NULL")
       @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
       search_ops.select do |k, v|
@@ -40,6 +40,14 @@ module Measures
         instance_variable_set("@#{k}", search_ops[k])
         send("apply_#{k}_filter")
       end
+
+      p ""
+      p "-" * 100
+      p ""
+      p " SQL: #{relation.sql}"
+      p ""
+      p "-" * 100
+      p ""
 
       relation.reverse_order(:validity_start_date)
               .page(page)
