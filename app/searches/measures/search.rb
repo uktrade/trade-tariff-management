@@ -44,6 +44,8 @@ module Measures
       p ""
       p "-" * 100
       p ""
+      p " search_ops: #{search_ops.inspect}"
+      p ""
       p " SQL: #{relation.sql}"
       p ""
       p "-" * 100

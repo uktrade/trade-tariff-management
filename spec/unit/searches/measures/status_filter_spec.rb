@@ -2,6 +2,10 @@ require "rails_helper"
 
 describe "Measure search: status filter" do
 
+  include_context "measures_search_is_or_is_not_context"
+
+  let(:search_key) { "status" }
+
   let(:draft_incomplete_measure) do
     create(:measure, status: "draft_incomplete")
   end
@@ -53,37 +57,4 @@ describe "Measure search: status filter" do
       expect(res.map(&:measure_sid)).not_to include(draft_incomplete_measure.measure_sid)
     end
   end
-
-  describe "Invalid Search" do
-    it "should not filter by status with 'is' if value blank" do
-      res = search_results(
-        operator: 'is'
-      )
-
-      expect(res.count).to be_eql(3)
-    end
-
-    it "should not filter by status with 'is_not' if value blank" do
-      res = search_results(
-        operator: 'is_not'
-      )
-
-      expect(res.count).to be_eql(3)
-    end
-
-    it "should not filter by status with blank ops provided" do
-      res = search_results({})
-
-      expect(res.count).to be_eql(3)
-    end
-  end
-
-  private
-
-    def search_results(ops)
-      ::Measures::Search.new(
-        status: ops
-      ).results
-       .to_a
-    end
 end
