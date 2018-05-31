@@ -118,7 +118,7 @@ class Measure < Sequel::Model
     if self[:validity_start_date].present?
       self[:validity_start_date]
     else
-      generating_regulation.validity_start_date
+      generating_regulation.try(:validity_start_date)
     end
   end
 
@@ -493,11 +493,15 @@ class Measure < Sequel::Model
     999
   end
 
+  #
+  # TODO: removed duplications
+  #
+
   def to_table_json
     #
     # TODO: remove status_title_line after testing and leave just `status_title`
     #
-    status_title_line = status_title + " " + JSON.parse(searchable_data).to_s
+    status_title_line = status_title + " " + (searchable_data.present? ? JSON.parse(searchable_data).to_s : "")
 
     {
       measure_sid: measure_sid,
@@ -521,12 +525,13 @@ class Measure < Sequel::Model
     #
     # TODO: remove status_title_line after testing and leave just `status_title`
     #
-    status_title_line = status_title + " " + JSON.parse(searchable_data).to_s
+    status_title_line = status_title + " " + (searchable_data.present? ? JSON.parse(searchable_data).to_s : "")
+
     {
       measure_sid: measure_sid,
       regulation: generating_regulation.to_json,
       measure_type: measure_type.to_json,
-      validity_start_date: validity_start_date.strftime("%d %b %Y"),
+      validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       goods_nomenclature: goods_nomenclature.try(:to_json),
       additional_code: additional_code.try(:to_json),
