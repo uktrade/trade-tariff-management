@@ -35,7 +35,9 @@ module Measures
       @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
       search_ops.select do |k, v|
-        ALLOWED_FILTERS.include?(k.to_s) && v.present?
+        ALLOWED_FILTERS.include?(k.to_s) &&
+        v.present? &&
+        v[:enabled].present?
       end.each do |k, v|
         instance_variable_set("@#{k}", search_ops[k])
         send("apply_#{k}_filter")
