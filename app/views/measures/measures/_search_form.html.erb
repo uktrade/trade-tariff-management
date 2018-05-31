@@ -130,7 +130,7 @@
       <custom-select :options="conditionsForValidityStartDate" label-field="label" value-field="value"  v-model="validity_start_date.operator" v-bind:disabled="validityStartDateDisabled" name="search[valid_from][operator]"></custom-select>
     </div>
     <div class="find-measure__long">
-      <date-select v-model="validity_start_date.value" name="search[valid_from][value]" v-bind:disabled="validityStartDateDisabled" />
+      <date-select v-model="validity_start_date.value" name="search[valid_from][value]" v-bind:disabled="validityStartDateValueDisabled" />
     </div>
   </div>
 
@@ -147,7 +147,7 @@
       <custom-select :options="conditionsForValidityEndDate" label-field="label" value-field="value"  v-model="validity_end_date.operator" v-bind:disabled="validityEndDateDisabled" name="search[valid_to][operator]"></custom-select>
     </div>
     <div class="find-measure__long">
-      <date-select v-model="validity_end_date.value" name="search[valid_to][value]" v-bind:disabled="validityEndDateDisabled" />
+      <date-select v-model="validity_end_date.value" name="search[valid_to][value]" v-bind:disabled="validityEndDateValueDisabled" />
     </div>
   </div>
 
@@ -164,7 +164,7 @@
       <custom-select :options="conditionsForCommodityCode" label-field="label" value-field="value"  v-model="commodity_code.operator" v-bind:disabled="commodityCodeDisabled" name="search[commodity_code][operator]"></custom-select>
     </div>
     <div class="find-measure__short">
-      <input name="search[commodity_code][value]" class="form-control" v-model="commodity_code.value" v-bind:disabled="commodityCodeDisabled" />
+      <input name="search[commodity_code][value]" class="form-control" v-model="commodity_code.value" v-bind:disabled="commodityCodeValueDisabled" />
     </div>
   </div>
 
@@ -198,7 +198,7 @@
       <custom-select :options="conditionsForOrigin" label-field="label" value-field="value"  v-model="origin.operator" v-bind:disabled="originDisabled" name="search[origin][operator]"></custom-select>
     </div>
     <div class="find-measure__short">
-      <custom-select url="/origins" label-field="description" value-field="origin_id" placeholder="― start typing ―" min-length="1" v-model="origin.value" v-bind:disabled="originDisabled" name="search[origin][value]"></custom-select>
+      <custom-select url="/origins" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="origin.value" v-bind:disabled="originDisabled" name="search[origin][value]"></custom-select>
     </div>
   </div>
 
@@ -214,15 +214,15 @@
     <div class="find-measures__is">
       <custom-select :options="conditionsForOriginExclusions" label-field="label" value-field="value"  v-model="origin_exclusions.operator" v-bind:disabled="originExclusionsDisabled" name="search[origin_exclusions][operator]"></custom-select>
     </div>
-    <div class="find-measure__short">
-      <div class='origin-exclusion' v-for="(exclusion, index) in origin_exclusions.value">
-        <custom-select url="/origins" label-field="description" value-field="origin_id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="originExclusionsDisabled" :name="'search[origin_exclusions][value][' + index + ']'"></custom-select>
+    <div class="find-measure__flow">
+      <div class='origin-exclusion-search' v-for="(exclusion, index) in origin_exclusions.value">
+        <custom-select url="/origins" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="originExclusionsDisabled" :name="'search[origin_exclusions][value][' + index + ']'" drilldown-name="parent_id" v-bind:drilldown-value.sync="origin.value"></custom-select>
+
+        <input type="hidden" :name="'search[origin_exclusions][value][' + index + ']'" :value="exclusion.value" />
       </div>
-      <p>
-        <a v-on:click.prevent="addOriginExclusion" v-if="origin_exclusions.enabled">
-          Add another exclusion
-        </a>
-      </p>
+      <a href="#" v-on:click.prevent="addOriginExclusion" v-if="origin_exclusions.enabled">
+        Add another exclusion
+      </a>
     </div>
   </div>
 
@@ -239,6 +239,16 @@
       <custom-select :options="conditionsForDuties" label-field="label" value-field="value"  v-model="duties.operator" v-bind:disabled="dutiesDisabled" name="search[duties][operator]"></custom-select>
     </div>
     <div class="find-measure__flow">
+      <div class='duty-search' v-for="(duty, index) in duties.value">
+        <custom-select url="/duty_expressions" label-field="description" value-field="duty_expression_id" code-field="duty_expression_code" v-model="duty.duty_expression_id" placeholder="― select the duty expression ―" code-class-name="prefix--duty-expression" abbreviation-class-name="abbreviation--duty-expression" :options-filter="expressionsFriendlyDuplicate" :disabled="dutiesDisabled"></custom-select>
+
+        <input v-model="duty.duty_amount" class="form-control small-input" :disabled="dutiesDisabled" />
+
+        <input type="hidden" :name="'search[duties][value][' + index + '][' + duty.duty_expression_id + ']'" :value="duty.duty_amount" />
+      </div>
+      <a href="#" v-on:click.prevent="addDuty" v-if="duties.enabled">
+        Add another duty expression
+      </a>
     </div>
   </div>
 
@@ -255,7 +265,14 @@
       <custom-select :options="conditionsForConditions" label-field="label" value-field="value"  v-model="conditions.operator" v-bind:disabled="conditionsDisabled" name="search[conditions][operator]"></custom-select>
     </div>
     <div class="find-measure__flow">
+      <div class='condition-search' v-for="(condition, index) in conditions.value">
+        <custom-select url="/measure_condition_codes" label-field="description" value-field="condition_code" code-field="condition_code" v-model="condition.measure_condition_code" placeholder="― select the condition ―" code-class-name="prefix--condition" :disabled="conditionsValueDisabled"></custom-select>
 
+        <input type="hidden" :name="'search[conditions][value][' + index + ']'" :value="condition.measure_condition_code" />
+      </div>
+      <a href="#" v-on:click.prevent="addCondition" v-if="!conditionsValueDisabled">
+        Add another condition
+      </a>
     </div>
   </div>
 
@@ -272,7 +289,20 @@
       <custom-select :options="conditionsForFootnotes" label-field="label" value-field="value"  v-model="footnotes.operator" v-bind:disabled="footnotesDisabled" name="search[footnotes][operator]"></custom-select>
     </div>
     <div class="find-measure__flow">
+      <div class='footnote-search' v-for="(footnote, index) in footnotes.value">
+        <custom-select url="/footnote_types" label-field="description" value-field="footnote_type_id" code-field="footnote_type_id" v-model="footnote.footnote_type_id" placeholder="― select the footnote type ―"  code-class-name="prefix--footnote-type" :disabled="footnotesValueDisabled"></custom-select>
 
+        <span class='middle-text'>
+          and ID
+        </span>
+
+        <input class="form-control tiny-input" v-model="footnote.footnote_id" :disabled="footnotesValueDisabled">
+
+        <input type="hidden" :name="'search[footnotes][value][' + index + '][' + footnote.footnote_type_id + ']'" :value="footnote.footnote_id" />
+      </div>
+      <a href="#" v-on:click.prevent="addFootnote" v-if="!footnotesValueDisabled">
+        Add another footnote
+      </a>
     </div>
   </div>
 

@@ -27,3 +27,62 @@ $find-measure-gutter: 5px;
 .origin-exclusion + .origin-exclusion {
   margin-top: 5px;
 }
+
+.footnote-search {
+  padding-top: 5px;
+  >div {
+    display: inline-block;
+    width: 350px;
+  }
+  >span {
+    display: inline-block;
+    padding: 8px 10px;
+    vertical-align: top;
+  }
+  .tiny-input {
+    vertical-align: top;
+    display: inline-block;
+    width: 70px !important
+  }
+}
+
+.origin-exclusion-search {
+  padding: 5px 0;
+  >div {
+    width: 220px;
+    display: inline-block;
+  }
+}
+
+.duty-search {
+  padding: 0;
+
+  &:first-child {
+    padding-top: 5px;
+  }
+
+  >div {
+    width: 300px;
+    display: inline-block;
+  }
+  .small-input {
+    width: 100px !important;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+  }
+}
+
+.condition-search {
+  padding: 5px 0;
+  >div {
+    width: 300px;
+    display: inline-block;
+  }
+  .small-input {
+    width: 100px !important;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+  }
+}

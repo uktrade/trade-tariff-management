@@ -65,17 +65,18 @@ Vue.component('custom-select', {
       }
     }
 
-    if (this.url && !this.minLength) {
+    if (this.url && (this.value || !this.minLength)) {
       options["onInitialize"] = function() {
         var self = this;
         var fn = self.settings.load;
+        self.isInitialLoad = true;
         self.load(function(callback) {
           fn.apply(self, ["", callback]);
         });
       };
 
       options.onLoad = function(data) {
-        if (vm.url && !vm.minLength && vm.value && !vm.firstLoadSelected) {
+        if (vm.url && vm.value && !vm.firstLoadSelected) {
           $(vm.$el).find("select")[0].selectize.setValue(vm.value.toString());
           vm.firstLoadSelected = true;
         }
@@ -84,13 +85,15 @@ Vue.component('custom-select', {
 
     if (this.url) {
       options["load"] = function(query, callback) {
+        var self = this;
+
         $(vm.$el).find("select")[0].selectize.clearOptions();
         $(vm.$el).find("select")[0].selectize.clearCache();
         $(vm.$el).find("select")[0].selectize.refreshOptions();
         $(vm.$el).find("select")[0].selectize.renderCache['option'] = {};
         $(vm.$el).find("select")[0].selectize.renderCache['item'] = {};
 
-        if (vm.minLength && query.length < vm.minLength) return callback();
+        if (!this.isInitialLoad && vm.minLength && query.length < vm.minLength) return callback();
         if (vm.drilldownRequired === "true" && !vm.drilldownValue) return callback();
 
         var data = {
@@ -116,6 +119,8 @@ Vue.component('custom-select', {
             } catch (e) {
               callback(res);
             }
+
+            self.isInitialLoad = false;
           }
         });
       }
@@ -177,7 +182,7 @@ Vue.component('custom-select', {
       $(vm.$el).find("select")[0].selectize.renderCache['option'] = {};
       $(vm.$el).find("select")[0].selectize.renderCache['item'] = {};
 
-      if (!vm.minLength) {
+      if (!vm.minLength || vm.value) {
         $(vm.$el).find("select")[0].selectize.load(function(callback) {
           $.ajax({
             url: vm.url,

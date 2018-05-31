@@ -1,3 +1,5 @@
+//= require ./duty-expressions-parser
+
 $(document).ready(function() {
   var form = document.querySelector(".find-measures");
 
@@ -67,6 +69,13 @@ $(document).ready(function() {
         conditionsForDuties: [ conditions.are, conditions.include ],
         conditionsForConditions: [ conditions.are, conditions.are_not_specified, conditions.are_not_unspecified, conditions.include ],
         conditionsForFootnotes: [ conditions.are, conditions.are_not_specified, conditions.are_not_unspecified, conditions.include ],
+
+        disableValue: [
+          conditions.is_not_specified.value,
+          conditions.is_not_unspecified.value,
+          conditions.are_not_specified.value,
+          conditions.are_not_unspecified.value
+        ],
 
         statuses: [
           { value: "draft_incomplete", label: "Draft - incomplete" },
@@ -152,22 +161,27 @@ $(document).ready(function() {
         origin_exclusions: {
           enabled: false,
           operator: "include",
-          value: []
+          value: [{value: ""}]
         },
         duties: {
           enabled: false,
           operator: "are",
-          value: null
+          value: [{duty_expression_id: null, duty_amount: null}]
         },
         conditions: {
           enabled: false,
           operator: "are",
-          value: null
+          value: [{
+            measure_condition_code: null
+          }]
         },
         footnotes: {
           enabled: false,
           operator: "are",
-          value: null
+          value: [{
+            footnote_type_id: null,
+            footnote_id: null
+          }]
         }
       };
 
@@ -213,16 +227,16 @@ $(document).ready(function() {
         data.type = default_params.type
       }
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.validity_start_date !== undefined) {
-        data.validity_start_date = window.__search_params.search.validity_start_date;
+      if (window.__search_params.search !== undefined && window.__search_params.search.valid_from !== undefined) {
+        data.validity_start_date = window.__search_params.search.valid_from;
       } else {
-        data.validity_start_date = default_params.validity_start_date
+        data.validity_start_date = default_params.valid_from
       }
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.validity_end_date !== undefined) {
-        data.validity_end_date = window.__search_params.search.validity_end_date;
+      if (window.__search_params.search !== undefined && window.__search_params.search.valid_to !== undefined) {
+        data.validity_end_date = window.__search_params.search.valid_to;
       } else {
-        data.validity_end_date = default_params.validity_end_date
+        data.validity_end_date = default_params.valid_to
       }
 
       if (window.__search_params.search !== undefined && window.__search_params.search.commodity_code !== undefined) {
@@ -244,27 +258,95 @@ $(document).ready(function() {
       }
 
       if (window.__search_params.search !== undefined && window.__search_params.search.origin_exclusions !== undefined) {
+        var c = window.__search_params.search.origin_exclusions.value;
+
         data.origin_exclusions = window.__search_params.search.origin_exclusions;
+        data.origin_exclusions.value = [];
+
+        for (var k in c) {
+          if (!c.hasOwnProperty(k)) {
+            continue;
+          }
+
+          data.origin_exclusions.value.push({
+            value: c[k]
+          });
+        }
       } else {
-        data.origin_exclusions = default_params.origin_exclusions
+        data.origin_exclusions = default_params.origin_exclusions;
       }
 
       if (window.__search_params.search !== undefined && window.__search_params.search.duties !== undefined) {
+        var d = window.__search_params.search.duties.value;
+
         data.duties = window.__search_params.search.duties;
+        data.duties.value = [];
+
+        for (var k in d) {
+          if (!d.hasOwnProperty(k)) {
+            continue;
+          }
+
+          var duty = {};
+
+          for (var kk in d[k]) {
+            if (!d[k].hasOwnProperty(kk)) {
+              continue;
+            }
+
+            duty.duty_expression_id = kk;
+            duty.duty_amount = d[k][kk];
+          }
+
+          data.duties.value.push(duty);
+        }
       } else {
-        data.duties = default_params.duties
+        data.duties = default_params.duties;
       }
 
       if (window.__search_params.search !== undefined && window.__search_params.search.conditions !== undefined) {
+        var c = window.__search_params.search.conditions.value;
+
         data.conditions = window.__search_params.search.conditions;
+        data.conditions.value = [];
+
+        for (var k in c) {
+          if (!c.hasOwnProperty(k)) {
+            continue;
+          }
+
+          data.conditions.value.push({
+            measure_condition_code: c[k]
+          });
+        }
       } else {
         data.conditions = default_params.conditions
       }
 
       if (window.__search_params.search !== undefined && window.__search_params.search.footnotes !== undefined) {
+        var f = window.__search_params.search.footnotes.value;
+
         data.footnotes = window.__search_params.search.footnotes;
+        data.footnotes.value = [];
+
+        for (var k in f) {
+          if (!f.hasOwnProperty(k)) {
+            continue;
+          }
+
+          for (var kk in f[k]) {
+            if (!f[k].hasOwnProperty(kk)) {
+              continue;
+            }
+
+            data.footnotes.value.push({
+              footnote_type_id: kk,
+              footnote_id: f[k][kk]
+            });
+          }
+        }
       } else {
-        data.footnotes = default_params.footnotes
+        data.footnotes = default_params.footnotes;
       }
 
       return data;
@@ -320,14 +402,49 @@ $(document).ready(function() {
       },
       noSelectedMeasures: function() {
         return this.selectedMeasures.length === 0;
-      }
+      },
+
+      validityStartDateValueDisabled: function() {
+        return this.validityStartDateDisabled || this.disableValue.indexOf(this.validity_start_date.operator) > -1;
+      },
+      validityEndDateValueDisabled: function() {
+        return this.validityEndDateDisabled || this.disableValue.indexOf(this.validity_end_date.operator) > -1;
+      },
+      commodityCodeValueDisabled: function() {
+        return this.commodityCodeDisabled || this.disableValue.indexOf(this.commodity_code.operator) > -1;
+      },
+      conditionsValueDisabled: function() {
+        return this.conditionsDisabled || this.disableValue.indexOf(this.conditions.operator) > -1;
+      },
+      footnotesValueDisabled: function() {
+        return this.footnotesDisabled || this.disableValue.indexOf(this.footnotes.operator) > -1;
+      },
     },
     methods: {
       addOriginExclusion: function() {
-        this.origin_exclusions.push({ value: '' });
+        this.origin_exclusions.value.push({ value: '' });
+      },
+      addDuty: function() {
+        this.duties.value.push({
+          duty_expression_id: null
+        });
+      },
+      addFootnote: function() {
+        this.footnotes.value.push({
+          footnote_type_id: null,
+          footnote_id: null
+        });
+      },
+      addCondition: function() {
+        this.conditions.value.push({
+          measure_condition_code: null
+        });
       },
       onMeasuresSelected: function(sids) {
         this.selectedMeasures = sids;
+      },
+      expressionsFriendlyDuplicate: function(options) {
+        return DutyExpressionsParser.parse(options);
       }
     }
   });
