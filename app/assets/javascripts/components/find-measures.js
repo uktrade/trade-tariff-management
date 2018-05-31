@@ -69,9 +69,9 @@ $(document).ready(function() {
         conditionsForFootnotes: [ conditions.are, conditions.are_not_specified, conditions.are_not_unspecified, conditions.include ],
 
         statuses: [
-          { value: "draft", label: "Draft - incomplete" },
-          { value: "ready_for_crosscheck", label: "Draft - ready for cross-check" },
-          { value: "submitted", label: "Submitted for cross-check" },
+          { value: "draft_incomplete", label: "Draft - incomplete" },
+          { value: "draft_ready_for_cross_check", label: "Draft - ready for cross-check" },
+          { value: "submitted_for_cross_check", label: "Submitted for cross-check" },
           { value: "cross_check_rejected", label: "Cross-check rejected" },
           { value: "ready_for_approval", label: "Ready for approval" },
           { value: "approval_rejected", label: "Approval rejected" },
