@@ -160,12 +160,14 @@ module Measures
       end
 
       def query_ops(ops)
+        val = just_value(ops)
+
         if ops[:mode].present?
           ops
         else
           [
             ops[:operator],
-            ops[:value]
+            val.is_a?(Hash) ? val.values : val
           ]
         end
       end
