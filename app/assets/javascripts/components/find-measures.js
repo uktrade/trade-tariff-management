@@ -131,13 +131,13 @@ $(document).ready(function() {
           operator: "is",
           value: null
         },
-        validity_start_date: {
+        valid_from: {
           enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
-        validity_end_date: {
+        valid_to: {
           enabled: false,
           operator: "is",
           value: null,
