@@ -148,4 +148,11 @@ class GeographicalArea < Sequel::Model
   def is_country?
     COUNTRIES_CODES.include?(geographical_code)
   end
+
+  def json_mapping
+    {
+      id: geographical_area_id,
+      description: description
+    }
+  end
 end
