@@ -85,10 +85,10 @@ module Measures
         end
 
         def item_amount(duty_ops)
-          duty_ops.values[0]
-                  .strip
-                  .to_f
-                  .to_s
+          val = duty_ops.values[0]
+                        .strip
+
+          val.present? ? val.to_f.to_s : ""
         end
     end
   end
