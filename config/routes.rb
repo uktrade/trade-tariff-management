@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     resources :measurement_units, only: [:index]
     resources :measurement_unit_qualifiers, only: [:index]
     resources :monetary_units, only: [:index]
+    resources :geographical_areas, only: [:index]
   end
 
   namespace :measures do

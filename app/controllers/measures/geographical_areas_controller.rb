@@ -1,5 +1,5 @@
 module Measures
-  class MeasureActionsController < ::BaseController
+  class GeographicalAreasController < ::BaseController
 
     def collection
       GeographicalArea.conditional_search(params)
