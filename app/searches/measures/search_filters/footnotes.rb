@@ -26,7 +26,7 @@
 
 module Measures
   module SearchFilters
-    class Footnotes
+    class Footnotes < ::Measures::SearchFilters::CollectionFilterBase
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         are
@@ -38,7 +38,7 @@ module Measures
 
       def initialize(operator, footnotes_list)
         @operator = operator
-        @footnotes_list = footnotes_list.uniq!
+        @footnotes_list = filtered_hash_collection_params(footnotes_list)
       end
 
       def sql_rules
