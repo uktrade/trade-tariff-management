@@ -419,6 +419,9 @@ $(document).ready(function() {
       footnotesValueDisabled: function() {
         return this.footnotesDisabled || this.disableValue.indexOf(this.footnotes.operator) > -1;
       },
+      exclusionsValueDisabled: function () {
+        return this.originExclusionsDisabled || this.disableValue.indexOf(this.origin_exclusions.operator) > -1;
+      },
     },
     methods: {
       addOriginExclusion: function() {

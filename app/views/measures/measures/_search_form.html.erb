@@ -216,11 +216,11 @@
     </div>
     <div class="find-measure__flow">
       <div class='origin-exclusion-search' v-for="(exclusion, index) in origin_exclusions.value">
-        <custom-select url="/geographical_areas" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="originExclusionsDisabled" :name="'search[origin_exclusions][value][' + index + ']'" drilldown-name="parent_id" v-bind:drilldown-value.sync="origin.value"></custom-select>
+        <custom-select url="/geographical_areas" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="exclusionsValueDisabled" :name="'search[origin_exclusions][value][' + index + ']'" drilldown-name="parent_id" v-bind:drilldown-value.sync="origin.value"></custom-select>
 
         <input type="hidden" :name="'search[origin_exclusions][value][' + index + ']'" :value="exclusion.value" />
       </div>
-      <a href="#" v-on:click.prevent="addOriginExclusion" v-if="origin_exclusions.enabled">
+      <a href="#" v-on:click.prevent="addOriginExclusion" v-if="!exclusionsValueDisabled">
         Add another exclusion
       </a>
     </div>
