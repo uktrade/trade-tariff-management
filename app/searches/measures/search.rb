@@ -37,8 +37,19 @@ module Measures
       search_ops.select do |k, v|
         ALLOWED_FILTERS.include?(k.to_s) &&
         v.present? &&
-        v[:enabled].present?
+        v[:enabled].present? &&
+        collection_filter_is_missing_or_having_proper_values?(v)
       end.each do |k, v|
+
+        p ""
+        p "-" * 100
+        p ""
+        p " v: #{v.inspect}"
+        p ""
+        p "-" * 100
+        p ""
+
+
         instance_variable_set("@#{k}", search_ops[k])
         send("apply_#{k}_filter")
       end
@@ -58,6 +69,16 @@ module Measures
     end
 
     private
+
+      def collection_filter_is_missing_or_having_proper_values?(v)
+        val = v[:value]
+        return true if val.blank?
+
+        !val.is_a?(Hash) ||
+        (
+          val.is_a?(Hash) && val.values.reject { |el| el.blank? }.present?
+        )
+      end
 
       def jsonb_search_required?
         group_name ||
