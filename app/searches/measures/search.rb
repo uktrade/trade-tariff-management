@@ -28,10 +28,7 @@ module Measures
     end
 
     def results
-      #
-      # TODO: remove .where("added_at IS NOT NULL") after testing
-      #
-      @relation = Measure.default_search.where("added_at IS NOT NULL")
+      @relation = Measure.default_search
       @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
       search_ops.select do |k, v|
