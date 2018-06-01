@@ -31,10 +31,6 @@ module Measures
       )
     }
 
-    expose(:measures_search_form) do
-      ::MeasuresSearchForm.new(search_ops)
-    end
-
     expose(:measures_search) do
       ::Measures::Search.new(search_ops)
     end
