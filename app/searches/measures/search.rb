@@ -28,7 +28,7 @@ module Measures
     end
 
     def results
-      @relation = Measure.default_search
+      @relation = Measure.reverse_order(:validity_start_date).page(page)
       @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
       search_ops.select do |k, v|
@@ -41,18 +41,19 @@ module Measures
         send("apply_#{k}_filter")
       end
 
-      p ""
-      p "-" * 100
-      p ""
-      p " search_ops: #{search_ops.inspect}"
-      p ""
-      p " SQL: #{relation.sql}"
-      p ""
-      p "-" * 100
-      p ""
+      if Rails.env.development?
+        p ""
+        p "-" * 100
+        p ""
+        p " search_ops: #{search_ops.inspect}"
+        p ""
+        p " SQL: #{relation.sql}"
+        p ""
+        p "-" * 100
+        p ""
+      end
 
-      relation.reverse_order(:validity_start_date)
-              .page(page)
+      relation
     end
 
     private
