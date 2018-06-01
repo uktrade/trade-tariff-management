@@ -152,7 +152,7 @@ class GeographicalArea < Sequel::Model
   def json_mapping
     {
       id: geographical_area_id,
-      description: description
+      description: "#{geographical_area_id} - #{description}"
     }
   end
 end
