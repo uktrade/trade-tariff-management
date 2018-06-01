@@ -10,7 +10,8 @@ h2.heading-large
   | Find measures
 
 script
-  == "window.__measures = #{search_results.map(&:to_table_json).to_json};"
+  - if params[:search].present?
+    == "window.__measures = #{search_results.map(&:to_table_json).to_json};"
   == "window.__search_params = #{params.to_json};"
 
 .find-measures
@@ -19,7 +20,8 @@ script
   = simple_form_for :search, url: bulk_edit_measures_path, method: :get do |f|
     = content_tag :input, nil, { type: "hidden", "name" => "measure_sids[]", "v-for" => "(sid, idx) in selectedMeasures", ":value" => "sid" }
     p
-      = content_tag "button", "Work with selected measures", { class: "button", ":disabled" => "noSelectedMeasures", type: :submit }
-  = render "measures_table"
+      - if params[:search].present?
+        = content_tag "button", "Work with selected measures", { class: "button", ":disabled" => "noSelectedMeasures", type: :submit }
+  = render "measures_table" if params[:search].present?
 
 = render "shared/vue_templates/measures_grid"
