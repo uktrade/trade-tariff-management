@@ -198,7 +198,7 @@
       <custom-select :options="conditionsForOrigin" label-field="label" value-field="value"  v-model="origin.operator" v-bind:disabled="originDisabled" name="search[origin][operator]"></custom-select>
     </div>
     <div class="find-measure__short">
-      <custom-select url="/origins" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="origin.value" v-bind:disabled="originDisabled" name="search[origin][value]"></custom-select>
+      <custom-select url="/geographical_areas" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="origin.value" v-bind:disabled="originDisabled" name="search[origin][value]"></custom-select>
     </div>
   </div>
 
@@ -216,7 +216,7 @@
     </div>
     <div class="find-measure__flow">
       <div class='origin-exclusion-search' v-for="(exclusion, index) in origin_exclusions.value">
-        <custom-select url="/origins" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="originExclusionsDisabled" :name="'search[origin_exclusions][value][' + index + ']'" drilldown-name="parent_id" v-bind:drilldown-value.sync="origin.value"></custom-select>
+        <custom-select url="/geographical_areas" label-field="description" value-field="id" placeholder="― start typing ―" min-length="1" v-model="exclusion.value" v-bind:disabled="originExclusionsDisabled" :name="'search[origin_exclusions][value][' + index + ']'" drilldown-name="parent_id" v-bind:drilldown-value.sync="origin.value"></custom-select>
 
         <input type="hidden" :name="'search[origin_exclusions][value][' + index + ']'" :value="exclusion.value" />
       </div>

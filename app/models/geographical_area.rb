@@ -67,12 +67,59 @@ class GeographicalArea < Sequel::Model
     def except_erga_omnes
       exclude(geographical_area_id: GeographicalArea::ERGA_OMNES)
     end
+
+    def q_search(filter_ops={})
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.join_table(:inner,
+          :geographical_area_descriptions,
+          geographical_area_id: :geographical_area_id,
+        ).where("
+          geographical_areas.geographical_area_id ilike ? OR
+          geographical_area_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      scope.order(Sequel.asc(:geographical_area_descriptions__description))
+    end
   end
 
   class << self
     def erga_omnes_group
-      actual.where(geographical_area_id: GeographicalArea::ERGA_OMNES)
+      actual.by_id(GeographicalArea::ERGA_OMNES)
             .first
+    end
+
+    def conditional_search(filter_ops={})
+      group_id = filter_ops[:parent_id]
+
+      if group_id.present?
+        group = actual.by_id(group_id).first
+
+        return [] if group.blank?
+
+        scope = group.contained_geographical_areas
+        keyword = filter_ops[:q].to_s.downcase.strip
+
+        if keyword.present?
+          scope = scope.select do |area|
+            [
+              area.geographical_area_id.downcase,
+              area.description.downcase
+            ].any? do |val|
+              val.starts_with?(keyword)
+            end
+          end
+        end
+
+        scope
+      else
+        q_search(filter_ops)
+      end
     end
   end
 
