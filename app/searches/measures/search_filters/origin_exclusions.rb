@@ -25,7 +25,7 @@
 
 module Measures
   module SearchFilters
-    class OriginExclusions
+    class OriginExclusions < ::Measures::SearchFilters::CollectionFilterBase
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         include
@@ -37,7 +37,7 @@ module Measures
 
       def initialize(operator, exclusions_list)
         @operator = operator
-        @exclusions_list = exclusions_list.uniq!
+        @exclusions_list = filtered_collection_params(exclusions_list)
       end
 
       def sql_rules
@@ -85,7 +85,7 @@ module Measures
         end
 
         def collection_compare_values
-          filtered_collection_params(exclusions_list).map do |origin_id|
+          exclusions_list.map do |origin_id|
             "%_#{origin_id}_%"
           end
         end
@@ -100,31 +100,6 @@ module Measures
           <<-eos
             searchable_data #>> '{"excluded_geographical_areas"}' IS NOT NULL
           eos
-        end
-
-        def filtered_collection_params(list)
-          p ""
-          p "-" * 100
-          p ""
-          p " list: #{list.inspect}"
-          p ""
-          p "-" * 100
-          p ""
-
-          res = list.map(&:strip)
-              .select do |item|
-            item.present?
-          end
-
-          p ""
-          p "-" * 100
-          p ""
-          p " res: #{res.inspect}"
-          p ""
-          p "-" * 100
-          p ""
-
-          res
         end
     end
   end

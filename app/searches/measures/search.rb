@@ -40,16 +40,6 @@ module Measures
         v[:enabled].present? &&
         collection_filter_is_missing_or_having_proper_values?(v)
       end.each do |k, v|
-
-        p ""
-        p "-" * 100
-        p ""
-        p " v: #{v.inspect}"
-        p ""
-        p "-" * 100
-        p ""
-
-
         instance_variable_set("@#{k}", search_ops[k])
         send("apply_#{k}_filter")
       end

@@ -25,7 +25,7 @@
 
 module Measures
   module SearchFilters
-    class Conditions
+    class Conditions < ::Measures::SearchFilters::CollectionFilterBase
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         are
@@ -37,7 +37,7 @@ module Measures
 
       def initialize(operator, conditions_list)
         @operator = operator
-        @conditions_list = conditions_list.uniq!
+        @conditions_list = filtered_collection_params(conditions_list)
       end
 
       def sql_rules
