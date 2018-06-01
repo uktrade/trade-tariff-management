@@ -79,7 +79,7 @@ module Measures
 
           exclusions_list.map do
             <<-eos
-              (searchable_data #>> '{"excluded_geographical_areas"}')::text #{prefix} ilike ?
+              (searchable_data #>> '{"excluded_geographical_areas_names"}')::text #{prefix} ilike ?
             eos
           end.join(" AND ")
         end
@@ -92,13 +92,13 @@ module Measures
 
         def are_not_specified_sql_rule
           <<-eos
-            searchable_data #>> '{"excluded_geographical_areas"}' IS NULL
+            searchable_data #>> '{"excluded_geographical_areas_names"}' IS NULL
           eos
         end
 
         def are_not_unspecified_sql_rule
           <<-eos
-            searchable_data #>> '{"excluded_geographical_areas"}' IS NOT NULL
+            searchable_data #>> '{"excluded_geographical_areas_names"}' IS NOT NULL
           eos
         end
     end
