@@ -293,9 +293,11 @@ class Measure < Sequel::Model
 
     if measure_components.present?
       ops[:duty_expressions] = measure_components.map do |m_component|
+        duty_amount = m_component.duty_amount.present? ? m_component.duty_amount.to_f.to_s : ''
+
         {
           duty_expression_id: m_component.duty_expression_id,
-          duty_amount: m_component.duty_amount.to_s,
+          duty_amount: duty_amount,
           monetary_unit_code: m_component.monetary_unit_code.to_s,
           measurement_unit_code: m_component.measurement_unit_code.to_s
         }

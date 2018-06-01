@@ -66,7 +66,7 @@ module Measures
         end
 
         def item_id_sql_rule(ops)
-          d_id = item_id(ops)
+          d_id = item_id(ops)[0..1]
 
           <<-eos
             searchable_data @> '{"duty_expressions": [{"duty_expression_id": "#{d_id}"}]}'
@@ -87,6 +87,8 @@ module Measures
         def item_amount(duty_ops)
           duty_ops.values[0]
                   .strip
+                  .to_f
+                  .to_s
         end
     end
   end
