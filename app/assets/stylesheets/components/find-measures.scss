@@ -86,3 +86,8 @@ $find-measure-gutter: 5px;
     margin-left: 10px;
   }
 }
+
+.measures-table-wrapper {
+  width: 100%;
+  overflow: auto;
+}
