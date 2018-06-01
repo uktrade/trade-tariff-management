@@ -23,14 +23,14 @@
 
 module Measures
   module SearchFilters
-    class Duties
+    class Duties < ::Measures::SearchFilters::CollectionFilterBase
 
       attr_accessor :operator,
                     :duties_list
 
       def initialize(operator, duties_list)
         @operator = operator
-        @duties_list = duties_list
+        @duties_list = filtered_hash_collection_params(duties_list)
       end
 
       def sql_rules
