@@ -94,11 +94,11 @@ $(document).ready(function() {
       measuresForTable: function() {
         return this.measures.map(function(measure) {
           var formatted_exclusions = measure.excluded_geographical_areas.map(function (ega) {
-            if (ega.geographical_area.is_country) {
-              return ega.geographical_area.geographical_area_id;
+            if (ega.is_country) {
+              return ega.geographical_area_id;
             }
 
-            return ega.geographical_area.description;
+            return ega.description;
           }).join("<br />") || "-";
 
           var formatted_components = measure.measure_components.map(function (mc) {
