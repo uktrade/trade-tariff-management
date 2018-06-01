@@ -82,9 +82,11 @@ class GeographicalArea < Sequel::Model
           geographical_area_descriptions.description ilike ?",
           q_rule, q_rule
         )
-      end
 
-      scope.order(Sequel.asc(:geographical_area_descriptions__description))
+        scope.order(Sequel.asc(:geographical_area_descriptions__description))
+      else
+        scope.order(Sequel.asc(:geographical_areas__geographical_area_id))
+      end
     end
   end
 
