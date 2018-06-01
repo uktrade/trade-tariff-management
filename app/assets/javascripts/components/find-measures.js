@@ -18,7 +18,7 @@ $(document).ready(function() {
     are_not_specified: { value: "are_not_specified", label: "are not specified" },
     are_not_unspecified: { value: "are_not_unspecified", label: "are not unspecified" },
     include: { value: "include", label: "include" },
-    does_not_include: { value: "does_not_include", label: "include" },
+    do_not_include: { value: "do_not_include", label: "do not include" },
     are: { value: "are", label: "are" },
     is_not_specified: { value: "is_not_specified", label: "is not specified" },
     is_not_unspecified: { value: "is_not_unspecified", label: "is not unspecified" }
@@ -65,7 +65,7 @@ $(document).ready(function() {
         conditionsForCommodityCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForAdditionalCode: [ conditions.is, conditions.is_not, conditions.starts_with ],
         conditionsForOrigin: [ conditions.is, conditions.is_not ],
-        conditionsForOriginExclusions: [ conditions.are_not_specified, conditions.are_not_unspecified, conditions.include, conditions.does_not_include ],
+        conditionsForOriginExclusions: [ conditions.are_not_specified, conditions.are_not_unspecified, conditions.include, conditions.do_not_include ],
         conditionsForDuties: [ conditions.are, conditions.include ],
         conditionsForConditions: [ conditions.are, conditions.are_not_specified, conditions.are_not_unspecified, conditions.include ],
         conditionsForFootnotes: [ conditions.are, conditions.are_not_specified, conditions.are_not_unspecified, conditions.include ],
