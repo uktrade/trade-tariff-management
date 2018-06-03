@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   scope module: :measures do
     resources :measures do
       collection do
-        get :bulk_edit
+        post :bulk_edit
         get :all_measures_data
 
         get '/bulks/info', to: 'measures#bulk_info', as: :bulk_info
