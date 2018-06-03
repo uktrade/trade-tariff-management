@@ -35,6 +35,10 @@ class BaseRegulation < Sequel::Model
     "00".freeze
   end
 
+  #
+  # TODO: probably we do not need this method as
+  #       we had to use `measure.generating_regulation_code` instead
+  #
   def formatted_id
     year = Date.strptime(base_regulation_id.slice(1,2), "%y").strftime("%Y");
     number = base_regulation_id.slice(3,4)

@@ -502,7 +502,7 @@ class Measure < Sequel::Model
   def to_table_json
     {
       measure_sid: measure_sid,
-      regulation: generating_regulation.formatted_id + " (#{measure_generating_regulation_id})",
+      regulation: generating_regulation_code + " (#{measure_generating_regulation_id})",
       measure_type_id: measure_type_id,
       validity_start_date: validity_start_date.strftime("%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
