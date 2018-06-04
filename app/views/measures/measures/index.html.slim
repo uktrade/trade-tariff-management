@@ -11,7 +11,7 @@ h2.heading-large
 
 script
   - if params[:search].present?
-    == "window.__measures = #{search_results.map(&:to_table_json).to_json};"
+    == "window.__measures = #{json_collection};"
   == "window.__search_params = #{params.to_json};"
 
 .find-measures

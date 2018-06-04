@@ -39,8 +39,20 @@ module Measures
       measures_search.results
     end
 
+    expose(:json_collection) do
+      search_results.map(&:to_table_json)
+                    .to_json
+    end
+
     expose(:form) do
       MeasureForm.new(Measure.new)
+    end
+
+    def index
+      respond_to do |format|
+        format.json { render json: json_collection }
+        format.html
+      end
     end
 
     def create
