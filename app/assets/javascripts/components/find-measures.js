@@ -96,87 +96,87 @@ $(document).ready(function() {
 
       var default_params = {
         group_name: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         status: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         author: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         date_of: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null,
           mode: "creation"
         },
         last_updated_by: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         regulation: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         type: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         valid_from: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null,
           mode: "creation"
         },
         valid_to: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null,
           mode: "creation"
         },
         commodity_code: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         additional_code: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         origin: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         origin_exclusions: {
-          enabled: false,
+          enabled: true,
           operator: "include",
           value: [{value: ""}]
         },
         duties: {
-          enabled: false,
+          enabled: true,
           operator: "are",
           value: [{duty_expression_id: null, duty_amount: null}]
         },
         conditions: {
-          enabled: false,
+          enabled: true,
           operator: "are",
           value: [{
             measure_condition_code: null
           }]
         },
         footnotes: {
-          enabled: false,
+          enabled: true,
           operator: "are",
           value: [{
             footnote_type_id: null,
