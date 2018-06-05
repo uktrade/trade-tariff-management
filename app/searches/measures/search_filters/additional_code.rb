@@ -24,25 +24,28 @@ module Measures
     class AdditionalCode
 
       attr_accessor :operator,
+                    :full_code,
                     :additional_code,
                     :additional_code_type_id
 
       def initialize(operator, additional_code=nil)
         @operator = operator
-        code = additional_code.to_s
-                              .delete(" ")
-                              .downcase
+        @full_code = additional_code.to_s
+                                    .delete(" ")
+                                    .downcase
 
-        if search_with_type_letter_prefix?
-          @additional_code_type_id = code[0]
-          @additional_code = code[1..-1]
-        else
-          @additional_code = code
+        if full_code.present?
+          if search_with_type_letter_prefix?
+            @additional_code_type_id = full_code[0]
+            @additional_code = full_code[1..-1]
+          else
+            @additional_code = full_code
+          end
         end
       end
 
       def sql_rules
-        return nil if additional_code.blank?
+        return nil if full_code.blank?
 
         if search_with_type_letter_prefix?
           [ clause, additional_code_type_id, value ]
@@ -103,7 +106,7 @@ module Measures
         end
 
         def search_with_type_letter_prefix?
-          additional_code.size == 4
+          full_code.size == 4
         end
     end
   end
