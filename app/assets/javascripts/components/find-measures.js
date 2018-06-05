@@ -91,92 +91,92 @@ $(document).ready(function() {
           { value: "already_in_cds", label: "Already in CDS" }
         ],
 
-        selectedMeasures: []
+        selectedMeasures: (window.__measures || []).map(function(m) { return m.measure_sid; })
       };
 
       var default_params = {
         group_name: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         status: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         author: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         date_of: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null,
           mode: "creation"
         },
         last_updated_by: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         regulation: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         type: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
-        valid_from: {
-          enabled: false,
+        validity_start_date: {
+          enabled: true,
           operator: "is",
           value: null,
           mode: "creation"
         },
-        valid_to: {
-          enabled: false,
+        validity_end_date: {
+          enabled: true,
           operator: "is",
           value: null,
           mode: "creation"
         },
         commodity_code: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         additional_code: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         origin: {
-          enabled: false,
+          enabled: true,
           operator: "is",
           value: null
         },
         origin_exclusions: {
-          enabled: false,
+          enabled: true,
           operator: "include",
           value: [{value: ""}]
         },
         duties: {
-          enabled: false,
+          enabled: true,
           operator: "are",
           value: [{duty_expression_id: null, duty_amount: null}]
         },
         conditions: {
-          enabled: false,
+          enabled: true,
           operator: "are",
           value: [{
             measure_condition_code: null
           }]
         },
         footnotes: {
-          enabled: false,
+          enabled: true,
           operator: "are",
           value: [{
             footnote_type_id: null,
@@ -185,168 +185,243 @@ $(document).ready(function() {
         }
       };
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.group_name !== undefined) {
-        data.group_name = window.__search_params.search.group_name;
-      } else {
-        data.group_name = default_params.group_name
+      var fields = [
+        "group_name",
+        "status",
+        "author",
+        "date_of",
+        "last_updated_by",
+        "regulation",
+        "type",
+        "validity_start_date",
+        "validity_end_date",
+        "commodity_code",
+        "additional_code",
+        "origin",
+        "origin_exclusions",
+        "duties",
+        "conditions",
+        "footnotes"
+      ];
+
+
+      for (var k in fields) {
+        var field = fields[k];
+
+        data[field] = default_params[field];
       }
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.status !== undefined) {
-        data.status = window.__search_params.search.status;
-      } else {
-        data.status = default_params.status
-      }
+      if (window.__search_params.search !== undefined) {
+        var params = window.__search_params.search;
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.author !== undefined) {
-        data.author = window.__search_params.search.author;
-      } else {
-        data.author = default_params.author
-      }
+        data.group_name.enabled = false;
+        data.status.enabled = false;
+        data.author.enabled = false;
+        data.last_updated_by.enabled = false;
+        data.regulation.enabled = false;
+        data.date_of.enabled = false;
+        data.type.enabled = false;
+        data.validity_start_date.enabled = false;
+        data.validity_end_date.enabled = false;
+        data.commodity_code.enabled = false;
+        data.additional_code.enabled = false;
+        data.origin.enabled = false;
+        data.origin_exclusions.enabled = false;
+        data.duties.enabled = false;
+        data.conditions.enabled = false;
+        data.footnotes.enabled = false;
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.date_of !== undefined) {
-        data.date_of = window.__search_params.search.date_of;
-      } else {
-        data.date_of = default_params.date_of
-      }
+        if (params.group_name !== undefined) {
+          data.group_name.enabled = params.group_name.enabled;
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.last_updated_by !== undefined) {
-        data.last_updated_by = window.__search_params.search.last_updated_by;
-      } else {
-        data.last_updated_by = default_params.last_updated_by
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.regulation !== undefined) {
-        data.regulation = window.__search_params.search.regulation;
-      } else {
-        data.regulation = default_params.regulation
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.type !== undefined) {
-        data.type = window.__search_params.search.type;
-      } else {
-        data.type = default_params.type
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.valid_from !== undefined) {
-        data.validity_start_date = window.__search_params.search.valid_from;
-      } else {
-        data.validity_start_date = default_params.valid_from
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.valid_to !== undefined) {
-        data.validity_end_date = window.__search_params.search.valid_to;
-      } else {
-        data.validity_end_date = default_params.valid_to
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.commodity_code !== undefined) {
-        data.commodity_code = window.__search_params.search.commodity_code;
-      } else {
-        data.commodity_code = default_params.commodity_code
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.additional_code !== undefined) {
-        data.additional_code = window.__search_params.search.additional_code;
-      } else {
-        data.additional_code = default_params.additional_code
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.origin !== undefined) {
-        data.origin = window.__search_params.search.origin;
-      } else {
-        data.origin = default_params.origin
-      }
-
-      if (window.__search_params.search !== undefined && window.__search_params.search.origin_exclusions !== undefined) {
-        var c = window.__search_params.search.origin_exclusions.value;
-
-        data.origin_exclusions = window.__search_params.search.origin_exclusions;
-        data.origin_exclusions.value = [];
-
-        for (var k in c) {
-          if (!c.hasOwnProperty(k)) {
-            continue;
+          if (params.group_name.enabled) {
+            data.group_name = params.group_name;
           }
-
-          data.origin_exclusions.value.push({
-            value: c[k]
-          });
         }
-      } else {
-        data.origin_exclusions = default_params.origin_exclusions;
-      }
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.duties !== undefined) {
-        var d = window.__search_params.search.duties.value;
-
-        data.duties = window.__search_params.search.duties;
-        data.duties.value = [];
-
-        for (var k in d) {
-          if (!d.hasOwnProperty(k)) {
-            continue;
+        if (params.status !== undefined) {
+          data.status.enabled = params.status.enabled;
+          if (params.status.enabled) {
+            data.status = params.status;
           }
+        }
 
-          var duty = {};
+        if (params.author !== undefined) {
+          data.author.enabled = params.author.enabled;
+          if (params.author.enabled) {
+            data.author = window.__search_params.search.author;
+          }
+        }
 
-          for (var kk in d[k]) {
-            if (!d[k].hasOwnProperty(kk)) {
-              continue;
+        if (params.date_of !== undefined) {
+          data.date_of = params.date_of.enabled;
+          if (params.date_of.enabled) {
+            data.date_of = window.__search_params.search.date_of;
+          }
+        }
+
+        if (params.last_updated_by !== undefined) {
+          data.last_updated_by.enabled = params.last_updated_by.enabled;
+          if (params.last_updated_by.enabled) {
+            data.last_updated_by = window.__search_params.search.last_updated_by;
+          }
+        }
+
+        if (params.regulation !== undefined) {
+          data.regulation.enabled = params.regulation.enabled;
+
+          if (params.regulation.enabled) {
+            data.regulation = window.__search_params.search.regulation;
+          }
+        }
+
+        if (params.type !== undefined) {
+          data.type.enabled = params.type.enabled;
+
+          if (params.type.enabled) {
+            data.type = window.__search_params.search.type;
+          }
+        }
+
+        if (params.valid_from !== undefined) {
+          data.validity_start_date.enabled = params.valid_from.enabled;
+
+          if (params.valid_from.enabled) {
+            data.validity_start_date = window.__search_params.search.valid_from;
+          }
+        }
+
+        if (params.valid_to !== undefined) {
+          data.validity_end_date.enabled = params.valid_to.enabled;
+
+          if (params.valid_to.enabled) {
+            data.validity_end_date = window.__search_params.search.valid_to;
+          }
+        }
+
+        if (params.commodity_code !== undefined) {
+          data.commodity_code.enabled = params.commodity_code.enabled;
+
+          if (params.commodity_code.enabled) {
+            data.commodity_code = window.__search_params.search.commodity_code;
+          }
+        }
+
+        if (params.additional_code !== undefined) {
+          data.additional_code.enabled = params.additional_code.enabled;
+
+          if (params.additional_code.enabled) {
+            data.additional_code = window.__search_params.search.additional_code;
+          }
+        }
+
+        if (params.origin !== undefined) {
+          data.origin.enabled = params.origin.enabled;
+
+          if (params.origin.enabled) {
+            data.origin = window.__search_params.search.origin;
+          }
+        }
+
+        if (params.origin_exclusions !== undefined) {
+          data.origin_exclusions.enabled = params.origin_exclusions.enabled;
+
+          if (params.origin_exclusions.enabled) {
+            var c = window.__search_params.search.origin_exclusions.value;
+
+            data.origin_exclusions = window.__search_params.search.origin_exclusions;
+            data.origin_exclusions.value = [];
+
+            for (var k in c) {
+              if (!c.hasOwnProperty(k)) {
+                continue;
+              }
+
+              data.origin_exclusions.value.push({
+                value: c[k]
+              });
             }
-
-            duty.duty_expression_id = kk;
-            duty.duty_amount = d[k][kk];
           }
-
-          data.duties.value.push(duty);
         }
-      } else {
-        data.duties = default_params.duties;
-      }
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.conditions !== undefined) {
-        var c = window.__search_params.search.conditions.value;
+        if (params.duties !== undefined) {
+          data.duties.enabled = params.duties.enabled;
 
-        data.conditions = window.__search_params.search.conditions;
-        data.conditions.value = [];
+          if (params.duties.enabled) {
+            var d = window.__search_params.search.duties.value;
 
-        for (var k in c) {
-          if (!c.hasOwnProperty(k)) {
-            continue;
-          }
+            data.duties = window.__search_params.search.duties;
+            data.duties.value = [];
 
-          data.conditions.value.push({
-            measure_condition_code: c[k]
-          });
-        }
-      } else {
-        data.conditions = default_params.conditions
-      }
+            for (var k in d) {
+              if (!d.hasOwnProperty(k)) {
+                continue;
+              }
 
-      if (window.__search_params.search !== undefined && window.__search_params.search.footnotes !== undefined) {
-        var f = window.__search_params.search.footnotes.value;
+              var duty = {};
 
-        data.footnotes = window.__search_params.search.footnotes;
-        data.footnotes.value = [];
+              for (var kk in d[k]) {
+                if (!d[k].hasOwnProperty(kk)) {
+                  continue;
+                }
 
-        for (var k in f) {
-          if (!f.hasOwnProperty(k)) {
-            continue;
-          }
+                duty.duty_expression_id = kk;
+                duty.duty_amount = d[k][kk];
+              }
 
-          for (var kk in f[k]) {
-            if (!f[k].hasOwnProperty(kk)) {
-              continue;
+              data.duties.value.push(duty);
             }
-
-            data.footnotes.value.push({
-              footnote_type_id: kk,
-              footnote_id: f[k][kk]
-            });
           }
         }
-      } else {
-        data.footnotes = default_params.footnotes;
+
+        if (params.conditions !== undefined) {
+          data.conditions.enabled = params.conditions.enabled;
+
+          if (params.conditions.enabled) {
+            var c = window.__search_params.search.conditions.value;
+
+            data.conditions = window.__search_params.search.conditions;
+            data.conditions.value = [];
+
+            for (var k in c) {
+              if (!c.hasOwnProperty(k)) {
+                continue;
+              }
+
+              data.conditions.value.push({
+                measure_condition_code: c[k]
+              });
+            }
+          }
+        }
+
+        if (params.footnotes !== undefined) {
+          data.footnotes.enabled = params.footnotes.enabled;
+
+          if (params.footnotes.enabled) {
+            var f = window.__search_params.search.footnotes.value;
+
+            data.footnotes = window.__search_params.search.footnotes;
+            data.footnotes.value = [];
+
+            for (var k in f) {
+              if (!f.hasOwnProperty(k)) {
+                continue;
+              }
+
+              for (var kk in f[k]) {
+                if (!f[k].hasOwnProperty(kk)) {
+                  continue;
+                }
+
+                data.footnotes.value.push({
+                  footnote_type_id: kk,
+                  footnote_id: f[k][kk]
+                });
+              }
+            }
+          }
+        }
       }
 
       return data;
