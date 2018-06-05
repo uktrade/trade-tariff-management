@@ -24,11 +24,15 @@ module Measures
     class AdditionalCode
 
       attr_accessor :operator,
-                    :additional_code
+                    :additional_code,
+                    :additional_code_type_id
 
       def initialize(operator, additional_code=nil)
         @operator = operator
-        @additional_code = additional_code
+        @additional_code = additional_code.to_s
+                                          .delete(" ")
+                                          .downcase
+        @additional_code_type_id = additional_code[0] if search_with_type_letter_prefix?
       end
 
       def sql_rules
@@ -62,15 +66,34 @@ module Measures
         end
 
         def is_clause
-          "additional_code_id = ?"
+          if search_with_type_letter_prefix?
+            "additional_code_type_id = ? AND additional_code_id = ?"
+          else
+            "additional_code_id = ?"
+          end
         end
 
         def is_not_clause
-          "additional_code_id IS NULL OR additional_code_id != ?"
+          if search_with_type_letter_prefix?
+            "additional_code_id IS NULL OR additional_code_id != ?"
+          else
+            <<-eos
+              additional_code_id IS NULL OR
+              ( additional_code_type_id != ? OR additional_code_id != ? )
+            eos
+          end
         end
 
         def starts_with_clause
-          "additional_code_id ilike ?"
+          if search_with_type_letter_prefix?
+            "additional_code_type_id = ? AND additional_code_id ilike ?"
+          else
+            "additional_code_id ilike ?"
+          end
+        end
+
+        def search_with_type_letter_prefix?
+          additional_code.size == 4
         end
     end
   end
