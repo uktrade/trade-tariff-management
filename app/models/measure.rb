@@ -475,6 +475,12 @@ class Measure < Sequel::Model
     end
   end
 
+  def additional_code_title
+    return "" if additional_code_id.blank?
+
+    "#{additional_code_type_id} #{additional_code_id}"
+  end
+
   def record_code
     "430".freeze
   end
@@ -507,7 +513,7 @@ class Measure < Sequel::Model
       validity_start_date: validity_start_date.strftime("%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       goods_nomenclature_id: goods_nomenclature_item_id,
-      additional_code_id: additional_code_id,
+      additional_code_id: additional_code_title,
       geographical_area: geographical_area.try(:geographical_area_id),
       excluded_geographical_areas: excluded_geographical_areas.map(&:geographical_area_id).join(", ") || "-",
       duties: duty_expression,
