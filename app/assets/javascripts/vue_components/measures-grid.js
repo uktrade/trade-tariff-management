@@ -6,7 +6,9 @@ Vue.component("measures-grid", {
       sortBy: "measure_sid",
       sortDir: "desc",
       selectedRows: [],
-      selectAll: false
+      selectAll: false,
+      firstLoad: true,
+      indirectSelectAll: false
     };
   },
   methods: {
@@ -42,8 +44,19 @@ Vue.component("measures-grid", {
       return result;
     }
   },
+  mounted: function() {
+    var self = this;
+
+    this.data.forEach(function(m) {
+      self.selectedRows.push(m.measure_sid);
+    });
+  },
   watch: {
     selectAll: function(val) {
+      if (this.indirectSelectAll) {
+        return;
+      }
+
       if (val) {
         this.selectedRows = this.data.map(function(row) {
           return row.measure_sid;
@@ -53,7 +66,14 @@ Vue.component("measures-grid", {
       }
     },
     selectedRows: function() {
+      var self = this;
+
+      this.indirectSelectAll = true;
       this.selectAll = this.selectedRows.length === this.data.length;
+
+      setTimeout(function() {
+        self.indirectSelectAll = false;
+      }, 50);
 
       if (this.onSelectionChange) {
         try {
