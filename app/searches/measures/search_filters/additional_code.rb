@@ -38,7 +38,11 @@ module Measures
       def sql_rules
         return nil if additional_code.blank?
 
-        [ clause, value ]
+        if search_with_type_letter_prefix?
+          [ clause, additional_code_type_id, value ]
+        else
+          [ clause, value ]
+        end
       end
 
       private
@@ -75,12 +79,12 @@ module Measures
 
         def is_not_clause
           if search_with_type_letter_prefix?
-            "additional_code_id IS NULL OR additional_code_id != ?"
-          else
             <<-eos
               additional_code_id IS NULL OR
               ( additional_code_type_id != ? OR additional_code_id != ? )
             eos
+          else
+            "additional_code_id IS NULL OR additional_code_id != ?"
           end
         end
 
