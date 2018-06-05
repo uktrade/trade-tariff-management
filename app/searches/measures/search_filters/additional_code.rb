@@ -29,10 +29,16 @@ module Measures
 
       def initialize(operator, additional_code=nil)
         @operator = operator
-        @additional_code = additional_code.to_s
-                                          .delete(" ")
-                                          .downcase
-        @additional_code_type_id = additional_code[0] if search_with_type_letter_prefix?
+        code = additional_code.to_s
+                              .delete(" ")
+                              .downcase
+
+        if search_with_type_letter_prefix?
+          @additional_code_type_id = code[0]
+          @additional_code = code[1..-1]
+        else
+          @additional_code = code
+        end
       end
 
       def sql_rules
