@@ -282,6 +282,10 @@ class Measure < Sequel::Model
   def set_searchable_data!
     ops = {}
 
+    if measure_generating_regulation_id.present?
+      ops[:regulation_code] = generating_regulation_code
+    end
+
     if measure_group.present?
       ops[:group_name] = measure_group.name
     end

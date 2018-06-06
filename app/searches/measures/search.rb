@@ -70,6 +70,7 @@ module Measures
 
       def jsonb_search_required?
         group_name ||
+        regulation ||
         origin_exclusions ||
         duties ||
         conditions ||

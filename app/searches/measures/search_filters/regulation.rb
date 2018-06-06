@@ -36,7 +36,7 @@ module Measures
         return nil if regulation_id.blank?
 
         [
-          query_rule, value, value
+          query_rule, value, value, value
         ]
       end
 
@@ -68,19 +68,35 @@ module Measures
         end
 
         def is_clause
-          "measure_generating_regulation_id = ? OR justification_regulation_id = ?"
+          <<-eos
+            measure_generating_regulation_id = ? OR
+            searchable_data #>> '{"regulation_code"}' = ? OR
+            justification_regulation_id = ?
+          eos
         end
 
         def is_not_clause
-          "measure_generating_regulation_id != ? AND justification_regulation_id != ?"
+          <<-eos
+            measure_generating_regulation_id != ? AND
+            searchable_data #>> '{"regulation_code"}' != ? AND
+            justification_regulation_id != ?
+          eos
         end
 
         def contains_clause
-          "measure_generating_regulation_id ilike ? OR justification_regulation_id ilike ?"
+          <<-eos
+            measure_generating_regulation_id ilike ? OR
+            searchable_data #>> '{"regulation_code"}' ilike ? OR
+            justification_regulation_id ilike ?
+          eos
         end
 
         def does_not_contain_clause
-          "measure_generating_regulation_id NOT ilike ? AND justification_regulation_id NOT ilike ?"
+          <<-eos
+            measure_generating_regulation_id NOT ilike ? AND
+            searchable_data #>> '{"regulation_code"}' NOT ilike ? AND
+            justification_regulation_id NOT ilike ?
+          eos
         end
     end
   end
