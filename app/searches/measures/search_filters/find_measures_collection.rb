@@ -1,10 +1,6 @@
 module Measures
   module SearchFilters
     module FindMeasuresCollection
-      def default_search
-        where("validity_start_date IS NOT NULL")
-      end
-
       def operation_search_jsonb_default
         where("searchable_data::text <> '{}'::text")
       end
