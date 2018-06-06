@@ -27,6 +27,7 @@ describe "Measure search: origin filter" do
   describe "Valid Search" do
     it "should filter by geographical_area_id with 'is' operator" do
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "AE"
       )
@@ -35,6 +36,7 @@ describe "Measure search: origin filter" do
       expect(res[0].measure_sid).to be_eql(ae_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "AG"
       )
@@ -49,6 +51,7 @@ describe "Measure search: origin filter" do
 
     it "should filter by geographical_area_id with 'is_not' operator" do
       res = search_results(
+        enabled: true,
         operator: 'is_not',
         value: "AE"
       )

@@ -50,6 +50,7 @@ describe "Measure search: date_of filter" do
   describe "Invalid Search" do
     it "should not filter if value option is blank" do
       res = search_results(
+        enabled: true,
         mode: 'creation',
         operator: 'is'
       )
@@ -59,6 +60,7 @@ describe "Measure search: date_of filter" do
 
     it "should not filter if value and operator options are blank" do
       res = search_results(
+        enabled: true,
         mode: 'creation'
       )
 

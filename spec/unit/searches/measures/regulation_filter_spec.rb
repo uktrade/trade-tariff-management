@@ -33,6 +33,7 @@ describe "Measure search: regulation filter" do
       # 'is' filter
       #
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "R3333333"
       )
@@ -41,6 +42,7 @@ describe "Measure search: regulation filter" do
       expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "R5555555"
       )
@@ -52,6 +54,7 @@ describe "Measure search: regulation filter" do
       # 'is_not' filter
       #
       res = search_results(
+        enabled: true,
         operator: 'is_not',
         value: "R3344444"
       )
@@ -64,6 +67,7 @@ describe "Measure search: regulation filter" do
       # 'contains' filter
       #
       res = search_results(
+        enabled: true,
         operator: 'contains',
         value: "33"
       )
@@ -76,6 +80,7 @@ describe "Measure search: regulation filter" do
       # 'does_not_contain' filter
       #
       res = search_results(
+        enabled: true,
         operator: 'does_not_contain',
         value: "33"
       )

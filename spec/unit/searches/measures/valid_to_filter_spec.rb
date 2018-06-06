@@ -11,6 +11,7 @@ describe "Measure search: valid_to filter" do
   describe "Valid Search" do
     it "should filter by operator" do
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: 2.days.ago.strftime('%d/%m/%Y')
       )
@@ -19,6 +20,7 @@ describe "Measure search: valid_to filter" do
       expect(res[0].measure_sid).to be_eql(b_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is_not',
         value: 2.days.ago.strftime('%d/%m/%Y')
       )
@@ -28,6 +30,7 @@ describe "Measure search: valid_to filter" do
       expect(measure_sids).not_to include(b_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is_after',
         value: 3.days.ago.strftime('%d/%m/%Y')
       )
@@ -37,6 +40,7 @@ describe "Measure search: valid_to filter" do
       expect(measure_sids).not_to include(a_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is_before',
         value: 2.days.ago.strftime('%d/%m/%Y')
       )
@@ -45,6 +49,7 @@ describe "Measure search: valid_to filter" do
       expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is_not_specified'
       )
 
@@ -52,6 +57,7 @@ describe "Measure search: valid_to filter" do
       expect(res[0].measure_sid).to be_eql(d_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is_not_unspecified'
       )
 

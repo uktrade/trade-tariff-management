@@ -30,6 +30,7 @@ describe "Measure search: additional code filter" do
       # 'is' filter
       #
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "333"
       )
@@ -38,6 +39,7 @@ describe "Measure search: additional code filter" do
       expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "555"
       )
@@ -49,6 +51,7 @@ describe "Measure search: additional code filter" do
       # 'is_not' filter
       #
       res = search_results(
+        enabled: true,
         operator: 'is_not',
         value: "334"
       )
@@ -61,6 +64,7 @@ describe "Measure search: additional code filter" do
       # 'starts_with' filter
       #
       res = search_results(
+        enabled: true,
         operator: 'starts_with',
         value: "33"
       )

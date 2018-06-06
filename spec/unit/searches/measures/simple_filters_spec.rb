@@ -38,6 +38,7 @@ describe "Measure search: simple filters" do
 
     it "should filter" do
       res = search_results(
+        enabled: true,
         value: adam.id
       )
 
@@ -46,6 +47,7 @@ describe "Measure search: simple filters" do
       expect(measure_sids).not_to include(b_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         value: bredd.id
       )
 
@@ -61,6 +63,7 @@ describe "Measure search: simple filters" do
 
     it "should filter" do
       res = search_results(
+        enabled: true,
         value: adam.id
       )
 
@@ -69,6 +72,7 @@ describe "Measure search: simple filters" do
       expect(measure_sids).not_to include(a_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         value: bredd.id
       )
 

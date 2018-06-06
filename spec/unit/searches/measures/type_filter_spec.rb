@@ -27,6 +27,7 @@ describe "Measure search: type filter" do
   describe "Valid Search" do
     it "should filter by measure_type_id with 'is' operator" do
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "143"
       )
@@ -35,6 +36,7 @@ describe "Measure search: type filter" do
       expect(res[0].measure_sid).to be_eql(type_143_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "481"
       )
@@ -49,6 +51,7 @@ describe "Measure search: type filter" do
 
     it "should filter by measure_type_id with 'is_not' operator" do
       res = search_results(
+        enabled: true,
         operator: 'is_not',
         value: "143"
       )
