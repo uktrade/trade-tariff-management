@@ -25,7 +25,7 @@ describe "Measure search: valid_from filter" do
         value: 2.days.ago.strftime('%d/%m/%Y')
       )
 
-      expect(res.count).to be_eql(2)
+      expect(res.count).to be_eql(3)
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).not_to include(b_measure.measure_sid)
 

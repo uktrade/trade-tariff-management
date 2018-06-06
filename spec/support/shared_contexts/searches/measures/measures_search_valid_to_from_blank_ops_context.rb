@@ -9,13 +9,13 @@ shared_context "measures_search_valid_to_from_blank_ops_context" do
         operator: 'is'
       )
 
-      expect(res.count).to be_eql(3)
+      expect(res.count).to be_eql(4)
     end
 
     it "should not filter with blank options provided" do
       res = search_results({})
 
-      expect(res.count).to be_eql(3)
+      expect(res.count).to be_eql(4)
     end
   end
 end
