@@ -80,7 +80,7 @@ module Measures
 
         def is_clause
           if search_with_type_letter_prefix?
-            "additional_code_type_id = ? AND additional_code_id = ?"
+            "lower(additional_code_type_id) = ? AND additional_code_id = ?"
           else
             "additional_code_id = ?"
           end
@@ -90,7 +90,7 @@ module Measures
           if search_with_type_letter_prefix?
             <<-eos
               additional_code_id IS NULL OR
-              ( additional_code_type_id != ? OR additional_code_id != ? )
+              ( lower(additional_code_type_id) != ? OR additional_code_id != ? )
             eos
           else
             "additional_code_id IS NULL OR additional_code_id != ?"
@@ -99,14 +99,14 @@ module Measures
 
         def starts_with_clause
           if search_with_type_letter_prefix?
-            "additional_code_type_id = ? AND additional_code_id ilike ?"
+            "lower(additional_code_type_id) = ? AND additional_code_id ilike ?"
           else
             "additional_code_id ilike ?"
           end
         end
 
         def search_with_type_letter_prefix?
-          full_code.size == 4
+          !(full_code[0].to_s =~  /\A[-+]?[0-9]*\.?[0-9]+\Z/)
         end
     end
   end

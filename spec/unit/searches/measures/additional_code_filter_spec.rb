@@ -7,11 +7,11 @@ describe "Measure search: additional code filter" do
   let(:search_key) { "additional_code" }
 
   let(:a_measure) do
-    create(:measure, additional_code_id: "333")
+    create(:measure, additional_code_type_id: "C", additional_code_id: "333")
   end
 
   let(:b_measure) do
-    create(:measure, additional_code_id: "334")
+    create(:measure, additional_code_type_id: "B", additional_code_id: "334")
   end
 
   let(:c_measure) do
@@ -41,6 +41,15 @@ describe "Measure search: additional code filter" do
       res = search_results(
         enabled: true,
         operator: 'is',
+        value: "c333"
+      )
+
+      expect(res.count).to be_eql(1)
+      expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
+
+      res = search_results(
+        enabled: true,
+        operator: 'is',
         value: "555"
       )
 
@@ -60,6 +69,16 @@ describe "Measure search: additional code filter" do
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).not_to include(b_measure.measure_sid)
 
+      res = search_results(
+        enabled: true,
+        operator: 'is_not',
+        value: "B334"
+      )
+
+      expect(res.count).to be_eql(2)
+      measure_sids = res.map(&:measure_sid)
+      expect(measure_sids).not_to include(b_measure.measure_sid)
+
       #
       # 'starts_with' filter
       #
@@ -72,6 +91,15 @@ describe "Measure search: additional code filter" do
       expect(res.count).to be_eql(2)
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).not_to include(c_measure.measure_sid)
+
+      res = search_results(
+        enabled: true,
+        operator: 'starts_with',
+        value: "c"
+      )
+
+      expect(res.count).to be_eql(1)
+      expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
     end
   end
 end
