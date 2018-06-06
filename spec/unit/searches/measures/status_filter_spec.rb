@@ -27,6 +27,7 @@ describe "Measure search: status filter" do
   describe "Valid Search" do
     it "should filter by status with 'is' operator" do
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "draft_incomplete"
       )
@@ -35,6 +36,7 @@ describe "Measure search: status filter" do
       expect(res[0].measure_sid).to be_eql(draft_incomplete_measure.measure_sid)
 
       res = search_results(
+        enabled: true,
         operator: 'is',
         value: "ready_for_approval"
       )
@@ -49,6 +51,7 @@ describe "Measure search: status filter" do
 
     it "should filter by status with 'is_not' operator" do
       res = search_results(
+        enabled: true,
         operator: 'is_not',
         value: "draft_incomplete"
       )

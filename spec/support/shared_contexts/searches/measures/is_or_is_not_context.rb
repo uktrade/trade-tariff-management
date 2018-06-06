@@ -7,6 +7,7 @@ shared_context "measures_search_is_or_is_not_context" do
   describe "Invalid Search" do
     it "should not filter with 'is' if value blank" do
       res = search_results(
+        enabled: true,
         operator: 'is'
       )
 
@@ -15,6 +16,7 @@ shared_context "measures_search_is_or_is_not_context" do
 
     it "should not filter with 'is_not' if value blank" do
       res = search_results(
+        enabled: true,
         operator: 'is_not'
       )
 
