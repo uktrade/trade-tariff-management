@@ -39,10 +39,7 @@ Rails.application.routes.draw do
     resources :measures do
       collection do
         post :search
-        post :bulk_edit
         get :all_measures_data
-
-        get '/bulks/info', to: 'measures#bulk_info', as: :bulk_info
       end
     end
 
@@ -58,7 +55,11 @@ Rails.application.routes.draw do
 
   namespace :measures do
     resources :bulks, only: [:create] do
-      post :validate, on: :collection
+      collection do
+        post :edit
+        post :info
+        post :validate
+      end
     end
   end
 

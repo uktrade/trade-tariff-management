@@ -11,6 +11,21 @@ module Measures
       ::Measures::BulkSaver.new(current_user, collection_ops)
     end
 
+    expose(:bulk_collection) do
+      ::Measure.where(measure_sid: params[:measure_sids])
+    end
+
+    def edit
+      respond_to do |format|
+        format.json { render json: bulk_collection.map(&:to_table_json) }
+        format.html
+      end
+    end
+
+    def info
+      render json: bulk_collection.map(&:to_json).to_json
+    end
+
     def validate
       if bulk_saver.valid?
         success_response

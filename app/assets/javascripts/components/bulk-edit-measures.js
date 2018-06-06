@@ -67,7 +67,7 @@ $(document).ready(function() {
         measure_sids: window.__measure_sids
       };
 
-      $.get("/measures/bulks/info", data, function(data) {
+      $.post("/measures/bulks/info", data, function(data) {
         self.measures = data.map(function(measure) {
           measure.visible = true;
 
