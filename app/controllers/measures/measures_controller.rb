@@ -49,6 +49,9 @@ module Measures
     end
 
     def index
+    end
+
+    def search
       respond_to do |format|
         format.json { render json: json_collection }
         format.html

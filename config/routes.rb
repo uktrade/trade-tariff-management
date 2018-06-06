@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   scope module: :measures do
     resources :measures do
       collection do
+        post :search
         post :bulk_edit
         get :all_measures_data
 

@@ -1,0 +1,32 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li aria-current="page"
+      | Measures
+
+h2.heading-large
+  | Find measures
+
+script
+  - if params[:search].present?
+    == "window.__measures = #{json_collection};"
+  == "window.__search_params = #{params.to_json};"
+
+.find-measures
+  = render "search_form"
+
+  = simple_form_for :search, url: bulk_edit_measures_path, method: :post do |f|
+    = content_tag :input, nil, { type: "hidden", "name" => "measure_sids[]", "v-for" => "(sid, idx) in selectedMeasures", ":value" => "sid" }
+    p
+      - if params[:search].present?
+        = content_tag "button", "Work with selected measures", { class: "button", style: "float: left", ":disabled" => "noSelectedMeasures", type: :submit }
+        span.number_of_measures_badge
+          = pluralize(search_results.total_count, 'measure', 'measures')
+          =<> "found"
+
+        .clearfix
+  = render "measures_table" if params[:search].present?
+
+= render "shared/vue_templates/measures_grid"
