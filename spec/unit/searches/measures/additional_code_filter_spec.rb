@@ -100,6 +100,15 @@ describe "Measure search: additional code filter" do
 
       expect(res.count).to be_eql(1)
       expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
+
+      res = search_results(
+        enabled: true,
+        operator: 'starts_with',
+        value: "b3"
+      )
+
+      expect(res.count).to be_eql(1)
+      expect(res[0].measure_sid).to be_eql(b_measure.measure_sid)
     end
   end
 end

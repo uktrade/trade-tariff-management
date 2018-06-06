@@ -48,7 +48,12 @@ module Measures
         return nil if full_code.blank?
 
         if search_with_type_letter_prefix?
-          [ clause, additional_code_type_id, value ]
+          if additional_code.present?
+            [ clause, additional_code_type_id, value ]
+          else
+            [ clause, additional_code_type_id ]
+          end
+
         else
           [ clause, value ]
         end
@@ -98,10 +103,17 @@ module Measures
         end
 
         def starts_with_clause
+          base_rule = "additional_code_id ilike ?"
+
           if search_with_type_letter_prefix?
-            "lower(additional_code_type_id) = ? AND additional_code_id ilike ?"
+            if additional_code.present?
+              "lower(additional_code_type_id) = ? AND #{base_rule}"
+            else
+              "lower(additional_code_type_id) = ?"
+            end
+
           else
-            "additional_code_id ilike ?"
+            base_rule
           end
         end
 
