@@ -5,7 +5,7 @@ per_page = if Rails.env.production?
 elsif Rails.env.development?
   25
 elsif Rails.env.test?
-  5
+  10
 end
 
 Kaminari.configure do |config|
