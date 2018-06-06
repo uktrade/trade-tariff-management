@@ -79,7 +79,7 @@ module Measures
           <<-eos
             measure_generating_regulation_id != ? AND
             searchable_data #>> '{"regulation_code"}' != ? AND
-            justification_regulation_id != ?
+            (justification_regulation_id != ? OR justification_regulation_id IS NULL)
           eos
         end
 

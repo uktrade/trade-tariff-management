@@ -13,6 +13,7 @@ shared_context "measures_search_date_of_context" do
     # 'is' filter
     #
     res = search_results(
+      enabled: true,
       operator: 'is',
       mode: search_mode,
       value: 2.days.ago.strftime('%d/%m/%Y')
@@ -22,6 +23,7 @@ shared_context "measures_search_date_of_context" do
     expect(res[0].measure_sid).to be_eql(b_measure.measure_sid)
 
     res = search_results(
+      enabled: true,
       operator: 'is',
       mode: search_mode,
       value: 3.days.ago.strftime('%d/%m/%Y')
@@ -34,6 +36,7 @@ shared_context "measures_search_date_of_context" do
     # 'is_not' filter
     #
     res = search_results(
+      enabled: true,
       operator: 'is_not',
       mode: search_mode,
       value: 3.days.ago.strftime('%d/%m/%Y')
@@ -47,6 +50,7 @@ shared_context "measures_search_date_of_context" do
     # 'is_after' filter
     #
     res = search_results(
+      enabled: true,
       operator: 'is_after',
       mode: search_mode,
       value: 2.days.ago.strftime('%d/%m/%Y')
@@ -59,6 +63,7 @@ shared_context "measures_search_date_of_context" do
     # 'is_before' filter
     #
     res = search_results(
+      enabled: true,
       operator: 'is_before',
       mode: search_mode,
       value: 2.days.ago.strftime('%d/%m/%Y')

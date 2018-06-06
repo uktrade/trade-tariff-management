@@ -7,17 +7,23 @@ describe "Measure search: regulation filter" do
   let(:search_key) { "regulation" }
 
   let(:a_measure) do
-    create(:measure, measure_generating_regulation_id: "R3333333")
+    set_searchable_jsonb_data!(
+      create(:measure, measure_generating_regulation_id: "R3333333")
+    )
   end
 
   let(:b_measure) do
-    create(:measure, measure_generating_regulation_id: "R3344444")
+    set_searchable_jsonb_data!(
+      create(:measure, measure_generating_regulation_id: "R3344444")
+    )
   end
 
   let(:c_measure) do
-    create(:measure,
-      measure_generating_regulation_id: "A1232222",
-      justification_regulation_id: "R5555555"
+    set_searchable_jsonb_data!(
+      create(:measure,
+        measure_generating_regulation_id: "A1232222",
+        justification_regulation_id: "R5555555"
+      )
     )
   end
 
@@ -89,4 +95,13 @@ describe "Measure search: regulation filter" do
       expect(res[0].measure_sid).to be_eql(c_measure.measure_sid)
     end
   end
+
+  private
+
+    def set_searchable_jsonb_data!(m)
+      m.set_searchable_data!
+      m.save
+
+      m.reload
+    end
 end
