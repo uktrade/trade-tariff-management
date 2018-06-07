@@ -4,4 +4,4 @@ Update `ruby` version to 2.5.0
 
 ## [February 5, 2018]
 
-Prepared new application sceleton, based on github.com/bitzesty/trade-tariff-backend application.
+Prepared new application, based on github.com/bitzesty/trade-tariff-backend application.
