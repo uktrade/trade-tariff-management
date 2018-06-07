@@ -4328,7 +4328,8 @@ CREATE TABLE public.measures_oplog (
     last_update_by_id integer,
     updated_at timestamp without time zone,
     measure_group_id integer,
-    searchable_data jsonb DEFAULT '{}'::jsonb
+    searchable_data jsonb DEFAULT '{}'::jsonb,
+    searchable_data_updated_at timestamp without time zone
 );
 
 
@@ -4370,7 +4371,8 @@ CREATE VIEW public.measures AS
     measures1.last_update_by_id,
     measures1.updated_at,
     measures1.measure_group_id,
-    measures1.searchable_data
+    measures1.searchable_data,
+    measures1.searchable_data_updated_at
    FROM public.measures_oplog measures1
   WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
            FROM public.measures_oplog measures2
@@ -10536,3 +10538,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180521160953_add_some_tr
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180521170635_create_measure_groups.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180521171648_add_measure_group_id_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180522084958_add_searchable_data_to_measures_oplog.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180607071508_add_searchable_data_updated_at_to_measures.rb');

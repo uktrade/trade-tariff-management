@@ -1,6 +1,10 @@
 module Measures
   module SearchFilters
     module FindMeasuresCollection
+      def searchable_data_not_indexed
+        where("searchable_data_updated_at IS NULL")
+      end
+
       def operation_search_jsonb_default
         where("searchable_data::text <> '{}'::text")
       end

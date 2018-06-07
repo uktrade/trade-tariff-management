@@ -326,6 +326,8 @@ class Measure < Sequel::Model
     end
 
     self.searchable_data = ops.to_json
+    self.searchable_data_updated_at = Time.now.utc
+
     save
   end
 
