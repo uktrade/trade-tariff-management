@@ -47,27 +47,9 @@ describe "Measure search: additional code filter" do
       expect(res.count).to be_eql(1)
       expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
 
-      res = search_results(
-        enabled: true,
-        operator: 'is',
-        value: "555"
-      )
-
-      expect(res.count).to be_eql(1)
-      expect(res[0].measure_sid).to be_eql(c_measure.measure_sid)
-
       #
       # 'is_not' filter
       #
-      res = search_results(
-        enabled: true,
-        operator: 'is_not',
-        value: "334"
-      )
-
-      expect(res.count).to be_eql(2)
-      measure_sids = res.map(&:measure_sid)
-      expect(measure_sids).not_to include(b_measure.measure_sid)
 
       res = search_results(
         enabled: true,
@@ -82,24 +64,6 @@ describe "Measure search: additional code filter" do
       #
       # 'starts_with' filter
       #
-      res = search_results(
-        enabled: true,
-        operator: 'starts_with',
-        value: "33"
-      )
-
-      expect(res.count).to be_eql(2)
-      measure_sids = res.map(&:measure_sid)
-      expect(measure_sids).not_to include(c_measure.measure_sid)
-
-      res = search_results(
-        enabled: true,
-        operator: 'starts_with',
-        value: "c"
-      )
-
-      expect(res.count).to be_eql(1)
-      expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
 
       res = search_results(
         enabled: true,
