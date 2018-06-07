@@ -812,7 +812,7 @@ GEM
     rabl (0.13.1)
       activesupport (>= 2.3.14)
     rack (2.0.4)
-    rack-protection (2.0.1)
+    rack-protection (2.0.2)
       rack
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
@@ -938,10 +938,10 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    sinatra (2.0.1)
+    sinatra (2.0.2)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.1)
+      rack-protection (= 2.0.2)
       tilt (~> 2.0)
     slim (3.0.9)
       temple (>= 0.7.6, < 0.9)
@@ -1059,6 +1059,7 @@ DEPENDENCIES
   simple_form (~> 3.5)
   simplecov (~> 0.14.1)
   simplecov-rcov!
+  sinatra (~> 2.0.2)
   slim-rails
   tilt
   uglifier (~> 2.7)
