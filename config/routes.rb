@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   end
 
   scope module: :measures do
-    resources :measures do
+    resources :measures, only: [:new, :create, :index] do
       collection do
         post :search
         get :all_measures_data
@@ -56,7 +56,9 @@ Rails.application.routes.draw do
   namespace :measures do
     resources :bulks, only: [:create] do
       collection do
-        post :edit
+        post :move_to_edit
+        get :edit
+
         post :info
         post :validate
       end

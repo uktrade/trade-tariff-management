@@ -28,7 +28,7 @@ module Measures
     end
 
     def results
-      @relation = Measure.reverse_order(:validity_start_date).page(page)
+      @relation = Measure.by_start_date_reverse.page(page)
       @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
       search_ops.select do |k, v|

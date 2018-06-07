@@ -151,6 +151,10 @@ class Measure < Sequel::Model
   end
 
   dataset_module do
+    def by_ids(collection_ids)
+      where(measure_sid: collection_ids)
+    end
+
     def by_regulation_id(regulation_id)
       where(
         "measure_generating_regulation_id = ? OR justification_regulation_id = ?",

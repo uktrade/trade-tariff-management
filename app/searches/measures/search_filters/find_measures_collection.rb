@@ -1,6 +1,17 @@
 module Measures
   module SearchFilters
     module FindMeasuresCollection
+      def bulk_edit_scope(search_code, page=nil)
+        by_ids(
+          Rails.cache.read(search_code)
+        ).by_start_date_reverse
+        .page(page || 1)
+      end
+
+      def by_start_date_reverse
+        reverse_order(:validity_start_date)
+      end
+
       def searchable_data_not_indexed
         where("searchable_data_updated_at IS NULL")
       end
