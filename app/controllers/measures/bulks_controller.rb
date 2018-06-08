@@ -1,6 +1,8 @@
 module Measures
   class BulksController < ApplicationController
 
+    include ::SearchCacheHelpers
+
     skip_around_action :configure_time_machine
 
     expose(:bulk_saver) do
@@ -18,11 +20,8 @@ module Measures
       )
     end
 
-    expose(:search_code) do
-      code = "#{current_user.id}BE#{Time.now.to_i}"
-      Rails.cache.write(code, params[:measure_sids] || [])
-
-      code
+    expose(:search_ops) do
+      params[:measure_sids] || []
     end
 
     def move_to_edit
@@ -72,11 +71,6 @@ module Measures
       def errors_response
         render json: bulk_saver.collection_with_errors,
                status: :unprocessable_entity
-      end
-
-      def search_mode?
-        params[:search_code].present? &&
-        Rails.cache.exist?(params[:search_code])
       end
   end
 end

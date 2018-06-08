@@ -1,6 +1,8 @@
 module Measures
   class MeasuresController < ApplicationController
 
+    include ::SearchCacheHelpers
+
     skip_around_action :configure_time_machine, only: [:index]
 
     expose(:measure_saver) do
@@ -15,7 +17,7 @@ module Measures
       measure_saver.measure
     end
 
-    expose(:search_ops) {
+    expose(:search_ops) do
       ops = params[:search]
 
       if ops.present?
@@ -24,15 +26,20 @@ module Measures
       else
         ops = {}
       end
-      ops = setup_advanced_filters(ops)
 
-      ops.merge(
-        page: params[:page] || 1
-      )
-    }
+      setup_advanced_filters(ops)
+    end
 
     expose(:measures_search) do
-      ::Measures::Search.new(search_ops)
+      if search_mode?
+        ::Measures::Search.new(
+          Rails.cache.read(search_code).merge(
+            page: params[:page] || 1
+          )
+        )
+      else
+        []
+      end
     end
 
     expose(:search_results) do
@@ -49,13 +56,14 @@ module Measures
     end
 
     def index
-    end
-
-    def search
       respond_to do |format|
         format.json { render json: json_collection }
         format.html
       end
+    end
+
+    def search
+      redirect_to measures_url(search_code: search_code)
     end
 
     def create
