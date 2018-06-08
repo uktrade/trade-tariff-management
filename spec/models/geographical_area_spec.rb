@@ -157,6 +157,55 @@ describe GeographicalArea do
     # GA2 The start date must be less than or equal to the end date.
     it { is_expected.to validate_validity_dates }
 
+    describe "GA3" do
+      it "without description record" do
+        geographical_area = create :geographical_area
+        geographical_area.geographical_area_sid = generate(:geographical_area_sid)
+        expect(geographical_area).to_not be_conformant
+        expect(geographical_area.conformance_errors).to have_key(:GA3)
+      end
+
+      it "start date of first description" do
+        geographical_area = create :geographical_area,
+                                   validity_start_date: Date.today - 10.days
+        geographical_area_description = geographical_area.geographical_area_description
+        geographical_area_description.geographical_area_description_period.validity_start_date = Date.today - 8.days
+        expect(geographical_area).to_not be_conformant
+        expect(geographical_area.conformance_errors).to have_key(:GA3)
+      end
+
+      it "two descriptions may not have the same start date" do
+        validity_start_date = Date.today - 10.days
+        geographical_area = create :geographical_area,
+                                   validity_start_date: validity_start_date
+        geographical_area_description2 = create(
+          :geographical_area_description,
+          :with_period,
+          valid_at: validity_start_date,
+          geographical_area_sid: geographical_area.geographical_area_sid
+        )
+        expect(geographical_area).to_not be_conformant
+        expect(geographical_area.conformance_errors).to have_key(:GA3)
+      end
+
+      it "start date of the description must be less than or equal to the end date" do
+        geographical_area = create :geographical_area,
+                                   validity_end_date: Date.today + 5.days
+        geographical_area_description = geographical_area.geographical_area_description
+        geographical_area_description.geographical_area_description_period.validity_end_date = Date.today + 10.days
+        expect(geographical_area).to_not be_conformant
+        expect(geographical_area.conformance_errors).to have_key(:GA3)
+      end
+
+      it "valid description record" do
+        geographical_area = create :geographical_area,
+                                   validity_end_date: Date.today + 10.days
+        ga_description = geographical_area.geographical_area_description
+        ga_description.geographical_area_description_period.validity_end_date = Date.today + 10.days
+        expect(geographical_area).to be_conformant
+      end
+    end
+
     describe "GA4" do
       let(:geographical_area) {
         build(:geographical_area, parent_geographical_area_group_sid: parent_id)

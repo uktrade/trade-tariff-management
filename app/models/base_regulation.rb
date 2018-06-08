@@ -8,13 +8,32 @@ class BaseRegulation < Sequel::Model
   plugin :time_machine, period_start_column: :base_regulations__validity_start_date,
                         period_end_column: :effective_end_date
   plugin :conformance_validator
+  plugin :dirty
 
   set_primary_key [:base_regulation_id, :base_regulation_role]
 
   include ::FormApiHelpers::RegulationSearch
 
-  one_to_one :complete_abrogation_regulation, key: [:complete_abrogation_regulation_id,
-                                                    :complete_abrogation_regulation_role]
+  one_to_one :complete_abrogation_regulation,
+             key: [ :complete_abrogation_regulation_id,
+                    :complete_abrogation_regulation_role ]
+
+  one_to_one :explicit_abrogation_regulation,
+             key: [ :explicit_abrogation_regulation_id,
+                    :explicit_abrogation_regulation_role ]
+
+  one_to_many :generating_measures,
+              class: :Measure,
+              key: [ :measure_generating_regulation_id,
+                     :measure_generating_regulation_role ] do |ds|
+    ds.with_actual(Measure)
+  end
+
+  one_to_many :modification_regulations,
+              key: [ :base_regulation_id,
+                     :base_regulation_role ]
+
+  many_to_one :regulation_group
 
   def not_completely_abrogated?
     complete_abrogation_regulation.blank?
