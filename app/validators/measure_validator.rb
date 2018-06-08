@@ -151,6 +151,52 @@ class MeasureValidator < TradeTariffBackend::Validator
        record.export_refund_nomenclature.number_indents <= (record.measure_type.measure_explosion_level))))
   end
 
+  #validation :ME104,
+    # WIP
+    #%Q{ "The justification regulation must be either:
+          #- the measure’s measure-generating regulation, or
+          #- a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
+        #If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation" } do |record|
+
+    #valid = true
+
+    # # Keeping this code verbose for now (As I am still understanding this code)
+    #if record.justification_regulation_id.present? && record.measure_generating_regulation_id.present?
+      #valid = record.justification_regulation_id == record.measure_generating_regulation_id
+
+      #if record.generating_regulation.present? && record.generating_regulation.validity_end_date.present?
+        #valid = record.generating_regulation.validity_end_date > record.validity_end_date
+      #else
+        #valid = record.validity_end_date.present?
+      #end
+    #end
+
+    #valid
+  #end
+
+  validation :ME112, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the measure does not require a goods code." do |record|
+    valid = true
+
+    if record.additional_code_type.present?
+      valid = record.additional_code_type.description == "Export refund for processed agricultural goods" &&
+        record.goods_nomenclature_item_id.blank?
+    end
+
+    valid
+  end
+
+  validation :ME113, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the additional code must exist as an Export Refund for Processed Agricultural Goods additional code." do |record|
+    valid = true
+
+    if record.additional_code_type.present?
+      valid = (record.additional_code_type.description == "Export refund for processed agricultural goods") &&
+        record.additional_code_id.present? &&
+        (record.additional_code.additional_code_type_id == additional_code_type.additional_code_type_id)
+    end
+
+    valid
+  end
+
   validation :ME115, 'The validity period of the referenced additional code must span the validity period of the measure', on: [:create, :update] do
     validates :validity_date_span, of: :additional_code
   end
@@ -164,6 +210,16 @@ class MeasureValidator < TradeTariffBackend::Validator
       } do
     # Only quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'
     validates :validity_date_span, of: :order_number
+  end
+
+  validation :ME117,
+             %{When a measure has a quota measure type then the origin must exist as a quota order number origin. This rule is only applicable for measures with start date after 31/12/2007. Only origins for quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'},
+             if: ->(record) {
+               ( record.validity_start_date > Date.new(2007,12,31) ) && (
+                 record.ordernumber.present? && record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094"
+               )
+             } do |record|
+    record.quota_order_number.present? && record.quota_order_number.quota_order_number_origin.present?
   end
 end
 

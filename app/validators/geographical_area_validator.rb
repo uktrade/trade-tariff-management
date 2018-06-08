@@ -8,6 +8,21 @@ class GeographicalAreaValidator < TradeTariffBackend::Validator
     validates :validity_dates
   end
 
+  validation :GA3, 'At least one description record is mandatory. The start date of the first description period must be equal to the start date of the geographical area. Two descriptions may not have the same start date. The start date of the description must be less than or equal to the end date of the geographical area.' do |record|
+    record.geographical_area_description.present? && (
+      record.geographical_area_description.geographical_area_description_period.validity_start_date == record.validity_start_date
+    ) && (
+      validity_start_dates = record.geographical_area_descriptions.map do |description|
+        description.geographical_area_description_period.validity_start_date
+      end
+      record.geographical_area_descriptions.length == validity_start_dates.uniq.length
+    ) && (
+      record.validity_end_date.blank? || record.geographical_area_descriptions.all? do |description|
+        description.geographical_area_description_period.validity_end_date <= record.validity_end_date
+      end
+    )
+  end
+
   validation :GA4, 'The referenced parent geographical area group must be an existing geographical area with area code = 1 (geographical area group)', on: [:create, :update] do |record|
     parent_sid = record.parent_geographical_area_group_sid
     if parent_sid.present?
