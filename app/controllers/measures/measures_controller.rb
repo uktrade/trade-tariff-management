@@ -30,13 +30,31 @@ module Measures
       setup_advanced_filters(ops)
     end
 
+    expose(:full_search_params) do
+      if Rails.cache.read(params[:search_code]).present?
+        Rails.cache.read(params[:search_code]).merge(
+          page: params[:page] || 1
+        )
+      else
+        nil
+      end
+    end
+
+    expose(:pagination_metadata) do
+      if search_mode?
+         {
+           page: params[:page] || 1,
+           total_count: search_results.total_count,
+           per_page: 25
+         }
+      else
+        {}
+      end
+    end
+
     expose(:measures_search) do
       if search_mode?
-        ::Measures::Search.new(
-          Rails.cache.read(search_code).merge(
-            page: params[:page] || 1
-          )
-        )
+        ::Measures::Search.new(full_search_params)
       else
         []
       end

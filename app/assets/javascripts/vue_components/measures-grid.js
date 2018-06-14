@@ -1,12 +1,17 @@
 Vue.component("measures-grid", {
   template: "#measures-grid-template",
-  props: ["onSelectionChange", "data", "columns"],
+  props: ["onSelectionChange", "onItemSelected", "onItemDeselected", "data", "columns", "selectedRows"],
   data: function() {
+    var selectAll = this.data.map(function(m) {
+      return self.selectedRows.indexOf(m.measure_sid) === -1;
+    }).filter(function(b) {
+      return b;
+    }).length === 0;
+
     return {
       sortBy: "measure_sid",
       sortDir: "desc",
-      selectedRows: [],
-      selectAll: false,
+      selectAll: selectAll,
       firstLoad: true,
       indirectSelectAll: false
     };
@@ -20,6 +25,13 @@ Vue.component("measures-grid", {
       } else {
         this.sortDir = "desc";
         this.sortBy = f;
+      }
+    },
+    sendCheckedTrigger: function(event) {
+      if (event.target.checked) {
+        this.onItemSelected(parseInt(event.target.value, 10));
+      } else {
+        this.onItemDeselected(parseInt(event.target.value, 10));
       }
     }
   },
@@ -44,43 +56,52 @@ Vue.component("measures-grid", {
       return result;
     }
   },
-  mounted: function() {
-    var self = this;
-
-    this.data.forEach(function(m) {
-      self.selectedRows.push(m.measure_sid);
-    });
-  },
   watch: {
     selectAll: function(val) {
+      var self = this;
+
       if (this.indirectSelectAll) {
         return;
       }
 
       if (val) {
-        this.selectedRows = this.data.map(function(row) {
-          return row.measure_sid;
+        this.data.map(function(row) {
+          self.onItemSelected(row.measure_sid);
         });
       } else {
-        this.selectedRows = [];
+        this.data.map(function(row) {
+          self.onItemDeselected(row.measure_sid);
+        });
       }
     },
-    selectedRows: function() {
+    selectedRows: function(newVal, oldVal) {
       var self = this;
 
       this.indirectSelectAll = true;
-      this.selectAll = this.selectedRows.length === this.data.length;
+      this.selectAll = this.data.map(function(m) {
+        return self.selectedRows.indexOf(m.measure_sid) === -1;
+      }).filter(function(b) {
+        return b;
+      }).length === 0;
 
       setTimeout(function() {
         self.indirectSelectAll = false;
       }, 50);
 
-      if (this.onSelectionChange) {
-        try {
-          this.onSelectionChange(this.selectedRows);
-        } catch (e) {
-          console.log(e);
-        }
+      if (this.onItemSelected) {
+        newVal.forEach(function(m) {
+          if (oldVal.indexOf(m) === -1) {
+            self.onItemSelected(m);
+          }
+        });
+      }
+
+      if (this.onItemDeselected) {
+        oldVal.forEach(function(m) {
+          if (newVal.indexOf(m) === -1) {
+            self.onItemDeselected(m);
+          }
+        });
       }
     }
   }

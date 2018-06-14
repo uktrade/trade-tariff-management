@@ -1,3 +1,5 @@
-<measures-grid :on-selection-change="onMeasuresSelected" :data="measures" :columns="columns">
+<measures-grid :selected-rows="selectedMeasures" :on-item-selected="onMeasuresSelected" :on-item-deselected="onMeasuresDeselected" :data="measures" :columns="columns">
   <p>Loading measures table...</p>
 </measures-grid>
+
+<table-pagination :page="pagination.page" :total="pagination.total_count" :per-page="pagination.per_page" :on-click="onPageChange"></table-pagination>

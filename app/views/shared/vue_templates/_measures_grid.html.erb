@@ -21,7 +21,7 @@
       <tbody>
         <tr v-for="row in data">
           <td>
-            <input type="checkbox" name="measures[]" :value="row.measure_sid" v-model="selectedRows" />
+            <input type="checkbox" name="measures[]" :value="row.measure_sid" :checked="selectedRows.indexOf(row.measure_sid) > -1" @change="sendCheckedTrigger" />
           </td>
           <td v-for="column in enabledColumns" v-html="row[column.field]">
           </td>
