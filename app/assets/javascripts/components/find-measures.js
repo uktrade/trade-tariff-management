@@ -1,4 +1,5 @@
 //= require ./duty-expressions-parser
+//= require ./url-parser
 
 $(document).ready(function() {
   var form = document.querySelector(".find-measures");
@@ -27,9 +28,10 @@ $(document).ready(function() {
   var app = new Vue({
     el: form,
     data: function() {
-      var data = {
-        measures: window.__measures || [],
+      var params = parseQueryString(window.location.search.substring(1));
+      var code = params.search_code;
 
+      var data = {
         columns: [
           {enabled: true, title: "ID", field: "measure_sid"},
           {enabled: true, title: "Regulation", field: "regulation"},
@@ -91,7 +93,16 @@ $(document).ready(function() {
           { value: "already_in_cds", label: "Already in CDS" }
         ],
 
-        selectedMeasures: (window.__measures || []).map(function(m) { return m.measure_sid; })
+        searchCode: code,
+        pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
+        selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_measures") || "[]")),
+        pagination: {
+          page: 1,
+          total_count: 0,
+          per_page: 25
+        },
+        measures: [],
+        isLoading: true,
       };
 
       var default_params = {
@@ -204,6 +215,10 @@ $(document).ready(function() {
         "footnotes"
       ];
 
+      if (window.__pagination_metadata) {
+        data.pagination = window.__pagination_metadata;
+        data.pagination.page = parseInt(data.pagination.page, 10);
+      }
 
       for (var k in fields) {
         var field = fields[k];
@@ -211,125 +226,54 @@ $(document).ready(function() {
         data[field] = default_params[field];
       }
 
-      if (window.__search_params.search !== undefined) {
-        var params = window.__search_params.search;
+      if (window.__search_params) {
+        var params = window.__search_params;
 
-        data.group_name.enabled = false;
-        data.status.enabled = false;
-        data.author.enabled = false;
-        data.last_updated_by.enabled = false;
-        data.regulation.enabled = false;
-        data.date_of.enabled = false;
-        data.type.enabled = false;
-        data.validity_start_date.enabled = false;
-        data.validity_end_date.enabled = false;
-        data.commodity_code.enabled = false;
-        data.additional_code.enabled = false;
-        data.origin.enabled = false;
+        var mapping = {
+          group_name: "group_name",
+          status: "status",
+          author: "author",
+          date_of: "date_of",
+          last_updated_by: "last_updated_by",
+          regulation: "regulation",
+          type: "type",
+          valid_from: "validity_start_date",
+          valid_to: "validity_end_date",
+          commodity_code: "commodity_code",
+          additional_code: "additional_code",
+          origin: "origin"
+        };
+
+        for (var k in mapping) {
+          if (!mapping.hasOwnProperty(k)) {
+            continue;
+          }
+
+          var v = mapping[k];
+
+          data[v].enabled = false;
+
+          if (params[k] !== undefined) {
+            data[v].enabled = params[k].enabled;
+
+            if (params[k].enabled) {
+              data[v] = params[k];
+            }
+          }
+        }
+
         data.origin_exclusions.enabled = false;
-        data.duties.enabled = false;
         data.conditions.enabled = false;
+        data.duties.enabled = false;
         data.footnotes.enabled = false;
-
-        if (params.group_name !== undefined) {
-          data.group_name.enabled = params.group_name.enabled;
-
-          if (params.group_name.enabled) {
-            data.group_name = params.group_name;
-          }
-        }
-
-        if (params.status !== undefined) {
-          data.status.enabled = params.status.enabled;
-          if (params.status.enabled) {
-            data.status = params.status;
-          }
-        }
-
-        if (params.author !== undefined) {
-          data.author.enabled = params.author.enabled;
-          if (params.author.enabled) {
-            data.author = window.__search_params.search.author;
-          }
-        }
-
-        if (params.date_of !== undefined) {
-          data.date_of = params.date_of.enabled;
-          if (params.date_of.enabled) {
-            data.date_of = window.__search_params.search.date_of;
-          }
-        }
-
-        if (params.last_updated_by !== undefined) {
-          data.last_updated_by.enabled = params.last_updated_by.enabled;
-          if (params.last_updated_by.enabled) {
-            data.last_updated_by = window.__search_params.search.last_updated_by;
-          }
-        }
-
-        if (params.regulation !== undefined) {
-          data.regulation.enabled = params.regulation.enabled;
-
-          if (params.regulation.enabled) {
-            data.regulation = window.__search_params.search.regulation;
-          }
-        }
-
-        if (params.type !== undefined) {
-          data.type.enabled = params.type.enabled;
-
-          if (params.type.enabled) {
-            data.type = window.__search_params.search.type;
-          }
-        }
-
-        if (params.valid_from !== undefined) {
-          data.validity_start_date.enabled = params.valid_from.enabled;
-
-          if (params.valid_from.enabled) {
-            data.validity_start_date = window.__search_params.search.valid_from;
-          }
-        }
-
-        if (params.valid_to !== undefined) {
-          data.validity_end_date.enabled = params.valid_to.enabled;
-
-          if (params.valid_to.enabled) {
-            data.validity_end_date = window.__search_params.search.valid_to;
-          }
-        }
-
-        if (params.commodity_code !== undefined) {
-          data.commodity_code.enabled = params.commodity_code.enabled;
-
-          if (params.commodity_code.enabled) {
-            data.commodity_code = window.__search_params.search.commodity_code;
-          }
-        }
-
-        if (params.additional_code !== undefined) {
-          data.additional_code.enabled = params.additional_code.enabled;
-
-          if (params.additional_code.enabled) {
-            data.additional_code = window.__search_params.search.additional_code;
-          }
-        }
-
-        if (params.origin !== undefined) {
-          data.origin.enabled = params.origin.enabled;
-
-          if (params.origin.enabled) {
-            data.origin = window.__search_params.search.origin;
-          }
-        }
 
         if (params.origin_exclusions !== undefined) {
           data.origin_exclusions.enabled = params.origin_exclusions.enabled;
 
           if (params.origin_exclusions.enabled) {
-            var c = window.__search_params.search.origin_exclusions.value;
+            var c = params.origin_exclusions.value;
 
-            data.origin_exclusions = window.__search_params.search.origin_exclusions;
+            data.origin_exclusions = params.origin_exclusions;
             data.origin_exclusions.value = [];
 
             for (var k in c) {
@@ -348,9 +292,9 @@ $(document).ready(function() {
           data.duties.enabled = params.duties.enabled;
 
           if (params.duties.enabled) {
-            var d = window.__search_params.search.duties.value;
+            var d = params.duties.value;
 
-            data.duties = window.__search_params.search.duties;
+            data.duties = params.duties;
             data.duties.value = [];
 
             for (var k in d) {
@@ -378,9 +322,9 @@ $(document).ready(function() {
           data.conditions.enabled = params.conditions.enabled;
 
           if (params.conditions.enabled) {
-            var c = window.__search_params.search.conditions.value;
+            var c = params.conditions.value;
 
-            data.conditions = window.__search_params.search.conditions;
+            data.conditions = params.conditions;
             data.conditions.value = [];
 
             for (var k in c) {
@@ -399,9 +343,9 @@ $(document).ready(function() {
           data.footnotes.enabled = params.footnotes.enabled;
 
           if (params.footnotes.enabled) {
-            var f = window.__search_params.search.footnotes.value;
+            var f = params.footnotes.value;
 
-            data.footnotes = window.__search_params.search.footnotes;
+            data.footnotes = params.footnotes;
             data.footnotes.value = [];
 
             for (var k in f) {
@@ -518,11 +462,85 @@ $(document).ready(function() {
           measure_condition_code: null
         });
       },
-      onMeasuresSelected: function(sids) {
-        this.selectedMeasures = sids;
+      onMeasuresSelected: function(sid) {
+        this.selectedMeasures.push(sid);
+      },
+      onMeasuresDeselected: function(sid) {
+        var index = this.selectedMeasures.indexOf(sid);
+
+        if (index === -1) {
+          return;
+        }
+
+        this.selectedMeasures.splice(index, 1);
       },
       expressionsFriendlyDuplicate: function(options) {
         return DutyExpressionsParser.parse(options);
+      },
+      onPageChange: function(page) {
+        var params = parseQueryString(window.location.search.substring(1));
+        params.page = page;
+        this.pagination.page = page;
+
+        var newQueryString = "?search_code=" + params.search_code + "&page=" + params.page;
+
+        window.history.pushState(params, "Find a measure - Page " + page, newQueryString);
+
+        this.loadMeasures();
+        this.scrollUp();
+      },
+      loadMeasures: function() {
+        var self = this;
+
+        this.isLoading = true;
+
+        $.get(window.location.href).success(function(data) {
+          self.measures = data;
+          self.isLoading = false;
+
+          if (self.pagesLoaded.indexOf(self.pagination.page) === -1) {
+            self.pagesLoaded.push(self.pagination.page);
+
+            self.measures.forEach(function(measure) {
+              self.selectedMeasures.push(measure.measure_sid);
+            });
+          }
+        }).fail(function(error) {
+          var params = parseQueryString(window.location.href);
+          var page = params.page || 1;
+
+          alert("There was a problem loading page " + page);
+          window.history.back();
+        });
+      },
+      scrollUp: function() {
+        var self = this;
+
+        setTimeout(function() {
+          $("html,body").animate({
+            scrollTop: $(".measures-table-wrapper").offset().top - 200
+          });
+        }, 200);
+      }
+    },
+    mounted: function() {
+      var self = this;
+
+      if (window.__search_params) {
+        this.loadMeasures();
+      }
+
+      window.onpopstate = function(event) {
+        self.scrollUp();
+        self.loadMeasures();
+      };
+    },
+    watch: {
+      pagesLoaded: function(newVal, oldVal) {
+        window.localStorage.setItem(this.searchCode + "_pages", JSON.stringify(newVal));
+      },
+      selectedMeasures: function(newVal, oldVal) {
+        window.localStorage.setItem(this.searchCode + "_measures", JSON.stringify(newVal));
       }
     }
   });
