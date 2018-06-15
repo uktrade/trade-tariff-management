@@ -3,7 +3,7 @@ module Measures
 
     include ::SearchCacheHelpers
 
-    skip_around_action :configure_time_machine, only: [:index]
+    skip_around_action :configure_time_machine, only: [:index, :search]
 
     expose(:measure_saver) do
       measure_ops = params[:measure]
@@ -30,35 +30,9 @@ module Measures
       setup_advanced_filters(ops)
     end
 
-    expose(:current_page) do
-      params[:page] || 1
-    end
-
-    expose(:full_search_params) do
-      if Rails.cache.read(params[:search_code]).present?
-        Rails.cache.read(params[:search_code]).merge(
-          page: current_page
-        )
-      else
-        nil
-      end
-    end
-
-    expose(:pagination_metadata) do
-      if search_mode?
-         {
-           page: search_results.current_page,
-           total_count: search_results.total_count,
-           per_page: search_results.limit_value
-         }
-      else
-        {}
-      end
-    end
-
     expose(:measures_search) do
       if search_mode?
-        ::Measures::Search.new(full_search_params)
+        ::Measures::Search.new(cached_search_ops)
       else
         []
       end
@@ -71,15 +45,6 @@ module Measures
     expose(:json_collection) do
       search_results.map(&:to_table_json)
                     .to_json
-    end
-
-    expose(:json_response) do
-      {
-        measures: json_collection,
-        total_pages: search_results.total_pages,
-        current_page: search_results.current_page,
-        has_more: !search_results.last_page?
-      }
     end
 
     expose(:form) do
