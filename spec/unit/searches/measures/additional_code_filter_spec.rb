@@ -7,15 +7,21 @@ describe "Measure search: additional code filter" do
   let(:search_key) { "additional_code" }
 
   let(:a_measure) do
-    create(:measure, additional_code_type_id: "C", additional_code_id: "333")
+    set_searchable_data!(
+      create(:measure, additional_code_type_id: "C", additional_code_id: "333")
+    )
   end
 
   let(:b_measure) do
-    create(:measure, additional_code_type_id: "B", additional_code_id: "334")
+    set_searchable_data!(
+      create(:measure, additional_code_type_id: "B", additional_code_id: "334")
+    )
   end
 
   let(:c_measure) do
-    create(:measure, additional_code_id: "555")
+    set_searchable_data!(
+      create(:measure, additional_code_id: "555")
+    )
   end
 
   before do
@@ -29,14 +35,6 @@ describe "Measure search: additional code filter" do
       #
       # 'is' filter
       #
-      res = search_results(
-        enabled: true,
-        operator: 'is',
-        value: "333"
-      )
-
-      expect(res.count).to be_eql(1)
-      expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
 
       res = search_results(
         enabled: true,
@@ -74,5 +72,12 @@ describe "Measure search: additional code filter" do
       expect(res.count).to be_eql(1)
       expect(res[0].measure_sid).to be_eql(b_measure.measure_sid)
     end
+  end
+
+  def set_searchable_data!(measure)
+    measure.set_searchable_data!
+    measure.save
+
+    measure.reload
   end
 end

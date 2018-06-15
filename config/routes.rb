@@ -21,7 +21,10 @@ Rails.application.routes.draw do
   resources :quota_order_numbers, only: [:index]
 
   scope module: :additional_codes do
-    resources :additional_codes, only: [:index]
+    resources :additional_codes, only: [:index] do
+      get :preview, on: :collection
+    end
+
     resources :additional_code_types, only: [:index]
   end
 

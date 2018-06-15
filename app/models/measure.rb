@@ -286,6 +286,10 @@ class Measure < Sequel::Model
   def set_searchable_data!
     ops = {}
 
+    if additional_code_id.present?
+      ops[:additional_code] = "#{additional_code_type_id}#{additional_code_id}".downcase
+    end
+
     if measure_generating_regulation_id.present?
       ops[:regulation_code] = generating_regulation_code
     end
