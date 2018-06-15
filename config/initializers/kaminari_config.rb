@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 per_page = if Rails.env.production?
-  6000
+  300
 elsif Rails.env.development?
   25
 elsif Rails.env.test?
