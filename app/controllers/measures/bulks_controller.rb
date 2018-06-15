@@ -13,15 +13,18 @@ module Measures
       ::Measures::BulkSaver.new(current_user, collection_ops)
     end
 
-    expose(:bulk_collection) do
-      ::Measure.bulk_edit_scope(
-        params[:search_code],
-        params[:page]
-      )
+    expose(:search_results) do
+      ::Measure.bulk_edit_scope(cached_search_ops)
+    end
+
+    expose(:json_collection) do
+      search_results.map(&:to_json)
     end
 
     expose(:search_ops) do
-      params[:measure_sids] || []
+      {
+        measure_sids: params[:measure_sids] || []
+      }
     end
 
     def move_to_edit
@@ -31,16 +34,12 @@ module Measures
     def edit
       if search_mode?
         respond_to do |format|
-          format.json { render json: bulk_collection.map(&:to_table_json) }
+          format.json { render json: json_response }
           format.html
         end
       else
         redirect_to measures_url
       end
-    end
-
-    def info
-      render json: bulk_collection.map(&:to_json).to_json
     end
 
     def validate

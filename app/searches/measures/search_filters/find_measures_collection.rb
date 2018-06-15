@@ -1,11 +1,9 @@
 module Measures
   module SearchFilters
     module FindMeasuresCollection
-      def bulk_edit_scope(search_code, page=nil)
-        by_ids(
-          Rails.cache.read(search_code)
-        ).by_start_date_reverse
-        .page(page || 1)
+      def bulk_edit_scope(search_ops={})
+        by_ids(search_ops[:measure_sids]).by_start_date_reverse
+                                         .page(search_ops[:page])
       end
 
       def by_start_date_reverse

@@ -59,7 +59,6 @@ Rails.application.routes.draw do
         post :move_to_edit
         get :edit
 
-        post :info
         post :validate
       end
     end
