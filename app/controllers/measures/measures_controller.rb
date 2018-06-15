@@ -47,9 +47,9 @@ module Measures
     expose(:pagination_metadata) do
       if search_mode?
          {
-           page: current_page,
+           page: search_results.current_page,
            total_count: search_results.total_count,
-           per_page: 25
+           per_page: search_results.limit_value
          }
       else
         {}
