@@ -57,23 +57,20 @@ $(document).ready(function() {
         changingRegulation: false,
         changingValidityPeriod: false,
         changingQuota: false,
-        changingStatus: false
+        changingStatus: false,
+        isLoading: true,
+        pagination: {
+          total_count: 0,
+          page: 1,
+          per_page: 25,
+          total_pages: 1
+        }
       };
     },
     mounted: function() {
       var self = this;
 
-      var data = {
-        measure_sids: window.__measure_sids
-      };
-
-      $.post("/measures/bulks/info", data, function(data) {
-        self.measures = data.map(function(measure) {
-          measure.visible = true;
-
-          return measure;
-        });
-      });
+      this.loadMeasures(1, this.loadNextPage.bind(this));
     },
     computed: {
       noSelectedMeasures: function() {
@@ -226,6 +223,29 @@ $(document).ready(function() {
         this.changingValidityPeriod = false;
         this.changingQuota = false;
         this.changingStatus = false;
+      },
+      loadMeasures: function(page, callback) {
+        var self = this;
+
+        $.get(window.location.href, function(data) {
+          self.measures.concat(data.measures.map(function(measure) {
+            measure.visible = true;
+
+            return measure;
+          }));
+
+          self.pagination.page = parseInt(data.current_page, 10);
+          self.pagination.total_pages = parseInt(data.total_pages, 10);
+
+          callback(measures);
+        });
+      },
+      loadNextPage: function() {
+        if (this.pagination.page === this.pagination.total_pages) {
+          return;
+        }
+
+        this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
       }
     }
   });
