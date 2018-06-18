@@ -48,13 +48,13 @@ module Measures
 
         def is_clause
           <<-eos
-            searchable_data #>> '{"group_name"}' = ?
+            searchable_data #>> '{"workbasket_name"}' = ?
           eos
         end
 
         def equal_clause
           <<-eos
-            searchable_data #>> '{"group_name"}' ilike ?
+            searchable_data #>> '{"workbasket_name"}' ilike ?
           eos
         end
 

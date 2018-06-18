@@ -3678,41 +3678,6 @@ ALTER SEQUENCE public.measure_excluded_geographical_areas_oid_seq OWNED BY publi
 
 
 --
--- Name: measure_groups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.measure_groups (
-    id integer NOT NULL,
-    name text,
-    status text,
-    added_by_id integer,
-    last_update_by_id integer,
-    last_status_change_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    created_at timestamp without time zone
-);
-
-
---
--- Name: measure_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.measure_groups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: measure_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.measure_groups_id_seq OWNED BY public.measure_groups.id;
-
-
---
 -- Name: measure_partial_temporary_stops_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4327,7 +4292,7 @@ CREATE TABLE public.measures_oplog (
     last_status_change_at timestamp without time zone,
     last_update_by_id integer,
     updated_at timestamp without time zone,
-    measure_group_id integer,
+    workbasket_id integer,
     searchable_data jsonb DEFAULT '{}'::jsonb,
     searchable_data_updated_at timestamp without time zone
 );
@@ -4370,7 +4335,7 @@ CREATE VIEW public.measures AS
     measures1.last_status_change_at,
     measures1.last_update_by_id,
     measures1.updated_at,
-    measures1.measure_group_id,
+    measures1.workbasket_id,
     measures1.searchable_data,
     measures1.searchable_data_updated_at
    FROM public.measures_oplog measures1
@@ -6689,6 +6654,42 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: workbaskets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.workbaskets (
+    id integer NOT NULL,
+    title text,
+    type text,
+    status text,
+    user_id integer,
+    last_update_by_id integer,
+    last_status_change_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: workbaskets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.workbaskets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: workbaskets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.workbaskets_id_seq OWNED BY public.workbaskets.id;
+
+
+--
 -- Name: xml_export_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7146,13 +7147,6 @@ ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog ALTER COLUMN o
 
 
 --
--- Name: measure_groups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.measure_groups ALTER COLUMN id SET DEFAULT nextval('public.measure_groups_id_seq'::regclass);
-
-
---
 -- Name: measure_partial_temporary_stops_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7521,6 +7515,13 @@ ALTER TABLE ONLY public.transmission_comments_oplog ALTER COLUMN oid SET DEFAULT
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: workbaskets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.workbaskets ALTER COLUMN id SET DEFAULT nextval('public.workbaskets_id_seq'::regclass);
 
 
 --
@@ -8019,14 +8020,6 @@ ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog
 
 
 --
--- Name: measure_groups measure_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.measure_groups
-    ADD CONSTRAINT measure_groups_pkey PRIMARY KEY (id);
-
-
---
 -- Name: measure_partial_temporary_stops_oplog measure_partial_temporary_stops_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8464,6 +8457,14 @@ ALTER TABLE ONLY public.transmission_comments_oplog
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: workbaskets workbaskets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.workbaskets
+    ADD CONSTRAINT workbaskets_pkey PRIMARY KEY (id);
 
 
 --
@@ -10539,3 +10540,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180521170635_create_meas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180521171648_add_measure_group_id_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180522084958_add_searchable_data_to_measures_oplog.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180607071508_add_searchable_data_updated_at_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180618144957_create_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180618150316_remove_measure_groups.rb');
