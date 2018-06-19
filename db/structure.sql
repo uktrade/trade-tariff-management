@@ -6666,8 +6666,47 @@ CREATE TABLE public.workbaskets (
     last_update_by_id integer,
     last_status_change_at timestamp without time zone,
     updated_at timestamp without time zone,
+    created_at timestamp without time zone,
+    regulation_id text,
+    regulation_role text,
+    changes_do_not_come_from_legislation boolean DEFAULT false,
+    reason_of_changes text,
+    operation_date date
+);
+
+
+--
+-- Name: workbaskets_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.workbaskets_events (
+    id integer NOT NULL,
+    workbasket_id integer,
+    user_id integer,
+    event_type text,
+    description text,
+    updated_at timestamp without time zone,
     created_at timestamp without time zone
 );
+
+
+--
+-- Name: workbaskets_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.workbaskets_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: workbaskets_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.workbaskets_events_id_seq OWNED BY public.workbaskets_events.id;
 
 
 --
@@ -7522,6 +7561,13 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 ALTER TABLE ONLY public.workbaskets ALTER COLUMN id SET DEFAULT nextval('public.workbaskets_id_seq'::regclass);
+
+
+--
+-- Name: workbaskets_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.workbaskets_events ALTER COLUMN id SET DEFAULT nextval('public.workbaskets_events_id_seq'::regclass);
 
 
 --
@@ -8457,6 +8503,14 @@ ALTER TABLE ONLY public.transmission_comments_oplog
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: workbaskets_events workbaskets_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.workbaskets_events
+    ADD CONSTRAINT workbaskets_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -10542,3 +10596,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180522084958_add_searcha
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180607071508_add_searchable_data_updated_at_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180618144957_create_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180618150316_remove_measure_groups.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180619082412_add_some_fields_to_workbasket.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083622_create_workbaskets_events.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083954_rename_title_to_event_type_in_workbaskets_events.rb');

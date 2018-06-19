@@ -2,6 +2,7 @@ module Workbaskets
   class Workbasket < Sequel::Model
 
     STATUS_LIST = [
+      :new,
       :draft_incomplete,
       :draft_ready_for_cross_check,
       :submitted_for_cross_check,
@@ -16,18 +17,16 @@ module Workbaskets
       :already_in_cds
     ]
 
-    one_to_many :workbaskets_events, key: :workbasket_id
+    one_to_many :events, key: :workbasket_id,
+                         class_name: "Workbaskets::Event"
+
+    many_to_one :user, key: :user_id,
+                       foreign_key: :id,
+                       class_name: "User"
 
     validates do
-      presence_of :title,
-                  :status,
-                  :user_id,
-                  :last_update_by_id
-
-      uniqueness_of [
-        :title,
-        :user_id
-      ]
+      presence_of :status,
+                  :user_id
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
     end
