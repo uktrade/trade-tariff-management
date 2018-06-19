@@ -58,6 +58,7 @@ module Measures
     end
 
     def search
+      track_measure_sids!
       redirect_to measures_url(search_code: search_code)
     end
 
@@ -93,6 +94,19 @@ module Measures
         end
 
         ops
+      end
+
+      def track_measure_sids!
+        Rails.cache.write(
+          "#{current_user.id}_SM_ALL_IDS_#{Time.now.to_i}",
+          search_result_all_measure_sids
+        )
+      end
+
+      def search_result_all_measure_sids
+        ::Measures::Search.new(
+          Rails.cache.read(search_code)
+        ).measure_sids
       end
   end
 end
