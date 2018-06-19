@@ -495,7 +495,7 @@ $(document).ready(function() {
         this.isLoading = true;
 
         $.get(window.location.href).success(function(data) {
-          self.measures = data;
+          self.measures = data.measures;
           self.isLoading = false;
 
           if (self.pagesLoaded.indexOf(self.pagination.page) === -1) {

@@ -2,6 +2,8 @@ Vue.component("measures-grid", {
   template: "#measures-grid-template",
   props: ["onSelectionChange", "onItemSelected", "onItemDeselected", "data", "columns", "selectedRows"],
   data: function() {
+    var self = this;
+
     var selectAll = this.data.map(function(m) {
       return self.selectedRows.indexOf(m.measure_sid) === -1;
     }).filter(function(b) {
@@ -33,6 +35,35 @@ Vue.component("measures-grid", {
       } else {
         this.onItemDeselected(parseInt(event.target.value, 10));
       }
+    },
+    findColumn: function(field) {
+      for (var k in this.columns) {
+        var o = this.columns[k];
+
+        console.log(o, field);
+        if (o.field == field) {
+          return o;
+        }
+      }
+    },
+    getSortingFunc: function() {
+      var column = this.findColumn(this.sortBy);
+      var sortBy = this.sortBy;
+
+      switch (column.type) {
+        case "number":
+          return function(a, b) {
+            return parseInt(a[sortBy], 10) - parseInt(b[sortBy], 10);
+          };
+        case "string":
+          return function(a, b) {
+            return a - b;
+          };
+        case "date":
+          return function(a, b) {
+            return a - b;
+          }
+      }
     }
   },
   computed: {
@@ -42,18 +73,15 @@ Vue.component("measures-grid", {
       });
     },
     sorted: function() {
-      var sortBy = this.sortBy;
       var sortDir = this.sortDir;
-
-      var result = this.data.sort(function(a, b) {
-        return a[sortBy] - b[sortDir];
-      })
+      var sortFunc = this.getSortingFunc();
+      var result = this.data.slice().sort(sortFunc);
 
       if (sortDir === "asc") {
         return result;
       }
 
-      return result;
+      return result.reverse();
     }
   },
   watch: {

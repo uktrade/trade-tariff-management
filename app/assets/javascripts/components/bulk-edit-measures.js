@@ -15,20 +15,20 @@ $(document).ready(function() {
         selectedMeasures: [],
         showTooltips: true,
         columns: [
-          {enabled: true, title: "ID", field: "measure_sid"},
-          {enabled: true, title: "Regulation", field: "regulation"},
-          {enabled: true, title: "Type", field: "measure_type_id"},
-          {enabled: true, title: "Valid from", field: "validity_start_date"},
-          {enabled: true, title: "Valid to", field: "validity_end_date"},
-          {enabled: true, title: "Commodity code", field: "goods_nomenclature"},
-          {enabled: true, title: "Additional code", field: "additional_code"},
-          {enabled: true, title: "Origin", field: "geographical_area"},
-          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas"},
-          {enabled: true, title: "Duties", field: "duties"},
-          {enabled: true, title: "Conditions", field: "conditions"},
-          {enabled: true, title: "Footnotes", field: "footnotes"},
-          {enabled: true, title: "Last updated", field: "last_updated"},
-          {enabled: true, title: "Status", field: "status"}
+          {enabled: true, title: "ID", field: "measure_sid", sortable: true, type: "number" },
+          {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string" },
+          {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string" },
+          {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date" },
+          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date" },
+          {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "string" },
+          {enabled: true, title: "Additional code", field: "additional_code", sortable: true, type: "string" },
+          {enabled: true, title: "Origin", field: "geographical_area", sortable: false },
+          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas", sortable: false },
+          {enabled: true, title: "Duties", field: "duties", sortable: false },
+          {enabled: true, title: "Conditions", field: "conditions", sortable: false },
+          {enabled: true, title: "Footnotes", field: "footnotes", sortable: false },
+          {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "date" },
+          {enabled: true, title: "Status", field: "status", sortable: true, type: "string" }
         ],
         actions: [
           { value: 'toggle_unselected', label: 'Hide/Show unselected items' },
@@ -57,23 +57,20 @@ $(document).ready(function() {
         changingRegulation: false,
         changingValidityPeriod: false,
         changingQuota: false,
-        changingStatus: false
+        changingStatus: false,
+        isLoading: true,
+        pagination: {
+          total_count: window.__pagination_metadata.total_count,
+          page: window.__pagination_metadata.page,
+          per_page: window.__pagination_metadata.per_page,
+          pages: Math.ceil(window.__pagination_metadata.total_count / window.__pagination_metadata.per_page)
+        }
       };
     },
     mounted: function() {
       var self = this;
 
-      var data = {
-        measure_sids: window.__measure_sids
-      };
-
-      $.post("/measures/bulks/info", data, function(data) {
-        self.measures = data.map(function(measure) {
-          measure.visible = true;
-
-          return measure;
-        });
-      });
+      this.loadMeasures(1, this.loadNextPage.bind(this));
     },
     computed: {
       noSelectedMeasures: function() {
@@ -116,11 +113,11 @@ $(document).ready(function() {
 
           var formatted_conditions = measure.measure_conditions.map(function(mc) {
             return MeasureConditionFormatter.format(mc);
-          }).join("<br />") || "-";
+          }).join(", ") || "-";
 
           var formatted_footnotes = measure.footnotes.map(function (ft) {
             return ft.footnote_type_id + " - " + ft.footnote_id;
-          }).join("<br />") || "-";
+          }).join(", ") || "-";
 
           var origin = "-";
 
@@ -156,8 +153,17 @@ $(document).ready(function() {
       addOriginExclusion: function() {
         this.origin_exclusions.push({ value: '' });
       },
-      onMeasuresSelected: function(sids) {
-        this.selectedMeasures = sids;
+      onItemSelected: function(sid) {
+        this.selectedMeasures.push(sid);
+      },
+      onItemDeselected: function(sid) {
+        var index = this.selectedMeasures.indexOf(sid);
+
+        if (index === -1) {
+          return;
+        }
+
+        this.selectedMeasures.splice(index, 1);
       },
       toggleUnselected: function() {
         var selected = this.selectedMeasures;
@@ -226,6 +232,30 @@ $(document).ready(function() {
         this.changingValidityPeriod = false;
         this.changingQuota = false;
         this.changingStatus = false;
+      },
+      loadMeasures: function(page, callback) {
+        var self = this;
+
+        $.get(window.location.href, function(data) {
+          self.measures = self.measures.concat(data.measures.map(function(measure) {
+            measure.visible = true;
+
+            return measure;
+          }));
+
+          self.pagination.page = parseInt(data.current_page, 10);
+          self.pagination.pages = parseInt(data.total_pages, 10);
+
+          callback();
+        });
+      },
+      loadNextPage: function() {
+        if (this.pagination.page === this.pagination.pages) {
+          this.isLoading = false;
+          return;
+        }
+
+        this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
       }
     }
   });

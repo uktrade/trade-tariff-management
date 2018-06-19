@@ -44,7 +44,6 @@ module Measures
 
     expose(:json_collection) do
       search_results.map(&:to_table_json)
-                    .to_json
     end
 
     expose(:form) do
