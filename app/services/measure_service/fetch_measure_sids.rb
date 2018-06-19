@@ -5,8 +5,8 @@ module MeasureService
                   :selection_type,
                   :measure_sids
 
-    def initialize(search_code, params={})
-      @search_code = search_code
+    def initialize(params={})
+      @search_code = params[:search_code]
       @selection_type = params[:selection_type]
       @measure_sids = params[:measure_sids] || []
     end

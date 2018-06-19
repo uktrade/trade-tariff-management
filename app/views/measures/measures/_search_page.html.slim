@@ -16,7 +16,10 @@ script
 .find-measures
   = render "search_form"
 
-  = simple_form_for :search, url: measures_bulks_url, method: :post do |f|
+  - ops = {}
+  - ops[:search_code] = params[:search_code] if params[:search_code].present?
+
+  = simple_form_for :search, url: measures_bulks_url(ops), method: :post do |f|
     = content_tag :input, nil, { type: "hidden", "name" => "measure_sids[]", "v-for" => "(sid, idx) in selectedMeasures", ":value" => "sid" }
     p
       - if measures_search.present?

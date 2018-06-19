@@ -58,8 +58,10 @@ module Measures
     end
 
     def search
-      track_measure_sids!
-      redirect_to measures_url(search_code: search_code)
+      code = search_code
+      ::MeasureService::TrackMeasureSids.new(code).run
+
+      redirect_to measures_url(search_code: code)
     end
 
     def create
@@ -94,12 +96,6 @@ module Measures
         end
 
         ops
-      end
-
-      def track_measure_sids!
-        ::MeasureService::TrackMeasureSids.new(
-          current_user, search_code
-        ).run
       end
   end
 end

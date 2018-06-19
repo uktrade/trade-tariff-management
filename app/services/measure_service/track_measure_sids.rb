@@ -1,13 +1,11 @@
 module MeasureService
   class TrackMeasureSids
 
-    CACHE_KEY_SEPARATOR = "FM_ALL_IDS"
+    CACHE_KEY_SEPARATOR = "_FM_ALL_IDS_"
 
-    attr_accessor :current_user,
-                  :search_code
+    attr_accessor :search_code
 
-    def initialize(current_user, search_code)
-      @current_user = current_user
+    def initialize(search_code)
       @search_code = search_code
     end
 
@@ -21,7 +19,7 @@ module MeasureService
     private
 
       def cache_key
-        "#{current_user.id}_#{CACHE_KEY_SEPARATOR}_#{Time.now.to_i}"
+        search_code.gsub("_SM_", CACHE_KEY_SEPARATOR)
       end
 
       def measure_sids
