@@ -52,10 +52,10 @@ module Measures
     end
 
     def create
-      self.workbasket = current_user.workbaskets.new(status: :new)
+      self.workbasket = Workbaskets::Workbasket.new(status: :new, user: current_user)
 
       if workbasket.save
-        redirect_to edit_measures_bulk_url(search_code: search_code)
+        redirect_to edit_measures_bulk_url(workbasket.id, search_code: search_code)
       else
         redirect_to measures_url(notice: "You have to select at least of 1 measure from list!")
       end
