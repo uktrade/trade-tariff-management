@@ -16,8 +16,9 @@ class Measure < Sequel::Model
   plugin :conformance_validator
   plugin :national
 
-  many_to_one :measure_group, key: :measure_group_id,
-                              foreign_key: :id
+  many_to_one :workbasket, key: :workbasket_id,
+                           foreign_key: :id,
+                           class_name: "Workbaskets::Workbasket"
 
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid,
                                    foreign_key: :goods_nomenclature_sid
@@ -294,8 +295,8 @@ class Measure < Sequel::Model
       ops[:regulation_code] = generating_regulation_code
     end
 
-    if measure_group.present?
-      ops[:group_name] = measure_group.name
+    if workbasket.present?
+      ops[:workbasket_name] = workbasket.title
     end
 
     if excluded_geographical_areas.present?

@@ -5,6 +5,12 @@ class User < Sequel::Model
 
   serialize_attributes :yaml, :permissions
 
+  one_to_many :workbaskets, key: :user_id,
+                            class_name: "Workbaskets::Workbasket"
+
+  one_to_many :workbasket_events, key: :user_id,
+                                  class_name: "Workbaskets::Event"
+
   dataset_module do
     def q_search(filter_ops)
       q_rule = "#{filter_ops[:q]}%"
