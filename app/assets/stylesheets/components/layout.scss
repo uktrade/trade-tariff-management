@@ -1,5 +1,11 @@
+* {
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
 #wrapper {
-  max-width: 1100px;
+  max-width: none !important;
+  min-width: 1440px !important;
   padding: 0 15px;
   margin: 0 auto;
 }
@@ -22,11 +28,13 @@ html {
 }
 
 #global-header-bar, #global-cookie-message p, #footer .footer-wrapper {
-  max-width: 1100px !important;
+  max-width: none !important;
+  min-width: 1440px !important;
 }
 
 .header-wrapper {
-  max-width: 1100px !important;
+  max-width: none !important;
+  min-width: 1440px !important;
 }
 
 .desktop-title {
@@ -84,4 +92,13 @@ html {
 
 .dashboard-page {
   padding-bottom: 3em;
+}
+
+.text-right {
+  text-align: right;
+
+  .multiple-choice {
+    float: none;
+    margin-left: auto;
+  }
 }

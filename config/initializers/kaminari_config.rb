@@ -1,7 +1,16 @@
 # frozen_string_literal: true
+
+per_page = if Rails.env.production?
+  300
+elsif Rails.env.development?
+  25
+elsif Rails.env.test?
+  10
+end
+
 Kaminari.configure do |config|
-  config.default_per_page = 25
-  config.max_per_page = 50
+  config.default_per_page = per_page
+  config.max_per_page = per_page
   # config.window = 4
   # config.outer_window = 0
   # config.left = 0

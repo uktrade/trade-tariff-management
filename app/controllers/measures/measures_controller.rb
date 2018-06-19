@@ -1,6 +1,10 @@
 module Measures
   class MeasuresController < ApplicationController
 
+    include ::SearchCacheHelpers
+
+    skip_around_action :configure_time_machine, only: [:index, :search]
+
     expose(:measure_saver) do
       measure_ops = params[:measure]
       measure_ops.send("permitted=", true)
@@ -13,17 +17,48 @@ module Measures
       measure_saver.measure
     end
 
-    expose(:measures) do
-      scope = Measure
-      scope = scope.by_regulation_id(params[:regulation_id]) if params[:regulation_id].present?
-      scope = scope.q_search(params[:code]) if params[:code].present?
+    expose(:search_ops) do
+      ops = params[:search]
 
-      scope.page(params[:page] || 1)
-           .per(25)
+      if ops.present?
+        ops.send("permitted=", true)
+        ops = ops.to_h
+      else
+        ops = {}
+      end
+
+      setup_advanced_filters(ops)
+    end
+
+    expose(:measures_search) do
+      if search_mode?
+        ::Measures::Search.new(cached_search_ops)
+      else
+        []
+      end
+    end
+
+    expose(:search_results) do
+      measures_search.results
+    end
+
+    expose(:json_collection) do
+      search_results.map(&:to_table_json)
     end
 
     expose(:form) do
       MeasureForm.new(Measure.new)
+    end
+
+    def index
+      respond_to do |format|
+        format.json { render json: json_response }
+        format.html
+      end
+    end
+
+    def search
+      redirect_to measures_url(search_code: search_code)
     end
 
     def create
@@ -39,5 +74,25 @@ module Measures
                status: :unprocessable_entity
       end
     end
+
+    private
+
+      def setup_advanced_filters(ops)
+        if params[:regulation_id].present?
+          ops[:regulation] = {
+            operator: 'is',
+            value: params[:regulation_id]
+          }
+        end
+
+        if params[:code].present?
+          ops[:commodity_code] = {
+            operator: 'is',
+            value: params[:code]
+          }
+        end
+
+        ops
+      end
   end
 end

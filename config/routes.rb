@@ -21,7 +21,10 @@ Rails.application.routes.draw do
   resources :quota_order_numbers, only: [:index]
 
   scope module: :additional_codes do
-    resources :additional_codes, only: [:index]
+    resources :additional_codes, only: [:index] do
+      get :preview, on: :collection
+    end
+
     resources :additional_code_types, only: [:index]
   end
 
@@ -36,7 +39,13 @@ Rails.application.routes.draw do
   end
 
   scope module: :measures do
-    resources :measures
+    resources :measures, only: [:new, :create, :index] do
+      collection do
+        post :search
+        get :all_measures_data
+      end
+    end
+
     resources :measure_types, only: [:index]
     resources :measure_type_series, only: [:index]
     resources :measure_condition_codes, only: [:index]
@@ -44,6 +53,15 @@ Rails.application.routes.draw do
     resources :measurement_units, only: [:index]
     resources :measurement_unit_qualifiers, only: [:index]
     resources :monetary_units, only: [:index]
+    resources :geographical_areas, only: [:index]
+  end
+
+  namespace :measures do
+    resources :bulks, only: [:create, :edit, :update] do
+      collection do
+        post :validate
+      end
+    end
   end
 
   namespace :regulation_form_api do
@@ -52,4 +70,5 @@ Rails.application.routes.draw do
   end
 
   resources :regulations
+  resources :users, only: [:index]
 end

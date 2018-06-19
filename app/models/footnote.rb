@@ -109,6 +109,10 @@ class Footnote < Sequel::Model
     "#{footnote_type_id}#{footnote_id}"
   end
 
+  def abbreviation
+    "#{footnote_type_id} - #{footnote_id}"
+  end
+
   def record_code
     "200".freeze
   end
@@ -123,5 +127,9 @@ class Footnote < Sequel::Model
       footnote_id: footnote_id,
       description: description
     }
+  end
+
+  def to_json(options = {})
+    json_mapping
   end
 end

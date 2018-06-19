@@ -16,6 +16,10 @@ class Measure < Sequel::Model
   plugin :conformance_validator
   plugin :national
 
+  many_to_one :workbasket, key: :workbasket_id,
+                           foreign_key: :id,
+                           class_name: "Workbaskets::Workbasket"
+
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid,
                                    foreign_key: :goods_nomenclature_sid
 
@@ -115,7 +119,7 @@ class Measure < Sequel::Model
     if self[:validity_start_date].present?
       self[:validity_start_date]
     else
-      generating_regulation.validity_start_date
+      generating_regulation.try(:validity_start_date)
     end
   end
 
@@ -148,6 +152,10 @@ class Measure < Sequel::Model
   end
 
   dataset_module do
+    def by_ids(collection_ids)
+      where(measure_sid: collection_ids)
+    end
+
     def by_regulation_id(regulation_id)
       where(
         "measure_generating_regulation_id = ? OR justification_regulation_id = ?",
@@ -272,6 +280,64 @@ class Measure < Sequel::Model
     def non_invalidated
       where(measures__invalidated_at: nil)
     end
+
+    include ::Measures::SearchFilters::FindMeasuresCollection
+  end
+
+  def set_searchable_data!
+    ops = {}
+
+    if additional_code_id.present?
+      ops[:additional_code] = "#{additional_code_type_id}#{additional_code_id}".downcase
+    end
+
+    if measure_generating_regulation_id.present?
+      ops[:regulation_code] = generating_regulation_code
+    end
+
+    if workbasket.present?
+      ops[:workbasket_name] = workbasket.title
+    end
+
+    if excluded_geographical_areas.present?
+      joined_areas_str = excluded_geographical_areas.map(&:geographical_area_id).uniq.join("_")
+      ops[:excluded_geographical_areas_names] = "_" + joined_areas_str + "_"
+    end
+
+    if measure_components.present?
+      ops[:duty_expressions] = measure_components.map do |m_component|
+        duty_amount = m_component.duty_amount.present? ? m_component.duty_amount.to_f.to_s : ''
+
+        {
+          duty_expression_id: m_component.duty_expression_id,
+          duty_amount: duty_amount,
+          monetary_unit_code: m_component.monetary_unit_code.to_s,
+          measurement_unit_code: m_component.measurement_unit_code.to_s
+        }
+      end
+      ops[:duty_expressions_count] = measure_components.count
+    end
+
+    if measure_conditions.present?
+      condition_codes = measure_conditions.map(&:condition_code).uniq
+      ops[:measure_conditions] = "_" + condition_codes.join("_") + "_"
+      ops[:measure_conditions_count] = condition_codes.count
+    end
+
+    if footnotes.present?
+      ops[:footnotes] = footnotes.map do |footnote|
+        {
+          footnote_id: footnote.footnote_id,
+          footnote_type_id: footnote.footnote_type_id
+        }
+      end
+      ops[:footnotes_count] = footnotes.count
+    end
+
+    self.searchable_data = ops.to_json
+    self.searchable_data_updated_at = Time.now.utc
+
+    save
   end
 
   def_column_accessor :effective_end_date, :effective_start_date
@@ -365,6 +431,10 @@ class Measure < Sequel::Model
     measure_components.map(&:formatted_duty_expression).join(" ")
   end
 
+  def conditions_short_list
+    measure_conditions.map(&:short_abbreviation).join(", ")
+  end
+
   def national_measurement_units_for(declarable)
     if excise? && declarable && declarable.national_measurement_unit_set.present?
       declarable.national_measurement_unit_set
@@ -412,6 +482,20 @@ class Measure < Sequel::Model
      .order(Sequel.desc(:operation_date, nulls: :last))
   end
 
+  def status_title
+    if status.present?
+      I18n.t(:measures)[:states][status.to_sym]
+    else
+      "-"
+    end
+  end
+
+  def additional_code_title
+    return "" if additional_code_id.blank?
+
+    "#{additional_code_type_id} #{additional_code_id}"
+  end
+
   def record_code
     "430".freeze
   end
@@ -430,5 +514,47 @@ class Measure < Sequel::Model
 
   def self.max_pages
     999
+  end
+
+  #
+  # TODO: removed duplications
+  #
+
+  def to_table_json
+    {
+      measure_sid: measure_sid,
+      regulation: generating_regulation_code + " (#{measure_generating_regulation_id})",
+      measure_type_id: measure_type_id,
+      validity_start_date: validity_start_date.strftime("%d %b %Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+      goods_nomenclature_id: goods_nomenclature_item_id,
+      additional_code_id: additional_code_title,
+      geographical_area: geographical_area.try(:geographical_area_id),
+      excluded_geographical_areas: excluded_geographical_areas.map(&:geographical_area_id).join(", ") || "-",
+      duties: duty_expression,
+      conditions: conditions_short_list,
+      footnotes: footnotes.map(&:abbreviation).join(", "),
+      last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
+      status: status_title
+    }
+  end
+
+  def to_json(options = {})
+    {
+      measure_sid: measure_sid,
+      regulation: generating_regulation.to_json,
+      measure_type: measure_type.to_json,
+      validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+      goods_nomenclature: goods_nomenclature.try(:to_json),
+      additional_code: additional_code.try(:to_json),
+      geographical_area: geographical_area.try(:to_json),
+      excluded_geographical_areas: excluded_geographical_areas.map(&:to_json),
+      measure_components: measure_components.map(&:to_json),
+      measure_conditions: measure_conditions.map(&:to_json),
+      footnotes: footnotes.map(&:to_json),
+      last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
+      status: status_title
+    }
   end
 end

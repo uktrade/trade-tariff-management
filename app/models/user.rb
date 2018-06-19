@@ -5,6 +5,23 @@ class User < Sequel::Model
 
   serialize_attributes :yaml, :permissions
 
+  one_to_many :workbaskets, key: :user_id,
+                            class_name: "Workbaskets::Workbasket"
+
+  one_to_many :workbasket_events, key: :user_id,
+                                  class_name: "Workbaskets::Event"
+
+  dataset_module do
+    def q_search(filter_ops)
+      q_rule = "#{filter_ops[:q]}%"
+
+      where(
+        "name ilike ? OR email ilike ?",
+        q_rule, q_rule
+      ).order(:name)
+    end
+  end
+
   module Permissions
     SIGNIN = 'signin'
     HMRC_EDITOR = 'HMRC Editor'
@@ -57,5 +74,12 @@ class User < Sequel::Model
   def update_attributes(attributes)
     update(attributes)
     self
+  end
+
+  def json_mapping
+    {
+      id: id,
+      name: name
+    }
   end
 end

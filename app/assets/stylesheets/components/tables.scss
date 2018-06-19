@@ -3,3 +3,100 @@ table {
     max-width: 400px;
   }
 }
+
+.measures-table {
+  table-layout: fixed;
+  min-width: 1365px !important;
+
+  .select-all-column {
+    width: 20px;
+  }
+
+  .measure_sid-column {
+    width: 80px;
+  }
+
+  .regulation-column {
+    width: 70px;
+  }
+
+  .measure_type_id-column {
+    width: 30px;
+  }
+
+  .validity_start_date-column {
+    width: 75px;
+  }
+
+  .validity_end_date-column {
+    width: 75px;
+  }
+
+  .goods_nomenclature-column {
+    width: 90px;
+  }
+
+  .additional_code-column {
+    width: 70px;
+  }
+
+  .geographical_area-column {
+    width: 45px;
+  }
+
+  .excluded_geographical_areas-column {
+    width: 100px;
+  }
+
+  .duties-column {
+    width: 220px;
+  }
+
+  .conditions-column {
+    width: 120px;
+  }
+
+  .footnotes-column {
+    width: 100px;
+  }
+
+  .last_updated-column {
+    width: 160px;
+  }
+
+  .status-column {
+    width: 110px;
+  }
+
+  td, th {
+    font-size: 13px;
+    padding: 3px 0 !important;
+    position: relative;
+    height: auto !important;
+    vertical-align: baseline;
+    font-weight: 400;
+
+    .arrow-down,
+    .arrow-up {
+      position: absolute;
+      right: 4px;
+      top: 3px;
+    }
+
+    a {
+      color: $blue !important;
+      position: relative;
+      display: inline-block;
+      padding-right: 20px;
+      cursor: pointer;
+    }
+  }
+
+  th {
+    font-size: 12px;
+  }
+}
+
+.table-top {
+  margin-bottom: 20px;
+}

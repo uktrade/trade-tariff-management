@@ -14,6 +14,14 @@ input.date-picker {
   &[type="file"] {
     border: none;
   }
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+}
+
+.modal .form-group {
+  margin-bottom: 15px !important;
 }
 
 .measure-form [class*="col-"] {
@@ -261,4 +269,51 @@ label abbr {
 .remove-link {
   color: $red;
   text-decoration: underline;
+}
+
+.small-checkbox {
+  display: inline-block;
+  position: relative;
+
+  input {
+    opacity: 0;
+
+    & ~ label {
+      margin-left: 10px;
+
+      &:before {
+        content: ' ';
+        display: block;
+        height: 20px;
+        width: 20px;
+        border: 1px solid $text-colour;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      &:after {
+        content: ' ';
+        display: block;
+        height: 5px;
+        width: 10px;
+        border-left: 3px solid $text-colour;
+        border-bottom: 3px solid $text-colour;
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        transform: rotate(-45deg);
+        opacity: 0;
+        transition: all 50ms ease-out;
+      }
+    }
+
+    &:checked ~ label:after {
+      opacity: 1;
+    }
+  }
+
+  .button-dropdown & {
+    margin: 0.5em 1em;
+  }
 }

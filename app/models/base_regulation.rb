@@ -34,4 +34,33 @@ class BaseRegulation < Sequel::Model
   def subrecord_code
     "00".freeze
   end
+
+  #
+  # TODO: probably we do not need this method as
+  #       we had to use `measure.generating_regulation_code` instead
+  #
+  def formatted_id
+    year = Date.strptime(base_regulation_id.slice(1,2), "%y").strftime("%Y");
+    number = base_regulation_id.slice(3,4)
+
+    "#{year}/#{number}"
+  end
+
+  def to_json(options = {})
+    {
+      base_regulation_id: base_regulation_id,
+      base_regulation_role: base_regulation_role,
+      validity_start_date: validity_start_date.try(:strftime, "%d/%m/%Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d/%m/%Y"),
+      community_code: community_code,
+      regulation_group_id: regulation_group_id,
+      replacement_indicator: replacement_indicator,
+      information_text: information_text,
+      approved_flag: approved_flag,
+      published_date: published_date.try(:strftime, "%d/%m/%Y"),
+      officialjournal_number: officialjournal_number,
+      officialjournal_page: officialjournal_page,
+      effective_end_date: effective_end_date.try(:strftime, "%d/%m/%Y"),
+    }
+  end
 end

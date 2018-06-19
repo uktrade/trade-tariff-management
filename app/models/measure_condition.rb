@@ -70,6 +70,24 @@ class MeasureCondition < Sequel::Model
     "#{certificate_type_code}#{certificate_code}"
   end
 
+  def short_abbreviation
+    res = if component_sequence_number.present?
+      [ "#{condition_code}#{component_sequence_number}" ]
+    else
+      [ condition_code ]
+    end
+
+    cert_info = document_code.strip
+    res << cert_info if cert_info.present?
+    res << action_code if action_code.present?
+
+    if res.size == 2
+      res.join(" - ")
+    else
+      res.join(" ")
+    end
+  end
+
   # TODO presenter?
   def requirement
     case requirement_type
@@ -116,5 +134,19 @@ class MeasureCondition < Sequel::Model
 
   def subrecord_code
     "10".freeze
+  end
+
+  def to_json(options = {})
+    {
+      measure_action: measure_action.to_json,
+      certificate: certificate.try(:to_json),
+      certificate_type: certificate_type.try(:to_json),
+      measurement_unit: measurement_unit.try(:to_json),
+      monetary_unit: monetary_unit.try(:to_json),
+      measurement_unit_qualifier: measurement_unit_qualifier.try(:to_json),
+      measure_condition_code: measure_condition_code.try(:to_json),
+      measure_condition_components: measure_condition_components.try(:to_json),
+      component_sequence_number: component_sequence_number
+    }
   end
 end

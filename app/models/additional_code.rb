@@ -41,6 +41,25 @@ class AdditionalCode < Sequel::Model
 
       scope.order(Sequel.asc(:additional_codes__additional_code))
     end
+
+    def by_code(code=nil)
+      full_code = code.to_s
+                      .delete(" ")
+                      .downcase
+
+      return nil unless (full_code.present? && full_code.size == 4)
+
+      additional_code_type_id = full_code[0]
+      additional_code = full_code[1..-1]
+
+      scope = actual.where(additional_code: additional_code)
+
+      if additional_code_type_id.present?
+        scope = scope.where("lower(additional_code_type_id) = ?", additional_code_type_id)
+      end
+
+      scope.first
+    end
   end
 
   def additional_code_description
@@ -68,6 +87,14 @@ class AdditionalCode < Sequel::Model
   end
 
   def json_mapping
+    {
+      additional_code: additional_code,
+      type_id: additional_code_type_id,
+      description: description
+    }
+  end
+
+  def to_json(options = {})
     {
       additional_code: additional_code,
       type_id: additional_code_type_id,
