@@ -17,7 +17,8 @@ class Measure < Sequel::Model
   plugin :national
 
   many_to_one :workbasket, key: :workbasket_id,
-                              foreign_key: :id
+                           foreign_key: :id,
+                           class_name: "Workbaskets::Workbasket"
 
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid,
                                    foreign_key: :goods_nomenclature_sid
