@@ -28,7 +28,7 @@ module Measures
 
     expose(:search_ops) do
       {
-        measure_sids: params[:measure_sids] || []
+        measure_sids: target_measure_sids
       }
     end
 
@@ -81,6 +81,12 @@ module Measures
       def errors_response
         render json: bulk_saver.collection_with_errors,
                status: :unprocessable_entity
+      end
+
+      def target_measure_sids
+        ::MeasureService::FetchMeasureSids.new(
+          current_user, search_code, params
+        ).ids
       end
   end
 end

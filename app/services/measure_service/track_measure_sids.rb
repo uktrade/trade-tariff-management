@@ -24,7 +24,7 @@ module MeasureService
         "#{current_user.id}_#{CACHE_KEY_SEPARATOR}_#{Time.now.to_i}"
       end
 
-      def search_result_all_measure_sids
+      def measure_sids
         ::Measures::Search.new(
           search_ops
         ).measure_sids
