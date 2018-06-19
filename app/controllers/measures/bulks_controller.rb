@@ -85,7 +85,7 @@ module Measures
 
       def target_measure_sids
         ::MeasureService::FetchMeasureSids.new(
-          current_user, search_code, params
+          search_code, params
         ).ids
       end
   end
