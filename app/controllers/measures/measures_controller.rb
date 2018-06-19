@@ -97,16 +97,9 @@ module Measures
       end
 
       def track_measure_sids!
-        Rails.cache.write(
-          "#{current_user.id}_SM_ALL_IDS_#{Time.now.to_i}",
-          search_result_all_measure_sids
-        )
-      end
-
-      def search_result_all_measure_sids
-        ::Measures::Search.new(
-          Rails.cache.read(search_code)
-        ).measure_sids
+        ::MeasureService::TrackMeasureSids.new(
+          current_user, search_code
+        ).run
       end
   end
 end
