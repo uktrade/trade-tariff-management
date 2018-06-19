@@ -57,11 +57,8 @@ Rails.application.routes.draw do
   end
 
   namespace :measures do
-    resources :bulks, only: [:create] do
+    resources :bulks, only: [:create, :edit, :update] do
       collection do
-        post :move_to_edit
-        get :edit
-
         post :validate
       end
     end

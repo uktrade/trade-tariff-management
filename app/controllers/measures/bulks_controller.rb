@@ -5,6 +5,11 @@ module Measures
 
     skip_around_action :configure_time_machine
 
+    expose(:workbasket) do
+      current_user.workbaskets
+                  .find(params[:id])
+    end
+
     expose(:bulk_saver) do
       collection_ops = params[:measures]
       collection_ops.send("permitted=", true)
@@ -27,10 +32,6 @@ module Measures
       }
     end
 
-    def move_to_edit
-      redirect_to edit_measures_bulks_url(search_code: search_code)
-    end
-
     def edit
       if search_mode?
         respond_to do |format|
@@ -51,6 +52,16 @@ module Measures
     end
 
     def create
+      self.workbasket = current_user.workbaskets.new(status: :new)
+
+      if workbasket.save
+        redirect_to edit_measures_bulk_url(search_code: search_code)
+      else
+        redirect_to measures_url(notice: "You have to select at least of 1 measure from list!")
+      end
+    end
+
+    def update
       if bulk_saver.valid?
         bulk_saver.persist!
 
