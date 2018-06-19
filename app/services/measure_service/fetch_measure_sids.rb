@@ -6,13 +6,15 @@ module MeasureService
                   :measure_sids
 
     def initialize(params={})
-      @search_code = params[:search_code]
+      @search_code = params[:search_code].gsub(
+        "_SM_", ::MeasureService::TrackMeasureSids::CACHE_KEY_SEPARATOR
+      )
       @selection_type = params[:selection_type]
       @measure_sids = params[:measure_sids] || []
     end
 
     def ids
-      case params[:selection_type]
+      case selection_type
       when 'all'
         #
         # if selection_type is `all`, then `measure_sids` contains exclusions
