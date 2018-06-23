@@ -89,7 +89,11 @@ $find-measure-gutter: 5px;
 
 .measures-table-wrapper {
   width: 100%;
-  overflow: auto;
+
+  .virtual-scroller {
+    height: 600px;
+    overflow-y: auto;
+  }
 }
 
 .number_of_measures_badge {

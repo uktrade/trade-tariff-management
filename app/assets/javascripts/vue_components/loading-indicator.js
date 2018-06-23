@@ -1,10 +1,8 @@
 var template = [
-  "<pop-up :open='true'>",
-    "<div class='loading-indicator-popup'>",
-      "<h2>Loading</h2>",
-      "<h4>{{start}} to {{end}} of {{total}}</h4>",
-    "</div>",
-  "</pop-up>"
+  "<div class='loading-indicator'>",
+    "<h2 class='heading-xlarge' slot='title'>Loading</h2>",
+    "<slot><h4>{{start}} to {{end}} of {{total}}</h4></slot>",
+  "</div>"
 ].join("");
 
 Vue.component("loading-indicator", {

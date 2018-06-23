@@ -5,6 +5,7 @@
 //= require ./vendors/selectize
 //= require ./vendors/numeral.min
 //= require ./vendors/URI.min
+//= require ./vendors/dexie
 //= require parsley
 //= require vue
 //= require vue-resource

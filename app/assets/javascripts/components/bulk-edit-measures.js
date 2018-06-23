@@ -1,5 +1,7 @@
 //= require ./duty-expression-formatter
 //= require ./measure-condition-formatter
+//= require ./url-parser
+//= require ./db
 
 $(document).ready(function() {
   var form = document.querySelector(".bulk-edit-measures");
@@ -11,7 +13,7 @@ $(document).ready(function() {
   var app = new Vue({
     el: form,
     data: function() {
-      return {
+      var data = {
         selectedMeasures: [],
         showTooltips: true,
         columns: [
@@ -66,11 +68,24 @@ $(document).ready(function() {
           pages: Math.ceil(window.__pagination_metadata.total_count / window.__pagination_metadata.per_page)
         }
       };
+
+      var query = parseQueryString(window.location.search.substring(1));
+
+      data.search_code = query.search_code;
+
+      return data;
     },
     mounted: function() {
       var self = this;
 
-      this.loadMeasures(1, this.loadNextPage.bind(this));
+      DB.getMeasuresBulk(self.search_code, function(row) {
+        if (row === undefined) {
+          self.loadMeasures(1, self.loadNextPage.bind(self));
+        } else {
+          self.measures = row.payload;
+          self.isLoading = false;
+        }
+      });
     },
     computed: {
       noSelectedMeasures: function() {
@@ -236,7 +251,9 @@ $(document).ready(function() {
       loadMeasures: function(page, callback) {
         var self = this;
 
-        $.get(window.location.href, function(data) {
+        var url = window.location.href + "&page=" + page;
+
+        $.get(url, function(data) {
           self.measures = self.measures.concat(data.measures.map(function(measure) {
             measure.visible = true;
 
@@ -250,8 +267,13 @@ $(document).ready(function() {
         });
       },
       loadNextPage: function() {
+        var self = this;
+
         if (this.pagination.page === this.pagination.pages) {
           this.isLoading = false;
+
+          DB.insertOrReplaceBulk(self.search_code, self.measures);
+
           return;
         }
 

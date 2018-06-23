@@ -1,6 +1,18 @@
 Vue.component("measures-grid", {
   template: "#measures-grid-template",
-  props: ["onSelectionChange", "onItemSelected", "onItemDeselected", "data", "columns", "selectedRows"],
+  props: [
+    "onSelectionChange",
+    "onItemSelected",
+    "onItemDeselected",
+    "onSelectAllChanged",
+    "data",
+    "columns",
+    "selectedRows",
+    "clientSorting",
+    "sortByChanged",
+    "sortDirChanged",
+    "selectionType"
+  ],
   data: function() {
     var self = this;
 
@@ -40,7 +52,6 @@ Vue.component("measures-grid", {
       for (var k in this.columns) {
         var o = this.columns[k];
 
-        console.log(o, field);
         if (o.field == field) {
           return o;
         }
@@ -73,6 +84,10 @@ Vue.component("measures-grid", {
       });
     },
     sorted: function() {
+      if (!this.clientSorting) {
+        return this.data;
+      }
+
       var sortDir = this.sortDir;
       var sortFunc = this.getSortingFunc();
       var result = this.data.slice().sort(sortFunc);
@@ -85,10 +100,25 @@ Vue.component("measures-grid", {
     }
   },
   watch: {
+    sortDir: function(val) {
+      if (this.sortDirChanged) {
+        this.sortDirChanged(val);
+      }
+    },
+    sortBy: function(val) {
+      if (this.sortByChanged) {
+        this.sortByChanged(val);
+      }
+    },
     selectAll: function(val) {
       var self = this;
 
       if (this.indirectSelectAll) {
+        return;
+      }
+
+      if (this.onSelectAllChanged) {
+        this.onSelectAllChanged(val);
         return;
       }
 
@@ -105,16 +135,19 @@ Vue.component("measures-grid", {
     selectedRows: function(newVal, oldVal) {
       var self = this;
 
-      this.indirectSelectAll = true;
-      this.selectAll = this.data.map(function(m) {
-        return self.selectedRows.indexOf(m.measure_sid) === -1;
-      }).filter(function(b) {
-        return b;
-      }).length === 0;
+      if (!this.onSelectAllChanged) {
+        this.indirectSelectAll = true;
 
-      setTimeout(function() {
-        self.indirectSelectAll = false;
-      }, 50);
+        this.selectAll = this.data.map(function(m) {
+          return self.selectedRows.indexOf(m.measure_sid) === -1;
+        }).filter(function(b) {
+          return b;
+        }).length === 0;
+
+        setTimeout(function() {
+          self.indirectSelectAll = false;
+        }, 50);
+      }
 
       if (this.onItemSelected) {
         newVal.forEach(function(m) {
