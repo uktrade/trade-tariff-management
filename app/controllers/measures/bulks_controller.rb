@@ -28,7 +28,7 @@ module Measures
 
     expose(:search_ops) do
       {
-        measure_sids: params[:measure_sids] || []
+        measure_sids: ::MeasureService::FetchMeasureSids.new(params).ids
       }
     end
 

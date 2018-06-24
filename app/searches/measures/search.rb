@@ -27,8 +27,9 @@ module Measures
       @page = search_ops[:page] || 1
     end
 
-    def results
-      @relation = Measure.by_start_date_reverse.page(page)
+    def results(paginated_query=true)
+      @relation = Measure.by_start_date_reverse
+      @relation = relation.page(page) if paginated_query
       @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
       search_ops.select do |k, v|
@@ -54,6 +55,10 @@ module Measures
       end
 
       relation
+    end
+
+    def measure_sids
+      results(false).pluck(:measure_sid)
     end
 
     private

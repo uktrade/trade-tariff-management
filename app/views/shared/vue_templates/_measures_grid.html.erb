@@ -21,11 +21,11 @@
         </tr>
       </thead>
       <template slot-scope="props">
-        <tr :key="props.item.measure_sid">
+        <tr :key="props.itemKey" height="50">
           <td>
-            <input type="checkbox" name="measures[]" :value="props.item.measure_sid" :checked="selectedRows.indexOf(props.item.measure_sid) > -1" @change="sendCheckedTrigger" />
+            <input type="checkbox" name="measures[]" :value="props.item.measure_sid" :checked="(selectionType == 'all' && selectedRows.indexOf(props.item.measure_sid) === -1) || (selectionType == 'none' && selectedRows.indexOf(props.item.measure_sid) > -1)" @change="sendCheckedTrigger" />
           </td>
-          <td v-for="column in enabledColumns" v-html="props.item[column.field]">
+          <td v-for="column in enabledColumns" v-html="props.item[column.field]" v-bind:class="column.field + '-column'">
           </td>
         </tr>
       </template>

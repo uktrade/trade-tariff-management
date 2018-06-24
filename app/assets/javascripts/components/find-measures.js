@@ -95,7 +95,8 @@ $(document).ready(function() {
 
         searchCode: code,
         pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
-        selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_measures") || "[]")),
+        selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_measure_sids") || "[]")),
+        selectionType: "all",
         pagination: {
           page: 1,
           total_count: 0,
@@ -420,7 +421,8 @@ $(document).ready(function() {
         return !this.footnotes.enabled;
       },
       noSelectedMeasures: function() {
-        return this.selectedMeasures.length === 0;
+        return (this.selectionType == "all" && this.selectedMeasures.length === this.pagination.total_count) ||
+               (this.selectionType == "none" && this.selectedMeasures.length === 0);
       },
 
       validityStartDateValueDisabled: function() {
@@ -440,7 +442,7 @@ $(document).ready(function() {
       },
       exclusionsValueDisabled: function () {
         return this.originExclusionsDisabled || this.disableValue.indexOf(this.origin_exclusions.operator) > -1;
-      },
+      }
     },
     methods: {
       addOriginExclusion: function() {
@@ -463,16 +465,30 @@ $(document).ready(function() {
         });
       },
       onMeasuresSelected: function(sid) {
-        this.selectedMeasures.push(sid);
+        if (this.selectionType !== "none") {
+          var index = this.selectedMeasures.indexOf(sid);
+
+          if (index === -1) {
+            return;
+          }
+
+          this.selectedMeasures.splice(index, 1);
+        } else {
+          this.selectedMeasures.push(sid);
+        }
       },
       onMeasuresDeselected: function(sid) {
-        var index = this.selectedMeasures.indexOf(sid);
+        if (this.selectionType != "none") {
+          this.selectedMeasures.push(sid);
+        } else {
+          var index = this.selectedMeasures.indexOf(sid);
 
-        if (index === -1) {
-          return;
+          if (index === -1) {
+            return;
+          }
+
+          this.selectedMeasures.splice(index, 1);
         }
-
-        this.selectedMeasures.splice(index, 1);
       },
       expressionsFriendlyDuplicate: function(options) {
         return DutyExpressionsParser.parse(options);
@@ -497,14 +513,6 @@ $(document).ready(function() {
         $.get(window.location.href).success(function(data) {
           self.measures = data.measures;
           self.isLoading = false;
-
-          if (self.pagesLoaded.indexOf(self.pagination.page) === -1) {
-            self.pagesLoaded.push(self.pagination.page);
-
-            self.measures.forEach(function(measure) {
-              self.selectedMeasures.push(measure.measure_sid);
-            });
-          }
         }).fail(function(error) {
           var params = parseQueryString(window.location.href);
           var page = params.page || 1;
@@ -521,6 +529,9 @@ $(document).ready(function() {
             scrollTop: $(".measures-table-wrapper").offset().top - 200
           });
         }, 200);
+      },
+      changeSelectionType: function(selectAll) {
+        this.selectionType = selectAll ? "all" : "none";
       }
     },
     mounted: function() {
@@ -536,11 +547,14 @@ $(document).ready(function() {
       };
     },
     watch: {
-      pagesLoaded: function(newVal, oldVal) {
+      pagesLoaded: function(newVal) {
         window.localStorage.setItem(this.searchCode + "_pages", JSON.stringify(newVal));
       },
       selectedMeasures: function(newVal, oldVal) {
-        window.localStorage.setItem(this.searchCode + "_measures", JSON.stringify(newVal));
+        window.localStorage.setItem(this.searchCode + "_measure_sids", JSON.stringify(newVal));
+      },
+      selectionType: function() {
+        this.selectedMeasures.splice(0, this.selectedMeasures.length);
       }
     }
   });

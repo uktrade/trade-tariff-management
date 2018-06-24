@@ -26,6 +26,7 @@ config/trade_tariff_backend_secrets.yml
 /coverage/*
 .idea/*
 REVISION
+*.org
 
 # RVM
 .ruby-gemset
