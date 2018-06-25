@@ -5,10 +5,12 @@ table {
 }
 
 .measures-table {
-  min-width: 1365px !important;
+  min-width: 1600px !important;
 
   .table__row {
-    border-bottom: 1px solid $border-colour
+    border-bottom: 1px solid $border-colour;
+    height: 45px;
+    overflow: hidden;
   }
 
   .table__column {
@@ -86,7 +88,7 @@ table {
     padding: 3px !important;
     position: relative;
     height: auto !important;
-    vertical-align: baseline;
+    vertical-align: top;
     font-weight: 400;
 
     .arrow-down,
@@ -102,6 +104,14 @@ table {
       display: inline-block;
       padding-right: 20px;
       cursor: pointer;
+    }
+  }
+
+  .table__header {
+    border-bottom: 2px solid $border-colour;
+
+    .table__column {
+      vertical-align: baseline;
     }
   }
 }

@@ -38,7 +38,7 @@ Vue.component("table-pagination", {
       return arr;
     },
     shouldShow: function() {
-      return this.pages > 0;
+      return this.pages > 1;
     },
     showFirst: function() {
       return this.page > 6;

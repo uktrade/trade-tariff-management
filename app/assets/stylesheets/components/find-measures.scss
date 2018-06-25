@@ -1,5 +1,9 @@
 $find-measure-gutter: 5px;
 
+.find-measures {
+  margin-bottom: 100px;
+}
+
 .find-measures__row {
   display: flex;
   border-bottom: 2px solid $border-colour;
@@ -91,7 +95,7 @@ $find-measure-gutter: 5px;
   width: 100%;
 
   .virtual-scroller {
-    height: 600px;
+    max-height: 600px;
     overflow-y: auto;
   }
 }

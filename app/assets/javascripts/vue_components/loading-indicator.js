@@ -16,7 +16,7 @@ Vue.component("loading-indicator", {
       return (this.metadata.page - 1) * this.metadata.per_page + 1;
     },
     end: function() {
-      return this.start + this.metadata.per_page - 1;
+      return Math.min(this.start + this.metadata.per_page - 1, this.total);
     },
     total: function() {
       return this.metadata.total_count;

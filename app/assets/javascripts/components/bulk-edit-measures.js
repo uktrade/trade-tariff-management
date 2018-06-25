@@ -118,7 +118,7 @@ $(document).ready(function() {
             }
 
             return ega.description;
-          }).join("<br />") || "-";
+          }).join(", ") || "-";
 
           var formatted_components = measure.measure_components.map(function (mc) {
             return DutyExpressionFormatter.format({
