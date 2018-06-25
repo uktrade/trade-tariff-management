@@ -5,8 +5,16 @@ table {
 }
 
 .measures-table {
-  table-layout: fixed;
   min-width: 1365px !important;
+
+  .table__row {
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  .table__column {
+    display: inline-block;
+
+  }
 
   .select-all-column {
     width: 20px;
@@ -25,11 +33,11 @@ table {
   }
 
   .validity_start_date-column {
-    width: 75px;
+    width: 85px;
   }
 
   .validity_end_date-column {
-    width: 75px;
+    width: 85px;
   }
 
   .goods_nomenclature-column {
@@ -49,11 +57,11 @@ table {
   }
 
   .duties-column {
-    width: 220px;
+    width: 180px;
   }
 
   .conditions-column {
-    width: 120px;
+    width: 160px;
   }
 
   .footnotes-column {
@@ -68,7 +76,7 @@ table {
     width: 110px;
   }
 
-  td, th {
+  .table__column {
     font-size: 13px;
     padding: 3px 0 !important;
     position: relative;

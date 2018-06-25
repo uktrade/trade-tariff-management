@@ -1,7 +1,7 @@
 var template = [
   "<div class='loading-indicator'>",
     "<h2 class='heading-xlarge' slot='title'>Loading</h2>",
-    "<slot><h4>{{start}} to {{end}} of {{total}}</h4></slot>",
+    "<slot :start='start' :end='end' :total='total'><h4>{{start}} to {{end}} of {{total}}</h4></slot>",
   "</div>"
 ].join("");
 

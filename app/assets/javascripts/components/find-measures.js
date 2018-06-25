@@ -494,6 +494,8 @@ $(document).ready(function() {
         return DutyExpressionsParser.parse(options);
       },
       onPageChange: function(page) {
+        var self = this;
+
         var params = parseQueryString(window.location.search.substring(1));
         params.page = page;
         this.pagination.page = page;
@@ -502,10 +504,11 @@ $(document).ready(function() {
 
         window.history.pushState(params, "Find a measure - Page " + page, newQueryString);
 
-        this.loadMeasures();
-        this.scrollUp();
+        this.loadMeasures(function() {
+          self.scrollUp();
+        });
       },
-      loadMeasures: function() {
+      loadMeasures: function(callback) {
         var self = this;
 
         this.isLoading = true;
@@ -513,12 +516,20 @@ $(document).ready(function() {
         $.get(window.location.href).success(function(data) {
           self.measures = data.measures;
           self.isLoading = false;
+
+          if (callback) {
+            callback();
+          }
         }).fail(function(error) {
           var params = parseQueryString(window.location.href);
           var page = params.page || 1;
 
           alert("There was a problem loading page " + page);
           window.history.back();
+
+          if (callback) {
+            callback();
+          }
         });
       },
       scrollUp: function() {
