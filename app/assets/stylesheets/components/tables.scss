@@ -8,12 +8,15 @@ table {
   min-width: 1365px !important;
 
   .table__row {
-    border-bottom: 1px solid #d0d0d0;
+    border-bottom: 1px solid $border-colour
   }
 
   .table__column {
     display: inline-block;
+  }
 
+  .table__column--highlight {
+    background: $panel-colour;
   }
 
   .select-all-column {
@@ -40,10 +43,12 @@ table {
     width: 85px;
   }
 
+  .goods_nomenclature_id-column,
   .goods_nomenclature-column {
     width: 90px;
   }
 
+  .additional_code_id-column,
   .additional_code-column {
     width: 70px;
   }
@@ -78,7 +83,7 @@ table {
 
   .table__column {
     font-size: 13px;
-    padding: 3px 0 !important;
+    padding: 3px !important;
     position: relative;
     height: auto !important;
     vertical-align: baseline;

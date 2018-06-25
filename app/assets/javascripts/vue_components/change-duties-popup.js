@@ -89,6 +89,10 @@ Vue.component("change-duties-popup", {
       var components = this.measureComponents;
 
       this.measures.forEach(function(measure) {
+        if (measure.changes.indexOf("duties") === -1) {
+          measure.changes.push("duties");
+        }
+
         measure.measure_components.splice(0, 999);
 
         components.forEach(function(component) {

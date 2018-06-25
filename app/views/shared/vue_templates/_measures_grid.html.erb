@@ -1,6 +1,6 @@
 <script type="text/x-template" id="measures-grid-template">
   <div class="measures-table-wrapper">
-    <virtual-scroller container-class="measures-table" :items="sorted" :item-height="55" buffer="1000" pool-size="2500" >
+    <virtual-scroller container-class="measures-table" :items="sorted" :item-height="45" buffer="1000" pool-size="2500" >
       <div class="table__header" slot="before-content">
         <div class="table__column select-all-column">
           <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" />
@@ -19,12 +19,11 @@
         </div>
       </div>
       <template slot-scope="props">
-        <div class='table__row' :key="props.itemKey" height="55">
+        <div class='table__row' :key="props.itemKey" height="45">
           <div class="table__column select-all-column">
             <input type="checkbox" name="measures[]" :value="props.item.measure_sid" :checked="(selectionType == 'all' && selectedRows.indexOf(props.item.measure_sid) === -1) || (selectionType == 'none' && selectedRows.indexOf(props.item.measure_sid) > -1)" @change="sendCheckedTrigger" />
           </div>
-          <div v-for="column in enabledColumns" v-html="props.item[column.field]" v-bind:class="'table__column ' + column.field + '-column'">
-          </div>
+          <grid-column v-for="column in enabledColumns" :item="props.item" :column="column.field" :changeProp="column.changeProp"></grid-column>
         </div>
       </template>
     </virtual-scroller>

@@ -17,20 +17,20 @@ $(document).ready(function() {
         selectedMeasures: [],
         showTooltips: true,
         columns: [
-          {enabled: true, title: "ID", field: "measure_sid", sortable: true, type: "number" },
-          {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string" },
-          {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string" },
-          {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date" },
-          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date" },
-          {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "string" },
-          {enabled: true, title: "Additional code", field: "additional_code", sortable: true, type: "string" },
-          {enabled: true, title: "Origin", field: "geographical_area", sortable: false },
-          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas", sortable: false },
-          {enabled: true, title: "Duties", field: "duties", sortable: false },
-          {enabled: true, title: "Conditions", field: "conditions", sortable: false },
-          {enabled: true, title: "Footnotes", field: "footnotes", sortable: false },
-          {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "date" },
-          {enabled: true, title: "Status", field: "status", sortable: true, type: "string" }
+          {enabled: true, title: "ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
+          {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string", changeProp: "regulation" },
+          {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string", changeProp: "measure_type" },
+          {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },
+          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date", changeProp: "validity_end_date" },
+          {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "string", changeProp: "goods_nomenclature" },
+          {enabled: true, title: "Additional code", field: "additional_code", sortable: true, type: "string", changeProp: "additional_code" },
+          {enabled: true, title: "Origin", field: "geographical_area", sortable: false, changeProp: "geographical_area" },
+          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas", sortable: false, changeProp: "excluded_geographical_areas" },
+          {enabled: true, title: "Duties", field: "duties", sortable: false, changeProp: "duties" },
+          {enabled: true, title: "Conditions", field: "conditions", sortable: false, changeProp: "conditions" },
+          {enabled: true, title: "Footnotes", field: "footnotes", sortable: false, changeProp: "footnotes" },
+          {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "date", changeProp: "last_updated" },
+          {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
         actions: [
           { value: 'toggle_unselected', label: 'Hide/Show unselected items' },
@@ -82,7 +82,14 @@ $(document).ready(function() {
         if (row === undefined) {
           self.loadMeasures(1, self.loadNextPage.bind(self));
         } else {
-          self.measures = row.payload;
+          self.measures = row.payload.map(function(measure) {
+            if (!measure.changes) {
+              measure.changes = [];
+            }
+
+            return measure;
+          });
+
           self.isLoading = false;
         }
       });
@@ -159,7 +166,8 @@ $(document).ready(function() {
             status: measure.status,
             visible: measure.visible,
             validity_start_date: measure.validity_start_date,
-            validity_end_date: measure.validity_end_date
+            validity_end_date: measure.validity_end_date,
+            changes: measure.changes
           }
         });
       }
@@ -256,6 +264,10 @@ $(document).ready(function() {
         $.get(url, function(data) {
           self.measures = self.measures.concat(data.measures.map(function(measure) {
             measure.visible = true;
+
+            if (!measure.changes) {
+              measure.changes = [];
+            }
 
             return measure;
           }));
