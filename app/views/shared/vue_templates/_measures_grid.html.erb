@@ -1,7 +1,7 @@
 <script type="text/x-template" id="measures-grid-template">
   <div class="measures-table-wrapper">
     <div class="measures-table">
-      <div class="table__header" slot="before-content">
+      <div class="table__header">
         <div class="table__column select-all-column">
           <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" />
         </div>
@@ -18,6 +18,7 @@
           <span v-if="!column.sortable">{{column.title}}</span>
         </div>
       </div>
+
       <virtual-scroller container-class="" :items="sorted" :item-height="45" buffer="1000" pool-size="2500" >
         <template slot-scope="props">
           <div class='table__row' :key="props.itemKey" height="45">

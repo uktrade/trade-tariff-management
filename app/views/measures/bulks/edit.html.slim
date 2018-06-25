@@ -33,5 +33,8 @@ form.bulk-edit-measures
 
   = content_tag "change-duties-popup", nil, { "v-if" => "changingDuties", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
 
+  = content_tag "change-validity-period-popup", nil, { "v-if" => "changingValidityPeriod", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
+
 = render "shared/vue_templates/measures_grid"
 = render "shared/vue_templates/change_duties"
+= render "shared/vue_templates/change_validity_period"
