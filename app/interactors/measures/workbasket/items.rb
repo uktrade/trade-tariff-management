@@ -17,7 +17,9 @@ module Measures
       def prepare
         fetch_target_records
 
-        unless workbasket.initial_items_populated?
+        if workbasket.initial_items_populated.present?
+          load_workbasket_items
+        else
           generate_initial_workbasket_items!
           mark_workbasket_as_populated! if final_batch_populated?
         end
@@ -61,6 +63,11 @@ module Measures
 
             item.save
           end
+        end
+
+        def load_workbasket_items
+          @workbasket_items = workbasket.items
+                                        .order(Sequel.asc(:created_at))
         end
 
         def mark_workbasket_as_populated!

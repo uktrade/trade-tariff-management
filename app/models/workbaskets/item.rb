@@ -7,6 +7,8 @@ module Workbaskets
       :rejected
     ]
 
+    plugin :timestamps
+
     many_to_one :workbasket, key: :workbasket_id,
                              foreign_key: :id
 

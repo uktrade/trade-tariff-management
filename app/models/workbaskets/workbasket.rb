@@ -17,6 +17,8 @@ module Workbaskets
       :already_in_cds
     ]
 
+    plugin :timestamps
+
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
 
