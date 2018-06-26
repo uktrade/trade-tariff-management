@@ -7,7 +7,29 @@ module Measures
 
     expose(:workbasket) do
       current_user.workbaskets
-                  .find(params[:id])
+                  .detect do |el|
+        el.id.to_s == params[:id]
+      end
+    end
+
+    expose(:workbasket_container) do
+      ::Measures::Workbasket::Items.new(
+        workbasket, cached_search_ops
+      ).prepare
+    end
+
+    expose(:search_results) do
+      workbasket_container.pagination_metadata
+    end
+
+    expose(:json_collection) do
+      workbasket_container.collection
+    end
+
+    expose(:search_ops) do
+      {
+        measure_sids: ::MeasureService::FetchMeasureSids.new(params).ids
+      }
     end
 
     expose(:bulk_saver) do
@@ -16,20 +38,6 @@ module Measures
       collection_ops = collection_ops.to_h
 
       ::Measures::BulkSaver.new(current_user, collection_ops)
-    end
-
-    expose(:search_results) do
-      ::Measure.bulk_edit_scope(cached_search_ops)
-    end
-
-    expose(:json_collection) do
-      search_results.map(&:to_json)
-    end
-
-    expose(:search_ops) do
-      {
-        measure_sids: ::MeasureService::FetchMeasureSids.new(params).ids
-      }
     end
 
     def edit

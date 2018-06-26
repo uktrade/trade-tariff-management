@@ -20,6 +20,9 @@ module Workbaskets
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
 
+    one_to_many :items, key: :workbasket_id,
+                        class_name: "Workbaskets::Item"
+
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
                        class_name: "User"
