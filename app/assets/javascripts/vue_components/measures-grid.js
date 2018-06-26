@@ -16,11 +16,7 @@ Vue.component("measures-grid", {
   data: function() {
     var self = this;
 
-    var selectAll = this.data.map(function(m) {
-      return self.selectedRows.indexOf(m.measure_sid) === -1;
-    }).filter(function(b) {
-      return b;
-    }).length === 0;
+    var selectAll = this.selectionType == 'all';
 
     return {
       sortBy: "measure_sid",

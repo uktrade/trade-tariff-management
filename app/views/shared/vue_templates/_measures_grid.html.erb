@@ -1,34 +1,33 @@
 <script type="text/x-template" id="measures-grid-template">
   <div class="measures-table-wrapper">
-    <virtual-scroller container-class="measures-table" :items="sorted" item-height="20" container-tag="table" content-tag="tbody">
-      <thead slot="before-content">
-        <tr>
-          <th class="select-all-column">
-            <input type="checkbox" class="select-all" value='1' v-model="selectAll" />
-          </th>
-          <th v-for="column in enabledColumns" v-bind:class="column.field + '-column'">
-            <a v-on:click.prevent="selectSorting(column)" v-if="column.sortable">
-              {{column.title}}
+    <div class="measures-table">
+      <div class="table__header" slot="before-content">
+        <div class="table__column select-all-column">
+          <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" />
+        </div>
+        <div v-for="column in enabledColumns" v-bind:class="'table__column ' + column.field + '-column'">
+          <a v-on:click.prevent="selectSorting(column)" v-if="column.sortable">
+            {{column.title}}
 
-              <span v-if="column.field == sortBy">
-                <arrow-down v-if="sortDir === 'desc'"></arrow-down>
-                <arrow-up v-if="sortDir === 'asc'"></arrow-up>
-              </span>
-            </a>
+            <span v-if="column.field == sortBy">
+              <arrow-down v-if="sortDir === 'desc'"></arrow-down>
+              <arrow-up v-if="sortDir === 'asc'"></arrow-up>
+            </span>
+          </a>
 
-            <span v-if="!column.sortable">{{column.title}}</span>
-          </th>
-        </tr>
-      </thead>
-      <template slot-scope="props">
-        <tr :key="props.itemKey" height="50">
-          <td>
-            <input type="checkbox" name="measures[]" :value="props.item.measure_sid" :checked="(selectionType == 'all' && selectedRows.indexOf(props.item.measure_sid) === -1) || (selectionType == 'none' && selectedRows.indexOf(props.item.measure_sid) > -1)" @change="sendCheckedTrigger" />
-          </td>
-          <td v-for="column in enabledColumns" v-html="props.item[column.field]" v-bind:class="column.field + '-column'">
-          </td>
-        </tr>
-      </template>
-    </virtual-scroller>
+          <span v-if="!column.sortable">{{column.title}}</span>
+        </div>
+      </div>
+      <virtual-scroller container-class="" :items="sorted" :item-height="45" buffer="1000" pool-size="2500" >
+        <template slot-scope="props">
+          <div class='table__row' :key="props.itemKey" height="45">
+            <div class="table__column select-all-column">
+              <input type="checkbox" name="measures[]" :value="props.item.measure_sid" :checked="(selectionType == 'all' && selectedRows.indexOf(props.item.measure_sid) === -1) || (selectionType == 'none' && selectedRows.indexOf(props.item.measure_sid) > -1)" @change="sendCheckedTrigger" />
+            </div>
+            <grid-column v-for="column in enabledColumns" :item="props.item" :column="column.field" :changeProp="column.changeProp"></grid-column>
+          </div>
+        </template>
+      </virtual-scroller>
+    </div>
   </div>
 </script>

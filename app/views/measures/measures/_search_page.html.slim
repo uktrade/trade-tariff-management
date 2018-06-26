@@ -38,5 +38,7 @@ script
         | Loading measures
       h4.heading-medium
         | Please wait while we fetch page {{pagination.page}}
+        br
+        = content_tag "loading-spinner", nil
 
 = render "shared/vue_templates/measures_grid"

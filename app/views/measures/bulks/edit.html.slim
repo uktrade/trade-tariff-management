@@ -18,10 +18,18 @@ script
 
 form.bulk-edit-measures
   = render "table_top"
-  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none" } do
+  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true } do
     p Loading measures table...
 
-  = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" }
+  = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
+    h1.heading-xlarge slot="title"
+      | Loading measures
+    h4.heading-medium slot-scope="slotProps"
+      | Please wait while we load and prepare measures for editing
+      br
+      | {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
+      br
+      = content_tag "loading-spinner", nil
 
   = content_tag "change-duties-popup", nil, { "v-if" => "changingDuties", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
 

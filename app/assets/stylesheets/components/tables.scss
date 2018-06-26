@@ -5,8 +5,21 @@ table {
 }
 
 .measures-table {
-  table-layout: fixed;
-  min-width: 1365px !important;
+  min-width: 1600px !important;
+
+  .table__row {
+    border-bottom: 1px solid $border-colour;
+    height: 45px;
+    overflow: hidden;
+  }
+
+  .table__column {
+    display: inline-block;
+  }
+
+  .table__column--highlight {
+    background: $panel-colour;
+  }
 
   .select-all-column {
     width: 20px;
@@ -25,17 +38,19 @@ table {
   }
 
   .validity_start_date-column {
-    width: 75px;
+    width: 85px;
   }
 
   .validity_end_date-column {
-    width: 75px;
+    width: 85px;
   }
 
+  .goods_nomenclature_id-column,
   .goods_nomenclature-column {
     width: 90px;
   }
 
+  .additional_code_id-column,
   .additional_code-column {
     width: 70px;
   }
@@ -49,11 +64,11 @@ table {
   }
 
   .duties-column {
-    width: 220px;
+    width: 180px;
   }
 
   .conditions-column {
-    width: 120px;
+    width: 160px;
   }
 
   .footnotes-column {
@@ -68,12 +83,12 @@ table {
     width: 110px;
   }
 
-  td, th {
+  .table__column {
     font-size: 13px;
-    padding: 3px 0 !important;
+    padding: 3px !important;
     position: relative;
     height: auto !important;
-    vertical-align: baseline;
+    vertical-align: top;
     font-weight: 400;
 
     .arrow-down,
@@ -89,6 +104,14 @@ table {
       display: inline-block;
       padding-right: 20px;
       cursor: pointer;
+    }
+  }
+
+  .table__header {
+    border-bottom: 2px solid $border-colour;
+
+    .table__column {
+      vertical-align: baseline;
     }
   }
 }
