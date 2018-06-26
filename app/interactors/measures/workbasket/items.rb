@@ -19,8 +19,8 @@ module Measures
 
         if workbasket.initial_items_populated.present?
           load_workbasket_items
-        else
 
+        elsif current_page.present? && current_batch_is_not_loaded?
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
@@ -34,7 +34,6 @@ module Measures
           Rails.logger.info ""
 
           generate_initial_workbasket_items!
-          mark_workbasket_as_populated! if final_batch_populated?
         end
 
         self
@@ -65,23 +64,14 @@ module Measures
 
         def generate_initial_workbasket_items!
           @workbasket_items = target_records.map do |record|
-            target_id = record.public_send(record.primary_key)
-
-            item = ::Workbaskets::Item.new(
-              workbasket_id: workbasket.id
+            ::Workbaskets::Item.create_from_target_record(
+              workbasket, record
             )
-            item.record_id = target_id
-            item.record_key = record.primary_key
-            item.record_type = record.class.to_s
-            item.status = "in_progress"
-            item.data = record.to_json.to_json
-
-            if item.valid?
-              item.save
-            else
-              workbasket.get_item_by_id(target_id)
-            end
           end
+
+          workbasket.track_current_page_loaded!(current_page)
+          workbasket.initial_items_populated = true if final_batch_populated?
+          workbasket.save
         end
 
         def load_workbasket_items
@@ -89,13 +79,17 @@ module Measures
                                         .order(Sequel.asc(:created_at))
         end
 
-        def mark_workbasket_as_populated!
-          workbasket.initial_items_populated = true
-          workbasket.save
-        end
-
         def final_batch_populated?
           workbasket.items.count == target_records.total_count
+        end
+
+        def current_batch_is_not_loaded?
+          !workbasket.batches_loaded_pages
+                     .include?(current_page)
+        end
+
+        def current_page
+          search_ops[:page].to_s
         end
     end
   end

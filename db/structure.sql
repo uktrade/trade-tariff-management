@@ -6708,7 +6708,8 @@ CREATE TABLE public.workbaskets (
     changes_do_not_come_from_legislation boolean DEFAULT false,
     reason_of_changes text,
     operation_date date,
-    initial_items_populated boolean DEFAULT false
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -10655,3 +10656,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180626120716_add_workbas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');
