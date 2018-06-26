@@ -26,6 +26,8 @@ module Measures
           Rails.logger.info ""
           Rails.logger.info " search_ops[:page]: #{search_ops[:page]}"
           Rails.logger.info ""
+          Rails.logger.info " search_ops[:page]: #{search_ops[:page]}"
+          Rails.logger.info ""
           Rails.logger.info " target_records: #{target_records.count}"
           Rails.logger.info ""
           Rails.logger.info " workbasket.items: #{workbasket.items.count}"
@@ -58,8 +60,16 @@ module Measures
 
       private
 
+        def current_batch_ids
+          per_page = Kaminari.config.default_per_page
+          offset = (current_page - 1) * per_page
+          top_limit = offset + per_page
+
+          search_ops[:measure_sids][offset..top_limit]
+        end
+
         def fetch_target_records
-          @target_records = ::Measure.bulk_edit_scope(search_ops)
+          @target_records = ::Measure.bulk_edit_scope(current_batch_ids)
         end
 
         def generate_initial_workbasket_items!
