@@ -153,7 +153,7 @@ $(document).ready(function() {
 
           return {
             measure_sid: measure.measure_sid,
-            regulation: measure.regulation.base_regulation_id,
+            regulation: measure.regulation.formatted_id,
             measure_type_id: measure.measure_type.measure_type_id,
             goods_nomenclature: measure.goods_nomenclature.goods_nomenclature_item_id,
             additional_code: "-",

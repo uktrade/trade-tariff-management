@@ -37,4 +37,21 @@ class ModificationRegulation < Sequel::Model
 
     "#{year}/#{number}"
   end
+
+  def to_json(options = {})
+    {
+      formatted_id: formatted_id,
+      modification_regulation_id: modification_regulation_id,
+      modification_regulation_role: modification_regulation_role,
+      base_regulation_id: base_regulation_id,
+      base_regulation_role: base_regulation_role,
+      validity_start_date: validity_start_date.try(:strftime, "%d/%m/%Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d/%m/%Y"),
+      information_text: information_text,
+      published_date: published_date.try(:strftime, "%d/%m/%Y"),
+      officialjournal_number: officialjournal_number,
+      officialjournal_page: officialjournal_page,
+      effective_end_date: effective_end_date.try(:strftime, "%d/%m/%Y")
+    }
+  end
 end

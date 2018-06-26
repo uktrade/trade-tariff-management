@@ -48,6 +48,7 @@ class BaseRegulation < Sequel::Model
 
   def to_json(options = {})
     {
+      formatted_id: formatted_id,
       base_regulation_id: base_regulation_id,
       base_regulation_role: base_regulation_role,
       validity_start_date: validity_start_date.try(:strftime, "%d/%m/%Y"),
