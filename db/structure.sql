@@ -6707,7 +6707,8 @@ CREATE TABLE public.workbaskets (
     regulation_role text,
     changes_do_not_come_from_legislation boolean DEFAULT false,
     reason_of_changes text,
-    operation_date date
+    operation_date date,
+    initial_items_populated boolean DEFAULT false
 );
 
 
@@ -10653,3 +10654,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083954_rename_titl
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626120716_add_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');

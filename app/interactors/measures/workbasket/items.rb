@@ -15,19 +15,11 @@ module Measures
       end
 
       def prepare
-        @target_records = fetch_target_records
+        fetch_target_records
 
-        @workbasket_items = target_records.map do |record|
-          item = ::Workbaskets::Item.new(
-            workbasket_id: workbasket.id
-          )
-          item.record_id = record.public_send(record.primary_key)
-          item.record_key = record.primary_key
-          item.record_type = record.class.to_s
-          item.status = "in_progress"
-          item.data = record.to_json.to_json
-
-          item.save
+        unless workbasket.initial_items_populated?
+          generate_initial_workbasket_items!
+          mark_workbasket_as_populated! if final_batch_populated?
         end
 
         self
@@ -53,7 +45,31 @@ module Measures
       private
 
         def fetch_target_records
-          ::Measure.bulk_edit_scope(search_ops)
+          @target_records = ::Measure.bulk_edit_scope(search_ops)
+        end
+
+        def generate_initial_workbasket_items!
+          @workbasket_items = target_records.map do |record|
+            item = ::Workbaskets::Item.new(
+              workbasket_id: workbasket.id
+            )
+            item.record_id = record.public_send(record.primary_key)
+            item.record_key = record.primary_key
+            item.record_type = record.class.to_s
+            item.status = "in_progress"
+            item.data = record.to_json.to_json
+
+            item.save
+          end
+        end
+
+        def mark_workbasket_as_populated!
+          workbasket.initial_items_populated = true
+          workbasket.save
+        end
+
+        def final_batch_populated?
+          target_records.total_pages == search_ops[:page]
         end
     end
   end
