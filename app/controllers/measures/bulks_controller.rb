@@ -5,6 +5,10 @@ module Measures
 
     skip_around_action :configure_time_machine
 
+    expose(:current_page) do
+      params[:page]
+    end
+
     expose(:workbasket) do
       current_user.workbaskets
                   .detect do |el|

@@ -35,5 +35,11 @@ module Workbaskets
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
     end
+
+    def get_item_by_id(target_id)
+      items.detect do |i|
+        i.record_id.to_s == target_id
+      end
+    end
   end
 end

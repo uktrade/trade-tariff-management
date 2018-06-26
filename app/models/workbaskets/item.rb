@@ -20,6 +20,13 @@ module Workbaskets
                   :record_type
 
       inclusion_of :status, in: STATES.map(&:to_s)
+
+      uniqueness_of [
+        :workbasket_id,
+        :record_id,
+        :record_key,
+        :record_type
+      ]
     end
 
     def hash_data

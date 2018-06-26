@@ -20,6 +20,19 @@ module Measures
         if workbasket.initial_items_populated.present?
           load_workbasket_items
         else
+
+          Rails.logger.info ""
+          Rails.logger.info "-" * 100
+          Rails.logger.info ""
+          Rails.logger.info " search_ops[:page]: #{search_ops[:page]}"
+          Rails.logger.info ""
+          Rails.logger.info " target_records: #{target_records.count}"
+          Rails.logger.info ""
+          Rails.logger.info " workbasket.items: #{workbasket.items.count}"
+          Rails.logger.info ""
+          Rails.logger.info "-" * 100
+          Rails.logger.info ""
+
           generate_initial_workbasket_items!
           mark_workbasket_as_populated! if final_batch_populated?
         end
@@ -52,16 +65,22 @@ module Measures
 
         def generate_initial_workbasket_items!
           @workbasket_items = target_records.map do |record|
+            target_id = record.public_send(record.primary_key)
+
             item = ::Workbaskets::Item.new(
               workbasket_id: workbasket.id
             )
-            item.record_id = record.public_send(record.primary_key)
+            item.record_id = target_id
             item.record_key = record.primary_key
             item.record_type = record.class.to_s
             item.status = "in_progress"
             item.data = record.to_json.to_json
 
-            item.save
+            if item.valid?
+              item.save
+            else
+              workbasket.get_item_by_id(target_id)
+            end
           end
         end
 
@@ -76,7 +95,7 @@ module Measures
         end
 
         def final_batch_populated?
-          target_records.total_pages == search_ops[:page]
+          workbasket.items.count == target_records.total_count
         end
     end
   end
