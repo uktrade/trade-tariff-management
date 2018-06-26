@@ -1,9 +1,20 @@
 module Measures
   module SearchFilters
     module FindMeasuresCollection
-      def bulk_edit_scope(search_ops={})
-        by_ids(search_ops[:measure_sids]).by_start_date_reverse
-                                         .page(search_ops[:page])
+      def order_by_ids(ids)
+        res = []
+
+        ids.each_with_index.map do |id, index|
+          res << [
+            { measure_sid: id }, index
+          ]
+        end
+
+        order(Sequel.case(res, nil))
+      end
+
+      def bulk_edit_scope(measure_sids)
+        by_ids(measure_sids).order_by_ids(measure_sids)
       end
 
       def by_start_date_reverse
