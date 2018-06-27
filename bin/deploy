@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# CF_ORG should be `trade-tariff`, can be changed in future
-export CF_ORG=trade-tariff
-
 # Fetch deployed revision
 export GIT_OLD_REVISION=`curl "https://$CF_APP.$HEALTHCHECK_URL" | grep -o -w -E '[[:alnum:]]{7}'`
 # Log the new revision
