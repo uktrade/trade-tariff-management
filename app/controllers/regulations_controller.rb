@@ -4,7 +4,7 @@ class RegulationsController < ::BaseController
     list = []
 
     collection.map do |record|
-      list << record.json_mapping(true)
+      list << (params[:full].present? ? record.to_json : record.json_mapping(true))
     end
 
     list
