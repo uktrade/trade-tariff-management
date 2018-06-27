@@ -6,12 +6,14 @@ module Measures
 
       attr_accessor :workbasket,
                     :search_ops,
+                    :paginator,
                     :target_records,
                     :workbasket_items
 
       def initialize(workbasket, search_ops)
         @workbasket = workbasket
         @search_ops = search_ops
+        @paginator = ::Measures::Workbasket::Paginator.new(search_ops)
       end
 
       def prepare
@@ -39,48 +41,22 @@ module Measures
         self
       end
 
-      def pagination_metadata
-        Hashie::Mash.new(
-          page: current_page.to_i,
-          current_page: current_page.to_i,
-          total_count: total_count,
-          total_pages: total_pages,
-          has_more: has_more?,
-          per_page: per_page
-        )
-      end
-
       def collection
         workbasket_items.map do |item|
           item.hash_data
         end
       end
 
+      def pagination_metadata
+        paginator.metadata
+      end
+
       private
 
-        def current_batch_ids
-          offset = current_page.to_i.zero? ? 0 : ((current_page.to_i - 1) * per_page)
-          top_limit = offset + per_page
-
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-          Rails.logger.info " offset: #{offset}"
-          Rails.logger.info ""
-          Rails.logger.info " top_limit: #{top_limit}"
-          Rails.logger.info ""
-          Rails.logger.info " search_ops: #{search_ops.inspect}"
-          Rails.logger.info ""
-          Rails.logger.info " search_ops[:measure_sids]: #{search_ops[:measure_sids].inspect}"
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-
-          measure_sids[offset..top_limit]
-        end
-
         def fetch_target_records
-          @target_records = ::Measure.bulk_edit_scope(current_batch_ids)
+          @target_records = ::Measure.bulk_edit_scope(
+            paginator.current_batch_ids
+          )
         end
 
         def generate_initial_workbasket_items!
@@ -109,30 +85,8 @@ module Measures
                      .include?(current_page)
         end
 
-        def measure_sids
-          @measure_sids ||= search_ops[:measure_sids]
-        end
-
-        begin :pagination_metadata_helpers
-          def current_page
-            search_ops[:page].to_s
-          end
-
-          def per_page
-            @per_page ||= Kaminari.config.default_per_page
-          end
-
-          def total_pages
-            (total_count.to_f / per_page.to_f).ceil
-          end
-
-          def total_count
-            measure_sids.size
-          end
-
-          def has_more?
-            total_pages > current_page.to_i
-          end
+        def current_page
+          paginator.current_page
         end
     end
   end
