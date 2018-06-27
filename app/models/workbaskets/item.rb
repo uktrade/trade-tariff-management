@@ -29,6 +29,14 @@ module Workbaskets
       ]
     end
 
+    dataset_module do
+      def by_workbasket(workbasket)
+        where(workbasket_id: workbasket.id)
+      end
+
+      include ::BulkEditHelpers::OrderByIdsQuery
+    end
+
     def hash_data
       JSON.parse(data)
     end

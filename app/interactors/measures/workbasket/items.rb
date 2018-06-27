@@ -43,7 +43,7 @@ module Measures
 
         def fetch_target_records
           @target_records = ::Measure.bulk_edit_scope(
-            paginator.current_batch_ids
+            :measure_sid, paginator.current_batch_ids
           )
         end
 
@@ -60,8 +60,10 @@ module Measures
         end
 
         def load_workbasket_items
-          @workbasket_items = workbasket.items
-                                        .order(Sequel.asc(:created_at))
+          @workbasket_items = ::Workbaskets::Item.by_workbasket(workbasket)
+                                                 .bulk_edit_scope(
+            :record_id, paginator.current_batch_ids
+          )
         end
 
         def final_batch_populated?
