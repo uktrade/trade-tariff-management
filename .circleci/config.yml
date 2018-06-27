@@ -67,10 +67,10 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ];
-              then CF_SPACE=dit-alpha CF_APP=tariff-management-dev CF_APP_WORKER=tariff-management-worker-dev ./bin/deploy
+              then CF_ORG=dit-staging CF_SPACE=dev-tariffs CF_APP=tariffs-dev CF_APP_WORKER=tariffs-worker-dev ./bin/deploy
             fi
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "staging" ];
-              then CF_SPACE=dit-beta CF_APP=tariff-management-beta CF_APP_WORKER=tariff-management-worker-beta ./bin/deploy
+              then CF_ORG=dit-staging CF_SPACE=uat-tariffs CF_APP=tariffs-uat CF_APP_WORKER=tariffs-worker-uat ./bin/deploy
             fi
