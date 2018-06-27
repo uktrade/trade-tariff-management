@@ -3,7 +3,7 @@
 per_page = if Rails.env.production?
   300
 elsif Rails.env.development?
-  300
+  30
 elsif Rails.env.test?
   10
 end

@@ -6654,6 +6654,42 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: workbasket_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.workbasket_items (
+    id integer NOT NULL,
+    workbasket_id integer,
+    record_id integer,
+    record_type text,
+    status text,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone,
+    data jsonb DEFAULT '{}'::jsonb,
+    record_key text
+);
+
+
+--
+-- Name: workbasket_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.workbasket_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: workbasket_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.workbasket_items_id_seq OWNED BY public.workbasket_items.id;
+
+
+--
 -- Name: workbaskets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6671,7 +6707,9 @@ CREATE TABLE public.workbaskets (
     regulation_role text,
     changes_do_not_come_from_legislation boolean DEFAULT false,
     reason_of_changes text,
-    operation_date date
+    operation_date date,
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -7554,6 +7592,13 @@ ALTER TABLE ONLY public.transmission_comments_oplog ALTER COLUMN oid SET DEFAULT
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: workbasket_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.workbasket_items ALTER COLUMN id SET DEFAULT nextval('public.workbasket_items_id_seq'::regclass);
 
 
 --
@@ -8503,6 +8548,14 @@ ALTER TABLE ONLY public.transmission_comments_oplog
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: workbasket_items workbasket_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.workbasket_items
+    ADD CONSTRAINT workbasket_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -10599,3 +10652,8 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180618150316_remove_meas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180619082412_add_some_fields_to_workbasket.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083622_create_workbaskets_events.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083954_rename_title_to_event_type_in_workbaskets_events.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626120716_add_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');

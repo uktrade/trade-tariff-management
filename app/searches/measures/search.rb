@@ -28,7 +28,7 @@ module Measures
     end
 
     def results(paginated_query=true)
-      @relation = Measure.by_start_date_reverse
+      @relation = Measure.by_start_date_and_measure_sid_reverse
       @relation = relation.page(page) if paginated_query
       @relation = relation.operation_search_jsonb_default if jsonb_search_required?
 
