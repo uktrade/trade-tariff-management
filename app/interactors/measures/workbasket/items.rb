@@ -41,12 +41,12 @@ module Measures
 
       def pagination_metadata
         Hashie::Mash.new(
-          total_pages: target_records.total_pages,
-          current_page: target_records.current_page,
-          has_more: !target_records.last_page?,
-          page: target_records.current_page,
-          total_count: target_records.total_count,
-          per_page: target_records.limit_value
+          page: current_page.to_i,
+          current_page: current_page.to_i,
+          total_count: total_count,
+          total_pages: total_pages,
+          has_more: has_more?,
+          per_page: per_page
         )
       end
 
@@ -59,7 +59,6 @@ module Measures
       private
 
         def current_batch_ids
-          per_page = Kaminari.config.default_per_page
           offset = current_page.to_i.zero? ? 0 : ((current_page.to_i - 1) * per_page)
           top_limit = offset + per_page
 
@@ -77,7 +76,7 @@ module Measures
           Rails.logger.info "-" * 100
           Rails.logger.info ""
 
-          search_ops[:measure_sids][offset..top_limit]
+          measure_sids[offset..top_limit]
         end
 
         def fetch_target_records
@@ -110,8 +109,30 @@ module Measures
                      .include?(current_page)
         end
 
-        def current_page
-          search_ops[:page].to_s
+        def measure_sids
+          @measure_sids ||= search_ops[:measure_sids]
+        end
+
+        begin :pagination_metadata_helpers
+          def current_page
+            search_ops[:page].to_s
+          end
+
+          def per_page
+            @per_page ||= Kaminari.config.default_per_page
+          end
+
+          def total_pages
+            (total_count.to_f / per_page.to_f).ceil
+          end
+
+          def total_count
+            measure_sids.size
+          end
+
+          def has_more?
+            total_pages > current_page.to_i
+          end
         end
     end
   end
