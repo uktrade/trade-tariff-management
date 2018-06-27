@@ -77,7 +77,7 @@ module Measures
         end
 
         def final_batch_populated?
-          workbasket.items.count == target_records.total_count
+          workbasket.items.count == paginator.total_count
         end
 
         def current_batch_is_not_loaded?

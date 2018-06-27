@@ -41,6 +41,10 @@ module Measures
         search_ops[:page].to_s
       end
 
+      def total_count
+        measure_sids.size
+      end
+
       private
 
         def per_page
@@ -49,10 +53,6 @@ module Measures
 
         def total_pages
           (total_count.to_f / per_page.to_f).ceil
-        end
-
-        def total_count
-          measure_sids.size
         end
 
         def has_more?
@@ -65,7 +65,7 @@ module Measures
         end
 
         def top_limit
-          offset + per_page
+          offset + per_page - 1
         end
     end
   end
