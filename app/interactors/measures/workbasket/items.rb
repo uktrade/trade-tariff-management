@@ -17,13 +17,14 @@ module Measures
       end
 
       def prepare
-        if workbasket.initial_items_populated.present?
-          load_workbasket_items
+        if current_page.present?
+          if workbasket.initial_items_populated.present?
+            load_workbasket_items
 
-        elsif current_page.present? && current_batch_is_not_loaded?
-          fetch_target_records
-          generate_initial_workbasket_items!
-
+          elsif current_batch_is_not_loaded?
+            fetch_target_records
+            generate_initial_workbasket_items!
+          end
         end
 
         self
