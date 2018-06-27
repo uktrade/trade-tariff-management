@@ -17,12 +17,12 @@ module Measures
       end
 
       def prepare
-        fetch_target_records
-
         if workbasket.initial_items_populated.present?
           load_workbasket_items
 
         elsif current_page.present? && current_batch_is_not_loaded?
+          fetch_target_records
+
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
