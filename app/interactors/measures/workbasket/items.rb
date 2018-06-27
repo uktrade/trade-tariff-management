@@ -22,20 +22,8 @@ module Measures
 
         elsif current_page.present? && current_batch_is_not_loaded?
           fetch_target_records
-
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-          Rails.logger.info " search_ops[:page]: #{search_ops[:page]}"
-          Rails.logger.info ""
-          Rails.logger.info " target_records: #{target_records.count}"
-          Rails.logger.info ""
-          Rails.logger.info " workbasket.items: #{workbasket.items.count}"
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-
           generate_initial_workbasket_items!
+
         end
 
         self

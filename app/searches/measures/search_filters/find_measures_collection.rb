@@ -10,19 +10,7 @@ module Measures
           ]
         end
 
-        list = order(Sequel.case(res, nil))
-
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-        Rails.logger.info " res: #{res.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info " SQL: #{list.sql}"
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-
-        list
+        order(Sequel.case(res, nil))
       end
 
       def bulk_edit_scope(measure_sids)

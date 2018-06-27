@@ -24,16 +24,6 @@ module Measures
       end
 
       def current_batch_ids
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-        Rails.logger.info " offset: #{offset}"
-        Rails.logger.info ""
-        Rails.logger.info " top_limit: #{top_limit}"
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-
         measure_sids[offset..top_limit]
       end
 
