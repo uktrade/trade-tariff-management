@@ -40,6 +40,8 @@ class BaseRegulation < Sequel::Model
   #       we had to use `measure.generating_regulation_code` instead
   #
   def formatted_id
+    return "I9999/YY" if base_regulation_id == "IYY99990"
+
     year = Date.strptime(base_regulation_id.slice(1,2), "%y").strftime("%Y");
     number = base_regulation_id.slice(3,4)
 
