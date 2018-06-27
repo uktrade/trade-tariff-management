@@ -1,8 +1,11 @@
 module Measures
   module SearchFilters
     module FindMeasuresCollection
-      def by_start_date_reverse
-        reverse_order(:validity_start_date)
+      def by_start_date_and_measure_sid_reverse
+        order(
+          Sequel.desc(:validity_start_date),
+          Sequel.desc(:measure_sid)
+        )
       end
 
       def searchable_data_not_indexed
