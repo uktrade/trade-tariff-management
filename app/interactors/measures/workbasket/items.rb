@@ -60,6 +60,20 @@ module Measures
         end
 
         def load_workbasket_items
+          Rails.logger.info ""
+          Rails.logger.info "-" * 100
+          Rails.logger.info ""
+          Rails.logger.info "workbasket.id: #{workbasket.id}"
+          Rails.logger.info ""
+          Rails.logger.info "current_page: #{current_page}"
+          Rails.logger.info ""
+          Rails.logger.info "paginator.current_batch_ids: #{paginator.current_batch_ids}"
+          Rails.logger.info ""
+          Rails.logger.info "SQL: #{::Workbaskets::Item.by_workbasket(workbasket).bulk_edit_scope(:record_id, paginator.current_batch_ids).sql}"
+          Rails.logger.info ""
+          Rails.logger.info "-" * 100
+          Rails.logger.info ""
+
           @workbasket_items = ::Workbaskets::Item.by_workbasket(workbasket)
                                                  .bulk_edit_scope(
             :record_id, paginator.current_batch_ids
