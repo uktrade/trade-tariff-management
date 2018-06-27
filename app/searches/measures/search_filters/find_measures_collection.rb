@@ -10,6 +10,14 @@ module Measures
           ]
         end
 
+        Rails.logger.info ""
+        Rails.logger.info "-" * 100
+        Rails.logger.info ""
+        Rails.logger.info " res: #{res.inspect}"
+        Rails.logger.info ""
+        Rails.logger.info "-" * 100
+        Rails.logger.info ""
+
         order(Sequel.case(res, nil))
       end
 
