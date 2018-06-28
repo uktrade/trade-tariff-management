@@ -14,6 +14,7 @@ h2.heading-large
     | Return to search results / amend selection
 
 script
+  == "window.__workbasket_id = #{workbasket.id};"
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"
 
 form.bulk-edit-measures

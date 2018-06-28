@@ -74,13 +74,23 @@ module Measures
     end
 
     def update
-      if bulk_saver.valid?
-        bulk_saver.persist!
+      Rails.logger.info ""
+      Rails.logger.info "-" * 100
+      Rails.logger.info ""
+      Rails.logger.info "params: #{params.inspect}"
+      Rails.logger.info ""
+      Rails.logger.info "-" * 100
+      Rails.logger.info ""
 
-        success_response
-      else
-        errors_response
-      end
+      # if bulk_saver.valid?
+      #   bulk_saver.persist!
+
+      #   success_response
+      # else
+      #   errors_response
+      # end
+
+      render nothing: true
     end
 
     private
