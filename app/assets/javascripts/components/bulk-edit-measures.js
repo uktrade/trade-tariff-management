@@ -286,7 +286,23 @@ $(document).ready(function() {
         }
 
         this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
-      }
+      },
+      saveForCrossCheck: function() {
+        this.saveProgress();
+      },
+      saveProgress: function() {
+        var data = { measures: this.measures };
+        var url = '/measures/bulks/' + window.__workbasket_id.toString()
+
+        $.ajax({
+          url: url,
+          type: 'PUT',
+          data: data,
+          success: function (result) {
+            return false;
+          }
+        });
+      },
     }
   });
 });
