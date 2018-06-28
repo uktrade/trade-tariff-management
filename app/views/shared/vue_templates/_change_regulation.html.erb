@@ -1,0 +1,64 @@
+<script type="text/x-template" id="change-regulation-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Change generating regulation
+    </template>
+
+    <div v-if="measures.length > 1">
+      <warning-message>
+        You are bulk-changing {{measures.length}} measures. Please check your inputs carefully!
+      </warning-message>
+    </div>
+
+    <div v-if="sameRegulation">
+      <info-message>
+        The selected measures currently have generating regulation {{regulationFullDescription}}.
+        <br>
+        This will be changed to the regulation you select below.
+      </info-message>
+    </div>
+
+    <div v-if="!sameRegulation">
+      <info-message>
+        <p>
+          The selection currently contains the following generating regulations.
+          <br>
+          These will all be replaced by the regulation you select below.
+        </p>
+
+        <ul class="unstyled">
+          <li v-for="regulation in currentRegulations">
+            {{regulation.id}} {{regulation.description}} ({{regulation.count}})
+          </li>
+        </ul>
+      </info-message>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <span class="form-hint">
+          Start typing in the field to see available regulations.
+          <br>
+          If the regulation you need is not in the list, you can <a href="#">add it here</a>.
+          <br>
+          If you're not sure of the regulation name or ID, you can <a href="#">search here</a>.
+        </span>
+      </label>
+
+      <div class="row">
+        <div class="col-md-5">
+          <custom-select url="/regulations.json" label-field="description" value-field="regulation_id" placeholder="― start typing ―" min-length="2" v-model="regulation_id" :on-change="onRegulationSelected"></custom-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="confirmChanges" :disabled="!newRegulation">
+        Update selected measures
+      </button>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>

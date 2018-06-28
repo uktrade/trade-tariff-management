@@ -38,7 +38,7 @@ $(document).ready(function() {
           { value: 'change_regulation', label: 'Change generating regulation' },
           { value: 'change_validity_period', label: 'Change validity period...' },
           { value: 'change_origin', label: 'Change origin...' },
-          { value: 'change_community_code', label: 'Change community code...' },
+          { value: 'change_commodity_codes', label: 'Change commodity codes...' },
           { value: 'change_additional_code', label: 'Change additional code...' },
           { value: 'change_quota', label: 'Change quota...' },
           { value: 'change_duties', label: 'Change duties...' },
@@ -53,7 +53,7 @@ $(document).ready(function() {
         deleting: false,
         changingFootnotes: false,
         changingAdditionalCode: false,
-        changingCommunityCode: false,
+        changingCommodityCodes: false,
         changingOrigin: false,
         makingCopies: false,
         changingRegulation: false,
@@ -113,11 +113,7 @@ $(document).ready(function() {
       measuresForTable: function() {
         return this.measures.map(function(measure) {
           var formatted_exclusions = measure.excluded_geographical_areas.map(function (ega) {
-            if (ega.is_country) {
-              return ega.geographical_area_id;
-            }
-
-            return ega.description;
+            return ega.geographical_area_id;
           }).join(", ") || "-";
 
           var formatted_components = measure.measure_components.map(function (mc) {
@@ -153,7 +149,7 @@ $(document).ready(function() {
 
           return {
             measure_sid: measure.measure_sid,
-            regulation: measure.regulation.base_regulation_id,
+            regulation: measure.regulation.formatted_id,
             measure_type_id: measure.measure_type.measure_type_id,
             goods_nomenclature: measure.goods_nomenclature.goods_nomenclature_item_id,
             additional_code: "-",
@@ -216,8 +212,8 @@ $(document).ready(function() {
           case 'change_origin':
             this.changingOrigin = true;
             break;
-          case 'change_community_code':
-            this.changingCommunityCode = true;
+          case 'change_commodity_codes':
+            this.changingCommodityCodes = true;
             break;
           case 'change_additional_code':
             this.changingAdditionalCode = true;

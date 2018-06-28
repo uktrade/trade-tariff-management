@@ -14,6 +14,8 @@ module Workbaskets
       :cds_import_error
     ]
 
+    plugin :timestamps
+
     many_to_one :workbasket, key: :workbasket_id,
                              foreign_key: :id
 

@@ -40,6 +40,8 @@ class BaseRegulation < Sequel::Model
   #       we had to use `measure.generating_regulation_code` instead
   #
   def formatted_id
+    return "I9999/YY" if base_regulation_id == "IYY99990"
+
     year = Date.strptime(base_regulation_id.slice(1,2), "%y").strftime("%Y");
     number = base_regulation_id.slice(3,4)
 
@@ -48,6 +50,7 @@ class BaseRegulation < Sequel::Model
 
   def to_json(options = {})
     {
+      formatted_id: formatted_id,
       base_regulation_id: base_regulation_id,
       base_regulation_role: base_regulation_role,
       validity_start_date: validity_start_date.try(:strftime, "%d/%m/%Y"),

@@ -1,0 +1,56 @@
+<script type="text/x-template" id="change-regulation-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Change commodity codes
+    </template>
+
+    <div v-if="measures.length > 1">
+      <warning-message>
+        You are bulk-changing {{measures.length}} measures. Please check your inputs carefully!
+      </warning-message>
+    </div>
+
+    <info-message>
+      The selection contains measures with the commodity code(s) listed below. You can replace them, but you cannot delete or add new commodity codes from here. To delete a commodity code, you need to delete the whole measure. To add new commodity codes, either create new measures via the Create Measures screen, or copy one of those measures and then edit the codes.
+    </info-message>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="row">
+              <span class="col-md-3">
+                Commodity code
+              </span>
+
+              <span class="col-md-5">
+                Replace with
+              </span>
+            </span>
+            <span class="form-hint">
+              Leave row fields blank / unchecked to keep existing code unchanged.
+            </span>
+          </label>
+
+          <div class="row">
+            <div class="col-md-5">
+              <custom-select url="/regulations.json" label-field="description" value-field="regulation_id" placeholder="― start typing ―" min-length="2" v-model="regulation_id" :on-change="onRegulationSelected"></custom-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="confirmChanges" :disabled="!newRegulation">
+        Update selected measures
+      </button>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>
