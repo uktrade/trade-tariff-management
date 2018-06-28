@@ -74,10 +74,14 @@ module Measures
     end
 
     def update
+      data = JSON.parse(request.body.read)["measures"]
+
       Rails.logger.info ""
       Rails.logger.info "-" * 100
       Rails.logger.info ""
-      Rails.logger.info "params: #{params.inspect}"
+      Rails.logger.info "request.body"
+      Rails.logger.info ""
+      Rails.logger.info "#{data.count}"
       Rails.logger.info ""
       Rails.logger.info "-" * 100
       Rails.logger.info ""

@@ -292,12 +292,14 @@ $(document).ready(function() {
       },
       saveProgress: function() {
         var data = { measures: this.measures };
-        var url = '/measures/bulks/' + window.__workbasket_id.toString()
+        var url = '/measures/bulks/' + window.__workbasket_id.toString() + '.json'
 
         $.ajax({
           url: url,
+          data: JSON.stringify(data),
           type: 'PUT',
-          data: data,
+          processData: false,
+          contentType: 'application/json',
           success: function (result) {
             return false;
           }
