@@ -94,7 +94,7 @@ module Measures
       #   errors_response
       # end
 
-      render nothing: true
+      render plain: '', head: :ok
     end
 
     private
