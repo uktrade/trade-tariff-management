@@ -24,8 +24,10 @@ window.BulkEditOfMeasuresSaveActions =
       measures: window.__sb_measures_collection.splice(bottom_limit, top_limit)
     }
 
+    ops = 'page=' + window.__sb_current_batch + '&bottom_limit=' + bottom_limit + '&top_limit=' + top_limit
+
     $.ajax
-      url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?page=' + window.__sb_current_batch
+      url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?' + ops
       data: JSON.stringify(data)
       type: 'PUT'
       processData: false
