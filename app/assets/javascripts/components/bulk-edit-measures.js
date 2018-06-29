@@ -292,56 +292,60 @@ $(document).ready(function() {
       },
       saveProgress: function() {
         var data =  this.measures;
-        var total_count = data.length;
-        var per_page = window.__pagination_metadata["per_page"];
-        var total_pages = Math.ceil(total_count / per_page);
+        window.__sb_total_count = data.length;
+        window.__sb_per_page = window.__pagination_metadata["per_page"];
+        window.__sb_total_pages = Math.ceil(window.__sb_total_count / window.__sb_per_page);
 
         console.log("");
-        console.log("total_count: " + total_count);
+        console.log("total_count: " + window.__sb_total_count);
         console.log("");
-        console.log("per_page: " + per_page);
+        console.log("per_page: " + window.__sb_per_page);
         console.log("");
-        console.log("total_pages: " + total_pages);
+        console.log("total_pages: " + window.__sb_total_pages);
         console.log("");
 
-        current_batch = 1
-        while (current_batch <= total_pages) {
-          console.log("current_batch: " + current_batch);
+        window.__sb_current_batch = 1
 
-          var bottom_limit = (current_batch - 1) * per_page;
-          var top_limit = bottom_limit + per_page;
-          var final_batch = false;
-
-          if (current_batch == total_pages) {
-            top_limit = total_count;
-            final_batch = true;
-          }
-
-          console.log("");
-          console.log("bottom_limit: " + bottom_limit);
-          console.log("");
-          console.log("top_limit: " + top_limit);
-          console.log("");
-          console.log("final_batch: " + final_batch);
-          console.log("");
-
-          this.sendSaveRequest(bottom_limit, top_limit, current_batch, final_batch);
-          current_batch++;
-        }
+        this.sendSaveRequest();
       },
-      sendSaveRequest: function(bottom_limit, top_limit, current_batch, final_batch) {
+      sendSaveRequest: function() {
+        console.log("current_batch: " + window.__sb_current_batch);
+
+        var bottom_limit = (window.__sb_current_batch - 1) * window.__sb_per_page;
+        var top_limit = bottom_limit + window.__sb_per_page;
+        var final_batch = false;
+
+        if (window.__sb_current_batch == window.__sb_total_pages) {
+          top_limit = window.__sb_total_count;
+          final_batch = true;
+        }
+
+        console.log("");
+        console.log("bottom_limit: " + bottom_limit);
+        console.log("");
+        console.log("top_limit: " + top_limit);
+        console.log("");
+        console.log("final_batch: " + final_batch);
+        console.log("");
+
         var data = {
           final_batch: final_batch,
           measures: this.measures.splice(bottom_limit, top_limit)
         };
 
         $.ajax({
-          url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?page=' + current_batch,
+          url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?page=' + window.__sb_current_batch,
           data: JSON.stringify(data),
           type: 'PUT',
           processData: false,
           contentType: 'application/json',
           success: function (result) {
+            window.__sb_current_batch = window.__sb_current_batch + 1;
+
+            if (window.__sb_current_batch <= window.__sb_total_pages) {
+              this.sendSaveRequest();
+            }
+
             return false;
           }
         });
