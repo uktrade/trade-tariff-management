@@ -291,11 +291,52 @@ $(document).ready(function() {
         this.saveProgress();
       },
       saveProgress: function() {
-        var data = { measures: this.measures };
-        var url = '/measures/bulks/' + window.__workbasket_id.toString() + '.json'
+        var data =  this.measures;
+        var total_count = data.length;
+        var per_page = window.__pagination_metadata["per_page"];
+        var total_pages = Math.ceil(total_count / per_page);
+
+        console.log("");
+        console.log("total_count: " + total_count);
+        console.log("");
+        console.log("per_page: " + per_page);
+        console.log("");
+        console.log("total_pages: " + total_pages);
+        console.log("");
+
+        current_batch = 1
+        while (current_batch <= total_pages) {
+          console.log("current_batch: " + current_batch);
+
+          var bottom_limit = (current_batch - 1) * per_page;
+          var top_limit = bottom_limit + per_page;
+          var final_batch = false;
+
+          if (current_batch == total_pages) {
+            top_limit = total_count;
+            final_batch = true;
+          }
+
+          console.log("");
+          console.log("bottom_limit: " + bottom_limit);
+          console.log("");
+          console.log("top_limit: " + top_limit);
+          console.log("");
+          console.log("final_batch: " + final_batch);
+          console.log("");
+
+          this.sendSaveRequest(bottom_limit, top_limit, current_batch, final_batch);
+          current_batch++;
+        }
+      },
+      sendSaveRequest: function(bottom_limit, top_limit, current_batch, final_batch) {
+        var data = {
+          final_batch: final_batch,
+          measures: this.measures.splice(bottom_limit, top_limit)
+        };
 
         $.ajax({
-          url: url,
+          url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?page=' + current_batch,
           data: JSON.stringify(data),
           type: 'PUT',
           processData: false,
