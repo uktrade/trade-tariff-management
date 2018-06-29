@@ -74,7 +74,7 @@ module Measures
     end
 
     def update
-      data = JSON.parse(request.body.read)["measures"]
+      data = JSON.parse(request.body.read)["bulk_measures_collection"]
 
       Rails.logger.info ""
       Rails.logger.info "-" * 100

@@ -19,9 +19,15 @@ window.BulkEditOfMeasuresSaveActions =
     console.log '     final_batch: ' + final_batch
     console.log ''
 
+    measures_collection = JSON.parse(JSON.stringify(window.__sb_measures_collection))
+
+    console.log ''
+    console.log '         Collection length: ' + measures_collection.length
+    console.log ''
+
     data = {
       final_batch: final_batch
-      measures: window.__sb_measures_collection.splice(bottom_limit, top_limit)
+      bulk_measures_collection: measures_collection.splice(bottom_limit, top_limit)
     }
 
     ops = 'page=' + window.__sb_current_batch + '&bottom_limit=' + bottom_limit + '&top_limit=' + top_limit
