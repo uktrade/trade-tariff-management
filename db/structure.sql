@@ -6667,7 +6667,9 @@ CREATE TABLE public.workbasket_items (
     created_at timestamp without time zone,
     original_data jsonb DEFAULT '{}'::jsonb,
     record_key text,
-    new_data jsonb DEFAULT '{}'::jsonb
+    new_data jsonb DEFAULT '{}'::jsonb,
+    changed_values jsonb DEFAULT '{}'::jsonb,
+    validation_errors jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -10734,3 +10736,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audi
 INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
