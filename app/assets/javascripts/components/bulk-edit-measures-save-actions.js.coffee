@@ -46,7 +46,11 @@ window.BulkEditOfMeasuresSaveActions =
 
         window.__sb_current_batch = window.__sb_current_batch + 1
         if window.__sb_current_batch <= window.__sb_total_pages
-          BulkEditOfMeasuresSaveActions.sendSaveRequest()
+
+          setTimeout (->
+            console.log('         wait for 2 second before sending of batch: ' + window.__sb_current_batch)
+            BulkEditOfMeasuresSaveActions.sendSaveRequest()
+          ), 3000
 
         return false
 
