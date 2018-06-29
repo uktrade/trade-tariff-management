@@ -27,7 +27,7 @@ window.BulkEditOfMeasuresSaveActions =
 
     data = {
       final_batch: final_batch
-      bulk_measures_collection: measures_collection.splice(bottom_limit, top_limit)
+      bulk_measures_collection: measures_collection.slice(bottom_limit, top_limit)
     }
 
     ops = 'page=' + window.__sb_current_batch + '&bottom_limit=' + bottom_limit + '&top_limit=' + top_limit
