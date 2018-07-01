@@ -60,18 +60,11 @@ Rails.application.configure do
 
   config.lograge.ignore_actions = ['HealthcheckController#index']
 
-  # Use a different cache store in production.
-  redis_url = if ENV['REDIS_URL'].present?
-    ENV["REDIS_URL"]
-  elsif ENV['VCAP_SERVICES'].present?
-    JSON.parse(ENV["VCAP_SERVICES"])["redis"].select do |s|
-      s["name"] == ENV["REDIS_INSTANCE_NAME"]
-    end[0]["credentials"]["uri"]
-  else
-    ""
-  end
+  redis_url = JSON.parse(ENV["VCAP_SERVICES"])["redis"].select do |s|
+    s["name"] == ENV["REDIS_INSTANCE_NAME"]
+  end[0]["credentials"]["uri"]
 
-  config.cache_store = :redis_store, redis_url
+  config.cache_store = :redis_store, { url: redis_url }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
