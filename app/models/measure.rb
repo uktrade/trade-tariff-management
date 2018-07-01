@@ -483,8 +483,12 @@ class Measure < Sequel::Model
     if status.present?
       I18n.t(:measures)[:states][status.to_sym]
     else
-      "-"
+      "Imported to TARIFF app"
     end
+  end
+
+  def sent_to_cds?
+    status.blank? || status.to_s.in?(::Workbasket::SENT_TO_CDS_STATES)
   end
 
   def additional_code_title
@@ -532,7 +536,8 @@ class Measure < Sequel::Model
       conditions: conditions_short_list,
       footnotes: footnotes.map(&:abbreviation).join(", "),
       last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
-      status: status_title
+      status: status_title,
+      sent_to_cds: sent_to_cds?
     }
   end
 
@@ -551,7 +556,8 @@ class Measure < Sequel::Model
       measure_conditions: measure_conditions.map(&:to_json),
       footnotes: footnotes.map(&:to_json),
       last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
-      status: status_title
+      status: status_title,
+      sent_to_cds: sent_to_cds?
     }
   end
 end

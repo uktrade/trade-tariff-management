@@ -17,6 +17,11 @@ module Workbaskets
       :already_in_cds
     ]
 
+    SENT_TO_CDS_STATES = [
+      :sent_to_cds,
+      :already_in_cds
+    ]
+
     plugin :timestamps
 
     one_to_many :events, key: :workbasket_id,
