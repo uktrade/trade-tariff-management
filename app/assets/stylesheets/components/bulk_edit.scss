@@ -1,3 +1,14 @@
 .bulk-edit-of-measures-actions-block {
-  margin-top: 20px;
+  margin-top: 50px;
+
+  a.secondary-button {
+    border: 2px solid currentcolor;
+    color: #0b0c0c;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0.5em 1.2em;
+    position: relative;
+    text-decoration: none;
+    margin-right: 15px;
+  }
 }

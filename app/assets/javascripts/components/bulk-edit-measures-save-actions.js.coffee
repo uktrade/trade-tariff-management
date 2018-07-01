@@ -19,13 +19,21 @@ window.BulkEditOfMeasuresSaveActions =
     console.log '     final_batch: ' + final_batch
     console.log ''
 
+    measures_collection = JSON.parse(JSON.stringify(window.__sb_measures_collection))
+
+    console.log ''
+    console.log '         Collection length: ' + measures_collection.length
+    console.log ''
+
     data = {
       final_batch: final_batch
-      measures: window.__sb_measures_collection.splice(bottom_limit, top_limit)
+      bulk_measures_collection: measures_collection.slice(bottom_limit, top_limit)
     }
 
+    ops = 'page=' + window.__sb_current_batch + '&bottom_limit=' + bottom_limit + '&top_limit=' + top_limit
+
     $.ajax
-      url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?page=' + window.__sb_current_batch
+      url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?' + ops
       data: JSON.stringify(data)
       type: 'PUT'
       processData: false
@@ -38,7 +46,11 @@ window.BulkEditOfMeasuresSaveActions =
 
         window.__sb_current_batch = window.__sb_current_batch + 1
         if window.__sb_current_batch <= window.__sb_total_pages
-          BulkEditOfMeasuresSaveActions.sendSaveRequest()
+
+          setTimeout (->
+            console.log('         wait for 2 second before sending of batch: ' + window.__sb_current_batch)
+            BulkEditOfMeasuresSaveActions.sendSaveRequest()
+          ), 3000
 
         return false
 

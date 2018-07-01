@@ -38,7 +38,8 @@ module Workbaskets
     end
 
     def hash_data
-      JSON.parse(data)
+      source = new_data.present? ? new_data : original_data
+      JSON.parse(source)
     end
 
     def record
@@ -55,7 +56,7 @@ module Workbaskets
         item.record_key = key
         item.record_id = target_record.public_send(key)
         item.record_type = target_record.class.to_s
-        item.data = target_record.to_json.to_json
+        item.original_data = target_record.to_json.to_json
         item.status = "in_progress"
 
         item.save
