@@ -97,6 +97,18 @@ module Measures
       render plain: '', head: :ok
     end
 
+    def remove_items
+      # TODO
+
+      render json: {}, head: :ok
+    end
+
+    def destroy
+      # TODO
+
+      redirect_to root_url
+    end
+
     private
 
       def success_response

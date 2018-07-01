@@ -57,9 +57,10 @@ Rails.application.routes.draw do
   end
 
   namespace :measures do
-    resources :bulks, only: [:create, :edit, :update] do
+    resources :bulks, only: [:create, :edit, :update, :destroy] do
       member do
         post :validate
+        post :remove_items
       end
     end
   end
