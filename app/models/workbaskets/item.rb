@@ -37,9 +37,16 @@ module Workbaskets
       include ::BulkEditHelpers::OrderByIdsQuery
     end
 
+    def new_data_parsed
+      @new_data_parsed ||= JSON.parse(new_data)
+    end
+
+    def original_data_parsed
+      @original_data_parsed ||= JSON.parse(original_data)
+    end
+
     def hash_data
-      source = new_data.present? ? new_data : original_data
-      JSON.parse(source)
+      new_data_parsed.present? ? new_data_parsed : original_data_parsed
     end
 
     def record
