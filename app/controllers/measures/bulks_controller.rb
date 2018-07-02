@@ -74,9 +74,17 @@ module Measures
     end
 
     def edit
-      respond_to do |format|
-        format.json { render json: json_response }
-        format.html
+      if search_mode?
+        respond_to do |format|
+          format.json { render json: json_response }
+          format.html
+        end
+
+      else
+        redirect_to edit_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.search_code
+        )
       end
     end
 
@@ -85,10 +93,17 @@ module Measures
     end
 
     def create
-      self.workbasket = Workbaskets::Workbasket.new(status: :new, user: current_user)
+      self.workbasket = Workbaskets::Workbasket.new(
+        status: :new,
+        user: current_user,
+        search_code: search_code
+      )
 
       if workbasket.save
-        redirect_to edit_measures_bulk_url(workbasket.id, search_code: search_code)
+        redirect_to edit_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.search_code
+        )
       else
         redirect_to measures_url(notice: "You have to select at least of 1 measure from list!")
       end

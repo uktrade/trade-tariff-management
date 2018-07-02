@@ -36,7 +36,8 @@ module Workbaskets
 
     validates do
       presence_of :status,
-                  :user_id
+                  :user_id,
+                  :search_code
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
     end
