@@ -20,10 +20,10 @@ module Measures
     attr_accessor :current_admin,
                   :collection_ops,
                   :workbasket,
-                  :errored_ids
+                  :errors_collection
 
     def initialize(current_admin, workbasket, collection_ops=[])
-      @errored_ids = []
+      @errors_collection = []
 
       @current_admin = current_admin
       @workbasket = workbasket
@@ -34,85 +34,33 @@ module Measures
       log_it("collection_ops: #{@collection_ops.inspect}")
     end
 
-    # def valid?
-    #   collection_ops.map do |item_ops|
+    def save_new_data_json_values!
+      collection_ops.map do |item_ops|
+        item = workbasket.get_item_by_id(
+          item_ops[:measure_sid].to_s
+        )
 
-    #     Rails.logger.info ""
-    #     Rails.logger.info "-" * 100
-    #     Rails.logger.info ""
-    #     Rails.logger.info "item_ops: #{item_ops.keys}"
-    #     Rails.logger.info ""
-    #     Rails.logger.info "-" * 100
-    #     Rails.logger.info ""
-
-    #     item = workbasket.get_item_by_id(
-    #       item_ops[:measure_sid].to_s
-    #     )
-
-    #     item.new_data = item_ops.to_json
-    #     item.save
-    #   end
-
-    #   false
-    # end
+        item.new_data = item_ops.to_json
+        item.save
+      end
+    end
 
     def valid?
       validate_collection!
       no_errors?
     end
 
-    def persist!
-      Rails.logger.info ""
-      Rails.logger.info "-" * 100
-      Rails.logger.info ""
-      Rails.logger.info "PERSIST OF MEASURES!"
-      Rails.logger.info ""
-      Rails.logger.info "-" * 100
-      Rails.logger.info ""
-
-      collection_ops.map do |item_ops|
-        if item_ops[:errors_details].blank?
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-          Rails.logger.info "  [#{item_ops[:measure_sid]}] saving!"
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-
-          item = workbasket.items.where(
-            record_id: item_ops[:measure_sid],
-            record_type: "Measure"
-          ).first
-
-          item.new_data = item_ops.to_json
-          item.save
-        end
-      end
-    end
-
-    def collection_overview_summary
+    def success_response
       {
         number_of_updated_measures: collection_ops.count,
+        measures_with_errors: errors_collection.map { |r| r.measure_sid },
         success: :ok
       }
-    end
-
-    def errors_overview
-      errored_ids
     end
 
     private
 
       def validate_collection!
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-        Rails.logger.info " VALIDATE COLLECTION STARTED"
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-
         collection_ops.each_with_index do |measure_params, index|
           Rails.logger.info ""
           Rails.logger.info "-" * 100
@@ -142,16 +90,10 @@ module Measures
       def validate_measure!(measure_params={})
         errors = {}
 
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-        Rails.logger.info " VALIDATING of measure_params #{measure_params.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-
         measure = Measure.new(
-          prepare_measure_ops(measure_params)
+          ::Measures::BulkParamsConverter.new(
+            measure_params
+          ).converted_ops
         )
         measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
@@ -174,62 +116,8 @@ module Measures
         errors
       end
 
-      def prepare_measure_ops(ops)
-        res = {}
-
-        res[:start_date] = ops["validity_start_date"].to_date
-        res[:end_date] = ops["validity_end_date"].try(:to_date) if ops["validity_end_date"] != "-"
-
-        if ops["goods_nomenclature"].present?
-          res[:goods_nomenclature_code] = ops["goods_nomenclature"]["goods_nomenclature_item_id"]
-        end
-
-        if ops["additional_code"].present?
-          res[:additional_code] = ops["additional_code"]["additional_code"]
-          res[:additional_code_type_id] = ops["additional_code"]["type_id"]
-        end
-
-        if ops["measure_type"].present?
-          res[:measure_type_id] = ops["measure_type"]["measure_type_id"]
-        end
-
-        if ops["regulation"].present?
-          res[:regulation_id] = if ops["regulation"]["base_regulation_id"].present?
-            ops["regulation"]["base_regulation_id"]
-          elsif ops["regulation"]["modification_regulation_id"].present?
-            ops["regulation"]["modification_regulation_id"]
-          end
-        end
-
-        if ops["geographical_area"].present?
-          res[:geographical_area_id] = ops["geographical_area"]["geographical_area_id"]
-        end
-
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-        Rails.logger.info " res before normalizer: #{res.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-
-        res = ::Measures::AttributesNormalizer.new(
-          ActiveSupport::HashWithIndifferentAccess.new(res)
-        ).normalized_params
-
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-        Rails.logger.info " res after normalizer: #{res.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-
-        res
-      end
-
       def no_errors?
-        errored_ids.blank?
+        errors_collection.blank?
       end
 
       def get_error_area(base_validator, error_code)

@@ -78,15 +78,13 @@ module Measures
     end
 
     def update
-      if bulk_saver.valid?
-        bulk_saver.persist!
+      bulk_saver.save_new_data_json_values!
 
+      if bulk_saver.valid?
         success_response
       else
         errors_response
       end
-
-      render plain: '', head: :ok
     end
 
     def remove_items
@@ -104,12 +102,12 @@ module Measures
     private
 
       def success_response
-        render json: bulk_saver.collection_overview_summary,
+        render json: bulk_saver.success_response,
                status: :ok
       end
 
       def errors_response
-        render json: bulk_saver.errors_overview,
+        render json: bulk_saver.errors_collection,
                status: :unprocessable_entity
       end
   end
