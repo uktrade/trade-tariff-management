@@ -6712,7 +6712,8 @@ CREATE TABLE public.workbaskets (
     reason_of_changes text,
     operation_date date,
     initial_items_populated boolean DEFAULT false,
-    batches_loaded jsonb DEFAULT '{}'::jsonb
+    batches_loaded jsonb DEFAULT '{}'::jsonb,
+    search_code text
 );
 
 
@@ -10737,3 +10738,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data
 INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180702142649_add_search_code_to_workbaskets.rb');
