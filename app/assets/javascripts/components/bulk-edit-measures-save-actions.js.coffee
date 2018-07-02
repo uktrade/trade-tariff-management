@@ -54,7 +54,7 @@ window.BulkEditOfMeasuresSaveActions =
 
   getValidationErrors: ->
     $(document).on 'click', '.has-validation-errors', ->
-      measure_sid = $(this).closest("div")
+      measure_sid = $(this).closest(".table__row")
                            .attr("data-measure-sid")
 
       console.log('measure_sid: ' + measure_sid)
