@@ -28,9 +28,10 @@ module Measures
     end
 
     expose(:cached_search_ops) do
-      if workbasket_items.count > 0
+      if workbasket.initial_items_populated.present?
         {
-          measure_sids: workbasket_items.pluck(:measure_sid)
+          measure_sids: workbasket_items.pluck(:record_id),
+          page: current_page
         }
       else
         Rails.cache.read(params[:search_code]).merge(
