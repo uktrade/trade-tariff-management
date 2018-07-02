@@ -49,4 +49,5 @@ window.BulkEditOfMeasuresSaveActions =
       measure_parent_div = $("[data-measure-sid='" + measure_sid + "']")
 
       $.each errored_columns, (index, errored_field_name) ->
-        $("." + errored_field_name + "-column").addClass('has-validation-errors')
+        measure_parent_div.find("." + errored_field_name + "-column")
+                          .addClass('has-validation-errors')

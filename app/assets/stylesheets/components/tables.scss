@@ -91,6 +91,10 @@ table {
     vertical-align: top;
     font-weight: 400;
 
+    &.has-validation-errors {
+      background-color: #f2dede;
+    }
+
     .arrow-down,
     .arrow-up {
       position: absolute;

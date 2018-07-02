@@ -17,11 +17,11 @@ module Measures
       validity_end_date: [
         :validity_end_date
       ],
-      goods_nomenclature_id: [
+      goods_nomenclature: [
         :goods_nomenclature_item_id,
         :goods_nomenclature_sid
       ],
-      additional_code_id: [
+      additional_code: [
         :additional_code_sid,
         :additional_code_type_id,
         :additional_code_id
