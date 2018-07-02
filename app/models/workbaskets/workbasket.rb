@@ -58,5 +58,25 @@ module Workbaskets
         i.record_id.to_s == target_id
       end
     end
+
+    class << self
+      def validate_measure!(measure_params={})
+        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
+
+        errors = {}
+
+        measure = Measure.new(
+          ::Measures::BulkParamsConverter.new(
+            measure_params
+          ).converted_ops
+        )
+
+        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+
+        ::Measures::ValidationHelper.new(
+          measure, {}
+        ).errors
+      end
+    end
   end
 end

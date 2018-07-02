@@ -77,6 +77,14 @@ module Workbaskets
                  .first
     end
 
+    def error_details(errored_column)
+      Workbaskets::Workbasket.validate_measure!(
+        ActiveSupport::HashWithIndifferentAccess.new(
+          hash_data
+        )
+      )
+    end
+
     class << self
       def create_from_target_record(workbasket, target_record)
         item = new(workbasket_id: workbasket.id)

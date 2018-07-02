@@ -51,3 +51,26 @@ window.BulkEditOfMeasuresSaveActions =
       $.each errored_columns, (index, errored_field_name) ->
         measure_parent_div.find("." + errored_field_name + "-column")
                           .addClass('has-validation-errors')
+
+  getValidationErrors: ->
+    $(document).on 'click', '.has-validation-errors', ->
+      measure_sid = $(this).closest("div")
+                           .attr("data-measure-sid")
+
+      type = $(this).attr("class")
+                    .replace("table__column", "")
+                    .replace("has-validation-errors", "")
+
+      $.ajax
+        url: '/measures/bulks/' + window.__workbasket_id.toString() + '/.json?' + ops
+        data: JSON.stringify(data)
+        type: 'PUT'
+        processData: false
+        contentType: 'application/json'
+        success: (result) ->
+          BulkEditOfMeasuresSaveActions.sendNextBatch()
+        error: (response) ->
+          BulkEditOfMeasuresSaveActions.handleErrors(response)
+          BulkEditOfMeasuresSaveActions.sendNextBatch()
+
+      return false

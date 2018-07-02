@@ -74,6 +74,11 @@ module Measures
       )
     end
 
+    expose(:workbasket_item) do
+      workbasket_items.where(record_id: params[:measure_sid])
+                      .first
+    end
+
     def edit
       if search_mode?
         respond_to do |format|
@@ -116,6 +121,11 @@ module Measures
       else
         errors_response
       end
+    end
+
+    def validation_details
+      render json: workbasket_item.error_details(params[:type]),
+             head: :ok
     end
 
     def remove_items

@@ -59,7 +59,7 @@ module Measures
           )
           item.new_data = measure_params.to_json
 
-          errors = validate_measure!(measure_params)
+          errors = Workbaskets::Workbasket.validate_measure!(measure_params)
 
           if errors.present?
             errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
@@ -72,24 +72,6 @@ module Measures
 
           item.save
         end
-      end
-
-      def validate_measure!(measure_params={})
-        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
-
-        errors = {}
-
-        measure = Measure.new(
-          ::Measures::BulkParamsConverter.new(
-            measure_params
-          ).converted_ops
-        )
-
-        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-
-        ::Measures::ValidationHelper.new(
-          measure, {}
-        ).errors
       end
 
       def no_errors?

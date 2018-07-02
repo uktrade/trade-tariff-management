@@ -295,15 +295,6 @@ $(document).ready(function() {
         window.__sb_total_count = window.__sb_measures_collection.length;
         window.__sb_per_page = window.__pagination_metadata["per_page"];
         window.__sb_total_pages = Math.ceil(window.__sb_total_count / window.__sb_per_page);
-
-        console.log("");
-        console.log("total_count: " + window.__sb_total_count);
-        console.log("");
-        console.log("per_page: " + window.__sb_per_page);
-        console.log("");
-        console.log("total_pages: " + window.__sb_total_pages);
-        console.log("");
-
         window.__sb_current_batch = 1;
 
         BulkEditOfMeasuresSaveActions.sendSaveRequest();
