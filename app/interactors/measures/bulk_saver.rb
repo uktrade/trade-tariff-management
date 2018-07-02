@@ -23,7 +23,7 @@ module Measures
                   :workbasket
 
     def initialize(current_admin, workbasket, collection_ops=[])
-      @errors_collection = []
+      @errors_collection = {}
       @current_admin = current_admin
       @workbasket = workbasket
 
@@ -64,7 +64,7 @@ module Measures
 
           if errors.present?
             @errors_collection[
-              measure_params[:measure_sid]
+              measure_params[:measure_sid].to_s
             ] = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
           end
         end
