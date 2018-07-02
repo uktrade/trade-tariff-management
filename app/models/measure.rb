@@ -483,7 +483,7 @@ class Measure < Sequel::Model
     if status.present?
       I18n.t(:measures)[:states][status.to_sym]
     else
-      "Imported to TARIFF app"
+      "Imported to TARIFF"
     end
   end
 

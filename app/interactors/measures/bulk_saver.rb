@@ -213,7 +213,9 @@ module Measures
         Rails.logger.info "-" * 100
         Rails.logger.info ""
 
-        res = ::Measures::AttributesNormalizer.new(res).normalized_params
+        res = ::Measures::AttributesNormalizer.new(
+          ActiveSupport::HashWithIndifferentAccess.new(res)
+        ).normalized_params
 
         Rails.logger.info ""
         Rails.logger.info "-" * 100
