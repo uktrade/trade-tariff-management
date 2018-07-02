@@ -81,8 +81,10 @@ module Measures
           Rails.logger.info ""
 
           if errors.present?
-            @collection_ops[index] = measure_params.merge(errors_details: errors)
-            @errored_ids << measure_params[:measure_sid]
+            @collection_ops[index] = measure_params.merge(
+              errors: errors
+            )
+            @errors_collection[measure_params[:measure_sid]] = ::Measures::BulkErroredColumnsDetector.new(errors)
           end
         end
       end
