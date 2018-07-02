@@ -36,12 +36,15 @@ module Measures
       }
     end
 
-    expose(:bulk_saver) do
-      collection_ops = params[:measures]
-      collection_ops.send("permitted=", true)
-      collection_ops = collection_ops.to_h
+    expose(:bulk_measures_collection) do
+      JSON.parse(request.body.read)["bulk_measures_collection"]
+    end
 
-      ::Measures::BulkSaver.new(current_user, collection_ops)
+    expose(:bulk_saver) do
+      ::Measures::BulkSaver.new(
+        current_user,
+        bulk_measures_collection
+      )
     end
 
     def edit
@@ -74,25 +77,13 @@ module Measures
     end
 
     def update
-      data = JSON.parse(request.body.read)["bulk_measures_collection"]
+      if bulk_saver.valid?
+        bulk_saver.persist!
 
-      Rails.logger.info ""
-      Rails.logger.info "-" * 100
-      Rails.logger.info ""
-      Rails.logger.info "request.body"
-      Rails.logger.info ""
-      Rails.logger.info "#{data.count}"
-      Rails.logger.info ""
-      Rails.logger.info "-" * 100
-      Rails.logger.info ""
-
-      # if bulk_saver.valid?
-      #   bulk_saver.persist!
-
-      #   success_response
-      # else
-      #   errors_response
-      # end
+        success_response
+      else
+        errors_response
+      end
 
       render plain: '', head: :ok
     end
@@ -117,7 +108,7 @@ module Measures
       end
 
       def errors_response
-        render json: bulk_saver.collection_with_errors,
+        render json: bulk_saver.errors_overview,
                status: :unprocessable_entity
       end
   end
