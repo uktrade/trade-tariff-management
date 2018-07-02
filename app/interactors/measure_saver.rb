@@ -87,27 +87,12 @@ class MeasureSaver
     end
 
     def validate!
-      measure_base_validation!
-    end
+      normalizer = ::Measures::ValidationHelper.new(
+        measure, @errors
+      )
 
-    def measure_base_validation!
-      @base_validator = base_validator.validate(measure)
-
-      if measure.conformance_errors.present?
-        measure.conformance_errors.map do |error_code, error_details_list|
-          @errors[get_error_area(error_code)] = error_details_list
-        end
-      end
-    end
-
-    def base_validator
-      @base_validator ||= MeasureValidator.new
-    end
-
-    def get_error_area(error_code)
-      base_validator.detect do |v|
-        v.identifiers == error_code
-      end.validation_options[:of]
+      measure = normalizer.measure
+      @errors = normalizer.errors
     end
 
     def generate_measure_sid

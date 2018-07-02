@@ -19,19 +19,17 @@ module Measures
 
     attr_accessor :current_admin,
                   :collection_ops,
-                  :workbasket,
-                  :errors_collection
+                  :errors_collection,
+                  :workbasket
 
     def initialize(current_admin, workbasket, collection_ops=[])
       @errors_collection = []
-
       @current_admin = current_admin
       @workbasket = workbasket
+
       @collection_ops = collection_ops.map do |item_ops|
         ActiveSupport::HashWithIndifferentAccess.new(item_ops)
       end
-
-      log_it("collection_ops: #{@collection_ops.inspect}")
     end
 
     def save_new_data_json_values!
@@ -80,27 +78,16 @@ module Measures
             measure_params
           ).converted_ops
         )
+
         measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
-        base_validator = MeasureValidator.new.validate(measure)
-
-        if measure.conformance_errors.present?
-          measure.conformance_errors.map do |error_code, error_details_list|
-            errors[get_error_area(base_validator, error_code)] = error_details_list
-          end
-        end
-
-        errors
+        ::Measures::ValidationHelper.new(
+          measure, {}
+        ).errors
       end
 
       def no_errors?
         errors_collection.blank?
-      end
-
-      def get_error_area(base_validator, error_code)
-        base_validator.detect do |v|
-          v.identifiers == error_code
-        end.validation_options[:of]
       end
   end
 end
