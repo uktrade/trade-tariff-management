@@ -32,17 +32,6 @@ module Measures
       end
     end
 
-    def save_new_data_json_values!
-      collection_ops.map do |item_ops|
-        item = workbasket.get_item_by_id(
-          item_ops[:measure_sid].to_s
-        )
-
-        item.new_data = item_ops.to_json
-        item.save
-      end
-    end
-
     def valid?
       validate_collection!
       no_errors?
@@ -65,13 +54,23 @@ module Measures
 
       def validate_collection!
         collection_ops.each_with_index do |measure_params, index|
+          item = workbasket.get_item_by_id(
+            measure_params[:measure_sid].to_s
+          )
+          item.new_data = measure_params.to_json
+
           errors = validate_measure!(measure_params)
 
           if errors.present?
+            errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
             @errors_collection[
               measure_params[:measure_sid].to_s
-            ] = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
+            ] = errored_columns
+
+            item.validation_errors = errored_columns.to_json
           end
+
+          item.save
         end
       end
 

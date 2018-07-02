@@ -46,7 +46,25 @@ module Workbaskets
     end
 
     def hash_data
-      new_data_parsed.present? ? new_data_parsed : original_data_parsed
+      data = new_data_parsed.present? ? new_data_parsed : original_data_parsed
+
+      if validation_errors_parsed.present?
+        data["errored_columns"] = validation_errors_parsed
+      end
+
+      if changed_values_parsed.present?
+        data["changed_columns"] = changed_values_parsed
+      end
+
+      data
+    end
+
+    def validation_errors_parsed
+      @validation_errors_parsed ||= JSON.parse(validation_errors)
+    end
+
+    def changed_values_parsed
+      @changed_values_parsed ||= JSON.parse(changed_values)
     end
 
     def record

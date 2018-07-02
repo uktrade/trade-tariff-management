@@ -60,11 +60,7 @@ module Measures
     end
 
     def validate
-      if bulk_saver.valid?
-        success_response
-      else
-        errors_response
-      end
+      # TODO
     end
 
     def create
@@ -78,8 +74,6 @@ module Measures
     end
 
     def update
-      bulk_saver.save_new_data_json_values!
-
       if bulk_saver.valid?
         success_response
       else
