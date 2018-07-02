@@ -71,6 +71,8 @@ module Measures
       end
 
       def validate_measure!(measure_params={})
+        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
+
         errors = {}
 
         measure = Measure.new(
