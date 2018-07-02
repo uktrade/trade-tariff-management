@@ -62,29 +62,12 @@ module Measures
 
       def validate_collection!
         collection_ops.each_with_index do |measure_params, index|
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-          Rails.logger.info "  [#{index} | #{measure_params[:measure_sid]}]"
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-
           errors = validate_measure!(measure_params)
 
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-          Rails.logger.info "  [#{index} | #{measure_params[:measure_sid]}] #{errors.inspect}"
-          Rails.logger.info ""
-          Rails.logger.info "-" * 100
-          Rails.logger.info ""
-
           if errors.present?
-            @collection_ops[index] = measure_params.merge(
-              errors: errors
-            )
-            @errors_collection[measure_params[:measure_sid]] = ::Measures::BulkErroredColumnsDetector.new(errors)
+            @errors_collection[
+              measure_params[:measure_sid]
+            ] = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
           end
         end
       end
@@ -98,14 +81,6 @@ module Measures
           ).converted_ops
         )
         measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
-        Rails.logger.info " Ops prepared, trying to validate #{measure.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info "-" * 100
-        Rails.logger.info ""
 
         base_validator = MeasureValidator.new.validate(measure)
 

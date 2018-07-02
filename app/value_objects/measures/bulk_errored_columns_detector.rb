@@ -42,13 +42,14 @@ module Measures
       errors.keys.map do |key|
         if key.is_a?(Array)
           key.map do |k|
-            detect_errored_column(key)
+            detect_errored_column(k)
           end
         else
           detect_errored_column(key)
         end
       end.flatten
          .uniq
+         .reject { |el| el.blank? }
     end
 
     private
@@ -60,6 +61,7 @@ module Measures
           end
         end.keys
            .first
+           .to_s
       end
   end
 end
