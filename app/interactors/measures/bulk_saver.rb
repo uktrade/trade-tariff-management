@@ -51,8 +51,13 @@ module Measures
     def success_response
       {
         number_of_updated_measures: collection_ops.count,
-        measures_with_errors: errors_collection.map { |r| r.measure_sid },
         success: :ok
+      }
+    end
+
+    def error_response
+      {
+        measures_with_errors: errors_collection,
       }
     end
 

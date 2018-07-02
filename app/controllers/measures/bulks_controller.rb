@@ -107,7 +107,7 @@ module Measures
       end
 
       def errors_response
-        render json: bulk_saver.errors_collection,
+        render json: bulk_saver.error_response,
                status: :unprocessable_entity
       end
   end
