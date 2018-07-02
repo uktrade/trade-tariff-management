@@ -57,20 +57,25 @@ window.BulkEditOfMeasuresSaveActions =
       measure_sid = $(this).closest("div")
                            .attr("data-measure-sid")
 
+      console.log('measure_sid: ' + measure_sid)
+
       type = $(this).attr("class")
                     .replace("table__column", "")
                     .replace("has-validation-errors", "")
 
+      console.log('type: ' + type)
+
       $.ajax
-        url: '/measures/bulks/' + window.__workbasket_id.toString() + '/.json?' + ops
-        data: JSON.stringify(data)
-        type: 'PUT'
-        processData: false
+        url: '/measures/bulks/' + window.__workbasket_id.toString() + '/validation_details.json'
+        data: { measure_sid: measure_sid, type: type }
+        type: 'GET'
         contentType: 'application/json'
-        success: (result) ->
-          BulkEditOfMeasuresSaveActions.sendNextBatch()
-        error: (response) ->
-          BulkEditOfMeasuresSaveActions.handleErrors(response)
-          BulkEditOfMeasuresSaveActions.sendNextBatch()
+        success: (response) ->
+          console.log('-success-')
+          console.dir(response)
 
       return false
+
+$ ->
+  BulkEditOfMeasuresSaveActions.getValidationErrors()
+

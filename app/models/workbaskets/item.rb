@@ -78,11 +78,14 @@ module Workbaskets
     end
 
     def error_details(errored_column)
-      Workbaskets::Workbasket.validate_measure!(
+      errors_detected = Workbaskets::Workbasket.validate_measure!(
         ActiveSupport::HashWithIndifferentAccess.new(
           hash_data
         )
       )
+
+      errors_detected.values
+                     .flatten
     end
 
     class << self
