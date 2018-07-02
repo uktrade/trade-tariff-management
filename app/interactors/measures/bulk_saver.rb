@@ -5,12 +5,14 @@ module Measures
 
     attr_accessor :current_admin,
                   :collection_ops,
+                  :workbasket,
                   :errored_ids
 
-    def initialize(current_admin, collection_ops=[])
+    def initialize(current_admin, workbasket, collection_ops=[])
       @errored_ids = []
 
       @current_admin = current_admin
+      @workbasket = workbasket
       @collection_ops = collection_ops.map do |item_ops|
         ActiveSupport::HashWithIndifferentAccess.new(item_ops)
       end
@@ -19,9 +21,31 @@ module Measures
     end
 
     def valid?
-      validate_collection!
-      no_errors?
+      collection_ops.map do |item_ops|
+
+        Rails.logger.info ""
+        Rails.logger.info "-" * 100
+        Rails.logger.info ""
+        Rails.logger.info "item_ops: #{item_ops.keys}"
+        Rails.logger.info ""
+        Rails.logger.info "-" * 100
+        Rails.logger.info ""
+
+        item = workbasket.get_item_by_id(
+          item_ops[:measure_sid].to_s
+        )
+
+        item.new_data = item_ops.to_json
+        item.save
+      end
+
+      false
     end
+
+    # def valid?
+    #   validate_collection!
+    #   no_errors?
+    # end
 
     def persist!
       Rails.logger.info ""
@@ -37,10 +61,15 @@ module Measures
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
-          Rails.logger.info "  [#{item_ops.measure_sid}] saving!"
+          Rails.logger.info "  [#{item_ops[:measure_sid]}] saving!"
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
+
+          item = workbasket.items.where(
+            record_id: item_ops[:measure_sid],
+            record_type: "Measure"
+          ).first
 
           item.new_data = item_ops.to_json
           item.save
@@ -74,7 +103,7 @@ module Measures
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
-          Rails.logger.info "  [#{index} | #{measure_params.measure_sid}]"
+          Rails.logger.info "  [#{index} | #{measure_params[:measure_sid]}]"
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
@@ -84,14 +113,14 @@ module Measures
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
-          Rails.logger.info "  [#{index} | #{measure_params.measure_sid}] #{errors.inspect}"
+          Rails.logger.info "  [#{index} | #{measure_params[:measure_sid]}] #{errors.inspect}"
           Rails.logger.info ""
           Rails.logger.info "-" * 100
           Rails.logger.info ""
 
           if errors.present?
             @collection_ops[index] = measure_params.merge(errors_details: errors)
-            @errored_ids << measure_params.measure_sid
+            @errored_ids << measure_params[:measure_sid]
           end
         end
       end

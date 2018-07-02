@@ -43,6 +43,7 @@ module Measures
     expose(:bulk_saver) do
       ::Measures::BulkSaver.new(
         current_user,
+        workbasket,
         bulk_measures_collection
       )
     end
