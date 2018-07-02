@@ -22,6 +22,31 @@ module Measures
       ).prepare
     end
 
+    expose(:workbasket_items) do
+      Workbaskets::Item.by_workbasket(workbasket)
+                       .by_id_asc
+    end
+
+    expose(:cached_search_ops) do
+      if workbasket_items.count > 0
+        {
+          measure_sids: workbasket_items.pluck(:measure_sid)
+        }
+      else
+        Rails.cache.read(params[:search_code]).merge(
+          page: current_page
+        )
+      end
+    end
+
+    expose(:pagination_metadata) do
+      {
+        page: search_results.current_page,
+        total_count: search_results.total_count,
+        per_page: search_results.limit_value
+      }
+    end
+
     expose(:search_results) do
       workbasket_container.pagination_metadata
     end
@@ -49,13 +74,9 @@ module Measures
     end
 
     def edit
-      if search_mode?
-        respond_to do |format|
-          format.json { render json: json_response }
-          format.html
-        end
-      else
-        redirect_to measures_url
+      respond_to do |format|
+        format.json { render json: json_response }
+        format.html
       end
     end
 

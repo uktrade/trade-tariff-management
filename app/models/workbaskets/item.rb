@@ -34,6 +34,10 @@ module Workbaskets
         where(workbasket_id: workbasket.id)
       end
 
+      def by_id_asc
+        order(Sequel.asc(:id))
+      end
+
       include ::BulkEditHelpers::OrderByIdsQuery
     end
 
