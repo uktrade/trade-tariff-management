@@ -23,8 +23,6 @@ form.bulk-edit-measures
   = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true } do
     p Loading measures table...
 
-  = render "measures/bulks/action_buttons"
-
   = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
     h1.heading-xlarge slot="title"
       | Loading measures
@@ -34,6 +32,8 @@ form.bulk-edit-measures
       | {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
       br
       = content_tag "loading-spinner", nil
+
+  = render "measures/bulks/action_buttons"
 
   = content_tag "change-duties-popup", nil, { "v-if" => "changingDuties", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
 
