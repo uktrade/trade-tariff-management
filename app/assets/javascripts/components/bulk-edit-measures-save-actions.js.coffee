@@ -41,25 +41,8 @@ window.BulkEditOfMeasuresSaveActions =
       ), 3000
     else
       BulkEditOfMeasuresSaveActions.toogleSaveSpinner()
-      BulkEditOfMeasuresSaveActions.unlock_buttons()
-
-      mode = window.__save_bulk_edit_of_measures_mode
-
-      if mode == "save_progress"
-        if $(".has-validation-errors").length > 0
-          $(".js-bulk-edit-of-measures-save-progress-details").html("Some measures are having validation errors! <br /> Please review table cells with highighted with red.")
-
-        MicroModal.show("modal-1530613431");
-
-      else
-        if $(".has-validation-errors").length > 0
-          $(".js-bulk-edit-of-measures-submission-issues").html("Some measures are having validation errors! <br /> Please review table cells with highighted with red.")
-
-          MicroModal.show("modal-1530613432");
-        else
-          MicroModal.show("modal-1530613433");
-
-      window.__save_bulk_edit_of_measures_mode = null
+      BulkEditOfMeasuresSaveActions.unlockButtons()
+      BulkEditOfMeasuresSaveActions.showSummaryPopup()
 
     return false
 
@@ -87,9 +70,6 @@ window.BulkEditOfMeasuresSaveActions =
         data: { measure_sid: measure_sid, type: type }
         type: 'GET'
         contentType: 'application/json'
-        success: (response) ->
-          console.log('-success-')
-          console.dir(response)
 
       return false
 
@@ -127,37 +107,33 @@ window.BulkEditOfMeasuresSaveActions =
 
     exit_link.addClass('disabled')
 
-  unlock_buttons: ->
+  unlockButtons: ->
     $(".js-bulk-edit-of-measures-save-progress").removeClass('disabled')
     $(".js-bulk-edit-of-measures-submit-for-cross-check").removeClass('disabled')
     $(".js-bulk-edit-of-measures-exit").removeClass('disabled')
 
-  closeErrorDetailsPopup: ->
-    $(document).on 'click', '.js-bulk-edit-of-measures-error-details-close-popup', ->
-      MicroModal.close("modal-1530613430")
-      $(".js-bulk-edit-of-measures-error-details").html("")
+  showSummaryPopup: ->
+    modal_id = "bem-save-progress-summary"
+    content = "There are no any validation errors!"
 
-      return false
+    if $(".has-validation-errors").length > 0
+      content = "Some measures are having validation errors! <br /> Please review table cells with highighted with red."
 
-    $(document).on 'click', '.js-bulk-edit-of-measures-save-progress-close-popup', ->
-      MicroModal.close("modal-1530613431")
-      $(".js-bulk-edit-of-measures-error-details").html("")
+    if window.__save_bulk_edit_of_measures_mode == "save_group_for_cross_check"
+      if $(".has-validation-errors").length > 0
+        modal_id = "bem-submit-summary-failed"
+      else
+        modal_id = "bem-submit-summary-success"
+        content = "After review you will get a feedback!"
 
-      return false
+    content_container = $("#" + modal_id + " .js-bem-popup-data-container")
+    content_container.html(content)
+    MicroModal.show(modal_id)
 
-    $(document).on 'click', '.js-bulk-edit-of-measures-submission-failed-close-popup', ->
-      MicroModal.close("modal-1530613432")
-      $(".js-bulk-edit-of-measures-error-details").html("")
+    window.__save_bulk_edit_of_measures_mode = null
 
-      return false
-
-    $(document).on 'click', '.js-bulk-edit-of-measures-submission-success-close-popup', ->
-      MicroModal.close("modal-1530613433")
-      $(".js-bulk-edit-of-measures-error-details").html("")
-
-      return false
+    return false
 
 $ ->
   BulkEditOfMeasuresSaveActions.getValidationErrors()
-  BulkEditOfMeasuresSaveActions.closeErrorDetailsPopup()
 
