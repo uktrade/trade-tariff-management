@@ -85,6 +85,7 @@ Vue.component("change-validity-period-popup", {
         }
       });
 
+      this.$emit("measures-updated");
       this.onClose();
     },
     triggerClose: function() {
