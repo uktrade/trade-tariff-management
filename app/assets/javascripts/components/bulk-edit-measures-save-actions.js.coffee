@@ -61,16 +61,12 @@ window.BulkEditOfMeasuresSaveActions =
       measure_sid = $(this).closest(".table__row")
                            .attr("data-measure-sid")
 
-      console.log('measure_sid: ' + measure_sid)
-
       type = $(this).attr("class")
                     .replace("table__column", "")
                     .replace("has-validation-errors", "")
 
-      console.log('type: ' + type)
-
       $.ajax
-        url: '/measures/bulks/' + window.__workbasket_id.toString() + '/validation_details.json'
+        url: '/measures/bulks/' + window.__workbasket_id.toString() + '/validation_details.js'
         data: { measure_sid: measure_sid, type: type }
         type: 'GET'
         contentType: 'application/json'
@@ -119,6 +115,14 @@ window.BulkEditOfMeasuresSaveActions =
     $(".js-bulk-edit-of-measures-submit-for-cross-check").removeClass('disabled')
     $(".js-bulk-edit-of-measures-exit").removeClass('disabled')
 
+  closeErrorDetailsPopup: ->
+    $(document).on 'click', '.js-bulk-edit-of-measures-error-details-close-popup', ->
+      MicroModal.close("modal-1530613430")
+      $(".js-bulk-edit-of-measures-error-details").html("")
+
+      return false
+
 $ ->
   BulkEditOfMeasuresSaveActions.getValidationErrors()
+  BulkEditOfMeasuresSaveActions.closeErrorDetailsPopup()
 
