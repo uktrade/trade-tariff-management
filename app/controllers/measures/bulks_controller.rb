@@ -124,11 +124,6 @@ module Measures
       end
     end
 
-    def validation_details
-      render json: workbasket_item.error_details(params[:type]),
-             head: :ok
-    end
-
     def remove_items
       # TODO
 
