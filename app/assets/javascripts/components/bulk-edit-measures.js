@@ -290,6 +290,9 @@ $(document).ready(function() {
       saveForCrossCheck: function() {
         this.saveProgress();
       },
+      measuresUpdated: function(){
+        DB.insertOrReplaceBulk(this.search_code, this.measures);
+      },
       saveProgress: function() {
         window.__sb_measures_collection =  this.measures;
         window.__sb_total_count = window.__sb_measures_collection.length;
