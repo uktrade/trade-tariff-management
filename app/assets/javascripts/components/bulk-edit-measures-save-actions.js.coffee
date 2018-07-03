@@ -114,17 +114,17 @@ window.BulkEditOfMeasuresSaveActions =
 
   showSummaryPopup: ->
     modal_id = "bem-save-progress-summary"
-    content = "There are no any validation errors!"
+    content = "There are no conformance errors"
 
     if $(".has-validation-errors").length > 0
-      content = "Some measures are having validation errors! <br /> Please review table cells with highighted with red."
+      content = "Some measures have conformance errors, please review table cells with highlighted in red"
 
     if window.__save_bulk_edit_of_measures_mode == "save_group_for_cross_check"
       if $(".has-validation-errors").length > 0
         modal_id = "bem-submit-summary-failed"
       else
         modal_id = "bem-submit-summary-success"
-        content = "After review you will get a feedback!"
+        content = "You have submitted your work for cross-check"
 
     content_container = $("#" + modal_id + " .js-bem-popup-data-container")
     content_container.html(content)
