@@ -66,7 +66,7 @@ window.BulkEditOfMeasuresSaveActions =
                     .replace("has-validation-errors", "")
 
       $.ajax
-        url: '/measures/bulks/' + window.__workbasket_id.toString() + '/validation_details.js'
+        url: '/measures/bulks/' + window.__workbasket_id.toString() + '/bulk_items/validation_details.js'
         data: { measure_sid: measure_sid, type: type }
         type: 'GET'
         contentType: 'application/json'
