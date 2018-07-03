@@ -5,15 +5,16 @@ module Measures
 
     skip_around_action :configure_time_machine
 
+    before_action :require_to_be_workbasket_owner!, only: [
+      :update, :remove_items, :destroy
+    ]
+
     expose(:current_page) do
       params[:page]
     end
 
     expose(:workbasket) do
-      current_user.workbaskets
-                  .detect do |el|
-        el.id.to_s == params[:id]
-      end
+      Workbaskets::Workbasket.find(id: params[:id])
     end
 
     expose(:workbasket_container) do
@@ -150,6 +151,19 @@ module Measures
       def errors_response
         render json: bulk_saver.error_response,
                status: :unprocessable_entity
+      end
+
+      def workbasket_author?
+        current_user.author_of_workbasket?(workbasket)
+      end
+
+      helper_method :workbasket_author?
+
+      def require_to_be_workbasket_owner!
+        unless workbasket_author?
+          render nothing: true, status: :ok
+          return false
+        end
       end
   end
 end

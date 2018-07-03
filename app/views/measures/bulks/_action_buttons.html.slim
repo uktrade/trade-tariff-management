@@ -1,15 +1,16 @@
 .bulk-edit-of-measures-actions-block
-  .submit_group_for_cross_check_block
-    = link_to "Submit group for cross-check", "#", class: "secondary-button js-bulk-edit-of-measures-submit-for-cross-check", "v-on:click.prevent" => "saveForCrossCheck"
+  - if workbasket_author?
+    .submit_group_for_cross_check_block
+      = link_to "Submit group for cross-check", "#", class: "secondary-button js-bulk-edit-of-measures-submit-for-cross-check", "v-on:click.prevent" => "saveForCrossCheck"
 
-    .js-bulk-edit-of-measures-submit-for-cross-check-spinner.spinner_block.hidden
-      = render "measures/bulks/loading_spinner", message: "Checking data..."
+      .js-bulk-edit-of-measures-submit-for-cross-check-spinner.spinner_block.hidden
+        = render "measures/bulks/loading_spinner", message: "Checking data..."
 
-  .save_progress_block
-    = link_to "Save progress", "#", class: "secondary-button js-bulk-edit-of-measures-save-progress", "v-on:click.prevent" => "saveProgress"
+    .save_progress_block
+      = link_to "Save progress", "#", class: "secondary-button js-bulk-edit-of-measures-save-progress", "v-on:click.prevent" => "saveProgress"
 
-    .js-bulk-edit-of-measures-save-progress-spinner.spinner_block.hidden
-      = render "measures/bulks/loading_spinner", message: "Saving..."
+      .js-bulk-edit-of-measures-save-progress-spinner.spinner_block.hidden
+        = render "measures/bulks/loading_spinner", message: "Saving..."
 
   .exit_block
     = link_to "Exit (return to main menu)", root_url, class: "js-bulk-edit-of-measures-exit"
