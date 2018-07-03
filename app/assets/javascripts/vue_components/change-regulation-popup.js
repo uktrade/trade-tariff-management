@@ -52,7 +52,8 @@ Vue.component("change-regulation-popup", {
       }
 
       this.measures.forEach(function(measure) {
-        if (!measure.regulation || measure.regulation.formatted_id != regulation.formatted_id) {                          measure.regulation = regulation;
+        if (!measure.regulation || measure.regulation.formatted_id != regulation.formatted_id) {
+          measure.regulation = regulation;
 
           if (measure.changes.indexOf("regulation") === -1) {
             measure.changes.push("regulation");
@@ -60,6 +61,7 @@ Vue.component("change-regulation-popup", {
         }
       });
 
+      this.$emit("measures-updated");
       this.onClose();
     },
     triggerClose: function() {
