@@ -24,7 +24,7 @@ window.BulkEditOfMeasuresSaveActions =
       type: 'PUT'
       processData: false
       contentType: 'application/json'
-      success: (result) ->
+      success: (response) ->
         BulkEditOfMeasuresSaveActions.sendNextBatch()
       error: (response) ->
         BulkEditOfMeasuresSaveActions.handleErrors(response)
@@ -32,7 +32,7 @@ window.BulkEditOfMeasuresSaveActions =
 
     return false
 
-  sendNextBatch: ->
+  sendNextBatch: () ->
     window.__sb_current_batch = window.__sb_current_batch + 1
     if window.__sb_current_batch <= window.__sb_total_pages
 
@@ -42,6 +42,23 @@ window.BulkEditOfMeasuresSaveActions =
     else
       BulkEditOfMeasuresSaveActions.toogleSaveSpinner()
       BulkEditOfMeasuresSaveActions.unlock_buttons()
+
+      mode = window.__save_bulk_edit_of_measures_mode
+
+      if mode == "save_progress"
+        if $(".has-validation-errors").length > 0
+          $(".js-bulk-edit-of-measures-save-progress-details").html("Some measures are having validation errors! <br /> Please review table cells with highighted with red.")
+
+        MicroModal.show("modal-1530613431");
+
+      else
+        if $(".has-validation-errors").length > 0
+          $(".js-bulk-edit-of-measures-submission-issues").html("Some measures are having validation errors! <br /> Please review table cells with highighted with red.")
+
+          MicroModal.show("modal-1530613432");
+        else
+          MicroModal.show("modal-1530613433");
+
       window.__save_bulk_edit_of_measures_mode = null
 
     return false
@@ -118,6 +135,24 @@ window.BulkEditOfMeasuresSaveActions =
   closeErrorDetailsPopup: ->
     $(document).on 'click', '.js-bulk-edit-of-measures-error-details-close-popup', ->
       MicroModal.close("modal-1530613430")
+      $(".js-bulk-edit-of-measures-error-details").html("")
+
+      return false
+
+    $(document).on 'click', '.js-bulk-edit-of-measures-save-progress-close-popup', ->
+      MicroModal.close("modal-1530613431")
+      $(".js-bulk-edit-of-measures-error-details").html("")
+
+      return false
+
+    $(document).on 'click', '.js-bulk-edit-of-measures-submission-failed-close-popup', ->
+      MicroModal.close("modal-1530613432")
+      $(".js-bulk-edit-of-measures-error-details").html("")
+
+      return false
+
+    $(document).on 'click', '.js-bulk-edit-of-measures-submission-success-close-popup', ->
+      MicroModal.close("modal-1530613433")
       $(".js-bulk-edit-of-measures-error-details").html("")
 
       return false
