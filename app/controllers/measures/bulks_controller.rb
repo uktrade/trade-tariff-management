@@ -1,31 +1,20 @@
 module Measures
-  class BulksController < ApplicationController
+  class BulksController < Measures::BulksBaseController
 
     include ::SearchCacheHelpers
 
-    skip_around_action :configure_time_machine
-
     before_action :require_to_be_workbasket_owner!, only: [
-      :update, :remove_items, :destroy
+      :update, :destroy
     ]
 
     expose(:current_page) do
       params[:page]
     end
 
-    expose(:workbasket) do
-      Workbaskets::Workbasket.find(id: params[:id])
-    end
-
     expose(:workbasket_container) do
       ::Measures::Workbasket::Items.new(
         workbasket, cached_search_ops
       ).prepare
-    end
-
-    expose(:workbasket_items) do
-      Workbaskets::Item.by_workbasket(workbasket)
-                       .by_id_asc
     end
 
     expose(:cached_search_ops) do
@@ -75,11 +64,6 @@ module Measures
       )
     end
 
-    expose(:workbasket_item) do
-      workbasket_items.where(record_id: params[:measure_sid])
-                      .first
-    end
-
     def edit
       if search_mode?
         respond_to do |format|
@@ -93,10 +77,6 @@ module Measures
           search_code: workbasket.search_code
         )
       end
-    end
-
-    def validate
-      # TODO
     end
 
     def create
@@ -118,16 +98,12 @@ module Measures
 
     def update
       if bulk_saver.valid?
-        success_response
+        render json: bulk_saver.success_response,
+               status: :ok
       else
-        errors_response
+        render json: bulk_saver.error_response,
+               status: :unprocessable_entity
       end
-    end
-
-    def remove_items
-      # TODO
-
-      render json: {}, head: :ok
     end
 
     def destroy
@@ -135,30 +111,5 @@ module Measures
 
       redirect_to root_url
     end
-
-    private
-
-      def success_response
-        render json: bulk_saver.success_response,
-               status: :ok
-      end
-
-      def errors_response
-        render json: bulk_saver.error_response,
-               status: :unprocessable_entity
-      end
-
-      def workbasket_author?
-        current_user.author_of_workbasket?(workbasket)
-      end
-
-      helper_method :workbasket_author?
-
-      def require_to_be_workbasket_owner!
-        unless workbasket_author?
-          render nothing: true, status: :ok
-          return false
-        end
-      end
   end
 end
