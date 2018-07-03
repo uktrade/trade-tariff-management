@@ -39,6 +39,10 @@ window.BulkEditOfMeasuresSaveActions =
       setTimeout (->
         BulkEditOfMeasuresSaveActions.sendSaveRequest()
       ), 3000
+    else
+      BulkEditOfMeasuresSaveActions.toogleSaveSpinner()
+      BulkEditOfMeasuresSaveActions.unlock_buttons()
+      window.__save_bulk_edit_of_measures_mode = null
 
     return false
 
@@ -75,6 +79,45 @@ window.BulkEditOfMeasuresSaveActions =
           console.dir(response)
 
       return false
+
+  toogleSaveSpinner: ->
+    mode = window.__save_bulk_edit_of_measures_mode
+    BulkEditOfMeasuresSaveActions.disable_other_buttons()
+
+    if mode == "save_progress"
+      link = $(".js-bulk-edit-of-measures-save-progress")
+      spinner = $(".js-bulk-edit-of-measures-save-progress-spinner")
+    else
+      link = $(".js-bulk-edit-of-measures-submit-for-cross-check")
+      spinner = $(".js-bulk-edit-of-measures-submit-for-cross-check-spinner")
+
+    if link.hasClass('hidden')
+      spinner.addClass('hidden')
+      link.addClass('secondary-button')
+      link.removeClass('hidden')
+    else
+      link.removeClass('secondary-button')
+      link.addClass('hidden')
+      spinner.removeClass('hidden')
+
+  disable_other_buttons: ->
+    save_link = $(".js-bulk-edit-of-measures-save-progress")
+    submit_link = $(".js-bulk-edit-of-measures-submit-for-cross-check")
+    exit_link = $(".js-bulk-edit-of-measures-exit")
+
+    mode = window.__save_bulk_edit_of_measures_mode
+
+    if mode == "save_progress"
+      submit_link.addClass('disabled')
+    else
+      save_link.addClass('disabled')
+
+    exit_link.addClass('disabled')
+
+  unlock_buttons: ->
+    $(".js-bulk-edit-of-measures-save-progress").removeClass('disabled')
+    $(".js-bulk-edit-of-measures-submit-for-cross-check").removeClass('disabled')
+    $(".js-bulk-edit-of-measures-exit").removeClass('disabled')
 
 $ ->
   BulkEditOfMeasuresSaveActions.getValidationErrors()

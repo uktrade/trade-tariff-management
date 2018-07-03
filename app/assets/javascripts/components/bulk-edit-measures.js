@@ -288,12 +288,16 @@ $(document).ready(function() {
         this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
       },
       saveForCrossCheck: function() {
-        this.saveProgress();
+        window.__save_bulk_edit_of_measures_mode = "save_group_for_cross_check";
+        this.startSavingProcess();
       },
-      measuresUpdated: function(){
-        DB.insertOrReplaceBulk(this.search_code, this.measures);
+      saveProgress: function () {
+        window.__save_bulk_edit_of_measures_mode = "save_progress";
+        this.startSavingProcess();
       },
-      saveProgress: function() {
+      startSavingProcess: function() {
+        BulkEditOfMeasuresSaveActions.toogleSaveSpinner();
+
         window.__sb_measures_collection =  this.measures;
         window.__sb_total_count = window.__sb_measures_collection.length;
         window.__sb_per_page = window.__pagination_metadata["per_page"];
@@ -301,6 +305,9 @@ $(document).ready(function() {
         window.__sb_current_batch = 1;
 
         BulkEditOfMeasuresSaveActions.sendSaveRequest();
+      },
+      measuresUpdated: function() {
+        DB.insertOrReplaceBulk(this.search_code, this.measures);
       }
     }
   });
