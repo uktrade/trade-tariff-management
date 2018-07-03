@@ -7,7 +7,7 @@
       = link_to "Measures", measures_url
 
 h2.heading-large
-  | Edit measures
+  = workbasket_author? ? 'Edit measures' : 'Review measures'
 
 /p
   a
