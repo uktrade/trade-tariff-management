@@ -61,6 +61,7 @@ $(document).ready(function() {
         changingQuota: false,
         changingStatus: false,
         isLoading: true,
+        selectedAllMeasures: false,
         pagination: {
           total_count: window.__pagination_metadata.total_count,
           page: window.__pagination_metadata.page,
@@ -308,6 +309,20 @@ $(document).ready(function() {
       },
       measuresUpdated: function() {
         DB.insertOrReplaceBulk(this.search_code, this.measures);
+      },
+      selectAllHasChanged: function(value) {
+        this.selectedAllMeasures = value;
+      },
+      measuresDeleted: function(deletedMeasures) {
+        var self = this;
+        deletedMeasures.forEach(function(deletedMeasure) {
+          var index = self.measures.indexOf(deletedMeasure);
+          self.measures.splice(index, 1);
+        });
+        this.measuresUpdated();
+      },
+      allMeasuresDeleted: function() {
+        DB.destroyMeasuresBulk(this.search_code);
       }
     }
   });

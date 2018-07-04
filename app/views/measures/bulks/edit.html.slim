@@ -20,7 +20,7 @@ script
 form.bulk-edit-measures
   = render "table_top"
 
-  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true } do
+  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true, ":select-all-has-changed" => "selectAllHasChanged" } do
     p Loading measures table...
 
   = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
@@ -45,6 +45,8 @@ form.bulk-edit-measures
 
   = content_tag "change-origins-popup", nil, { "v-if" => "changingOrigin", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
 
+  = content_tag "delete-measures-popup", nil, { "v-if" => "deleting", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-deleted-cb" => "measuresDeleted", ":all-measures-deleted-cb" => "allMeasuresDeleted" }
+
 = render "shared/vue_templates/measures_grid"
 = render "shared/vue_templates/measure_origin"
 = render "shared/vue_templates/change_duties"
@@ -52,6 +54,6 @@ form.bulk-edit-measures
 = render "shared/vue_templates/change_commodity_codes"
 = render "shared/vue_templates/change_validity_period"
 = render "shared/vue_templates/change_origins"
+= render "shared/vue_templates/delete_measures"
 
 = render "measures/bulks/save_actions_popups/collection"
-
