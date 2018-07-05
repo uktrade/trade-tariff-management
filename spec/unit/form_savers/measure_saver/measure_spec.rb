@@ -75,13 +75,13 @@ describe "Measure Saver: Saving of Measure" do
       it "should NOT be valid" do
         expect(measure_saver.valid?).to be_falsey
 
-        expect(measure_errors[:measure_type_id]).to include("The measure type must exist.")
-        expect(measure_errors[:geographical_area]).to include("The geographical area must exist.")
+        expect(measure_errors[:measure_type_id]).to include("ME2: The measure type must exist.")
+        expect(measure_errors[:geographical_area]).to include("ME4: The geographical area must exist.")
         expect(measure_errors[[:measure_generating_regulation_id, :measure_generating_regulation_role]]).to include(
-          "The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date."
+          "ME24: The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date."
         )
         expect(measure_errors[:measure_generating_regulation_role]).to include(
-          "The role of the entered regulation must be a Base, a Modification, a Provisional Anti-Dumping, a Definitive Anti-Dumping."
+          "ME86: The role of the entered regulation must be a Base, a Modification, a Provisional Anti-Dumping, a Definitive Anti-Dumping."
         )
       end
     end
