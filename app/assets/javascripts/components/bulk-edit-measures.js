@@ -45,12 +45,14 @@ $(document).ready(function() {
           { value: 'change_conditions', label: 'Change conditions...' },
           { value: 'change_footnotes', label: 'Change footnotes...' },
           { value: 'change_status', label: 'Change status...' },
+          { value: 'remove_from_group', label: 'Remove from group...' },
           { value: 'delete', label: 'Delete...' },
         ],
         measures: [],
         changingDuties: false,
         changingConditions: false,
         deleting: false,
+        removingFromGroup: false,
         changingFootnotes: false,
         changingAdditionalCode: false,
         changingCommodityCodes: false,
@@ -234,6 +236,9 @@ $(document).ready(function() {
           case 'change_status':
             this.changingStatus = true;
             break;
+          case 'remove_from_group':
+            this.removingFromGroup = true;
+            break;
           case 'delete':
             this.deleting = true;
             break;
@@ -243,6 +248,7 @@ $(document).ready(function() {
         this.changingDuties = false;
         this.changingConditions = false;
         this.deleting = false;
+        this.removingFromGroup = false;
         this.changingFootnotes = false;
         this.changingAdditionalCodes= false;
         this.changingCommunityCode = false;
@@ -313,15 +319,15 @@ $(document).ready(function() {
       selectAllHasChanged: function(value) {
         this.selectedAllMeasures = value;
       },
-      measuresDeleted: function(deletedMeasures) {
+      measuresRemoved: function(removedMeasures) {
         var self = this;
-        deletedMeasures.forEach(function(deletedMeasure) {
-          var index = self.measures.indexOf(deletedMeasure);
+        removedMeasures.forEach(function(removedMeasure) {
+          var index = self.measures.indexOf(removedMeasure);
           self.measures.splice(index, 1);
         });
         this.measuresUpdated();
       },
-      allMeasuresDeleted: function() {
+      allMeasuresRemoved: function() {
         DB.destroyMeasuresBulk(this.search_code);
       }
     }

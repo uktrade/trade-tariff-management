@@ -1,30 +1,30 @@
-Vue.component("delete-measures-popup", {
-  template: "#delete-measures-popup-template",
+Vue.component("remove-measures-popup", {
+  template: "#remove-measures-popup-template",
   props: [
     "measures",
     "onClose",
     "open",
     "selectedAllMeasures",
-    "measuresDeletedCb",
-    "allMeasuresDeletedCb"
+    "measuresRemovedCb",
+    "allMeasuresRemovedCb"
   ],
   methods: {
     triggerClose: function(){
       this.onClose();
     },
-    confirmDelete: function(){
+    confirmRemove: function(){
       var jqxhr,
           self = this;
       if (this.selectedAllMeasures) {
-        jqxhr = BulkDeleteMeasuresActions.deleteAllMeasuresInWorkbasket();
+        jqxhr = BulkRemoveMeasuresActions.removeAllMeasuresInWorkbasket();
         jqxhr.always(function(){
-          self.allMeasuresDeletedCb();
+          self.allMeasuresRemovedCb();
           $(".js-bulk-edit-of-measures-exit")[0].click(); // click exit
         });
       } else {
-        jqxhr = BulkDeleteMeasuresActions.deleteMeasures(this.measures);
+        jqxhr = BulkRemoveMeasuresActions.removeMeasures(this.measures);
         jqxhr.always(function(){
-          self.measuresDeletedCb(self.measures);
+          self.measuresRemovedCb(self.measures);
           self.triggerClose();
         });
       }

@@ -45,7 +45,7 @@ form.bulk-edit-measures
 
   = content_tag "change-origins-popup", nil, { "v-if" => "changingOrigin", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
 
-  = content_tag "delete-measures-popup", nil, { "v-if" => "deleting", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-deleted-cb" => "measuresDeleted", ":all-measures-deleted-cb" => "allMeasuresDeleted" }
+  = content_tag "remove-measures-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-removed-cb" => "measuresRemoved", ":all-measures-removed-cb" => "allMeasuresRemoved" }
 
 = render "shared/vue_templates/measures_grid"
 = render "shared/vue_templates/measure_origin"
@@ -54,6 +54,6 @@ form.bulk-edit-measures
 = render "shared/vue_templates/change_commodity_codes"
 = render "shared/vue_templates/change_validity_period"
 = render "shared/vue_templates/change_origins"
-= render "shared/vue_templates/delete_measures"
+= render "shared/vue_templates/remove_measures"
 
 = render "measures/bulks/save_actions_popups/collection"

@@ -1,8 +1,8 @@
-window.BulkDeleteMeasuresActions = {
+window.BulkRemoveMeasuresActions = {
   getWorkbasketId: function(){
     return window.__workbasket_id;
   },
-  deleteMeasures: function(measures){
+  removeMeasures: function(measures){
     var measuresSids = measures.map(function(measure){
       return measure.measure_sid;
     });
@@ -15,7 +15,7 @@ window.BulkDeleteMeasuresActions = {
       contentType: "application/json"
     });
   },
-  deleteAllMeasuresInWorkbasket: function(){
+  removeAllMeasuresInWorkbasket: function(){
     return $.ajax({
       url: "/measures/bulks/" + this.getWorkbasketId(),
       type: "DELETE",
