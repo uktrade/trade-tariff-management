@@ -45,12 +45,14 @@ $(document).ready(function() {
           { value: 'change_conditions', label: 'Change conditions...' },
           { value: 'change_footnotes', label: 'Change footnotes...' },
           { value: 'change_status', label: 'Change status...' },
+          { value: 'remove_from_group', label: 'Remove from group...' },
           { value: 'delete', label: 'Delete...' },
         ],
         measures: [],
         changingDuties: false,
         changingConditions: false,
         deleting: false,
+        removingFromGroup: false,
         changingFootnotes: false,
         changingAdditionalCode: false,
         changingCommodityCodes: false,
@@ -61,6 +63,7 @@ $(document).ready(function() {
         changingQuota: false,
         changingStatus: false,
         isLoading: true,
+        selectedAllMeasures: false,
         pagination: {
           total_count: window.__pagination_metadata.total_count,
           page: window.__pagination_metadata.page,
@@ -233,6 +236,9 @@ $(document).ready(function() {
           case 'change_status':
             this.changingStatus = true;
             break;
+          case 'remove_from_group':
+            this.removingFromGroup = true;
+            break;
           case 'delete':
             this.deleting = true;
             break;
@@ -242,6 +248,7 @@ $(document).ready(function() {
         this.changingDuties = false;
         this.changingConditions = false;
         this.deleting = false;
+        this.removingFromGroup = false;
         this.changingFootnotes = false;
         this.changingAdditionalCodes= false;
         this.changingCommunityCode = false;
@@ -308,6 +315,20 @@ $(document).ready(function() {
       },
       measuresUpdated: function() {
         DB.insertOrReplaceBulk(this.search_code, this.measures);
+      },
+      selectAllHasChanged: function(value) {
+        this.selectedAllMeasures = value;
+      },
+      measuresRemoved: function(removedMeasures) {
+        var self = this;
+        removedMeasures.forEach(function(removedMeasure) {
+          var index = self.measures.indexOf(removedMeasure);
+          self.measures.splice(index, 1);
+        });
+        this.measuresUpdated();
+      },
+      allMeasuresRemoved: function() {
+        DB.destroyMeasuresBulk(this.search_code);
       }
     }
   });
