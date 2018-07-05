@@ -11,14 +11,15 @@ module Measures
     end
 
     expose(:candidates_to_remove) do
-      workbasket_items.where(record_id: remove_ids)
+      workbasket_items.where(record_id: params["_json"])
+                      .all
     end
 
     def remove_items
       candidates_to_remove.map(&:delete)
 
       render json: {
-        number_of_removed_measures: candidates_to_remove.count
+        number_of_removed_measures: candidates_to_remove.size
       }, head: :ok
     end
   end
