@@ -8,6 +8,12 @@ Vue.component("remove-measures-popup", {
     "measuresRemovedCb",
     "allMeasuresRemovedCb"
   ],
+  data: function(){
+    return {
+      removingMeasures: false,
+      submissionErrors: null
+    };
+  },
   methods: {
     triggerClose: function(){
       this.onClose();
@@ -15,19 +21,29 @@ Vue.component("remove-measures-popup", {
     confirmRemove: function(){
       var jqxhr,
           self = this;
+
+      this.removingMeasures = true;
+
       if (this.selectedAllMeasures) {
         jqxhr = BulkRemoveMeasuresActions.removeAllMeasuresInWorkbasket();
-        jqxhr.always(function(){
+        jqxhr.done(function(){
           self.allMeasuresRemovedCb();
           $(".js-bulk-edit-of-measures-exit")[0].click(); // click exit
         });
       } else {
         jqxhr = BulkRemoveMeasuresActions.removeMeasures(this.measures);
-        jqxhr.always(function(){
+        jqxhr.done(function(){
           self.measuresRemovedCb(self.measures);
           self.triggerClose();
         });
       }
+
+      jqxhr.fail(function(){
+        self.submissionErrors = "Something went wrong. Please try again.";
+      });
+      jqxhr.always(function(){
+        self.removingMeasures = false;
+      });
     }
   }
 });
