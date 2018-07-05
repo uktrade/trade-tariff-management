@@ -12,7 +12,7 @@ window.DB = {
     var db = this.connection;
 
     db.transaction("rw", db.measures, function() {
-      db.measures.where("search_code").equals(search_code).delete();
+      self.destroyMeasuresBulk(search_code);
 
       db.measures.add({
         search_code: search_code,
@@ -21,11 +21,17 @@ window.DB = {
     });
   },
   getMeasuresBulk: function(search_code, callback) {
-    var self = this;
     var db = this.connection;
 
     db.transaction("rw", db.measures, function() {
       db.measures.where("search_code").equals(search_code).first(callback);
+    });
+  },
+  destroyMeasuresBulk: function(search_code) {
+    var db = this.connection;
+
+    db.transaction("rw", db.measures, function() {
+      db.measures.where("search_code").equals(search_code).delete();
     });
   }
 };

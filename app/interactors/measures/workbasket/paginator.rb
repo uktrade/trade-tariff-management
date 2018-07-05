@@ -19,7 +19,8 @@ module Measures
           total_count: total_count,
           total_pages: total_pages,
           has_more: has_more?,
-          per_page: per_page
+          per_page: per_page,
+          limit_value: per_page
         )
       end
 

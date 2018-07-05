@@ -17,7 +17,10 @@ module Workbaskets
       :already_in_cds
     ]
 
-    plugin :timestamps
+    SENT_TO_CDS_STATES = [
+      :sent_to_cds,
+      :already_in_cds
+    ]
 
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
@@ -29,9 +32,14 @@ module Workbaskets
                        foreign_key: :id,
                        class_name: "User"
 
+    plugin :timestamps
+    plugin :association_dependencies, events: :destroy,
+                                      items: :destroy
+
     validates do
       presence_of :status,
-                  :user_id
+                  :user_id,
+                  :search_code
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
     end
@@ -50,6 +58,26 @@ module Workbaskets
     def get_item_by_id(target_id)
       items.detect do |i|
         i.record_id.to_s == target_id
+      end
+    end
+
+    class << self
+      def validate_measure!(measure_params={})
+        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
+
+        errors = {}
+
+        measure = Measure.new(
+          ::Measures::BulkParamsConverter.new(
+            measure_params
+          ).converted_ops
+        )
+
+        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+
+        ::Measures::ValidationHelper.new(
+          measure, {}
+        ).errors
       end
     end
   end

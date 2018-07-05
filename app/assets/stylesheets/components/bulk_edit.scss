@@ -1,0 +1,42 @@
+.bulk-edit-of-measures-actions-block {
+  margin-top: 50px;
+
+  a.secondary-button {
+    border: 2px solid currentcolor;
+    color: #0b0c0c;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0.5em 1.2em;
+    position: relative;
+    text-decoration: none;
+  }
+
+  a.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .submit_group_for_cross_check_block, .save_progress_block, .exit_block {
+    margin-right: 15px;
+    float: left;
+  }
+
+  .exit_block {
+    padding-top: 10px;
+    margin-left: 5px;
+  }
+
+  .spinner_block {
+    padding-top: 1px;
+
+    img {
+      float: left;
+    }
+
+    span.saving_message {
+      margin-top: 10px;
+      display: inline-block;
+    }
+  }
+}

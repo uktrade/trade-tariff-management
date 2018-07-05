@@ -45,12 +45,14 @@ $(document).ready(function() {
           { value: 'change_conditions', label: 'Change conditions...' },
           { value: 'change_footnotes', label: 'Change footnotes...' },
           { value: 'change_status', label: 'Change status...' },
+          { value: 'remove_from_group', label: 'Remove from group...' },
           { value: 'delete', label: 'Delete...' },
         ],
         measures: [],
         changingDuties: false,
         changingConditions: false,
         deleting: false,
+        removingFromGroup: false,
         changingFootnotes: false,
         changingAdditionalCode: false,
         changingCommodityCodes: false,
@@ -61,6 +63,7 @@ $(document).ready(function() {
         changingQuota: false,
         changingStatus: false,
         isLoading: true,
+        selectedAllMeasures: false,
         pagination: {
           total_count: window.__pagination_metadata.total_count,
           page: window.__pagination_metadata.page,
@@ -233,6 +236,9 @@ $(document).ready(function() {
           case 'change_status':
             this.changingStatus = true;
             break;
+          case 'remove_from_group':
+            this.removingFromGroup = true;
+            break;
           case 'delete':
             this.deleting = true;
             break;
@@ -242,6 +248,7 @@ $(document).ready(function() {
         this.changingDuties = false;
         this.changingConditions = false;
         this.deleting = false;
+        this.removingFromGroup = false;
         this.changingFootnotes = false;
         this.changingAdditionalCodes= false;
         this.changingCommunityCode = false;
@@ -286,6 +293,42 @@ $(document).ready(function() {
         }
 
         this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
+      },
+      saveForCrossCheck: function() {
+        window.__save_bulk_edit_of_measures_mode = "save_group_for_cross_check";
+        this.startSavingProcess();
+      },
+      saveProgress: function () {
+        window.__save_bulk_edit_of_measures_mode = "save_progress";
+        this.startSavingProcess();
+      },
+      startSavingProcess: function() {
+        BulkEditOfMeasuresSaveActions.toogleSaveSpinner();
+
+        window.__sb_measures_collection =  this.measures;
+        window.__sb_total_count = window.__sb_measures_collection.length;
+        window.__sb_per_page = window.__pagination_metadata["per_page"];
+        window.__sb_total_pages = Math.ceil(window.__sb_total_count / window.__sb_per_page);
+        window.__sb_current_batch = 1;
+
+        BulkEditOfMeasuresSaveActions.sendSaveRequest();
+      },
+      measuresUpdated: function() {
+        DB.insertOrReplaceBulk(this.search_code, this.measures);
+      },
+      selectAllHasChanged: function(value) {
+        this.selectedAllMeasures = value;
+      },
+      measuresRemoved: function(removedMeasures) {
+        var self = this;
+        removedMeasures.forEach(function(removedMeasure) {
+          var index = self.measures.indexOf(removedMeasure);
+          self.measures.splice(index, 1);
+        });
+        this.measuresUpdated();
+      },
+      allMeasuresRemoved: function() {
+        DB.destroyMeasuresBulk(this.search_code);
       }
     }
   });

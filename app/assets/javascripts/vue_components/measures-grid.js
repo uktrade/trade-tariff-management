@@ -11,7 +11,8 @@ Vue.component("measures-grid", {
     "clientSorting",
     "sortByChanged",
     "sortDirChanged",
-    "selectionType"
+    "selectionType",
+    "selectAllHasChanged"
   ],
   data: function() {
     var self = this;
@@ -108,6 +109,10 @@ Vue.component("measures-grid", {
     },
     selectAll: function(val) {
       var self = this;
+
+      if (this.selectAllHasChanged) {
+        this.selectAllHasChanged(val);
+      }
 
       if (this.indirectSelectAll) {
         return;
