@@ -107,9 +107,9 @@ module Measures
     end
 
     def destroy
-      # TODO
-      # WARNING do not redirect as raises jqXhr error. need to properly respond with 204 or something
-      redirect_to root_url
+      workbasket.destroy
+
+      render json: {}, head: :ok
     end
   end
 end

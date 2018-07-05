@@ -22,8 +22,6 @@ module Workbaskets
       :already_in_cds
     ]
 
-    plugin :timestamps
-
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
 
@@ -33,6 +31,10 @@ module Workbaskets
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
                        class_name: "User"
+
+    plugin :timestamps
+    plugin :association_dependencies, events: :destroy,
+                                      items: :destroy
 
     validates do
       presence_of :status,

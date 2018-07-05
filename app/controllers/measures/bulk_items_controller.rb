@@ -10,10 +10,16 @@ module Measures
                       .first
     end
 
-    def remove_items
-      # TODO
+    expose(:candidates_to_remove) do
+      workbasket_items.where(record_id: remove_ids)
+    end
 
-      render json: {}, head: :ok
+    def remove_items
+      candidates_to_remove.map(&:delete)
+
+      render json: {
+        number_of_removed_measures: candidates_to_remove.count
+      }, head: :ok
     end
   end
 end
