@@ -26,11 +26,18 @@
       </strong>
     </p>
 
+    <p v-if="!removingMeasures && submissionErrors" class="alert--error">
+      {{submissionErrors}}
+    </p>
+
     <div class="form-actions">
-      <button class="button" v-on:click.prevent="confirmRemove">
+      <button class="button" v-on:click.prevent="confirmRemove" :disabled="removingMeasures">
         Yes - remove measures
       </button>
-      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+      <span class="loading-spinner-wrapper" v-if="removingMeasures">
+        <%= render "measures/bulks/loading_spinner", message: "Removing measures..." %>
+      </span>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose" :disabled="removingMeasures">
         No - cancel
       </a>
     </div>
