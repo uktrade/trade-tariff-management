@@ -1,0 +1,44 @@
+script type="text/x-template" id="delete-measures-popup-template"
+  pop-up :open="open" :on-close="triggerClose"
+    template slot="title" Delete measures
+
+    warning-message
+      ' You are about to
+      span v-if="measuresNotSentToCDSCount > 0"
+        ' delete
+      span v-if="measuresSentToCDSCount > 0 && measuresNotSentToCDSCount > 0"
+        ' or
+      span v-if="measuresSentToCDSCount > 0"
+        ' end-date
+      | {{measures.length}} measures.
+
+    info-message
+      span v-if="measuresNotSentToCDSCount == 0"
+        | All measures in the selection have been sent to CDS or previously submitted into workflow. Therefore they will be immediately end-dated (stopped) but will not be deleted from the system.
+      span v-if="measuresSentToCDSCount == 0"
+        | No measures in the selection have yet been sent through to CDS or submitted into workflow. Therefore they will be deleted from the system. This cannot be undone.
+      span v-if="measuresSentToCDSCount > 0 && measuresNotSentToCDSCount > 0"
+        | The selection contains some measures that are draft (not yet submitted into workflow or sent through to CDS) and some that have been sent to CDS or previously submitted into workflow. Draft measures will be permanently deleted from the system; other measures will be immediately end-dated (stopped) but will not be deleted from the system.
+
+    p v-if="(measuresSentToCDSCount > 0 || measuresNotSentToCDSCount > 0) && (measuresSentToCDSCount == 0 || measuresNotSentToCDSCount == 0)"
+      strong
+        ' Are you sure you want to
+        span v-if="measuresNotSentToCDSCount == 0"
+          ' immediately end-date
+        span v-if="measuresSentToCDSCount == 0"
+          ' permanently delete
+        | {{measures.length}} measures?
+
+    div v-if="measuresSentToCDSCount > 0 && measuresNotSentToCDSCount > 0"
+      p
+        strong Are you sure you want to proceed?
+      div
+        ' {{measuresNotSentToCDSCount}} measures will be permanently deleted.
+      div
+        ' {{measuresSentToCDSCount}} measures will be immediately end-dated.
+
+    .form-actions
+      button.button @click.prevent="confirmDelete"
+        | Yes - end-date measures
+      a.secondary-button href="#" v-on:click.prevent="onClose"
+        | No - cancel
