@@ -46,7 +46,7 @@ $(document).ready(function() {
           { value: 'change_footnotes', label: 'Change footnotes...' },
           { value: 'change_status', label: 'Change status...' },
           { value: 'remove_from_group', label: 'Remove from group...' },
-          { value: 'delete', label: 'Delete...' },
+          { value: 'delete', label: 'Delete measures' },
         ],
         measures: [],
         changingDuties: false,
