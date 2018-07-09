@@ -367,7 +367,7 @@ class RegulationSaver
     end
 
     def check_required_params!
-      if target_class.blank?
+      if target_class.to_s.blank?
         @errors[:role] = "You need to specify the regulation type!"
 
         return false
