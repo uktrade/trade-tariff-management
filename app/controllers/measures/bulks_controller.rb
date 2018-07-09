@@ -82,6 +82,7 @@ module Measures
     def create
       self.workbasket = Workbaskets::Workbasket.new(
         status: :new,
+        type: :bulk_edit_of_measures,
         user: current_user,
         search_code: search_code
       )
