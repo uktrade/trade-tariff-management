@@ -494,7 +494,7 @@ class Measure < Sequel::Model
   def additional_code_title
     return "" if additional_code_id.blank?
 
-    "#{additional_code_type_id} #{additional_code_id}"
+    "#{additional_code_type_id}#{additional_code_id}"
   end
 
   def record_code
@@ -549,7 +549,7 @@ class Measure < Sequel::Model
       validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       goods_nomenclature: goods_nomenclature.try(:to_json),
-      additional_code: additional_code.try(:to_json),
+      additional_code: additional_code_title,
       geographical_area: geographical_area.try(:to_json),
       excluded_geographical_areas: excluded_geographical_areas.map(&:to_json),
       measure_components: measure_components.map(&:to_json),
