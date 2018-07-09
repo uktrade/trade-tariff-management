@@ -251,7 +251,7 @@ $(document).ready(function() {
         this.removingFromGroup = false;
         this.changingFootnotes = false;
         this.changingAdditionalCodes= false;
-        this.changingCommunityCode = false;
+        this.changingCommodityCodes = false;
         this.changingOrigin = false;
         this.makingCopies = false;
         this.changingRegulation = false;

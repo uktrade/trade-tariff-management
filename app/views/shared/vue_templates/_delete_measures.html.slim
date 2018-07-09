@@ -2,7 +2,7 @@ script type="text/x-template" id="delete-measures-popup-template"
   pop-up :open="open" :on-close="triggerClose"
     template slot="title" Delete measures
 
-    warning-message
+    warning-message v-if="measures.length > 1"
       ' You are about to
       span v-if="measuresNotSentToCDSCount > 0"
         ' delete
