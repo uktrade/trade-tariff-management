@@ -488,7 +488,7 @@ class Measure < Sequel::Model
   end
 
   def sent_to_cds?
-    status.blank? || status.to_s.in?(::Workbasket::SENT_TO_CDS_STATES)
+    status.blank? || status.to_s.in?(::Workbaskets::Workbasket::SENT_TO_CDS_STATES)
   end
 
   def additional_code_title
