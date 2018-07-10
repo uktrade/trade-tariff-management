@@ -1,13 +1,22 @@
 fieldset
   h3.heading-medium
-    | Specify the regulation that gives legal force to this measure
+    | Which regulation gives legal force to these measures?
 
   .form-group
     label.form-label
       span.form-hint
-        | Start typing in the field to see available regulations. If the regulation you need is not in the list, you can&nbsp;
-        a href="#"
-          | add it here
+        | Start typing in the field to see available regulations.
+        br
+
+        | If the regulation you need is not in the list, you can&nbsp;
+
+        = link_to "add it from here", new_regulation_url, target: "_blank"
+        |&nbsp;.
+        br
+
+        | If you're not sure of the regulation name or ID, you can&nbsp;
+
+        = link_to "search here", regulations_url, target: "_blank"
         |&nbsp;.
 
     .row

@@ -3,19 +3,7 @@
 
 = simple_form_for form, url: measures_path, html: { class: "measure-form", data: { measure: form.measure.to_json, measure_condition_attributes: form.measure.measure_conditions.to_json } } do |f|
 
-  = render "workbaskets/create_measures/form_parts/main", f: f
-  = render "workbaskets/create_measures/form_parts/regulation", f: f
-  = render "workbaskets/create_measures/form_parts/measure_type", f: f
-  = render "workbaskets/create_measures/form_parts/quota", f: f
-  = render "workbaskets/create_measures/form_parts/geographical_area", f: f
-  = render "workbaskets/create_measures/form_parts/goods_nomenclature", f: f
-  = render "workbaskets/create_measures/form_parts/duty_expression", f: f
-  = render "workbaskets/create_measures/form_parts/standart_import_value", f: f
-  = render "workbaskets/create_measures/form_parts/reference_price", f: f
-  = render "workbaskets/create_measures/form_parts/unit_price", f: f
-  = render "workbaskets/create_measures/form_parts/conditions", f: f
-  = render "workbaskets/create_measures/form_parts/footnotes", f: f
-  = render "workbaskets/create_measures/form_parts/operation_date", f: f
+  = render "workbaskets/create_measures/steps/step_#{params[:step].to_s}", f: f
 
   .js-measure-form-errors-container.alert.alert-danger v-if="hasErrors"
     h3.measure-form-errors-header
