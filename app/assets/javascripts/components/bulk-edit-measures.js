@@ -155,7 +155,7 @@ $(document).ready(function() {
             regulation: measure.regulation.formatted_id,
             measure_type_id: measure.measure_type.measure_type_id,
             goods_nomenclature: measure.goods_nomenclature.goods_nomenclature_item_id,
-            additional_code: "-",
+            additional_code: measure.additional_code || "-",
             geographical_area: origin,
             excluded_geographical_areas: formatted_exclusions,
             duties: formatted_components,
@@ -250,7 +250,7 @@ $(document).ready(function() {
         this.deleting = false;
         this.removingFromGroup = false;
         this.changingFootnotes = false;
-        this.changingAdditionalCodes= false;
+        this.changingAdditionalCode = false;
         this.changingCommodityCodes = false;
         this.changingOrigin = false;
         this.makingCopies = false;

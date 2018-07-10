@@ -1,0 +1,46 @@
+script type="text/x-template" id="measure-change-additional-code-input-template"
+  .row
+    .col-xs-4
+      p
+        | {{additionalCode || "-"}}
+    .col-xs-8
+      p
+        input type="checkbox" v-model="removeAdditionalCode"
+        '  or
+        input type="text" v-model="newAdditionalCode" :disabled="removeAdditionalCode"
+
+script type="text/x-template" id="measure-additional-code-previewer-template"
+  div
+    p
+      input.form-control v-model="desiredAdditionalCode"
+    p.form-hint v-if=="desiredAdditionalCode == '' && !loadingAdditionalCode"
+      ' Code description will appear here once you enter an additional code above.
+    .loading-spinner-wrapper v-if="loadingAdditionalCode"
+      = render "measures/bulks/loading_spinner", message: "Loading additional code..."
+    div v-html="desiredAdditionalCodeHTML"
+
+script type="text/x-template" id="change-additional-code-popup-template"
+  pop-up :open="open" :on-close="triggerClose"
+    template slot="title" Change additional codes
+
+    div v-if="measures.length > 1"
+      warning-message You are bulk-changing {{measures.length}} measures. Please check your inputs carefully!
+
+    info-message The selection contains measures with the additional code(s) listed below. You can replace or remove these.
+
+    .row
+      .col-md-6
+        .form-group
+          .form-label
+            span.row
+              span.col-md-4 Current code
+              span.col-md-8 Remove or replace with
+            span.form-hint Leave row fields blank / unchecked to keep existing code unchanged.
+            measure-change-additional-code-input v-for="additionalCode in measuresAdditionalCodes" :additional-code="additionalCode"
+      .col-md-6
+        .form-hint If you need to check an additional code, enter it here to see the description. Codes entered here will not affect measures in the selection.
+        measure-additional-code-previewer
+
+    .form-actions
+      button.button @click.prevent="confirmChanges" Update selected measures
+      a.secondary-button href="#" @click.prevent="onClose" Cancel
