@@ -52,9 +52,6 @@ Vue.component("change-commodity-code-popup", {
     triggerClose: function() {
       this.onClose();
     },
-    onRegulationSelected: function(object) {
-      this.newRegulation = object;
-    },
     setCommodityCode: function(currentCommodityCode, newCommodityCode){
       this.commodityCodesMap[currentCommodityCode] = newCommodityCode;
     }
