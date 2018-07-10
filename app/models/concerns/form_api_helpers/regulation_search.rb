@@ -32,7 +32,8 @@ module FormApiHelpers
     def json_mapping(details_with_code=false)
       res = {
         regulation_id: regulation_id,
-        description: details(details_with_code)
+        description: details(details_with_code),
+        formatted_id: formatted_id
       }
 
       case self.class.name

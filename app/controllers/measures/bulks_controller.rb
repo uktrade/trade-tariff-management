@@ -1,25 +1,41 @@
 module Measures
-  class BulksController < ApplicationController
+  class BulksController < Measures::BulksBaseController
 
     include ::SearchCacheHelpers
 
-    skip_around_action :configure_time_machine
+    before_action :require_to_be_workbasket_owner!, only: [
+      :update, :destroy
+    ]
 
     expose(:current_page) do
       params[:page]
-    end
-
-    expose(:workbasket) do
-      current_user.workbaskets
-                  .detect do |el|
-        el.id.to_s == params[:id]
-      end
     end
 
     expose(:workbasket_container) do
       ::Measures::Workbasket::Items.new(
         workbasket, cached_search_ops
       ).prepare
+    end
+
+    expose(:cached_search_ops) do
+      if workbasket.initial_items_populated.present?
+        {
+          measure_sids: workbasket_items.pluck(:record_id),
+          page: current_page
+        }
+      else
+        Rails.cache.read(params[:search_code]).merge(
+          page: current_page
+        )
+      end
+    end
+
+    expose(:pagination_metadata) do
+      {
+        page: search_results.current_page,
+        total_count: search_results.total_count,
+        per_page: search_results.limit_value
+      }
     end
 
     expose(:search_results) do
@@ -36,12 +52,16 @@ module Measures
       }
     end
 
-    expose(:bulk_saver) do
-      collection_ops = params[:measures]
-      collection_ops.send("permitted=", true)
-      collection_ops = collection_ops.to_h
+    expose(:bulk_measures_collection) do
+      JSON.parse(request.body.read)["bulk_measures_collection"]
+    end
 
-      ::Measures::BulkSaver.new(current_user, collection_ops)
+    expose(:bulk_saver) do
+      ::Measures::BulkSaver.new(
+        current_user,
+        workbasket,
+        bulk_measures_collection
+      )
     end
 
     def edit
@@ -50,24 +70,27 @@ module Measures
           format.json { render json: json_response }
           format.html
         end
-      else
-        redirect_to measures_url
-      end
-    end
 
-    def validate
-      if bulk_saver.valid?
-        success_response
       else
-        errors_response
+        redirect_to edit_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.search_code
+        )
       end
     end
 
     def create
-      self.workbasket = Workbaskets::Workbasket.new(status: :new, user: current_user)
+      self.workbasket = Workbaskets::Workbasket.new(
+        status: :new,
+        user: current_user,
+        search_code: search_code
+      )
 
       if workbasket.save
-        redirect_to edit_measures_bulk_url(workbasket.id, search_code: search_code)
+        redirect_to edit_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.search_code
+        )
       else
         redirect_to measures_url(notice: "You have to select at least of 1 measure from list!")
       end
@@ -75,24 +98,18 @@ module Measures
 
     def update
       if bulk_saver.valid?
-        bulk_saver.persist!
-
-        success_response
+        render json: bulk_saver.success_response,
+               status: :ok
       else
-        errors_response
+        render json: bulk_saver.error_response,
+               status: :unprocessable_entity
       end
     end
 
-    private
+    def destroy
+      workbasket.destroy
 
-      def success_response
-        render json: bulk_saver.collection_overview_summary,
-               status: :ok
-      end
-
-      def errors_response
-        render json: bulk_saver.collection_with_errors,
-               status: :unprocessable_entity
-      end
+      render json: {}, head: :ok
+    end
   end
 end

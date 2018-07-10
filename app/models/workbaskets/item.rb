@@ -34,17 +34,58 @@ module Workbaskets
         where(workbasket_id: workbasket.id)
       end
 
+      def by_id_asc
+        order(Sequel.asc(:id))
+      end
+
       include ::BulkEditHelpers::OrderByIdsQuery
     end
 
+    def new_data_parsed
+      @new_data_parsed ||= JSON.parse(new_data)
+    end
+
+    def original_data_parsed
+      @original_data_parsed ||= JSON.parse(original_data)
+    end
+
     def hash_data
-      JSON.parse(data)
+      data = new_data_parsed.present? ? new_data_parsed : original_data_parsed
+
+      if validation_errors_parsed.present?
+        data["errored_columns"] = validation_errors_parsed
+      end
+
+      if changed_values_parsed.present?
+        data["changed_columns"] = changed_values_parsed
+      end
+
+      data
+    end
+
+    def validation_errors_parsed
+      @validation_errors_parsed ||= JSON.parse(validation_errors)
+    end
+
+    def changed_values_parsed
+      @changed_values_parsed ||= JSON.parse(changed_values)
     end
 
     def record
       record_type.constantize
                  .where(record_key.to_sym => record_id)
                  .first
+    end
+
+    def error_details(errored_column)
+      errors_detected = Workbaskets::Workbasket.validate_measure!(
+        ActiveSupport::HashWithIndifferentAccess.new(
+          hash_data
+        )
+      )
+
+      errors_detected.values
+                     .flatten
     end
 
     class << self
@@ -55,7 +96,7 @@ module Workbaskets
         item.record_key = key
         item.record_id = target_record.public_send(key)
         item.record_type = target_record.class.to_s
-        item.data = target_record.to_json.to_json
+        item.original_data = target_record.to_json.to_json
         item.status = "in_progress"
 
         item.save

@@ -483,14 +483,18 @@ class Measure < Sequel::Model
     if status.present?
       I18n.t(:measures)[:states][status.to_sym]
     else
-      "-"
+      "Imported to TARIFF"
     end
+  end
+
+  def sent_to_cds?
+    status.blank? || status.to_s.in?(::Workbaskets::Workbasket::SENT_TO_CDS_STATES)
   end
 
   def additional_code_title
     return "" if additional_code_id.blank?
 
-    "#{additional_code_type_id} #{additional_code_id}"
+    "#{additional_code_type_id}#{additional_code_id}"
   end
 
   def record_code
@@ -532,7 +536,8 @@ class Measure < Sequel::Model
       conditions: conditions_short_list,
       footnotes: footnotes.map(&:abbreviation).join(", "),
       last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
-      status: status_title
+      status: status_title,
+      sent_to_cds: sent_to_cds?
     }
   end
 
@@ -544,14 +549,15 @@ class Measure < Sequel::Model
       validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       goods_nomenclature: goods_nomenclature.try(:to_json),
-      additional_code: additional_code.try(:to_json),
+      additional_code: additional_code_title,
       geographical_area: geographical_area.try(:to_json),
       excluded_geographical_areas: excluded_geographical_areas.map(&:to_json),
       measure_components: measure_components.map(&:to_json),
       measure_conditions: measure_conditions.map(&:to_json),
       footnotes: footnotes.map(&:to_json),
       last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
-      status: status_title
+      status: status_title,
+      sent_to_cds: sent_to_cds?
     }
   end
 end

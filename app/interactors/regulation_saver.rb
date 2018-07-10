@@ -367,6 +367,12 @@ class RegulationSaver
     end
 
     def check_required_params!
+      if target_class.to_s.blank?
+        @errors[:role] = "You need to specify the regulation type!"
+
+        return false
+      end
+
       target_class_required_params.map do |k|
         if original_params[k.to_s].blank?
           @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"

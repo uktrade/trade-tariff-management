@@ -6665,8 +6665,11 @@ CREATE TABLE public.workbasket_items (
     status text,
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
-    data jsonb DEFAULT '{}'::jsonb,
-    record_key text
+    original_data jsonb DEFAULT '{}'::jsonb,
+    record_key text,
+    new_data jsonb DEFAULT '{}'::jsonb,
+    changed_values jsonb DEFAULT '{}'::jsonb,
+    validation_errors jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -6709,7 +6712,8 @@ CREATE TABLE public.workbaskets (
     reason_of_changes text,
     operation_date date,
     initial_items_populated boolean DEFAULT false,
-    batches_loaded jsonb DEFAULT '{}'::jsonb
+    batches_loaded jsonb DEFAULT '{}'::jsonb,
+    search_code text
 );
 
 
@@ -10611,6 +10615,58 @@ CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
 --
 
 SET search_path TO "$user", public;
+INSERT INTO "schema_migrations" ("filename") VALUES ('1342519058_create_schema.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120726092749_duty_amount_expressed_in_float.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120726162358_measure_sid_to_be_unsigned.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120730121153_add_gono_id_index_on_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120803132451_fix_chief_columns.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120805223427_rename_qta_elig_use_lstrubg_chief.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120805224946_add_transformed_to_chief_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120806141008_add_note_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120807111730_add_national_attributes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120810083616_fix_datatypes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120810085137_add_national_abbreviation_to_certificates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120810104725_create_add_acronym_to_measure_types.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120810105500_adjust_fields_for_chief.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120810114211_add_national_to_certificate_description_periods.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120820074642_create_search_references.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120820181332_measure_sid_should_be_signed.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120821151733_add_amend_indicator_to_chief.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120823142700_change_decimals_in_chief.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120911111821_change_chief_duty_expressions_to_boolean.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120912143520_add_indexes_to_chief_records.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120913170136_add_national_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120919073610_remove_export_indication_from_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20120921072412_export_refund_changes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121001141720_adjust_chief_keys.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121003061643_add_origin_to_chief_records.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121004111601_create_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121004172558_extend_tariff_updates_size.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121009120028_add_tariff_measure_number.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121012080652_modify_primary_keys.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121015072148_drop_tamf_le_tsmp.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121029133148_convert_additional_codes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121109121107_fix_chief_last_effective_dates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121129094209_add_invalidated_columns_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20121204130816_create_hidden_goods_nomenclatures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130118122518_create_comms.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130118150014_add_origin_to_comm.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130123090129_create_tbl9s.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130123095635_add_processed_indicator_to_chief_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130123125153_adjust_chief_decimal_columns.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130124080334_add_comm_tbl9_indexes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130124085812_fix_chief_field_lengths.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130207150008_add_oplog_columns.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130208142043_rename_to_oplog_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130208155058_add_model_views.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130208170444_add_index_on_operation_date.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130208205715_remove_updated_at_columns.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130209072950_modify_created_at_to_use_timestamp.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130215093803_change_quota_volume_type.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130220094325_add_index_for_regulation_replacements.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130221132447_make_effective_end_dates_timestamps.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130221140444_change_export_refund_nomenclature_indent_type.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130417135357_add_users_table.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
@@ -10657,3 +10713,29 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130809075350_change_chapter_note_foreign_key_type.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130916082304_add_foreign_keys_to_search_references.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20131113142525_add_search_references_polymorphic_association.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140410213345_create_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140424105255_add_columns_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140526161142_add_error_column_to_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140527124014_change_column_in_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140715224356_create_measurement_unit_abbreviations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140721090137_add_organisation_slug_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140722151202_add_error_backtrace_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140731161233_create_tariff_update_conformance_errors.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150114110937_quota_critical_events_oplog_primary_key.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150406165721_add_disabled_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150507133620_add_organisation_content_id_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214224024_add_model_views_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214230831_quota_critical_events_view_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20161209195324_alter_footnotes_foonote_id_lenght.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audits.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180702142649_add_search_code_to_workbaskets.rb');

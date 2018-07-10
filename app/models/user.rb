@@ -82,4 +82,8 @@ class User < Sequel::Model
       name: name
     }
   end
+
+  def author_of_workbasket?(workbasket)
+    workbasket.user_id == id
+  end
 end

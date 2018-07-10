@@ -7,18 +7,20 @@
       = link_to "Measures", measures_url
 
 h2.heading-large
-  | Edit measures
+  = workbasket_author? ? 'Edit measures' : 'Review measures'
 
 /p
   a
     | Return to search results / amend selection
 
 script
+  == "window.__workbasket_id = #{workbasket.id};"
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"
 
 form.bulk-edit-measures
   = render "table_top"
-  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true } do
+
+  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true, ":select-all-has-changed" => "selectAllHasChanged" } do
     p Loading measures table...
 
   = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
@@ -31,15 +33,23 @@ form.bulk-edit-measures
       br
       = content_tag "loading-spinner", nil
 
+  = render "measures/bulks/action_buttons"
+
   = content_tag "change-duties-popup", nil, { "v-if" => "changingDuties", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
 
-  = content_tag "change-validity-period-popup", nil, { "v-if" => "changingValidityPeriod", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
+  = content_tag "change-validity-period-popup", nil, { "v-if" => "changingValidityPeriod", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
-  = content_tag "change-regulation-popup", nil, { "v-if" => "changingRegulation", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
+  = content_tag "change-regulation-popup", nil, { "v-if" => "changingRegulation", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
-  = content_tag "change-commodity-code-popup", nil, { "v-if" => "changingCommodityCodes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
+  = content_tag "change-commodity-code-popup", nil, { "v-if" => "changingCommodityCodes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
   = content_tag "change-origins-popup", nil, { "v-if" => "changingOrigin", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
+
+  = content_tag "remove-measures-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-removed-cb" => "measuresRemoved", ":all-measures-removed-cb" => "allMeasuresRemoved" }
+
+  = content_tag "delete-measures-popup", nil, { "v-if" => "deleting", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+
+  = content_tag "change-additional-code-popup", nil, { "v-if" => "changingAdditionalCode", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
 = render "shared/vue_templates/measures_grid"
 = render "shared/vue_templates/measure_origin"
@@ -48,3 +58,8 @@ form.bulk-edit-measures
 = render "shared/vue_templates/change_commodity_codes"
 = render "shared/vue_templates/change_validity_period"
 = render "shared/vue_templates/change_origins"
+= render "shared/vue_templates/remove_measures"
+= render "shared/vue_templates/delete_measures"
+= render "shared/vue_templates/change_additional_code"
+
+= render "measures/bulks/save_actions_popups/collection"

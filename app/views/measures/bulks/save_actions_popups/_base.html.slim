@@ -1,0 +1,24 @@
+.modal aria-hidden="true" id="bem-#{modal_id}"
+  .modal__overlay tabindex="-1"
+    .modal__container aria-modal="true" role="dialog"
+      header.modal__header
+        h2.modal__title
+          slot name="title"
+            = title
+
+      .modal__content
+        slot
+          div
+            .alert.alert--info
+              svg.icon.icon--info version="1.1" viewbox=("0 0 24 28") xmlns="http://www.w3.org/2000/svg"
+                path d=("M16 21.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-1.5v-8c0-0.281-0.219-0.5-0.5-0.5h-5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h1.5v5h-1.5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h7c0.281 0 0.5-0.219 0.5-0.5zM14 7.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-3c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h3c0.281 0 0.5-0.219 0.5-0.5zM24 14c0 6.625-5.375 12-12 12s-12-5.375-12-12 5.375-12 12-12 12 5.375 12 12z")
+
+              div class="js-bem-popup-data-container"
+
+          .form-actions
+            button.button style="display:none"
+              | Nothing
+            a.secondary-button href="#" onClick="MicroModal.close('bem-#{modal_id}'); return false;"
+              | OK
+
+
