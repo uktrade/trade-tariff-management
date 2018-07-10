@@ -1,0 +1,77 @@
+fieldset v-if="showQuota"
+  h3.heading-medium
+    | Configure the quota
+
+  .form-group
+    .multiple-choice
+      input type='radio' id="quota-existing" class="radio-inline-group" name="existing_quota" v-model="measure.existing_quota" value="existing"
+      label for="quota-existing"
+        | Specify an existing quota
+    .multiple-choice
+      input type='radio' id="quota-new" class="radio-inline-group" name="existing_quota" v-model="measure.existing_quota" value="new"
+      label for="quota-new"
+        | Create a new quota
+  div v-if="creatingNewQuota"
+    .form-group
+      .row
+        .col-xs-12.col-sm-6
+          label.form-label
+            | Order number
+            span.form-hint
+              | This is the code an importer would need to enter into their customs declaration to benefit from this tariff quota.
+          .row
+            .col-md-5
+              input.form-control v-model="measure.quota_ordernumber"
+
+    .form-group
+      label.form-label
+        | Initial status
+
+      .row
+        .col-md-5
+          = content_tag "custom-select", "", { ":options" => "quota_statuses", "label-field" => "label", "value-field" => "value", placeholder: "― select initial status ―", "v-model" => "measure.quota_status", "code-class-name" => "prefix--quota-status" }
+
+    .form-group
+      label.form-label
+        | Criticality threshold
+
+      .row
+        .col-xs-10.col-sm-4.col-md-3.col-lg-2
+          input.form-control v-model="measure.quota_criticality_threshold"
+        .col-xs-2.col-sm-1.col-md-1
+          span.input-suffix
+            | %
+
+    .form-group
+      label.form-label
+        | Description
+
+        span.form-hint
+          | Optional.
+
+      textarea.form-control rows="3" v-model="measure.quota_description"
+
+    h3.heading-medium
+      | Set the quota opening balance
+
+    .quota-periods
+      div.quota-period v-for="(quotaPeriod, index) in measure.quota_periods"
+        = content_tag "quota-period", "", { ":quota-period" => "quotaPeriod", ":index" => "index" }
+
+        div v-if="canRemoveQuota && index > 0"
+          a.text-danger href="#" v-on:click.prevent="removeQuotaPeriod(quotaPeriod)"
+            | Remove
+
+    div v-if="showAddMoreQuotaPeriods"
+      a href="#" v-on:click.prevent="addQuotaPeriod"
+        | Add another quota period
+
+  div v-if="usingExistingQuota"
+    .form-group
+      label.form-label
+        | Quota number
+        span.form-hint
+          | Start typing in the field to see available quotas. If the quota you need is not in the list, change the option above to create a new one instead.
+      .row
+        .col-3
+          = content_tag "custom-select", "", { url: "/quota_order_numbers", "label-field" => "quota_order_number_id", "value-field" => "quota_order_number_id", placeholder: "― start typing ―", "min-length" => 1, "v-model" => "measure.quota_ordernumber", "date-sensitive" => true, "code-class-name" => "prefix--quota-order-number" }

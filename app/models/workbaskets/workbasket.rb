@@ -42,14 +42,24 @@ module Workbaskets
                        class_name: "User"
 
     plugin :timestamps
+    plugin :validation_helpers
+    plugin :enumerize
     plugin :association_dependencies, events: :destroy,
                                       items: :destroy
+
+    enumerize :type, in: TYPES,
+                     predicates: true
+
+    enumerize :status, in: STATUS_LIST,
+                       default: :new,
+                       predicates: true
 
     validates do
       presence_of :status,
                   :user_id,
-                  :search_code,
                   :type
+
+      presence_of :search_code, if: :bulk_edit_of_measures?
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
       inclusion_of :type, in: TYPES.map(&:to_s)
