@@ -110,22 +110,23 @@ Vue.component("measures-grid", {
     selectAll: function(val) {
       var self = this;
 
-      if (this.selectAllHasChanged) {
-        this.selectAllHasChanged(val);
-      }
-
       if (this.indirectSelectAll) {
         return;
       }
 
       if (this.onSelectAllChanged) {
         this.onSelectAllChanged(val);
-        return;
+
+        if(this.clientSorting !== true) {
+          return;
+        }
       }
 
       if (val) {
         this.data.map(function(row) {
-          self.onItemSelected(row.measure_sid);
+          if (self.selectedRows.indexOf(row.measure_sid) === -1) {
+            self.onItemSelected(row.measure_sid);
+          }
         });
       } else {
         this.data.map(function(row) {

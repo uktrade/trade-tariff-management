@@ -4,7 +4,8 @@ Vue.component("change-duties-popup", {
   data: function() {
     return {
       measureComponents: [],
-      replacing: false
+      replacing: false,
+      errors: []
     };
   },
   mounted: function() {
@@ -71,6 +72,9 @@ Vue.component("change-duties-popup", {
     }
   },
   methods: {
+    validate: function() {
+
+    }
     getDutyExpressionId: function(component) {
       var ids = ["01","02","04","19","20"];
       var id = component.duty_expression.duty_expression_id;
@@ -87,6 +91,10 @@ Vue.component("change-duties-popup", {
     },
     confirmChanges: function() {
       var components = this.measureComponents;
+
+      if (!this.validate()) {
+        return;
+      }
 
       this.measures.forEach(function(measure) {
         if (measure.changes.indexOf("duties") === -1) {
