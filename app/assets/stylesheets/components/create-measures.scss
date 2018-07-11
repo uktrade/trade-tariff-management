@@ -1,5 +1,9 @@
-.measure-form {
-  input.button-with-right-margin {
-    margin-right: 15px;
+.measure-form.create-measures-v2 {
+  .form-actions {
+    margin-top: 85px;
+
+    input.button-with-right-margin {
+      margin-right: 15px;
+    }
   }
 }
