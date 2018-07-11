@@ -3,15 +3,6 @@
 
 = simple_form_for form, url: measures_path, html: { class: "measure-form", data: { measure: form.measure.to_json, measure_condition_attributes: form.measure.measure_conditions.to_json } } do |f|
 
-  = render "workbaskets/create_measures/steps/step_#{params[:step].to_s}", f: f
-
-  .js-measure-form-errors-container.alert.alert-danger v-if="hasErrors"
-    h3.measure-form-errors-header
-      | Please, review the following errors:
-    ul
-      li v-for="error in errors"
-        span v-html="error"
-
-  .form-actions
-    = f.button :submit, "Create measure", class: "button"
-    = link_to "Exit(return to workbasket)", root_url, class: "secondary-button"
+  = render "workbaskets/create_measures/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/create_measures/errors_container", f: f
+  = render "workbaskets/create_measures/action_links", f: f
