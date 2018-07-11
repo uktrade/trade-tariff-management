@@ -4,8 +4,6 @@
 }
 
 #wrapper {
-  max-width: none !important;
-  min-width: 1440px !important;
   padding: 0 15px;
   margin: 0 auto;
 }
@@ -27,13 +25,12 @@ html {
   background: #fff !important;
 }
 
-#global-header-bar, #global-cookie-message p, #footer .footer-wrapper {
-  max-width: none !important;
-  min-width: 1440px !important;
-}
-
-.header-wrapper {
-  max-width: none !important;
+#global-header-bar,
+#global-cookie-message p,
+#footer .footer-wrapper,
+.header-wrapper,
+#wrapper {
+  max-width: calc(100% - 60px) !important;
   min-width: 1440px !important;
 }
 
