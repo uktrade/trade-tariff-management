@@ -10,43 +10,43 @@ script type="text/x-template" id="measure-component-template"
       .form-group
         label.form-label v-if="index === 0"
           | Duty amount (% or €)
-        input.form-control v-model="measureComponent.amount"
+        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
 
     .col-md-3 v-if="showDutyAmountPercentage"
       .form-group
         label.form-label v-if="index === 0"
           | Duty amount (%)
-        input.form-control v-model="measureComponent.amount"
+        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
 
     .col-md-3 v-if="showDutyAmountNegativePercentage"
       .form-group
         label.form-label v-if="index === 0"
           | Duty amount (-%)
-        input.form-control v-model="measureComponent.amount"
+        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
 
     .col-md-3 v-if="showDutyAmountNumber"
       .form-group
         label.form-label v-if="index === 0"
           | Duty amount (€)
-        input.form-control v-model="measureComponent.amount"
+        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
 
     .col-md-3 v-if="showDutyAmountMinimum"
       .form-group
         label.form-label v-if="index === 0"
           | Duty amount (at least €)
-        input.form-control v-model="measureComponent.amount"
+        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
 
     .col-md-3 v-if="showDutyAmountMaximum"
       .form-group
         label.form-label
           | Duty amount (not more than €)
-        input.form-control v-model="measureComponent.amount"
+        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
 
     .col-md-3 v-if="showDutyRefundAmount"
       .form-group
         label.form-label v-if="index === 0"
           | Refund amount (€)
-        input.form-control v-model="measureComponent.amount"
+        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
 
     .col-md-3 v-if="showMonetaryUnit"
       .form-group

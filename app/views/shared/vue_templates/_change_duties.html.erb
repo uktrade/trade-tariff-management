@@ -18,6 +18,18 @@
       </info-message>
     </div>
 
+    <div class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1" v-if="errors.length > 0">
+
+      <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+        There are {{errors.length}} errors on the duty expressions entered
+      </h2>
+
+      <ul class="error-summary-list">
+        <li v-for="error in errors">{{error}}</li>
+      </ul>
+
+    </div>
+
     <div class="duty-expression" v-for="(measureComponent, index) in measureComponents">
       <measure-component :measure-component="measureComponent" :index="index">
         <div class="col-md-2">

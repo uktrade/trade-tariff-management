@@ -165,7 +165,7 @@ $(document).ready(function() {
             status: measure.status,
             visible: measure.visible,
             validity_start_date: measure.validity_start_date,
-            validity_end_date: measure.validity_end_date,
+            validity_end_date: measure.validity_end_date || "&ndash;",
             changes: measure.changes
           }
         });

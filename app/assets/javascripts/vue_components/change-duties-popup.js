@@ -73,8 +73,23 @@ Vue.component("change-duties-popup", {
   },
   methods: {
     validate: function() {
+      var errors = [];
+      var amountRegex = new RegExp(/^([\d]+)[\.]?[\d]*$/g);
 
-    }
+      this.measureComponents.forEach(function(mc, index) {
+        if (!mc.duty_expression_id || mc.duty_expression_id == "37") {
+          return;
+        }
+
+        if (!mc.amount || !amountRegex.test(mc.amount)) {
+          errors.push("Amount field for " + ordinal(index + 1) + " duty expression is invalid");
+        }
+      });
+
+      this.errors = errors;
+
+      return errors.length === 0;
+    },
     getDutyExpressionId: function(component) {
       var ids = ["01","02","04","19","20"];
       var id = component.duty_expression.duty_expression_id;
