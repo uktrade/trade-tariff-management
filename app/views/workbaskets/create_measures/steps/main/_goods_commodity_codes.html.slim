@@ -4,12 +4,12 @@ fieldset.js-create-measures-check-code-parent-container
 
   .form-group
     label.form-label
-      | Goods commodity codes
+      span.create-measures-sub_header
+        | Goods commodity codes
 
       span.form-hint
         | Enter one or more commodity codes here. Separate individual codes with line break.
         br
-
         | If you don't know which code you need, you can find it via the &nbsp;
 
         = link_to "Trade Tariff tool", "https://www.trade-tariff.service.gov.uk/trade-tariff/sections", target: "_blank"
@@ -23,3 +23,4 @@ fieldset.js-create-measures-check-code-parent-container
         = f.input :commodity_codes, as: :text, label: false, input_html: { rows: 4 }
 
     = render "workbaskets/create_measures/form_parts/check_a_commodity_code_description"
+    = render "workbaskets/create_measures/form_parts/commodity_codes_exceptions", f: f
