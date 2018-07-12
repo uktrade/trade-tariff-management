@@ -1,5 +1,5 @@
-Vue.component("change-duties-popup", {
-  template: "#change-duties-popup-template",
+Vue.component("change-conditions-popup", {
+  template: "#change-conditions-popup-template",
   props: ["measures", "onClose", "open"],
   data: function() {
     return {
@@ -59,10 +59,6 @@ Vue.component("change-duties-popup", {
           monetary_unit_code: component.monetary_unit ? component.monetary_unit.monetary_unit_code : null
         };
       });
-
-      if (this.measures[0].measure_components.length === 0) {
-        this.addDutyExpression();
-      }
     } else {
       this.addDutyExpression();
     }

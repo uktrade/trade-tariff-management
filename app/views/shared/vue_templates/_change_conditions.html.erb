@@ -1,0 +1,62 @@
+<script type="text/x-template" id="change-conditions-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Change conditions
+    </template>
+
+    <div v-if="multiple">
+      <warning-message>
+        You are bulk-changing {{measures.length}} measures. Please check your inputs carefully!
+      </warning-message>
+    </div>
+
+    <div v-if="replacing">
+      <info-message>
+        The selection contains differing conditions.
+        <br />
+        These will be replaced with the conditions you configure here
+      </info-message>
+    </div>
+
+    <div class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1" v-if="errors.length > 0">
+
+      <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+        There are {{errors.length}} errors on the duty expressions entered
+      </h2>
+
+      <ul class="error-summary-list">
+        <li v-for="error in errors">{{error}}</li>
+      </ul>
+
+    </div>
+
+    <div class="measure-condition" v-for="(measureCondition, index) in conditions">
+      <measure-condition :condition="measureCondition" :index="index">
+        <div class="col-md-2">
+          <div class="form-group">
+            <a class="secondary-button text-danger" href="#" v-on:click.prevent="removeCondition(condition, index)" v-if="canRemoveMeasureCondition">
+              remove
+            </a>
+          </div>
+        </div>
+      </measure-condition>
+    </div>
+
+    <p>
+      <a href="#" v-on:click.prevent="addCondition">Add another condition</a>
+    </p>
+
+    <div v-if="replacing">
+
+    </div>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="confirmChanges">
+        Update selected measures
+      </button>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>
