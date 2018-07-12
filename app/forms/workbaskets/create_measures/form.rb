@@ -41,6 +41,9 @@ module Workbaskets
                     :excluded_geographical_areas,
                     :measure
 
+      attr_accessor :commodity_codes,
+                    :additional_codes
+
       def initialize(measure)
         @measure = measure
       end
