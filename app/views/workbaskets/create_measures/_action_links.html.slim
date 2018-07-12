@@ -8,6 +8,7 @@
     = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button button-with-right-margin js-create-measures-submit-for-cross-check-button"
 
   = f.button :submit, "Save progress", name: "save_progress", class: "button button-with-right-margin js-create-measures-save-progress-button"
+
   = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-create-measures-exit-button"
 
   - if workbasket_has_previous_step?

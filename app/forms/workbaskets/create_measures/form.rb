@@ -43,7 +43,9 @@ module Workbaskets
 
       attr_accessor :commodity_codes,
                     :additional_codes,
-                    :commodity_codes_exclusions
+                    :commodity_codes_exclusions,
+                    :reduction_indicator,
+                    :workbasket_name
 
       def initialize(measure)
         @measure = measure
