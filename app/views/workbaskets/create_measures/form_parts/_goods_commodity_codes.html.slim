@@ -1,8 +1,4 @@
-
-/ h4.heading-small
-/   | Give the regulation name
-
-fieldset
+fieldset.js-create-measures-check-code-parent-container
   h3.heading-medium
     | Which goods will the measures apply to?
 
@@ -26,25 +22,4 @@ fieldset
       .col-xs-12.col-md-11.col-lg-9
         = f.input :commodity_codes, as: :text, label: false, input_html: { rows: 4 }
 
-    label.form-label
-      span.form-hint
-        = link_to "Check a commodity code description", "#", class: "js-create-measures-check-commodity-code-description"
-        br
-
-    .js-create-measures-check-commodity-code-container.hidden
-
-      label.form-label
-        span.form-hint
-          | If you need to check a commodity code, enter it here to see the description.
-          br
-          | Codes entered here will not be added to the measures.
-
-      .row
-        .col-md-5
-          input.form-control v-model="goods_nomenclature_code"
-
-      label.form-label
-        .after-field v-html="goods_nomenclature_code_description" v-if="goods_nomenclature_code_description"
-
-        span.form-hint.after-field v-else=""
-          | Code description will appear here once you enter a commodity code above.
+    = render "workbaskets/create_measures/form_parts/check_a_commodity_code_description"

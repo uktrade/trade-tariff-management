@@ -1,0 +1,25 @@
+label.form-label
+  span.form-hint
+    = link_to "Check a additional code description", "#",
+              class: "js-create-measures-check-code-description"
+    br
+
+.js-create-measures-check-code-container.hidden
+  label.form-label
+    span.form-hint
+      | If you need to check an additional code, enter it here to see the description.
+      br
+      | Codes entered here will not be added to the measures.
+
+  .row
+    .col-md-5
+      input.form-control
+      / TODO: add related v-model="additional_codes"
+
+  label.form-label
+    .after-field
+    / TODO: add related v-html="" v-if=""
+
+    span.form-hint.after-field
+      / TODO: add related v-else=""
+      | Code description will appear here once you enter a additional code above.

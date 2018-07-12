@@ -1,13 +1,13 @@
 window.CreateMeasuresMainStepAdvancedActions =
 
   init: ->
-    CreateMeasuresMainStepAdvancedActions.checkCommodityCodeShowHideFunction()
+    CreateMeasuresMainStepAdvancedActions.checkCodeShowHideFunction()
 
-  checkCommodityCodeShowHideFunction: ->
-    $(document).on 'click', '.js-create-measures-check-commodity-code-description', ->
-      console.log('- CODE -')
+  checkCodeShowHideFunction: ->
+    $(document).on 'click', '.js-create-measures-check-code-description', ->
+      parent = $(this).closest(".js-create-measures-check-code-parent-container")
 
-      container = $(".js-create-measures-check-commodity-code-container")
+      container = parent.find(".js-create-measures-check-code-container")
 
       if container.hasClass("hidden")
         container.removeClass("hidden")
