@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
-    resources :create_measures, only: [:create, :show, :edit, :update]
+    resources :create_measures, only: [:new, :show, :edit, :update]
   end
 
   namespace :regulation_form_api do

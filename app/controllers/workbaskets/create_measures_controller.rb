@@ -31,14 +31,15 @@ module Workbaskets
       Workbaskets::CreateMeasures::Form.new(Measure.new)
     end
 
-    def create
-      self.workbasket = Workbaskets::Workbasket.new(
-        type: :create_measures,
-        user: current_user
+    def new
+      self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
+        :create_measures, current_user
       )
-      workbasket.save
 
-      redirect_to edit_create_measure_url(workbasket.id, step: :main)
+      redirect_to edit_create_measure_url(
+        workbasket.id,
+        step: :main
+      )
     end
 
     def update

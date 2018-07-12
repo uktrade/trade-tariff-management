@@ -89,6 +89,16 @@ module Workbaskets
     end
 
     class << self
+      def buld_new_workbasket!(type, current_user)
+        workbasket = Workbaskets::Workbasket.new(
+          type: type,
+          user: current_user
+        )
+        workbasket.save
+
+        workbasket
+      end
+
       def validate_measure!(measure_params={})
         return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
 
