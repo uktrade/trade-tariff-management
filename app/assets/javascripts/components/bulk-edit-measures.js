@@ -103,7 +103,7 @@ $(document).ready(function() {
       },
       visibleMeasures: function() {
         return this.measuresForTable.filter(function (measure) {
-          return measure.visible;
+          return measure.visible && !measure.deleted;
         });
       },
       selectedMeasureObjects: function() {
@@ -164,6 +164,7 @@ $(document).ready(function() {
             last_updated: measure.operation_date,
             status: measure.status,
             visible: measure.visible,
+            deleted: measure.deleted,
             validity_start_date: measure.validity_start_date,
             validity_end_date: measure.validity_end_date,
             changes: measure.changes
@@ -315,6 +316,19 @@ $(document).ready(function() {
       },
       measuresUpdated: function() {
         DB.insertOrReplaceBulk(this.search_code, this.measures);
+      },
+      measuresDeleted: function(deletedMeasures){
+        var self = this;
+        deletedMeasures.forEach(function(deletedMeasure){
+          var measureInTable = self.visibleMeasures.find(function(msr){
+            return msr.measure_sid == deletedMeasure.measure_sid;
+          });
+          if (measureInTable) {
+            measureInTable.deleted = true;
+          }
+        });
+        this.selectedMeasures = [];
+        this.measuresUpdated();
       },
       selectAllHasChanged: function(value) {
         this.selectedAllMeasures = value;
