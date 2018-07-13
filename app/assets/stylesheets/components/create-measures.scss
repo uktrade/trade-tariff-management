@@ -1,0 +1,28 @@
+.measure-form.create-measures-v2 {
+  .form-actions {
+    margin-top: 85px;
+
+    input.button-with-right-margin {
+      margin-right: 15px;
+    }
+  }
+
+  .js-create-measures-check-code-description {
+    cursor: pointer;
+  }
+
+  .js-create-measures-check-code-container {
+    overflow: hidden;
+    border-left: 3px solid gray;
+    padding-left: 20px;
+
+    &.additional_code_check {
+      margin-bottom: 25px;
+    }
+  }
+
+  span.create-measures-sub_header {
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+}

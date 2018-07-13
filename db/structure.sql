@@ -1247,6 +1247,38 @@ ALTER SEQUENCE public.complete_abrogation_regulations_oid_seq OWNED BY public.co
 
 
 --
+-- Name: create_measures_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_measures_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    created_at time without time zone,
+    updated_at time without time zone
+);
+
+
+--
+-- Name: create_measures_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_measures_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_measures_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_measures_workbasket_settings_id_seq OWNED BY public.create_measures_workbasket_settings.id;
+
+
+--
 -- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6713,7 +6745,8 @@ CREATE TABLE public.workbaskets (
     operation_date date,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb,
-    search_code text
+    search_code text,
+    all_batched_loaded boolean DEFAULT false
 );
 
 
@@ -6931,6 +6964,13 @@ ALTER TABLE ONLY public.chief_measurement_unit ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.complete_abrogation_regulations_oid_seq'::regclass);
+
+
+--
+-- Name: create_measures_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_measures_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_measures_workbasket_settings_id_seq'::regclass);
 
 
 --
@@ -7768,6 +7808,14 @@ ALTER TABLE ONLY public.chief_measurement_unit
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
     ADD CONSTRAINT complete_abrogation_regulations_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: create_measures_workbasket_settings create_measures_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_measures_workbasket_settings
+    ADD CONSTRAINT create_measures_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -10739,3 +10787,7 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publ
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180702142649_add_search_code_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180702144052_add_all_batched_loaded_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182215_create_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182401_add_settings_jsonb_to_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182617_add_timestamps_to_create_measures_workbasket_settings.rb');
