@@ -30,6 +30,10 @@
   box-sizing: border-box;
   border: 2px solid $text-colour;
   box-shadow: 0 0 75px rgba(0, 0, 0, 0.3);
+
+  .conditions-popup & {
+    width: 1280px;
+  }
 }
 
 .modal__header {

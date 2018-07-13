@@ -4,7 +4,7 @@ script type="text/x-template" id="measure-condition-component-template"
       .form-group
         label.form-label
           | Duty expression
-        = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_code", "v-model" => "measureConditionComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―", "code-class-name" => "prefix--duty-expression", "abbreviation-class-name" => "abbreviation--duty-expression", ":options-filter" => "expressionsFriendlyDuplicate" }
+        = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_code", "v-model" => "measureConditionComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―", "code-class-name" => "prefix--duty-expression", "abbreviation-class-name" => "abbreviation--duty-expression", ":options-filter" => "expressionsFriendlyDuplicate", ":on-change" => "onDutyExpressionSelected", ":allow-clear" => "true" }
 
     .col-md-3 v-if="showDutyAmountOrPercentage"
       .form-group
@@ -58,17 +58,18 @@ script type="text/x-template" id="measure-condition-component-template"
       .form-group
         label.form-label
           | Monetary unit
-        = content_tag "custom-select", "", { url: "/monetary_units", "label-field" => "description", "value-field" => "monetary_unit_code", "code-field" => "monetary_unit_code", "v-model" => "measureConditionComponent.monetary_unit_code", "placeholder" => "― select the monetary unit or blank for EURO ―", "date-sensitive" => true, "code-class-name" => "prefix--monetary-unit" }
+        = content_tag "custom-select", "", { url: "/monetary_units", "label-field" => "description", "value-field" => "monetary_unit_code", "code-field" => "monetary_unit_code", "v-model" => "measureConditionComponent.monetary_unit_code", "placeholder" => "― select the monetary unit or blank for EURO ―", "date-sensitive" => true, "code-class-name" => "prefix--monetary-unit", ":on-change" => "onMonetaryUnitSelected", ":allow-clear" => "true" }
 
     .col-md-3 v-if="showMeasurementUnit"
       .form-group
         label.form-label
           | Measurement unit
-        = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measureConditionComponent.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit" }
+        = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measureConditionComponent.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit", ":on-change" => "onMeasurementUnitSelected", ":allow-clear" => "true" }
 
     .col-md-3 v-if="showMeasurementUnit"
       .form-group
         label.form-label
           | Measurement unit qualifier
-        = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measureConditionComponent.measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit-qualifier" }
+        = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measureConditionComponent.measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit-qualifier", ":on-change" => "onMeasurementUnitQualifierSelected", ":allow-clear" => "true" }
 
+    = content_tag :slot, nil

@@ -1,7 +1,7 @@
 window.___modal_count = 0;
 
 var template = [
-  '<div :id="\'modal-\' + id" aria-hidden="true" class="modal">',
+  '<div :id="\'modal-\' + id" aria-hidden="true" :class="[classes, \'modal\']">',
     '<div tabindex="-1" class="modal__overlay">',
       '<div role="dialog" class="modal__container" aria-modal="true" aria-labelledby="\'modal-\' + id + \'-title\'" >',
         '<header class="modal__header">',
@@ -20,7 +20,7 @@ var template = [
 
 Vue.component("pop-up", {
   template: template,
-  props: ["onClose", "open"],
+  props: ["onClose", "open", "classes"],
   data: function() {
     return {
       id: (++window.___modal_count)

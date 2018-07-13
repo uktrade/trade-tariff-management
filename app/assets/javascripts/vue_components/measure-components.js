@@ -59,7 +59,7 @@ var componentCommonFunctionality = {
     expressionsFriendlyDuplicate: function(options) {
       return DutyExpressionsParser.parse(options);
     },
-    dutyExpressionSelected: function(item) {
+    onDutyExpressionSelected: function(item) {
       this[this.thing].duty_expression = item;
 
       if (!this.showMonetaryUnit) {
@@ -74,13 +74,13 @@ var componentCommonFunctionality = {
         this[this.thing].measurement_unit_qualifier = null;
       }
     },
-    monetaryUnitSelected: function(item) {
+    onMonetaryUnitSelected: function(item) {
       this[this.thing].monetary_unit = item;
     },
-    measurementUnitSelected: function(item) {
+    onMeasurementUnitSelected: function(item) {
       this[this.thing].measurement_unit = item;
     },
-    measurementUnitQualifierSelected: function(item) {
+    onMeasurementUnitQualifierSelected: function(item) {
       this[this.thing].measurement_unit_qualifier = item;
     }
   }

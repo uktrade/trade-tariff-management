@@ -1,6 +1,6 @@
 Vue.component('measure-condition', {
   template: "#condition-template",
-  props: ["condition"],
+  props: ["condition", "hideHelp"],
   computed: {
     showAction: function() {
       var codes = ["K", "P", "S", "W", "Y"];
@@ -99,6 +99,21 @@ Vue.component('measure-condition', {
       }
 
       this.condition.measure_condition_components.splice(idx, 1);
-    }
+    },
+    addCertificate: function() {
+
+    },
+    onConditionCodeSelected: function(obj) {
+      this.condition.measure_condition_code = obj;
+    },
+    onCertificateTypeSelected: function(obj) {
+      this.condition.certificate_type = obj;
+    },
+    onCertificateSelected: function(obj) {
+      this.condition.certificate = obj;
+    },
+    onActionSelected: function(obj) {
+      this.condition.measure_action = obj;
+    },
   }
 });
