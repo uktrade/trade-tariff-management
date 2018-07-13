@@ -6,16 +6,15 @@ fieldset
   .form-group.with_less_bottom_margin
     label.form-label
       span.form-hint
-        | Duties specified here will apply to all the measures beign created.
+        | Duties specified here will apply to all the measures being created. If you need to specify
         br
 
-        | If you need to specify exceptions, you can vary the amounts on next screen;
+        | exceptions, you can vary the amounts on next screen; If you need to specify completelly
         br
 
-        | If you need to specify completelly different duty expressions, you should either create
-        | those measures separately, or create them with same duties initially and then use bulk-editing
-        | to make the necessary changes.
-
+        | different duty expressions, you should either create those measures separately, or create
+        br
+        | them with the same duties initially and then use bulk-editing to make the necessary changes.
 
   .measure-components
     div.measure-component v-for="(measureComponent, index) in measure.measure_components"

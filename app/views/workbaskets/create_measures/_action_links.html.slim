@@ -12,4 +12,5 @@
   = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-create-measures-exit-button"
 
   - if workbasket_has_previous_step?
-    = link_to "Previous step", "#", class: "secondary-button"
+    = link_to "Previous step", edit_create_measure_url(workbasket.id, step: create_meaasures_previous_step),
+                               class: "secondary-button"
