@@ -1,5 +1,5 @@
 <script type="text/x-template" id="change-conditions-popup-template">
-  <pop-up :open="open" :on-close="triggerClose">
+  <pop-up :open="open" :on-close="triggerClose" classes="conditions-popup">
     <template slot="title">
       Change conditions
     </template>
@@ -31,7 +31,7 @@
     </div>
 
     <div class="measure-condition" v-for="(measureCondition, index) in conditions">
-      <measure-condition :condition="measureCondition" :index="index">
+      <measure-condition :condition="measureCondition" :index="index" :hide-help="true">
         <div class="col-md-2">
           <div class="form-group">
             <a class="secondary-button text-danger" href="#" v-on:click.prevent="removeCondition(condition, index)" v-if="canRemoveMeasureCondition">
@@ -47,7 +47,33 @@
     </p>
 
     <div v-if="replacing">
+      <div class="form-group">
+        <div class="multiple-choice">
+          <input type='radio' id="conditions_add" class="radio-inline-group" v-model="mode" value="add" />
+          <label for="conditions_add">
+            Add to any existing conditions in the selection
 
+            <br>
+
+            <span class="form-hint">
+              Existing conditions will be retained. Conditions specified here will not be added to any measures in which the exact same condition already exists.
+            </span>
+          </label>
+        </div>
+
+        <div class="multiple-choice">
+          <input type='radio' id="conditions_replace" class="radio-inline-group" v-model="mode" value="replace" />
+          <label for="conditions_replace">
+            Replace any existing conditions in the selection
+
+            <br>
+
+            <span class="form-hint">
+              Select this option and leave the condition field above unselected to remove all existing conditions in the selection
+            </span>
+          </label>
+        </div>
+      </div>
     </div>
 
     <div class="form-actions">
