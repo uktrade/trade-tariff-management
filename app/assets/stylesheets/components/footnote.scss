@@ -1,0 +1,19 @@
+.footnote-template {
+  dl {
+    margin-bottom: 10px;
+
+    dt {
+      font-weight: bold;
+      width: 120px;
+      margin-top: 10px;
+    }
+
+    dt, dd {
+      display: inline-block;
+    }
+
+    .clear {
+      display: block;
+    }
+  }
+}

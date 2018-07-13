@@ -47,9 +47,11 @@ form.bulk-edit-measures
 
   = content_tag "remove-measures-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-removed-cb" => "measuresRemoved", ":all-measures-removed-cb" => "allMeasuresRemoved" }
 
-  = content_tag "delete-measures-popup", nil, { "v-if" => "deleting", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+  = content_tag "delete-measures-popup", nil, { "v-if" => "deleting", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-deleted" => "measuresDeleted" }
 
   = content_tag "change-additional-code-popup", nil, { "v-if" => "changingAdditionalCode", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+
+  = content_tag "change-footnotes-popup", nil, { "v-if" => "changingFootnotes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
 = render "shared/vue_templates/measures_grid"
 = render "shared/vue_templates/measure_origin"
@@ -61,5 +63,6 @@ form.bulk-edit-measures
 = render "shared/vue_templates/remove_measures"
 = render "shared/vue_templates/delete_measures"
 = render "shared/vue_templates/change_additional_code"
+= render "shared/vue_templates/change_footnotes"
 
 = render "measures/bulks/save_actions_popups/collection"
