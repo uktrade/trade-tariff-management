@@ -51,6 +51,8 @@ form.bulk-edit-measures
 
   = content_tag "change-additional-code-popup", nil, { "v-if" => "changingAdditionalCode", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
+  = content_tag "change-footnotes-popup", nil, { "v-if" => "changingFootnotes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+
 = render "shared/vue_templates/measures_grid"
 = render "shared/vue_templates/measure_origin"
 = render "shared/vue_templates/change_duties"
@@ -61,5 +63,6 @@ form.bulk-edit-measures
 = render "shared/vue_templates/remove_measures"
 = render "shared/vue_templates/delete_measures"
 = render "shared/vue_templates/change_additional_code"
+= render "shared/vue_templates/change_footnotes"
 
 = render "measures/bulks/save_actions_popups/collection"
