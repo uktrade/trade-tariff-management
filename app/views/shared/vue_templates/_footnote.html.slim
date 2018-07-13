@@ -11,7 +11,9 @@ script type="text/x-template" id="footnote-template"
 
     .form-group v-if="!onlyOneMeasure || (onlyOneMeasure && index != 0)"
       label.form-label
-        | Footnote type
+        span.create-measures-sub_header
+          | Footnote type
+
       .row
         .col-md-5
           = content_tag "custom-select", "", { url: "/footnote_types", "label-field" => "description", "value-field" => "footnote_type_id", "code-field" => "footnote_type_id", "v-model" => "footnote.footnote_type_id", "placeholder" => "― select the footnote type to use ―", "date-sensitive" => true, "code-class-name" => "prefix--footnote-type" }
@@ -20,12 +22,16 @@ script type="text/x-template" id="footnote-template"
         .col-md-8
           .form-group
             label.form-label
-              | Footnote
+              span.create-measures-sub_header
+                | Footnote
+
               span.form-hint v-if="onlyOneMeasure && index == 0"
                 ' Note: editing the copy here will, when you click Update, create a new footnote (with a new footnote ID) to replace the current one in the selection. It will not change any other instance of this footnote used elsewhere. If you want to change this footnote everywhere it is used, you can do so via
                 a href="#" Manage reference data - Manage footnotes
               span.form-hint v-if="!onlyOneMeasure || (onlyOneMeasure && index != 0)"
-                | Start typing your footnote in the field below. Matching or similar footnotes (within the type selected above) will be listed below - select one to re-use it, or continue typing to create a new one.
+                | Start typing your footnote in the field below.
+                | Matching or similar footnotes (within the type selected above) will be listed below -
+                | select one to re-use it, or continue typing to create a new one.
 
             textarea.form-control v-model="footnote.description" rows="5"
 
