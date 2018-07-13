@@ -1,0 +1,8 @@
+= simple_form_for form, url: create_measure_url(id: workbasket.id),
+                        html: { \
+                          class: "measure-form create-measures-v2",
+                          method: :put \
+                        } do |f|
+
+  = render "workbaskets/create_measures/errors_container", f: f
+  = render "workbaskets/create_measures/action_links", f: f

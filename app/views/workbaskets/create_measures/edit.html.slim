@@ -13,4 +13,7 @@ header
   h1.heading-large
     = create_measures_header
 
-= render "form"
+- if saver_class::FORM_STEPS.include?(params[:step])
+  = render "workbaskets/create_measures/form"
+- else
+  = render "workbaskets/create_measures/steps/review_and_submit"
