@@ -163,8 +163,17 @@ $(document).ready(function() {
             window.location = window.save_url + advanced_params;
           },
           error: function(response) {
-            button.val(button.attr("data-text"));
-            button.prop("disabled", false);
+
+            if ( window.save_url == "/measures" ) {
+              // Create measures V1 version
+              //
+              button.val(button.attr("data-text"));
+              button.prop("disabled", false);
+            } else {
+              // Create measures V2 version
+              //
+              CreateMeasuresSaveActions.unlockButtonsAndHideSpinner();
+            }
 
             $.each( response.responseJSON.errors, function( key, value ) {
               if (value.constructor === Array) {

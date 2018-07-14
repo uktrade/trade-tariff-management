@@ -31,8 +31,8 @@ window.CreateMeasuresSaveActions =
 
     exit_link.addClass('disabled')
 
-  unlockButtons: ->
-    $(".js-create-measures-save-progress-button").removeClass('disabled')
-    $(".js-create-measures-continue-button").removeClass('disabled')
-    $(".js-create-measures-exit-button").removeClass('disabled')
+  unlockButtonsAndHideSpinner: ->
+    $(".spinner_block").addClass('hidden')
+    $(".js-create-measures-v2-submit-button, .js-create-measures-exit-button").removeClass('disabled')
+                                                                              .removeClass('hidden')
 
