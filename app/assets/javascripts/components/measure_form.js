@@ -120,6 +120,8 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
 
+        var data_ops = { measure: self.preparePayload() };
+
         if ( window.save_url == "/measures" ) {
           // Create measures V1 version
           //
@@ -137,6 +139,8 @@ $(document).ready(function() {
 
           CreateMeasuresSaveActions.toogleSaveSpinner($(this).attr('name'));
           var http_method = "PUT";
+
+          data_ops['step'] = window.current_step;
         }
 
         self.errors = [];
@@ -144,9 +148,7 @@ $(document).ready(function() {
         $.ajax({
           url: window.save_url,
           type: http_method,
-          data: {
-            measure: self.preparePayload()
-          },
+          data: data_ops,
           success: function(response) {
             $(".js-measure-form-errors-container").empty().addClass("hidden");
 
