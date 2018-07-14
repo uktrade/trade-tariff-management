@@ -29,6 +29,12 @@ module Workbaskets
       )
     end
 
+    expose(:workbasket_items) do
+       Workbaskets::Item.all.select { |i| i.new_data_parsed.present? }[0..15].map do |item|
+        item.new_data_parsed
+      end
+    end
+
     def new
       self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
         :create_measures, current_user
