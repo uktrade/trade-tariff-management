@@ -29,4 +29,21 @@
   .form-group.with_less_bottom_margin {
     margin-bottom: 10px;
   }
+
+  .create-measures-message-block {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .create-measures-details-table {
+
+    td {
+      font-size: 18px;
+
+      &.heading_column {
+        font-weight: bold;
+      }
+    }
+  }
 }
