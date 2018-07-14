@@ -65,8 +65,6 @@ $(document).ready(function() {
         this.parseMeasure(window.__measure);
       } else {
         data.measure = {
-          workbasket_name: null,
-          reduction_indicator: null,
           operation_date: null,
           regulation_id: null,
           measure_type_series_id: null,
@@ -81,6 +79,12 @@ $(document).ready(function() {
           quota_periods: [],
           measure_components: [],
           footnotes: [],
+          workbasket_name: null,
+          reduction_indicator: null,
+          commodity_codes: null,
+          commodity_codes_exclusions: null,
+          additional_codes: null,
+
           existing_quota: null
         };
       }
@@ -325,8 +329,6 @@ $(document).ready(function() {
       },
       preparePayload: function() {
         var payload = {
-          workbasket_name: this.measure.workbasket_name,
-          reduction_indicator: this.measure.reduction_indicator,
           operation_date: this.measure.operation_date,
 
           start_date: this.measure.validity_start_date,
@@ -340,6 +342,12 @@ $(document).ready(function() {
           goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
           additional_code_description: this.measure.additional_code_description,
           footnotes: this.measure.footnotes,
+
+          workbasket_name: this.measure.workbasket_name,
+          reduction_indicator: this.measure.reduction_indicator,
+          additional_codes: this.measure.additional_codes,
+          commodity_codes: this.measure.commodity_codes,
+          commodity_codes_exclusions: this.measure.commodity_codes_exclusions,
 
           existing_quota: this.measure.existing_quota === "existing",
           quota_status: this.measure.quota_status,

@@ -20,7 +20,7 @@ fieldset.js-create-measures-check-code-parent-container
 
     .row
       .col-xs-12.col-md-11.col-lg-9
-        = f.input :commodity_codes, as: :text, label: false, input_html: { rows: 4 }
+        textarea.form-control*{ "v-model" => "measure.commodity_codes", rows: 4 }
 
     = render "workbaskets/create_measures/steps/main/check_a_commodity_code_description"
     = render "workbaskets/create_measures/steps/main/commodity_codes_exceptions", f: f
