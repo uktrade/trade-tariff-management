@@ -54,4 +54,27 @@
     margin-bottom: 40px;
     overflow: hidden;
   }
+
+  .submit_group_for_cross_check_block, .save_progress_block, .exit_block {
+    margin-right: 5px;
+    float: left;
+  }
+
+  .exit_block {
+    padding-top: 10px;
+    margin-left: 5px;
+  }
+
+  .spinner_block {
+    padding-top: 1px;
+
+    img {
+      float: left;
+    }
+
+    span.saving_message {
+      margin-top: 10px;
+      display: inline-block;
+    }
+  }
 }

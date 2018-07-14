@@ -120,22 +120,44 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
 
-        var button = $("input[type='submit']");
-        button.attr("data-text", button.val());
-        button.val("Saving...");
-        button.prop("disabled", true);
+        if ( window.save_url == "/measures" ) {
+          // Create measures V1 version
+          //
+
+          var button = $("input[type='submit']");
+          button.attr("data-text", button.val());
+          button.val("Saving...");
+          button.prop("disabled", true);
+
+        } else {
+          // Create measures V2 version
+          //
+
+          CreateMeasuresSaveActions.toogleSaveSpinner(mode);
+        }
 
         self.errors = [];
 
         $.ajax({
-          url: "/measures",
+          url: window.save_url,
           type: "POST",
           data: {
             measure: self.preparePayload()
           },
           success: function(response) {
             $(".js-measure-form-errors-container").empty().addClass("hidden");
-            window.location = "/measures?code=" + response.goods_nomenclature_item_id;
+
+            if ( window.save_url == "/measures" ) {
+              // Create measures V1 version
+              //
+              var advanced_params = "?code=" + response.goods_nomenclature_item_id;
+            } else {
+              // Create measures V2 version
+              //
+              var advanced_params = "?step=" + response.next_step;
+            }
+
+            window.location = window.save_url + advanced_params;
           },
           error: function(response) {
             button.val(button.attr("data-text"));

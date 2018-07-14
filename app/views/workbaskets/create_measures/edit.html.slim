@@ -17,3 +17,6 @@ header
   = render "workbaskets/create_measures/form"
 - else
   = render "workbaskets/create_measures/steps/review_and_submit"
+
+script
+  == "window.save_url = '/create_measures/#{workbasket.id}';"
