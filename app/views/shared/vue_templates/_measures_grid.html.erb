@@ -19,16 +19,16 @@
         </div>
       </div>
 
-      <virtual-scroller container-class="" :items="sorted" :item-height="45" buffer="1000" pool-size="2500" >
-        <template slot-scope="props">
-          <div class='table__row' v-if="!props.item.deleted" :key="props.itemKey" height="45" :data-measure-sid="props.item.measure_sid">
+      <recycle-list class="scroller" :items="sorted" :item-height="45">
+        <template slot-scope="{ item, index, active }">
+          <div class='table__row' v-if="!item.deleted" :data-measure-sid="item.measure_sid">
             <div class="table__column select-all-column">
-              <input type="checkbox" name="measures[]" :value="props.item.measure_sid" :checked="(selectionType == 'all' && selectedRows.indexOf(props.item.measure_sid) === -1) || (selectionType == 'none' && selectedRows.indexOf(props.item.measure_sid) > -1)" @change="sendCheckedTrigger" />
+              <input type="checkbox" name="measures[]" :value="item.measure_sid" :checked="checked[item.measure_sid]" @change="sendCheckedTrigger" />
             </div>
-            <grid-column v-for="column in enabledColumns" :item="props.item" :column="column.field" :changeProp="column.changeProp"></grid-column>
+            <grid-column v-if="active" v-for="column in enabledColumns" :item="item" :column="column.field" :changeProp="column.changeProp"></grid-column>
           </div>
         </template>
-      </virtual-scroller>
+      </recycle-list>
     </div>
   </div>
 </script>

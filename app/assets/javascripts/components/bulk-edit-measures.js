@@ -84,11 +84,15 @@ $(document).ready(function() {
               measure.changes = [];
             }
 
+            self.selectedMeasures.push(measure.measure_sid);
+
             return measure;
           });
 
           self.isLoading = false;
         }
+
+        self.selectedAllMeasures = true;
       });
     },
     computed: {
@@ -254,6 +258,8 @@ $(document).ready(function() {
             if (!measure.changes) {
               measure.changes = [];
             }
+
+            self.selectedMeasures.push(measure.measure_sid);
 
             return measure;
           }));
