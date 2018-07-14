@@ -2,7 +2,7 @@ module Workbaskets
   class Workbasket < Sequel::Model
 
     STATUS_LIST = [
-      :new,
+      :in_progress,
       :draft_incomplete,
       :draft_ready_for_cross_check,
       :submitted_for_cross_check,
@@ -51,7 +51,7 @@ module Workbaskets
                      predicates: true
 
     enumerize :status, in: STATUS_LIST,
-                       default: :new,
+                       default: :in_progress,
                        predicates: true
 
     validates do
