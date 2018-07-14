@@ -167,14 +167,16 @@ $(document).ready(function() {
             if ( window.save_url == "/measures" ) {
               // Create measures V1 version
               //
-              var advanced_params = "?code=" + response.goods_nomenclature_item_id;
+              window.location = window.save_url + "?code=" + response.goods_nomenclature_item_id;
             } else {
               // Create measures V2 version
               //
-              var advanced_params = "?step=" + response.next_step;
+              if ( response.next_step.length > 0 ) {
+                window.location = window.save_url + "?step=" + response.next_step;
+              } else {
+                console.log('final step updated!');
+              }
             }
-
-            window.location = window.save_url + advanced_params;
           },
           error: function(response) {
 
@@ -341,7 +343,6 @@ $(document).ready(function() {
           start_date: this.measure.validity_start_date,
           end_date: this.measure.validity_end_date,
           regulation_id: this.measure.regulation_id,
-          measure_type_series_id: this.measure.measure_type_series_id,
           measure_type_id: this.measure.measure_type_id,
           workbasket_name: this.measure.workbasket_name,
           reduction_indicator: this.measure.reduction_indicator,
