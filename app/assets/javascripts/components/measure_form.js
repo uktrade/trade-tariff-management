@@ -65,6 +65,8 @@ $(document).ready(function() {
         this.parseMeasure(window.__measure);
       } else {
         data.measure = {
+          workbasket_name: null,
+          reduction_indicator: null,
           operation_date: null,
           regulation_id: null,
           measure_type_series_id: null,
@@ -287,6 +289,8 @@ $(document).ready(function() {
       },
       preparePayload: function() {
         var payload = {
+          workbasket_name: this.measure.workbasket_name,
+          reduction_indicator: this.measure.reduction_indicator,
           operation_date: this.measure.operation_date,
 
           start_date: this.measure.validity_start_date,

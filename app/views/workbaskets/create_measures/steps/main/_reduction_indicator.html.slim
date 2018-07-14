@@ -9,4 +9,4 @@ fieldset
 
     .row
       .col-md-3
-        = f.input :reduction_indicator, label: false, input_html: { class: 'form-control' }
+        input.form-control*{ "v-model" => "measure.reduction_indicator" }

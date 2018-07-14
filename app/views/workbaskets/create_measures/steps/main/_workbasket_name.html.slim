@@ -11,4 +11,4 @@ fieldset
 
     .row
       .col-md-5
-        = f.input :workbasket_name, label: false, input_html: { class: 'form-control' }
+        input.form-control*{ "v-model" => "measure.workbasket_name" }
