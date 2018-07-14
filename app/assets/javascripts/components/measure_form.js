@@ -116,7 +116,7 @@ $(document).ready(function() {
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
 
-      $(".measure-form").on("submit", function(e) {
+      $(document).on('click', ".js-create-measures-v1-submit-button, .js-create-measures-v2-submit-button", function(e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -129,18 +129,21 @@ $(document).ready(function() {
           button.val("Saving...");
           button.prop("disabled", true);
 
+          var http_method = "POST";
+
         } else {
           // Create measures V2 version
           //
 
-          CreateMeasuresSaveActions.toogleSaveSpinner(mode);
+          CreateMeasuresSaveActions.toogleSaveSpinner($(this).attr('name'));
+          var http_method = "PUT";
         }
 
         self.errors = [];
 
         $.ajax({
           url: window.save_url,
-          type: "POST",
+          type: http_method,
           data: {
             measure: self.preparePayload()
           },

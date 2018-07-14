@@ -4,15 +4,15 @@
 
   .submit_group_for_cross_check_block
     - if workbasket_has_next_step?
-      = f.button :submit, "Continue", name: "continue", class: "button button-with-right-margin js-create-measures-continue-button"
+      = f.button :submit, "Continue", name: "continue", class: "button button-with-right-margin js-create-measures-continue-button js-create-measures-v2-submit-button"
     - else
-      = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button button-with-right-margin js-create-measures-continue-button"
+      = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button button-with-right-margin js-create-measures-continue-button js-create-measures-v2-submit-button"
 
     .js-create-measures-continue-spinner.spinner_block.hidden
       = render "measures/bulks/loading_spinner", message: "Checking data..."
 
   .save_progress_block
-    = f.button :submit, "Save progress", name: "save_progress", class: "button button-with-right-margin js-create-measures-save-progress-button"
+    = f.button :submit, "Save progress", name: "save_progress", class: "button button-with-right-margin js-create-measures-save-progress-button js-create-measures-v2-submit-button"
 
     .js-create-measures-save-progress-spinner.spinner_block.hidden
       = render "measures/bulks/loading_spinner", message: "Saving..."
