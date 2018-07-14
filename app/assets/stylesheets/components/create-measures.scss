@@ -1,10 +1,6 @@
 .measure-form.create-measures-v2 {
   .form-actions {
     margin-top: 85px;
-
-    input.button-with-right-margin {
-      margin-right: 15px;
-    }
   }
 
   .js-create-measures-check-code-description {
@@ -56,7 +52,7 @@
   }
 
   .submit_group_for_cross_check_block, .save_progress_block, .exit_block {
-    margin-right: 5px;
+    margin-right: 25px;
     float: left;
   }
 
@@ -67,6 +63,7 @@
 
   .spinner_block {
     padding-top: 1px;
+    margin-top: -3px;
 
     img {
       float: left;
@@ -76,5 +73,15 @@
       margin-top: 10px;
       display: inline-block;
     }
+  }
+
+  .js-create-measures-v2-submit-button.hidden {
+    display: none;
+  }
+
+  a.disabled, input[type='submit'].disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
   }
 }
