@@ -124,8 +124,6 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
 
-        var data_ops = { measure: self.preparePayload() };
-
         if ( window.save_url == "/measures" ) {
           // Create measures V1 version
           //
@@ -136,6 +134,7 @@ $(document).ready(function() {
           button.prop("disabled", true);
 
           var http_method = "POST";
+          var data_ops = { measure: self.preparePayload() };
 
         } else {
           // Create measures V2 version
@@ -144,7 +143,16 @@ $(document).ready(function() {
           CreateMeasuresSaveActions.toogleSaveSpinner($(this).attr('name'));
           var http_method = "PUT";
 
-          data_ops['step'] = window.current_step;
+          if (window.current_step == 'main') {
+            var payload = self.prepareV2Step1Payload();
+          } else if (window.current_step == 'duties_conditions_footnotes') {
+            var payload = self.prepareV2Step2Payload();
+          }
+
+          var data_ops = {
+            step: window.current_step,
+            measure: payload
+          };
         }
 
         self.errors = [];
@@ -326,6 +334,84 @@ $(document).ready(function() {
           self[description] = "";
           self.measure[code] = null;
         }
+      },
+      prepareV2Step1Payload: function() {
+        var payload = {
+          operation_date: this.measure.operation_date,
+          start_date: this.measure.validity_start_date,
+          end_date: this.measure.validity_end_date,
+          regulation_id: this.measure.regulation_id,
+          measure_type_series_id: this.measure.measure_type_series_id,
+          measure_type_id: this.measure.measure_type_id,
+          workbasket_name: this.measure.workbasket_name,
+          reduction_indicator: this.measure.reduction_indicator,
+          additional_codes: this.measure.additional_codes,
+          commodity_codes: this.measure.commodity_codes,
+          commodity_codes_exclusions: this.measure.commodity_codes_exclusions
+        };
+
+        if (this.origins.country.selected) {
+          payload.geographical_area_id = this.origins.country.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.group.selected) {
+          payload.geographical_area_id = this.origins.group.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.erga_omnes.selected) {
+          payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        }
+
+        return payload;
+      },
+      prepareV2Step2Payload: function() {
+        var payload = {
+          footnotes: this.measure.footnotes
+        };
+
+        try {
+          if (this.showDuties) {
+            payload.measure_components = this.measure.measure_components.map(function(component) {
+              var c = clone(component);
+
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
+
+              return c;
+            });
+          }
+        } catch (e) {
+          console.error(e);
+        }
+
+        try {
+          payload.conditions = this.measure.conditions.map(function(condition) {
+            var c = clone(condition);
+
+            c.measure_condition_components = c.measure_condition_components.map(function(component) {
+              var c = clone(component);
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
+
+              return c;
+            });
+
+            return c;
+          });
+        } catch (e) {
+          console.error(e);
+        }
+
+        return payload;
       },
       preparePayload: function() {
         var payload = {
