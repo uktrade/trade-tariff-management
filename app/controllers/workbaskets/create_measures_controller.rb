@@ -5,10 +5,6 @@ module Workbaskets
       :edit, :update
     ]
 
-    expose(:saver_class) do
-      Workbaskets::CreateMeasures::Saver
-    end
-
     expose(:workbasket_has_previous_step?) do
       step_in?(saver_class::PREVIOUS_STEP_POINTERS)
     end
@@ -17,9 +13,14 @@ module Workbaskets
       step_in?(saver_class::NEXT_STEP_POINTERS)
     end
 
+    expose(:saver_class) do
+      Workbaskets::CreateMeasures::SettingsSaver
+    end
+
     expose(:saver) do
       saver_class.new(
-        params[:measure]
+        workbasket,
+        params
       )
     end
 
@@ -47,10 +48,10 @@ module Workbaskets
     end
 
     def update
-      saver.persist!
+      saver.save!
 
       if saver.valid?
-        render json: { next_step: saver.next_step },
+        render json: saver.success_ops,
                status: :ok
       else
         render json: { errors: saver.errors },
