@@ -13,13 +13,10 @@ label.form-label
 
   .row
     .col-md-5
-      input.form-control
-      / TODO: add related v-model="additional_codes"
+      input.form-control v-model="additional_code_preview"
 
   label.form-label
-    .after-field
-    / TODO: add related v-html="" v-if=""
+    .after-field v-html="additional_code_preview_description" v-if="additional_code_preview_description"
 
-    span.form-hint.after-field
-      / TODO: add related v-else=""
+    span.form-hint.after-field v-else=""
       | Code description will appear here once you enter a additional code above.

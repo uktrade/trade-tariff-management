@@ -30,8 +30,10 @@ $(document).ready(function() {
     data: function() {
       var data = {
         goods_nomenclature_code: "",
+        additional_code_preview: "",
         additional_code: null,
         goods_nomenclature_code_description: "",
+        additional_code_preview_description: "",
         additional_code_description: "",
         quota_statuses: [
           { value: "open", label: "Open" },
@@ -119,6 +121,7 @@ $(document).ready(function() {
       }
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
+      this.fetchAdditionalCode("/additional_codes/preview", 4, "additional_code_preview", "additional_code_preview_description");
 
       $(document).on('click', ".js-create-measures-v1-submit-button, .js-create-measures-v2-submit-button", function(e) {
         e.preventDefault();
@@ -310,6 +313,40 @@ $(document).ready(function() {
             url: url,
             data: {
               q: this[code].trim()
+            },
+            success: function(data) {
+
+              if (type === "json") {
+                if (data.length > 0) {
+                  self[description] = data[0][description_field];
+                  self.measure[code] = self[code].trim();
+                } else {
+                  self[description] = "";
+                  self.measure[code] = null;
+                }
+              } else {
+                self[description] = data;
+                self.measure[code] = self[code].trim();
+              }
+
+            },
+            error: function() {
+              self[description] = "";
+              self.measure[code] = null;
+            }
+          });
+        } else {
+          self[description] = "";
+          self.measure[code] = null;
+        }
+      },
+      fetchAdditionalCode: function(url, length, code, description, type, description_field) {
+        var self = this;
+        if (this[code].trim().length === length) {
+          $.ajax({
+            url: url,
+            data: {
+              code: this[code].trim()
             },
             success: function(data) {
 
@@ -646,6 +683,9 @@ $(document).ready(function() {
       },
       goods_nomenclature_code: function() {
         this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
+      },
+      additional_code_preview: function() {
+        this.fetchAdditionalCode("/additional_codes/preview", 4, "additional_code_preview", "additional_code_preview_description");
       },
       "measure.validity_start_date": function() {
         window.measure_start_date = this.measure.validity_start_date;
