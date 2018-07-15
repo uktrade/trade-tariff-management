@@ -346,7 +346,7 @@ $(document).ready(function() {
           $.ajax({
             url: url,
             data: {
-              q: this[code].trim()
+              code: this[code].trim()
             },
             success: function(data) {
 
