@@ -46,7 +46,7 @@ module Workbaskets
         @current_step = current_step
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
         @errors = {}
-        @candidates_with_errors = []
+        @candidates_with_errors = {}
       end
 
       def save!
@@ -62,6 +62,7 @@ module Workbaskets
         return false if @errors.present?
 
         validate!
+
         candidates_with_errors.blank?
       end
 
@@ -101,30 +102,81 @@ module Workbaskets
         end
 
         def validate!
-          candidates.map do |code|
-            record = validate_candidate!(code, validation_mode)
+          validate_candidates!
+          get_unique_candidate_errors!
+        end
 
-            if record.errors.present?
-              @candidates_with_errors << [
-                code: record.errors.full_messages
-              ]
+        def validate_candidates!
+          candidates.map do |code|
+            candidate_errors = candidate_validation_errors(code, validation_mode)
+
+            if candidate_errors.present?
+              @candidates_with_errors[code.to_s] = candidate_errors
             end
           end
+        end
+
+        def get_unique_candidate_errors!
+          unique_errors = {}
+
+          @candidates_with_errors.values
+                                 .map do |errors_list|
+
+            errors_list.map do |k, v|
+              unique_errors = check_candidate_errors_on_uniqueness!(
+                unique_errors, k, v
+              )
+            end
+          end
+
+          unique_errors.map do |k, v|
+            @errors = check_candidate_errors_on_uniqueness!(
+              errors, k, v
+            )
+          end
+        end
+
+        def check_candidate_errors_on_uniqueness!(res, k, v)
+          if res.has_key?(k)
+            v.flatten.map do |error_message|
+              unless res[k].include?(error_message)
+                res = add_error(res, k, error_message)
+              end
+            end
+
+          else
+            v.flatten.map do |error_message|
+              res = add_error(res, k, error_message)
+            end
+          end
+
+          res
+        end
+
+        def add_error(res, k, error_message)
+          if res[k].is_a?(Array)
+            res[k] << error_message
+          else
+            res[k] = [ error_message ]
+          end
+
+          res
         end
 
         def validation_mode
           commodity_codes.present? ? :commodity_codes : :additional_codes
         end
 
-        def validate_candidate!(code, mode)
+        def candidate_validation_errors(code, mode)
           measure = Measure.new(
             measure_params(code, mode)
           )
+
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
           ::Measures::ValidationHelper.new(
             measure, {}
-          ).measure
+          ).errors
         end
 
         def candidates

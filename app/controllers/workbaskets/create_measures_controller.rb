@@ -73,8 +73,10 @@ module Workbaskets
         render json: saver.success_ops,
                status: :ok
       else
-        render json: { errors: saver.errors },
-               status: :unprocessable_entity
+        render json: {
+          errors: saver.errors,
+          candidates_with_errors: saver.candidates_with_errors
+        }, status: :unprocessable_entity
       end
     end
 

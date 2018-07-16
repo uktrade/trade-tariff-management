@@ -9,6 +9,8 @@ module Measures
       @errors = errors
 
       measure_base_validation!
+
+      self
     end
 
     private
