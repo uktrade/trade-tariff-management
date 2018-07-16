@@ -5,6 +5,16 @@ module Workbaskets
       :edit, :update
     ]
 
+    expose(:current_step) { params[:step] }
+
+    expose(:workbasket_settings) do
+      workbasket.create_measures_settings
+    end
+
+    expose(:workbasket_step_settings) do
+      workbasket_settings.step_settings(current_step)
+    end
+
     expose(:workbasket_has_previous_step?) do
       step_in?(saver_class::PREVIOUS_STEP_POINTERS)
     end
@@ -17,10 +27,19 @@ module Workbaskets
       Workbaskets::CreateMeasures::SettingsSaver
     end
 
+    expose(:settings_params) do
+      ops = params[:settings]
+      ops.send("permitted=", true)
+      ops = ops.to_h
+
+      ops
+    end
+
     expose(:saver) do
       saver_class.new(
         workbasket,
-        params
+        current_step,
+        settings_params
       )
     end
 
@@ -62,7 +81,7 @@ module Workbaskets
     private
 
       def step_in?(list)
-        params[:step].in?(list)
+        current_step.in?(list)
       end
   end
 end

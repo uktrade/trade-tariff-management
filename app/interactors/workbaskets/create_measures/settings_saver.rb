@@ -1,26 +1,3 @@
-#
-# Example of params:
-#
-# {
-#   "step"=>"main",
-#   "settings" => {
-#     "operation_date"=>"25/07/2018",
-#     "start_date"=>"17/07/2018",
-#     "end_date"=>"31/07/2018",
-#     "regulation_id"=>"C1501512",
-#     "measure_type_id"=>"143",
-#     "workbasket_name"=>"TEST WORKBASKET",
-#     "reduction_indicator"=>"3",
-#     "additional_codes"=>"2550, 2551",
-#     "commodity_codes"=>"1,2,3,4",
-#     "commodity_codes_exclusions"=>"1,2",
-#     "geographical_area_id"=>"1011",
-#     "excluded_geographical_areas"=>["AD", "AR", "AS"]
-#   },
-#   "id"=>"317"
-# }
-#
-
 module Workbaskets
   module CreateMeasures
     class SettingsSaver
@@ -29,18 +6,46 @@ module Workbaskets
       NEXT_STEP_POINTERS = %w(main duties_conditions_footnotes)
       PREVIOUS_STEP_POINTERS = %w(duties_conditions_footnotes review_and_submit)
 
+      REQUIRED_PARAMS = {
+        start_date: :validity_start_date,
+        operation_date: :operation_date
+      }
+
+      MAIN_STEP_SETTINGS = %w(
+        regulation_id
+        start_date
+        end_date
+        measure_type_id
+        workbasket_name
+        operation_date
+        commodity_codes
+        commodity_codes_exclusions
+        additional_codes
+        reduction_indicator
+        geographical_area_id
+        excluded_geographical_areas
+      )
+
+      DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS = %w(
+        measure_components
+        conditions
+        footnotes
+      )
+
       attr_accessor :current_step,
                     :settings,
                     :workbasket,
                     :settings_params,
+                    :errors,
                     :candidates_with_errors
 
-      def initialize(workbasket, params={})
+      def initialize(workbasket, current_step, settings_ops={})
         @workbasket = workbasket
         @settings = workbasket.create_measures_settings
 
-        @current_step = params[:step]
-        @settings_params = ActiveSupport::HashWithIndifferentAccess.new(params[:settings])
+        @current_step = current_step
+        @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
+        @errors = {}
         @candidates_with_errors = []
       end
 
@@ -53,6 +58,9 @@ module Workbaskets
       end
 
       def valid?
+        check_required_params!
+        return false if @errors.present?
+
         validate!
         candidates_with_errors.blank?
       end
@@ -64,8 +72,10 @@ module Workbaskets
         ops
       end
 
-      def errors
-        candidates_with_errors.to_json
+      class << self
+        def keys_for_step(step)
+          const_get("#{step.upcase}_STEP_SETTINGS")
+        end
       end
 
       private
@@ -74,9 +84,25 @@ module Workbaskets
           FORM_STEPS.include?(current_step)
         end
 
+        def check_required_params!
+          REQUIRED_PARAMS.map do |k, v|
+            if settings_params[k.to_s].blank?
+              @errors[v.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+            end
+          end
+
+          if commodity_codes.blank? && additional_codes.blank?
+            @errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
+          end
+
+          if commodity_codes.blank? && exceptions.present?
+            @errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
+          end
+        end
+
         def validate!
           candidates.map do |code|
-            record = validate_candidate!(code, :commodity_codes)
+            record = validate_candidate!(code, validation_mode)
 
             if record.errors.present?
               @candidates_with_errors << [
@@ -84,6 +110,10 @@ module Workbaskets
               ]
             end
           end
+        end
+
+        def validation_mode
+          commodity_codes.present? ? :commodity_codes : :additional_codes
         end
 
         def validate_candidate!(code, mode)
@@ -99,14 +129,19 @@ module Workbaskets
 
         def candidates
           if commodity_codes.present?
-            commodity_codes
+            commodity_codes.split( /\r?\n/ )
           else
-            additional_codes
-          end
+            additional_codes.split(",")
+          end.map(&:strip)
         end
 
         def commodity_codes
           settings_params[:commodity_codes]
+        end
+
+        def exceptions
+          list = settings_params[:commodity_codes_exclusions]
+          list.present? ? list.split( /\r?\n/ ).map(&:strip) : []
         end
 
         def additional_codes
@@ -132,6 +167,10 @@ module Workbaskets
           ::Measures::AttributesNormalizer.new(
             ActiveSupport::HashWithIndifferentAccess.new(ops)
           ).normalized_params
+        end
+
+        def errors_translator(key)
+          I18n.t(:create_measures)[:errors][key]
         end
     end
   end

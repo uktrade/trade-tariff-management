@@ -121,11 +121,12 @@ module Workbaskets
     private
 
       def build_related_settings_table!
-        settings = case type
+        case type.to_sym
         when :create_measures
-          ::Workbaskets::CreateMeasuresSettings.new(
+          settings = ::Workbaskets::CreateMeasuresSettings.new(
             workbasket_id: id
           )
+          settings.save
 
         when :bulk_edit_of_measures
           # TODO: need to refactor Bulk Edit stuff
@@ -136,7 +137,7 @@ module Workbaskets
           # TODO
         end
 
-        settings.try(:save)
+
       end
   end
 end
