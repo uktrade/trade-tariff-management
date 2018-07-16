@@ -87,20 +87,14 @@
     cursor: default;
   }
 
-  .js-measure-form-errors-container {
-    ul {
-      li {
-        span {
-          a.js-show_hide_affected_codes {
-            margin-left: 15px;
-          }
+  .create-measures-error-block {
+    a.js-show_hide_affected_codes {
+      margin-left: 10px;
+    }
 
-          span.js-affected_codes_list {
-            padding-left: 20px;
-            color:#0b0c0c;
-          }
-        }
-      }
+    span.js-affected_codes_list {
+      padding-left: 20px;
+      color:#0b0c0c;
     }
   }
 }

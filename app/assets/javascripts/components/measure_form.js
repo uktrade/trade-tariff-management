@@ -212,7 +212,7 @@ $(document).ready(function() {
                       self.errors.push(innerError[0]);
 
                       setTimeout(function(){
-                        CreateMeasuresValidationErrorsHandler.render_affected_commodities_block(innerError);
+                        CreateMeasuresValidationErrorsHandler.renderAffectedCommoditiesBlock(innerError);
                       }, 1000);
                     } else {
                       self.errors.push(innerError);
