@@ -86,4 +86,21 @@
     pointer-events: none;
     cursor: default;
   }
+
+  .js-measure-form-errors-container {
+    ul {
+      li {
+        span {
+          a.js-show_hide_affected_codes {
+            margin-left: 15px;
+          }
+
+          span.js-affected_codes_list {
+            padding-left: 20px;
+            color:#0b0c0c;
+          }
+        }
+      }
+    }
+  }
 }

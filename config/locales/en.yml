@@ -39,5 +39,6 @@ en:
 
   create_measures:
     errors:
+      blank_workbasket_name: "Workbasket name can not be blank."
       blank_commodity_and_additional_codes: "Goods commodity codes: can be empty but only if one or more Meursing codes are entered in the Additional codes field."
       commodity_codes_exclusions: "Exceptions: if one or more codes are entered here, Goods commodity codes field must not be empty; each exception code must be a child of one of the goods commodity codes above."

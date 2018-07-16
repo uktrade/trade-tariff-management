@@ -50,7 +50,7 @@ module Workbaskets
       end
 
       def save!
-        workbasket.title = settings_params[:workbasket_name]
+        workbasket.title = workbasket_name
         workbasket.save
 
         settings.settings_jsonb = settings_params.to_json
@@ -92,6 +92,10 @@ module Workbaskets
             end
           end
 
+          if workbasket_name.blank?
+            @errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
+          end
+
           if commodity_codes.blank? && additional_codes.blank?
             @errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
           end
@@ -120,7 +124,6 @@ module Workbaskets
           res = {}
 
           @candidates_with_errors.map do |code, errors_list|
-
             errors_list.map do |k, v|
               if res.has_key?(k)
                 v.flatten.map do |error_message|
@@ -180,6 +183,10 @@ module Workbaskets
           else
             additional_codes.split(",")
           end.map(&:strip)
+        end
+
+        def workbasket_name
+          settings_params[:workbasket_name]
         end
 
         def commodity_codes

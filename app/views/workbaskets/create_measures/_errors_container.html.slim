@@ -4,4 +4,4 @@
 
   ul
     li v-for="error in errors"
-      span v-html="error"
+      .create-measures-error-block :data-error-message="error" v-html="error"
