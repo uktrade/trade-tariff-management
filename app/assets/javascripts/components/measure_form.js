@@ -174,11 +174,7 @@ $(document).ready(function() {
             } else {
               // Create measures V2 version
               //
-              if ( response.next_step.length > 0 ) {
-                window.location = window.save_url + "/edit?step=" + response.next_step;
-              } else {
-                console.log('final step updated!');
-              }
+              CreateMeasuresSaveActions.handleSuccessResponse(response);
             }
           },
           error: function(response) {
@@ -204,6 +200,8 @@ $(document).ready(function() {
               //
               // Also response returns `candidates_with_errors` collection
               // which having errors per candidate
+
+              CreateMeasuresSaveActions.hideSuccessMessage();
 
               $.each( response.responseJSON.errors, function( key, value ) {
                 if (value.constructor === Array) {

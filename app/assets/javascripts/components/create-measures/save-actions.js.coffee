@@ -36,3 +36,19 @@ window.CreateMeasuresSaveActions =
     $(".js-create-measures-v2-submit-button, .js-create-measures-exit-button").removeClass('disabled')
                                                                               .removeClass('hidden')
 
+  handleSuccessResponse: (resp) ->
+    if resp.next_step.length > 0 && window.create_measures_mode == 'continue'
+      CreateMeasuresSaveActions.showSuccessMessage()
+
+      setTimeout (->
+        window.location = window.save_url + '/edit?step=' + response.next_step
+      ), 3000
+    else
+      CreateMeasuresSaveActions.showSuccessMessage()
+
+  showSuccessMessage: ->
+    $(".js-measure-form-success-message-container").removeClass('hidden')
+
+  hideSuccessMessage: ->
+    $(".js-measure-form-success-message-container").addClass('hidden')
+
