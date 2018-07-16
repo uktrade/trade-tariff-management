@@ -175,7 +175,7 @@ $(document).ready(function() {
               // Create measures V2 version
               //
               if ( response.next_step.length > 0 ) {
-                window.location = window.save_url + "?step=" + response.next_step;
+                window.location = window.save_url + "/edit?step=" + response.next_step;
               } else {
                 console.log('final step updated!');
               }

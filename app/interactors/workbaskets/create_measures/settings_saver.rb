@@ -6,6 +6,11 @@ module Workbaskets
       NEXT_STEP_POINTERS = %w(main duties_conditions_footnotes)
       PREVIOUS_STEP_POINTERS = %w(duties_conditions_footnotes review_and_submit)
 
+      STEP_TRANSITIONS = {
+        main: :duties_conditions_footnotes,
+        duties_conditions_footnotes: :review_and_submit
+      }
+
       REQUIRED_PARAMS = %w(
         start_date
         operation_date
@@ -68,7 +73,7 @@ module Workbaskets
 
       def success_ops
         ops = {}
-        ops[:next_step] = true if next_step?
+        ops[:next_step] = next_step if next_step?
 
         ops
       end
@@ -80,6 +85,10 @@ module Workbaskets
       end
 
       private
+
+        def next_step
+          STEP_TRANSITIONS[current_step.to_sym]
+        end
 
         def next_step?
           FORM_STEPS.include?(current_step)
@@ -162,13 +171,6 @@ module Workbaskets
           measure = Measure.new(
             measure_params(code, mode)
           )
-
-          if code ==  "0601102000"
-            measure.measure_type_id = "143"
-          elsif code == "0601104000"
-            measure.measure_type_id = "141"
-            measure.validity_end_date = 2.years.ago
-          end
 
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
