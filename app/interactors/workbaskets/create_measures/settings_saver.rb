@@ -6,10 +6,10 @@ module Workbaskets
       NEXT_STEP_POINTERS = %w(main duties_conditions_footnotes)
       PREVIOUS_STEP_POINTERS = %w(duties_conditions_footnotes review_and_submit)
 
-      REQUIRED_PARAMS = {
-        start_date: :validity_start_date,
-        operation_date: :operation_date
-      }
+      REQUIRED_PARAMS = %w(
+        start_date
+        operation_date
+      )
 
       MAIN_STEP_SETTINGS = %w(
         regulation_id
@@ -86,9 +86,9 @@ module Workbaskets
         end
 
         def check_required_params!
-          REQUIRED_PARAMS.map do |k, v|
+          REQUIRED_PARAMS.map do |k|
             if settings_params[k.to_s].blank?
-              @errors[v.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+              @errors[k.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
             end
           end
 
@@ -103,7 +103,7 @@ module Workbaskets
 
         def validate!
           validate_candidates!
-          get_unique_candidate_errors!
+          get_unique_errors_from_candidates!
         end
 
         def validate_candidates!
@@ -116,51 +116,39 @@ module Workbaskets
           end
         end
 
-        def get_unique_candidate_errors!
-          unique_errors = {}
+        def get_unique_errors_from_candidates!
+          res = {}
 
-          @candidates_with_errors.values
-                                 .map do |errors_list|
+          @candidates_with_errors.map do |code, errors_list|
 
             errors_list.map do |k, v|
-              unique_errors = check_candidate_errors_on_uniqueness!(
-                unique_errors, k, v
-              )
-            end
-          end
+              if res.has_key?(k)
+                v.flatten.map do |error_message|
+                  if res[k].map { |el| el[0] }.include?(error_message)
+                    item = res[k].detect { |el| el[0] == error_message }
+                    item[1] << code
+                  else
+                    res[k] << [ error_message, [code] ]
+                  end
+                end
 
-          unique_errors.map do |k, v|
-            @errors = check_candidate_errors_on_uniqueness!(
-              errors, k, v
-            )
-          end
-        end
+              else
+                v.flatten.map do |error_message|
+                  val = [ error_message, [code] ]
 
-        def check_candidate_errors_on_uniqueness!(res, k, v)
-          if res.has_key?(k)
-            v.flatten.map do |error_message|
-              unless res[k].include?(error_message)
-                res = add_error(res, k, error_message)
+                  if res[k].is_a?(Array)
+                    res[k] << val
+                  else
+                    res[k] = [ val ]
+                  end
+                end
               end
             end
-
-          else
-            v.flatten.map do |error_message|
-              res = add_error(res, k, error_message)
-            end
           end
 
-          res
-        end
-
-        def add_error(res, k, error_message)
-          if res[k].is_a?(Array)
-            res[k] << error_message
-          else
-            res[k] = [ error_message ]
+          res.map do |k, v|
+            @errors[k] = v
           end
-
-          res
         end
 
         def validation_mode
@@ -171,6 +159,13 @@ module Workbaskets
           measure = Measure.new(
             measure_params(code, mode)
           )
+
+          if code ==  "0601102000"
+            measure.measure_type_id = "143"
+          elsif code == "0601104000"
+            measure.measure_type_id = "141"
+            measure.validity_end_date = 2.years.ago
+          end
 
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 

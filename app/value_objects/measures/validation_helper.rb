@@ -21,7 +21,13 @@ module Measures
         if measure.conformance_errors.present?
           measure.conformance_errors.map do |error_code, error_details_list|
             @errors[get_error_area(error_code)] = error_details_list.map do |error_message|
-              "#{error_code}: #{error_message}"
+              code = error_code
+              code = code.join(', ') if error_code.is_a?(Array)
+
+              message = error_message
+              message = message.tr("\n","") if message.include?("\n")
+
+              "#{code}: #{message}"
             end.uniq
           end
         end
