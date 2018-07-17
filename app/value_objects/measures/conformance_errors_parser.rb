@@ -1,25 +1,27 @@
 module Measures
-  class ValidationHelper
+  class ConformanceErrorsParser
 
-    attr_accessor :measure,
+    attr_accessor :record,
+                  :base_validator,
                   :errors
 
-    def initialize(measure, errors)
-      @measure = measure
+    def initialize(record, validator, errors)
+      @record = record
+      @base_validator = validator.new
       @errors = errors
 
-      measure_base_validation!
+      base_validation!
 
       self
     end
 
     private
 
-      def measure_base_validation!
-        @base_validator = base_validator.validate(measure)
+      def base_validation!
+        @base_validator = base_validator.validate(record)
 
-        if measure.conformance_errors.present?
-          measure.conformance_errors.map do |error_code, error_details_list|
+        if record.conformance_errors.present?
+          record.conformance_errors.map do |error_code, error_details_list|
             @errors[get_error_area(error_code)] = error_details_list.map do |error_message|
               code = error_code
               code = code.join(', ') if error_code.is_a?(Array)
@@ -31,10 +33,6 @@ module Measures
             end.uniq
           end
         end
-      end
-
-      def base_validator
-        @base_validator ||= MeasureValidator.new
       end
 
       def get_error_area(error_code)

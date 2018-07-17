@@ -174,8 +174,8 @@ module Workbaskets
 
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
-          ::Measures::ValidationHelper.new(
-            measure, {}
+          ::Measures::ConformanceErrorsParser.new(
+            measure, MeasureValidator, {}
           ).errors
         end
 

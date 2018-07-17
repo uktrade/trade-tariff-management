@@ -78,8 +78,8 @@ class MeasureSaver
     end
 
     def validate!
-      normalizer = ::Measures::ValidationHelper.new(
-        measure, @errors
+      normalizer = ::Measures::ConformanceErrorsParser.new(
+        measure, MeasureValidator, @errors
       )
 
       measure = normalizer.measure

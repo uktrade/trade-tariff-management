@@ -61,6 +61,7 @@ module CreateMeasures
           footnote.footnote_type_id = footnote_type_id
 
           set_primary_key(footnote)
+          validate!(footnote)
         end
 
         def check_footnote_association_measure!
@@ -71,6 +72,7 @@ module CreateMeasures
           footnote_association_measure.footnote_type_id = footnote_type_id
 
           set_primary_key(footnote_association_measure)
+          validate!(footnote_association_measure)
         end
 
         def check_footnote_description_period!
@@ -84,6 +86,7 @@ module CreateMeasures
 
           set_primary_key(footnote_description_period)
           @period_sid = footnote_description_period.footnote_description_period_sid
+          validate!(footnote_description_period)
         end
 
         def check_footnote_description!
@@ -97,6 +100,27 @@ module CreateMeasures
           footnote_description.footnote_description_period_sid = period_sid
 
           set_primary_key(footnote_description)
+          validate!(footnote_description)
+        end
+
+        def validate!(record)
+          if validator(record.class.name).present?
+            ::Measures::ConformanceErrorsParser.new(
+              record, validator(record.class.name), {}
+            ).errors
+             .map do |k, v|
+              @errors[k] = v
+            end
+          end
+        end
+
+        def validator(klass_name)
+          case klass_name
+          when "Footnote"
+            FootnoteValidator
+          when "FootnoteDescriptionPeriod"
+            FootnoteDescriptionPeriodValidator
+          end
         end
 
         def set_primary_key(record)
