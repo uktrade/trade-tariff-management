@@ -1,5 +1,16 @@
 window.CreateMeasuresSaveActions =
 
+  init: ->
+    $(document).on 'click', '.js-create-measures-continue-button', ->
+      window.create_measures_mode == 'continue'
+
+      return false
+
+    $(document).on 'click', '.js-create-measures-save-progress-button', ->
+      window.create_measures_mode == 'save_progress'
+
+      return false
+
   toogleSaveSpinner: (mode) ->
     CreateMeasuresSaveActions.disable_other_buttons(mode)
 
@@ -52,3 +63,5 @@ window.CreateMeasuresSaveActions =
   hideSuccessMessage: ->
     $(".js-measure-form-success-message-container").addClass('hidden')
 
+$ ->
+  CreateMeasuresSaveActions.init()
