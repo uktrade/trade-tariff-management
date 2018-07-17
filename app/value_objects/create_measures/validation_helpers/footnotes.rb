@@ -3,6 +3,8 @@ module CreateMeasures
     class Footnotes < ::CreateMeasures::ValidationHelpers::Base
 
       attr_accessor :measure,
+                    :current_admin,
+                    :operation_date
                     :footnote_description,
                     :footnote_type_id,
                     :footnote,
@@ -12,8 +14,10 @@ module CreateMeasures
                     :period_sid,
                     :errors
 
-      def initialize(measure, footnote_ops)
+      def initialize(measure, system_ops, footnote_ops={})
         @measure = measure
+        @current_admin = system_ops[:current_admin]
+        @operation_date = system_ops[:operation_date]
         @footnote_description = footnote_ops[:description]
         @footnote_type_id = footnote_ops[:footnote_type_id]
 
@@ -32,6 +36,19 @@ module CreateMeasures
 
         check_footnote_description!
         @errors.blank?
+      end
+
+      def persist!
+        [
+          footnote,
+          footnote_association_measure,
+          footnote_description_period,
+          footnote_description
+        ].map do |record|
+          ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
+            current_admin, operation_date
+          ).assign!
+        end
       end
 
       private
@@ -80,6 +97,10 @@ module CreateMeasures
           footnote_description.footnote_description_period_sid = period_sid
 
           set_primary_key(footnote_description)
+        end
+
+        def set_primary_key(record)
+          ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(record).assign!
         end
     end
   end

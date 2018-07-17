@@ -380,7 +380,7 @@ class MeasureSaver
     end
 
     def set_oplog_attrs_and_save!(record)
-      ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(record)
+      ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(record).assign!
 
       log_it("[ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}")
 
@@ -391,14 +391,9 @@ class MeasureSaver
     end
 
     def set_system_attrs(record)
-      record.manual_add = true
-      record.operation = "C"
-      record.operation_date = operation_date
-      record.added_by_id = current_admin.id
-      record.added_at = Time.zone.now
-      record.national = true
-      record.try("approved_flag=", true)
-      record.try("stopped_flag=", false)
+      ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
+        record, current_admin, operation_date
+      ).assign!
     end
 
     def operation_date

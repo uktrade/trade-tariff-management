@@ -11,7 +11,13 @@ module CreateMeasures
         "MeasureCondition" => :measure_condition_sid
       }
 
+      attr_accessor :record
+
       def initialize(record)
+        @record = record
+      end
+
+      def assign!
         p_key = PRIMARY_KEYS[record.class.name]
 
         if p_key.present?
