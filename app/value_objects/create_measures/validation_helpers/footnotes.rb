@@ -4,7 +4,7 @@ module CreateMeasures
 
       attr_accessor :measure,
                     :current_admin,
-                    :operation_date
+                    :operation_date,
                     :footnote_description,
                     :footnote_type_id,
                     :footnote,
