@@ -143,6 +143,7 @@ $(document).ready(function() {
           // Create measures V2 version
           //
 
+          CreateMeasuresSaveActions.hideSuccessMessage();
           CreateMeasuresSaveActions.toogleSaveSpinner($(this).attr('name'));
           var http_method = "PUT";
 

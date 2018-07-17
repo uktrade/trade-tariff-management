@@ -2,12 +2,12 @@ window.CreateMeasuresSaveActions =
 
   init: ->
     $(document).on 'click', '.js-create-measures-continue-button', ->
-      window.create_measures_mode == 'continue'
+      window.create_measures_mode = 'continue'
 
       return false
 
     $(document).on 'click', '.js-create-measures-save-progress-button', ->
-      window.create_measures_mode == 'save_progress'
+      window.create_measures_mode = 'save_progress'
 
       return false
 
@@ -52,7 +52,7 @@ window.CreateMeasuresSaveActions =
       CreateMeasuresSaveActions.showSuccessMessage()
 
       setTimeout (->
-        window.location = window.save_url + '/edit?step=' + response.next_step
+        window.location = window.save_url + '/edit?step=' + resp.next_step
       ), 3000
     else
       CreateMeasuresSaveActions.showSuccessMessage()
