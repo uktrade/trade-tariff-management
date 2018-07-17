@@ -1,11 +1,15 @@
 module Workbaskets
   class CreateMeasuresController < Measures::BulksBaseController
 
-    before_action :require_to_be_workbasket_owner!, only: [
-      :edit, :update
-    ]
+    before_action :require_to_be_workbasket_owner!,
+                  :require_step_declaration_in_params!,
+                  :check_if_action_is_permitted!, only: [ :edit, :update ]
 
     expose(:current_step) { params[:step] }
+
+    expose(:previous_step) do
+      saver_class.previous_step(current_step)
+    end
 
     expose(:workbasket_settings) do
       workbasket.create_measures_settings
@@ -70,9 +74,13 @@ module Workbaskets
       saver.save!
 
       if saver.valid?
+        create_measures_settings.track_step_validations_status!(current_step, true)
+
         render json: saver.success_ops,
                status: :ok
       else
+        create_measures_settings.track_step_validations_status!(current_step, false)
+
         render json: {
           errors: saver.errors,
           candidates_with_errors: saver.candidates_with_errors
@@ -84,6 +92,30 @@ module Workbaskets
 
       def step_in?(list)
         current_step.in?(list)
+      end
+
+      def require_step_declaration_in_params!
+        if current_step.blank?
+          redirect_to edit_create_measure_url(
+            workbasket.id,
+            step: :main
+          )
+
+          return false
+        end
+      end
+
+      def check_if_action_is_permitted!
+        if current_step != 'main' &&
+           !create_measures_settings.previous_step_validations_passed?(previous_step)
+
+          redirect_to edit_create_measure_url(
+            workbasket.id,
+            step: previous_step
+          )
+
+          return false
+        end
       end
   end
 end

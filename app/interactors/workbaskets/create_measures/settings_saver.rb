@@ -55,11 +55,12 @@ module Workbaskets
       end
 
       def save!
-        workbasket.title = workbasket_name
-        workbasket.save
+        if main_step?
+          workbasket.title = workbasket_name
+          workbasket.save
+        end
 
-        settings.settings_jsonb = settings_params.to_json
-        settings.save
+        settings.set_settings_for!(current_step, settings_params)
       end
 
       def valid?
@@ -67,7 +68,6 @@ module Workbaskets
         return false if @errors.present?
 
         validate!
-
         candidates_with_errors.blank?
       end
 
@@ -82,9 +82,19 @@ module Workbaskets
         def keys_for_step(step)
           const_get("#{step.upcase}_STEP_SETTINGS")
         end
+
+        def previous_step(current_step)
+          STEP_TRANSITIONS.select do |k, v|
+            v == current_step.to_sym
+          end.keys.first
+        end
       end
 
       private
+
+        def main_step?
+          current_step == 'main'
+        end
 
         def next_step
           STEP_TRANSITIONS[current_step.to_sym]

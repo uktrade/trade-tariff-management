@@ -1253,9 +1253,12 @@ ALTER SEQUENCE public.complete_abrogation_regulations_oid_seq OWNED BY public.co
 CREATE TABLE public.create_measures_workbasket_settings (
     id integer NOT NULL,
     workbasket_id integer,
-    settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     created_at time without time zone,
-    updated_at time without time zone
+    updated_at time without time zone,
+    duties_conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    duties_conditions_footnotes_validation_passed boolean DEFAULT false
 );
 
 
@@ -10791,3 +10794,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180702144052_add_all_bat
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182215_create_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182401_add_settings_jsonb_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182617_add_timestamps_to_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180717164406_change_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180717165903_add_more_fields_to_create_measures_workbasket_settings.rb');
