@@ -56,6 +56,7 @@ window.CreateMeasuresSaveActions =
       ), 3000
     else
       CreateMeasuresSaveActions.showSuccessMessage()
+      CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
 
   showSuccessMessage: ->
     $(".js-measure-form-success-message-container").removeClass('hidden')
