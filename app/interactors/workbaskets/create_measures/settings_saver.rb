@@ -29,9 +29,13 @@ module Workbaskets
         @current_step = current_step
         @settings = workbasket.create_measures_settings
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
-        @step_pointer = ::CreateMeasures::StepPointer.new(current_step)
-        @attrs_parser = ::CreateMeasures::AttributesParser.new(settings_params)
 
+        @step_pointer = ::CreateMeasures::StepPointer.new(current_step)
+        @attrs_parser = ::CreateMeasures::AttributesParser.new(
+          workbasket,
+          current_step,
+          settings_params
+        )
         @errors = {}
         @candidates_with_errors = {}
       end

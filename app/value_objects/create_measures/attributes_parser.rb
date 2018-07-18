@@ -1,10 +1,16 @@
 module CreateMeasures
   class AttributesParser
 
-    attr_accessor :ops
+    attr_accessor :workbasket_name,
+                  :step,
+                  :ops
 
-    def initialize(ops)
+    def initialize(workbasket, step, ops)
+      @workbasket = workbasket
+      @step = step
       @ops = ops
+
+      prepare_ops
     end
 
     def workbasket_name
@@ -52,5 +58,13 @@ module CreateMeasures
         ActiveSupport::HashWithIndifferentAccess.new(res)
       ).normalized_params
     end
+
+    private
+
+      def prepare_ops
+        if step == "duties_conditions_footnotes"
+          @ops = ops.merge(workbasket_name.main_step_settings)
+        end
+      end
   end
 end

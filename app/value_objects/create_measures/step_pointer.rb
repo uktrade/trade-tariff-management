@@ -64,7 +64,7 @@ module CreateMeasures
     def step_settings(settings_params)
       res = {}
 
-      MAIN_STEP_SETTINGS.map do |key|
+      keys_for_step.map do |key|
         res[key] = settings_params[key]
       end
 
