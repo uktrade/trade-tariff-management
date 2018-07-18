@@ -9,10 +9,12 @@ module Workbaskets
 
       ATTRS_PARSER_METHODS = %w(
         workbasket_name
+        operation_date
         commodity_codes
         commodity_codes_exclusions
         additional_codes
         candidates
+        footnotes
       )
 
       attr_accessor :current_step,
@@ -112,28 +114,58 @@ module Workbaskets
           end
         end
 
+        def validation_mode
+          commodity_codes.present? ? :commodity_codes : :additional_codes
+        end
+
+        def candidate_validation_errors(code, mode)
+          errors_collection = {}
+
+          measure = generate_new_measure!(code, mode)
+
+          m_errors = measure_errors(measure)
+          errors_collection[:measure] = m_errors if m_errors.present?
+
+          f_errors = footnotes_errors(measure)
+          errors_collection[:footnotes] = f_errors if f_errors.present?
+
+          errors_collection
+        end
+
+        def generate_new_measure!(code, mode)
+          measure = Measure.new(
+            attrs_parser.measure_params(code, mode)
+          )
+
+          measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+          measure
+        end
+
+        def measure_errors(measure)
+          ::Measures::ConformanceErrorsParser.new(
+            measure, MeasureValidator, {}
+          ).errors
+        end
+
+        def footnotes_errors(measure)
+          ::CreateMeasures::ValidationHelpers::Footnotes.errors_in_collection(
+            measure, system_ops, footnotes
+          )
+        end
+
+        def system_ops
+          {
+            operation_date: operation_date,
+            current_admin: workbasket.user
+          }
+        end
+
         def get_unique_errors_from_candidates!
           ::CreateMeasures::ValidationHelpers::CandidatesValidationsSummarizer.new(
             candidates_with_errors
           ).errors.map do |k, v|
             @errors[k] = v
           end
-        end
-
-        def validation_mode
-          commodity_codes.present? ? :commodity_codes : :additional_codes
-        end
-
-        def candidate_validation_errors(code, mode)
-          measure = Measure.new(
-            attrs_parser.measure_params(code, mode)
-          )
-
-          measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-
-          ::Measures::ConformanceErrorsParser.new(
-            measure, MeasureValidator, {}
-          ).errors
         end
 
         def errors_translator(key)

@@ -11,6 +11,7 @@ module CreateMeasures
                     :footnote_association_measure,
                     :footnote_description_period,
                     :footnote_description,
+                    :extra_increment_value,
                     :period_sid,
                     :errors
 
@@ -20,21 +21,15 @@ module CreateMeasures
         @operation_date = system_ops[:operation_date]
         @footnote_description = footnote_ops[:description]
         @footnote_type_id = footnote_ops[:footnote_type_id]
+        @extra_increment_value = footnote_ops[:position]
 
         @errors = {}
       end
 
       def valid?
-        check_footnote!
-        return false if @errors.blank?
+        generate_records!
+        validate_records!
 
-        check_footnote_association_measure!
-        return false if @errors.blank?
-
-        check_footnote_description_period!
-        return false if @errors.blank?
-
-        check_footnote_description!
         @errors.blank?
       end
 
@@ -51,9 +46,42 @@ module CreateMeasures
         end
       end
 
+      class << self
+        def errors_in_collection(measure, system_ops, footnotes)
+          errors = {}
+
+          footnotes.map do |k, footnote_ops|
+            ops = footnote_ops.merge(position: k)
+
+            record = new(measure, system_ops, ops)
+            errors[k] = record.errors unless record.valid?
+          end
+
+          errors
+        end
+      end
+
       private
 
-        def check_footnote!
+        def generate_records!
+          generate_footnote!
+          generate_footnote_association_measure!
+          generate_footnote_description_period!
+          generate_footnote_description!
+        end
+
+        def validate_records!
+          [
+            footnote,
+            footnote_association_measure,
+            footnote_description_period,
+            footnote_description
+          ].map do |record|
+            validate!(record)
+          end
+        end
+
+        def generate_footnote!
           @footnote = Footnote.new(
             validity_start_date: measure.validity_start_date,
             validity_end_date: measure.validity_end_date
@@ -61,21 +89,17 @@ module CreateMeasures
           footnote.footnote_type_id = footnote_type_id
 
           set_primary_key(footnote)
-          validate!(footnote)
         end
 
-        def check_footnote_association_measure!
+        def generate_footnote_association_measure!
           @footnote_association_measure = FootnoteAssociationMeasure.new
 
           footnote_association_measure.measure_sid = measure.measure_sid
           footnote_association_measure.footnote_id = footnote.footnote_id
           footnote_association_measure.footnote_type_id = footnote_type_id
-
-          set_primary_key(footnote_association_measure)
-          validate!(footnote_association_measure)
         end
 
-        def check_footnote_description_period!
+        def generate_footnote_description_period!
           @footnote_description_period = FootnoteDescriptionPeriod.new(
             validity_start_date: footnote.validity_start_date,
             validity_end_date: footnote.validity_end_date
@@ -86,10 +110,11 @@ module CreateMeasures
 
           set_primary_key(footnote_description_period)
           @period_sid = footnote_description_period.footnote_description_period_sid
-          validate!(footnote_description_period)
+
+          footnote.footnote_description_periods << footnote_description_period
         end
 
-        def check_footnote_description!
+        def generate_footnote_description!
           @footnote_description = FootnoteDescription.new(
             language_id: DEFAULT_LANGUAGE,
             description: footnote_description
@@ -98,9 +123,6 @@ module CreateMeasures
           footnote_description.footnote_id = footnote.footnote_id
           footnote_description.footnote_type_id = footnote_type_id
           footnote_description.footnote_description_period_sid = period_sid
-
-          set_primary_key(footnote_description)
-          validate!(footnote_description)
         end
 
         def validate!(record)
@@ -118,13 +140,18 @@ module CreateMeasures
           case klass_name
           when "Footnote"
             FootnoteValidator
+          when "FootnoteDescription"
+            FootnoteDescriptionValidator
           when "FootnoteDescriptionPeriod"
             FootnoteDescriptionPeriodValidator
           end
         end
 
-        def set_primary_key(record)
-          ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(record).assign!
+        def set_primary_key(record, extra_increment_value=nil)
+          ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(
+            record,
+            extra_increment_value
+          ).assign!
         end
     end
   end

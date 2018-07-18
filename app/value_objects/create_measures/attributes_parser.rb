@@ -30,6 +30,17 @@ module CreateMeasures
       ops[:additional_codes]
     end
 
+    def footnotes
+      ops[:footnotes].select do |k, f_ops|
+        f_ops[:footnote_type_id].present? ||
+        f_ops[:description].present?
+      end
+    end
+
+    def operation_date
+      ops[:operation_date]
+    end
+
     def candidates
       if commodity_codes.present?
         commodity_codes.split( /\r?\n/ )
