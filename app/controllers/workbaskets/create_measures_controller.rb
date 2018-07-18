@@ -12,15 +12,11 @@ module Workbaskets
     end
 
     expose(:previous_step) do
-      step_pointer.previous_step(current_step)
+      step_pointer.previous_step
     end
 
     expose(:workbasket_settings) do
       workbasket.create_measures_settings
-    end
-
-    expose(:saver_class) do
-      Workbaskets::CreateMeasures::SettingsSaver
     end
 
     expose(:settings_params) do
@@ -32,7 +28,7 @@ module Workbaskets
     end
 
     expose(:saver) do
-      saver_class.new(
+      Workbaskets::CreateMeasures::SettingsSaver.new(
         workbasket,
         current_step,
         settings_params
@@ -95,7 +91,7 @@ module Workbaskets
 
       def check_if_action_is_permitted!
         if current_step != 'main' &&
-           !workbasket_settings.previous_step_validations_passed?(previous_step)
+           !workbasket_settings.validations_passed?(previous_step)
 
           redirect_to edit_create_measure_url(
             workbasket.id,

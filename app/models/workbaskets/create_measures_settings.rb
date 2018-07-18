@@ -41,8 +41,8 @@ module Workbaskets
       save
     end
 
-    def previous_step_validations_passed?(step)
-      public_send("#{step}_step_validation_passed").present?
+    def validations_passed?(step)
+      public_send("#{step}_step_validation_passed?")
     end
   end
 end
