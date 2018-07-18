@@ -1753,7 +1753,7 @@ ALTER SEQUENCE public.export_refund_nomenclatures_oid_seq OWNED BY public.export
 CREATE TABLE public.footnote_association_additional_codes_oplog (
     additional_code_sid integer,
     footnote_type_id character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     additional_code_type_id text,
@@ -1812,7 +1812,7 @@ ALTER SEQUENCE public.footnote_association_additional_codes_oid_seq OWNED BY pub
 CREATE TABLE public.footnote_association_erns_oplog (
     export_refund_nomenclature_sid integer,
     footnote_type character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     goods_nomenclature_item_id character varying(10),
@@ -1875,7 +1875,7 @@ ALTER SEQUENCE public.footnote_association_erns_oid_seq OWNED BY public.footnote
 CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
     goods_nomenclature_sid integer,
     footnote_type character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     goods_nomenclature_item_id character varying(10),
@@ -1936,7 +1936,7 @@ ALTER SEQUENCE public.footnote_association_goods_nomenclatures_oid_seq OWNED BY 
 CREATE TABLE public.footnote_association_measures_oplog (
     measure_sid integer,
     footnote_type_id character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     created_at timestamp without time zone,
     "national" boolean,
     oid integer NOT NULL,
@@ -1995,7 +1995,7 @@ CREATE TABLE public.footnote_association_meursing_headings_oplog (
     meursing_heading_number character varying(255),
     row_column_code integer,
     footnote_type character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     created_at timestamp without time zone,
@@ -10797,3 +10797,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182617_add_timesta
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180717164406_change_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180717165903_add_more_fields_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_validation_field_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
