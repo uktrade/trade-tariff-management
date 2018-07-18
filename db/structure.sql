@@ -1258,7 +1258,7 @@ CREATE TABLE public.create_measures_workbasket_settings (
     updated_at time without time zone,
     duties_conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     main_step_validation_passed boolean DEFAULT false,
-    duties_conditions_footnotes_validation_passed boolean DEFAULT false
+    duties_conditions_footnotes_step_validation_passed boolean DEFAULT false
 );
 
 
@@ -10796,3 +10796,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182401_add_setting
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182617_add_timestamps_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180717164406_change_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180717165903_add_more_fields_to_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_validation_field_create_measures_workbasket_settings.rb');

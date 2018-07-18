@@ -74,12 +74,12 @@ module Workbaskets
       saver.save!
 
       if saver.valid?
-        create_measures_settings.track_step_validations_status!(current_step, true)
+        workbasket_settings.track_step_validations_status!(current_step, true)
 
         render json: saver.success_ops,
                status: :ok
       else
-        create_measures_settings.track_step_validations_status!(current_step, false)
+        workbasket_settings.track_step_validations_status!(current_step, false)
 
         render json: {
           errors: saver.errors,
@@ -107,7 +107,7 @@ module Workbaskets
 
       def check_if_action_is_permitted!
         if current_step != 'main' &&
-           !create_measures_settings.previous_step_validations_passed?(previous_step)
+           !workbasket_settings.previous_step_validations_passed?(previous_step)
 
           redirect_to edit_create_measure_url(
             workbasket.id,

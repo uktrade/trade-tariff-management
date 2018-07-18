@@ -37,12 +37,12 @@ module Workbaskets
     end
 
     def track_step_validations_status!(current_step, passed=false)
-      public_send("#{current_step}_validation_passed=", passed)
+      public_send("#{current_step}_step_validation_passed=", passed)
       save
     end
 
     def previous_step_validations_passed?(step)
-      public_send("#{step}_validation_passed").present?
+      public_send("#{step}_step_validation_passed").present?
     end
   end
 end
