@@ -113,35 +113,9 @@ module Workbaskets
         end
 
         def get_unique_errors_from_candidates!
-          res = {}
-
-          @candidates_with_errors.map do |code, errors_list|
-            errors_list.map do |k, v|
-              if res.has_key?(k)
-                v.flatten.map do |error_message|
-                  if res[k].map { |el| el[0] }.include?(error_message)
-                    item = res[k].detect { |el| el[0] == error_message }
-                    item[1] << code
-                  else
-                    res[k] << [ error_message, [code] ]
-                  end
-                end
-
-              else
-                v.flatten.map do |error_message|
-                  val = [ error_message, [code] ]
-
-                  if res[k].is_a?(Array)
-                    res[k] << val
-                  else
-                    res[k] = [ val ]
-                  end
-                end
-              end
-            end
-          end
-
-          res.map do |k, v|
+          ::CreateMeasures::ValidationHelpers::CandidatesValidationsSummarizer.new(
+            candidates_with_errors
+          ).errors.map do |k, v|
             @errors[k] = v
           end
         end
