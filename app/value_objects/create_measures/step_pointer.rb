@@ -72,7 +72,7 @@ module CreateMeasures
     end
 
     def keys_for_step
-      const_get("#{current_step.upcase}_STEP_SETTINGS")
+      self.class.const_get("#{current_step.upcase}_STEP_SETTINGS")
     end
   end
 end
