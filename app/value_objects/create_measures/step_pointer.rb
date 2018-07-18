@@ -13,7 +13,6 @@ module CreateMeasures
       start_date
       end_date
       measure_type_id
-      workbasket_name
       operation_date
       commodity_codes
       commodity_codes_exclusions
@@ -44,7 +43,7 @@ module CreateMeasures
     end
 
     def has_next_step?
-      form_step?(current_step)
+      next_step.present?
     end
 
     def has_previous_step?
@@ -58,7 +57,7 @@ module CreateMeasures
     def previous_step
       STEP_TRANSITIONS.select do |k, v|
         v == current_step.to_sym
-      end.try(:keys
+      end.try(:keys)
          .try(:first)
     end
 

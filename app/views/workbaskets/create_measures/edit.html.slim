@@ -22,4 +22,4 @@ script
   == "window.save_url = '/create_measures/#{workbasket.id}';"
   == "window.current_step = '#{current_step}';"
   == "window.all_settings = '#{workbasket_settings.settings.to_json}';"
-  == "window.current_step_settings = '#{workbasket_step_settings.to_json}';"
+  == "window.current_step_settings = '#{workbasket_settings.step_settings(current_step).to_json}';"

@@ -17,8 +17,8 @@ module Workbaskets
 
       def initialize(workbasket, current_step, settings_ops={})
         @workbasket = workbasket
-        @settings = workbasket.create_measures_settings
         @current_step = current_step
+        @settings = workbasket.create_measures_settings
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
         @step_pointer = ::CreateMeasures::StepPointer.new(current_step)
 
@@ -32,12 +32,17 @@ module Workbaskets
           workbasket.save
         end
 
-        settings.set_settings_for!(current_step, settings_params)
+        settings.set_settings_for!(
+          current_step,
+          step_settings
+        )
       end
 
       def valid?
-        check_required_params!
-        return false if @errors.present?
+        if step_pointer.main_step?
+          check_required_params!
+          return false if @errors.present?
+        end
 
         validate!
         candidates_with_errors.blank?
@@ -51,6 +56,16 @@ module Workbaskets
       end
 
       private
+
+        def step_settings
+          res = {}
+
+          step_pointer::MAIN_STEP_SETTINGS.map do |key|
+            res[key] = settings_params[key]
+          end
+
+          res
+        end
 
         def check_required_params!
           REQUIRED_PARAMS.map do |k|

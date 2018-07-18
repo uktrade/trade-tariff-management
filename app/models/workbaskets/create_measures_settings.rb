@@ -23,26 +23,26 @@ module Workbaskets
       JSON.parse(duties_conditions_footnotes_step_settings_jsonb)
     end
 
-    def step_settings(current_step)
-      public_send("#{current_step}_step_settings")
+    def step_settings(step)
+      public_send("#{step}_step_settings")
     end
 
-    def set_settings_for!(current_step, settings_ops)
+    def set_settings_for!(step, settings_ops)
       public_send(
-        "#{current_step}_step_settings_jsonb=",
+        "#{step}_step_settings_jsonb=",
         settings_ops.to_json
       )
 
       save
     end
 
-    def track_step_validations_status!(current_step, passed=false)
-      public_send("#{current_step}_step_validation_passed=", passed)
+    def track_step_validations_status!(step, passed=false)
+      public_send("#{step}_step_validation_passed=", passed)
       save
     end
 
     def validations_passed?(step)
-      public_send("#{step}_step_validation_passed?")
+      public_send("#{step}_step_validation_passed").present?
     end
   end
 end
