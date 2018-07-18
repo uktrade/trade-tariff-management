@@ -1,12 +1,12 @@
 module CreateMeasures
   class AttributesParser
 
-    attr_accessor :workbasket_name,
+    attr_accessor :workbasket_settings,
                   :step,
                   :ops
 
-    def initialize(workbasket, step, ops)
-      @workbasket = workbasket
+    def initialize(workbasket_settings, step, ops)
+      @workbasket_settings = workbasket_settings
       @step = step
       @ops = ops
 
@@ -63,7 +63,7 @@ module CreateMeasures
 
       def prepare_ops
         if step == "duties_conditions_footnotes"
-          @ops = ops.merge(workbasket_name.main_step_settings)
+          @ops = ops.merge(workbasket_settings.main_step_settings)
         end
       end
   end

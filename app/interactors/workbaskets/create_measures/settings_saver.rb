@@ -32,7 +32,7 @@ module Workbaskets
 
         @step_pointer = ::CreateMeasures::StepPointer.new(current_step)
         @attrs_parser = ::CreateMeasures::AttributesParser.new(
-          workbasket,
+          settings,
           current_step,
           settings_params
         )
