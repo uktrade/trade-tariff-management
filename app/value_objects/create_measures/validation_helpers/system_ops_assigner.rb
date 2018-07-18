@@ -21,5 +21,6 @@ module CreateMeasures
         record.try("approved_flag=", true)
         record.try("stopped_flag=", false)
       end
+    end
   end
 end
