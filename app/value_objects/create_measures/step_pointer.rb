@@ -61,6 +61,16 @@ module CreateMeasures
          .try(:first)
     end
 
+    def step_settings(settings_params)
+      res = {}
+
+      MAIN_STEP_SETTINGS.map do |key|
+        res[key] = settings_params[key]
+      end
+
+      res
+    end
+
     def keys_for_step
       const_get("#{current_step.upcase}_STEP_SETTINGS")
     end

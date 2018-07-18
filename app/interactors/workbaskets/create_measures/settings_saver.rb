@@ -7,11 +7,20 @@ module Workbaskets
         operation_date
       )
 
+      ATTRS_PARSER_METHODS = %w(
+        workbasket_name
+        commodity_codes
+        commodity_codes_exclusions
+        additional_codes
+        candidates
+      )
+
       attr_accessor :current_step,
                     :settings,
                     :workbasket,
                     :settings_params,
                     :step_pointer,
+                    :attrs_parser,
                     :errors,
                     :candidates_with_errors
 
@@ -21,6 +30,7 @@ module Workbaskets
         @settings = workbasket.create_measures_settings
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
         @step_pointer = ::CreateMeasures::StepPointer.new(current_step)
+        @attrs_parser = ::CreateMeasures::AttributesParser.new(settings_params)
 
         @errors = {}
         @candidates_with_errors = {}
@@ -34,7 +44,7 @@ module Workbaskets
 
         settings.set_settings_for!(
           current_step,
-          step_settings
+          step_pointer.step_settings(settings_params)
         )
       end
 
@@ -55,17 +65,13 @@ module Workbaskets
         ops
       end
 
-      private
-
-        def step_settings
-          res = {}
-
-          step_pointer::MAIN_STEP_SETTINGS.map do |key|
-            res[key] = settings_params[key]
-          end
-
-          res
+      ATTRS_PARSER_METHODS.map do |option|
+        def "#{option}"
+          attrs_parser.public_send(option)
         end
+      end
+
+      private
 
         def check_required_params!
           REQUIRED_PARAMS.map do |k|
@@ -82,7 +88,7 @@ module Workbaskets
             @errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
           end
 
-          if commodity_codes.blank? && exceptions.present?
+          if commodity_codes.blank? && commodity_codes_exclusions.present?
             @errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
           end
         end
@@ -142,7 +148,7 @@ module Workbaskets
 
         def candidate_validation_errors(code, mode)
           measure = Measure.new(
-            measure_params(code, mode)
+            attrs_parser.measure_params(code, mode)
           )
 
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
@@ -150,52 +156,6 @@ module Workbaskets
           ::Measures::ConformanceErrorsParser.new(
             measure, MeasureValidator, {}
           ).errors
-        end
-
-        def candidates
-          if commodity_codes.present?
-            commodity_codes.split( /\r?\n/ )
-          else
-            additional_codes.split(",")
-          end.map(&:strip)
-        end
-
-        def workbasket_name
-          settings_params[:workbasket_name]
-        end
-
-        def commodity_codes
-          settings_params[:commodity_codes]
-        end
-
-        def exceptions
-          list = settings_params[:commodity_codes_exclusions]
-          list.present? ? list.split( /\r?\n/ ).map(&:strip) : []
-        end
-
-        def additional_codes
-          settings_params[:additional_codes]
-        end
-
-        def measure_params(code, mode)
-          ops = {
-            start_date: settings_params[:start_date],
-            end_date: settings_params[:end_date],
-            regulation_id: settings_params[:regulation_id],
-            measure_type_id: settings_params[:measure_type_id],
-            reduction_indicator: settings_params[:reduction_indicator],
-            geographical_area_id: settings_params[:geographical_area_id]
-          }
-
-          if mode == :commodity_codes
-            ops[:goods_nomenclature_code] = code
-          else
-            ops[:additional_code] = code
-          end
-
-          ::Measures::AttributesNormalizer.new(
-            ActiveSupport::HashWithIndifferentAccess.new(ops)
-          ).normalized_params
         end
 
         def errors_translator(key)
