@@ -66,7 +66,7 @@ module Workbaskets
       end
 
       ATTRS_PARSER_METHODS.map do |option|
-        def "#{option}"
+        define_method("#{option}") do
           attrs_parser.public_send(option)
         end
       end

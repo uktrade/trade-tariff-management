@@ -50,6 +50,7 @@ window.CreateMeasuresSaveActions =
   handleSuccessResponse: (resp) ->
     if resp.next_step.length > 0 && window.create_measures_mode == 'continue'
       CreateMeasuresSaveActions.showSuccessMessage()
+      CreateMeasuresSaveActions.setSpinnerText("Redirecting to next step")
 
       setTimeout (->
         window.location = window.save_url + '/edit?step=' + resp.next_step
@@ -63,6 +64,9 @@ window.CreateMeasuresSaveActions =
 
   hideSuccessMessage: ->
     $(".js-measure-form-success-message-container").addClass('hidden')
+
+  setSpinnerText: (message) ->
+    $(".js-create-measures-continue-spinner .saving_message").text(message)
 
 $ ->
   CreateMeasuresSaveActions.init()
