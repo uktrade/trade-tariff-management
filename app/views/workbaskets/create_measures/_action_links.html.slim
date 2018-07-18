@@ -3,7 +3,7 @@
     | Next step
 
   .submit_group_for_cross_check_block
-    - if workbasket_has_next_step?
+    - if step_pointer.has_next_step?
       = f.button :submit, "Continue", name: "continue", class: "button js-create-measures-continue-button js-create-measures-v2-submit-button"
     - else
       = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button js-create-measures-continue-button js-create-measures-v2-submit-button"
@@ -19,6 +19,6 @@
 
   = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-create-measures-exit-button"
 
-  - if workbasket_has_previous_step?
-    = link_to "Previous step", edit_create_measure_url(workbasket.id, step: create_meaasures_previous_step),
+  - if step_pointer.has_previous_step?
+    = link_to "Previous step", edit_create_measure_url(workbasket.id, step: step_pointer.previous_step),
                                class: "secondary-button"

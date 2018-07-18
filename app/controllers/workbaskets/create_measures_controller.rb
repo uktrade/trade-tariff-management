@@ -7,24 +7,16 @@ module Workbaskets
 
     expose(:current_step) { params[:step] }
 
+    expose(:step_pointer) do
+      ::CreateMeasures::StepPointer.new(current_step)
+    end
+
     expose(:previous_step) do
-      saver_class.previous_step(current_step)
+      step_pointer.previous_step(current_step)
     end
 
     expose(:workbasket_settings) do
       workbasket.create_measures_settings
-    end
-
-    expose(:workbasket_step_settings) do
-      workbasket_settings.step_settings(current_step)
-    end
-
-    expose(:workbasket_has_previous_step?) do
-      step_in?(saver_class::PREVIOUS_STEP_POINTERS)
-    end
-
-    expose(:workbasket_has_next_step?) do
-      step_in?(saver_class::NEXT_STEP_POINTERS)
     end
 
     expose(:saver_class) do
@@ -89,10 +81,6 @@ module Workbaskets
     end
 
     private
-
-      def step_in?(list)
-        current_step.in?(list)
-      end
 
       def require_step_declaration_in_params!
         if current_step.blank?

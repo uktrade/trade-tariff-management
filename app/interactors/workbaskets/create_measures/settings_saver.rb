@@ -2,60 +2,32 @@ module Workbaskets
   module CreateMeasures
     class SettingsSaver
 
-      FORM_STEPS = %w(main duties_conditions_footnotes)
-      NEXT_STEP_POINTERS = %w(main duties_conditions_footnotes)
-      PREVIOUS_STEP_POINTERS = %w(duties_conditions_footnotes review_and_submit)
-
-      STEP_TRANSITIONS = {
-        main: :duties_conditions_footnotes,
-        duties_conditions_footnotes: :review_and_submit
-      }
-
       REQUIRED_PARAMS = %w(
         start_date
         operation_date
-      )
-
-      MAIN_STEP_SETTINGS = %w(
-        regulation_id
-        start_date
-        end_date
-        measure_type_id
-        workbasket_name
-        operation_date
-        commodity_codes
-        commodity_codes_exclusions
-        additional_codes
-        reduction_indicator
-        geographical_area_id
-        excluded_geographical_areas
-      )
-
-      DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS = %w(
-        measure_components
-        conditions
-        footnotes
       )
 
       attr_accessor :current_step,
                     :settings,
                     :workbasket,
                     :settings_params,
+                    :step_pointer,
                     :errors,
                     :candidates_with_errors
 
       def initialize(workbasket, current_step, settings_ops={})
         @workbasket = workbasket
         @settings = workbasket.create_measures_settings
-
         @current_step = current_step
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
+        @step_pointer = ::CreateMeasures::StepPointer.new(current_step)
+
         @errors = {}
         @candidates_with_errors = {}
       end
 
       def save!
-        if main_step?
+        if step_pointer.main_step?
           workbasket.title = workbasket_name
           workbasket.save
         end
@@ -73,36 +45,12 @@ module Workbaskets
 
       def success_ops
         ops = {}
-        ops[:next_step] = next_step if next_step?
+        ops[:next_step] = step_pointer.next_step if step_pointer.has_next_step?
 
         ops
       end
 
-      class << self
-        def keys_for_step(step)
-          const_get("#{step.upcase}_STEP_SETTINGS")
-        end
-
-        def previous_step(current_step)
-          STEP_TRANSITIONS.select do |k, v|
-            v == current_step.to_sym
-          end.keys.first
-        end
-      end
-
       private
-
-        def main_step?
-          current_step == 'main'
-        end
-
-        def next_step
-          STEP_TRANSITIONS[current_step.to_sym]
-        end
-
-        def next_step?
-          FORM_STEPS.include?(current_step)
-        end
 
         def check_required_params!
           REQUIRED_PARAMS.map do |k|

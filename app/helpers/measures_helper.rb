@@ -14,23 +14,14 @@ module MeasuresHelper
     ]
   end
 
-  def create_measures_header
-    case params[:step]
+  def create_measures_section_header
+    case current_step
     when "main"
       "Create measures"
     when "duties_conditions_footnotes"
       "Specify duties, conditions and footnotes"
     when "review_and_submit"
       "Review and submit"
-    end
-  end
-
-  def create_meaasures_previous_step
-    case params[:step]
-    when "duties_conditions_footnotes"
-      "main"
-    when "review_and_submit"
-      "duties_conditions_footnotes"
     end
   end
 end
