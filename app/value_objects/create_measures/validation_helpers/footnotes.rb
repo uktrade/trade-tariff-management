@@ -1,6 +1,6 @@
 module CreateMeasures
   module ValidationHelpers
-    class Footnotes < ::CreateMeasures::ValidationHelpers::Base
+    class Footnotes < ::CreateMeasures::ValidationHelpers::AssociationBase
 
       attr_accessor :measure,
                     :current_admin,
@@ -40,24 +40,7 @@ module CreateMeasures
           footnote_description_period,
           footnote_description
         ].map do |record|
-          ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
-            current_admin, operation_date
-          ).assign!
-        end
-      end
-
-      class << self
-        def errors_in_collection(measure, system_ops, footnotes)
-          errors = {}
-
-          footnotes.map do |k, footnote_ops|
-            ops = footnote_ops.merge(position: k)
-
-            record = new(measure, system_ops, ops)
-            errors[k] = record.errors unless record.valid?
-          end
-
-          errors
+          persist_record!(record)
         end
       end
 
@@ -145,13 +128,6 @@ module CreateMeasures
           when "FootnoteDescriptionPeriod"
             FootnoteDescriptionPeriodValidator
           end
-        end
-
-        def set_primary_key(record, extra_increment_value=nil)
-          ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(
-            record,
-            extra_increment_value
-          ).assign!
         end
     end
   end

@@ -1,6 +1,13 @@
 module CreateMeasures
   class AttributesParser
 
+    SIMPLE_OPS = %w(
+      operation_date
+      workbasket_name
+      commodity_codes
+      additional_codes
+    )
+
     attr_accessor :workbasket_settings,
                   :step,
                   :ops
@@ -13,29 +20,33 @@ module CreateMeasures
       prepare_ops
     end
 
-    def workbasket_name
-      ops[:workbasket_name]
+    SIMPLE_OPS.map do |option_name|
+      define_method(option_name) do
+        ops[option_name]
+      end
     end
 
-    def commodity_codes
-      ops[:commodity_codes]
+    def measure_components
+      ops[:measure_components].select do |option|
+        option[:duty_expression_id].present?
+      end
+    end
+
+    def conditions
+      ops[:conditions].select do |option|
+        option[:duty_expression_id].present?
+      end
+    end
+
+    def footnotes
+      ops[:footnotes].select do |option|
+        option[:footnote_type_id].present?
+      end
     end
 
     def commodity_codes_exclusions
       list = ops[:commodity_codes_exclusions]
       list.present? ? list.split( /\r?\n/ ).map(&:strip) : []
-    end
-
-    def additional_codes
-      ops[:additional_codes]
-    end
-
-    def footnotes
-      ops[:footnotes]
-    end
-
-    def operation_date
-      ops[:operation_date]
     end
 
     def candidates
