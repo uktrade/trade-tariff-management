@@ -5,7 +5,7 @@ script type="text/x-template" id="change-footnotes-popup-template"
     div v-if="measures.length > 1"
       warning-message You are bulk-changing {{measures.length}} measures. Please check your inputs carefully!
 
-    div v-if="!onlyOneMeasure"
+    div v-if="!onlyOneMeasure && uniqMeasuresFootnotes.length > 1"
       info-message
         | The selection contains differing conditions.<br />
         | These will be replaced with the conditions you configure here.
