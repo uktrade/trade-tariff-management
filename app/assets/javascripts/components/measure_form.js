@@ -166,11 +166,10 @@ $(document).ready(function() {
           type: http_method,
           data: data_ops,
           success: function(response) {
-            $(".js-measure-form-errors-container").empty().addClass("hidden");
-
             if ( window.save_url == "/measures" ) {
               // Create measures V1 version
               //
+              $(".js-measure-form-errors-container").empty().addClass("hidden");
               window.location = window.save_url + "?code=" + response.goods_nomenclature_item_id;
             } else {
               // Create measures V2 version
