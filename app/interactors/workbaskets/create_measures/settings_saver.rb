@@ -173,22 +173,14 @@ module Workbaskets
           ).errors
         end
 
-        def measure_components_errors(measure)
-          ::CreateMeasures::ValidationHelpers::Duties.errors_in_collection(
-            measure, system_ops, measure_components
-          )
-        end
+        ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
+          define_method("#{name}_errors") do |measure|
+            name = name.split("_").map(&:capitalize).join('')
 
-        def conditions_errors(measure)
-          ::CreateMeasures::ValidationHelpers::Conditions.errors_in_collection(
-            measure, system_ops, conditions
-          )
-        end
-
-        def footnotes_errors(measure)
-          ::CreateMeasures::ValidationHelpers::Footnotes.errors_in_collection(
-            measure, system_ops, footnotes
-          )
+            const_get("CreateMeasures::ValidationHelpers::#{name}".errors_in_collection(
+              measure, system_ops, public_send(name)
+            )
+          end
         end
 
         def system_ops

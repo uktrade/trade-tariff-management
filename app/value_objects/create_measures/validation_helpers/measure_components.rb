@@ -1,6 +1,6 @@
 module CreateMeasures
   module ValidationHelpers
-    class Duties < ::CreateMeasures::ValidationHelpers::AssociationBase
+    class MeasureComponents < ::CreateMeasures::ValidationHelpers::AssociationBase
 
       attr_accessor :measure,
                     :current_admin,
