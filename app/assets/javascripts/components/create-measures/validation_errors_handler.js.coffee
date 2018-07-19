@@ -6,6 +6,14 @@ window.CreateMeasuresValidationErrorsHandler =
     CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
 
   setFormErrors: (response, measure_form) ->
+    # Also response returns `candidates_with_errors` collection
+    # which having errors per candidate (commodity or additional code)
+    #
+
+    console.log('-----ERRORS BEGIN-----')
+    console.dir(response.responseJSON.errors)
+    console.log('-----ERRORS END-----')
+
     $.each response.responseJSON.errors, (key, value) ->
       if value.constructor == Array
         value.forEach (innerError) ->

@@ -199,9 +199,6 @@ $(document).ready(function() {
             } else {
               // Create measures V2 version
               //
-              // Also response returns `candidates_with_errors` collection
-              // which having errors per candidate
-
               CreateMeasuresValidationErrorsHandler.handleErrorsResponse(response, self);
             }
           }

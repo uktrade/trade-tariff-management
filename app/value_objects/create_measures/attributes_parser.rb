@@ -31,10 +31,7 @@ module CreateMeasures
     end
 
     def footnotes
-      ops[:footnotes].select do |k, f_ops|
-        f_ops[:footnote_type_id].present? ||
-        f_ops[:description].present?
-      end
+      ops[:footnotes]
     end
 
     def operation_date

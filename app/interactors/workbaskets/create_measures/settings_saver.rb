@@ -77,6 +77,24 @@ module Workbaskets
         end
       end
 
+      def summarized_errors
+        res = {}
+
+        errors[:measure].map do |k, v|
+          res[k] = v
+        end
+
+        if errors[:footnotes].present?
+          errors[:footnotes].map do |position, hash_of_errors|
+            hash_of_errors.map do |k, v|
+              res[k] = v
+            end
+          end
+        end
+
+        res
+      end
+
       private
 
         def check_required_params!
@@ -126,8 +144,10 @@ module Workbaskets
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
 
-          f_errors = footnotes_errors(measure)
-          errors_collection[:footnotes] = f_errors if f_errors.present?
+          if footnotes.present?
+            f_errors = footnotes_errors(measure)
+            errors_collection[:footnotes] = f_errors if f_errors.present?
+          end
 
           errors_collection
         end
