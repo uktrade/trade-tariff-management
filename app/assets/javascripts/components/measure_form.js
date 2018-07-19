@@ -202,27 +202,7 @@ $(document).ready(function() {
               // Also response returns `candidates_with_errors` collection
               // which having errors per candidate
 
-              CreateMeasuresSaveActions.hideSuccessMessage();
-
-              $.each( response.responseJSON.errors, function( key, value ) {
-                if (value.constructor === Array) {
-                  value.forEach(function(innerError) {
-                    if (innerError.constructor === Array) {
-                      self.errors.push(innerError[0]);
-
-                      setTimeout(function(){
-                        CreateMeasuresValidationErrorsHandler.renderAffectedCommoditiesBlock(innerError);
-                      }, 1000);
-                    } else {
-                      self.errors.push(innerError);
-                    }
-                  });
-                } else {
-                  self.errors.push(value);
-                }
-              });
-
-              CreateMeasuresSaveActions.unlockButtonsAndHideSpinner();
+              CreateMeasuresValidationErrorsHandler.handleErrorsResponse(response, self);
             }
           }
         });
