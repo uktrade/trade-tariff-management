@@ -34,6 +34,15 @@ module CreateMeasures
             extra_increment_value
           ).assign!
         end
+
+        def unit_ops(attrs)
+          {
+            duty_amount: attrs[:amount],
+            monetary_unit_code: attrs[:monetary_unit_code],
+            measurement_unit_code: attrs[:measurement_unit_code],
+            measurement_unit_qualifier_code: attrs[:measurement_unit_qualifier_code]
+          }
+        end
     end
   end
 end

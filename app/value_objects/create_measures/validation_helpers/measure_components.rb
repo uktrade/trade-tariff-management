@@ -35,20 +35,13 @@ module CreateMeasures
       private
 
         def generate_record!
-          @duty_expression = MeasureComponent.new(ops)
+          @duty_expression = MeasureComponent.new(
+            unit_ops(duty_expression_ops)
+          )
           duty_expression.measure_sid = measure.measure_sid
           duty_expression.duty_expression_id = duty_expression_ops[:duty_expression_id]
 
           set_primary_key(duty_expression)
-        end
-
-        def ops
-          {
-            duty_amount: duty_expression_ops[:amount],
-            monetary_unit_code: duty_expression_ops[:monetary_unit_code],
-            measurement_unit_code: duty_expression_ops[:measurement_unit_code],
-            measurement_unit_qualifier_code: duty_expression_ops[:measurement_unit_qualifier_code]
-          }
         end
 
         def validate!

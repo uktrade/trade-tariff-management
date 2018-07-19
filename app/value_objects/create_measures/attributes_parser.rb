@@ -27,19 +27,19 @@ module CreateMeasures
     end
 
     def measure_components
-      ops[:measure_components].select do |option|
+      ops[:measure_components].select do |k, option|
         option[:duty_expression_id].present?
       end
     end
 
     def conditions
-      ops[:conditions].select do |option|
-        option[:duty_expression_id].present?
+      ops[:conditions].select do |k, option|
+        option[:condition_code].present?
       end
     end
 
     def footnotes
-      ops[:footnotes].select do |option|
+      ops[:footnotes].select do |k, option|
         option[:footnote_type_id].present?
       end
     end

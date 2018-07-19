@@ -34,12 +34,7 @@ module CreateMeasures
       end
 
       def persist!
-        [
-          footnote,
-          footnote_association_measure,
-          footnote_description_period,
-          footnote_description
-        ].map do |record|
+        records.map do |record|
           persist_record!(record)
         end
       end
@@ -53,13 +48,17 @@ module CreateMeasures
           generate_footnote_description!
         end
 
-        def validate_records!
+        def records
           [
             footnote,
             footnote_association_measure,
             footnote_description_period,
             footnote_description
-          ].map do |record|
+          ]
+        end
+
+        def validate_records!
+          records.map do |record|
             validate!(record)
           end
         end
