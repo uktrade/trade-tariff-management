@@ -13,4 +13,8 @@
   = render "workbaskets/create_measures/steps/#{params[:step].to_s}", f: f
   = render "workbaskets/create_measures/success_message", f: f
   = render "workbaskets/create_measures/errors_container", f: f
+
+  - if current_step == "duties_conditions_footnotes"
+    = render "workbaskets/create_measures/custom_errors_block", f: f
+
   = render "workbaskets/create_measures/action_links", f: f

@@ -181,9 +181,12 @@ module Workbaskets
         end
 
         def get_unique_errors_from_candidates!
-          ::CreateMeasures::ValidationHelpers::CandidatesValidationsSummarizer.new(
-            candidates_with_errors
-          ).errors.map do |k, v|
+          summarizer = ::CreateMeasures::ValidationHelpers::CandidatesValidationsSummarizer.new(
+            current_step, candidates_with_errors
+          )
+          summarizer.summarize!
+
+          summarizer.errors.map do |k, v|
             @errors[k] = v
           end
         end

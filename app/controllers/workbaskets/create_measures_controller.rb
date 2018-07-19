@@ -70,6 +70,7 @@ module Workbaskets
         workbasket_settings.track_step_validations_status!(current_step, false)
 
         render json: {
+          step: current_step,
           errors: saver.errors,
           candidates_with_errors: saver.candidates_with_errors
         }, status: :unprocessable_entity

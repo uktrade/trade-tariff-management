@@ -2,19 +2,21 @@ window.CreateMeasuresValidationErrorsHandler =
 
   handleErrorsResponse: (response, measure_form) ->
     CreateMeasuresSaveActions.hideSuccessMessage()
-    CreateMeasuresValidationErrorsHandler.setFormErrors(response, measure_form)
+
+    if response.responseJSON.step == "main"
+      CreateMeasuresValidationErrorsHandler.setFormErrors(response, measure_form)
+    else
+      CreateMeasuresValidationErrorsHandler.renderErrorsBlock(response)
+
     CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
 
   setFormErrors: (response, measure_form) ->
-    # Also response returns `candidates_with_errors` collection
-    # which having errors per candidate (commodity or additional code)
-    #
+    errors_list = response.responseJSON.errors
 
-    console.log('-----ERRORS BEGIN-----')
-    console.dir(response.responseJSON.errors)
-    console.log('-----ERRORS END-----')
+    if errors_list['measure'] isnt undefined
+      errors_list = errors_list['measure']
 
-    $.each response.responseJSON.errors, (key, value) ->
+    $.each errors_list, (key, value) ->
       if value.constructor == Array
         value.forEach (innerError) ->
           if innerError.constructor == Array
@@ -28,6 +30,21 @@ window.CreateMeasuresValidationErrorsHandler =
         measure_form.errors.push value
 
     return false
+
+  renderErrorsBlock: (response) ->
+    $(".js-measure-form-errors-container.js-custom-errors-block").removeClass('hidden')
+
+    $.each response.responseJSON.errors, (group_key, errors_collection) ->
+      group_block = $(".js-create-measures-custom-errors[data-errors-container='" + group_key + "']")
+      group_block.removeClass('hidden')
+      list_block = group_block.find("ul")
+
+      $.each errors_collection, (key, value) ->
+        value.forEach (innerError) ->
+          text = innerError[0]
+          commodities_list = innerError[1]
+          affected_codes_html = CreateMeasuresValidationErrorsHandler.content(commodities_list)
+          list_block.append("<li><div class=create-measures-error-block'>" + text + affected_codes_html + "</div></li>")
 
   initShowHideAffectedCommoditiesBlock: () ->
     $(document).on 'click', '.js-show_hide_affected_codes', ->
