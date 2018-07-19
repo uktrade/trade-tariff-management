@@ -181,27 +181,27 @@ module CreateMeasures
       def fetch_commodity_codes(list_of_codes)
         list_of_codes.map do |code|
           rec = Commodity.by_code(code).first
-          rec.present? ? get_commodity_with_children(rec) : nil
+          rec.present? ? get_commodity_children_tree(rec) : nil
         end.flatten
            .reject { |el| el.blank? }
            .map(&:goods_nomenclature_item_id)
            .uniq
       end
 
-      def get_commodity_with_children(rec)
+      def get_commodity_children_tree(rec)
         @list = []
-        fetch_all_codes_from_commodity(rec)
+        get_commodity_with_children(rec)
 
         list
       end
 
-      def fetch_all_codes_from_commodity(rec)
+      def get_commodity_with_children(rec)
         @list << rec.goods_nomenclature_item_id
         children = rec.children
 
         if children.present?
           children.map do |child|
-            fetch_all_codes_from_commodity(child)
+            get_commodity_with_children(child)
           end
         end
       end
