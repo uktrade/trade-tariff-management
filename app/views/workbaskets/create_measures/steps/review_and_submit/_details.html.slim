@@ -6,58 +6,64 @@ table.create-measures-details-table
       td.heading_column
         | Workbasket name
       td
-        | Lorem ipsum dolor sit amet
+        = workbasket.title
+
+    tr
+      td.heading_column
+        | Operation date
+      td
+        = attributes_parser.operation_date_formatted
 
     tr
       td.heading_column
         | Regulation
       td
-        | 2018/1234
+        = attributes_parser.regulation
 
     tr
       td.heading_column
         | Start date
       td
-        | 30 March 2019
+        = attributes_parser.start_date_formatted
 
     tr
       td.heading_column
         | End date
       td
-        | -
+        = attributes_parser.end_date_formatted
 
     tr
       td.heading_column
         | Type
       td
-        | 142 Tariff preference
+        = attributes_parser.measure_type
 
     tr
       td.heading_column
         | Goods
       td
-        | 12340000000, 12340000002, 12340000000, 12340000002, 12340000000, 12340000002, 12340000000, 12340000002, 12340000000, 12340000002, 12340000000, 12340000002
+        = attributes_parser.initial_commodity_codes
 
     tr
       td.heading_column
         | Goods exceptions
       td
-        | -
+        = attributes_parser.goods_exceptions
 
     tr
       td.heading_column
         | Additional codes
       td
-        | 7021, 7033
+        = attributes_parser.additional_codes
 
     tr
       td.heading_column
         | Origin
       td
-        | 1011
+        = attributes_parser.origin
 
     tr
       td.heading_column
         | Origin exceptions
       td
-        | AU, CA, NZ, US
+        = attributes_parser.origin_exceptions

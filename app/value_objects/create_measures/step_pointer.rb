@@ -42,6 +42,10 @@ module CreateMeasures
       current_step == 'main'
     end
 
+    def review_and_submit_step?
+      current_step == "review_and_submit"
+    end
+
     def has_next_step?
       next_step.present?
     end

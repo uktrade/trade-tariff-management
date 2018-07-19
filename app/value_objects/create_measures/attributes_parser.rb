@@ -12,10 +12,10 @@ module CreateMeasures
                   :step,
                   :ops
 
-    def initialize(workbasket_settings, step, ops)
+    def initialize(workbasket_settings, step, ops=nil)
       @workbasket_settings = workbasket_settings
       @step = step
-      @ops = ops
+      @ops = ops.present? ? ops : workbasket_settings.settings
 
       prepare_ops
     end
@@ -90,12 +90,75 @@ module CreateMeasures
       ).normalized_params
     end
 
+    begin :decoration_methods
+      def regulation
+        regulation_id = ops[:regulation_id]
+
+        regulation = BaseRegulation.actual
+                                   .not_replaced_and_partially_replaced
+                                   .where(base_regulation_id: regulation_id).first
+
+        if regulation.blank?
+          regulation = ModificationRegulation.actual
+                                             .not_replaced_and_partially_replaced
+                                             .where(modification_regulation_id: regulation_id).first
+        end
+
+        regulation.formatted_id
+      end
+
+      def operation_date_formatted
+        date_to_format(ops[:operation_date])
+      end
+
+      def start_date_formatted
+        date_to_format(ops[:start_date])
+      end
+
+      def end_date_formatted
+        ops[:end_date].present? ? date_to_format(ops[:end_date]) : "-"
+      end
+
+      def measure_type
+        MeasureType.by_measure_type_id(ops[:measure_type_id])
+                   .first
+                   .description
+      end
+
+      def initial_commodity_codes
+
+      end
+
+      def goods_exceptions
+
+      end
+
+      def origin
+        id = ops[:geographical_area_id]
+        desc = GeographicalArea.actual
+                               .where(geographical_area_id: id)
+                               .first
+                               .description
+
+        "#{desc} (#{id})"
+      end
+
+      def origin_exceptions
+        areas = ops[:excluded_geographical_areas]
+        areas.present? ? areas.join(", ") : "-"
+      end
+    end
+
     private
 
       def prepare_ops
         if step == "duties_conditions_footnotes"
           @ops = ops.merge(workbasket_settings.main_step_settings)
         end
+      end
+
+      def date_to_format(date)
+        date.strftime("%d %B %Y")
       end
   end
 end

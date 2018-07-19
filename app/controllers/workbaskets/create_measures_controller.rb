@@ -47,6 +47,12 @@ module Workbaskets
       end
     end
 
+    expose(:attributes_parser) do
+      ::CreateMeasures::AttributesParser.new(
+        workbasket_settings, current_step
+      )
+    end
+
     def new
       self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
         :create_measures, current_user
