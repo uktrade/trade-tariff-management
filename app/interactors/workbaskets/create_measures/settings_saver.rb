@@ -14,6 +14,8 @@ module Workbaskets
         commodity_codes_exclusions
         additional_codes
         candidates
+        measure_components
+        conditions
         footnotes
       )
 
@@ -72,7 +74,7 @@ module Workbaskets
       end
 
       ATTRS_PARSER_METHODS.map do |option|
-        define_method("#{option}") do
+        define_method(option) do
           attrs_parser.public_send(option)
         end
       end
@@ -84,10 +86,12 @@ module Workbaskets
           res[k] = v
         end
 
-        if errors[:footnotes].present?
-          errors[:footnotes].map do |position, hash_of_errors|
-            hash_of_errors.map do |k, v|
-              res[k] = v
+        ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
+          if errors[name].present?
+            errors[name].map do |position, hash_of_errors|
+              hash_of_errors.map do |k, v|
+                res[k] = v
+              end
             end
           end
         end
@@ -144,9 +148,11 @@ module Workbaskets
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
 
-          if footnotes.present?
-            f_errors = footnotes_errors(measure)
-            errors_collection[:footnotes] = f_errors if f_errors.present?
+          ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
+            if public_send(name).present?
+              association_errors = public_send("#{name}_errors", measure)
+              errors_collection[name] = association_errors if association_errors.present?
+            end
           end
 
           errors_collection
@@ -165,6 +171,18 @@ module Workbaskets
           ::Measures::ConformanceErrorsParser.new(
             measure, MeasureValidator, {}
           ).errors
+        end
+
+        def measure_components_errors(measure)
+          ::CreateMeasures::ValidationHelpers::Duties.errors_in_collection(
+            measure, system_ops, measure_components
+          )
+        end
+
+        def conditions_errors(measure)
+          ::CreateMeasures::ValidationHelpers::Conditions.errors_in_collection(
+            measure, system_ops, conditions
+          )
         end
 
         def footnotes_errors(measure)
