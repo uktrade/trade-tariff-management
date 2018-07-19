@@ -88,6 +88,10 @@
   }
 
   .create-measures-error-block {
+    &.with_left_margin {
+      margin-left: 20px;
+    }
+
     a.js-show_hide_affected_codes {
       margin-left: 10px;
     }

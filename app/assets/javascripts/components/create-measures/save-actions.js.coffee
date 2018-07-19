@@ -48,6 +48,8 @@ window.CreateMeasuresSaveActions =
                                                                               .removeClass('hidden')
 
   handleSuccessResponse: (resp) ->
+    CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
+
     if resp.next_step.length > 0 && window.create_measures_mode == 'continue'
       CreateMeasuresSaveActions.showSuccessMessage()
       CreateMeasuresSaveActions.setSpinnerText("Redirecting to next step")

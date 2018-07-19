@@ -1,6 +1,7 @@
 window.CreateMeasuresValidationErrorsHandler =
 
   handleErrorsResponse: (response, measure_form) ->
+    CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
     CreateMeasuresSaveActions.hideSuccessMessage()
 
     if response.responseJSON.step == "main"
@@ -32,7 +33,7 @@ window.CreateMeasuresValidationErrorsHandler =
     return false
 
   renderErrorsBlock: (response) ->
-    $(".js-measure-form-errors-container.js-custom-errors-block").removeClass('hidden')
+    CreateMeasuresValidationErrorsHandler.showCustomErrorsBlock()
 
     $.each response.responseJSON.errors, (group_key, errors_collection) ->
       group_block = $(".js-create-measures-custom-errors[data-errors-container='" + group_key + "']")
@@ -40,11 +41,17 @@ window.CreateMeasuresValidationErrorsHandler =
       list_block = group_block.find("ul")
 
       $.each errors_collection, (key, value) ->
-        value.forEach (innerError) ->
-          text = innerError[0]
-          commodities_list = innerError[1]
-          affected_codes_html = CreateMeasuresValidationErrorsHandler.content(commodities_list)
-          list_block.append("<li><div class=create-measures-error-block'>" + text + affected_codes_html + "</div></li>")
+        value.forEach (error) ->
+          result_html = CreateMeasuresValidationErrorsHandler.customErrorHtml(error)
+          list_block.append(result_html)
+
+  customErrorHtml: (error) ->
+    text = error[0]
+    commodities_list = error[1]
+    affected_codes_html = CreateMeasuresValidationErrorsHandler.content(commodities_list)
+
+    return "<li><div class='create-measures-error-block with_left_margin'>" +
+           text + affected_codes_html + "</div></li>"
 
   initShowHideAffectedCommoditiesBlock: () ->
     $(document).on 'click', '.js-show_hide_affected_codes', ->
@@ -77,6 +84,14 @@ window.CreateMeasuresValidationErrorsHandler =
            "<div class='clearfix'></div><span class='js-affected_codes_list hidden'>" +
            commodities_list.join(", ") +
            "</span>"
+
+  showCustomErrorsBlock: () ->
+    $(".js-measure-form-errors-container.js-custom-errors-block").removeClass('hidden')
+
+  hideCustomErrorsBlock: () ->
+    $(".js-measure-form-errors-container.js-custom-errors-block").addClass('hidden')
+    $(".js-create-measures-custom-errors").addClass('hidden')
+    $(".js-create-measures-custom-errors ul").empty()
 
 $ ->
   CreateMeasuresValidationErrorsHandler.initShowHideAffectedCommoditiesBlock()
