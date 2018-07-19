@@ -180,30 +180,11 @@ module CreateMeasures
 
       def fetch_commodity_codes(list_of_codes)
         list_of_codes.map do |code|
-          rec = Commodity.by_code(code).first
-          rec.present? ? get_commodity_children_tree(rec) : nil
+          ::CreateMeasures::CommodityCodesParser.new(code).codes
         end.flatten
            .reject { |el| el.blank? }
            .map(&:goods_nomenclature_item_id)
            .uniq
-      end
-
-      def get_commodity_children_tree(rec)
-        @list = []
-        get_commodity_with_children(rec)
-
-        list
-      end
-
-      def get_commodity_with_children(rec)
-        @list << rec.goods_nomenclature_item_id
-        children = rec.children
-
-        if children.present?
-          children.map do |child|
-            get_commodity_with_children(child)
-          end
-        end
       end
 
       def fetch_additional_codes(list_of_codes)
