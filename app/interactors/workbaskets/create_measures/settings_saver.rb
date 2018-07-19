@@ -150,7 +150,7 @@ module Workbaskets
 
           ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
             if public_send(name).present?
-              association_errors = public_send("#{name}_errors", measure)
+              association_errors = send("#{name}_errors", measure)
               errors_collection[name] = association_errors if association_errors.present?
             end
           end
@@ -175,9 +175,9 @@ module Workbaskets
 
         ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
           define_method("#{name}_errors") do |measure|
-            name = name.split("_").map(&:capitalize).join('')
+            klass_name = name.split("_").map(&:capitalize).join('')
 
-            const_get("CreateMeasures::ValidationHelpers::#{name}".errors_in_collection(
+            "CreateMeasures::ValidationHelpers::#{klass_name}".constantize.errors_in_collection(
               measure, system_ops, public_send(name)
             )
           end
