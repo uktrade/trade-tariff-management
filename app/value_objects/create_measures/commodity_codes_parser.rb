@@ -27,7 +27,7 @@ module CreateMeasures
       end
 
       def get_commodity_with_children(record)
-        @all_codes << record.goods_nomenclature_item_id
+        @all_codes << record.goods_nomenclature_item_id if record.declarable?
         children = record.children
 
         if children.present?

@@ -180,7 +180,9 @@ module CreateMeasures
 
       def fetch_commodity_codes(list_of_codes)
         list_of_codes.map do |code|
-          ::CreateMeasures::CommodityCodesParser.new(code).codes
+          ::CreateMeasures::CommodityCodesParser.new(
+            code
+          ).codes
         end.flatten
            .reject { |el| el.blank? }
            .map(&:goods_nomenclature_item_id)
