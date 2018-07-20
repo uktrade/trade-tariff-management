@@ -171,7 +171,8 @@ module CreateMeasures
       end
 
       def date_to_format(date)
-        date.strftime("%d %B %Y")
+        date.try(:to_date)
+            .try(:strftime, "%d %B %Y")
       end
   end
 end
