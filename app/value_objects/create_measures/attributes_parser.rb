@@ -16,7 +16,11 @@ module CreateMeasures
     def initialize(workbasket_settings, step, ops=nil)
       @workbasket_settings = workbasket_settings
       @step = step
-      @ops = ops.present? ? ops : workbasket_settings.settings
+      @ops = if ops.present?
+        ops
+      else
+        ActiveSupport::HashWithIndifferentAccess.new(workbasket_settings.settings)
+      end
 
       prepare_ops
       setup_code_analyzer

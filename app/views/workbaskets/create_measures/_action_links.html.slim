@@ -11,11 +11,12 @@
     .js-create-measures-continue-spinner.spinner_block.hidden
       = render "measures/bulks/loading_spinner", message: "Checking data..."
 
-  .save_progress_block
-    = f.button :submit, "Save progress", name: "save_progress", class: "button js-create-measures-save-progress-button js-create-measures-v2-submit-button"
+  - if step_pointer.has_next_step?
+    .save_progress_block
+      = f.button :submit, "Save progress", name: "save_progress", class: "button js-create-measures-save-progress-button js-create-measures-v2-submit-button"
 
-    .js-create-measures-save-progress-spinner.spinner_block.hidden
-      = render "measures/bulks/loading_spinner", message: "Saving..."
+      .js-create-measures-save-progress-spinner.spinner_block.hidden
+        = render "measures/bulks/loading_spinner", message: "Saving..."
 
   = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-create-measures-exit-button"
 

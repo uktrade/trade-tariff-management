@@ -49,9 +49,8 @@ module Workbaskets
 
     expose(:attributes_parser) do
       ::CreateMeasures::AttributesParser.new(
-        workbasket.create_measures_settings,
-        current_step,
-        ActiveSupport::HashWithIndifferentAccess.new(workbasket.create_measures_settings.settings)
+        workbasket_settings,
+        current_step
       )
     end
 
