@@ -22,7 +22,11 @@ module CreateMeasures
         p_key = PRIMARY_KEYS[record.class.name]
 
         if p_key.present?
-          sid = record.class.max(p_key).to_i + 1
+          sid = record.class
+                      .pluck(p_key)
+                      .map(&:to_i)
+                      .max + 1
+
           sid += extra_increment_value if extra_increment_value.present?
 
           record.public_send("#{p_key}=", sid)

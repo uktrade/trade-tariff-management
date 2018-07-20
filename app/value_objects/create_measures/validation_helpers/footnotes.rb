@@ -11,6 +11,7 @@ module CreateMeasures
                     :footnote_association_measure,
                     :footnote_description_period,
                     :footnote_description,
+                    :footnote_reuse,
                     :extra_increment_value,
                     :period_sid,
                     :errors
@@ -50,13 +51,13 @@ module CreateMeasures
         Rails.logger.info "--------Persist runned!-------"
         Rails.logger.info ""
 
-        records.map do |record|
-          Rails.logger.info ""
-          Rails.logger.info "    record: #{record}"
-          Rails.logger.info ""
-
-          persist_record!(record)
+        unless footnote_reuse.present?
+          persist_record!(footnote)
+          persist_record!(footnote_description_period)
+          persist_record!(footnote_description)
         end
+
+        persist_record!(footnote_association_measure)
       end
 
       private
@@ -64,33 +65,47 @@ module CreateMeasures
         def generate_records!
           generate_footnote!
           generate_footnote_association_measure!
-          generate_footnote_description_period!
-          generate_footnote_description!
-        end
 
-        def records
-          [
-            footnote,
-            footnote_association_measure,
-            footnote_description_period,
-            footnote_description
-          ]
-        end
-
-        def validate_records!
-          records.map do |record|
-            validate!(record)
+          unless footnote_reuse.present?
+            generate_footnote_description_period!
+            generate_footnote_description!
           end
         end
 
-        def generate_footnote!
-          @footnote = Footnote.new(
-            validity_start_date: measure.validity_start_date,
-            validity_end_date: measure.validity_end_date
-          )
-          footnote.footnote_type_id = footnote_type_id
+        def validate_records!
+          unless footnote_reuse.present?
+            validate!(footnote)
+            validate!(footnote_description_period)
+            validate!(footnote_description)
+          end
 
-          set_primary_key(footnote)
+          validate!(footnote_association_measure)
+        end
+
+        def generate_footnote!
+          footnote_desc = FootnoteDescription.where(
+            footnote_type_id: footnote_type_id,
+            description: footnote_description
+          ).first
+
+          if footnote_desc.present?
+            @footnote = Footnote.where(
+              footnote_type_id: footnote_type_id,
+              footnote_id: footnote_desc.footnote_id
+            ).first
+          end
+
+          if @footnote.present?
+            @footnote_reuse = true
+          else
+            @footnote = Footnote.new(
+              validity_start_date: measure.validity_start_date,
+              validity_end_date: measure.validity_end_date
+            )
+            footnote.footnote_type_id = footnote_type_id
+
+            set_primary_key(footnote)
+          end
         end
 
         def generate_footnote_association_measure!

@@ -45,6 +45,4 @@
                 = item.conditions_short_list
 
               .table__column.footnotes-column
-                - item.footnotes.map do |footnote|
-                  = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
-                  br
+                = item.footnotes.map { |footnote| "#{footnote.footnote_type_id} - #{footnote.footnote_id}" }.join(', ')
