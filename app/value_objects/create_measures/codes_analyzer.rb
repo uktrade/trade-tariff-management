@@ -87,9 +87,9 @@ module CreateMeasures
       end
 
       def clean_array(list)
-        list.flatten
-            .reject { |el| el.blank? }
-            .uniq
+        (list || []).flatten
+                    .reject { |el| el.blank? }
+                    .uniq
       end
   end
 end

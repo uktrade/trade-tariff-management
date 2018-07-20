@@ -127,11 +127,11 @@ module CreateMeasures
                    .description
       end
 
-      def initial_commodity_codes
+      def commodity_codes_formatted
         codes_analyzer.commodity_codes_formatted
       end
 
-      def goods_exceptions
+      def exclusions_formatted
         codes_analyzer.exclusions_formatted
       end
 
