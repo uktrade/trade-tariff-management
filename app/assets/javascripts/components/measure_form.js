@@ -411,18 +411,16 @@ $(document).ready(function() {
         };
 
         try {
-          if (this.showDuties) {
-            payload.measure_components = this.measure.measure_components.map(function(component) {
-              var c = clone(component);
+          payload.measure_components = this.measure.measure_components.map(function(component) {
+            var c = clone(component);
 
-              if (c.duty_expression_id) {
-                // to ignore A and B
-                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
-              }
+            if (c.duty_expression_id) {
+              // to ignore A and B
+              c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+            }
 
-              return c;
-            });
-          }
+            return c;
+          });
         } catch (e) {
           console.error(e);
         }
