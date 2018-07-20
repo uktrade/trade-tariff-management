@@ -34,6 +34,7 @@ window.CreateMeasuresSaveActions =
     save_link = $(".js-create-measures-save-progress-button")
     submit_link = $(".js-create-measures-continue-button")
     exit_link = $(".js-create-measures-exit-button")
+    previous_link = $(".js-create-measures-previous-step-link")
 
     if mode == "save_progress"
       submit_link.addClass('disabled')
@@ -41,11 +42,12 @@ window.CreateMeasuresSaveActions =
       save_link.addClass('disabled')
 
     exit_link.addClass('disabled')
+    previous_link.addClass('disabled')
 
   unlockButtonsAndHideSpinner: ->
     $(".spinner_block").addClass('hidden')
-    $(".js-create-measures-v2-submit-button, .js-create-measures-exit-button").removeClass('disabled')
-                                                                              .removeClass('hidden')
+    $(".js-create-measures-v2-submit-button, .js-create-measures-exit-button, .js-create-measures-previous-step-link").removeClass('disabled')
+                                                                                                                      .removeClass('hidden')
 
   handleSuccessResponse: (resp) ->
     CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
