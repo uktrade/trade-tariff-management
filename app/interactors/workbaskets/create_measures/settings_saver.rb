@@ -163,6 +163,7 @@ module Workbaskets
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
           if @persist.present?
+            measure = assign_system_ops!(measure)
             measure.save
             @measure_sids << measure.measure_sid
 
@@ -189,11 +190,24 @@ module Workbaskets
           end
         end
 
+        def assign_system_ops!(measure)
+          system_ops_assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
+            measure, current_admin, operation_date
+          )
+          system_ops_assigner.assign!
+
+          system_ops_assigner.record
+        end
+
         def system_ops
           {
             operation_date: operation_date,
-            current_admin: workbasket.user
+            current_admin: current_admin
           }
+        end
+
+        def current_admin
+          workbasket.user
         end
 
         def get_unique_errors_from_candidates!

@@ -18,6 +18,7 @@ module CreateMeasures
         record.operation_date = operation_date
         record.added_by_id = current_admin.id
         record.added_at = Time.zone.now
+        record.national = false
         record.try("approved_flag=", true)
         record.try("stopped_flag=", false)
       end
