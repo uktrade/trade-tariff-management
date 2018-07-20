@@ -12,7 +12,7 @@ module Workbaskets
     end
 
     def measure_sids
-      JSON.parse(measure_sids_jsonb)
+      JSON.parse(measure_sids_jsonb).uniq
     end
 
     def measures
