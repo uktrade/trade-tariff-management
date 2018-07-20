@@ -120,7 +120,11 @@ module Workbaskets
             @errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
           end
 
-          if (commodity_codes.present? || additional_codes.present?) && candidates.blank?
+          if settings_params['start_date'].present? && (
+              commodity_codes.present? ||
+              additional_codes.present?
+            ) && candidates.blank?
+
             @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
           end
         end

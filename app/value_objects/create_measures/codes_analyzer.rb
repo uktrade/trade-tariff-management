@@ -1,7 +1,8 @@
 module CreateMeasures
   class CodesAnalyzer
 
-    attr_accessor :commodity_codes,
+    attr_accessor :start_date,
+                  :commodity_codes,
                   :additional_codes,
                   :commodity_codes_exclusions,
                   :collection,
@@ -11,6 +12,7 @@ module CreateMeasures
 
     def initialize(ops={})
       @collection = nil
+      @start_date = ops[:start_date]
       @commodity_codes = ops[:commodity_codes]
       @additional_codes = ops[:additional_codes]
       @commodity_codes_exclusions = ops[:commodity_codes_exclusions]
@@ -73,6 +75,7 @@ module CreateMeasures
       def fetch_commodity_codes(codes_list)
         res = codes_list.map do |code|
           ::CreateMeasures::CommodityCodeParser.new(
+            start_date,
             code
           ).codes
         end

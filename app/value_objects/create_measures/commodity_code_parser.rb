@@ -2,11 +2,14 @@ module CreateMeasures
   class CommodityCodeParser
 
     attr_accessor :commodity,
+                  :start_date,
                   :all_codes
 
-    def initialize(code)
-      @commodity = Commodity.by_code(code)
-                            .first
+    def initialize(start_date, code)
+      @start_date = start_date
+      @commodity = Commodity.by_code(code).where(
+        "validity_end_date IS NULL OR validity_end_date > ?", start_date
+      ).first
     end
 
     def codes
@@ -31,7 +34,9 @@ module CreateMeasures
         children = record.children
 
         if children.present?
-          children.map do |child|
+          children.select do |child|
+            child.validity_end_date.blank? || child.validity_end_date > start_date
+          end.map do |child|
             get_commodity_with_children(child)
           end
         end

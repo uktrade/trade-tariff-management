@@ -20,6 +20,7 @@ module CreateMeasures
       prepare_ops
 
       @codes_analyzer = ::CreateMeasures::CodesAnalyzer.new(
+        start_date: ops[:start_date].to_date,
         commodity_codes: commodity_codes,
         additional_codes: additional_codes,
         commodity_codes_exclusions: commodity_codes_exclusions
