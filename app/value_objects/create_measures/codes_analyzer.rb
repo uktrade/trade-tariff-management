@@ -83,7 +83,8 @@ module CreateMeasures
       def fetch_additional_codes
         @additional_codes_detected = list_of_codes.map do |code|
           AdditionalCode.by_code(code)
-        end.map(&:code)
+        end.reject { |el| el.blank? }
+           .map(&:code)
       end
 
       def clean_array(list)
