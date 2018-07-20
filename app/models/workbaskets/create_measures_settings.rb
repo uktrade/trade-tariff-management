@@ -15,6 +15,11 @@ module Workbaskets
       JSON.parse(measure_sids_jsonb)
     end
 
+    def measures
+      Measure.where(measure_sid: measure_sids)
+             .order(:measure_sid)
+    end
+
     def settings
       main_step_settings.merge(duties_conditions_footnotes_step_settings)
     end

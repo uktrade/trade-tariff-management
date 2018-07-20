@@ -30,6 +30,14 @@ module CreateMeasures
         generate_records!
         validate_records!
 
+        Rails.logger.info ""
+        Rails.logger.info " measure.measure_sid: #{measure.measure_sid}"
+        Rails.logger.info ""
+        Rails.logger.info "@errors: #{@errors.inspect}"
+        Rails.logger.info ""
+        Rails.logger.info "persist: #{!measure.new?}"
+        Rails.logger.info ""
+
         if @errors.blank? && !measure.new?
           persist!
         end
@@ -38,7 +46,15 @@ module CreateMeasures
       end
 
       def persist!
+        Rails.logger.info ""
+        Rails.logger.info "--------Persist runned!-------"
+        Rails.logger.info ""
+
         records.map do |record|
+          Rails.logger.info ""
+          Rails.logger.info "    record: #{record}"
+          Rails.logger.info ""
+
           persist_record!(record)
         end
       end

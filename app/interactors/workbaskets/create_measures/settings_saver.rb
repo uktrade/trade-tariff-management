@@ -72,12 +72,6 @@ module Workbaskets
 
         validate!
 
-        Rails.logger.info ""
-        Rails.logger.info ""
-        Rails.logger.info " @measure_sids: #{@measure_sids}"
-        Rails.logger.info ""
-        Rails.logger.info ""
-
         settings.measure_sids_jsonb = @measure_sids.to_json
         settings.save
       end
@@ -171,9 +165,12 @@ module Workbaskets
           if @persist.present?
             measure.save
             @measure_sids << measure.measure_sid
-          end
 
-          measure
+            Measure.where(measure_sid: measure.measure_sid)
+                   .first
+          else
+            measure
+          end
         end
 
         def measure_errors(measure)
