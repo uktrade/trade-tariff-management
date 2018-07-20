@@ -155,6 +155,7 @@ $(document).ready(function() {
 
           var data_ops = {
             step: window.current_step,
+            mode: window.create_measures_mode,
             settings: payload
           };
         }

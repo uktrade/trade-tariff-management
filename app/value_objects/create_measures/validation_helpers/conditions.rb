@@ -24,6 +24,10 @@ module CreateMeasures
         generate_records!
         validate_records!
 
+        if @errors.blank? && !measure.new?
+          persist!
+        end
+
         @errors.blank?
       end
 

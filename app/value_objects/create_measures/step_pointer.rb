@@ -42,6 +42,10 @@ module CreateMeasures
       current_step == 'main'
     end
 
+    def duties_conditions_footnotes?
+      current_step == "duties_conditions_footnotes"
+    end
+
     def review_and_submit_step?
       current_step == "review_and_submit"
     end

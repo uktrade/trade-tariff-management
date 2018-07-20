@@ -11,6 +11,10 @@ module Workbaskets
       Workbaskets::Workbasket.find(id: workbasket_id)
     end
 
+    def measure_sids
+      JSON.parse(measure_sids_jsonb)
+    end
+
     def settings
       main_step_settings.merge(duties_conditions_footnotes_step_settings)
     end

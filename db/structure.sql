@@ -1258,7 +1258,8 @@ CREATE TABLE public.create_measures_workbasket_settings (
     updated_at time without time zone,
     duties_conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     main_step_validation_passed boolean DEFAULT false,
-    duties_conditions_footnotes_step_validation_passed boolean DEFAULT false
+    duties_conditions_footnotes_step_validation_passed boolean DEFAULT false,
+    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -10798,3 +10799,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180717164406_change_crea
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180717165903_add_more_fields_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_validation_field_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure_sids_to_create_measures_workbasket_settings.rb');

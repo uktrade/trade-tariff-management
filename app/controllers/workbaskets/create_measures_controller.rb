@@ -71,6 +71,10 @@ module Workbaskets
       if saver.valid?
         workbasket_settings.track_step_validations_status!(current_step, true)
 
+        if step_pointer.duties_conditions_footnotes? && params[:mode] == 'continue'
+          saver.persist!
+        end
+
         render json: saver.success_ops,
                status: :ok
       else

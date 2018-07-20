@@ -66,6 +66,22 @@ module Workbaskets
         candidates_with_errors.blank?
       end
 
+      def persist!
+        @persist = true
+        @measure_sids = []
+
+        validate!
+
+        Rails.logger.info ""
+        Rails.logger.info ""
+        Rails.logger.info " @measure_sids: #{@measure_sids}"
+        Rails.logger.info ""
+        Rails.logger.info ""
+
+        settings.measure_sids_jsonb = @measure_sids.to_json
+        settings.save
+      end
+
       def success_ops
         ops = {}
         ops[:next_step] = step_pointer.next_step if step_pointer.has_next_step?
@@ -77,26 +93,6 @@ module Workbaskets
         define_method(option) do
           attrs_parser.public_send(option)
         end
-      end
-
-      def summarized_errors
-        res = {}
-
-        errors[:measure].map do |k, v|
-          res[k] = v
-        end
-
-        ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
-          if errors[name].present?
-            errors[name].map do |position, hash_of_errors|
-              hash_of_errors.map do |k, v|
-                res[k] = v
-              end
-            end
-          end
-        end
-
-        res
       end
 
       private
@@ -170,8 +166,13 @@ module Workbaskets
           measure = Measure.new(
             attrs_parser.measure_params(code, mode)
           )
-
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+
+          if @persist.present?
+            measure.save
+            @measure_sids << measure.measure_sid
+          end
+
           measure
         end
 
