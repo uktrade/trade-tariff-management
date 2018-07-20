@@ -22,11 +22,14 @@ module CreateMeasures
         p_key = PRIMARY_KEYS[record.class.name]
 
         if p_key.present?
-          sid = record.class
-                      .pluck(p_key)
-                      .map(&:to_i)
-                      .max + 1
-
+          if record.class.name == "Footnote"
+            sid = record.class
+                        .pluck(p_key)
+                        .map(&:to_i)
+                        .max + 1
+          else
+            sid = record.class.max(p_key).to_i + 1
+          end
           sid += extra_increment_value if extra_increment_value.present?
 
           record.public_send("#{p_key}=", sid)
