@@ -1,3 +1,5 @@
+require 'measures/refresh_cache'
+
 class RefreshCacheWorker
   include Sidekiq::Worker
 
