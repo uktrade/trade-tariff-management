@@ -9,6 +9,7 @@ module CreateMeasures
     )
 
     attr_accessor :workbasket_settings,
+                  :codes_analyzer,
                   :step,
                   :ops
 
@@ -16,8 +17,13 @@ module CreateMeasures
       @workbasket_settings = workbasket_settings
       @step = step
       @ops = ops.present? ? ops : workbasket_settings.settings
-
       prepare_ops
+
+      @codes_analyzer = ::CreateMeasures::CodesAnalyzer.new(
+        commodity_codes: commodity_codes,
+        additional_codes: additional_codes,
+        commodity_codes_exclusions: commodity_codes_exclusions
+      )
     end
 
     SIMPLE_OPS.map do |option_name|
@@ -78,16 +84,12 @@ module CreateMeasures
     end
 
     def commodity_codes_exclusions
-      list = ops[:commodity_codes_exclusions]
+      list = ops['commodity_codes_exclusions']
       list.present? ? list.split( /\r?\n/ ).map(&:strip) : []
     end
 
     def candidates
-      ::CreateMeasures::CodesAnalyzer.new(
-        commodity_codes: commodity_codes,
-        additional_codes: additional_codes,
-        commodity_codes_exclusions: commodity_codes_exclusions
-      ).collection
+      codes_analyzer.collection
     end
 
     begin :decoration_methods
@@ -126,11 +128,15 @@ module CreateMeasures
       end
 
       def initial_commodity_codes
-        commodity_codes.join(", ")
+        codes_analyzer.commodity_codes_formatted
       end
 
       def goods_exceptions
-        commodity_codes_exclusions.join(", ")
+        codes_analyzer.exclusions_formatted
+      end
+
+      def additional_codes_formatted
+        codes_analyzer.additional_codes_formatted
       end
 
       def origin

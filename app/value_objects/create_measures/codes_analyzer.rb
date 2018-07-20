@@ -3,36 +3,62 @@ module CreateMeasures
 
     attr_accessor :commodity_codes,
                   :additional_codes,
-                  :commodity_codes_exclusions
+                  :commodity_codes_exclusions,
+                  :collection,
+                  :commodity_codes_detected,
+                  :exclusions_detected,
+                  :additional_codes_detected
 
     def initialize(ops={})
+      @collection = nil
       @commodity_codes = ops[:commodity_codes]
       @additional_codes = ops[:additional_codes]
       @commodity_codes_exclusions = ops[:commodity_codes_exclusions]
+
+      setup_collection!
     end
 
-    def collection
-      res = nil
+    def commodity_codes_formatted
+      clean_array(commodity_codes_detected).join(', ')
+    end
 
-      if list_of_codes.present?
-        res = if commodity_codes.present?
-          codes = fetch_commodity_codes(list_of_codes)
+    def exclusions_formatted
+      clean_array(exclusions_detected).join(', ')
+    end
 
-          if codes.present? && commodity_codes_exclusions.present?
-            exclusions = fetch_commodity_codes(commodity_codes_exclusions)
-            codes = codes - exclusions if exclusions.present?
-          end
-
-          codes
-        else
-          fetch_additional_codes
-        end
-      end
-
-      clean_array(res)
+    def additional_codes_formatted
+      clean_array(additional_codes_detected).join(', ')
     end
 
     private
+
+      def setup_collection!
+        if list_of_codes.present?
+          @collection = if commodity_codes_mode?
+            @commodity_codes_detected = fetch_commodity_codes(list_of_codes)
+
+            if commodity_codes_detected.present? && commodity_codes_exclusions.present?
+              @exclusions_detected = fetch_commodity_codes(commodity_codes_exclusions)
+
+              if exclusions_detected.present?
+                @commodity_codes_detected = commodity_codes_detected - exclusions_detected
+              end
+            end
+
+            @commodity_codes_detected
+          else
+            fetch_additional_codes
+          end
+        end
+
+        clean_array(collection).sort do |a, b|
+          a <=> b
+        end
+      end
+
+      def commodity_codes_mode?
+        commodity_codes.present?
+      end
 
       def list_of_codes
         if commodity_codes.present?
@@ -55,7 +81,7 @@ module CreateMeasures
       end
 
       def fetch_additional_codes
-        list_of_codes.map do |code|
+        @additional_codes_detected = list_of_codes.map do |code|
           AdditionalCode.by_code(code)
         end.map(&:code)
       end
