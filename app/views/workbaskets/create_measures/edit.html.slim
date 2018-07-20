@@ -16,7 +16,7 @@ header
 - if step_pointer.current_step_is_form_step?
   = render "workbaskets/create_measures/form"
 - else
-  = render "workbaskets/create_measures/steps/review_and_submit"
+  = render "workbaskets/create_measures/steps/review_and_submit", read_only: false
 
 script
   == "window.save_url = '/create_measures/#{workbasket.id}';"

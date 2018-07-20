@@ -50,16 +50,21 @@ window.CreateMeasuresSaveActions =
   handleSuccessResponse: (resp) ->
     CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
 
-    if resp.next_step.length > 0 && window.create_measures_mode == 'continue'
-      CreateMeasuresSaveActions.showSuccessMessage()
-      CreateMeasuresSaveActions.setSpinnerText("Redirecting to next step")
-
+    if resp.redirect_url.length >0
       setTimeout (->
-        window.location = window.save_url + '/edit?step=' + resp.next_step
+        window.location = resp.redirect_url
       ), 1000
     else
-      CreateMeasuresSaveActions.showSuccessMessage()
-      CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
+      if resp.next_step.length > 0 && window.create_measures_mode == 'continue'
+        CreateMeasuresSaveActions.showSuccessMessage()
+        CreateMeasuresSaveActions.setSpinnerText("Redirecting to next step")
+
+        setTimeout (->
+          window.location = window.save_url + '/edit?step=' + resp.next_step
+        ), 1000
+      else
+        CreateMeasuresSaveActions.showSuccessMessage()
+        CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
 
   showSuccessMessage: ->
     $(".js-measure-form-success-message-container").removeClass('hidden')

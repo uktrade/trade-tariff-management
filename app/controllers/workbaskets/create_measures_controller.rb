@@ -66,6 +66,13 @@ module Workbaskets
     end
 
     def update
+      if step_pointer.review_and_submit_step?
+        render json: { redirect_url: create_measure_url(workbasket.id) },
+               status: :ok
+
+        return false
+      end
+
       saver.save!
 
       if saver.valid?
