@@ -50,7 +50,7 @@ window.CreateMeasuresSaveActions =
   handleSuccessResponse: (resp) ->
     CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
 
-    if resp.redirect_url.length >0
+    if resp.redirect_url isnt undefined
       setTimeout (->
         window.location = resp.redirect_url
       ), 1000
