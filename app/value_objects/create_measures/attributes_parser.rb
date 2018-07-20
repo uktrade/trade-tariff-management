@@ -26,6 +26,27 @@ module CreateMeasures
       end
     end
 
+    def measure_params(code, mode)
+      res = {
+        start_date: ops[:start_date],
+        end_date: ops[:end_date],
+        regulation_id: ops[:regulation_id],
+        measure_type_id: ops[:measure_type_id],
+        reduction_indicator: ops[:reduction_indicator],
+        geographical_area_id: ops[:geographical_area_id]
+      }
+
+      if mode == :commodity_codes
+        res[:goods_nomenclature_code] = code
+      else
+        res[:additional_code] = code
+      end
+
+      ::Measures::AttributesNormalizer.new(
+        ActiveSupport::HashWithIndifferentAccess.new(res)
+      ).normalized_params
+    end
+
     def measure_components
       if ops[:measure_components].present?
         ops[:measure_components].select do |k, option|
@@ -61,56 +82,12 @@ module CreateMeasures
       list.present? ? list.split( /\r?\n/ ).map(&:strip) : []
     end
 
-    def list_of_codes
-      if commodity_codes.present?
-        commodity_codes.split( /\r?\n/ )
-      else
-        additional_codes.split(",")
-      end.map(&:strip)
-         .reject { |el| el.blank? }
-         .uniq
-    end
-
     def candidates
-      res = nil
-
-      if list_of_codes.present?
-        res = if commodity_codes_mode?
-          codes = fetch_commodity_codes(list_of_codes)
-
-          if commodity_codes_exclusions.present?
-            exclusions = fetch_commodity_codes(exclusions)
-            codes = codes - exclusions if exclusions.present?
-          end
-
-          codes.uniq
-        else
-          fetch_additional_codes(list_of_codes)
-        end
-      end
-
-      res
-    end
-
-    def measure_params(code, mode)
-      res = {
-        start_date: ops[:start_date],
-        end_date: ops[:end_date],
-        regulation_id: ops[:regulation_id],
-        measure_type_id: ops[:measure_type_id],
-        reduction_indicator: ops[:reduction_indicator],
-        geographical_area_id: ops[:geographical_area_id]
-      }
-
-      if mode == :commodity_codes
-        res[:goods_nomenclature_code] = code
-      else
-        res[:additional_code] = code
-      end
-
-      ::Measures::AttributesNormalizer.new(
-        ActiveSupport::HashWithIndifferentAccess.new(res)
-      ).normalized_params
+      ::CreateMeasures::CodesAnalyzer.new(
+        commodity_codes: commodity_codes,
+        additional_codes: additional_codes,
+        commodity_codes_exclusions: commodity_codes_exclusions
+      ).collection
     end
 
     begin :decoration_methods
@@ -173,29 +150,6 @@ module CreateMeasures
     end
 
     private
-
-      def commodity_codes_mode?
-        commodity_codes.present?
-      end
-
-      def fetch_commodity_codes(list_of_codes)
-        list_of_codes.map do |code|
-          ::CreateMeasures::CommodityCodesParser.new(
-            code
-          ).codes
-        end.flatten
-           .reject { |el| el.blank? }
-           .map(&:goods_nomenclature_item_id)
-           .uniq
-      end
-
-      def fetch_additional_codes(list_of_codes)
-        list_of_codes.map do |code|
-          AdditionalCode.by_code(code)
-        end.reject { |el| el.blank? }
-           .map(&:code)
-           .uniq
-      end
 
       def prepare_ops
         if step == "duties_conditions_footnotes"

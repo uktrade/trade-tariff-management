@@ -1,5 +1,5 @@
 module CreateMeasures
-  class CommodityCodesParser
+  class CommodityCodeParser
 
     attr_accessor :commodity,
                   :all_codes
