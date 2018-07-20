@@ -26,25 +26,25 @@
       .item-container
         .items style=("margin-top: 0px;")
 
-          - workbasket_items.map do |item|
+          - workbasket_settings.measures.map do |item|
             .table__row data-measure-sid="-485562" height="45"
 
               / .table__column.select-all-column
               /   input data-v-caa2d078="" name="measures[]" type="checkbox" value="-485562"
 
               .table__column.goods_nomenclature-column
-                = item["goods_nomenclature"]["goods_nomenclature_item_id"]
+                = item.goods_nomenclature_item_id
 
               .table__column.additional_code-column
-                = item["additional_code"]
+                = item.additional_code
 
               .table__column.duties-column
-                | -
+                = item.duty_expression
 
               .table__column.conditions-column
-                | -
+                = item.conditions_short_list
 
               .table__column.footnotes-column
-                - item["footnotes"].map do |footnote|
-                  = "#{footnote['footnote_type_id']} - #{footnote['footnote_id']}"
+                - item.footnotes.map do |footnote|
+                  = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
                   br
