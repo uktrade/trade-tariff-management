@@ -22,6 +22,7 @@ module Measures
       regulation_id
       geographical_area_id
       additional_code
+      reduction_indicator
     )
 
     attr_accessor :normalized_params, :measure_params

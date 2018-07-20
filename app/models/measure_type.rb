@@ -30,6 +30,10 @@ class MeasureType < Sequel::Model
   delegate :description, to: :measure_type_description
 
   dataset_module do
+    def by_measure_type_id(type_id)
+      where(measure_type_id: type_id)
+    end
+
     def national
       where(national: true)
     end

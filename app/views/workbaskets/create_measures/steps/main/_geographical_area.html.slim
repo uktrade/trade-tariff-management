@@ -1,0 +1,19 @@
+fieldset
+  h3.heading-medium
+    | Which origin will the measures apply to?
+
+  span.form-hint
+    | You can specify a single country or territory, or a pre-defined group of countries, or select
+    br
+    | 'Erga Omnes' to apply the quota to all origins. If the group you need is not in the list, you
+    br
+
+    | can&nbsp;
+    a href="#"
+      | add it from here
+    |.
+
+  .controls.origins-region
+    = content_tag "measure-origin", "", { kind: "country", placeholder: "― select a country or region ―", ":origin" => "origins.country" }
+    = content_tag "measure-origin", "", { kind: "group", placeholder: "― select a group of countries ―", ":origin" => "origins.group" }
+    = content_tag "measure-origin", "", { kind: "erga_omnes", placeholder: "― select a country or region ―", ":origin" => "origins.erga_omnes" }

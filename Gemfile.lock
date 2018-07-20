@@ -666,6 +666,8 @@ GEM
       activemodel-serializers-xml (~> 1.0)
       activesupport (~> 5.0)
       request_store (~> 1.0)
+    enumerize (2.2.2)
+      activesupport (>= 3.2)
     erubi (1.7.1)
     et-orbi (1.0.9)
       tzinfo
@@ -1006,6 +1008,7 @@ DEPENDENCIES
   decent_exposure
   dotenv-rails (>= 2.1.1)
   draper
+  enumerize
   factory_girl_rails (~> 4.8.0)
   fakefs (~> 0.11.0)
   ffi (= 1.9.18)

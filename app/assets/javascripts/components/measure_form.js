@@ -30,8 +30,10 @@ $(document).ready(function() {
     data: function() {
       var data = {
         goods_nomenclature_code: "",
+        additional_code_preview: "",
         additional_code: null,
         goods_nomenclature_code_description: "",
+        additional_code_preview_description: "",
         additional_code_description: "",
         quota_statuses: [
           { value: "open", label: "Open" },
@@ -79,6 +81,12 @@ $(document).ready(function() {
           quota_periods: [],
           measure_components: [],
           footnotes: [],
+          workbasket_name: null,
+          reduction_indicator: null,
+          commodity_codes: null,
+          commodity_codes_exclusions: null,
+          additional_codes: null,
+
           existing_quota: null
         };
       }
@@ -113,41 +121,86 @@ $(document).ready(function() {
       }
 
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
+      this.fetchAdditionalCode("/additional_codes/preview", 4, "additional_code_preview", "additional_code_preview_description");
 
-      $(".measure-form").on("submit", function(e) {
+      $(document).on('click', ".js-create-measures-v1-submit-button, .js-create-measures-v2-submit-button", function(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        var button = $("input[type='submit']");
-        button.attr("data-text", button.val());
-        button.val("Saving...");
-        button.prop("disabled", true);
+        if ( window.save_url == "/measures" ) {
+          // Create measures V1 version
+          //
+
+          var button = $("input[type='submit']");
+          button.attr("data-text", button.val());
+          button.val("Saving...");
+          button.prop("disabled", true);
+
+          var http_method = "POST";
+          var data_ops = { measure: self.preparePayload() };
+
+        } else {
+          // Create measures V2 version
+          //
+
+          CreateMeasuresSaveActions.hideSuccessMessage();
+          CreateMeasuresSaveActions.toogleSaveSpinner($(this).attr('name'));
+          var http_method = "PUT";
+
+          if (window.current_step == 'main') {
+            var payload = self.prepareV2Step1Payload();
+          } else if (window.current_step == 'duties_conditions_footnotes') {
+            var payload = self.prepareV2Step2Payload();
+          }
+
+          var data_ops = {
+            step: window.current_step,
+            mode: window.create_measures_mode,
+            settings: payload
+          };
+        }
 
         self.errors = [];
 
         $.ajax({
-          url: "/measures",
-          type: "POST",
-          data: {
-            measure: self.preparePayload()
-          },
+          url: window.save_url,
+          type: http_method,
+          data: data_ops,
           success: function(response) {
-            $(".js-measure-form-errors-container").empty().addClass("hidden");
-            window.location = "/measures?code=" + response.goods_nomenclature_item_id;
+            if ( window.save_url == "/measures" ) {
+              // Create measures V1 version
+              //
+              $(".js-measure-form-errors-container").empty().addClass("hidden");
+              window.location = window.save_url + "?code=" + response.goods_nomenclature_item_id;
+            } else {
+              // Create measures V2 version
+              //
+              CreateMeasuresSaveActions.handleSuccessResponse(response);
+            }
           },
           error: function(response) {
-            button.val(button.attr("data-text"));
-            button.prop("disabled", false);
 
-            $.each( response.responseJSON.errors, function( key, value ) {
-              if (value.constructor === Array) {
-                value.forEach(function(innerError) {
-                  self.errors.push(innerError);
-                });
-              } else {
-                self.errors.push(value);
-              }
-            });
+            if ( window.save_url == "/measures" ) {
+              // Create measures V1 version
+              //
+              button.val(button.attr("data-text"));
+              button.prop("disabled", false);
+
+              $.each( response.responseJSON.errors, function( key, value ) {
+                if (value.constructor === Array) {
+                  value.forEach(function(innerError) {
+                    self.errors.push(innerError);
+                  });
+                } else {
+                  self.errors.push(value);
+                }
+              });
+
+            } else {
+              // Create measures V2 version
+              //
+              CreateMeasuresValidationErrorsHandler.handleErrorsResponse(response, self);
+            }
           }
         });
       });
@@ -285,6 +338,115 @@ $(document).ready(function() {
           self.measure[code] = null;
         }
       },
+      fetchAdditionalCode: function(url, length, code, description, type, description_field) {
+        var self = this;
+        if (this[code].trim().length === length) {
+          $.ajax({
+            url: url,
+            data: {
+              code: this[code].trim()
+            },
+            success: function(data) {
+
+              if (type === "json") {
+                if (data.length > 0) {
+                  self[description] = data[0][description_field];
+                  self.measure[code] = self[code].trim();
+                } else {
+                  self[description] = "";
+                  self.measure[code] = null;
+                }
+              } else {
+                self[description] = data;
+                self.measure[code] = self[code].trim();
+              }
+
+            },
+            error: function() {
+              self[description] = "";
+              self.measure[code] = null;
+            }
+          });
+        } else {
+          self[description] = "";
+          self.measure[code] = null;
+        }
+      },
+      prepareV2Step1Payload: function() {
+        var payload = {
+          operation_date: this.measure.operation_date,
+          start_date: this.measure.validity_start_date,
+          end_date: this.measure.validity_end_date,
+          regulation_id: this.measure.regulation_id,
+          measure_type_id: this.measure.measure_type_id,
+          workbasket_name: this.measure.workbasket_name,
+          reduction_indicator: this.measure.reduction_indicator,
+          additional_codes: this.measure.additional_codes,
+          commodity_codes: this.measure.commodity_codes,
+          commodity_codes_exclusions: this.measure.commodity_codes_exclusions
+        };
+
+        if (this.origins.country.selected) {
+          payload.geographical_area_id = this.origins.country.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.group.selected) {
+          payload.geographical_area_id = this.origins.group.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.erga_omnes.selected) {
+          payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        }
+
+        return payload;
+      },
+      prepareV2Step2Payload: function() {
+        var payload = {
+          footnotes: this.measure.footnotes
+        };
+
+        try {
+          payload.measure_components = this.measure.measure_components.map(function(component) {
+            var c = clone(component);
+
+            if (c.duty_expression_id) {
+              // to ignore A and B
+              c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+            }
+
+            return c;
+          });
+        } catch (e) {
+          console.error(e);
+        }
+
+        try {
+          payload.conditions = this.measure.conditions.map(function(condition) {
+            var c = clone(condition);
+
+            c.measure_condition_components = c.measure_condition_components.map(function(component) {
+              var c = clone(component);
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
+
+              return c;
+            });
+
+            return c;
+          });
+        } catch (e) {
+          console.error(e);
+        }
+
+        return payload;
+      },
       preparePayload: function() {
         var payload = {
           operation_date: this.measure.operation_date,
@@ -300,6 +462,12 @@ $(document).ready(function() {
           goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
           additional_code_description: this.measure.additional_code_description,
           footnotes: this.measure.footnotes,
+
+          workbasket_name: this.measure.workbasket_name,
+          reduction_indicator: this.measure.reduction_indicator,
+          additional_codes: this.measure.additional_codes,
+          commodity_codes: this.measure.commodity_codes,
+          commodity_codes_exclusions: this.measure.commodity_codes_exclusions,
 
           existing_quota: this.measure.existing_quota === "existing",
           quota_status: this.measure.quota_status,
@@ -511,6 +679,9 @@ $(document).ready(function() {
       },
       goods_nomenclature_code: function() {
         this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
+      },
+      additional_code_preview: function() {
+        this.fetchAdditionalCode("/additional_codes/preview", 4, "additional_code_preview", "additional_code_preview_description");
       },
       "measure.validity_start_date": function() {
         window.measure_start_date = this.measure.validity_start_date;

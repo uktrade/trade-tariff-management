@@ -3,6 +3,7 @@ Vue.component("change-footnotes-popup", {
   props: ["measures", "onClose", "open"],
   data: function(){
     return {
+      uniqMeasuresFootnotes: [],
       measuresFootnotes: [],
       onlyOneMeasure: false,
       confirmBtnDisabled: true,
@@ -71,12 +72,16 @@ Vue.component("change-footnotes-popup", {
     var allMeasuresFootnotes = this.measures.reduce(function(map, measure){
       return map.concat(measure.footnotes);
     }, []);
-    var uniqMeasuresFootnotes = allMeasuresFootnotes.filter(function(footnote, index, self){
-      return self.indexOf(footnote) == index;
-    });
+    this.uniqMeasuresFootnotes = allMeasuresFootnotes.reduce(function(memo, footnote){
+      var existsInMemo = memo.some(function(filteredFootnote){
+        return filteredFootnote.footnote_id == footnote.footnote_id && filteredFootnote.footnote_type_id == footnote.footnote_type_id;
+      });
+      if (!existsInMemo) { return memo.concat(footnote); }
+      return memo;
+    }, []);
 
-    if (uniqMeasuresFootnotes.length == 1) {
-      this.measuresFootnotes = uniqMeasuresFootnotes;
+    if (this.uniqMeasuresFootnotes.length == 1) {
+      this.measuresFootnotes = this.uniqMeasuresFootnotes;
       this.confirmBtnDisabled = false;
       this.onlyOneMeasure = true;
     }

@@ -1247,6 +1247,42 @@ ALTER SEQUENCE public.complete_abrogation_regulations_oid_seq OWNED BY public.co
 
 
 --
+-- Name: create_measures_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_measures_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    created_at time without time zone,
+    updated_at time without time zone,
+    duties_conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    duties_conditions_footnotes_step_validation_passed boolean DEFAULT false,
+    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb
+);
+
+
+--
+-- Name: create_measures_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_measures_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_measures_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_measures_workbasket_settings_id_seq OWNED BY public.create_measures_workbasket_settings.id;
+
+
+--
 -- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1718,7 +1754,7 @@ ALTER SEQUENCE public.export_refund_nomenclatures_oid_seq OWNED BY public.export
 CREATE TABLE public.footnote_association_additional_codes_oplog (
     additional_code_sid integer,
     footnote_type_id character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     additional_code_type_id text,
@@ -1777,7 +1813,7 @@ ALTER SEQUENCE public.footnote_association_additional_codes_oid_seq OWNED BY pub
 CREATE TABLE public.footnote_association_erns_oplog (
     export_refund_nomenclature_sid integer,
     footnote_type character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     goods_nomenclature_item_id character varying(10),
@@ -1840,7 +1876,7 @@ ALTER SEQUENCE public.footnote_association_erns_oid_seq OWNED BY public.footnote
 CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
     goods_nomenclature_sid integer,
     footnote_type character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     goods_nomenclature_item_id character varying(10),
@@ -1901,7 +1937,7 @@ ALTER SEQUENCE public.footnote_association_goods_nomenclatures_oid_seq OWNED BY 
 CREATE TABLE public.footnote_association_measures_oplog (
     measure_sid integer,
     footnote_type_id character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     created_at timestamp without time zone,
     "national" boolean,
     oid integer NOT NULL,
@@ -1960,7 +1996,7 @@ CREATE TABLE public.footnote_association_meursing_headings_oplog (
     meursing_heading_number character varying(255),
     row_column_code integer,
     footnote_type character varying(2),
-    footnote_id character varying(3),
+    footnote_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
     created_at timestamp without time zone,
@@ -6713,7 +6749,8 @@ CREATE TABLE public.workbaskets (
     operation_date date,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb,
-    search_code text
+    search_code text,
+    all_batched_loaded boolean DEFAULT false
 );
 
 
@@ -6931,6 +6968,13 @@ ALTER TABLE ONLY public.chief_measurement_unit ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.complete_abrogation_regulations_oid_seq'::regclass);
+
+
+--
+-- Name: create_measures_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_measures_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_measures_workbasket_settings_id_seq'::regclass);
 
 
 --
@@ -7768,6 +7812,14 @@ ALTER TABLE ONLY public.chief_measurement_unit
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
     ADD CONSTRAINT complete_abrogation_regulations_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: create_measures_workbasket_settings create_measures_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_measures_workbasket_settings
+    ADD CONSTRAINT create_measures_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -10739,3 +10791,12 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publ
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180702142649_add_search_code_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180702144052_add_all_batched_loaded_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182215_create_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182401_add_settings_jsonb_to_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180709182617_add_timestamps_to_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180717164406_change_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180717165903_add_more_fields_to_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_validation_field_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure_sids_to_create_measures_workbasket_settings.rb');
