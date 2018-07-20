@@ -1,3 +1,5 @@
+require 'goods_nomenclature_mapper'
+
 class Commodity < GoodsNomenclature
   include Declarable
 
@@ -83,7 +85,7 @@ class Commodity < GoodsNomenclature
 
   def children
     func = Proc.new {
-      GoodsNomenclatureMapper.new(
+      ::GoodsNomenclatureMapper.new(
         heading.commodities_dataset.
                 eager(:goods_nomenclature_indents, :goods_nomenclature_descriptions).
                 all
