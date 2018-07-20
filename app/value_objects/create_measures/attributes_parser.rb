@@ -17,14 +17,9 @@ module CreateMeasures
       @workbasket_settings = workbasket_settings
       @step = step
       @ops = ops.present? ? ops : workbasket_settings.settings
-      prepare_ops
 
-      @codes_analyzer = ::CreateMeasures::CodesAnalyzer.new(
-        start_date: ops[:start_date].to_date,
-        commodity_codes: commodity_codes,
-        additional_codes: additional_codes,
-        commodity_codes_exclusions: commodity_codes_exclusions
-      )
+      prepare_ops
+      setup_code_analyzer
     end
 
     SIMPLE_OPS.map do |option_name|
@@ -161,6 +156,17 @@ module CreateMeasures
       def prepare_ops
         if step == "duties_conditions_footnotes"
           @ops = ops.merge(workbasket_settings.main_step_settings)
+        end
+      end
+
+      def setup_code_analyzer
+        if ops[:start_date].present?
+          @codes_analyzer = ::CreateMeasures::CodesAnalyzer.new(
+            start_date: ops[:start_date].to_date,
+            commodity_codes: commodity_codes,
+            additional_codes: additional_codes,
+            commodity_codes_exclusions: commodity_codes_exclusions
+          )
         end
       end
 

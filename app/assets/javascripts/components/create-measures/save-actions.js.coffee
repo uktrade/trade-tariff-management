@@ -56,7 +56,7 @@ window.CreateMeasuresSaveActions =
 
       setTimeout (->
         window.location = window.save_url + '/edit?step=' + resp.next_step
-      ), 2000
+      ), 1000
     else
       CreateMeasuresSaveActions.showSuccessMessage()
       CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
