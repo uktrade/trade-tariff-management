@@ -23,9 +23,12 @@ module CreateMeasures
           assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
             record, system_ops
           )
-
           assigner.assign!
-          assigner.record.save
+
+          rec = assigner.record
+          rec.save
+
+          rec
         end
 
         def set_primary_key(record, extra_increment_value=nil)

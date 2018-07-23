@@ -233,7 +233,7 @@ module Workbaskets
         end
 
         def clear_cached_sequence_number!
-          Rails.cache.delete("#{workbasket_id}_sequence_number")
+          Rails.cache.delete("#{workbasket.id}_sequence_number")
         end
     end
   end

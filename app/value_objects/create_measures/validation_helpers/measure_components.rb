@@ -22,14 +22,6 @@ module CreateMeasures
         generate_record!
         validate!
 
-        Rails.logger.info ""
-        Rails.logger.info " measure.measure_sid: #{measure.measure_sid}"
-        Rails.logger.info ""
-        Rails.logger.info "@errors: #{@errors.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info "persist: #{!measure.new?}"
-        Rails.logger.info ""
-
         if @errors.blank? && !measure.new?
           persist!
         end
