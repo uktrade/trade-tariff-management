@@ -82,7 +82,7 @@ class MeasureSaver
         measure, MeasureValidator, @errors
       )
 
-      measure = normalizer.measure
+      measure = normalizer.record
       @errors = normalizer.errors
     end
 
