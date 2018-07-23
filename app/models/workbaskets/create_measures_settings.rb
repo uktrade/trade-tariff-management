@@ -69,6 +69,7 @@ module Workbaskets
 
     def set_searchable_data_for_created_measures!
       measures.map do |measure|
+        measure.manual_add = true
         measure.set_searchable_data!
       end
     end
