@@ -3,8 +3,7 @@ module CreateMeasures
     class Footnotes < ::CreateMeasures::ValidationHelpers::AssociationBase
 
       attr_accessor :measure,
-                    :current_admin,
-                    :operation_date,
+                    :system_ops,
                     :footnote_description,
                     :footnote_type_id,
                     :footnote,
@@ -18,8 +17,7 @@ module CreateMeasures
 
       def initialize(measure, system_ops, footnote_ops={})
         @measure = measure
-        @current_admin = system_ops[:current_admin]
-        @operation_date = system_ops[:operation_date]
+        @system_ops = system_ops
         @footnote_description = footnote_ops[:description]
         @footnote_type_id = footnote_ops[:footnote_type_id]
         @extra_increment_value = footnote_ops[:position]

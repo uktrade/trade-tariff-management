@@ -1,6 +1,17 @@
 module Workbaskets
   class CreateMeasuresSettings < Sequel::Model(:create_measures_workbasket_settings)
 
+    COLLECTION_MODELS = %w(
+      Measure
+      Footnote
+      FootnoteDescription
+      FootnoteDescriptionPeriod
+      FootnoteAssociationMeasure
+      MeasureComponent
+      MeasureCondition
+      MeasureConditionComponent
+    )
+
     plugin :timestamps
 
     validates do
@@ -11,13 +22,15 @@ module Workbaskets
       Workbaskets::Workbasket.find(id: workbasket_id)
     end
 
-    def measure_sids
-      JSON.parse(measure_sids_jsonb).uniq
-    end
-
-    def measures
-      Measure.where(measure_sid: measure_sids)
-             .order(:measure_sid)
+    def collection
+      COLLECTION_MODELS.map do |db_model|
+        db_model.constantize
+                .by_workbasket(workbasket_id)
+                .all
+      end.flatten
+         .sort do |a, b|
+         a.workbasket_sequence_number <=> b.workbasket_sequence_number
+      end
     end
 
     def settings
@@ -52,6 +65,22 @@ module Workbaskets
 
     def validations_passed?(step)
       public_send("#{step}_step_validation_passed").present?
+    end
+
+    def set_searchable_data_for_created_measures!
+      measures.map do |measure|
+        measure.set_searchable_data!
+        measure.save
+      end
+    end
+
+    def measure_sids
+      JSON.parse(measure_sids_jsonb).uniq
+    end
+
+    def measures
+      Measure.where(measure_sid: measure_sids)
+             .order(:measure_sid)
     end
   end
 end

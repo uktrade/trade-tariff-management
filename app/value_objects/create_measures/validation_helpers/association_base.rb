@@ -21,7 +21,7 @@ module CreateMeasures
 
         def persist_record!(record)
           assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
-            record, current_admin, operation_date
+            record, system_ops
           )
 
           assigner.assign!

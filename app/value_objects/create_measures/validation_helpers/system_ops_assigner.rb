@@ -3,20 +3,21 @@ module CreateMeasures
     class SystemOpsAssigner
 
       attr_accessor :record,
-                    :current_admin,
-                    :operation_date
+                    :ops
 
-      def initialize(record, current_admin, operation_date)
+      def initialize(record, ops={})
         @record = record
-        @current_admin = current_admin
-        @operation_date = operation_date
+        @ops = ops
       end
 
       def assign!
+        record.workbasket_id = ops[:workbasket_id]
+        record.workbasket_sequence_number = ops[:sequence_number]
+        record.operation_date = ops[:operation_date]
+        record.added_by_id = ops[:current_admin_id]
+        record.status = "in_progress"
         record.manual_add = true
         record.operation = "C"
-        record.operation_date = operation_date
-        record.added_by_id = current_admin.id
         record.added_at = Time.zone.now
         record.national = false
         record.try("approved_flag=", true)

@@ -3,8 +3,7 @@ module CreateMeasures
     class Conditions < ::CreateMeasures::ValidationHelpers::AssociationBase
 
       attr_accessor :measure,
-                    :current_admin,
-                    :operation_date,
+                    :system_ops,
                     :condition_ops,
                     :condition,
                     :extra_increment_value,
@@ -12,8 +11,7 @@ module CreateMeasures
 
       def initialize(measure, system_ops, condition_ops={})
         @measure = measure
-        @current_admin = system_ops[:current_admin]
-        @operation_date = system_ops[:operation_date]
+        @system_ops = system_ops
         @condition_ops = condition_ops
         @extra_increment_value = condition_ops[:position]
 

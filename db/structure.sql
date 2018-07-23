@@ -1944,7 +1944,10 @@ CREATE TABLE public.footnote_association_measures_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -1961,7 +1964,10 @@ CREATE VIEW public.footnote_association_measures AS
     footnote_association_measures1.operation,
     footnote_association_measures1.operation_date,
     footnote_association_measures1.added_at,
-    footnote_association_measures1.added_by_id
+    footnote_association_measures1.added_by_id,
+    footnote_association_measures1.status,
+    footnote_association_measures1.workbasket_id,
+    footnote_association_measures1.workbasket_sequence_number
    FROM public.footnote_association_measures_oplog footnote_association_measures1
   WHERE ((footnote_association_measures1.oid IN ( SELECT max(footnote_association_measures2.oid) AS max
            FROM public.footnote_association_measures_oplog footnote_association_measures2
@@ -2062,7 +2068,10 @@ CREATE TABLE public.footnote_description_periods_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -2081,7 +2090,10 @@ CREATE VIEW public.footnote_description_periods AS
     footnote_description_periods1.operation,
     footnote_description_periods1.operation_date,
     footnote_description_periods1.added_at,
-    footnote_description_periods1.added_by_id
+    footnote_description_periods1.added_by_id,
+    footnote_description_periods1.status,
+    footnote_description_periods1.workbasket_id,
+    footnote_description_periods1.workbasket_sequence_number
    FROM public.footnote_description_periods_oplog footnote_description_periods1
   WHERE ((footnote_description_periods1.oid IN ( SELECT max(footnote_description_periods2.oid) AS max
            FROM public.footnote_description_periods_oplog footnote_description_periods2
@@ -2123,7 +2135,10 @@ CREATE TABLE public.footnote_descriptions_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -2142,7 +2157,10 @@ CREATE VIEW public.footnote_descriptions AS
     footnote_descriptions1.operation,
     footnote_descriptions1.operation_date,
     footnote_descriptions1.added_at,
-    footnote_descriptions1.added_by_id
+    footnote_descriptions1.added_by_id,
+    footnote_descriptions1.status,
+    footnote_descriptions1.workbasket_id,
+    footnote_descriptions1.workbasket_sequence_number
    FROM public.footnote_descriptions_oplog footnote_descriptions1
   WHERE ((footnote_descriptions1.oid IN ( SELECT max(footnote_descriptions2.oid) AS max
            FROM public.footnote_descriptions_oplog footnote_descriptions2
@@ -2291,7 +2309,10 @@ CREATE TABLE public.footnotes_oplog (
     operation character varying(1) DEFAULT 'C'::character varying,
     operation_date date,
     added_by_id integer,
-    added_at timestamp without time zone
+    added_at timestamp without time zone,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -2309,7 +2330,10 @@ CREATE VIEW public.footnotes AS
     footnotes1.operation,
     footnotes1.operation_date,
     footnotes1.added_by_id,
-    footnotes1.added_at
+    footnotes1.added_at,
+    footnotes1.status,
+    footnotes1.workbasket_id,
+    footnotes1.workbasket_sequence_number
    FROM public.footnotes_oplog footnotes1
   WHERE ((footnotes1.oid IN ( SELECT max(footnotes2.oid) AS max
            FROM public.footnotes_oplog footnotes2
@@ -3372,7 +3396,10 @@ CREATE TABLE public.measure_components_oplog (
     operation_date date,
     added_by_id integer,
     added_at timestamp without time zone,
-    "national" boolean
+    "national" boolean,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -3392,7 +3419,10 @@ CREATE VIEW public.measure_components AS
     measure_components1.operation_date,
     measure_components1.added_by_id,
     measure_components1.added_at,
-    measure_components1."national"
+    measure_components1."national",
+    measure_components1.status,
+    measure_components1.workbasket_id,
+    measure_components1.workbasket_sequence_number
    FROM public.measure_components_oplog measure_components1
   WHERE ((measure_components1.oid IN ( SELECT max(measure_components2.oid) AS max
            FROM public.measure_components_oplog measure_components2
@@ -3537,7 +3567,10 @@ CREATE TABLE public.measure_condition_components_oplog (
     operation_date date,
     added_by_id integer,
     added_at timestamp without time zone,
-    "national" boolean
+    "national" boolean,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -3557,7 +3590,10 @@ CREATE VIEW public.measure_condition_components AS
     measure_condition_components1.operation_date,
     measure_condition_components1.added_by_id,
     measure_condition_components1.added_at,
-    measure_condition_components1."national"
+    measure_condition_components1."national",
+    measure_condition_components1.status,
+    measure_condition_components1.workbasket_id,
+    measure_condition_components1.workbasket_sequence_number
    FROM public.measure_condition_components_oplog measure_condition_components1
   WHERE ((measure_condition_components1.oid IN ( SELECT max(measure_condition_components2.oid) AS max
            FROM public.measure_condition_components_oplog measure_condition_components2
@@ -3605,7 +3641,10 @@ CREATE TABLE public.measure_conditions_oplog (
     operation_date date,
     added_by_id integer,
     added_at timestamp without time zone,
-    "national" boolean
+    "national" boolean,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -3630,7 +3669,10 @@ CREATE VIEW public.measure_conditions AS
     measure_conditions1.operation_date,
     measure_conditions1.added_by_id,
     measure_conditions1.added_at,
-    measure_conditions1."national"
+    measure_conditions1."national",
+    measure_conditions1.status,
+    measure_conditions1.workbasket_id,
+    measure_conditions1.workbasket_sequence_number
    FROM public.measure_conditions_oplog measure_conditions1
   WHERE ((measure_conditions1.oid IN ( SELECT max(measure_conditions2.oid) AS max
            FROM public.measure_conditions_oplog measure_conditions2
@@ -4330,7 +4372,8 @@ CREATE TABLE public.measures_oplog (
     updated_at timestamp without time zone,
     workbasket_id integer,
     searchable_data jsonb DEFAULT '{}'::jsonb,
-    searchable_data_updated_at timestamp without time zone
+    searchable_data_updated_at timestamp without time zone,
+    workbasket_sequence_number integer
 );
 
 
@@ -4373,7 +4416,8 @@ CREATE VIEW public.measures AS
     measures1.updated_at,
     measures1.workbasket_id,
     measures1.searchable_data,
-    measures1.searchable_data_updated_at
+    measures1.searchable_data_updated_at,
+    measures1.workbasket_sequence_number
    FROM public.measures_oplog measures1
   WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
            FROM public.measures_oplog measures2
@@ -10800,3 +10844,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180717165903_add_more_fi
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_validation_field_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure_sids_to_create_measures_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180722185024_add_workbasket_attributes_to_db_tables.rb');

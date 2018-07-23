@@ -1,6 +1,7 @@
 class Measure < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   VALID_ROLE_TYPE_IDS = [
     1, # Base regulation
@@ -15,10 +16,6 @@ class Measure < Sequel::Model
   plugin :oplog, primary_key: :measure_sid
   plugin :conformance_validator
   plugin :national
-
-  many_to_one :workbasket, key: :workbasket_id,
-                           foreign_key: :id,
-                           class_name: "Workbaskets::Workbasket"
 
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid,
                                    foreign_key: :goods_nomenclature_sid

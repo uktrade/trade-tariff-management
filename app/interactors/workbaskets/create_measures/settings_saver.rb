@@ -47,6 +47,7 @@ module Workbaskets
       def save!
         if step_pointer.main_step?
           workbasket.title = workbasket_name
+          workbasket.operation_date = operation_date.try(:to_date)
           workbasket.save
         end
 
@@ -73,7 +74,10 @@ module Workbaskets
         validate!
 
         settings.measure_sids_jsonb = @measure_sids.to_json
-        settings.save
+
+        if settings.save
+          settings.set_searchable_data_for_created_measures!
+        end
       end
 
       def success_ops
@@ -192,7 +196,7 @@ module Workbaskets
 
         def assign_system_ops!(measure)
           system_ops_assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
-            measure, current_admin, operation_date
+            measure, system_ops
           )
           system_ops_assigner.assign!
 
@@ -201,8 +205,10 @@ module Workbaskets
 
         def system_ops
           {
+            workbasket_id: workbasket.id,
+            sequence_number: workbasket.generate_next_sequence_number,
             operation_date: operation_date,
-            current_admin: current_admin
+            current_admin_id: current_admin.id
           }
         end
 
