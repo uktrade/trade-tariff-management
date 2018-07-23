@@ -131,6 +131,12 @@ module XmlGeneration
     private
 
       def data
+        ::Workbaskets::Workbasket.by_date_range(
+          start_date, end_date
+        ).in_status(:submitted_for_cross_check)
+         .order(:operation_date)
+         .map do |workbasket|
+
         SEQUENCE_OF_DATA_FETCH.map do |record_class|
           if end_date.present?
             record_class.where(
@@ -143,5 +149,19 @@ module XmlGeneration
           end.all
         end.flatten
       end
+
+      # def data
+      #   SEQUENCE_OF_DATA_FETCH.map do |record_class|
+      #     if end_date.present?
+      #       record_class.where(
+      #         "operation_date >= ? AND operation_date <= ?", start_date, end_date
+      #       )
+      #     else
+      #       record_class.where(
+      #         "operation_date = ?", start_date
+      #       )
+      #     end.all
+      #   end.flatten
+      # end
   end
 end
