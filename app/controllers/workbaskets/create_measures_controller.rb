@@ -41,16 +41,16 @@ module Workbaskets
       )
     end
 
-    expose(:workbasket_items) do
-       Workbaskets::Item.all.select { |i| i.new_data_parsed.present? }[0..15].map do |item|
-        item.new_data_parsed
-      end
-    end
-
     expose(:attributes_parser) do
       ::CreateMeasures::AttributesParser.new(
         workbasket_settings,
         current_step
+      )
+    end
+
+    expose(:submit_for_cross_check) do
+      ::Workbaskets::CreateMeasures::SubmitForCrossCheck.new(
+        workbasket
       )
     end
 
@@ -67,6 +67,8 @@ module Workbaskets
 
     def update
       if step_pointer.review_and_submit_step?
+        submit_for_cross_check.run!
+
         render json: { redirect_url: create_measure_url(workbasket.id) },
                status: :ok
 

@@ -13,5 +13,10 @@ module WorkbasketHelpers
         end
       end
     end
+
+    def move_status_to!(new_status)
+      self.status = new_status
+      save
+    end
   end
 end

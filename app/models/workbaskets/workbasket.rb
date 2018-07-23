@@ -71,6 +71,11 @@ module Workbaskets
       end
     end
 
+    def move_status_to!(new_status)
+      self.status = new_status
+      save
+    end
+
     def settings
       case type.to_sym
       when :create_measures
