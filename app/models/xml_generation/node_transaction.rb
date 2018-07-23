@@ -1,9 +1,11 @@
 module XmlGeneration
   class NodeTransaction
 
-    attr_accessor :messages
+    attr_accessor :workbasket,
+                  :messages
 
     def initialize(workbasket)
+      @workbasket = workbasket
       @messages = workbasket.settings
                             .collection
                             .map do |record|

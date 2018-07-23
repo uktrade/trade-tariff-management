@@ -69,7 +69,7 @@ module Workbaskets
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status(:submitted_for_cross_check)
+        ).in_status("submitted_for_cross_check")
          .order(:operation_date)
       end
 
