@@ -70,7 +70,6 @@ module Workbaskets
     def set_searchable_data_for_created_measures!
       measures.map do |measure|
         measure.set_searchable_data!
-        measure.save
       end
     end
 
