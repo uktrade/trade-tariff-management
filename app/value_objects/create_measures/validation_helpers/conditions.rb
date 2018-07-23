@@ -73,9 +73,10 @@ module CreateMeasures
             mc_component = MeasureConditionComponent.new(
               unit_ops(v)
             )
-
             mc_component.measure_condition_sid = condition.measure_condition_sid
             mc_component.duty_expression_id = v[:duty_expression_id]
+
+            mc_component
           end
         end
 
