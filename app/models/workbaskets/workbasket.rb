@@ -65,6 +65,31 @@ module Workbaskets
       inclusion_of :type, in: TYPES.map(&:to_s)
     end
 
+    dataset_module do
+      def xml_export_collection(start_date, end_date)
+        by_date_range(
+          start_date, end_date
+        ).in_status(:submitted_for_cross_check)
+         .order(:operation_date)
+      end
+
+      def by_date_range(start_date, end_date)
+        if end_date.present?
+          where(
+            "operation_date >= ? AND operation_date <= ?", start_date, end_date
+          )
+        else
+          where(
+            "operation_date = ?", start_date
+          )
+        end
+      end
+
+      def in_status(status_name)
+        where(status: status_name)
+      end
+    end
+
     begin :callbacks
       def after_create
         build_related_settings_table!

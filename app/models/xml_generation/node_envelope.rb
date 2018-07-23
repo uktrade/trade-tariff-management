@@ -4,18 +4,14 @@ module XmlGeneration
 
     attr_accessor :transactions
 
-    def initialize(records)
-      @transactions = records.map do |transaction_block|
-        ::XmlGeneration::NodeTransaction.new(transaction_block)
+    def initialize(workbaskets)
+      @transactions = workbaskets.map do |workbasket|
+        ::XmlGeneration::NodeTransaction.new(workbasket)
       end
     end
 
     def node_id
-      # TODO
-      #
-      # Emulation:
-      #
-      Time.now.to_i - 1519999000
+      Time.now.to_i
     end
   end
 end
