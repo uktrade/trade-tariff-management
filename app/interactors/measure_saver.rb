@@ -392,8 +392,15 @@ class MeasureSaver
 
     def set_system_attrs(record)
       ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
-        record, current_admin, operation_date
+        record, system_ops
       ).assign!
+    end
+
+    def system_ops
+      {
+        operation_date: operation_date,
+        current_admin_id: current_admin.id
+      }
     end
 
     def operation_date

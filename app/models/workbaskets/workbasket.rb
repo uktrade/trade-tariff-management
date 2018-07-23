@@ -71,6 +71,30 @@ module Workbaskets
       end
     end
 
+    def move_status_to!(new_status)
+      self.status = new_status
+      save
+    end
+
+    def settings
+      case type.to_sym
+      when :create_measures
+        create_measures_settings
+
+      when :bulk_edit_of_measures
+        # TODO: need to refactor Bulk Edit stuff
+        #       to store settings, specific for Bulk Edit of measures
+        #       in separated DB table
+        #
+      when :create_quota
+        # TODO
+      end
+    end
+
+    def generate_next_sequence_number
+      @sequence_number = (@sequence_number || 0) + 1
+    end
+
     def track_current_page_loaded!(current_page)
       res = JSON.parse(batches_loaded)
       res[current_page] = true

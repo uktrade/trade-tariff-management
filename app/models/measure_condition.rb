@@ -1,6 +1,8 @@
 class MeasureCondition < Sequel::Model
+
   include Formatter
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :national

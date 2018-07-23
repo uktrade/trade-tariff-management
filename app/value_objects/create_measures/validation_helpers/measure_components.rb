@@ -3,8 +3,7 @@ module CreateMeasures
     class MeasureComponents < ::CreateMeasures::ValidationHelpers::AssociationBase
 
       attr_accessor :measure,
-                    :current_admin,
-                    :operation_date,
+                    :system_ops,
                     :duty_expression,
                     :duty_expression_ops,
                     :extra_increment_value,
@@ -12,9 +11,7 @@ module CreateMeasures
 
       def initialize(measure, system_ops, duty_expression_ops={})
         @measure = measure
-        @current_admin = system_ops[:current_admin]
-        @operation_date = system_ops[:operation_date]
-
+        @system_ops = system_ops
         @duty_expression_ops = duty_expression_ops
         @extra_increment_value = duty_expression_ops[:position]
 
@@ -24,14 +21,6 @@ module CreateMeasures
       def valid?
         generate_record!
         validate!
-
-        Rails.logger.info ""
-        Rails.logger.info " measure.measure_sid: #{measure.measure_sid}"
-        Rails.logger.info ""
-        Rails.logger.info "@errors: #{@errors.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info "persist: #{!measure.new?}"
-        Rails.logger.info ""
 
         if @errors.blank? && !measure.new?
           persist!
