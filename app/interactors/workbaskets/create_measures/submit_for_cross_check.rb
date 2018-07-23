@@ -16,8 +16,10 @@ module Workbaskets
       private
 
         def update_collection!
-          workbasket.collection
+          workbasket.settings
+                    .collection
                     .map do |item|
+
             item.move_status_to!(:submitted_for_cross_check)
           end
         end

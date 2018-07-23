@@ -42,6 +42,8 @@ module Workbaskets
         )
         @errors = {}
         @candidates_with_errors = {}
+
+        clear_cached_sequence_number!
       end
 
       def save!
@@ -206,7 +208,6 @@ module Workbaskets
         def system_ops
           {
             workbasket_id: workbasket.id,
-            sequence_number: workbasket.generate_next_sequence_number,
             operation_date: operation_date,
             current_admin_id: current_admin.id
           }
@@ -229,6 +230,10 @@ module Workbaskets
 
         def errors_translator(key)
           I18n.t(:create_measures)[:errors][key]
+        end
+
+        def clear_cached_sequence_number!
+          Rails.cache.delete("#{workbasket_id}_sequence_number")
         end
     end
   end
