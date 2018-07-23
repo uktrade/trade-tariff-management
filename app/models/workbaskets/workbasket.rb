@@ -112,6 +112,19 @@ module Workbaskets
       end
     end
 
+    def debug_collection
+      settings.collection
+              .map do |el|
+
+        puts "-"
+        puts ""
+        puts "#{el.class.name} | #{el.class.name == 'MeasureComponent' ? el.formatted_duty_expression : ''} | #{el.workbasket_id} | #{el.workbasket_sequence_number}"
+        puts "#{el.status}"
+        puts ""
+        puts "-"
+      end
+    end
+
     class << self
       def buld_new_workbasket!(type, current_user)
         workbasket = Workbaskets::Workbasket.new(
