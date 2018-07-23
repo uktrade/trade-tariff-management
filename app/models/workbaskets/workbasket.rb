@@ -139,12 +139,33 @@ module Workbaskets
 
     def debug_collection
       settings.collection
-              .map do |el|
-
-        puts "-"
+              .map.with_index do |el, index|
         puts ""
-        puts "#{el.class.name} | #{el.class.name == 'MeasureComponent' ? el.formatted_duty_expression : ''} | #{el.workbasket_id} | #{el.workbasket_sequence_number}"
-        puts "#{el.status}"
+        puts " [#{index}] Class: #{el.class.name}"
+        puts "             Workbasket ID: #{el.workbasket_id}"
+        puts "             Sequence number: #{el.workbasket_sequence_number}"
+        puts "             Status: #{el.status}"
+
+        custom_note = case el.class.name
+        when "Measure"
+          el.measure_sid
+        when "MeasureComponent"
+          el.formatted_duty_expression
+        when "MeasureCondition"
+          el.short_abbreviation
+        when "MeasureConditionComponent"
+          el.formatted_duty_expression
+        when "Footnote"
+          "#{el.footnote_type_id} - #{el.footnote_id}"
+        when "FootnoteDescription"
+          "#{el.description}"
+        when "FootnoteDescriptionPeriod"
+          "#{el.footnote_description_period_sid}"
+        when "FootnoteAssociationMeasure"
+          "footnote_type_id: #{el.footnote_type_id}, footnote_id: #{el.footnote_id}, measure_sid: #{el.measure_sid}"
+        end
+
+        puts "             #{custom_note}"
         puts ""
         puts "-"
       end
