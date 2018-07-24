@@ -17,6 +17,9 @@ script
   == "window.__workbasket_id = #{workbasket.id};"
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"
 
+- cache [ "measure_form_js_variabless", expires_in: 8.hours ] do
+  = render "measures/measures/js_variables", form: MeasureForm.new(Measure.new)
+
 form.bulk-edit-measures
   = render "table_top"
 
@@ -45,7 +48,7 @@ form.bulk-edit-measures
 
   = content_tag "change-commodity-code-popup", nil, { "v-if" => "changingCommodityCodes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
-  = content_tag "change-origins-popup", nil, { "v-if" => "changingOrigin", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups" }
+  = content_tag "change-origins-popup", nil, { "v-if" => "changingOrigin", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
   = content_tag "remove-measures-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-removed-cb" => "measuresRemoved", ":all-measures-removed-cb" => "allMeasuresRemoved" }
 

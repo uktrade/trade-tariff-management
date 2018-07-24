@@ -112,7 +112,7 @@ module Workbaskets
         @all_ga ||= Rails.cache.fetch(:measures_form_geographical_areas, expires_in: 8.hours) do
           GeographicalArea.actual
                           .all
-                          .map { |area| { geographical_area_id: area.geographical_area_id, description: area.description } }
+                          .map(&:to_json)
         end
       end
 
@@ -121,7 +121,7 @@ module Workbaskets
           GeographicalArea.actual
                           .countries
                           .all
-                          .map { |area| { geographical_area_id: area.geographical_area_id, description: area.description } }
+                          .map(&:to_json)
         end
       end
 
@@ -130,13 +130,13 @@ module Workbaskets
           GeographicalArea.actual.groups
                           .except_erga_omnes
                           .all
-                          .map { |area| { geographical_area_id: area.geographical_area_id, description: area.description } }
+                          .map(&:to_json)
         end
       end
 
       def geographical_area_erga_omnes
         @gaeo ||= Rails.cache.fetch(:measures_form_geographical_area_erga_omnes, expires_in: 8.hours) do
-          GeographicalArea.erga_omnes_group.to_hash.slice(:geographical_area_id, :description)
+          GeographicalArea.erga_omnes_group.to_json
         end
       end
 
@@ -158,4 +158,3 @@ module Workbaskets
     end
   end
 end
-

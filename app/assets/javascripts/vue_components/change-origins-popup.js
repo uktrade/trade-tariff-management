@@ -21,7 +21,8 @@ Vue.component("change-origins-popup", {
         erga_omnes: {
           geographical_area_id: null,
           exclusions: [],
-          selected: false
+          selected: false,
+          geographical_area: window.geographical_area_erga_omnes
         }
       }
     };
@@ -87,21 +88,24 @@ Vue.component("change-origins-popup", {
   },
   methods: {
     confirmChanges: function() {
-      var newOrigin = this.newOrigin;
-      var newExclusions = this.newExclusions;
+      var newOriginData = this.getNewOriginData(),
+          newExclusionsData = this.getNewExclusionsData(newOriginData);
 
       this.measures.forEach(function(measure) {
         if (measure.changes.indexOf("geographical_area") === -1) {
           measure.changes.push("geographical_area");
         }
 
-        measure.geographical_area = newOrigin;
+        measure.geographical_area = newOriginData.geographical_area;
 
-        if (newExclusions) {
-
+        if (measure.changes.indexOf("excluded_geographical_areas") === -1) {
+          measure.changes.push("excluded_geographical_areas");
         }
+
+        measure.excluded_geographical_areas = newExclusionsData;
       });
 
+      this.$emit("measures-updated");
       this.onClose();
     },
     triggerClose: function() {
@@ -109,6 +113,21 @@ Vue.component("change-origins-popup", {
     },
     onRegulationSelected: function(object) {
       this.newRegulation = object;
+    },
+    getNewOriginData: function(){
+      var self = this;
+      var selectedKey = Object.keys(this.origins).find(function(key){
+        return self.origins[key].selected;
+      });
+      return this.origins[selectedKey];
+    },
+    getNewExclusionsData: function(originData){
+      return originData.exclusions.reduce(function(memo, exclusion){
+        if (exclusion.geographical_area_id) {
+          return memo.concat(exclusion);
+        }
+        return memo;
+      }, []);
     }
   }
 });
