@@ -2,7 +2,7 @@ require 'rails_helper'
 
 shared_context "xml_generation_base_context" do
   let(:xml_node) do
-    ::XmlGeneration::NodeEnvelope.new(Array.wrap(db_record))
+    ::XmlGeneration::NodeEnvelope.new(Array.wrap(workbasket))
   end
 
   let(:xml_builder) do
