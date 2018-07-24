@@ -1,7 +1,7 @@
 xml.tag!("oub:base.regulation") do |base_regulation|
   xml_data_item_v2(base_regulation, "base.regulation.role", self.base_regulation_role)
   xml_data_item_v2(base_regulation, "base.regulation.id", self.base_regulation_id)
-  xml_data_item_v2(base_regulation, "published.date", self.published_date.try(:strftime, "%Y-%m-%d")
+  xml_data_item_v2(base_regulation, "published.date", self.published_date.try(:strftime, "%Y-%m-%d"))
   xml_data_item_v2(base_regulation, "officialjournal.number", self.officialjournal_number)
   xml_data_item_v2(base_regulation, "officialjournal.page", self.officialjournal_page)
   xml_data_item_v2(base_regulation, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
