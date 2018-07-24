@@ -1,21 +1,7 @@
 xml.tag!("oub:certificate.description.period") do |certificate_description_period|
-  certificate_description_period.tag!("oub:certificate.description.period.sid") do certificate_description_period
-    xml_data_item(certificate_description_period, self.certificate_description_period_sid)
-  end
-
-  certificate_description_period.tag!("oub:certificate.type.code") do certificate_description_period
-    xml_data_item(certificate_description_period, self.certificate_type_code)
-  end
-
-  certificate_description_period.tag!("oub:certificate.code") do certificate_description_period
-    xml_data_item(certificate_description_period, self.certificate_code)
-  end
-
-  certificate_description_period.tag!("oub:validity.start.date") do certificate_description_period
-    xml_data_item(certificate_description_period, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  certificate_description_period.tag!("oub:validity.end.date") do certificate_description_period
-    xml_data_item(certificate_description_period, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(certificate_description_period, "certificate.description.period.sid", self.certificate_description_period_sid)
+  xml_data_item_v2(certificate_description_period, "certificate.type.code", self.certificate_type_code)
+  xml_data_item_v2(certificate_description_period, "certificate.code", self.certificate_code)
+  xml_data_item_v2(certificate_description_period, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(certificate_description_period, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

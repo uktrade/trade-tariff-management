@@ -1,77 +1,21 @@
 xml.tag!("oub:measure") do |measure|
-  measure.tag!("oub:measure.sid") do measure
-    xml_data_item(measure, self.measure_sid)
-  end
-
-  measure.tag!("oub:measure.type") do measure
-    xml_data_item(measure, self.measure_type_id)
-  end
-
-  measure.tag!("oub:validity.start.date") do measure
-    xml_data_item(measure, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  measure.tag!("oub:validity.end.date") do measure
-    xml_data_item(measure, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  measure.tag!("oub:geographical.area") do measure
-    xml_data_item(measure, self.geographical_area_id)
-  end
-
-  measure.tag!("oub:geographical.area.sid") do measure
-    xml_data_item(measure, self.geographical_area_sid)
-  end
-
-  measure.tag!("oub:goods.nomenclature.item.id") do measure
-    xml_data_item(measure, self.goods_nomenclature_item_id)
-  end
-
-  measure.tag!("oub:goods.nomenclature.sid") do measure
-    xml_data_item(measure, self.goods_nomenclature_sid)
-  end
-
-  measure.tag!("oub:additional.code.sid") do measure
-    xml_data_item(measure, self.additional_code_sid)
-  end
-
-  measure.tag!("oub:additional.code") do measure
-    xml_data_item(measure, self.additional_code_id)
-  end
-
-  measure.tag!("oub:additional.code.type") do measure
-    xml_data_item(measure, self.additional_code_type_id)
-  end
-
-  measure.tag!("oub:measure.generating.regulation.role") do measure
-    xml_data_item(measure, self.measure_generating_regulation_role)
-  end
-
-  measure.tag!("oub:measure.generating.regulation.id") do measure
-    xml_data_item(measure, self.measure_generating_regulation_id)
-  end
-
-  measure.tag!("oub:justification.regulation.role") do measure
-    xml_data_item(measure, self.justification_regulation_role)
-  end
-
-  measure.tag!("oub:justification.regulation.id") do measure
-    xml_data_item(measure, self.justification_regulation_id)
-  end
-
-  measure.tag!("oub:export.refund.nomenclature.sid") do measure
-    xml_data_item(measure, self.export_refund_nomenclature_sid)
-  end
-
-  measure.tag!("oub:ordernumber") do measure
-    xml_data_item(measure, self.ordernumber)
-  end
-
-  measure.tag!("oub:reduction.indicator") do measure
-    xml_data_item(measure, self.reduction_indicator)
-  end
-
-  measure.tag!("oub:stopped.flag") do measure
-    xml_data_item(measure, self.stopped_flag)
-  end
+  xml_data_item_v2(measure, "measure.sid", self.measure_sid)
+  xml_data_item_v2(measure, "measure.type", self.measure_type_id)
+  xml_data_item_v2(measure, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(measure, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(measure, "geographical.area", self.geographical_area_id)
+  xml_data_item_v2(measure, "geographical.area.sid", self.geographical_area_sid)
+  xml_data_item_v2(measure, "goods.nomenclature.item.id", self.goods_nomenclature_item_id)
+  xml_data_item_v2(measure, "goods.nomenclature.sid", self.goods_nomenclature_sid)
+  xml_data_item_v2(measure, "additional.code.sid", self.additional_code_sid)
+  xml_data_item_v2(measure, "additional.code", self.additional_code_id)
+  xml_data_item_v2(measure, "additional.code.type", self.additional_code_type_id)
+  xml_data_item_v2(measure, "measure.generating.regulation.role", self.measure_generating_regulation_role)
+  xml_data_item_v2(measure, "measure.generating.regulation.id", self.measure_generating_regulation_id)
+  xml_data_item_v2(measure, "justification.regulation.role", self.justification_regulation_role)
+  xml_data_item_v2(measure, "justification.regulation.id", self.justification_regulation_id)
+  xml_data_item_v2(measure, "export.refund.nomenclature.sid", self.export_refund_nomenclature_sid)
+  xml_data_item_v2(measure, "ordernumber", self.ordernumber)
+  xml_data_item_v2(measure, "reduction.indicator", self.reduction_indicator)
+  xml_data_item_v2(measure, "stopped.flag", self.stopped_flag)
 end

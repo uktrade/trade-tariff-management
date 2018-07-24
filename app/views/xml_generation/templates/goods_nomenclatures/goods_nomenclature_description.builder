@@ -1,25 +1,8 @@
 xml.tag!("oub:goods.nomenclature.description") do |goods_nomenclature_description|
-  goods_nomenclature_description.tag!("oub:goods.nomenclature.description.period.sid") do goods_nomenclature_description
-    xml_data_item(goods_nomenclature_description, self.goods_nomenclature_description_period_sid)
-  end
-
-  goods_nomenclature_description.tag!("oub:goods.nomenclature.sid") do goods_nomenclature_description
-    xml_data_item(goods_nomenclature_description, self.goods_nomenclature_sid)
-  end
-
-  goods_nomenclature_description.tag!("oub:goods.nomenclature.item.id") do goods_nomenclature_description
-    xml_data_item(goods_nomenclature_description, self.goods_nomenclature_item_id)
-  end
-
-  goods_nomenclature_description.tag!("oub:productline.suffix") do goods_nomenclature_description
-    xml_data_item(goods_nomenclature_description, self.productline_suffix)
-  end
-
-  goods_nomenclature_description.tag!("oub:language.id") do goods_nomenclature_description
-    xml_data_item(goods_nomenclature_description, self.language_id)
-  end
-
-  goods_nomenclature_description.tag!("oub:description") do goods_nomenclature_description
-    xml_data_item(goods_nomenclature_description, self.description)
-  end
+  xml_data_item_v2(goods_nomenclature_description, "goods.nomenclature.description.period.sid", self.goods_nomenclature_description_period_sid)
+  xml_data_item_v2(goods_nomenclature_description, "goods.nomenclature.sid", self.goods_nomenclature_sid)
+  xml_data_item_v2(goods_nomenclature_description, "goods.nomenclature.item.id", self.goods_nomenclature_item_id)
+  xml_data_item_v2(goods_nomenclature_description, "productline.suffix", self.productline_suffix)
+  xml_data_item_v2(goods_nomenclature_description, "language.id", self.language_id)
+  xml_data_item_v2(goods_nomenclature_description, "description", self.description)
 end

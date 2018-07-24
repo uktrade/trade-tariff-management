@@ -1,33 +1,10 @@
 xml.tag!("oub:complete.abrogation.regulation") do |complete_abrogation_regulation|
-  complete_abrogation_regulation.tag!("oub:complete.abrogation.regulation.role") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.complete_abrogation_regulation_role)
-  end
-
-  complete_abrogation_regulation.tag!("oub:complete.abrogation.regulation.id") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.complete_abrogation_regulation_id)
-  end
-
-  complete_abrogation_regulation.tag!("oub:published.date") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.published_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  complete_abrogation_regulation.tag!("oub:officialjournal.number") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.officialjournal_number)
-  end
-
-  complete_abrogation_regulation.tag!("oub:officialjournal.page") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.officialjournal_page)
-  end
-
-  complete_abrogation_regulation.tag!("oub:replacement.indicator") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.replacement_indicator)
-  end
-
-  complete_abrogation_regulation.tag!("oub:information.text") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.information_text)
-  end
-
-  complete_abrogation_regulation.tag!("oub:approved.flag") do complete_abrogation_regulation
-    xml_data_item(complete_abrogation_regulation, self.approved_flag)
-  end
+  xml_data_item_v2(complete_abrogation_regulation, "complete.abrogation.regulation.role", self.complete_abrogation_regulation_role)
+  xml_data_item_v2(complete_abrogation_regulation, "complete.abrogation.regulation.id", self.complete_abrogation_regulation_id)
+  xml_data_item_v2(complete_abrogation_regulation, "published.date", self.published_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(complete_abrogation_regulation, "officialjournal.number", self.officialjournal_number)
+  xml_data_item_v2(complete_abrogation_regulation, "officialjournal.page", self.officialjournal_page)
+  xml_data_item_v2(complete_abrogation_regulation, "replacement.indicator", self.replacement_indicator)
+  xml_data_item_v2(complete_abrogation_regulation, "information.text", self.information_text)
+  xml_data_item_v2(complete_abrogation_regulation, "approved.flag", self.approved_flag)
 end

@@ -1,13 +1,5 @@
 xml.tag!("oub:quota.reopening.event") do |quota_reopening_event|
-  quota_reopening_event.tag!("oub:quota.definition.sid") do quota_reopening_event
-    xml_data_item(quota_reopening_event, self.quota_definition_sid)
-  end
-
-  quota_reopening_event.tag!("oub:occurrence.timestamp") do quota_reopening_event
-    xml_data_item(quota_reopening_event, timestamp_value(self.occurrence_timestamp))
-  end
-
-  quota_reopening_event.tag!("oub:reopening.date") do quota_reopening_event
-    xml_data_item(quota_reopening_event, self.reopening_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(quota_reopening_event, "quota.definition.sid", self.quota_definition_sid)
+  xml_data_item_v2(quota_reopening_event, "occurrence.timestamp", self.timestamp_value(self.occurrence_timestamp))
+  xml_data_item_v2(quota_reopening_event, "reopening.date", self.reopening_date.try(:strftime, "%Y-%m-%d"))
 end

@@ -1,17 +1,6 @@
 xml.tag!("oub:quota.order.number") do |quota_order_number|
-  quota_order_number.tag!("oub:quota.order.number.sid") do quota_order_number
-    xml_data_item(quota_order_number, self.quota_order_number_sid)
-  end
-
-  quota_order_number.tag!("oub:quota.order.number.id") do quota_order_number
-    xml_data_item(quota_order_number, self.quota_order_number_id)
-  end
-
-  quota_order_number.tag!("oub:validity.start.date") do quota_order_number
-    xml_data_item(quota_order_number, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  quota_order_number.tag!("oub:validity.end.date") do quota_order_number
-    xml_data_item(quota_order_number, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(quota_order_number, "quota.order.number.sid", self.quota_order_number_sid)
+  xml_data_item_v2(quota_order_number, "quota.order.number.id", self.quota_order_number_id)
+  xml_data_item_v2(quota_order_number, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(quota_order_number, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

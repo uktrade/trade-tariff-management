@@ -1,13 +1,5 @@
 xml.tag!("oub:measure.condition.code.description") do |measure_condition_code_description|
-  measure_condition_code_description.tag!("oub:condition.code") do measure_condition_code_description
-    xml_data_item(measure_condition_code_description, self.condition_code)
-  end
-
-  measure_condition_code_description.tag!("oub:language.id") do measure_condition_code_description
-    xml_data_item(measure_condition_code_description, self.language_id)
-  end
-
-  measure_condition_code_description.tag!("oub:description") do measure_condition_code_description
-    xml_data_item(measure_condition_code_description, self.description)
-  end
+  xml_data_item_v2(measure_condition_code_description, "condition.code", self.condition_code)
+  xml_data_item_v2(measure_condition_code_description, "language.id", self.language_id)
+  xml_data_item_v2(measure_condition_code_description, "description", self.description)
 end

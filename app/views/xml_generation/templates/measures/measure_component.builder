@@ -1,25 +1,8 @@
 xml.tag!("oub:measure.component") do |measure_component|
-  measure_component.tag!("oub:measure.sid") do measure_component
-    xml_data_item(measure_component, self.measure_sid)
-  end
-
-  measure_component.tag!("oub:duty.expression.id") do measure_component
-    xml_data_item(measure_component, self.duty_expression_id)
-  end
-
-  measure_component.tag!("oub:duty.amount") do measure_component
-    xml_data_item(measure_component, self.duty_amount)
-  end
-
-  measure_component.tag!("oub:monetary.unit.code") do measure_component
-    xml_data_item(measure_component, self.monetary_unit_code)
-  end
-
-  measure_component.tag!("oub:measurement.unit.code") do measure_component
-    xml_data_item(measure_component, self.measurement_unit_code)
-  end
-
-  measure_component.tag!("oub:measurement.unit.qualifier.code") do measure_component
-    xml_data_item(measure_component, self.measurement_unit_qualifier_code)
-  end
+  xml_data_item_v2(measure_component, "measure.sid", self.measure_sid)
+  xml_data_item_v2(measure_component, "duty.expression.id", self.duty_expression_id)
+  xml_data_item_v2(measure_component, "duty.amount", self.duty_amount)
+  xml_data_item_v2(measure_component, "monetary.unit.code", self.monetary_unit_code)
+  xml_data_item_v2(measure_component, "measurement.unit.code", self.measurement_unit_code)
+  xml_data_item_v2(measure_component, "measurement.unit.qualifier.code", self.measurement_unit_qualifier_code)
 end

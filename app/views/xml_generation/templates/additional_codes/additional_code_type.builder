@@ -1,21 +1,7 @@
 xml.tag!("oub:additional.code.type") do |additional_code_type|
-  additional_code_type.tag!("oub:additional.code.type.id") do additional_code_type
-    xml_data_item(additional_code_type, self.additional_code_type_id)
-  end
-
-  additional_code_type.tag!("oub:application.code") do additional_code_type
-    xml_data_item(additional_code_type, self.application_code)
-  end
-
-  additional_code_type.tag!("oub:meursing.table.plan.id") do additional_code_type
-    xml_data_item(additional_code_type, self.meursing_table_plan_id)
-  end
-
-  additional_code_type.tag!("oub:validity.start.date") do additional_code_type
-    xml_data_item(additional_code_type, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  additional_code_type.tag!("oub:validity.end.date") do additional_code_type
-    xml_data_item(additional_code_type, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(additional_code_type, "additional.code.type.id", self.additional_code_type_id)
+  xml_data_item_v2(additional_code_type, "application.code", self.application_code)
+  xml_data_item_v2(additional_code_type, "meursing.table.plan.id", self.meursing_table_plan_id)
+  xml_data_item_v2(additional_code_type, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(additional_code_type, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

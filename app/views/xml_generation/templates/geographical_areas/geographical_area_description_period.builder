@@ -1,21 +1,7 @@
 xml.tag!("oub:geographical.area.description.period") do |geographical_area_description_period|
-  geographical_area_description_period.tag!("oub:geographical.area.description.period.sid") do geographical_area_description_period
-    xml_data_item(geographical_area_description_period, self.geographical_area_description_period_sid)
-  end
-
-  geographical_area_description_period.tag!("oub:geographical.area.sid") do geographical_area_description_period
-    xml_data_item(geographical_area_description_period, self.geographical_area_sid)
-  end
-
-  geographical_area_description_period.tag!("oub:geographical.area.id") do geographical_area_description_period
-    xml_data_item(geographical_area_description_period, self.geographical_area_id)
-  end
-
-  geographical_area_description_period.tag!("oub:validity.start.date") do geographical_area_description_period
-    xml_data_item(geographical_area_description_period, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  geographical_area_description_period.tag!("oub:validity.end.date") do geographical_area_description_period
-    xml_data_item(geographical_area_description_period, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(geographical_area_description_period, "geographical.area.description.period.sid", self.geographical_area_description_period_sid)
+  xml_data_item_v2(geographical_area_description_period, "geographical.area.sid", self.geographical_area_sid)
+  xml_data_item_v2(geographical_area_description_period, "geographical.area.id", self.geographical_area_id)
+  xml_data_item_v2(geographical_area_description_period, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(geographical_area_description_period, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

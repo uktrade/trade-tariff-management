@@ -1,33 +1,10 @@
 xml.tag!("oub:export.refund.nomenclature") do |export_refund_nomenclature|
-  export_refund_nomenclature.tag!("oub:export.refund.nomenclature.sid") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.export_refund_nomenclature_sid)
-  end
-
-  export_refund_nomenclature.tag!("oub:goods.nomenclature.item.id") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.goods_nomenclature_item_id)
-  end
-
-  export_refund_nomenclature.tag!("oub:additional.code.type") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.additional_code_type)
-  end
-
-  export_refund_nomenclature.tag!("oub:export.refund.code") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.export_refund_code)
-  end
-
-  export_refund_nomenclature.tag!("oub:productline.suffix") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.productline_suffix)
-  end
-
-  export_refund_nomenclature.tag!("oub:goods.nomenclature.sid") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.goods_nomenclature_sid)
-  end
-
-  export_refund_nomenclature.tag!("oub:validity.start.date") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  export_refund_nomenclature.tag!("oub:validity.end.date") do export_refund_nomenclature
-    xml_data_item(export_refund_nomenclature, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(export_refund_nomenclature, "export.refund.nomenclature.sid", self.export_refund_nomenclature_sid)
+  xml_data_item_v2(export_refund_nomenclature, "goods.nomenclature.item.id", self.goods_nomenclature_item_id)
+  xml_data_item_v2(export_refund_nomenclature, "additional.code.type", self.additional_code_type)
+  xml_data_item_v2(export_refund_nomenclature, "export.refund.code", self.export_refund_code)
+  xml_data_item_v2(export_refund_nomenclature, "productline.suffix", self.productline_suffix)
+  xml_data_item_v2(export_refund_nomenclature, "goods.nomenclature.sid", self.goods_nomenclature_sid)
+  xml_data_item_v2(export_refund_nomenclature, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(export_refund_nomenclature, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end
