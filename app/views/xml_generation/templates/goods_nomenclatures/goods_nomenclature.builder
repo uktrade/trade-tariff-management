@@ -1,25 +1,8 @@
 xml.tag!("oub:goods.nomenclature") do |goods_nomenclature|
-  goods_nomenclature.tag!("oub:goods.nomenclature.sid") do goods_nomenclature
-    xml_data_item(goods_nomenclature, self.goods_nomenclature_sid)
-  end
-
-  goods_nomenclature.tag!("oub:goods.nomenclature.item.id") do goods_nomenclature
-    xml_data_item(goods_nomenclature, self.goods_nomenclature_item_id)
-  end
-
-  goods_nomenclature.tag!("oub:producline.suffix") do goods_nomenclature
-    xml_data_item(goods_nomenclature, self.producline_suffix)
-  end
-
-  goods_nomenclature.tag!("oub:statistical.indicator") do goods_nomenclature
-    xml_data_item(goods_nomenclature, self.statistical_indicator)
-  end
-
-  goods_nomenclature.tag!("oub:validity.start.date") do goods_nomenclature
-    xml_data_item(goods_nomenclature, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  goods_nomenclature.tag!("oub:validity.end.date") do goods_nomenclature
-    xml_data_item(goods_nomenclature, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(goods_nomenclature, "goods.nomenclature.sid", self.goods_nomenclature_sid)
+  xml_data_item_v2(goods_nomenclature, "goods.nomenclature.item.id", self.goods_nomenclature_item_id)
+  xml_data_item_v2(goods_nomenclature, "producline.suffix", self.producline_suffix)
+  xml_data_item_v2(goods_nomenclature, "statistical.indicator", self.statistical_indicator)
+  xml_data_item_v2(goods_nomenclature, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(goods_nomenclature, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

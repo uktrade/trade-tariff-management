@@ -1,73 +1,20 @@
 xml.tag!("oub:modification.regulation") do |modification_regulation|
-  modification_regulation.tag!("oub:modification.regulation.role") do modification_regulation
-    xml_data_item(modification_regulation, self.modification_regulation_role)
-  end
-
-  modification_regulation.tag!("oub:modification.regulation.id") do modification_regulation
-    xml_data_item(modification_regulation, self.modification_regulation_id)
-  end
-
-  modification_regulation.tag!("oub:published.date") do modification_regulation
-    xml_data_item(modification_regulation, self.published_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  modification_regulation.tag!("oub:officialjournal.number") do modification_regulation
-    xml_data_item(modification_regulation, self.officialjournal_number)
-  end
-
-  modification_regulation.tag!("oub:officialjournal.page") do modification_regulation
-    xml_data_item(modification_regulation, self.officialjournal_page)
-  end
-
-  modification_regulation.tag!("oub:validity.start.date") do modification_regulation
-    xml_data_item(modification_regulation, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  modification_regulation.tag!("oub:validity.end.date") do modification_regulation
-    xml_data_item(modification_regulation, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  modification_regulation.tag!("oub:effective.end.date") do modification_regulation
-    xml_data_item(modification_regulation, self.effective_end_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  modification_regulation.tag!("oub:base.regulation.role") do base_regulation
-    xml_data_item(modification_regulation, self.base_regulation_role)
-  end
-
-  modification_regulation.tag!("oub:base.regulation.id") do base_regulation
-    xml_data_item(modification_regulation, self.base_regulation_id)
-  end
-
-  modification_regulation.tag!("oub:complete.abrogation.regulation.role") do modification_regulation
-    xml_data_item(modification_regulation, self.complete_abrogation_regulation_role)
-  end
-
-  modification_regulation.tag!("oub:complete.abrogation.regulation.id") do modification_regulation
-    xml_data_item(modification_regulation, self.complete_abrogation_regulation_id)
-  end
-
-  modification_regulation.tag!("oub:explicit.abrogation.regulation.role") do modification_regulation
-    xml_data_item(modification_regulation, self.explicit_abrogation_regulation_role)
-  end
-
-  modification_regulation.tag!("oub:explicit.abrogation.regulation.id") do modification_regulation
-    xml_data_item(modification_regulation, self.explicit_abrogation_regulation_id)
-  end
-
-  modification_regulation.tag!("oub:replacement.indicator") do modification_regulation
-    xml_data_item(modification_regulation, self.replacement_indicator)
-  end
-
-  modification_regulation.tag!("oub:stopped.flag") do modification_regulation
-    xml_data_item(modification_regulation, self.stopped_flag)
-  end
-
-  modification_regulation.tag!("oub:information.text") do modification_regulation
-    xml_data_item(modification_regulation, self.information_text)
-  end
-
-  modification_regulation.tag!("oub:approved.flag") do modification_regulation
-    xml_data_item(modification_regulation, self.approved_flag)
-  end
+  xml_data_item_v2(modification_regulation, "modification.regulation.role", self.modification_regulation_role)
+  xml_data_item_v2(modification_regulation, "modification.regulation.id", self.modification_regulation_id)
+  xml_data_item_v2(modification_regulation, "published.date", self.published_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(modification_regulation, "officialjournal.number", self.officialjournal_number)
+  xml_data_item_v2(modification_regulation, "officialjournal.page", self.officialjournal_page)
+  xml_data_item_v2(modification_regulation, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(modification_regulation, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(modification_regulation, "effective.end.date", self.effective_end_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(modification_regulation, "base.regulation.role", self.base_regulation_role)
+  xml_data_item_v2(modification_regulation, "base.regulation.id", self.base_regulation_id)
+  xml_data_item_v2(modification_regulation, "complete.abrogation.regulation.role", self.complete_abrogation_regulation_role)
+  xml_data_item_v2(modification_regulation, "complete.abrogation.regulation.id", self.complete_abrogation_regulation_id)
+  xml_data_item_v2(modification_regulation, "explicit.abrogation.regulation.role", self.explicit_abrogation_regulation_role)
+  xml_data_item_v2(modification_regulation, "explicit.abrogation.regulation.id", self.explicit_abrogation_regulation_id)
+  xml_data_item_v2(modification_regulation, "replacement.indicator", self.replacement_indicator)
+  xml_data_item_v2(modification_regulation, "stopped.flag", self.stopped_flag)
+  xml_data_item_v2(modification_regulation, "information.text", self.information_text)
+  xml_data_item_v2(modification_regulation, "approved.flag", self.approved_flag)
 end

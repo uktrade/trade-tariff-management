@@ -1,13 +1,5 @@
 xml.tag!("oub:regulation.role.type") do |regulation_role_type|
-  regulation_role_type.tag!("oub:regulation.role.type.id") do regulation_role_type
-    xml_data_item(regulation_role_type, self.regulation_role_type_id)
-  end
-
-  regulation_role_type.tag!("oub:validity.start.date") do regulation_role_type
-    xml_data_item(regulation_role_type, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  regulation_role_type.tag!("oub:validity.end.date") do regulation_role_type
-    xml_data_item(regulation_role_type, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(regulation_role_type, "regulation.role.type.id", self.regulation_role_type_id)
+  xml_data_item_v2(regulation_role_type, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(regulation_role_type, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

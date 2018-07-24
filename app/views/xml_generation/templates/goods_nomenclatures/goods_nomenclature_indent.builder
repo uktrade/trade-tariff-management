@@ -1,29 +1,9 @@
 xml.tag!("oub:goods.nomenclature.indents") do |goods_nomenclature_indent|
-  goods_nomenclature_indent.tag!("oub:goods.nomenclature.indent.sid") do goods_nomenclature_indent
-    xml_data_item(goods_nomenclature_indent, self.goods_nomenclature_indent_sid)
-  end
-
-  goods_nomenclature_indent.tag!("oub:goods.nomenclature.sid") do goods_nomenclature_indent
-    xml_data_item(goods_nomenclature_indent, self.goods_nomenclature_sid)
-  end
-
-  goods_nomenclature_indent.tag!("oub:goods.nomenclature.item.id") do goods_nomenclature_indent
-    xml_data_item(goods_nomenclature_indent, self.goods_nomenclature_item_id)
-  end
-
-  goods_nomenclature_indent.tag!("oub:number.indents") do goods_nomenclature_indent
-    xml_data_item(goods_nomenclature_indent, self.number_indents)
-  end
-
-  goods_nomenclature_indent.tag!("oub:productline.suffix") do goods_nomenclature_indent
-    xml_data_item(goods_nomenclature_indent, self.productline_suffix)
-  end
-
-  goods_nomenclature_indent.tag!("oub:validity.start.date") do goods_nomenclature_indent
-    xml_data_item(goods_nomenclature_indent, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  goods_nomenclature_indent.tag!("oub:validity.end.date") do goods_nomenclature_indent
-    xml_data_item(goods_nomenclature_indent, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(goods_nomenclature_indent, "goods.nomenclature.indent.sid", self.goods_nomenclature_indent_sid)
+  xml_data_item_v2(goods_nomenclature_indent, "goods.nomenclature.sid", self.goods_nomenclature_sid)
+  xml_data_item_v2(goods_nomenclature_indent, "goods.nomenclature.item.id", self.goods_nomenclature_item_id)
+  xml_data_item_v2(goods_nomenclature_indent, "number.indents", self.number_indents)
+  xml_data_item_v2(goods_nomenclature_indent, "productline.suffix", self.productline_suffix)
+  xml_data_item_v2(goods_nomenclature_indent, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(goods_nomenclature_indent, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

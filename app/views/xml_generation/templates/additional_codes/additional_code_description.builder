@@ -1,25 +1,8 @@
 xml.tag!("oub:additional.code.description") do |additional_code_description|
-  additional_code_description.tag!("oub:additional.code.description.period.sid") do additional_code_description
-    xml_data_item(additional_code_description, self.additional_code_description_period_sid)
-  end
-
-  additional_code_description.tag!("oub:language.id") do additional_code_description
-    xml_data_item(additional_code_description, self.language_id)
-  end
-
-  additional_code_description.tag!("oub:additional.code.sid") do additional_code_description
-    xml_data_item(additional_code_description, self.additional_code_sid)
-  end
-
-  additional_code_description.tag!("oub:additional.code.type.id") do additional_code_description
-    xml_data_item(additional_code_description, self.additional_code_type_id)
-  end
-
-  additional_code_description.tag!("oub:additional.code") do additional_code_description
-    xml_data_item(additional_code_description, self.additional_code)
-  end
-
-  additional_code_description.tag!("oub:description") do additional_code_description
-    xml_data_item(additional_code_description, self.description)
-  end
+  xml_data_item_v2(additional_code_description, "additional.code.description.period.sid", self.additional_code_description_period_sid)
+  xml_data_item_v2(additional_code_description, "language.id", self.language_id)
+  xml_data_item_v2(additional_code_description, "additional.code.sid", self.additional_code_sid)
+  xml_data_item_v2(additional_code_description, "additional.code.type.id", self.additional_code_type_id)
+  xml_data_item_v2(additional_code_description, "additional.code", self.additional_code)
+  xml_data_item_v2(additional_code_description, "description", self.description)
 end
