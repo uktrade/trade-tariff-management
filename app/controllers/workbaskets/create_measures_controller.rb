@@ -3,7 +3,8 @@ module Workbaskets
 
     before_action :require_to_be_workbasket_owner!,
                   :require_step_declaration_in_params!,
-                  :check_if_action_is_permitted!, only: [ :edit, :update ]
+                  :check_if_action_is_permitted!,
+                  :status_check!, only: [ :edit, :update ]
 
     expose(:current_step) { params[:step] }
 
@@ -118,6 +119,14 @@ module Workbaskets
             workbasket.id,
             step: previous_step
           )
+
+          return false
+        end
+      end
+
+      def status_check!
+        unless workbasket.in_progress?
+          redirect_to create_measure_url(workbasket.id)
 
           return false
         end
