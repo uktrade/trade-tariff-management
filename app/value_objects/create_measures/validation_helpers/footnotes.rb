@@ -38,8 +38,8 @@ module CreateMeasures
 
       def persist!
         unless footnote_reuse.present?
-          persist_record!(footnote)
           persist_record!(footnote_description_period)
+          persist_record!(footnote)
           persist_record!(footnote_description)
         end
 
