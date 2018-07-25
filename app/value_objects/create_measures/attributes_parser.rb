@@ -89,7 +89,7 @@ module CreateMeasures
     end
 
     def candidates
-      codes_analyzer.collection
+      codes_analyzer.try(:collection)
     end
 
     begin :decoration_methods
@@ -167,8 +167,8 @@ module CreateMeasures
         if ops[:start_date].present?
           @codes_analyzer = ::CreateMeasures::CodesAnalyzer.new(
             start_date: ops[:start_date].to_date,
-            commodity_codes: commodity_codes,
-            additional_codes: additional_codes,
+            commodity_codes: commodity_codes || [],
+            additional_codes: additional_codes || [],
             commodity_codes_exclusions: commodity_codes_exclusions
           )
         end

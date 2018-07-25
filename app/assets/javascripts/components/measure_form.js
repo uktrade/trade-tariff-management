@@ -156,6 +156,8 @@ $(document).ready(function() {
           var data_ops = {
             step: window.current_step,
             mode: window.create_measures_mode,
+            start_date: window.create_measures_start_date,
+            end_date: window.create_measures_end_date,
             settings: payload
           };
         }

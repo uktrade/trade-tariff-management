@@ -1,10 +1,14 @@
 module Workbaskets
   class CreateMeasuresController < Measures::BulksBaseController
 
+    around_action :configure_time_machine
+
     before_action :require_to_be_workbasket_owner!,
                   :require_step_declaration_in_params!,
                   :check_if_action_is_permitted!,
                   :status_check!, only: [ :edit, :update ]
+
+    before_action :handle_submit_for_cross_check!, only: [:update]
 
     expose(:current_step) { params[:step] }
 
@@ -28,10 +32,13 @@ module Workbaskets
       ops
     end
 
+    expose(:saver_mode) { params[:mode] }
+
     expose(:saver) do
       Workbaskets::CreateMeasures::SettingsSaver.new(
         workbasket,
         current_step,
+        saver_mode,
         settings_params
       )
     end
@@ -67,34 +74,19 @@ module Workbaskets
     end
 
     def update
-      if step_pointer.review_and_submit_step?
-        submit_for_cross_check.run!
+      saver.save!
 
-        render json: { redirect_url: create_measure_url(workbasket.id) },
-               status: :ok
+      if step_pointer.main_step? && saver_mode == "continue"
+        render json: saver.success_ops,
+                     status: :ok
 
         return false
       end
 
-      saver.save!
-
       if saver.valid?
-        workbasket_settings.track_step_validations_status!(current_step, true)
-
-        if step_pointer.duties_conditions_footnotes? && params[:mode] == 'continue'
-          saver.persist!
-        end
-
-        render json: saver.success_ops,
-               status: :ok
+        handle_success_saving!
       else
-        workbasket_settings.track_step_validations_status!(current_step, false)
-
-        render json: {
-          step: current_step,
-          errors: saver.errors,
-          candidates_with_errors: saver.candidates_with_errors
-        }, status: :unprocessable_entity
+        handle_errors!
       end
     end
 
@@ -112,7 +104,7 @@ module Workbaskets
       end
 
       def check_if_action_is_permitted!
-        if current_step != 'main' &&
+        if step_pointer.review_and_submit_step? &&
            !workbasket_settings.validations_passed?(previous_step)
 
           redirect_to edit_create_measure_url(
@@ -130,6 +122,38 @@ module Workbaskets
 
           return false
         end
+      end
+
+      def handle_submit_for_cross_check!
+        if step_pointer.review_and_submit_step?
+          submit_for_cross_check.run!
+
+          render json: { redirect_url: create_measure_url(workbasket.id) },
+                 status: :ok
+
+          return false
+        end
+      end
+
+      def handle_success_saving!
+        workbasket_settings.track_step_validations_status!(current_step, true)
+
+        if step_pointer.duties_conditions_footnotes? && saver_mode == 'continue'
+          saver.persist!
+        end
+
+        render json: saver.success_ops,
+               status: :ok
+      end
+
+      def handle_errors!
+        workbasket_settings.track_step_validations_status!(current_step, false)
+
+        render json: {
+          step: current_step,
+          errors: saver.errors,
+          candidates_with_errors: saver.candidates_with_errors
+        }, status: :unprocessable_entity
       end
   end
 end
