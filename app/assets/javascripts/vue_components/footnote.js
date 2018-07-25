@@ -31,7 +31,9 @@ Vue.component("foot-note", {
         url: "/footnotes",
         data: {
           footnote_type_id: type_id,
-          description: description
+          description: description,
+          start_date: window.measure_start_date,
+          end_date: window.measure_end_date
         },
         success: function(data) {
           self.suggestions = data;
