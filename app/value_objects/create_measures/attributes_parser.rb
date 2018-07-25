@@ -2,6 +2,8 @@ module CreateMeasures
   class AttributesParser
 
     SIMPLE_OPS = %w(
+      start_date
+      end_date
       operation_date
       workbasket_name
       commodity_codes

@@ -13,6 +13,7 @@ module CreateMeasures
       start_date
       end_date
       measure_type_id
+      workbasket_name
       operation_date
       commodity_codes
       commodity_codes_exclusions

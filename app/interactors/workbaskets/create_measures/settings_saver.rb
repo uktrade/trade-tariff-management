@@ -8,6 +8,8 @@ module Workbaskets
       )
 
       ATTRS_PARSER_METHODS = %w(
+        start_date
+        end_date
         workbasket_name
         operation_date
         commodity_codes
@@ -104,7 +106,7 @@ module Workbaskets
           general_errors = {}
 
           REQUIRED_PARAMS.map do |k|
-            if settings_params[k.to_s].blank?
+            if public_send(k).blank?
               general_errors[k.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
             end
           end
@@ -135,13 +137,15 @@ module Workbaskets
           #   @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
           # end
 
-          if step_pointer.main_step?
-            general_errors.map do |k, v|
-              @errors[k] = v
-            end
+          if general_errors.present?
+            if step_pointer.main_step?
+              general_errors.map do |k, v|
+                @errors[k] = v
+              end
 
-          else
-            @errors[:general] = general_errors
+            else
+              @errors[:general] = general_errors
+            end
           end
         end
 
