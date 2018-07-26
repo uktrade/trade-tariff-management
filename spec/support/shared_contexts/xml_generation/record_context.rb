@@ -33,10 +33,6 @@ shared_context "xml_generation_record_context" do
 
   it "should return valid XML" do
     fields_to_check.map do |_field_name|
-      p ""
-      p "#{_field_name}: #{_field_name}"
-      p ""
-
       expect_proper_xml_at(_field_name)
     end
   end
