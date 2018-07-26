@@ -2,6 +2,8 @@ module CreateMeasures
   class AttributesParser
 
     SIMPLE_OPS = %w(
+      start_date
+      end_date
       operation_date
       workbasket_name
       commodity_codes
@@ -54,30 +56,20 @@ module CreateMeasures
     end
 
     def measure_components
-      if ops[:measure_components].present?
-        ops[:measure_components].select do |k, option|
-          option[:duty_expression_id].present?
-        end
-      else
-        []
-      end
+      prepare_collection(:measure_components, :duty_expression_id)
     end
 
     def conditions
-      if ops[:conditions].present?
-        ops[:conditions].select do |k, option|
-          option[:condition_code].present?
-        end
-      else
-        []
-      end
+      prepare_collection(:conditions, :condition_code)
     end
 
     def footnotes
-      if ops[:footnotes].present?
-        ops[:footnotes].select do |k, option|
-          option[:footnote_type_id].present?
-        end
+      prepare_collection(:footnotes, :footnote_type_id)
+    end
+
+    def excluded_geographical_areas
+      if ops[:excluded_geographical_areas].present?
+        ops[:excluded_geographical_areas].uniq
       else
         []
       end
@@ -89,7 +81,7 @@ module CreateMeasures
     end
 
     def candidates
-      codes_analyzer.collection
+      codes_analyzer.try(:collection)
     end
 
     begin :decoration_methods
@@ -167,8 +159,8 @@ module CreateMeasures
         if ops[:start_date].present?
           @codes_analyzer = ::CreateMeasures::CodesAnalyzer.new(
             start_date: ops[:start_date].to_date,
-            commodity_codes: commodity_codes,
-            additional_codes: additional_codes,
+            commodity_codes: commodity_codes || [],
+            additional_codes: additional_codes || [],
             commodity_codes_exclusions: commodity_codes_exclusions
           )
         end
@@ -177,6 +169,16 @@ module CreateMeasures
       def date_to_format(date)
         date.try(:to_date)
             .try(:strftime, "%d %B %Y")
+      end
+
+      def prepare_collection(namespace, key_option)
+        if ops[namespace].present?
+          ops[namespace].select do |k, option|
+            option[key_option].present?
+          end
+        else
+          []
+        end
       end
   end
 end

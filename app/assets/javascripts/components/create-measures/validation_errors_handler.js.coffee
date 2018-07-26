@@ -7,7 +7,7 @@ window.CreateMeasuresValidationErrorsHandler =
     if response.responseJSON.step == "main"
       CreateMeasuresValidationErrorsHandler.setFormErrors(response, measure_form)
     else
-      CreateMeasuresValidationErrorsHandler.renderErrorsBlock(response)
+      CreateMeasuresValidationErrorsHandler.renderErrorsBlock(response, measure_form)
 
     CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
 
@@ -32,10 +32,22 @@ window.CreateMeasuresValidationErrorsHandler =
 
     return false
 
-  renderErrorsBlock: (response) ->
+  renderErrorsBlock: (response, measure_form) ->
     CreateMeasuresValidationErrorsHandler.showCustomErrorsBlock()
 
-    $.each response.responseJSON.errors, (group_key, errors_collection) ->
+    grouped_errors = response.responseJSON.errors
+    general_errors = grouped_errors['general']
+
+    if general_errors isnt undefined
+      $.each general_errors, (key, value) ->
+        group_block = $(".js-create-measures-custom-errors[data-errors-container='measure']")
+        group_block.removeClass('hidden')
+        list_block = group_block.find("ul")
+        list_block.append("<li><div class='create-measures-error-block with_left_margin'>" + value + "</div></li>")
+
+    delete grouped_errors['general']
+
+    $.each grouped_errors, (group_key, errors_collection) ->
       group_block = $(".js-create-measures-custom-errors[data-errors-container='" + group_key + "']")
       group_block.removeClass('hidden')
       list_block = group_block.find("ul")

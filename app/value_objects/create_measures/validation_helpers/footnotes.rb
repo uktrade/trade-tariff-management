@@ -1,6 +1,6 @@
 module CreateMeasures
   module ValidationHelpers
-    class Footnotes < ::CreateMeasures::ValidationHelpers::AssociationBase
+    class Footnotes < ::CreateMeasures::ValidationHelpers::MultipleAssociation
 
       attr_accessor :measure,
                     :system_ops,
@@ -23,17 +23,6 @@ module CreateMeasures
         @extra_increment_value = footnote_ops[:position]
 
         @errors = {}
-      end
-
-      def valid?
-        generate_records!
-        validate_records!
-
-        if @errors.blank? && !measure.new?
-          persist!
-        end
-
-        @errors.blank?
       end
 
       def persist!
@@ -126,17 +115,6 @@ module CreateMeasures
           footnote_description.footnote_id = footnote.footnote_id
           footnote_description.footnote_type_id = footnote_type_id
           footnote_description.footnote_description_period_sid = period_sid
-        end
-
-        def validate!(record)
-          if validator(record.class.name).present?
-            ::Measures::ConformanceErrorsParser.new(
-              record, validator(record.class.name), {}
-            ).errors
-             .map do |k, v|
-              @errors[k] = v
-            end
-          end
         end
 
         def validator(klass_name)

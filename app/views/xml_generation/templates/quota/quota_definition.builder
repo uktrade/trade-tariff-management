@@ -3,7 +3,7 @@ xml.tag!("oub:quota.definition") do |quota_definition|
   xml_data_item_v2(quota_definition, "quota.order.number.id", self.quota_order_number_id)
   xml_data_item_v2(quota_definition, "quota.order.number.sid", self.quota_order_number_sid)
   xml_data_item_v2(quota_definition, "volume", self.volume)
-  xml_data_item_v2(quota_definition, "initial.volume", self.initial.volume)
+  xml_data_item_v2(quota_definition, "initial.volume", self.initial_volume)
   xml_data_item_v2(quota_definition, "monetary.unit.code", self.monetary_unit_code)
   xml_data_item_v2(quota_definition, "measurement.unit.code", self.measurement_unit_code)
   xml_data_item_v2(quota_definition, "measurement.unit.qualifier.code", self.measurement_unit_qualifier_code)
