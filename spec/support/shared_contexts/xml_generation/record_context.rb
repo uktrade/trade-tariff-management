@@ -26,6 +26,9 @@ shared_context "xml_generation_record_context" do
 
     db_record.reload
     workbasket.reload
+
+    settings = workbasket.settings
+    allow(settings).to receive(:collection) { [db_record] }
   end
 
   it "should return valid XML" do
