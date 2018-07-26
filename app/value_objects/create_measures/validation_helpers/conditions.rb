@@ -1,6 +1,6 @@
 module CreateMeasures
   module ValidationHelpers
-    class Conditions < ::CreateMeasures::ValidationHelpers::AssociationBase
+    class Conditions < ::CreateMeasures::ValidationHelpers::MultipleAssociation
 
       attr_accessor :measure,
                     :system_ops,
@@ -18,17 +18,6 @@ module CreateMeasures
         @errors = {}
       end
 
-      def valid?
-        generate_records!
-        validate_records!
-
-        if @errors.blank? && !measure.new?
-          persist!
-        end
-
-        @errors.blank?
-      end
-
       def persist!
         records.map do |record|
           persist_record!(record)
@@ -40,6 +29,12 @@ module CreateMeasures
         def generate_records!
           generate_condition!
           generate_condition_components!
+        end
+
+        def validate_records!
+          records.map do |record|
+            validate!(record)
+          end
         end
 
         def records
@@ -77,23 +72,6 @@ module CreateMeasures
             mc_component.duty_expression_id = v[:duty_expression_id]
 
             mc_component
-          end
-        end
-
-        def validate_records!
-          records.map do |record|
-            validate!(record)
-          end
-        end
-
-        def validate!(record)
-          if validator(record.class.name).present?
-            ::Measures::ConformanceErrorsParser.new(
-              record, validator(record.class.name), {}
-            ).errors
-             .map do |k, v|
-              @errors[k] = v
-            end
           end
         end
 

@@ -6,7 +6,7 @@ module CreateMeasures
         def errors_in_collection(measure, system_ops, collection)
           errors = {}
 
-          collection.map do |k, item_ops|
+          prepare_collection(collection).map do |k, item_ops|
             ops = item_ops.merge(position: k)
 
             record = new(measure, system_ops, ops)
@@ -18,6 +18,20 @@ module CreateMeasures
       end
 
       private
+
+        def prepare_collection(collection)
+          return collection if collection.is_a?(Hash)
+
+          res = {}
+          collection.uniq.each_with_index do |excluded_geographical_area, index|
+            res[index] = {
+              position: index,
+              excluded_geographical_area: excluded_geographical_area
+            }
+          end
+
+          res
+        end
 
         def persist_record!(record)
           assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(

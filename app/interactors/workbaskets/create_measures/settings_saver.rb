@@ -21,6 +21,13 @@ module Workbaskets
         footnotes
       )
 
+      ASSOCIATIONS_LIST = %w(
+        measure_components
+        conditions
+        footnotes
+        excluded_geographical_areas
+      )
+
       attr_accessor :current_step,
                     :save_mode,
                     :settings,
@@ -176,7 +183,7 @@ module Workbaskets
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
 
-          ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
+          ASSOCIATIONS_LIST.map do |name|
             if public_send(name).present?
               association_errors = send("#{name}_errors", measure)
               errors_collection[name] = association_errors if association_errors.present?
@@ -210,7 +217,7 @@ module Workbaskets
           ).errors
         end
 
-        ::CreateMeasures::StepPointer::DUTIES_CONDITIONS_FOOTNOTES_STEP_SETTINGS.map do |name|
+        ASSOCIATIONS_LIST.map do |name|
           define_method("#{name}_errors") do |measure|
             klass_name = name.split("_").map(&:capitalize).join('')
 
