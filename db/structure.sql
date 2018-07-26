@@ -3712,7 +3712,10 @@ CREATE TABLE public.measure_excluded_geographical_areas_oplog (
     operation_date date,
     added_by_id integer,
     added_at timestamp without time zone,
-    "national" boolean
+    "national" boolean,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
@@ -3729,7 +3732,10 @@ CREATE VIEW public.measure_excluded_geographical_areas AS
     measure_excluded_geographical_areas1.operation_date,
     measure_excluded_geographical_areas1.added_by_id,
     measure_excluded_geographical_areas1.added_at,
-    measure_excluded_geographical_areas1."national"
+    measure_excluded_geographical_areas1."national",
+    measure_excluded_geographical_areas1.status,
+    measure_excluded_geographical_areas1.workbasket_id,
+    measure_excluded_geographical_areas1.workbasket_sequence_number
    FROM public.measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas1
   WHERE ((measure_excluded_geographical_areas1.oid IN ( SELECT max(measure_excluded_geographical_areas2.oid) AS max
            FROM public.measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas2
@@ -10845,3 +10851,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_vali
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure_sids_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180722185024_add_workbasket_attributes_to_db_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180726104556_add_workbasket_attrs_to_measure_excluded_geographical_areas.rb');

@@ -10,6 +10,7 @@ module Workbaskets
       MeasureComponent
       MeasureCondition
       MeasureConditionComponent
+      MeasureExcludedGeographicalArea
     )
 
     plugin :timestamps
