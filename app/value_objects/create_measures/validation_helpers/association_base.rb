@@ -15,9 +15,6 @@ module CreateMeasures
 
           errors
         end
-      end
-
-      private
 
         def prepare_collection(collection)
           return collection if collection.is_a?(Hash)
@@ -32,6 +29,9 @@ module CreateMeasures
 
           res
         end
+      end
+
+      private
 
         def persist_record!(record)
           assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(

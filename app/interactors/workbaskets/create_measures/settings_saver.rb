@@ -19,6 +19,7 @@ module Workbaskets
         measure_components
         conditions
         footnotes
+        excluded_geographical_areas
       )
 
       ASSOCIATIONS_LIST = %w(
