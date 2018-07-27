@@ -71,6 +71,7 @@ Rails.application.routes.draw do
 
   scope module: :workbaskets do
     resources :create_measures, only: [:new, :show, :edit, :update]
+    resources :create_quota, only: [:new, :show, :edit, :update]
   end
 
   namespace :regulation_form_api do
