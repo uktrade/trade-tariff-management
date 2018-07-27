@@ -37,6 +37,9 @@ module Workbaskets
     one_to_one :create_measures_settings, key: :workbasket_id,
                                           class_name: "Workbaskets::CreateMeasuresSettings"
 
+    one_to_one :create_quota_settings, key: :workbasket_id,
+                                       class_name: "Workbaskets::CreateQuotaSettings"
+
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
                        class_name: "User"
@@ -105,14 +108,13 @@ module Workbaskets
       case type.to_sym
       when :create_measures
         create_measures_settings
-
       when :bulk_edit_of_measures
         # TODO: need to refactor Bulk Edit stuff
         #       to store settings, specific for Bulk Edit of measures
         #       in separated DB table
         #
       when :create_quota
-        # TODO
+        create_quota_settings
       end
     end
 
