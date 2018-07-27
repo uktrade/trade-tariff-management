@@ -1,13 +1,13 @@
-window.CreateMeasuresValidationErrorsHandler =
+window.WorkbasketBaseValidationErrorsHandler =
 
   handleErrorsResponse: (response, measure_form) ->
-    CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
+    WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
     WorkbasketBaseSaveActions.hideSuccessMessage()
 
     if response.responseJSON.step == "main"
-      CreateMeasuresValidationErrorsHandler.setFormErrors(response, measure_form)
+      WorkbasketBaseValidationErrorsHandler.setFormErrors(response, measure_form)
     else
-      CreateMeasuresValidationErrorsHandler.renderErrorsBlock(response, measure_form)
+      WorkbasketBaseValidationErrorsHandler.renderErrorsBlock(response, measure_form)
 
     WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner()
 
@@ -23,7 +23,7 @@ window.CreateMeasuresValidationErrorsHandler =
           if innerError.constructor == Array
             measure_form.errors.push innerError[0]
             setTimeout (->
-              CreateMeasuresValidationErrorsHandler.renderAffectedCommoditiesBlock innerError
+              WorkbasketBaseValidationErrorsHandler.renderAffectedCommoditiesBlock innerError
             ), 1000
           else
             measure_form.errors.push innerError
@@ -33,59 +33,44 @@ window.CreateMeasuresValidationErrorsHandler =
     return false
 
   renderErrorsBlock: (response, measure_form) ->
-    CreateMeasuresValidationErrorsHandler.showCustomErrorsBlock()
+    WorkbasketBaseValidationErrorsHandler.showCustomErrorsBlock()
 
     grouped_errors = response.responseJSON.errors
     general_errors = grouped_errors['general']
 
     if general_errors isnt undefined
       $.each general_errors, (key, value) ->
-        group_block = $(".js-create-measures-custom-errors[data-errors-container='measure']")
+        group_block = $(".js-workbasket-custom-errors[data-errors-container='measure']")
         group_block.removeClass('hidden')
         list_block = group_block.find("ul")
-        list_block.append("<li><div class='create-measures-error-block with_left_margin'>" + value + "</div></li>")
+        list_block.append("<li><div class='workbasket-error-block with_left_margin'>" + value + "</div></li>")
 
     delete grouped_errors['general']
 
     $.each grouped_errors, (group_key, errors_collection) ->
-      group_block = $(".js-create-measures-custom-errors[data-errors-container='" + group_key + "']")
+      group_block = $(".js-workbasket-custom-errors[data-errors-container='" + group_key + "']")
       group_block.removeClass('hidden')
       list_block = group_block.find("ul")
 
       $.each errors_collection, (key, value) ->
         value.forEach (error) ->
-          result_html = CreateMeasuresValidationErrorsHandler.customErrorHtml(error)
+          result_html = WorkbasketBaseValidationErrorsHandler.customErrorHtml(error)
           list_block.append(result_html)
 
   customErrorHtml: (error) ->
     text = error[0]
     commodities_list = error[1]
-    affected_codes_html = CreateMeasuresValidationErrorsHandler.content(commodities_list)
+    affected_codes_html = WorkbasketBaseValidationErrorsHandler.content(commodities_list)
 
-    return "<li><div class='create-measures-error-block with_left_margin'>" +
+    return "<li><div class='workbasket-error-block with_left_margin'>" +
            text + affected_codes_html + "</div></li>"
-
-  initShowHideAffectedCommoditiesBlock: () ->
-    $(document).on 'click', '.js-show_hide_affected_codes', ->
-      parent = $(this).closest(".create-measures-error-block")
-
-      container = parent.find(".js-affected_codes_list")
-
-      if container.hasClass("hidden")
-        container.removeClass("hidden")
-        $(this).text('Hide affected codes')
-      else
-        container.addClass("hidden")
-        $(this).text('Show affected codes')
-
-      return false
 
   renderAffectedCommoditiesBlock: (error_object) ->
     text = error_object[0]
     commodities_list = error_object[1]
 
-    error_container = $(".create-measures-error-block[data-error-message='" + text + "']")
-    affected_codes_html = CreateMeasuresValidationErrorsHandler.content(commodities_list)
+    error_container = $(".workbasket-error-block[data-error-message='" + text + "']")
+    affected_codes_html = WorkbasketBaseValidationErrorsHandler.content(commodities_list)
 
     error_container.html(text + affected_codes_html)
 
@@ -98,12 +83,9 @@ window.CreateMeasuresValidationErrorsHandler =
            "</span>"
 
   showCustomErrorsBlock: () ->
-    $(".js-measure-form-errors-container.js-custom-errors-block").removeClass('hidden')
+    $(".js-workbasket-errors-container.js-custom-errors-block").removeClass('hidden')
 
   hideCustomErrorsBlock: () ->
-    $(".js-measure-form-errors-container.js-custom-errors-block").addClass('hidden')
-    $(".js-create-measures-custom-errors").addClass('hidden')
-    $(".js-create-measures-custom-errors ul").empty()
-
-$ ->
-  CreateMeasuresValidationErrorsHandler.initShowHideAffectedCommoditiesBlock()
+    $(".js-workbasket-errors-container.js-custom-errors-block").addClass('hidden')
+    $(".js-workbasket-custom-errors").addClass('hidden')
+    $(".js-workbasket-custom-errors ul").empty()

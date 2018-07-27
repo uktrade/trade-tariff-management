@@ -50,7 +50,7 @@ window.WorkbasketBaseSaveActions =
                                                                                                                       .removeClass('hidden')
 
   handleSuccessResponse: (resp) ->
-    CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
+    WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
 
     if resp.redirect_url isnt undefined
       setTimeout (->

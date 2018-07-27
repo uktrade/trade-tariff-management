@@ -3,13 +3,13 @@
     margin-top: 85px;
   }
 
-  .js-create-measures-check-code-description {
+  .js-workbasket-check-code-description {
     cursor: pointer;
     margin-top: 25px;
     display: inline-block;
   }
 
-  .js-create-measures-check-code-container {
+  .js-workbasket-check-code-container {
     overflow: hidden;
     border-left: 3px solid gray;
     padding-left: 20px;
@@ -87,7 +87,7 @@
     cursor: default;
   }
 
-  .create-measures-error-block {
+  .workbasket-error-block {
     &.with_left_margin {
       margin-left: 20px;
     }
@@ -115,7 +115,7 @@
     margin-bottom: 15px;
   }
 
-  .js-measure-form-errors-container.hidden {
+  .js-workbasket-errors-container.hidden {
     display: none;
   }
 }

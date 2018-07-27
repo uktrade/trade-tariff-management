@@ -172,7 +172,7 @@ $(document).ready(function() {
             if ( window.save_url == "/measures" ) {
               // Create measures V1 version
               //
-              $(".js-measure-form-errors-container").empty().addClass("hidden");
+              $(".js-workbasket-errors-container").empty().addClass("hidden");
               window.location = window.save_url + "?code=" + response.goods_nomenclature_item_id;
             } else {
               // Create measures V2 version
@@ -201,7 +201,7 @@ $(document).ready(function() {
             } else {
               // Create measures V2 version
               //
-              CreateMeasuresValidationErrorsHandler.handleErrorsResponse(response, self);
+              WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
             }
           }
         });

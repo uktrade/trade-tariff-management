@@ -1,4 +1,4 @@
-.js-measure-form-errors-container.alert.alert-danger v-if="hasErrors"
+.js-workbasket-errors-container.alert.alert-danger v-if="hasErrors"
   h3.measure-form-errors-header
     | Progress successfuly saved!
     br
@@ -6,4 +6,4 @@
 
   ul
     li v-for="error in errors"
-      .create-measures-error-block :data-error-message="error" v-html="error"
+      .workbasket-error-block :data-error-message="error" v-html="error"
