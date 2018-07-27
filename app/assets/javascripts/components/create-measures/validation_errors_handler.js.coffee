@@ -2,14 +2,14 @@ window.CreateMeasuresValidationErrorsHandler =
 
   handleErrorsResponse: (response, measure_form) ->
     CreateMeasuresValidationErrorsHandler.hideCustomErrorsBlock()
-    CreateMeasuresSaveActions.hideSuccessMessage()
+    WorkbasketBaseSaveActions.hideSuccessMessage()
 
     if response.responseJSON.step == "main"
       CreateMeasuresValidationErrorsHandler.setFormErrors(response, measure_form)
     else
       CreateMeasuresValidationErrorsHandler.renderErrorsBlock(response, measure_form)
 
-    CreateMeasuresSaveActions.unlockButtonsAndHideSpinner()
+    WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner()
 
   setFormErrors: (response, measure_form) ->
     errors_list = response.responseJSON.errors

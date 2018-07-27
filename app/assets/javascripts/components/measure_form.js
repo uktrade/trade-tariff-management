@@ -123,7 +123,7 @@ $(document).ready(function() {
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
       this.fetchAdditionalCode("/additional_codes/preview", 4, "additional_code_preview", "additional_code_preview_description");
 
-      $(document).on('click', ".js-create-measures-v1-submit-button, .js-create-measures-v2-submit-button", function(e) {
+      $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -143,8 +143,8 @@ $(document).ready(function() {
           // Create measures V2 version
           //
 
-          CreateMeasuresSaveActions.hideSuccessMessage();
-          CreateMeasuresSaveActions.toogleSaveSpinner($(this).attr('name'));
+          WorkbasketBaseSaveActions.hideSuccessMessage();
+          WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
           var http_method = "PUT";
 
           if (window.current_step == 'main') {
@@ -155,7 +155,7 @@ $(document).ready(function() {
 
           var data_ops = {
             step: window.current_step,
-            mode: window.create_measures_mode,
+            mode: window.workbasket_submit_mode,
             start_date: window.create_measures_start_date,
             end_date: window.create_measures_end_date,
             settings: payload
@@ -177,7 +177,7 @@ $(document).ready(function() {
             } else {
               // Create measures V2 version
               //
-              CreateMeasuresSaveActions.handleSuccessResponse(response);
+              WorkbasketBaseSaveActions.handleSuccessResponse(response);
             }
           },
           error: function(response) {
