@@ -4,13 +4,13 @@
                           method: :put \
                         } do |f|
 
-  = render "workbaskets/create_measures/steps/review_and_submit/message", read_only: read_only
-  = render "workbaskets/create_measures/steps/review_and_submit/details", read_only: read_only
-  = render "workbaskets/create_measures/steps/review_and_submit/measures", read_only: read_only
+  = render "workbaskets/shared/steps/review_and_submit/message", read_only: read_only
+  = render "workbaskets/shared/steps/review_and_submit/details", read_only: read_only
+  = render "workbaskets/shared/steps/review_and_submit/measures", read_only: read_only
 
   - if read_only
     .form-actions
       h3.heading-medium
   - else
-    = render "workbaskets/create_measures/action_links", f: f
+    = render "workbaskets/shared/action_links", f: f
 
