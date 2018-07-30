@@ -1374,7 +1374,10 @@ CREATE TABLE public.create_quota_workbasket_settings (
     configure_quota_step_validation_passed boolean DEFAULT false,
     conditions_footnotes_step_validation_passed boolean DEFAULT false,
     created_at time without time zone,
-    updated_at time without time zone
+    updated_at time without time zone,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -11447,3 +11450,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180726104556_add_workbas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726140522_update_xml_exportable_data_with_workbasket_fields.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727172730_create_create_quota_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727173036_add_more_fields_to_create_quota_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fields_to_create_quota_settings.rb');
