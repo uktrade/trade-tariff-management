@@ -1,5 +1,5 @@
-module CreateMeasures
-  module ValidationHelpers
+module Workbaskets
+  module Shared
     class SystemOpsAssigner
 
       attr_accessor :record,

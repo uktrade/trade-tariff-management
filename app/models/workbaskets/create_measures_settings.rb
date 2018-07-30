@@ -18,13 +18,5 @@ module Workbaskets
     def duties_conditions_footnotes_step_settings
       JSON.parse(duties_conditions_footnotes_step_settings_jsonb)
     end
-
-    def start_date
-      settings['start_date']
-    end
-
-    def end_date
-      settings['end_date']
-    end
   end
 end

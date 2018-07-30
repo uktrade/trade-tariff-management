@@ -70,5 +70,13 @@ module WorkbasketHelpers
       Measure.where(measure_sid: measure_sids)
              .order(:measure_sid)
     end
+
+    def start_date
+      settings['start_date']
+    end
+
+    def end_date
+      settings['end_date']
+    end
   end
 end

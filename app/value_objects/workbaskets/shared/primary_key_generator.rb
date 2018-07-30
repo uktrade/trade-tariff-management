@@ -1,5 +1,5 @@
-module CreateMeasures
-  module ValidationHelpers
+module Workbaskets
+  module Shared
     class PrimaryKeyGenerator
 
       PRIMARY_KEYS = {
