@@ -1,3 +1,5 @@
+require 'goods_nomenclature_mapper'
+
 class Commodity < GoodsNomenclature
   include Declarable
 
@@ -36,6 +38,10 @@ class Commodity < GoodsNomenclature
 
     def declarable
       filter(producline_suffix: "80")
+    end
+
+    def with_validity_end_date_nil_or_after(start_date)
+      where("validity_end_date IS NULL OR validity_end_date > ?", start_date)
     end
   end
 
@@ -83,7 +89,7 @@ class Commodity < GoodsNomenclature
 
   def children
     func = Proc.new {
-      GoodsNomenclatureMapper.new(
+      ::GoodsNomenclatureMapper.new(
         heading.commodities_dataset.
                 eager(:goods_nomenclature_indents, :goods_nomenclature_descriptions).
                 all

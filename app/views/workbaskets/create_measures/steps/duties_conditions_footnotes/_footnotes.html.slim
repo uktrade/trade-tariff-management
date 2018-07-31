@@ -1,0 +1,14 @@
+fieldset
+  h3.heading-medium
+    | Optionally add footnotes
+
+  .footnotes
+    div.footnote v-for="(footnote, index) in measure.footnotes"
+      = content_tag "foot-note", "", { ":footnote" => "footnote", ":index" => "index" }
+
+      div v-if="canRemoveFootnote"
+        a.text-danger href="#" v-on:click.prevent="removeFootnote(footnote)"
+          | Remove
+  div
+    a href="#" v-on:click.prevent="addFootnote"
+      | Add another footnote

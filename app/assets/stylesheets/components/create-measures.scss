@@ -1,0 +1,121 @@
+.measure-form.create-measures-v2 {
+  .form-actions {
+    margin-top: 85px;
+  }
+
+  .js-create-measures-check-code-description {
+    cursor: pointer;
+    margin-top: 25px;
+    display: inline-block;
+  }
+
+  .js-create-measures-check-code-container {
+    overflow: hidden;
+    border-left: 3px solid gray;
+    padding-left: 20px;
+
+    &.additional_code_check {
+      margin-bottom: 25px;
+    }
+  }
+
+  span.create-measures-sub_header {
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+
+  .form-group.with_less_bottom_margin {
+    margin-bottom: 10px;
+  }
+
+  .create-measures-message-block {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .create-measures-details-table {
+    margin-bottom: 60px;
+    overflow: hidden;
+
+    td {
+      font-size: 18px;
+
+      &.heading_column {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .create-measures-actions-bar {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .submit_group_for_cross_check_block, .save_progress_block, .exit_block {
+    margin-right: 25px;
+    float: left;
+  }
+
+  .exit_block {
+    padding-top: 10px;
+    margin-left: 5px;
+  }
+
+  .spinner_block {
+    padding-top: 1px;
+    margin-top: -3px;
+
+    img {
+      float: left;
+    }
+
+    span.saving_message {
+      margin-top: 10px;
+      display: inline-block;
+    }
+  }
+
+  .js-create-measures-v2-submit-button.hidden {
+    display: none;
+  }
+
+  a.disabled, input[type='submit'].disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .create-measures-error-block {
+    &.with_left_margin {
+      margin-left: 20px;
+    }
+
+    a.js-show_hide_affected_codes {
+      margin-left: 10px;
+    }
+
+    span.js-affected_codes_list {
+      padding-left: 20px;
+      color:#0b0c0c;
+    }
+  }
+
+  .js-measure-form-success-message-container {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+  }
+
+  h3.create-measures-custom-errors-header {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .js-measure-form-errors-container.hidden {
+    display: none;
+  }
+}

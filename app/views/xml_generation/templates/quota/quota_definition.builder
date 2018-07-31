@@ -1,57 +1,16 @@
 xml.tag!("oub:quota.definition") do |quota_definition|
-  quota_definition.tag!("oub:quota.definition.sid") do quota_definition
-    xml_data_item(quota_definition, self.quota_definition_sid)
-  end
-
-  quota_definition.tag!("oub:quota.order.number.id") do quota_definition
-    xml_data_item(quota_definition, self.quota_order_number_id)
-  end
-
-  quota_definition.tag!("oub:quota.order.number.sid") do quota_definition
-    xml_data_item(quota_definition, self.quota_order_number_sid)
-  end
-
-  quota_definition.tag!("oub:volume") do quota_definition
-    xml_data_item(quota_definition, self.volume)
-  end
-
-  quota_definition.tag!("oub:initial.volume") do quota_definition
-    xml_data_item(quota_definition, self.initial_volume)
-  end
-
-  quota_definition.tag!("oub:monetary.unit.code") do quota_definition
-    xml_data_item(quota_definition, self.monetary_unit_code)
-  end
-
-  quota_definition.tag!("oub:measurement.unit.code") do quota_definition
-    xml_data_item(quota_definition, self.measurement_unit_code)
-  end
-
-  quota_definition.tag!("oub:measurement.unit.qualifier.code") do quota_definition
-    xml_data_item(quota_definition, self.measurement_unit_qualifier_code)
-  end
-
-  quota_definition.tag!("oub:maximum.precision") do quota_definition
-    xml_data_item(quota_definition, self.maximum_precision)
-  end
-
-  quota_definition.tag!("oub:critical.state") do quota_definition
-    xml_data_item(quota_definition, self.critical_state)
-  end
-
-  quota_definition.tag!("oub:critical.threshold") do quota_definition
-    xml_data_item(quota_definition, self.critical_threshold)
-  end
-
-  quota_definition.tag!("oub:description") do quota_definition
-    xml_data_item(quota_definition, self.description)
-  end
-
-  quota_definition.tag!("oub:validity.start.date") do quota_definition
-    xml_data_item(quota_definition, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  quota_definition.tag!("oub:validity.end.date") do quota_definition
-    xml_data_item(quota_definition, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(quota_definition, "quota.definition.sid", self.quota_definition_sid)
+  xml_data_item_v2(quota_definition, "quota.order.number.id", self.quota_order_number_id)
+  xml_data_item_v2(quota_definition, "quota.order.number.sid", self.quota_order_number_sid)
+  xml_data_item_v2(quota_definition, "volume", self.volume)
+  xml_data_item_v2(quota_definition, "initial.volume", self.initial_volume)
+  xml_data_item_v2(quota_definition, "monetary.unit.code", self.monetary_unit_code)
+  xml_data_item_v2(quota_definition, "measurement.unit.code", self.measurement_unit_code)
+  xml_data_item_v2(quota_definition, "measurement.unit.qualifier.code", self.measurement_unit_qualifier_code)
+  xml_data_item_v2(quota_definition, "maximum.precision", self.maximum_precision)
+  xml_data_item_v2(quota_definition, "critical.state", self.critical_state)
+  xml_data_item_v2(quota_definition, "critical.threshold", self.critical_threshold)
+  xml_data_item_v2(quota_definition, "description", self.description)
+  xml_data_item_v2(quota_definition, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(quota_definition, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

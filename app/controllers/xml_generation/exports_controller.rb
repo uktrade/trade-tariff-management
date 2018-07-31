@@ -1,5 +1,5 @@
 module XmlGeneration
-  class ExportsController < ::XmlGeneration::BaseController
+  class ExportsController < ApplicationController
 
     include ::BaseJobMixin
 

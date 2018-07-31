@@ -1,0 +1,45 @@
+script type="text/x-template" id="change-footnotes-popup-template"
+  pop-up :open="open" :on-close="triggerClose"
+    template slot="title" Change footnotes
+
+    div v-if="measures.length > 1"
+      warning-message You are bulk-changing {{measures.length}} measures. Please check your inputs carefully!
+
+    div v-if="!onlyOneMeasure && uniqMeasuresFootnotes.length > 1"
+      info-message
+        | The selection contains differing conditions.<br />
+        | These will be replaced with the conditions you configure here.
+
+    .footnotes
+      div.footnote v-for="(footnote, index) in measuresFootnotes"
+        = content_tag "foot-note", "", { ":footnote" => "footnote", ":index" => "index", ":only-one-measure" => "onlyOneMeasure" }
+
+        p v-if="footnote.footnote_type_id"
+          input type="checkbox" v-model="footnote.remove"
+          label
+            | Remove this footnote from the selection
+    div
+      a href="#" v-on:click.prevent="addFootnote"
+        | Add another footnote
+
+    .form-actions
+      div v-if="!onlyOneMeasure && !hideUpdateMode"
+        .row
+          .col-xs-1
+            input type="radio" v-model="updateMode" value="add"
+          .col-xs-11
+            div
+              strong Add to any existing footnotes in the selection
+            .form-hint
+              | Existing footnotes will be retained. Footnotes specified here will not be added to any measures in which the exact same footnote already exists.
+        .row
+          .col-xs-1
+            input type="radio" v-model="updateMode" value="replace"
+          .col-xs-11
+            div
+              strong Replace any existing footnotes in the selection
+            .form-hint
+              | Select this option and leave the footnotes field above empty to remove all existing footnotes in the selection.
+
+      button.button @click.prevent="confirmChanges" :disabled="confirmBtnDisabled" Update
+      a.secondary-button href="#" @click.prevent="onClose" Cancel

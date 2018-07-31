@@ -1,21 +1,7 @@
 xml.tag!("oub:certificate.description") do |certificate_description|
-  certificate_description.tag!("oub:certificate.description.period.sid") do certificate_description
-    xml_data_item(certificate_description, self.certificate_description_period_sid)
-  end
-
-  certificate_description.tag!("oub:certificate.type.code") do certificate_description
-    xml_data_item(certificate_description, self.certificate_type_code)
-  end
-
-  certificate_description.tag!("oub:certificate.code") do certificate_description
-    xml_data_item(certificate_description, self.certificate_code)
-  end
-
-  certificate_description.tag!("oub:language.id") do certificate_description
-    xml_data_item(certificate_description, self.language_id)
-  end
-
-  certificate_description.tag!("oub:description") do certificate_description
-    xml_data_item(certificate_description, self.description)
-  end
+  xml_data_item_v2(certificate_description, "certificate.description.period.sid", self.certificate_description_period_sid)
+  xml_data_item_v2(certificate_description, "certificate.type.code", self.certificate_type_code)
+  xml_data_item_v2(certificate_description, "certificate.code", self.certificate_code)
+  xml_data_item_v2(certificate_description, "language.id", self.language_id)
+  xml_data_item_v2(certificate_description, "description", self.description)
 end

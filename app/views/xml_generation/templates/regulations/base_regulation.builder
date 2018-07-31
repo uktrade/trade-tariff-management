@@ -1,81 +1,22 @@
 xml.tag!("oub:base.regulation") do |base_regulation|
-  base_regulation.tag!("oub:base.regulation.role") do base_regulation
-    xml_data_item(base_regulation, self.base_regulation_role)
-  end
-
-  base_regulation.tag!("oub:base.regulation.id") do base_regulation
-    xml_data_item(base_regulation, self.base_regulation_id)
-  end
-
-  base_regulation.tag!("oub:published.date") do base_regulation
-    xml_data_item(base_regulation, self.published_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  base_regulation.tag!("oub:officialjournal.number") do base_regulation
-    xml_data_item(base_regulation, self.officialjournal_number)
-  end
-
-  base_regulation.tag!("oub:officialjournal.page") do base_regulation
-    xml_data_item(base_regulation, self.officialjournal_page)
-  end
-
-  base_regulation.tag!("oub:validity.start.date") do base_regulation
-    xml_data_item(base_regulation, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  base_regulation.tag!("oub:validity.end.date") do base_regulation
-    xml_data_item(base_regulation, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  base_regulation.tag!("oub:effective.end.date") do base_regulation
-    xml_data_item(base_regulation, self.effective_end_date.try(:strftime, "%Y-%m-%d"))
-  end
-
-  base_regulation.tag!("oub:community.code") do base_regulation
-    xml_data_item(base_regulation, self.community_code)
-  end
-
-  base_regulation.tag!("oub:regulation.group.id") do base_regulation
-    xml_data_item(base_regulation, self.regulation_group_id)
-  end
-
-  base_regulation.tag!("oub:antidumping.regulation.role") do base_regulation
-    xml_data_item(base_regulation, self.antidumping_regulation_role)
-  end
-
-  base_regulation.tag!("oub:related.antidumping.regulation.id") do base_regulation
-    xml_data_item(base_regulation, self.related_antidumping_regulation_id)
-  end
-
-  base_regulation.tag!("oub:complete.abrogation.regulation.role") do base_regulation
-    xml_data_item(base_regulation, self.complete_abrogation_regulation_role)
-  end
-
-  base_regulation.tag!("oub:complete.abrogation.regulation.id") do base_regulation
-    xml_data_item(base_regulation, self.complete_abrogation_regulation_id)
-  end
-
-  base_regulation.tag!("oub:explicit.abrogation.regulation.role") do base_regulation
-    xml_data_item(base_regulation, self.explicit_abrogation_regulation_role)
-  end
-
-  base_regulation.tag!("oub:explicit.abrogation.regulation.id") do base_regulation
-    xml_data_item(base_regulation, self.explicit_abrogation_regulation_id)
-  end
-
-  base_regulation.tag!("oub:replacement.indicator") do base_regulation
-    xml_data_item(base_regulation, self.replacement_indicator)
-  end
-
-  base_regulation.tag!("oub:stopped.flag") do base_regulation
-    xml_data_item(base_regulation, self.stopped_flag)
-  end
-
-  base_regulation.tag!("oub:information.text") do base_regulation
-    xml_data_item(base_regulation, self.information_text)
-  end
-
-  base_regulation.tag!("oub:approved.flag") do base_regulation
-    xml_data_item(base_regulation, self.approved_flag)
-  end
+  xml_data_item_v2(base_regulation, "base.regulation.role", self.base_regulation_role)
+  xml_data_item_v2(base_regulation, "base.regulation.id", self.base_regulation_id)
+  xml_data_item_v2(base_regulation, "published.date", self.published_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(base_regulation, "officialjournal.number", self.officialjournal_number)
+  xml_data_item_v2(base_regulation, "officialjournal.page", self.officialjournal_page)
+  xml_data_item_v2(base_regulation, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(base_regulation, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(base_regulation, "effective.end.date", self.effective_end_date.try(:strftime, "%Y-%m-%d"))
+  xml_data_item_v2(base_regulation, "community.code", self.community_code)
+  xml_data_item_v2(base_regulation, "regulation.group.id", self.regulation_group_id)
+  xml_data_item_v2(base_regulation, "antidumping.regulation.role", self.antidumping_regulation_role)
+  xml_data_item_v2(base_regulation, "related.antidumping.regulation.id", self.related_antidumping_regulation_id)
+  xml_data_item_v2(base_regulation, "complete.abrogation.regulation.role", self.complete_abrogation_regulation_role)
+  xml_data_item_v2(base_regulation, "complete.abrogation.regulation.id", self.complete_abrogation_regulation_id)
+  xml_data_item_v2(base_regulation, "explicit.abrogation.regulation.role", self.explicit_abrogation_regulation_role)
+  xml_data_item_v2(base_regulation, "explicit.abrogation.regulation.id", self.explicit_abrogation_regulation_id)
+  xml_data_item_v2(base_regulation, "replacement.indicator", self.replacement_indicator)
+  xml_data_item_v2(base_regulation, "stopped.flag", self.stopped_flag)
+  xml_data_item_v2(base_regulation, "information.text", self.information_text)
+  xml_data_item_v2(base_regulation, "approved.flag", self.approved_flag)
 end

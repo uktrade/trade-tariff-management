@@ -1,25 +1,8 @@
 xml.tag!("oub:goods.nomenclature.description.period") do |goods_nomenclature_description_period|
-  goods_nomenclature_description_period.tag!("oub:goods.nomenclature.description.period.sid") do goods_nomenclature_description_period
-    xml_data_item(goods_nomenclature_description_period, self.goods_nomenclature_description_period_sid)
-  end
-
-  goods_nomenclature_description_period.tag!("oub:goods.nomenclature.sid") do goods_nomenclature_description_period
-    xml_data_item(goods_nomenclature_description_period, self.goods_nomenclature_sid)
-  end
-
-  goods_nomenclature_description_period.tag!("oub:goods.nomenclature.item.id") do goods_nomenclature_description_period
-    xml_data_item(goods_nomenclature_description_period, self.goods_nomenclature_item_id)
-  end
-
-  goods_nomenclature_description_period.tag!("oub:productline.suffix") do goods_nomenclature_description_period
-    xml_data_item(goods_nomenclature_description_period, self.productline_suffix)
-  end
-
-  goods_nomenclature_description_period.tag!("oub:validity.start.date") do goods_nomenclature_description_period
-    xml_data_item(goods_nomenclature_description_period, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  goods_nomenclature_description_period.tag!("oub:validity.end.date") do goods_nomenclature_description_period
-    xml_data_item(goods_nomenclature_description_period, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(goods_nomenclature_description_period, "goods.nomenclature.description.period.sid", self.goods_nomenclature_description_period_sid)
+  xml_data_item_v2(goods_nomenclature_description_period, "goods.nomenclature.sid", self.goods_nomenclature_sid)
+  xml_data_item_v2(goods_nomenclature_description_period, "goods.nomenclature.item.id", self.goods_nomenclature_item_id)
+  xml_data_item_v2(goods_nomenclature_description_period, "productline.suffix", self.productline_suffix)
+  xml_data_item_v2(goods_nomenclature_description_period, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(goods_nomenclature_description_period, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

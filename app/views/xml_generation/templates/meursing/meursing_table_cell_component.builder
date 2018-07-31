@@ -1,33 +1,10 @@
 xml.tag!("oub:meursing.table.cell.component") do |meursing_table_cell_component|
-  meursing_table_cell_component.tag!("oub:meursing.additional.code.sid") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.meursing_additional_code_sid)
-  end
-
-  meursing_table_cell_component.tag!("oub:meursing.table.plan.id") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.meursing_table_plan_id)
-  end
-
-  meursing_table_cell_component.tag!("oub:heading.number") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.heading_number)
-  end
-
-  meursing_table_cell_component.tag!("oub:row.column.code") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.row_column_code)
-  end
-
-  meursing_table_cell_component.tag!("oub:subheading.sequence.number") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.subheading_sequence_number)
-  end
-
-  meursing_table_cell_component.tag!("oub:additional.code") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.additional_code)
-  end
-
-  meursing_table_cell_component.tag!("oub:validity.start.date") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  meursing_table_cell_component.tag!("oub:validity.end.date") do meursing_table_cell_component
-    xml_data_item(meursing_table_cell_component, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(meursing_table_cell_component, "meursing.additional.code.sid", self.meursing_additional_code_sid)
+  xml_data_item_v2(meursing_table_cell_component, "meursing.table.plan.id", self.meursing_table_plan_id)
+  xml_data_item_v2(meursing_table_cell_component, "heading.number", self.heading_number)
+  xml_data_item_v2(meursing_table_cell_component, "row.column.code", self.row_column_code)
+  xml_data_item_v2(meursing_table_cell_component, "subheading.sequence.number", self.subheading_sequence_number)
+  xml_data_item_v2(meursing_table_cell_component, "additional.code", self.additional_code)
+  xml_data_item_v2(meursing_table_cell_component, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(meursing_table_cell_component, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

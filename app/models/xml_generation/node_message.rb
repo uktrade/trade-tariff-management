@@ -149,7 +149,7 @@ module XmlGeneration
     end
 
     def node_id
-      rand(2..999)
+      record.workbasket_sequence_number
     end
 
     def record_code
@@ -161,8 +161,11 @@ module XmlGeneration
     end
 
     def record_sequence_number
-      # TODO
-      rand(100..999)
+      #
+      # TODO: Need to make sure if node_id and
+      #       record_sequence_number are same thing
+      #
+      node_id
     end
 
     def update_type

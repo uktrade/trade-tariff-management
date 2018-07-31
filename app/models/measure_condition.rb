@@ -1,6 +1,8 @@
 class MeasureCondition < Sequel::Model
+
   include Formatter
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :national
@@ -145,7 +147,7 @@ class MeasureCondition < Sequel::Model
       monetary_unit: monetary_unit.try(:to_json),
       measurement_unit_qualifier: measurement_unit_qualifier.try(:to_json),
       measure_condition_code: measure_condition_code.try(:to_json),
-      measure_condition_components: measure_condition_components.try(:to_json),
+      measure_condition_components: measure_condition_components.map(&:to_json),
       component_sequence_number: component_sequence_number
     }
   end

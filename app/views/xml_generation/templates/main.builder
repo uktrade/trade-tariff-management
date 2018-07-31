@@ -1,12 +1,10 @@
-xml.instruct!(:xml, version: "1.0", encoding: "utf-8")
+xml.instruct!(:xml, version: "1.0", encoding: "UTF-8")
 xml.tag!("env:envelope", xmlns: "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
                         "xmlns:env" => "urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0",
                         id: self.node_id) do |env|
 
   self.transactions.map do |transaction|
-    env.tag!("env:transaction", "xmlns:ns2" => "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
-                                "xmlns:ns3" => "urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0",
-                                id: transaction.node_id) do |transaction_node|
+    env.tag!("env:transaction", id: transaction.node_id) do |transaction_node|
       transaction.messages.map do |message|
         transaction_node.tag!("env:app.message", id: message.node_id) do |message_node|
           message_node.tag!("oub:transmission", "xmlns:oub" => "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",

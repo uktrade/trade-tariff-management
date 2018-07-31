@@ -7,15 +7,6 @@ class MeasureSaver
     operation_date: :operation_date
   }
 
-  PRIMARY_KEYS = {
-    "QuotaDefinition" => :quota_definition_sid,
-    "Footnote" => :footnote_id,
-    "FootnoteDescriptionPeriod" => :footnote_description_period_sid,
-    "QuotaOrderNumber" => :quota_order_number_sid,
-    "QuotaOrderNumberOrigin" => :quota_order_number_origin_sid,
-    "MeasureCondition" => :measure_condition_sid
-  }
-
   attr_accessor :current_admin,
                 :original_params,
                 :measure_params,
@@ -87,11 +78,11 @@ class MeasureSaver
     end
 
     def validate!
-      normalizer = ::Measures::ValidationHelper.new(
-        measure, @errors
+      normalizer = ::Measures::ConformanceErrorsParser.new(
+        measure, MeasureValidator, @errors
       )
 
-      measure = normalizer.measure
+      measure = normalizer.record
       @errors = normalizer.errors
     end
 
@@ -389,50 +380,7 @@ class MeasureSaver
     end
 
     def set_oplog_attrs_and_save!(record)
-      p_key = PRIMARY_KEYS[record.class.name]
-
-      if p_key.present?
-        sid = if record.is_a?(Footnote)
-          #
-          # TODO:
-          #
-          # Footnote, FootnoteDescription, FootnoteDescriptionPeriod
-          # in current db having:
-          #
-          #   footnote_id character varying(5)
-          #
-          # but in FootnoteAssociationMeasure
-          #
-          #   footnote_id character varying(3)
-          #
-          # This is wrong and break saving of FootnoteAssociationMeasure
-          # if footnote_id is longer than 3 symbols
-          #
-          # Also, then we are trying to fix it via:
-          #
-          #     alter_table :footnote_association_measures_oplog do
-          #       set_column_type :footnote_id, String, size: 5
-          #     end
-          #
-          # System raises error:
-          #
-          # PG::FeatureNotSupported: ERROR:  cannot alter type of a column used by a view or rule
-          # DETAIL:  rule _RETURN on view footnote_association_measures depends on column "footnote_id"
-          #
-          # So, we fix it later!
-
-          f_max_id = Footnote.where { Sequel.ilike(:footnote_id, "F%") }
-                             .order(Sequel.desc(:footnote_id))
-                             .first
-                             .try(:footnote_id)
-
-          f_max_id.present? ? "F#{f_max_id.gsub("F", "").to_i + 1}" : "F01"
-        else
-          record.class.max(p_key).to_i + 1
-        end
-
-        record.public_send("#{p_key}=", sid)
-      end
+      ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(record).assign!
 
       log_it("[ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}")
 
@@ -443,14 +391,16 @@ class MeasureSaver
     end
 
     def set_system_attrs(record)
-      record.manual_add = true
-      record.operation = "C"
-      record.operation_date = operation_date
-      record.added_by_id = current_admin.id
-      record.added_at = Time.zone.now
-      record.national = true
-      record.try("approved_flag=", true)
-      record.try("stopped_flag=", false)
+      ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
+        record, system_ops
+      ).assign!
+    end
+
+    def system_ops
+      {
+        operation_date: operation_date,
+        current_admin_id: current_admin.id
+      }
     end
 
     def operation_date

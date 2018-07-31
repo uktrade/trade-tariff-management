@@ -86,7 +86,7 @@ label abbr {
   }
 }
 
-.condition {
+.measure-condition {
   padding: 15px 0 0;
 
   &:first-of-type {
@@ -101,9 +101,18 @@ label abbr {
     padding-bottom: 0 !important;
   }
 
-  & + .condition {
+  & + .measure-condition {
     margin-top: 15px;
     border-top: 1px solid #000;
+  }
+
+  .modal & {
+    padding: 0;
+
+    & + .measure-condition {
+      padding-top: 15px;
+      margin-top: 0;
+    }
   }
 }
 
@@ -125,6 +134,14 @@ label abbr {
   & + .measure-component {
     margin-top: 15px;
     border-top: 1px solid #000;
+  }
+
+  .modal & {
+    padding: 0;
+
+    & + .measure-component {
+      margin-top: 0;
+    }
   }
 }
 
@@ -194,8 +211,12 @@ label abbr {
     padding-bottom: 0;
   }
 
-  & + .condition {
-    border-top: 1px solid #000;
+  .modal & {
+    padding: 0;
+
+    & + .measure-condition-component {
+      margin-top: 0;
+    }
   }
 }
 
@@ -236,7 +257,7 @@ label abbr {
     margin-top: 3em;
   }
 
-  .js-measure-form-errors-container {
+  .js-measure-form-errors-container, .js-measure-form-success-message-container {
     position: relative;
     top: 2em;
   }
@@ -269,6 +290,20 @@ label abbr {
 .remove-link {
   color: $red;
   text-decoration: underline;
+}
+
+.form-group {
+  .multiple-choice {
+    label {
+      font-size: 1em !important;
+      max-width: 35em !important;
+
+      span.form-hint {
+        font-size: 1em !important;
+        margin: 0.5em 0 0;
+      }
+    }
+  }
 }
 
 .small-checkbox {

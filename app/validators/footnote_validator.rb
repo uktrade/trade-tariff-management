@@ -1,7 +1,7 @@
 ######### Conformance validations 200
 class FootnoteValidator < TradeTariffBackend::Validator
   validation :FO1, 'The referenced footnote type must exist.', on: [:create, :update] do
-    validates :presence, of: [:footnote_type]
+    validates :presence, of: :footnote_type_id
   end
 
   validation :FO2, 'The combination footnote type and code must be unique.', on: [:create, :update] do

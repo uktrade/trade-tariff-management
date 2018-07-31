@@ -1,0 +1,12 @@
+fieldset
+  h3.heading-medium
+    | What reduction indicator (if any) applies to these measures?
+
+  .form-group
+    label.form-label
+      span.form-hint
+        | This is optional, but if specified, must be 1, 2 or 3.
+
+    .row
+      .col-md-3
+        input.form-control*{ "v-model" => "measure.reduction_indicator" }

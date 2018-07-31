@@ -4,7 +4,8 @@ Vue.component("change-duties-popup", {
   data: function() {
     return {
       measureComponents: [],
-      replacing: false
+      replacing: false,
+      errors: []
     };
   },
   mounted: function() {
@@ -58,6 +59,10 @@ Vue.component("change-duties-popup", {
           monetary_unit_code: component.monetary_unit ? component.monetary_unit.monetary_unit_code : null
         };
       });
+
+      if (this.measures[0].measure_components.length === 0) {
+        this.addDutyExpression();
+      }
     } else {
       this.addDutyExpression();
     }
@@ -71,6 +76,24 @@ Vue.component("change-duties-popup", {
     }
   },
   methods: {
+    validate: function() {
+      var errors = [];
+      var amountRegex = new RegExp(/^([\d]+)[\.]?[\d]*$/g);
+
+      this.measureComponents.forEach(function(mc, index) {
+        if (!mc.duty_expression_id || mc.duty_expression_id == "37") {
+          return;
+        }
+
+        if (!mc.amount || !amountRegex.test(mc.amount)) {
+          errors.push("Amount field for " + ordinal(index + 1) + " duty expression is invalid");
+        }
+      });
+
+      this.errors = errors;
+
+      return errors.length === 0;
+    },
     getDutyExpressionId: function(component) {
       var ids = ["01","02","04","19","20"];
       var id = component.duty_expression.duty_expression_id;
@@ -87,6 +110,10 @@ Vue.component("change-duties-popup", {
     },
     confirmChanges: function() {
       var components = this.measureComponents;
+
+      if (!this.validate()) {
+        return;
+      }
 
       this.measures.forEach(function(measure) {
         if (measure.changes.indexOf("duties") === -1) {
@@ -106,6 +133,7 @@ Vue.component("change-duties-popup", {
         });
       });
 
+      this.$emit("measures-updated");
       this.onClose();
     },
     triggerClose: function() {

@@ -1,25 +1,8 @@
 xml.tag!("oub:quota.balance.event") do |quota_balance_event|
-  quota_balance_event.tag!("oub:quota.definition.sid") do quota_balance_event
-    xml_data_item(quota_balance_event, self.quota_definition_sid)
-  end
-
-  quota_balance_event.tag!("oub:occurrence.timestamp") do quota_balance_event
-    xml_data_item(quota_balance_event, timestamp_value(self.occurrence_timestamp))
-  end
-
-  quota_balance_event.tag!("oub:old.balance") do quota_balance_event
-    xml_data_item(quota_balance_event, self.old_balance)
-  end
-
-  quota_balance_event.tag!("oub:new.balance") do quota_balance_event
-    xml_data_item(quota_balance_event, self.new_balance)
-  end
-
-  quota_balance_event.tag!("oub:imported.amount") do quota_balance_event
-    xml_data_item(quota_balance_event, self.imported_amount)
-  end
-
-  quota_balance_event.tag!("oub:last.import.date.in.allocation") do quota_balance_event
-    xml_data_item(quota_balance_event, self.last_import_date_in_allocation)
-  end
+  xml_data_item_v2(quota_balance_event, "quota.definition.sid", self.quota_definition_sid)
+  xml_data_item_v2(quota_balance_event, "occurrence.timestamp", timestamp_value(self.occurrence_timestamp))
+  xml_data_item_v2(quota_balance_event, "old.balance", self.old_balance)
+  xml_data_item_v2(quota_balance_event, "new.balance", self.new_balance)
+  xml_data_item_v2(quota_balance_event, "imported.amount", self.imported_amount)
+  xml_data_item_v2(quota_balance_event, "last.import.date.in.allocation", self.last_import_date_in_allocation)
 end

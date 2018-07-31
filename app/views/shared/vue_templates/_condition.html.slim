@@ -4,16 +4,18 @@ script type="text/x-template" id="condition-template"
       .col-xs-12.col-sm-6.col-md-3
         .form-group
           label.form-label
-            | Condition
-            span.form-hint
-              | You can optionally select conditions that will determine the customs treatment of the goods this measure applies to.
-          = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select condition ―", "code-class-name" => "prefix--condition" }
+            span.create-measures-sub_header
+              | Condition
+
+            span.form-hint v-if="hideHelp !== true"
+              | This specifies a requirement the import mush meet and determines the customs treatment of the goods concerned.
+          = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select condition ―", "code-class-name" => "prefix--condition", ":on-change" => "onConditionCodeSelected", ":allow-clear" => "true" }
 
       = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showMinimumPrice" do
         .form-group
           label.form-label
             | Minimum Price (€)
-            span.form-hint
+            span.form-hint v-if="hideHelp !== true"
               | Specify the price (in €) at or above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
 
@@ -21,7 +23,7 @@ script type="text/x-template" id="condition-template"
         .form-group
           label.form-label
             | Ratio
-            span.form-hint
+            span.form-hint v-if="hideHelp !== true"
               | Specify the ratio at or above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
 
@@ -29,7 +31,7 @@ script type="text/x-template" id="condition-template"
         .form-group
           label.form-label
             | Entry Price (€)
-            span.form-hint
+            span.form-hint v-if="hideHelp !== true"
               | Specify the price (in €) above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
 
@@ -43,35 +45,39 @@ script type="text/x-template" id="condition-template"
         .form-group
           label.form-label
             | Certificate type
-            span.form-hint
+            span.form-hint v-if="hideHelp !== true"
               | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
-          = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate type ―", "code-class-name" => "prefix--certificate-type" }
+          = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate type ―", "code-class-name" => "prefix--certificate-type", ":on-change" => "onCertificateTypeSelected", ":allow-clear" => "true" }
 
       = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showCertificate" do
         .form-group
           label.form-label
             | Certificate
-            span.form-hint
+            span.form-hint v-if="hideHelp !== true"
               | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
-          = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType", "code-class-name" => "prefix--certificate" }
+          = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType", "code-class-name" => "prefix--certificate", ":on-change" => "onCertificateSelected", ":allow-clear" => "true" }
 
       = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showAction" } do
         .form-group
           label.form-label
             | Action
-            = content_tag :span, { class: "form-hint", "v-if" => "certificateActionHint" } do
+            = content_tag :span, { class: "form-hint", "v-if" => "hideHelp !== true && certificateActionHint" } do
               | Define the action to take when the specified certificate (or no certificate) is presented.
-            = content_tag :span, { class: "form-hint", "v-if" => "noCertificateActionHint" } do
+            = content_tag :span, { class: "form-hint", "v-if" => "hideHelp !== true && noCertificateActionHint" } do
               | Define the action to take if the condition is met.
-          = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action" }
+          = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action", ":on-change" => "onActionSelected", ":allow-clear" => "true" }
+
+
+      = content_tag :slot
     = content_tag :div, { class: "condition-components-wrapper", "v-if" => "showConditionComponents" } do
       .measure-condition-components
         div.measure-condition-component v-for="(measureConditionComponent, index) in condition.measure_condition_components"
-          = content_tag "measure-condition-component", "", { ":measure-condition-component" => "measureConditionComponent", ":index" => "index" }
-
-          div v-if="canRemoveComponent"
-            a.text-danger href="#" v-on:click.prevent="removeMeasureConditionComponent(measureConditionComponent)"
-              | Remove duty expression
+          = content_tag "measure-condition-component", { ":measure-condition-component" => "measureConditionComponent", ":index" => "index" } do
+            .col-md-3 v-if="canRemoveComponent"
+              label.form-label
+                | &nbsp;
+              a.text-danger href="#" v-on:click.prevent="removeMeasureConditionComponent(measureConditionComponent)"
+                | Remove
 
       div
         a href="#" v-on:click.prevent="addMeasureConditionComponent"

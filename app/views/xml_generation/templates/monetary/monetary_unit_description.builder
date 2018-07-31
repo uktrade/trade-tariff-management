@@ -1,13 +1,5 @@
 xml.tag!("oub:monetary.unit.description") do |monetary_unit_description|
-  monetary_unit_description.tag!("oub:monetary.unit.code") do monetary_unit_description
-    xml_data_item(monetary_unit_description, self.monetary_unit_code)
-  end
-
-  monetary_unit_description.tag!("oub:language.id") do monetary_unit_description
-    xml_data_item(monetary_unit_description, self.language_id)
-  end
-
-  monetary_unit_description.tag!("oub:description") do monetary_unit_description
-    xml_data_item(monetary_unit_description, self.description)
-  end
+  xml_data_item_v2(monetary_unit_description, "monetary.unit.code", self.monetary_unit_code)
+  xml_data_item_v2(monetary_unit_description, "language.id", self.language_id)
+  xml_data_item_v2(monetary_unit_description, "description", self.description)
 end

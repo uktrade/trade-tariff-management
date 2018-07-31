@@ -1,6 +1,6 @@
 Vue.component("foot-note", {
   template: "#footnote-template",
-  props: ["footnote"],
+  props: ["footnote", "onlyOneMeasure", "index"],
   data: function() {
     return {
       suggestions: [],
@@ -31,7 +31,9 @@ Vue.component("foot-note", {
         url: "/footnotes",
         data: {
           footnote_type_id: type_id,
-          description: description
+          description: description,
+          start_date: window.measure_start_date,
+          end_date: window.measure_end_date
         },
         success: function(data) {
           self.suggestions = data;
@@ -41,6 +43,7 @@ Vue.component("foot-note", {
     useSuggestion: function(suggestion) {
       this.lastSuggestionUsed  = suggestion;
       this.footnote.description = suggestion.description;
+      this.footnote.footnote_id = suggestion.footnote_id;
       this.suggestions.splice(0, 999);
     }
   },

@@ -1,21 +1,7 @@
 xml.tag!("oub:certificate") do |certificate|
-  certificate.tag!("oub:certificate.type.code") do certificate
-    xml_data_item(certificate, self.certificate_type_code)
-  end
-
-  certificate.tag!("oub:certificate.code") do certificate
-    xml_data_item(certificate, self.certificate_code)
-  end
-
-  certificate.tag!("oub:national.abbrev") do certificate
-    xml_data_item(certificate, self.national_abbrev)
-  end
-
-  certificate.tag!("oub:validity.start.date") do certificate
-    xml_data_item(certificate, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  certificate.tag!("oub:validity.end.date") do certificate
-    xml_data_item(certificate, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(certificate, "certificate.type.code", self.certificate_type_code)
+  xml_data_item_v2(certificate, "certificate.code", self.certificate_code)
+  xml_data_item_v2(certificate, "national.abbrev", self.national_abbrev)
+  xml_data_item_v2(certificate, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(certificate, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

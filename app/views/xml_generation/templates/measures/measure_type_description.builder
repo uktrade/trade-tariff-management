@@ -1,13 +1,5 @@
 xml.tag!("oub:measure.type.description") do |measure_type_description|
-  measure_type_description.tag!("oub:measure.type.id") do measure_type_description
-    xml_data_item(measure_type_description, self.measure_type_id)
-  end
-
-  measure_type_description.tag!("oub:language.id") do measure_type_description
-    xml_data_item(measure_type_description, self.language_id)
-  end
-
-  measure_type_description.tag!("oub:description") do measure_type_description
-    xml_data_item(measure_type_description, self.description)
-  end
+  xml_data_item_v2(measure_type_description, "measure.type.id", self.measure_type_id)
+  xml_data_item_v2(measure_type_description, "language.id", self.language_id)
+  xml_data_item_v2(measure_type_description, "description", self.description)
 end

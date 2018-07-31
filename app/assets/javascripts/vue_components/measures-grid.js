@@ -12,19 +12,31 @@ Vue.component("measures-grid", {
     "sortByChanged",
     "sortDirChanged",
     "selectionType",
-    "selectAllHasChanged"
+    "selectAllHasChanged",
+    "clientSelection"
   ],
   data: function() {
     var self = this;
 
     var selectAll = this.selectionType == 'all';
+    var checked = {};
+
+    this.data.forEach(function(measure) {
+      checked[measure.measure_sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(measure.measure_sid) === -1) ||
+                                     (self.selectionType == 'none' && self.selectedRows.indexOf(measure.measure_sid) > -1);
+    });
+
+    if (this.clientSelection === true) {
+      selectAll = this.selectedRows.length === this.data.length;
+    }
 
     return {
       sortBy: "measure_sid",
       sortDir: "desc",
       selectAll: selectAll,
       firstLoad: true,
-      indirectSelectAll: false
+      indirectSelectAll: false,
+      checked: checked
     };
   },
   methods: {
@@ -39,10 +51,18 @@ Vue.component("measures-grid", {
       }
     },
     sendCheckedTrigger: function(event) {
+      var self = this;
+
       if (event.target.checked) {
         this.onItemSelected(parseInt(event.target.value, 10));
+        window.requestAnimationFrame(function() {
+          self.checked[event.target.value] = true;
+        });
       } else {
         this.onItemDeselected(parseInt(event.target.value, 10));
+        window.requestAnimationFrame(function() {
+          self.checked[event.target.value] = false;
+        });
       }
     },
     findColumn: function(field) {
@@ -72,6 +92,13 @@ Vue.component("measures-grid", {
             return a - b;
           }
       }
+    },
+    rebuildChecked: function() {
+      var self = this;
+      this.data.forEach(function(measure) {
+        self.checked[measure.measure_sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(measure.measure_sid) === -1) ||
+                                       (self.selectionType == 'none' && self.selectedRows.indexOf(measure.measure_sid) > -1);
+      });
     }
   },
   computed: {
@@ -110,26 +137,33 @@ Vue.component("measures-grid", {
     selectAll: function(val) {
       var self = this;
 
-      if (this.selectAllHasChanged) {
-        this.selectAllHasChanged(val);
-      }
-
       if (this.indirectSelectAll) {
         return;
       }
 
       if (this.onSelectAllChanged) {
         this.onSelectAllChanged(val);
-        return;
+
+        if(this.clientSelection !== true) {
+          requestAnimationFrame(function() {
+            self.rebuildChecked();
+          });
+
+          return;
+        }
       }
 
       if (val) {
         this.data.map(function(row) {
-          self.onItemSelected(row.measure_sid);
+          if (self.selectedRows.indexOf(row.measure_sid) === -1) {
+            self.onItemSelected(row.measure_sid);
+            self.checked[row.measure_sid] = true;
+          }
         });
       } else {
         this.data.map(function(row) {
           self.onItemDeselected(row.measure_sid);
+          self.checked[row.measure_sid] = false;
         });
       }
     },
@@ -139,11 +173,7 @@ Vue.component("measures-grid", {
       if (!this.onSelectAllChanged) {
         this.indirectSelectAll = true;
 
-        this.selectAll = this.data.map(function(m) {
-          return self.selectedRows.indexOf(m.measure_sid) === -1;
-        }).filter(function(b) {
-          return b;
-        }).length === 0;
+        this.selectAll = this.selectedRows.length === this.data.length;
 
         setTimeout(function() {
           self.indirectSelectAll = false;
@@ -154,6 +184,7 @@ Vue.component("measures-grid", {
         newVal.forEach(function(m) {
           if (oldVal.indexOf(m) === -1) {
             self.onItemSelected(m);
+            self.checked[m] = true;
           }
         });
       }
@@ -162,6 +193,7 @@ Vue.component("measures-grid", {
         oldVal.forEach(function(m) {
           if (newVal.indexOf(m) === -1) {
             self.onItemDeselected(m);
+            self.checked[m] = false;
           }
         });
       }

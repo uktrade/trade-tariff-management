@@ -7,7 +7,7 @@ window.MeasureConditionFormatter = {
 
     var res = [];
 
-    if (mc.component_sequence_number !== null) {
+    if (mc.component_sequence_number) {
       res = ["" + mc.measure_condition_code.condition_code + mc.component_sequence_number];
     } else {
       res = [ mc.condition_code ];
@@ -21,6 +21,10 @@ window.MeasureConditionFormatter = {
 
     if (action_code) {
       res.push(action_code);
+    }
+
+    if (certificate_type_code === undefined || certificate_code === undefined) {
+      console.log(mc, res);
     }
 
     if (res.length === 2) {

@@ -82,9 +82,15 @@ module Sequel
         end
 
         def _update_columns(columns)
-          self.operation = :update
+          if manual_add
+            sql = _update_dataset.update_sql(columns)
+            _update_dataset.send(:returning_fetch_rows, sql)
 
-          operation_klass.insert(self.values.except(:oid))
+          else
+            self.operation = :update
+
+            operation_klass.insert(self.values.except(:oid))
+          end
         end
       end
 

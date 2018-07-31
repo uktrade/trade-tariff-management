@@ -6,14 +6,15 @@ Vue.component("measure-origin", {
     "origin"
   ],
   mounted: function() {
-    var self = this;
-    var radio = $(this.$el).find("input[type='radio']");
+    var self = this,
+        radio = $(this.$el).find("input[type='radio']"),
+        parent = $(".measure-form").length > 0 ? $(".measure-form") : $(this.$el.parentElement);
 
     radio.on("change", function() {
-      $(".measure-form").trigger("origin:changed");
+      parent.trigger("origin:changed");
     });
 
-    $(".measure-form").on("origin:changed", function() {
+    parent.on("origin:changed", function() {
       self.origin.selected = radio.is(":checked");
     });
   },
@@ -72,6 +73,9 @@ Vue.component("measure-origin", {
       }
 
       this.origin.exclusions.splice(index, 1);
+    },
+    geographicalAreaChanged: function(newGeographicalArea) {
+      this.origin.geographical_area = newGeographicalArea;
     }
   }
 });

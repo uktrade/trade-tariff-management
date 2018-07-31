@@ -11,6 +11,7 @@ table {
     border-bottom: 1px solid $border-colour;
     height: 45px;
     overflow: hidden;
+    display: flex;
   }
 
   .table__column {

@@ -1,13 +1,5 @@
 xml.tag!("oub:regulation.role.type.description") do |regulation_role_type_description|
-  regulation_role_type_description.tag!("oub:regulation.role.type.id") do regulation_role_type_description
-    xml_data_item(regulation_role_type_description, self.regulation_role_type_id)
-  end
-
-  regulation_role_type_description.tag!("oub:language.id") do regulation_role_type_description
-    xml_data_item(regulation_role_type_description, self.language_id)
-  end
-
-  regulation_role_type_description.tag!("oub:description") do regulation_role_type_description
-    xml_data_item(regulation_role_type_description, self.description)
-  end
+  xml_data_item_v2(regulation_role_type_description, "regulation.role.type.id", self.regulation_role_type_id)
+  xml_data_item_v2(regulation_role_type_description, "language.id", self.language_id)
+  xml_data_item_v2(regulation_role_type_description, "description", self.description)
 end

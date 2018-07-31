@@ -1,13 +1,5 @@
 xml.tag!("oub:measure.condition.code") do |measure_condition_code|
-  measure_condition_code.tag!("oub:condition.code") do measure_condition_code
-    xml_data_item(measure_condition_code, self.condition_code)
-  end
-
-  measure_condition_code.tag!("oub:validity.start.date") do measure_condition_code
-    xml_data_item(measure_condition_code, self.validity_start_date.strftime("%Y-%m-%d"))
-  end
-
-  measure_condition_code.tag!("oub:validity.end.date") do measure_condition_code
-    xml_data_item(measure_condition_code, self.validity_end_date.try(:strftime, "%Y-%m-%d"))
-  end
+  xml_data_item_v2(measure_condition_code, "condition.code", self.condition_code)
+  xml_data_item_v2(measure_condition_code, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(measure_condition_code, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end

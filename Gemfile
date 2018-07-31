@@ -56,6 +56,7 @@ gem 'kaminari'
 gem 'kaminari-sequel'
 gem "simple_form", "~> 3.5"
 gem "jbuilder"
+gem "enumerize"
 
 # Decorators & Exposing named methods
 gem 'draper'

@@ -10,6 +10,7 @@
 //= require vue
 //= require vue-resource
 //= require ./vendors/vue-virtual-scroller.min
+//= require ./components/utils
 //= require_tree ./vue_components
 //= require_tree .
 

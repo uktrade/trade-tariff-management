@@ -27,7 +27,7 @@ Vue.component("delete-measures-popup", {
       this.measures.forEach(function(measure){
         measure.deleted = true;
       });
-      this.$emit("measures-updated");
+      this.$emit("measures-deleted", this.measures);
       this.onClose();
     }
   }

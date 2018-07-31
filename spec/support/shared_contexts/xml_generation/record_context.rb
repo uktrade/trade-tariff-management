@@ -12,12 +12,31 @@ shared_context "xml_generation_record_context" do
     xml_record[data_namespace]
   end
 
+  let!(:workbasket) do
+    create(:workbasket, :create_measures)
+  end
+
   before do
-    db_record
+    workbasket
+
+    db_record.workbasket_id = workbasket.id
+    db_record.workbasket_sequence_number = 1
+    db_record.status = "submitted_for_cross_check"
+    db_record.save
+
+    db_record.reload
+    workbasket.reload
+
+    settings = workbasket.settings
+    allow(settings).to receive(:collection) { [db_record] }
   end
 
   it "should return valid XML" do
     fields_to_check.map do |_field_name|
+      p ""
+      p "#{_field_name}: #{_field_name}"
+      p ""
+
       expect_proper_xml_at(_field_name)
     end
   end

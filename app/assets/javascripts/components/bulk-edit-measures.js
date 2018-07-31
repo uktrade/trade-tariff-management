@@ -34,17 +34,14 @@ $(document).ready(function() {
         ],
         actions: [
           { value: 'toggle_unselected', label: 'Hide/Show unselected items' },
-          { value: 'make_copies', label: 'Make copies...' },
           { value: 'change_regulation', label: 'Change generating regulation' },
           { value: 'change_validity_period', label: 'Change validity period...' },
           { value: 'change_origin', label: 'Change origin...' },
           { value: 'change_commodity_codes', label: 'Change commodity codes...' },
           { value: 'change_additional_code', label: 'Change additional code...' },
-          { value: 'change_quota', label: 'Change quota...' },
           { value: 'change_duties', label: 'Change duties...' },
           { value: 'change_conditions', label: 'Change conditions...' },
           { value: 'change_footnotes', label: 'Change footnotes...' },
-          { value: 'change_status', label: 'Change status...' },
           { value: 'remove_from_group', label: 'Remove from group...' },
           { value: 'delete', label: 'Delete measures' },
         ],
@@ -57,13 +54,10 @@ $(document).ready(function() {
         changingAdditionalCode: false,
         changingCommodityCodes: false,
         changingOrigin: false,
-        makingCopies: false,
         changingRegulation: false,
         changingValidityPeriod: false,
-        changingQuota: false,
-        changingStatus: false,
         isLoading: true,
-        selectedAllMeasures: false,
+        selectedAllMeasures: true,
         pagination: {
           total_count: window.__pagination_metadata.total_count,
           page: window.__pagination_metadata.page,
@@ -90,11 +84,15 @@ $(document).ready(function() {
               measure.changes = [];
             }
 
+            self.selectedMeasures.push(measure.measure_sid);
+
             return measure;
           });
 
           self.isLoading = false;
         }
+
+        self.selectedAllMeasures = true;
       });
     },
     computed: {
@@ -103,7 +101,7 @@ $(document).ready(function() {
       },
       visibleMeasures: function() {
         return this.measuresForTable.filter(function (measure) {
-          return measure.visible;
+          return measure.visible && !measure.deleted;
         });
       },
       selectedMeasureObjects: function() {
@@ -154,7 +152,7 @@ $(document).ready(function() {
             measure_sid: measure.measure_sid,
             regulation: measure.regulation.formatted_id,
             measure_type_id: measure.measure_type.measure_type_id,
-            goods_nomenclature: measure.goods_nomenclature.goods_nomenclature_item_id,
+            goods_nomenclature: measure.goods_nomenclature ? measure.goods_nomenclature.goods_nomenclature_item_id : "-",
             additional_code: measure.additional_code || "-",
             geographical_area: origin,
             excluded_geographical_areas: formatted_exclusions,
@@ -164,8 +162,9 @@ $(document).ready(function() {
             last_updated: measure.operation_date,
             status: measure.status,
             visible: measure.visible,
+            deleted: measure.deleted,
             validity_start_date: measure.validity_start_date,
-            validity_end_date: measure.validity_end_date,
+            validity_end_date: measure.validity_end_date || "&ndash;",
             changes: measure.changes
           }
         });
@@ -203,9 +202,6 @@ $(document).ready(function() {
           case 'toggle_unselected':
             this.toggleUnselected();
             break;
-          case 'make_copies':
-            this.makingCopies = true;
-            break;
           case 'change_regulation':
             this.changingRegulation = true;
             break;
@@ -221,9 +217,6 @@ $(document).ready(function() {
           case 'change_additional_code':
             this.changingAdditionalCode = true;
             break;
-          case 'change_quota':
-            this.changingQuota = true;
-            break;
           case 'change_duties':
             this.changingDuties = true;
             break;
@@ -232,9 +225,6 @@ $(document).ready(function() {
             break;
           case 'change_footnotes':
             this.changingFootnotes = true;
-            break;
-          case 'change_status':
-            this.changingStatus = true;
             break;
           case 'remove_from_group':
             this.removingFromGroup = true;
@@ -253,11 +243,8 @@ $(document).ready(function() {
         this.changingAdditionalCode = false;
         this.changingCommodityCodes = false;
         this.changingOrigin = false;
-        this.makingCopies = false;
         this.changingRegulation = false;
         this.changingValidityPeriod = false;
-        this.changingQuota = false;
-        this.changingStatus = false;
       },
       loadMeasures: function(page, callback) {
         var self = this;
@@ -271,6 +258,8 @@ $(document).ready(function() {
             if (!measure.changes) {
               measure.changes = [];
             }
+
+            self.selectedMeasures.push(measure.measure_sid);
 
             return measure;
           }));
@@ -315,6 +304,19 @@ $(document).ready(function() {
       },
       measuresUpdated: function() {
         DB.insertOrReplaceBulk(this.search_code, this.measures);
+      },
+      measuresDeleted: function(deletedMeasures){
+        var self = this;
+        deletedMeasures.forEach(function(deletedMeasure){
+          var measureInTable = self.visibleMeasures.find(function(msr){
+            return msr.measure_sid == deletedMeasure.measure_sid;
+          });
+          if (measureInTable) {
+            measureInTable.deleted = true;
+          }
+        });
+        this.selectedMeasures = [];
+        this.measuresUpdated();
       },
       selectAllHasChanged: function(value) {
         this.selectedAllMeasures = value;

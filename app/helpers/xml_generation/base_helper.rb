@@ -5,7 +5,15 @@ module XmlGeneration
     end
 
     def xml_data_item(xml_node, data)
-      xml_node.text!(data.to_s || '')
+      xml_node.text!(data.to_s)
+    end
+
+    def xml_data_item_v2(xml_node, namespace, data)
+      if data.present?
+        xml_node.tag!("oub:#{namespace}") do xml_node
+          xml_data_item(xml_node, data)
+        end
+      end
     end
   end
 end
