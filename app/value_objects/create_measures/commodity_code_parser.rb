@@ -7,9 +7,13 @@ module CreateMeasures
 
     def initialize(start_date, code)
       @start_date = start_date
-      @commodity = Commodity.by_code(code).where(
-        "validity_end_date IS NULL OR validity_end_date > ?", start_date
-      ).first
+
+      @commodity = Commodity.by_code(code)
+                            .with_validity_end_date_nil_or_after(start_date)
+                            .all
+                            .sort do |a, b|
+        a.producline_suffix.to_i <=> b.producline_suffix.to_i
+      end.first
     end
 
     def codes
