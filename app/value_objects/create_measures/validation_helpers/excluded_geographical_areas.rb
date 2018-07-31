@@ -10,7 +10,7 @@ module CreateMeasures
           ).first
 
           @record = MeasureExcludedGeographicalArea.new(
-            excluded_geographical_area: record_ops[:excluded_geographical_area]
+            excluded_geographical_area: area.geographical_area_id
           )
           record.measure_sid = measure.measure_sid
           record.geographical_area_sid = area.geographical_area_sid

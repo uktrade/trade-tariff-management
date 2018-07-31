@@ -72,7 +72,7 @@ module CreateMeasures
         ops[:excluded_geographical_areas].uniq
       else
         []
-      end
+      end.reject { |i| i.blank? }
     end
 
     def commodity_codes_exclusions
