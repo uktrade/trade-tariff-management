@@ -1,6 +1,6 @@
-module CreateMeasures
-  module ValidationHelpers
-    class MeasureComponents < ::CreateMeasures::ValidationHelpers::SingleAssociation
+module Workbaskets
+  module MeasureAssociationSavers
+    class MeasureComponents < ::Workbaskets::MeasureAssociationSavers::SingleAssociation
 
       private
 

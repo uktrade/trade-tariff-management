@@ -1,5 +1,5 @@
-module CreateMeasures
-  module ValidationHelpers
+module Workbaskets
+  module MeasureAssociationSavers
     class Base
 
       DEFAULT_LANGUAGE = "EN"
@@ -7,7 +7,7 @@ module CreateMeasures
       private
 
         def set_primary_key(record)
-          PrimaryKeyGenerator.new(record)
+          ::Workbaskets::Shared::PrimaryKeyGenerator.new(record)
         end
     end
   end

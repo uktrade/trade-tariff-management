@@ -1,6 +1,6 @@
-module CreateMeasures
-  module ValidationHelpers
-    class AssociationBase < ::CreateMeasures::ValidationHelpers::Base
+module Workbaskets
+  module MeasureAssociationSavers
+    class AssociationBase < ::Workbaskets::MeasureAssociationSavers::Base
 
       class << self
         def errors_in_collection(measure, system_ops, collection)
@@ -34,7 +34,7 @@ module CreateMeasures
       private
 
         def persist_record!(record)
-          assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
+          assigner = ::Workbaskets::Shared::SystemOpsAssigner.new(
             record, system_ops
           )
           assigner.assign!
@@ -46,7 +46,7 @@ module CreateMeasures
         end
 
         def set_primary_key(record, extra_increment_value=nil)
-          ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(
+          ::Workbaskets::Shared::PrimaryKeyGenerator.new(
             record,
             extra_increment_value
           ).assign!

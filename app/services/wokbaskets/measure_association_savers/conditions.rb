@@ -1,6 +1,6 @@
-module CreateMeasures
-  module ValidationHelpers
-    class Conditions < ::CreateMeasures::ValidationHelpers::MultipleAssociation
+module Workbaskets
+  module MeasureAssociationSavers
+    class Conditions < ::Workbaskets::MeasureAssociationSavers::MultipleAssociation
 
       attr_accessor :measure,
                     :system_ops,

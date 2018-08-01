@@ -1,6 +1,6 @@
-module CreateMeasures
-  module ValidationHelpers
-    class SingleAssociation < ::CreateMeasures::ValidationHelpers::AssociationBase
+module Workbaskets
+  module MeasureAssociationSavers
+    class SingleAssociation < ::Workbaskets::MeasureAssociationSavers::AssociationBase
 
       attr_accessor :measure,
                     :system_ops,

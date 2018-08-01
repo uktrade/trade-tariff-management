@@ -46,8 +46,8 @@ module Workbaskets
         @settings = workbasket.create_measures_settings
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
 
-        @step_pointer = ::CreateMeasures::StepPointer.new(current_step)
-        @attrs_parser = ::CreateMeasures::AttributesParser.new(
+        @step_pointer = ::Workbaskets::CreateMeasures::StepPointer.new(current_step)
+        @attrs_parser = ::Workbaskets::CreateMeasures::AttributesParser.new(
           settings,
           current_step,
           settings_params
@@ -229,7 +229,7 @@ module Workbaskets
         end
 
         def assign_system_ops!(measure)
-          system_ops_assigner = ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
+          system_ops_assigner = ::Workbaskets::Shared::SystemOpsAssigner.new(
             measure, system_ops
           )
           system_ops_assigner.assign!
@@ -250,7 +250,7 @@ module Workbaskets
         end
 
         def get_unique_errors_from_candidates!
-          summarizer = ::CreateMeasures::ValidationHelpers::CandidatesValidationsSummarizer.new(
+          summarizer = ::Workbaskets::Shared::CandidatesValidationsSummarizer.new(
             current_step, candidates_with_errors
           )
           summarizer.summarize!

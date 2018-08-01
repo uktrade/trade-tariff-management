@@ -1,6 +1,6 @@
-module CreateMeasures
-  module ValidationHelpers
-    class MultipleAssociation < ::CreateMeasures::ValidationHelpers::AssociationBase
+module Workbaskets
+  module MeasureAssociationSavers
+    class MultipleAssociation < ::Workbaskets::MeasureAssociationSavers::AssociationBase
 
       def valid?
         generate_records!

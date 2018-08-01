@@ -1,6 +1,6 @@
-module CreateMeasures
-  module ValidationHelpers
-    class Footnotes < ::CreateMeasures::ValidationHelpers::MultipleAssociation
+module Workbaskets
+  module MeasureAssociationSavers
+    class Footnotes < ::Workbaskets::MeasureAssociationSavers::MultipleAssociation
 
       attr_accessor :measure,
                     :system_ops,

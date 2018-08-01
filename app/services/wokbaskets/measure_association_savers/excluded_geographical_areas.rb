@@ -1,6 +1,6 @@
-module CreateMeasures
-  module ValidationHelpers
-    class ExcludedGeographicalAreas < ::CreateMeasures::ValidationHelpers::SingleAssociation
+module Workbaskets
+  module MeasureAssociationSavers
+    class ExcludedGeographicalAreas < ::Workbaskets::MeasureAssociationSavers::SingleAssociation
 
       private
 
