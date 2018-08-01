@@ -127,6 +127,13 @@ class RegulationSaver
     ExplicitAbrogationRegulation
   )
 
+  REGULATION_CODE_KEYS = %w(
+    prefix
+    publication_year
+    regulation_number
+    number_suffix
+  )
+
   REQUIRED_PARAMS = [
     :role,
     :prefix,
@@ -380,13 +387,22 @@ class RegulationSaver
         end
       end
 
-      if @errors.blank? && regulation_code.size != 8
-        @errors[:number_suffix] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
+      if regulation_code_params_present? && regulation_code.size != 8
+        @errors[:regulation_number] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
+      end
+    end
+
+    def regulation_code_params_present?
+      REGULATION_CODE_KEYS.all? do |k|
+        original_params[k].present?
       end
     end
 
     def regulation_code
-      "#{prefix}#{publication_year}#{regulation_number}#{number_suffix}".delete(" ")
+      REGULATION_CODE_KEYS.map do |k|
+        original_params[k]
+      end.join
+         .delete(" ")
     end
 
     def target_class_required_params
