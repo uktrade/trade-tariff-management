@@ -17,7 +17,7 @@ module Workbaskets
     expose(:current_step) { params[:step] }
 
     expose(:step_pointer) do
-      ::CreateMeasures::StepPointer.new(current_step)
+      namespace_constant("StepPointer").new(current_step)
     end
 
     expose(:previous_step) do
@@ -34,8 +34,14 @@ module Workbaskets
       ops
     end
 
+    expose(:form) do
+      "Workbaskets::#{sub_klass}Form".constantize.new(
+        Measure.new
+      )
+    end
+
     expose(:saver) do
-      "Workbaskets::#{sub_klass}::SettingsSaver".constantize.new(
+      namespace_constant("SettingsSaver").new(
         workbasket,
         current_step,
         saver_mode,
@@ -43,21 +49,15 @@ module Workbaskets
       )
     end
 
-    expose(:form) do
-      "Workbaskets::#{sub_klass}Form".constantize.new(
-        Measure.new
-      )
-    end
-
     expose(:attributes_parser) do
-      "::#{sub_klass}::AttributesParser".constantize.new(
+      namespace_constant("AttributesParser").new(
         workbasket_settings,
         current_step
       )
     end
 
     expose(:submit_for_cross_check) do
-      "::Workbaskets::#{sub_klass}::SubmitForCrossCheck".constantize.new(
+      namespace_constant("SubmitForCrossCheck").new(
         workbasket
       )
     end
@@ -95,6 +95,10 @@ module Workbaskets
 
           return false
         end
+      end
+
+      def namespace_constant(target_klass)
+        "::Workbaskets::#{sub_klass}::#{target_klass}".constantize
       end
   end
 end
