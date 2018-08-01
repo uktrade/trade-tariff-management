@@ -1,6 +1,8 @@
 xml.tag!("oub:quota.definition") do |quota_definition|
   xml_data_item_v2(quota_definition, "quota.definition.sid", self.quota_definition_sid)
   xml_data_item_v2(quota_definition, "quota.order.number.id", self.quota_order_number_id)
+  xml_data_item_v2(quota_definition, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
+  xml_data_item_v2(quota_definition, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
   xml_data_item_v2(quota_definition, "quota.order.number.sid", self.quota_order_number_sid)
   xml_data_item_v2(quota_definition, "volume", self.volume)
   xml_data_item_v2(quota_definition, "initial.volume", self.initial_volume)
@@ -11,6 +13,4 @@ xml.tag!("oub:quota.definition") do |quota_definition|
   xml_data_item_v2(quota_definition, "critical.state", self.critical_state)
   xml_data_item_v2(quota_definition, "critical.threshold", self.critical_threshold)
   xml_data_item_v2(quota_definition, "description", self.description)
-  xml_data_item_v2(quota_definition, "validity.start.date", self.validity_start_date.strftime("%Y-%m-%d"))
-  xml_data_item_v2(quota_definition, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
 end
