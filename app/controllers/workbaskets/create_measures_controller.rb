@@ -73,6 +73,25 @@ module Workbaskets
       )
     end
 
+    def create
+      record = klass.new(
+        date_filters: date_filters,
+        issue_date: Time.zone.now,
+        state: "P"
+      )
+
+      if record.save
+        ::XmlGeneration::TaricExport.new(record).run
+        #worker_klass.perform_async(record.id) unless Rails.env.test?
+
+        redirect_to redirect_url,
+                    notice: "#{record_name} was successfully scheduled. Please wait!"
+      else
+        redirect_to redirect_url,
+                    notice: "Something wrong!"
+      end
+    end
+
     def update
       saver.save!
 

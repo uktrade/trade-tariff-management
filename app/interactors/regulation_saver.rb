@@ -132,6 +132,7 @@ class RegulationSaver
     :prefix,
     :publication_year,
     :regulation_number,
+    :number_suffix,
     :replacement_indicator,
     :information_text,
     :operation_date
@@ -378,6 +379,14 @@ class RegulationSaver
           @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
         end
       end
+
+      if @errors.blank? && regulation_code.size != 8
+        @errors[:number_suffix] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
+      end
+    end
+
+    def regulation_code
+      "#{prefix}#{publication_year}#{regulation_number}#{number_suffix}".delete(" ")
     end
 
     def target_class_required_params
