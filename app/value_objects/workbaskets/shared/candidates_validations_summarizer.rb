@@ -1,5 +1,5 @@
-module CreateMeasures
-  module ValidationHelpers
+module Workbaskets
+  module Shared
     class CandidatesValidationsSummarizer
 
       attr_accessor :step,

@@ -13,15 +13,15 @@ module Workbaskets
         )
       end
 
-      def measure_components
-        prepare_collection(:measure_components, :duty_expression_id)
-      end
-
       private
 
         def prepare_ops
-          if step == "duties_conditions_footnotes"
+          if step.in?(["configure_quota", "conditions_footnotes"])
             @ops = ops.merge(workbasket_settings.main_step_settings)
+          end
+
+          if step == "conditions_footnotes"
+            @ops = ops.merge(workbasket_settings.configure_quota_step_settings)
           end
         end
     end
