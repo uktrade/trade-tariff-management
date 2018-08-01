@@ -1,6 +1,26 @@
 module Workbaskets
   class SettingsSaverBase
 
+    REQUIRED_PARAMS = %w(
+      start_date
+      operation_date
+    )
+
+    ATTRS_PARSER_METHODS = %w(
+      start_date
+      end_date
+      workbasket_name
+      operation_date
+      commodity_codes
+      commodity_codes_exclusions
+      additional_codes
+      candidates
+      measure_components
+      conditions
+      footnotes
+      excluded_geographical_areas
+    )
+
     attr_accessor :current_step,
                   :save_mode,
                   :settings,
@@ -70,13 +90,54 @@ module Workbaskets
       ops
     end
 
-    attrs_parser_methods.map do |option|
+    ATTRS_PARSER_METHODS.map do |option|
       define_method(option) do
         attrs_parser.public_send(option)
       end
     end
 
     private
+
+      def check_required_params!
+        general_errors = {}
+
+        REQUIRED_PARAMS.map do |k|
+          if public_send(k).blank?
+            general_errors[k.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+          end
+        end
+
+        if workbasket_type == "CreateMeasures" && workbasket_name.blank?
+          general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
+        end
+
+        if candidates.blank?
+          general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
+        end
+
+        if commodity_codes.blank? && commodity_codes_exclusions.present?
+          general_errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
+        end
+
+        if settings_params['start_date'].present? && (
+            commodity_codes.present? ||
+            additional_codes.present?
+          ) && candidates.blank?
+
+          @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
+        end
+
+        if general_errors.present?
+          if step_pointer.main_step?
+            general_errors.map do |k, v|
+              @errors[k] = v
+            end
+
+          else
+            @errors[:general] = general_errors
+          end
+        end
+      end
 
       def validate!
         validate_candidates!
@@ -144,7 +205,7 @@ module Workbaskets
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
 
-          associations_list.map do |name|
+          self.class.associations_list.map do |name|
             if public_send(name).present?
               association_errors = send("#{name}_errors", measure)
               errors_collection[name] = association_errors if association_errors.present?
