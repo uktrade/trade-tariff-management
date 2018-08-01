@@ -1,6 +1,6 @@
 module Workbaskets
   module CreateMeasures
-    class SettingsSaver
+    class SettingsSaver < ::Workbaskets::SettingsSaverBase
 
       REQUIRED_PARAMS = %w(
         start_date
