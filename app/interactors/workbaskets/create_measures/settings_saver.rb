@@ -3,7 +3,6 @@ module Workbaskets
     class SettingsSaver < ::Workbaskets::SettingsSaverBase
 
       workbasket_type = "CreateMeasures"
-      workbasket_type_prefix = "::Workbaskets::#{workbasket_type}"
 
       required_params = %w(
         start_date
@@ -31,30 +30,6 @@ module Workbaskets
         footnotes
         excluded_geographical_areas
       )
-
-      def valid?
-        check_required_params!
-
-        if candidates.present?
-          validate!
-          candidates_with_errors.blank?
-        end
-
-        @errors.blank?
-      end
-
-      def persist!
-        @persist = true
-        @measure_sids = []
-
-        validate!
-
-        settings.measure_sids_jsonb = @measure_sids.to_json
-
-        if settings.save
-          settings.set_searchable_data_for_created_measures!
-        end
-      end
 
       private
 
@@ -103,76 +78,6 @@ module Workbaskets
               @errors[:general] = general_errors
             end
           end
-        end
-
-        def validate!
-          validate_candidates!
-          get_unique_errors_from_candidates!
-        end
-
-        def validate_candidates!
-          candidates.map do |code|
-            candidate_errors = candidate_validation_errors(code, validation_mode)
-
-            if candidate_errors.present?
-              @candidates_with_errors[code.to_s] = candidate_errors
-            end
-          end
-        end
-
-        def validation_mode
-          commodity_codes.present? ? :commodity_codes : :additional_codes
-        end
-
-        def candidate_validation_errors(code, mode)
-          errors_collection = {}
-
-          measure = generate_new_measure!(code, mode)
-
-          m_errors = measure_errors(measure)
-          errors_collection[:measure] = m_errors if m_errors.present?
-
-          associations_list.map do |name|
-            if public_send(name).present?
-              association_errors = send("#{name}_errors", measure)
-              errors_collection[name] = association_errors if association_errors.present?
-            end
-          end
-
-          errors_collection
-        end
-
-        def generate_new_measure!(code, mode)
-          measure = Measure.new(
-            attrs_parser.measure_params(code, mode)
-          )
-          measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-
-          if @persist.present?
-            measure = assign_system_ops!(measure)
-            measure.save
-            @measure_sids << measure.measure_sid
-
-            Measure.where(measure_sid: measure.measure_sid)
-                   .first
-          else
-            measure
-          end
-        end
-
-        def measure_errors(measure)
-          ::Measures::ConformanceErrorsParser.new(
-            measure, MeasureValidator, {}
-          ).errors
-        end
-
-        def assign_system_ops!(measure)
-          system_ops_assigner = ::Workbaskets::Shared::SystemOpsAssigner.new(
-            measure, system_ops
-          )
-          system_ops_assigner.assign!
-
-          system_ops_assigner.record
         end
     end
   end
