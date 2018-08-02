@@ -15,8 +15,7 @@ describe "GeographicalAreaDescriptionPeriod XML generation" do
       :geographical_area_description_period_sid,
       :geographical_area_sid,
       :validity_start_date,
-      :geographical_area_id,
-      :validity_end_date
+      :geographical_area_id
     ]
   end
 

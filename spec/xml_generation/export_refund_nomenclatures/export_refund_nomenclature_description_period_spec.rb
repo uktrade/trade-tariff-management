@@ -18,8 +18,7 @@ describe "ExportRefundNomenclatureDescriptionPeriod XML generation" do
       :goods_nomenclature_item_id,
       :additional_code_type,
       :export_refund_code,
-      :productline_suffix,
-      :validity_end_date
+      :productline_suffix
     ]
   end
 
