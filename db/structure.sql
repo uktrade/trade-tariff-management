@@ -2641,7 +2641,9 @@ CREATE TABLE public.full_temporary_stop_regulations_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    complete_abrogation_regulation_role integer,
+    complete_abrogation_regulation_id text
 );
 
 
@@ -2671,7 +2673,9 @@ CREATE VIEW public.full_temporary_stop_regulations AS
     full_temporary_stop_regulations1."national",
     full_temporary_stop_regulations1.status,
     full_temporary_stop_regulations1.workbasket_id,
-    full_temporary_stop_regulations1.workbasket_sequence_number
+    full_temporary_stop_regulations1.workbasket_sequence_number,
+    full_temporary_stop_regulations1.complete_abrogation_regulation_role,
+    full_temporary_stop_regulations1.complete_abrogation_regulation_id
    FROM public.full_temporary_stop_regulations_oplog full_temporary_stop_regulations1
   WHERE ((full_temporary_stop_regulations1.oid IN ( SELECT max(full_temporary_stop_regulations2.oid) AS max
            FROM public.full_temporary_stop_regulations_oplog full_temporary_stop_regulations2
@@ -11451,3 +11455,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180726140522_update_xml_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727172730_create_create_quota_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727173036_add_more_fields_to_create_quota_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fields_to_create_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_to_full_temporary_stop_regulations.rb');

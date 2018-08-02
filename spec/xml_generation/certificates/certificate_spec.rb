@@ -15,8 +15,7 @@ describe "Certificate XML generation" do
       :certificate_type_code,
       :certificate_code,
       :validity_start_date,
-      :validity_end_date,
-      :national_abbrev
+      :validity_end_date
     ]
   end
 

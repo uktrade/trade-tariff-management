@@ -56,7 +56,7 @@
       .col-md-3
         = f.input :regulation_number, label: "Regulation number", input_html: { placeholder: "####", "v-model" => "regulation.regulation_number" }
       .col-md-3
-        = f.input :number_suffix, label: "Number suffix", input_html: { placeholder: "Optional", "v-model" => "regulation.number_suffix" }
+        = f.input :number_suffix, label: "Number suffix", input_html: { placeholder: "#", "v-model" => "regulation.number_suffix" }
 
     .row
       .col-md-4

@@ -18,8 +18,7 @@ describe "ProrogationRegulation XML generation" do
       :officialjournal_number,
       :officialjournal_page,
       :replacement_indicator,
-      :information_text,
-      :approved_flag
+      :information_text
     ]
   end
 

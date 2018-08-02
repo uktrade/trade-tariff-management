@@ -16,8 +16,7 @@ describe "AdditionalCodeDescriptionPeriod XML generation" do
       :additional_code_sid,
       :additional_code_type_id,
       :additional_code,
-      :validity_start_date,
-      :validity_end_date
+      :validity_start_date
     ]
   end
 

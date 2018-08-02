@@ -14,7 +14,7 @@ xml.tag!("oub:modification.regulation") do |modification_regulation|
   xml_data_item_v2(modification_regulation, "explicit.abrogation.regulation.role", self.explicit_abrogation_regulation_role)
   xml_data_item_v2(modification_regulation, "explicit.abrogation.regulation.id", self.explicit_abrogation_regulation_id)
   xml_data_item_v2(modification_regulation, "replacement.indicator", self.replacement_indicator)
-  xml_data_item_v2(modification_regulation, "stopped.flag", self.stopped_flag)
+  xml_data_item_v2(modification_regulation, "stopped.flag", flag_format(self.stopped_flag))
   xml_data_item_v2(modification_regulation, "information.text", self.information_text)
-  xml_data_item_v2(modification_regulation, "approved.flag", self.approved_flag)
+  xml_data_item_v2(modification_regulation, "approved.flag", flag_format(self.approved_flag))
 end

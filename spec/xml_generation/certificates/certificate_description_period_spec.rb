@@ -15,8 +15,7 @@ describe "CertificateDescriptionPeriod XML generation" do
       :certificate_description_period_sid,
       :certificate_type_code,
       :certificate_code,
-      :validity_start_date,
-      :validity_end_date
+      :validity_start_date
     ]
   end
 

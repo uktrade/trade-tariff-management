@@ -16,8 +16,7 @@ describe "GoodsNomenclatureDescriptionPeriod XML generation" do
       :goods_nomenclature_sid,
       :validity_start_date,
       :goods_nomenclature_item_id,
-      :productline_suffix,
-      :validity_end_date
+      :productline_suffix
     ]
   end
 
