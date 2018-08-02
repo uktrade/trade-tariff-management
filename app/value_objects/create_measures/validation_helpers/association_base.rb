@@ -53,8 +53,7 @@ module CreateMeasures
         end
 
         def get_component_sequence_number!(codes_and_items, code)
-          number = codes_and_items[code].present? ? (codes_and_items[code].size + 1) : 1
-          "#{code}#{number}".upcase
+          codes_and_items[code].present? ? (codes_and_items[code].size + 1) : 1
         end
       end
 
