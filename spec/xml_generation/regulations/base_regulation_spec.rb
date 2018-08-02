@@ -29,9 +29,7 @@ describe "BaseRegulation XML generation" do
       :explicit_abrogation_regulation_role,
       :explicit_abrogation_regulation_id,
       :replacement_indicator,
-      :stopped_flag,
-      :information_text,
-      :approved_flag
+      :information_text
     ]
   end
 

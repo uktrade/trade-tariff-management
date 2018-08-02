@@ -6,7 +6,7 @@ module CreateMeasures
         def errors_in_collection(measure, system_ops, collection)
           errors = {}
 
-          prepare_collection(collection).map do |k, item_ops|
+          prepare_collection(collection, system_ops[:type_of]).map do |k, item_ops|
             ops = item_ops.merge(position: k)
 
             record = new(measure, system_ops, ops)
@@ -16,7 +16,8 @@ module CreateMeasures
           errors
         end
 
-        def prepare_collection(collection)
+        def prepare_collection(collection, type_of)
+          return prepare_conditions(collection) if type_of == "conditions"
           return collection if collection.is_a?(Hash)
 
           res = {}
@@ -28,6 +29,31 @@ module CreateMeasures
           end
 
           res
+        end
+
+        def prepare_conditions(collection)
+          res = {}
+          codes_and_items = {}
+
+          collection.map do |k, item_ops|
+            code = item_ops[:condition_code]
+
+            res[k] = item_ops.merge(
+              component_sequence_number: get_component_sequence_number!(codes_and_items, code)
+            )
+
+            if codes_and_items[code].present?
+              codes_and_items[code] << k
+            else
+              codes_and_items[code] = [ k ]
+            end
+          end
+
+          res
+        end
+
+        def get_component_sequence_number!(codes_and_items, code)
+          codes_and_items[code].present? ? (codes_and_items[code].size + 1) : 1
         end
       end
 

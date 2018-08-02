@@ -29,8 +29,7 @@ describe "Measure XML generation" do
       :justification_regulation_id,
       :export_refund_nomenclature_sid,
       :ordernumber,
-      :reduction_indicator,
-      :stopped_flag
+      :reduction_indicator
     ]
   end
 

@@ -15,8 +15,7 @@ describe "FootnoteDescriptionPeriod XML generation" do
       :footnote_description_period_sid,
       :footnote_type_id,
       :footnote_id,
-      :validity_start_date,
-      :validity_end_date
+      :validity_start_date
     ]
   end
 

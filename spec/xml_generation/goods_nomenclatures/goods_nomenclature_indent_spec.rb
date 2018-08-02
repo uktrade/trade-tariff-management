@@ -17,8 +17,7 @@ describe "GoodsNomenclatureIndent XML generation" do
       :validity_start_date,
       :number_indents,
       :goods_nomenclature_item_id,
-      :productline_suffix,
-      :validity_end_date
+      :productline_suffix
     ]
   end
 

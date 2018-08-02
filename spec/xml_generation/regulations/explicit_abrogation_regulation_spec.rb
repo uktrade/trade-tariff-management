@@ -19,8 +19,7 @@ describe "ExplicitAbrogationRegulation XML generation" do
       :officialjournal_page,
       :replacement_indicator,
       :abrogation_date,
-      :information_text,
-      :approved_flag
+      :information_text
     ]
   end
 
