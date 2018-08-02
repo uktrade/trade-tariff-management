@@ -7,5 +7,5 @@ xml.tag!("oub:explicit.abrogation.regulation") do |explicit_abrogation_regulatio
   xml_data_item_v2(explicit_abrogation_regulation, "replacement.indicator", self.replacement_indicator)
   xml_data_item_v2(explicit_abrogation_regulation, "abrogation.date", self.abrogation_date.strftime("%Y-%m-%d"))
   xml_data_item_v2(explicit_abrogation_regulation, "information.text", self.information_text)
-  xml_data_item_v2(explicit_abrogation_regulation, "approved.flag", self.approved_flag)
+  xml_data_item_v2(explicit_abrogation_regulation, "approved.flag", flag_format(self.approved_flag))
 end

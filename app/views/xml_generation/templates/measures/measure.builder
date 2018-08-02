@@ -13,7 +13,7 @@ xml.tag!("oub:measure") do |measure|
   xml_data_item_v2(measure, "validity.end.date", self.validity_end_date.try(:strftime, "%Y-%m-%d"))
   xml_data_item_v2(measure, "justification.regulation.role", self.justification_regulation_role)
   xml_data_item_v2(measure, "justification.regulation.id", self.justification_regulation_id)
-  xml_data_item_v2(measure, "stopped.flag", self.stopped_flag)
+  xml_data_item_v2(measure, "stopped.flag", flag_format(self.stopped_flag))
   xml_data_item_v2(measure, "geographical.area.sid", self.geographical_area_sid)
   xml_data_item_v2(measure, "goods.nomenclature.sid", self.goods_nomenclature_sid)
   xml_data_item_v2(measure, "additional.code.sid", self.additional_code_sid)
