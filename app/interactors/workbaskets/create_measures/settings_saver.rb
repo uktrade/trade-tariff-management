@@ -223,7 +223,7 @@ module Workbaskets
             klass_name = name.split("_").map(&:capitalize).join('')
 
             "CreateMeasures::ValidationHelpers::#{klass_name}".constantize.errors_in_collection(
-              measure, system_ops, public_send(name)
+              measure, system_ops.merge(type_of: name), public_send(name)
             )
           end
         end
