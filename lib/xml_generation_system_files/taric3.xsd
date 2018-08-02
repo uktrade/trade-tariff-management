@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:envelope="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0" targetNamespace="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
     <xs:annotation>
       <xs:documentation>Get access to the xml: attribute groups for xml:lang as declared on
         'schema' and 'documentation'
