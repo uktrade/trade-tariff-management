@@ -57,7 +57,8 @@ module CreateMeasures
             condition_code: condition_ops[:condition_code],
             condition_duty_amount: condition_ops[:amount],
             certificate_type_code: condition_ops[:certificate_type_code],
-            certificate_code: condition_ops[:certificate_code]
+            certificate_code: condition_ops[:certificate_code],
+            component_sequence_number: condition_ops[:component_sequence_number]
           }
         end
 

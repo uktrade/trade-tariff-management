@@ -32,7 +32,7 @@ module CreateMeasures
         end
 
         def prepare_conditions(collection)
-          res = []
+          res = {}
           codes_and_items = {}
 
           collection.map do |k, item_ops|
@@ -42,12 +42,10 @@ module CreateMeasures
               component_sequence_number: get_component_sequence_number!(codes_and_items, code)
             )
 
-            target_namespace = codes_and_items[code]
-
-            if target_namespace.present?
-              target_namespace << index
+            if codes_and_items[code].present?
+              codes_and_items[code] << k
             else
-              target_namespace = [ index ]
+              codes_and_items[code] = [ k ]
             end
           end
 
@@ -55,7 +53,8 @@ module CreateMeasures
         end
 
         def get_component_sequence_number!(codes_and_items, code)
-          codes_and_items[code].present? ? (codes_and_items[code].size + 1) : 1
+          number = codes_and_items[code].present? ? (codes_and_items[code].size + 1) : 1
+          "#{code}#{number}".upcase
         end
       end
 
