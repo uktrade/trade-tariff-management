@@ -13,5 +13,5 @@ xml.tag!("oub:full.temporary.stop.regulation") do |full_temporary_stop_regulatio
   xml_data_item_v2(full_temporary_stop_regulation, "explicit.abrogation.regulation.id", self.explicit_abrogation_regulation_id)
   xml_data_item_v2(full_temporary_stop_regulation, "replacement.indicator", self.replacement_indicator)
   xml_data_item_v2(full_temporary_stop_regulation, "information.text", self.information_text)
-  xml_data_item_v2(full_temporary_stop_regulation, "approved.flag", self.approved_flag)
+  xml_data_item_v2(full_temporary_stop_regulation, "approved.flag", flag_format(self.approved_flag))
 end

@@ -15,5 +15,9 @@ module XmlGeneration
         end
       end
     end
+
+    def flag_format(val)
+      val.present? ? 1 : 0
+    end
   end
 end

@@ -21,7 +21,6 @@ describe "FullTemporaryStopRegulation XML generation" do
       :explicit_abrogation_regulation_id,
       :replacement_indicator,
       :information_text,
-      :approved_flag,
       :effective_enddate,
       :validity_start_date,
       :validity_end_date
