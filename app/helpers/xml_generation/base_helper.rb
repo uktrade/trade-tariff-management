@@ -9,7 +9,7 @@ module XmlGeneration
     end
 
     def xml_data_item_v2(xml_node, namespace, data)
-      if data.present?
+      if data.in?([true, false]) || data.present?
         xml_node.tag!("oub:#{namespace}") do xml_node
           xml_data_item(xml_node, data)
         end

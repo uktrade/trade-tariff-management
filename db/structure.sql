@@ -1361,6 +1361,46 @@ ALTER SEQUENCE public.create_measures_workbasket_settings_id_seq OWNED BY public
 
 
 --
+-- Name: create_quota_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_quota_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    configure_quota_step_validation_passed boolean DEFAULT false,
+    conditions_footnotes_step_validation_passed boolean DEFAULT false,
+    created_at time without time zone,
+    updated_at time without time zone,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb
+);
+
+
+--
+-- Name: create_quota_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_quota_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_quota_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_quota_workbasket_settings_id_seq OWNED BY public.create_quota_workbasket_settings.id;
+
+
+--
 -- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2601,7 +2641,9 @@ CREATE TABLE public.full_temporary_stop_regulations_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    complete_abrogation_regulation_role integer,
+    complete_abrogation_regulation_id text
 );
 
 
@@ -2631,7 +2673,9 @@ CREATE VIEW public.full_temporary_stop_regulations AS
     full_temporary_stop_regulations1."national",
     full_temporary_stop_regulations1.status,
     full_temporary_stop_regulations1.workbasket_id,
-    full_temporary_stop_regulations1.workbasket_sequence_number
+    full_temporary_stop_regulations1.workbasket_sequence_number,
+    full_temporary_stop_regulations1.complete_abrogation_regulation_role,
+    full_temporary_stop_regulations1.complete_abrogation_regulation_id
    FROM public.full_temporary_stop_regulations_oplog full_temporary_stop_regulations1
   WHERE ((full_temporary_stop_regulations1.oid IN ( SELECT max(full_temporary_stop_regulations2.oid) AS max
            FROM public.full_temporary_stop_regulations_oplog full_temporary_stop_regulations2
@@ -7568,6 +7612,13 @@ ALTER TABLE ONLY public.create_measures_workbasket_settings ALTER COLUMN id SET 
 
 
 --
+-- Name: create_quota_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_quota_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_quota_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: db_rollbacks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8410,6 +8461,14 @@ ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
 
 ALTER TABLE ONLY public.create_measures_workbasket_settings
     ADD CONSTRAINT create_measures_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_quota_workbasket_settings create_quota_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_quota_workbasket_settings
+    ADD CONSTRAINT create_quota_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -11393,3 +11452,7 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180722185024_add_workbasket_attributes_to_db_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726104556_add_workbasket_attrs_to_measure_excluded_geographical_areas.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726140522_update_xml_exportable_data_with_workbasket_fields.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180727172730_create_create_quota_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180727173036_add_more_fields_to_create_quota_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fields_to_create_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_to_full_temporary_stop_regulations.rb');

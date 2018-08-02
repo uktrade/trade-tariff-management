@@ -27,7 +27,9 @@ module CreateMeasures
                         .pluck(p_key)
                         .map(&:to_i)
                         .max
-                        .to_i + 1
+                        .to_i
+
+            sid = (sid + 1).to_s.ljust(5, '0')
           else
             sid = record.class.max(p_key).to_i + 1
           end
