@@ -69,12 +69,12 @@ module Workbaskets
     def persist!
       @persist = true
       @measure_sids = []
-      @quota_period_sids = [] if workbasket_type == "CreateQuota"
+      @quota_period_sids = [] if self.class::WORKBASKET_TYPE == "CreateQuota"
 
       validate!
 
       settings.measure_sids_jsonb = @measure_sids.to_json
-      if workbasket_type == "CreateQuota"
+      if self.class::WORKBASKET_TYPE == "CreateQuota"
         settings.quota_period_sids_jsonb = @quota_period_sids.to_json
       end
 
@@ -107,7 +107,7 @@ module Workbaskets
           end
         end
 
-        if workbasket_type == "CreateMeasures" && workbasket_name.blank?
+        if self.class::WORKBASKET_TYPE == "CreateMeasures" && workbasket_name.blank?
           general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
         end
 
@@ -175,9 +175,9 @@ module Workbaskets
 
       def errors_translator(key)
         I18n.t(
-          workbasket_type.titleize
-                         .gsub(' ', '_')
-                         .downcase
+          self.class::WORKBASKET_TYPE.titleize
+                                     .gsub(' ', '_')
+                                     .downcase
         )[:errors][key]
       end
 
@@ -205,7 +205,7 @@ module Workbaskets
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
 
-          self.class.associations_list.map do |name|
+          self.class::ASSOCIATION_LIST.map do |name|
             if public_send(name).present?
               association_errors = send("#{name}_errors", measure)
               errors_collection[name] = association_errors if association_errors.present?
@@ -215,14 +215,12 @@ module Workbaskets
           errors_collection
         end
 
-        associations_list.map do |name|
-          define_method("#{name}_errors") do |measure|
-            klass_name = name.split("_").map(&:capitalize).join('')
+        def association_errors(name)
+          klass_name = name.split("_").map(&:capitalize).join('')
 
-            "::Workbaskets::Shared::#{klass_name}".constantize.errors_in_collection(
-              measure, system_ops.merge(type_of: name), public_send(name)
-            )
-          end
+          "::Workbaskets::Shared::#{klass_name}".constantize.errors_in_collection(
+            measure, system_ops.merge(type_of: name), public_send(name)
+          )
         end
 
         def generate_new_measure!(code, mode)
@@ -267,7 +265,7 @@ module Workbaskets
         end
 
         def workbasket_type_prefix
-          "::Workbaskets::#{workbasket_type}"
+          "::Workbaskets::#{self.class::WORKBASKET_TYPE}"
         end
       end
   end

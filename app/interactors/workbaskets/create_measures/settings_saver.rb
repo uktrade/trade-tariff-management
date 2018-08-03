@@ -2,16 +2,18 @@ module Workbaskets
   module CreateMeasures
     class SettingsSaver < ::Workbaskets::SettingsSaverBase
 
-      workbasket_type = "CreateMeasures"
+      WORKBASKET_TYPE = "CreateMeasures"
 
-      class << self
-        def associations_list
-          %w(
-            measure_components
-            conditions
-            footnotes
-            excluded_geographical_areas
-          )
+      ASSOCIATION_LIST = %w(
+        measure_components
+        conditions
+        footnotes
+        excluded_geographical_areas
+      )
+
+      ::ASSOCIATION_LIST.map do |name|
+        define_method("#{name}_errors") do |measure|
+          association_errors(name)
         end
       end
     end
