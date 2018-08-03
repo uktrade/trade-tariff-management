@@ -1,6 +1,5 @@
 = render "workbaskets/shared/edit_base"
 
-- unless step_pointer.main_step?
-  script
-    == "window.measure_start_date = '#{workbasket_settings.start_date}';"
-    == "window.measure_end_date = '#{workbasket_settings.end_date}';"
+script
+  == "window.measure_start_date = '#{workbasket_settings.start_date}';"
+  == "window.measure_end_date = '#{workbasket_settings.end_date}';"
