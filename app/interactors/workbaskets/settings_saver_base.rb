@@ -215,10 +215,10 @@ module Workbaskets
           errors_collection
         end
 
-        def get_association_errors(name)
+        def get_association_errors(name, measure)
           klass_name = name.split("_").map(&:capitalize).join('')
 
-          "::Workbaskets::Shared::#{klass_name}".constantize.errors_in_collection(
+          "::Workbaskets::MeasureAssociationSavers::#{klass_name}".constantize.errors_in_collection(
             measure, system_ops.merge(type_of: name), public_send(name)
           )
         end

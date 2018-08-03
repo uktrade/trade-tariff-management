@@ -13,7 +13,7 @@ module Workbaskets
 
       ASSOCIATION_LIST.map do |name|
         define_method("#{name}_errors") do |measure|
-          get_association_errors(name)
+          get_association_errors(name, measure)
         end
       end
     end
