@@ -2,15 +2,19 @@ module Workbaskets
   module CreateMeasures
     class AttributesParser < Workbaskets::AttributesParserBase
 
-      def simple_ops
-        %w(
-          start_date
-          end_date
-          operation_date
-          workbasket_name
-          commodity_codes
-          additional_codes
-        )
+      SIMPLE_OPS = %w(
+        start_date
+        end_date
+        operation_date
+        workbasket_name
+        commodity_codes
+        additional_codes
+      )
+
+      SIMPLE_OPS.map do |option_name|
+        define_method(option_name) do
+          ops[option_name]
+        end
       end
 
       def measure_components

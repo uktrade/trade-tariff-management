@@ -11,9 +11,9 @@ module Workbaskets
         excluded_geographical_areas
       )
 
-      ::ASSOCIATION_LIST.map do |name|
+      ASSOCIATION_LIST.map do |name|
         define_method("#{name}_errors") do |measure|
-          association_errors(name)
+          get_association_errors(name)
         end
       end
     end

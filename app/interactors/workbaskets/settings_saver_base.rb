@@ -215,7 +215,7 @@ module Workbaskets
           errors_collection
         end
 
-        def association_errors(name)
+        def get_association_errors(name)
           klass_name = name.split("_").map(&:capitalize).join('')
 
           "::Workbaskets::Shared::#{klass_name}".constantize.errors_in_collection(

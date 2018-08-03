@@ -19,12 +19,6 @@ module Workbaskets
       setup_code_analyzer
     end
 
-    simple_ops.map do |option_name|
-      define_method(option_name) do
-        ops[option_name]
-      end
-    end
-
     def measure_params(code, mode)
       res = {
         start_date: ops[:start_date],
