@@ -1,13 +1,17 @@
 script type="text/x-template" id="measure-change-additional-code-input-template"
-  .row
+  .row.measure-change-additional-code-input
     .col-xs-4
       p
         | {{additionalCode || "-"}}
     .col-xs-8
-      p
-        input type="checkbox" v-model="removeAdditionalCode"
-        '  or
-        input type="text" v-model="newAdditionalCode" :disabled="removeAdditionalCode"
+      .multiple-choice-wrapper
+        .multiple-choice
+          input type="checkbox" v-model="removeAdditionalCode" class="remove-additional-code-checkbox"
+          label
+        .or or
+        .text-input-wrapper
+          input type="text" v-model="newAdditionalCode" class="form-control" :disabled="removeAdditionalCode"
+        p
 
 script type="text/x-template" id="measure-additional-code-previewer-template"
   div

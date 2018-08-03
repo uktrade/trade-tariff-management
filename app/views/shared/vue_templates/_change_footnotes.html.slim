@@ -14,10 +14,12 @@ script type="text/x-template" id="change-footnotes-popup-template"
       div.footnote v-for="(footnote, index) in measuresFootnotes"
         = content_tag "foot-note", "", { ":footnote" => "footnote", ":index" => "index", ":only-one-measure" => "onlyOneMeasure" }
 
-        p v-if="footnote.footnote_type_id"
-          input type="checkbox" v-model="footnote.remove"
-          label
+        .multiple-choice v-if="footnote.footnote_type_id"
+          input type="checkbox" v-model="footnote.remove" :id=="'remove_footnote_checkbox_' + index"
+          label :for=="'remove_footnote_checkbox_' + index"
             | Remove this footnote from the selection
+        p.clearfix
+
     div
       a href="#" v-on:click.prevent="addFootnote"
         | Add another footnote
@@ -26,20 +28,26 @@ script type="text/x-template" id="change-footnotes-popup-template"
       div v-if="!onlyOneMeasure && !hideUpdateMode"
         .row
           .col-xs-1
-            input type="radio" v-model="updateMode" value="add"
+            .multiple-choice
+              input type="radio" v-model="updateMode" value="add" id="add-to-any-existing"
+              label
           .col-xs-11
-            div
-              strong Add to any existing footnotes in the selection
-            .form-hint
-              | Existing footnotes will be retained. Footnotes specified here will not be added to any measures in which the exact same footnote already exists.
+            label for="add-to-any-existing"
+              div
+                strong Add to any existing footnotes in the selection
+              .form-hint
+                | Existing footnotes will be retained. Footnotes specified here will not be added to any measures in which the exact same footnote already exists.
         .row
           .col-xs-1
-            input type="radio" v-model="updateMode" value="replace"
+            .multiple-choice
+              input type="radio" v-model="updateMode" value="replace" id="replace-any-existing"
+              label
           .col-xs-11
-            div
-              strong Replace any existing footnotes in the selection
-            .form-hint
-              | Select this option and leave the footnotes field above empty to remove all existing footnotes in the selection.
+            label for="replace-any-existing"
+              div
+                strong Replace any existing footnotes in the selection
+              .form-hint
+                | Select this option and leave the footnotes field above empty to remove all existing footnotes in the selection.
 
       button.button @click.prevent="confirmChanges" :disabled="confirmBtnDisabled" Update
       a.secondary-button href="#" @click.prevent="onClose" Cancel
