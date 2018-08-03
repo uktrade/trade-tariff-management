@@ -85,3 +85,28 @@
     font-weight: bold;
   }
 }
+
+.measure-change-additional-code-input {
+  .remove-additional-code-checkbox {
+
+  }
+
+  .multiple-choice-wrapper {
+    .multiple-choice {
+      width: 38px;
+      height: 38px;
+      display: inline-block;
+      padding: 0;
+    }
+
+    .or {
+      display: inline-block;
+      padding: 0 10px;
+    }
+
+    .text-input-wrapper {
+      display: inline-block;
+      width: calc(100% - 80px);
+    }
+  }
+}
