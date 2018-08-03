@@ -35,7 +35,7 @@ module Workbaskets
     end
 
     expose(:form) do
-      "Workbaskets::#{sub_klass}Form".constantize.new(
+      "WorkbasketForms::#{sub_klass}Form".constantize.new(
         Measure.new
       )
     end
