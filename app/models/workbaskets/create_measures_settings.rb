@@ -3,17 +3,19 @@ module Workbaskets
 
     include ::WorkbasketHelpers::SettingsBase
 
-    COLLECTION_MODELS = %w(
-      Measure
-      Footnote
-      FootnoteDescription
-      FootnoteDescriptionPeriod
-      FootnoteAssociationMeasure
-      MeasureComponent
-      MeasureCondition
-      MeasureConditionComponent
-      MeasureExcludedGeographicalArea
-    )
+    def collection_models
+      %w(
+        Measure
+        Footnote
+        FootnoteDescription
+        FootnoteDescriptionPeriod
+        FootnoteAssociationMeasure
+        MeasureComponent
+        MeasureCondition
+        MeasureConditionComponent
+        MeasureExcludedGeographicalArea
+      )
+    end
 
     def duties_conditions_footnotes_step_settings
       JSON.parse(duties_conditions_footnotes_step_settings_jsonb)

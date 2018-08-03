@@ -15,7 +15,7 @@ module WorkbasketHelpers
     end
 
     def collection
-      COLLECTION_MODELS.map do |db_model|
+      collection_models.map do |db_model|
         db_model.constantize
                 .by_workbasket(workbasket_id)
                 .all

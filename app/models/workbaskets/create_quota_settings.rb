@@ -3,20 +3,22 @@ module Workbaskets
 
     include ::WorkbasketHelpers::SettingsBase
 
-    COLLECTION_MODELS = %w(
-      QuotaOrderNumber
-      QuotaOrderNumberOrigin
-      QuotaOrderNumberOriginExclusion
-      QuotaDefinition
-      Measure
-      Footnote
-      FootnoteDescription
-      FootnoteDescriptionPeriod
-      FootnoteAssociationMeasure
-      MeasureCondition
-      MeasureConditionComponent
-      MeasureExcludedGeographicalArea
-    )
+    def collection_models
+      %w(
+        QuotaOrderNumber
+        QuotaOrderNumberOrigin
+        QuotaOrderNumberOriginExclusion
+        QuotaDefinition
+        Measure
+        Footnote
+        FootnoteDescription
+        FootnoteDescriptionPeriod
+        FootnoteAssociationMeasure
+        MeasureCondition
+        MeasureConditionComponent
+        MeasureExcludedGeographicalArea
+      )
+    end
 
     def configure_quota_step_settings
       JSON.parse(configure_quota_step_settings_jsonb)
