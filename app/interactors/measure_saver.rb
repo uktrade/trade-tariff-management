@@ -380,7 +380,7 @@ class MeasureSaver
     end
 
     def set_oplog_attrs_and_save!(record)
-      ::CreateMeasures::ValidationHelpers::PrimaryKeyGenerator.new(record).assign!
+      ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
 
       log_it("[ATTEMPT TO SAVE - #{record.class.name}] #{record.inspect}")
 
@@ -391,7 +391,7 @@ class MeasureSaver
     end
 
     def set_system_attrs(record)
-      ::CreateMeasures::ValidationHelpers::SystemOpsAssigner.new(
+      ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
         record, system_ops
       ).assign!
     end
