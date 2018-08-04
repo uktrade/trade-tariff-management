@@ -21,7 +21,7 @@
 
       <recycle-list class="scroller" :items="sorted" :item-height="45">
         <template slot-scope="{ item, index, active }">
-          <div class='table__row' v-if="!item.deleted" :data-measure-sid="item.measure_sid">
+          <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item.measure_sid">
             <div class="table__column select-all-column">
               <input type="checkbox" name="measures[]" :value="item.measure_sid" :checked="checked[item.measure_sid]" @change="sendCheckedTrigger" />
             </div>

@@ -12,6 +12,10 @@ table {
     height: 45px;
     overflow: hidden;
     display: flex;
+
+    &.deleted {
+      text-decoration: line-through;
+    }
   }
 
   .table__column {
