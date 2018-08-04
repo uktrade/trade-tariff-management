@@ -63,32 +63,70 @@ $(document).ready(function() {
         errors: []
       };
 
+      var default_measure = {
+        operation_date: null,
+        regulation_id: null,
+        measure_type_series_id: null,
+        measure_type_id: null,
+        quota_ordernumber: null,
+        quota_status: "open",
+        quota_criticality_threshold: null,
+        quota_description: null,
+        geographical_area_id: null,
+        excluded_geographical_areas: [],
+        conditions: [],
+        quota_periods: [],
+        measure_components: [],
+        footnotes: [],
+        workbasket_name: null,
+        reduction_indicator: null,
+        commodity_codes: null,
+        commodity_codes_exclusions: null,
+        additional_codes: null,
+
+        existing_quota: null
+      };
+
       if (window.__measure) {
         this.parseMeasure(window.__measure);
-      } else {
-        data.measure = {
-          operation_date: null,
-          regulation_id: null,
-          measure_type_series_id: null,
-          measure_type_id: null,
-          quota_ordernumber: null,
-          quota_status: "open",
-          quota_criticality_threshold: null,
-          quota_description: null,
-          geographical_area_id: null,
-          excluded_geographical_areas: [],
-          conditions: [],
-          quota_periods: [],
-          measure_components: [],
-          footnotes: [],
-          workbasket_name: null,
-          reduction_indicator: null,
-          commodity_codes: null,
-          commodity_codes_exclusions: null,
-          additional_codes: null,
+      } else if (window.all_settings) {
+        data.measure = jQuery.extend({}, default_measure, this.unwrapPayload(window.all_settings));
 
-          existing_quota: null
-        };
+        if (window.all_settings.geographical_area_id) {
+          if (window.all_settings.geographical_area_id == '1011') {
+            data.origins.erga_omnes.selected = true;
+            data.origins.erga_omnes.geographical_area_id = window.all_settings.geographical_area_id;
+
+            if (window.all_settings.excluded_geographical_areas) {
+              window.all_settings.excluded_geographical_areas.forEach(function(e) {
+                data.origins.erga_omnes.exclusions.push({
+                  geographical_area_id: e,
+                  options: window.all_geographical_countries
+                });
+              });
+            }
+          } else {
+            // country
+            if (window.geographical_areas_json[window.all_settings.geographical_area_id].length === 0) {
+              data.origins.country.selected = true;
+              data.origins.country.geographical_area_id = window.all_settings.geographical_area_id;
+            } else {
+              data.origins.group.selected = true;
+              data.origins.group.geographical_area_id = window.all_settings.geographical_area_id;
+
+              if (window.all_settings.excluded_geographical_areas) {
+                window.all_settings.excluded_geographical_areas.forEach(function(e) {
+                  data.origins.group.exclusions.push({
+                    geographical_area_id: e,
+                    options: window.geographical_areas_json[window.all_settings.geographical_area_id]
+                  });
+                });
+              }
+            }
+          }
+        }
+      } else {
+        data.measure = default_measure;
       }
 
       return data;
@@ -374,6 +412,32 @@ $(document).ready(function() {
           self.measure[code] = null;
         }
       },
+      unwrapPayload: function(payload) {
+        var self = this;
+
+        var measure = {
+          operation_date: payload.operation_date,
+          validity_start_date: payload.start_date,
+          validity_end_date: payload.end_date,
+          regulation_id: payload.regulation_id,
+          measure_type_id: payload.measure_type_id,
+          workbasket_name: payload.workbasket_name,
+          reduction_indicator: payload.reduction_indicator,
+          additional_codes: payload.additional_codes,
+          commodity_codes: payload.commodity_codes,
+          commodity_codes_exclusions: payload.commodity_codes_exclusions
+        };
+
+        if (window.measure_types_json) {
+          window.measure_types_json.forEach(function(mt) {
+            if (mt.measure_type_id == payload.measure_type_id) {
+              measure.measure_type_series_id = mt.measure_type_series_id;
+            }
+          });
+        }
+
+        return measure;
+      },
       prepareV2Step1Payload: function() {
         var payload = {
           operation_date: this.measure.operation_date,
@@ -385,7 +449,9 @@ $(document).ready(function() {
           reduction_indicator: this.measure.reduction_indicator,
           additional_codes: this.measure.additional_codes,
           commodity_codes: this.measure.commodity_codes,
-          commodity_codes_exclusions: this.measure.commodity_codes_exclusions
+          commodity_codes_exclusions: this.measure.commodity_codes_exclusions,
+          footnotes: this.measure.footnotes
+
         };
 
         if (this.origins.country.selected) {
