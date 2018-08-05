@@ -37,7 +37,7 @@ module Measures
 
       def initialize(operator, conditions_list)
         @operator = operator
-        @conditions_list = filtered_collection_params(conditions_list)
+        @conditions_list = filtered_collection_params(conditions_list) if conditions_list.present?
       end
 
       def sql_rules
