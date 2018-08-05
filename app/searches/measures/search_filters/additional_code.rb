@@ -11,6 +11,8 @@
 # - is
 # - is_not
 # - starts_with
+# - is_not_specified
+# - is_not_unspecified
 #
 # Example:
 #
@@ -23,6 +25,12 @@ module Measures
   module SearchFilters
     class AdditionalCode
 
+      OPERATORS_WITH_REQUIRED_PARAMS = %w(
+        is
+        is_not
+        starts_with
+      )
+
       attr_accessor :operator,
                     :additional_code
 
@@ -34,24 +42,35 @@ module Measures
       end
 
       def sql_rules
-        return nil if additional_code.blank?
+        return nil if required_options_are_blank?
 
-        [ clause, value ]
+        clause
       end
 
       private
+
+        def required_options_are_blank?
+          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+          additional_code.blank?
+        end
 
         def clause
           case operator
           when "is"
 
-            is_clause
+            [ is_clause, value ]
           when "is_not"
 
-            is_not_clause
+            [ is_not_clause, value ]
+          when "is_not_specified"
+
+            is_not_specified_clause
+          when "is_not_unspecified"
+
+            is_not_unspecified_clause
           when "starts_with"
 
-            starts_with_clause
+            [ starts_with_clause, value ]
           end
         end
 
@@ -71,7 +90,7 @@ module Measures
 
         def is_not_clause
           <<-eos
-            searchable_data #>> '{"additional_code"}' IS NULL OR
+            #{is_not_specified_clause} OR
             searchable_data #>> '{"additional_code"}' != ?
           eos
         end
@@ -79,6 +98,18 @@ module Measures
         def starts_with_clause
           <<-eos
             searchable_data #>> '{"additional_code"}' ilike ?
+          eos
+        end
+
+        def is_not_specified_clause
+          <<-eos
+            searchable_data #>> '{"additional_code"}' IS NULL
+          eos
+        end
+
+        def is_not_unspecified_clause
+          <<-eos
+            searchable_data #>> '{"additional_code"}' IS NOT NULL
           eos
         end
     end
