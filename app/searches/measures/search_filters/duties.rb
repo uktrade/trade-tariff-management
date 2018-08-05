@@ -30,7 +30,7 @@ module Measures
 
       def initialize(operator, duties_list)
         @operator = operator
-        @duties_list = filtered_hash_collection_params(duties_list)
+        @duties_list = filtered_hash_collection_params(duties_list) if duties_list.present?
       end
 
       def sql_rules
