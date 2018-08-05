@@ -4,6 +4,8 @@ describe "Measure search: additional code filter" do
 
   include_context "measures_search_is_or_is_not_context"
 
+  let(:is_not_context_number_of_measures) { 4 }
+
   let(:search_key) { "additional_code" }
 
   let(:a_measure) do
@@ -24,10 +26,17 @@ describe "Measure search: additional code filter" do
     )
   end
 
+  let(:d_measure) do
+    set_searchable_data!(
+      create(:measure)
+    )
+  end
+
   before do
     a_measure
     b_measure
     c_measure
+    d_measure
   end
 
   describe "Valid Search" do
@@ -55,7 +64,7 @@ describe "Measure search: additional code filter" do
         value: "B334"
       )
 
-      expect(res.count).to be_eql(2)
+      expect(res.count).to be_eql(3)
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).not_to include(b_measure.measure_sid)
 
@@ -71,6 +80,30 @@ describe "Measure search: additional code filter" do
 
       expect(res.count).to be_eql(1)
       expect(res[0].measure_sid).to be_eql(b_measure.measure_sid)
+
+
+      #
+      # 'is_not_unspecified' filter
+      #
+
+      res = search_results(
+        enabled: true,
+        operator: 'is_not_specified'
+      )
+
+      expect(res.count).to be_eql(1)
+      expect(res[0].measure_sid).to be_eql(d_measure.measure_sid)
+
+      #
+      # 'is_not_unspecified' filter
+      #
+
+      res = search_results(
+        enabled: true,
+        operator: 'is_not_unspecified'
+      )
+
+      expect(res.count).to be_eql(3)
     end
   end
 

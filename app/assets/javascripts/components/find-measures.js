@@ -65,7 +65,7 @@ $(document).ready(function() {
         conditionsForValidityStartDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
         conditionsForValidityEndDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
         conditionsForCommodityCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
-        conditionsForAdditionalCode: [ conditions.is, conditions.is_not, conditions.starts_with ],
+        conditionsForAdditionalCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForOrigin: [ conditions.is, conditions.is_not ],
         conditionsForOriginExclusions: [ conditions.are_not_specified, conditions.are_not_unspecified, conditions.include, conditions.do_not_include ],
         conditionsForDuties: [ conditions.are, conditions.include ],
