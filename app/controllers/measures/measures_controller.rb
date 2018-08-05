@@ -57,11 +57,19 @@ module Measures
       end
     end
 
-    def search
-      code = search_code
-      ::MeasureService::TrackMeasureSids.new(code).run
+    def quick_search
+      #
+      # This is a GET version of same search.
+      # We need it in order to perform one parametr searches via links.
+      #
+      # For example: when you click on [measures] link in regulation
+      # found in 'Find Regulation' section
+      #
+      perform_search
+    end
 
-      redirect_to measures_url(search_code: code)
+    def search
+      perform_search
     end
 
     def create
@@ -96,6 +104,13 @@ module Measures
         end
 
         ops
+      end
+
+      def perform_search
+        code = search_code
+        ::MeasureService::TrackMeasureSids.new(code).run
+
+        redirect_to measures_url(search_code: code)
       end
   end
 end
