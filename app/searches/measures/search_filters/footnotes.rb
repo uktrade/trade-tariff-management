@@ -38,7 +38,7 @@ module Measures
 
       def initialize(operator, footnotes_list)
         @operator = operator
-        @footnotes_list = filtered_hash_collection_params(footnotes_list)
+        @footnotes_list = filtered_hash_collection_params(footnotes_list) if footnotes_list.present?
       end
 
       def sql_rules
