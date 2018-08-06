@@ -2,6 +2,7 @@ module Measures
   class Search
 
     ALLOWED_FILTERS = %w(
+      measure_sid
       group_name
       status
       author
@@ -80,6 +81,12 @@ module Measures
         duties ||
         conditions ||
         footnotes
+      end
+
+      def apply_measure_sid_filter
+        @relation = relation.operator_search_by_measure_sid(
+          *query_ops(measure_sid)
+        )
       end
 
       def apply_group_name_filter
