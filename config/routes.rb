@@ -42,6 +42,8 @@ Rails.application.routes.draw do
     resources :measures, only: [:new, :create, :index] do
       collection do
         post :search
+
+        get :quick_search
         get :all_measures_data
       end
     end
