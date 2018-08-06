@@ -8,7 +8,9 @@ module Workbaskets
                   :check_if_action_is_permitted!,
                   :status_check!, only: [ :edit, :update ]
 
-    before_action :handle_submit_for_cross_check!, only: [:update]
+    before_action :clean_up_persisted_data_on_update!,
+                  :handle_submit_for_cross_check!, only: [:update]
+
 
     expose(:workbasket_settings) do
       workbasket.settings
@@ -131,6 +133,12 @@ module Workbaskets
           errors: saver.errors,
           candidates_with_errors: saver.candidates_with_errors
         }, status: :unprocessable_entity
+      end
+
+      def clean_up_persisted_data_on_update!
+        unless step_pointer.review_and_submit_step?
+          workbasket_settings.collection.map(&:destroy) # TODO: refactor it Ruslan
+        end
       end
   end
 end
