@@ -61,6 +61,10 @@ module Measures
         operator_search_where_clause("Regulation", operator, regulation_id)
       end
 
+      def operator_search_by_measure_sid(operator, measure_sid=nil)
+        operator_search_where_clause("MeasureSid", operator, measure_sid)
+      end
+
       def operator_search_by_group_name(operator, group_name=nil)
         operator_search_where_clause("GroupName", operator, group_name)
       end
