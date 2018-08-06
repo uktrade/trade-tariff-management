@@ -1,16 +1,5 @@
 window.WorkbasketBaseSaveActions =
 
-  init: ->
-    $(document).on 'click', '.js-workbasket-base-continue-button', ->
-      window.workbasket_submit_mode = 'continue'
-
-      return false
-
-    $(document).on 'click', '.js-workbasket-base-save-progress-button', ->
-      window.workbasket_submit_mode = 'save_progress'
-
-      return false
-
   toogleSaveSpinner: (mode) ->
     WorkbasketBaseSaveActions.disable_other_buttons(mode)
 
@@ -49,7 +38,7 @@ window.WorkbasketBaseSaveActions =
     $(".js-workbasket-base-submit-button, .js-workbasket-base-exit-button, .js-workbasket-base-previous-step-link").removeClass('disabled')
                                                                                                                       .removeClass('hidden')
 
-  handleSuccessResponse: (resp) ->
+  handleSuccessResponse: (resp, submit_mode) ->
     WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
 
     if resp.redirect_url isnt undefined
@@ -57,7 +46,7 @@ window.WorkbasketBaseSaveActions =
         window.location = resp.redirect_url
       ), 1000
     else
-      if resp.next_step.length > 0 && window.workbasket_submit_mode == 'continue'
+      if resp.next_step.length > 0 && submit_mode == 'continue'
         WorkbasketBaseSaveActions.setSpinnerText("Redirecting to next step")
 
         setTimeout (->
@@ -75,6 +64,3 @@ window.WorkbasketBaseSaveActions =
 
   setSpinnerText: (message) ->
     $(".js-workbasket-base-continue-spinner .saving_message").text(message)
-
-$ ->
-  WorkbasketBaseSaveActions.init()
