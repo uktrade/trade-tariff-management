@@ -425,8 +425,69 @@ $(document).ready(function() {
           reduction_indicator: payload.reduction_indicator,
           additional_codes: payload.additional_codes,
           commodity_codes: payload.commodity_codes,
-          commodity_codes_exclusions: payload.commodity_codes_exclusions
+          commodity_codes_exclusions: payload.commodity_codes_exclusions,
+          footnotes: [],
+          measure_components: [],
+          conditions: []
         };
+
+        if (payload.footnotes) {
+          for (var k in payload.footnotes) {
+            if (!payload.footnotes.hasOwnProperty(k)) {
+              continue;
+            }
+
+            measure.footnotes.push(clone(payload.footnotes[k]));
+          }
+        }
+
+        if (payload.measure_components) {
+          for (var k in payload.measure_components) {
+            if (!payload.measure_components.hasOwnProperty(k)) {
+              continue;
+            }
+
+              var component = clone(payload.measure_components[k]);
+
+              if (component.duty_expression_id) {
+                component.duty_expression_id = self.getDutyExpressionId(component);
+              }
+
+              measure.measure_components.push(component);
+          };
+        }
+
+        if (payload.conditions) {
+          for (var k in payload.conditions) {
+            if (!payload.conditions.hasOwnProperty(k)) {
+              continue;
+            }
+
+            var condition = clone(payload.conditions[k]);
+
+            if (condition.measure_condition_components) {
+              var mcc = [];
+
+              for (var kk in condition.measure_condition_components) {
+                if (!condition.measure_condition_components.hasOwnProperty(kk)) {
+                  continue;
+                }
+
+                var component = clone(condition.measure_condition_components[kk]);
+
+                if (component.duty_expression_id) {
+                  component.duty_expression_id = self.getDutyExpressionId(component);
+                }
+
+                mcc.push(component);
+              }
+
+              condition.measure_condition_components = mcc;
+            }
+
+            measure.conditions.push(condition);
+          }
+        }
 
         if (window.measure_types_json) {
           window.measure_types_json.forEach(function(mt) {
@@ -670,6 +731,20 @@ $(document).ready(function() {
         }
 
         this.measure.conditions.splice(index, 1);
+      },
+      getDutyExpressionId: function(component) {
+        var ids = ["01","02","04","19","20"];
+        var id = component.duty_expression.duty_expression_id;
+
+        if (ids.indexOf(component.duty_expression.duty_expression_id) === -1) {
+          return id;
+        }
+
+        if (component.monetary_unit) {
+          return id + "B";
+        }
+
+        return id + "A";
       }
     },
     computed: {
