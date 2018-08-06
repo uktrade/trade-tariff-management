@@ -1,5 +1,5 @@
 module WorkbasketValueObjects
-  module CreateMeasures
+  module CreateQuota
     class AttributesParser < WorkbasketValueObjects::AttributesParserBase
 
       SIMPLE_OPS = %w(

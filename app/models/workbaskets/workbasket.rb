@@ -213,33 +213,41 @@ module Workbaskets
         #
         # TODO: remove me after finishing of active development phase
         #
-        by_type("create_measures").map do |w|
-          w.settings.collection.map(&:destroy)
-          w.destroy
+        TYPES.map do |type_name|
+          by_type(type_name.to_s).map do |w|
+            settings = w.settings
+
+            if settings.present?
+              settings.collection.map(&:destroy)
+              w.destroy
+            end
+          end
         end
+
+        all.map(&:destroy)
       end
     end
 
     private
 
       def build_related_settings_table!
-        case type.to_sym
+        settings = case type.to_sym
         when :create_measures
-          settings = ::Workbaskets::CreateMeasuresSettings.new(
+          ::Workbaskets::CreateMeasuresSettings.new(
             workbasket_id: id
           )
-          settings.save
-
         when :bulk_edit_of_measures
           # TODO: need to refactor Bulk Edit stuff
           #       to store settings, specific for Bulk Edit of measures
           #       in separated DB table
           #
         when :create_quota
-          # TODO
+          ::Workbaskets::CreateQuotaSettings.new(
+            workbasket_id: id
+          )
         end
 
-
+        settings.save
       end
   end
 end

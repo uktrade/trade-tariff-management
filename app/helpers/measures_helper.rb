@@ -14,17 +14,6 @@ module MeasuresHelper
     ]
   end
 
-  def create_measures_section_header
-    case current_step
-    when "main"
-      "Create measures"
-    when "duties_conditions_footnotes"
-      "Specify duties, conditions and footnotes"
-    when "review_and_submit"
-      "Review and submit"
-    end
-  end
-
   def search_in_measures_by_regulation_rule(item)
     {
       search: {

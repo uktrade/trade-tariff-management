@@ -25,10 +25,6 @@ module WorkbasketHelpers
       end
     end
 
-    def settings
-      main_step_settings.merge(duties_conditions_footnotes_step_settings)
-    end
-
     def main_step_settings
       JSON.parse(main_step_settings_jsonb)
     end

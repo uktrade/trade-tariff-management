@@ -25,8 +25,8 @@ module WorkbasketValueObjects
           operation_date
           measure_type_id
           description
-          is_licensed
-          license_id
+          quota_is_licensed
+          quota_licence
           commodity_codes
           commodity_codes_exclusions
           additional_codes

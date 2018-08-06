@@ -22,23 +22,6 @@ module Workbaskets
       create_measure_url(workbasket.id)
     end
 
-    def update
-      saver.save!
-
-      if step_pointer.main_step? && saver_mode == "continue"
-        render json: saver.success_ops,
-                     status: :ok
-
-        return false
-      end
-
-      if saver.valid?
-        handle_success_saving!
-      else
-        handle_errors!
-      end
-    end
-
     private
 
       def check_if_action_is_permitted!
@@ -50,25 +33,9 @@ module Workbaskets
         end
       end
 
-      def handle_success_saving!
-        workbasket_settings.track_step_validations_status!(current_step, true)
-
-        if step_pointer.duties_conditions_footnotes? && saver_mode == 'continue'
-          saver.persist!
-        end
-
-        render json: saver.success_ops,
-               status: :ok
-      end
-
-      def handle_errors!
-        workbasket_settings.track_step_validations_status!(current_step, false)
-
-        render json: {
-          step: current_step,
-          errors: saver.errors,
-          candidates_with_errors: saver.candidates_with_errors
-        }, status: :unprocessable_entity
+      def workbasket_data_can_be_persisted?
+        step_pointer.duties_conditions_footnotes? &&
+        saver_mode == 'continue'
       end
   end
 end

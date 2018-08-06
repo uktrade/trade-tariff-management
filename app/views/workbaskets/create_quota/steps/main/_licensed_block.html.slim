@@ -1,0 +1,32 @@
+fieldset
+  h3.heading-medium
+    | Is this a licensed quota?
+
+  .form-group
+    label.form-label
+      .find-measures__checkbox-column
+        .multiple-choice
+          input name="quota_is_licensed" type="hidden" v-model="measure.quota_is_licensed" value="1"
+          input#toggle-type name="quota_is_licensed" type="checkbox" v-model="measure.quota_is_licensed" value="1"
+          label for="toggle-type"
+            | Yes - use of this quota requires oresentation of a licence
+
+  .form-group.js-workbasket-create-quota-licence-block.hidden
+    label.form-label
+      span.create-measures-sub_header
+        | Licence
+
+      span.form-hint
+        | Begin typing the quota_licence description or code, then select the required quota_licence.
+        br
+        | If the license you need is not in the list, you can &nbsp;
+
+        = link_to "add it from here", root_url, target: "_blank"
+        |.
+        br
+
+    .row
+      .col-md-5
+        = content_tag "custom-select", { "url" => "/certificates", "allow-clear" => true, "code-field" => "certificate_code", "label-field" => "description", "value-field" => "certificate_code", "v-model" => "measure.quota_licence", "code-class-name" => "prefix--certificate", "date-sensitive" => true, placeholder: "― start typing ―" } do
+
+          = f.input :quota_licence, as: :select, label: false
