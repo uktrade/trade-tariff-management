@@ -83,6 +83,8 @@ $(document).ready(function() {
         commodity_codes: null,
         commodity_codes_exclusions: null,
         additional_codes: null,
+        validity_start_date: null,
+        validity_end_date: null,
 
         existing_quota: null
       };

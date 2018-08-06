@@ -28,6 +28,12 @@ $find-measure-gutter: 5px;
   padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
 }
 
+.find-measure__date {
+  flex: 0 0 500px;
+  max-width: 500px;
+  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+}
+
 .origin-exclusion + .origin-exclusion {
   margin-top: 5px;
 }
@@ -73,7 +79,7 @@ $find-measure-gutter: 5px;
     width: 100px !important;
     display: inline-block;
     vertical-align: top;
-    margin-left: 10px;
+    margin-left: 2px;
   }
 }
 

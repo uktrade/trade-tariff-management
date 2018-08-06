@@ -172,8 +172,12 @@
 .selectize-input {
   border-radius: 0 !important;
   border: 2px solid #000 !important;
-  padding-right: 65px !important;
   line-height: 22px !important;
+  padding-right: 35px !important;
+
+  &.allow-clear {
+    padding-right: 65px !important;
+  }
 
   &.focus {
     box-shadow: none !important;
