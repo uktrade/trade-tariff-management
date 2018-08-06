@@ -1,0 +1,9 @@
+.js-workbasket-errors-container.alert.alert-danger v-if="hasErrors"
+  h3.measure-form-errors-header
+    | Progress successfuly saved!
+    br
+    | Please, review the following errors:
+
+  ul
+    li v-for="error in errors"
+      .workbasket-error-block :data-error-message="error" v-html="error"

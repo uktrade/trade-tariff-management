@@ -1,0 +1,17 @@
+.condition {
+  border-bottom: 1px solid $border-colour;
+  padding-bottom: 10px;
+
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  & + & {
+    padding-top: 10px;
+  }
+
+  &:last-of-type {
+    margin-bottom: 10px;
+    border-bottom: 0;
+  }
+}

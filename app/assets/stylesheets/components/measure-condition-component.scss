@@ -1,0 +1,11 @@
+.condition-components-wrapper {
+  padding: 0;
+}
+
+.measure-condition-component {
+  margin-top: 20px;
+
+  &:last-child {
+    margin-bottom: 20px;
+  }
+}

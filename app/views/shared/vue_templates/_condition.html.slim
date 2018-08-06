@@ -8,7 +8,7 @@ script type="text/x-template" id="condition-template"
               | Condition
 
             span.form-hint v-if="hideHelp !== true"
-              | This specifies a requirement the import mush meet and determines the customs treatment of the goods concerned.
+              | This specifies a requirement the import must meet and determines the customs treatment of the goods concerned.
           = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select condition ―", "code-class-name" => "prefix--condition", ":on-change" => "onConditionCodeSelected", ":allow-clear" => "true" }
 
       = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showMinimumPrice" do

@@ -37,6 +37,9 @@ module Workbaskets
     one_to_one :create_measures_settings, key: :workbasket_id,
                                           class_name: "Workbaskets::CreateMeasuresSettings"
 
+    one_to_one :create_quota_settings, key: :workbasket_id,
+                                       class_name: "Workbaskets::CreateQuotaSettings"
+
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
                        class_name: "User"
@@ -88,6 +91,10 @@ module Workbaskets
       def in_status(status_name)
         where(status: status_name)
       end
+
+      def by_type(type_name)
+        where(type: type_name)
+      end
     end
 
     begin :callbacks
@@ -105,14 +112,13 @@ module Workbaskets
       case type.to_sym
       when :create_measures
         create_measures_settings
-
       when :bulk_edit_of_measures
         # TODO: need to refactor Bulk Edit stuff
         #       to store settings, specific for Bulk Edit of measures
         #       in separated DB table
         #
       when :create_quota
-        # TODO
+        create_quota_settings
       end
     end
 
@@ -138,6 +144,9 @@ module Workbaskets
     end
 
     def debug_collection
+      #
+      # TODO: remove me after finishing of active development phase
+      #
       settings.collection
               .map.with_index do |el, index|
         puts ""
@@ -199,28 +208,46 @@ module Workbaskets
           measure, MeasureValidator, {}
         ).errors
       end
+
+      def clean_up!
+        #
+        # TODO: remove me after finishing of active development phase
+        #
+        TYPES.map do |type_name|
+          by_type(type_name.to_s).map do |w|
+            settings = w.settings
+
+            if settings.present?
+              settings.collection.map(&:destroy)
+              w.destroy
+            end
+          end
+        end
+
+        all.map(&:destroy)
+      end
     end
 
     private
 
       def build_related_settings_table!
-        case type.to_sym
+        settings = case type.to_sym
         when :create_measures
-          settings = ::Workbaskets::CreateMeasuresSettings.new(
+          ::Workbaskets::CreateMeasuresSettings.new(
             workbasket_id: id
           )
-          settings.save
-
         when :bulk_edit_of_measures
           # TODO: need to refactor Bulk Edit stuff
           #       to store settings, specific for Bulk Edit of measures
           #       in separated DB table
           #
         when :create_quota
-          # TODO
+          ::Workbaskets::CreateQuotaSettings.new(
+            workbasket_id: id
+          )
         end
 
-
+        settings.save if settings.present?
       end
   end
 end

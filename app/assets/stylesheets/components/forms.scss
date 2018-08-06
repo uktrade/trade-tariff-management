@@ -61,6 +61,7 @@ label abbr {
 
 .form-hint {
   margin: 1em 0 1em;
+  max-width: 800px;
 }
 
 .selectize-control.form-control {
@@ -257,7 +258,7 @@ label abbr {
     margin-top: 3em;
   }
 
-  .js-measure-form-errors-container, .js-measure-form-success-message-container {
+  .js-workbasket-errors-container, .js-workbasket-base-success-message-container {
     position: relative;
     top: 2em;
   }
@@ -355,4 +356,12 @@ label abbr {
 
 .bulk-edit-measures {
   margin-bottom: 100px;
+}
+
+fieldset + fieldset {
+  margin-top: -30px;
+}
+
+.single-digit-field {
+  width: 50px !important;
 }

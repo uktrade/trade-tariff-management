@@ -1,31 +1,5 @@
-.breadcrumbs
-  ol
-    li
-      = link_to "Tariff Management", root_url
-
-    li
-      = link_to "Measures", measures_url
-
-    li aria-current="page"
-      | Create measures
-
-header
-  h1.heading-large
-    = create_measures_section_header
-
-- if step_pointer.current_step_is_form_step?
-  = render "workbaskets/create_measures/form"
-- else
-  = render "workbaskets/create_measures/steps/review_and_submit", read_only: false
+= render "workbaskets/shared/edit_base"
 
 script
-  == "window.save_url = '/create_measures/#{workbasket.id}';"
-  == "window.current_step = '#{current_step}';"
-  == "window.all_settings = #{workbasket_settings.settings.to_json};"
-
-  - unless step_pointer.main_step?
-    == "window.measure_start_date = '#{workbasket_settings.start_date}';"
-    == "window.measure_end_date = '#{workbasket_settings.end_date}';"
-
-  - unless step_pointer.review_and_submit_step?
-    == "window.current_step_settings = #{workbasket_settings.step_settings(current_step).to_json};"
+  == "window.measure_start_date = '#{workbasket_settings.start_date}';"
+  == "window.measure_end_date = '#{workbasket_settings.end_date}';"

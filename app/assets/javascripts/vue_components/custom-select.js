@@ -70,6 +70,7 @@ Vue.component('custom-select', {
         var self = this;
         var fn = self.settings.load;
         self.isInitialLoad = true;
+
         self.load(function(callback) {
           fn.apply(self, ["", callback]);
         });
@@ -77,7 +78,8 @@ Vue.component('custom-select', {
 
       options.onLoad = function(data) {
         if (vm.url && vm.value && !vm.firstLoadSelected) {
-          $(vm.$el).find("select")[0].selectize.setValue(vm.value.toString());
+          $(vm.$el).find("select")[0].selectize.setValue(vm.value);
+
           vm.firstLoadSelected = true;
         }
       };
@@ -87,17 +89,23 @@ Vue.component('custom-select', {
       options["load"] = function(query, callback) {
         var self = this;
 
+        var q = query.toString();
+
         $(vm.$el).find("select")[0].selectize.clearOptions();
         $(vm.$el).find("select")[0].selectize.clearCache();
         $(vm.$el).find("select")[0].selectize.refreshOptions();
         $(vm.$el).find("select")[0].selectize.renderCache['option'] = {};
         $(vm.$el).find("select")[0].selectize.renderCache['item'] = {};
 
-        if (!this.isInitialLoad && vm.minLength && query.length < vm.minLength) return callback();
+        if (!vm.firstLoadSelected && vm.value && vm.minLength) {
+          q = vm.value;
+        }
+
+        if (!this.isInitialLoad && vm.minLength && q.length < vm.minLength) return callback();
         if (vm.drilldownRequired === "true" && !vm.drilldownValue) return callback();
 
         var data = {
-          q: query,
+          q: q,
           start_date: vm.start_date,
           end_date: vm.end_date
         };
