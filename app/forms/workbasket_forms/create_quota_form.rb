@@ -3,7 +3,7 @@ module WorkbasketForms
 
     attr_accessor :order_number,
                   :description,
-                  :licensed,
-                  :license_id
+                  :quota_is_licensed,
+                  :quota_licence
   end
 end

@@ -71,6 +71,8 @@ $(document).ready(function() {
           regulation_id: null,
           measure_type_series_id: null,
           measure_type_id: null,
+          quota_is_licensed: null,
+          quota_licence: null,
           quota_ordernumber: null,
           quota_status: "open",
           quota_criticality_threshold: null,
