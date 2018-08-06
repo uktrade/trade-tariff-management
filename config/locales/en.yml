@@ -43,3 +43,10 @@ en:
       blank_commodity_and_additional_codes: "Goods commodity codes: can be empty but only if one or more Meursing codes are entered in the Additional codes field."
       commodity_codes_exclusions: "Exceptions: if one or more codes are entered here, Goods commodity codes field must not be empty; each exception code must be a child of one of the goods commodity codes above."
       commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please, double check params"
+
+  create_quota:
+    errors:
+      quota_ordernumber: "Order number can not be blank."
+      blank_commodity_and_additional_codes: "Goods commodity codes: can be empty but only if one or more Meursing codes are entered in the Additional codes field."
+      commodity_codes_exclusions: "Exceptions: if one or more codes are entered here, Goods commodity codes field must not be empty; each exception code must be a child of one of the goods commodity codes above."
+      commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please, double check params"

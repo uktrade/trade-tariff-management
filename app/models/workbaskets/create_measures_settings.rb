@@ -17,6 +17,10 @@ module Workbaskets
       )
     end
 
+    def settings
+      main_step_settings.merge(duties_conditions_footnotes_step_settings)
+    end
+
     def duties_conditions_footnotes_step_settings
       JSON.parse(duties_conditions_footnotes_step_settings_jsonb)
     end
