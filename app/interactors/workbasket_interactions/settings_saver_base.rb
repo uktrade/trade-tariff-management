@@ -35,7 +35,7 @@ module WorkbasketInteractions
       @workbasket = workbasket
       @save_mode = save_mode
       @current_step = current_step
-      @settings = workbasket.create_measures_settings
+      @settings = workbasket.settings
       @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
 
       setup_system_pointers!
