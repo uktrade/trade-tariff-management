@@ -247,7 +247,7 @@ module Workbaskets
           )
         end
 
-        settings.save
+        settings.save if settings.present?
       end
   end
 end
