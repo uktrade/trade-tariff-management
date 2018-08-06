@@ -91,6 +91,10 @@ module Workbaskets
       def in_status(status_name)
         where(status: status_name)
       end
+
+      def by_type(type_name)
+        where(type: type_name)
+      end
     end
 
     begin :callbacks
@@ -140,6 +144,9 @@ module Workbaskets
     end
 
     def debug_collection
+      #
+      # TODO: remove me after finishing of active development phase
+      #
       settings.collection
               .map.with_index do |el, index|
         puts ""
@@ -200,6 +207,16 @@ module Workbaskets
         ::Measures::ConformanceErrorsParser.new(
           measure, MeasureValidator, {}
         ).errors
+      end
+
+      def clean_up!
+        #
+        # TODO: remove me after finishing of active development phase
+        #
+        by_type("create_measures").map do |w|
+          w.settings.collection.map(&:destroy)
+          w.destroy
+        end
       end
     end
 

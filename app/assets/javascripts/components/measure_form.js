@@ -127,6 +127,8 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
 
+        submit_button = $(this);
+
         if ( window.save_url == "/measures" ) {
           // Create measures V1 version
           //
@@ -155,7 +157,7 @@ $(document).ready(function() {
 
           var data_ops = {
             step: window.current_step,
-            mode: window.workbasket_submit_mode,
+            mode: submit_button.attr('name'),
             start_date: window.create_measures_start_date,
             end_date: window.create_measures_end_date,
             settings: payload
@@ -177,7 +179,7 @@ $(document).ready(function() {
             } else {
               // Create measures V2 version
               //
-              WorkbasketBaseSaveActions.handleSuccessResponse(response);
+              WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
             }
           },
           error: function(response) {
