@@ -1,0 +1,26 @@
+fieldset.js-workbasket-check-code-parent-container
+  h3.heading-medium
+    | Which goods will the measures apply to?
+
+  .form-group
+    label.form-label
+      span.create-measures-sub_header
+        | Goods commodity codes
+
+      span.form-hint
+        | Enter one or more commodity codes here. Separate individual codes with line break.
+        br
+        | If you don't know which code you need, you can find it via the &nbsp;
+
+        = link_to "Trade Tariff tool", "https://www.trade-tariff.service.gov.uk/trade-tariff/sections", target: "_blank"
+        |.
+        br
+
+        | You may optionally leave this field blank if you will be providing a Meursing code in the additional code field below.
+
+    .row
+      .col-xs-12.col-md-11.col-lg-9
+        textarea.form-control*{ "v-model" => "measure.commodity_codes", rows: 4 }
+
+    = render "workbaskets/shared/steps/main/check_a_commodity_code_description"
+    = render "workbaskets/shared/steps/main/commodity_codes_exceptions", f: f

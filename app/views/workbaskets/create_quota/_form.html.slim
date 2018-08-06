@@ -1,0 +1,20 @@
+- cache [ "measure_form_js_variables", expires_in: 8.hours ] do
+  = render "workbaskets/shared/js_variables"
+
+= simple_form_for form, url: create_quotum_url(id: workbasket.id),
+                        html: { \
+                          class: "measure-form create-measures-v2",
+                          method: :put, data: { \
+                            measure: form.measure.to_json,
+                            measure_condition_attributes: form.measure.measure_conditions.to_json \
+                          } \
+                        } do |f|
+
+  = render "workbaskets/create_quota/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/shared/errors_container", f: f
+
+  - if current_step == "conditions_footnotes"
+    = render "workbaskets/create_quota/custom_errors_block", f: f
+
+  = render "workbaskets/shared/action_links", f: f

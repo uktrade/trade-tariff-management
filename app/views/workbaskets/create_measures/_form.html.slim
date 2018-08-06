@@ -1,5 +1,5 @@
 - cache [ "measure_form_js_variables", expires_in: 8.hours ] do
-  = render "js_variables"
+  = render "workbaskets/shared/js_variables"
 
 = simple_form_for form, url: create_measure_url(id: workbasket.id),
                         html: { \
@@ -11,10 +11,10 @@
                         } do |f|
 
   = render "workbaskets/create_measures/steps/#{params[:step].to_s}", f: f
-  = render "workbaskets/create_measures/success_message", f: f
-  = render "workbaskets/create_measures/errors_container", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/shared/errors_container", f: f
 
   - if current_step == "duties_conditions_footnotes"
     = render "workbaskets/create_measures/custom_errors_block", f: f
 
-  = render "workbaskets/create_measures/action_links", f: f
+  = render "workbaskets/shared/action_links", f: f

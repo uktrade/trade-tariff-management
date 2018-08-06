@@ -1,0 +1,14 @@
+fieldset
+  h3.heading-medium
+    | What is the quota order number?
+
+  .form-group
+    label.form-label
+      span.form-hint
+        | This is the code an importer would need to enter into their custom declaration to benefit from this tariff quota.
+        br
+        | It will be shared by all goods codes associated with this quota.
+
+    .row
+      .col-md-5
+        input.form-control*{ "v-model" => "measure.quota_ordernumber" }

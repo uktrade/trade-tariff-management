@@ -1,0 +1,26 @@
+fieldset
+  h3.heading-medium
+    | Which regulation gives legal force to these
+    =<> record_type
+    | ?
+
+  .form-group
+    label.form-label
+      span.form-hint
+        | Start typing in the field to see available regulations.
+        br
+
+        | If the regulation you need is not in the list, you can&nbsp;
+
+        = link_to "add it from here", new_regulation_url, target: "_blank"
+        |.
+        br
+
+        | If you're not sure of the regulation name or ID, you can&nbsp;
+
+        = link_to "search here", regulations_url, target: "_blank"
+        |.
+
+    .row
+      .col-md-5
+        = content_tag "custom-select", "", { url: "/regulations.json", "label-field" => "description", "value-field" => "regulation_id", placeholder: "― start typing ―", "min-length" => 2, "v-model" => "measure.regulation_id", "date-sensitive" => true }

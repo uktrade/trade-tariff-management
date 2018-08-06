@@ -1,0 +1,7 @@
+= render "workbaskets/#{settings_type}/breadcrumbs"
+
+header
+  h1.heading-large
+    | Workbasket submitted for review
+
+  = render "workbaskets/#{settings_type}/steps/review_and_submit", read_only: true

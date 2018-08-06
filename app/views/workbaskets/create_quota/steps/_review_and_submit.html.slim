@@ -1,0 +1,17 @@
+= simple_form_for form, url: create_quotum_url(id: workbasket.id),
+                        html: { \
+                          class: "measure-form create-measures-v2",
+                          method: :put \
+                        } do |f|
+
+  = render "workbaskets/shared/steps/review_and_submit/message", read_only: read_only
+  = render "workbaskets/shared/steps/review_and_submit/details", read_only: read_only
+  = render "workbaskets/shared/steps/review_and_submit/quota_periods", read_only: read_only
+  = render "workbaskets/shared/steps/review_and_submit/measures", read_only: read_only
+
+  - if read_only
+    .form-actions
+      h3.heading-medium
+  - else
+    = render "workbaskets/shared/action_links", f: f
+

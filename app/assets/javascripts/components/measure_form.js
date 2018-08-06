@@ -63,32 +63,74 @@ $(document).ready(function() {
         errors: []
       };
 
+      var default_measure = {
+        operation_date: null,
+        regulation_id: null,
+        measure_type_series_id: null,
+        measure_type_id: null,
+        quota_is_licensed: null,
+        quota_licence: null,
+        quota_ordernumber: null,
+        quota_status: "open",
+        quota_criticality_threshold: null,
+        quota_description: null,
+        geographical_area_id: null,
+        excluded_geographical_areas: [],
+        conditions: [],
+        quota_periods: [],
+        measure_components: [],
+        footnotes: [],
+        workbasket_name: null,
+        reduction_indicator: null,
+        commodity_codes: null,
+        commodity_codes_exclusions: null,
+        additional_codes: null,
+        validity_start_date: null,
+        validity_end_date: null,
+
+        existing_quota: null
+      };
+
       if (window.__measure) {
         this.parseMeasure(window.__measure);
-      } else {
-        data.measure = {
-          operation_date: null,
-          regulation_id: null,
-          measure_type_series_id: null,
-          measure_type_id: null,
-          quota_ordernumber: null,
-          quota_status: "open",
-          quota_criticality_threshold: null,
-          quota_description: null,
-          geographical_area_id: null,
-          excluded_geographical_areas: [],
-          conditions: [],
-          quota_periods: [],
-          measure_components: [],
-          footnotes: [],
-          workbasket_name: null,
-          reduction_indicator: null,
-          commodity_codes: null,
-          commodity_codes_exclusions: null,
-          additional_codes: null,
+      } else if (window.all_settings) {
+        data.measure = jQuery.extend({}, default_measure, this.unwrapPayload(window.all_settings));
 
-          existing_quota: null
-        };
+        if (window.all_settings.geographical_area_id) {
+          if (window.all_settings.geographical_area_id == '1011') {
+            data.origins.erga_omnes.selected = true;
+            data.origins.erga_omnes.geographical_area_id = window.all_settings.geographical_area_id;
+
+            if (window.all_settings.excluded_geographical_areas) {
+              window.all_settings.excluded_geographical_areas.forEach(function(e) {
+                data.origins.erga_omnes.exclusions.push({
+                  geographical_area_id: e,
+                  options: window.all_geographical_countries
+                });
+              });
+            }
+          } else {
+            // country
+            if (window.geographical_areas_json[window.all_settings.geographical_area_id].length === 0) {
+              data.origins.country.selected = true;
+              data.origins.country.geographical_area_id = window.all_settings.geographical_area_id;
+            } else {
+              data.origins.group.selected = true;
+              data.origins.group.geographical_area_id = window.all_settings.geographical_area_id;
+
+              if (window.all_settings.excluded_geographical_areas) {
+                window.all_settings.excluded_geographical_areas.forEach(function(e) {
+                  data.origins.group.exclusions.push({
+                    geographical_area_id: e,
+                    options: window.geographical_areas_json[window.all_settings.geographical_area_id]
+                  });
+                });
+              }
+            }
+          }
+        }
+      } else {
+        data.measure = default_measure;
       }
 
       return data;
@@ -123,9 +165,11 @@ $(document).ready(function() {
       this.fetchNomenclatureCode("/goods_nomenclatures", 10, "goods_nomenclature_code", "goods_nomenclature_code_description");
       this.fetchAdditionalCode("/additional_codes/preview", 4, "additional_code_preview", "additional_code_preview_description");
 
-      $(document).on('click', ".js-create-measures-v1-submit-button, .js-create-measures-v2-submit-button", function(e) {
+      $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
         e.preventDefault();
         e.stopPropagation();
+
+        submit_button = $(this);
 
         if ( window.save_url == "/measures" ) {
           // Create measures V1 version
@@ -143,19 +187,40 @@ $(document).ready(function() {
           // Create measures V2 version
           //
 
-          CreateMeasuresSaveActions.hideSuccessMessage();
-          CreateMeasuresSaveActions.toogleSaveSpinner($(this).attr('name'));
+          WorkbasketBaseSaveActions.hideSuccessMessage();
+          WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
           var http_method = "PUT";
 
-          if (window.current_step == 'main') {
-            var payload = self.prepareV2Step1Payload();
-          } else if (window.current_step == 'duties_conditions_footnotes') {
-            var payload = self.prepareV2Step2Payload();
+          if ( window.save_url.indexOf('create_measures') == -1 ) {
+            // Create Quota
+            //
+
+            if (window.current_step == 'main') {
+              var payload = self.createQuotaMainStepPayload();
+
+            } else if (window.current_step == 'configure_quota') {
+              var payload = self.createQuotaConfigureQuotaStepPayload();
+
+            } else if (window.current_step == 'conditions_footnotes') {
+              var payload = self.createQuotaConditionsFootnotesStepPayload();
+
+            }
+          } else {
+            // Create measures V2
+            //
+
+            if (window.current_step == 'main') {
+              var payload = self.prepareV2Step1Payload();
+
+            } else if (window.current_step == 'duties_conditions_footnotes') {
+              var payload = self.prepareV2Step2Payload();
+
+            }
           }
 
           var data_ops = {
             step: window.current_step,
-            mode: window.create_measures_mode,
+            mode: submit_button.attr('name'),
             start_date: window.create_measures_start_date,
             end_date: window.create_measures_end_date,
             settings: payload
@@ -172,12 +237,12 @@ $(document).ready(function() {
             if ( window.save_url == "/measures" ) {
               // Create measures V1 version
               //
-              $(".js-measure-form-errors-container").empty().addClass("hidden");
+              $(".js-workbasket-errors-container").empty().addClass("hidden");
               window.location = window.save_url + "?code=" + response.goods_nomenclature_item_id;
             } else {
               // Create measures V2 version
               //
-              CreateMeasuresSaveActions.handleSuccessResponse(response);
+              WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
             }
           },
           error: function(response) {
@@ -201,7 +266,7 @@ $(document).ready(function() {
             } else {
               // Create measures V2 version
               //
-              CreateMeasuresValidationErrorsHandler.handleErrorsResponse(response, self);
+              WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
             }
           }
         });
@@ -374,6 +439,162 @@ $(document).ready(function() {
           self.measure[code] = null;
         }
       },
+      unwrapPayload: function(payload) {
+        var self = this;
+
+        var measure = {
+          operation_date: payload.operation_date,
+          validity_start_date: payload.start_date,
+          validity_end_date: payload.end_date,
+          regulation_id: payload.regulation_id,
+          measure_type_id: payload.measure_type_id,
+          workbasket_name: payload.workbasket_name,
+          reduction_indicator: payload.reduction_indicator,
+          additional_codes: payload.additional_codes,
+          commodity_codes: payload.commodity_codes,
+          commodity_codes_exclusions: payload.commodity_codes_exclusions,
+          footnotes: [],
+          measure_components: [],
+          conditions: []
+        };
+
+        if (payload.footnotes) {
+          for (var k in payload.footnotes) {
+            if (!payload.footnotes.hasOwnProperty(k)) {
+              continue;
+            }
+
+            measure.footnotes.push(clone(payload.footnotes[k]));
+          }
+        }
+
+        if (payload.measure_components) {
+          for (var k in payload.measure_components) {
+            if (!payload.measure_components.hasOwnProperty(k)) {
+              continue;
+            }
+
+              var component = clone(payload.measure_components[k]);
+
+              if (component.duty_expression_id) {
+                component.duty_expression_id = self.getDutyExpressionId(component);
+              }
+
+              measure.measure_components.push(component);
+          };
+        }
+
+        if (payload.conditions) {
+          for (var k in payload.conditions) {
+            if (!payload.conditions.hasOwnProperty(k)) {
+              continue;
+            }
+
+            var condition = clone(payload.conditions[k]);
+
+            if (condition.measure_condition_components) {
+              var mcc = [];
+
+              for (var kk in condition.measure_condition_components) {
+                if (!condition.measure_condition_components.hasOwnProperty(kk)) {
+                  continue;
+                }
+
+                var component = clone(condition.measure_condition_components[kk]);
+
+                if (component.duty_expression_id) {
+                  component.duty_expression_id = self.getDutyExpressionId(component);
+                }
+
+                mcc.push(component);
+              }
+
+              condition.measure_condition_components = mcc;
+            }
+
+            measure.conditions.push(condition);
+          }
+        }
+
+        if (window.measure_types_json) {
+          window.measure_types_json.forEach(function(mt) {
+            if (mt.measure_type_id == payload.measure_type_id) {
+              measure.measure_type_series_id = mt.measure_type_series_id;
+            }
+          });
+        }
+
+        return measure;
+      },
+      createQuotaMainStepPayload: function() {
+        var payload = {
+          operation_date: this.measure.operation_date,
+          regulation_id: this.measure.regulation_id,
+          measure_type_id: this.measure.measure_type_id,
+          quota_ordernumber: this.measure.quota_ordernumber,
+          quota_description: this.measure.quota_description,
+          quota_is_licensed: this.measure.quota_is_licensed,
+          quota_licence: this.measure.quota_licence,
+          reduction_indicator: this.measure.reduction_indicator,
+          additional_codes: this.measure.additional_codes,
+          commodity_codes: this.measure.commodity_codes,
+          commodity_codes_exclusions: this.measure.commodity_codes_exclusions
+        };
+
+        if (this.origins.country.selected) {
+          payload.geographical_area_id = this.origins.country.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.group.selected) {
+          payload.geographical_area_id = this.origins.group.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        } else if (this.origins.erga_omnes.selected) {
+          payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
+          payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
+            return e.geographical_area_id;
+          });
+        }
+
+        return payload;
+      },
+      createQuotaConfigureQuotaStepPayload: function() {
+        var payload = {
+          // Mauricio BRO!
+          // You can add add 'Configure Quota' step payload options here!
+        };
+
+        return payload;
+      },
+      createQuotaConditionsFootnotesStepPayload: function() {
+        var payload = {
+          footnotes: this.measure.footnotes
+        };
+
+        try {
+          payload.conditions = this.measure.conditions.map(function(condition) {
+            var c = clone(condition);
+
+            c.measure_condition_components = c.measure_condition_components.map(function(component) {
+              var c = clone(component);
+              if (c.duty_expression_id) {
+                // to ignore A and B
+                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
+              }
+
+              return c;
+            });
+
+            return c;
+          });
+        } catch (e) {
+          console.error(e);
+        }
+
+        return payload;
+      },
       prepareV2Step1Payload: function() {
         var payload = {
           operation_date: this.measure.operation_date,
@@ -385,7 +606,9 @@ $(document).ready(function() {
           reduction_indicator: this.measure.reduction_indicator,
           additional_codes: this.measure.additional_codes,
           commodity_codes: this.measure.commodity_codes,
-          commodity_codes_exclusions: this.measure.commodity_codes_exclusions
+          commodity_codes_exclusions: this.measure.commodity_codes_exclusions,
+          footnotes: this.measure.footnotes
+
         };
 
         if (this.origins.country.selected) {
@@ -604,6 +827,20 @@ $(document).ready(function() {
         }
 
         this.measure.conditions.splice(index, 1);
+      },
+      getDutyExpressionId: function(component) {
+        var ids = ["01","02","04","19","20"];
+        var id = component.duty_expression.duty_expression_id;
+
+        if (ids.indexOf(component.duty_expression.duty_expression_id) === -1) {
+          return id;
+        }
+
+        if (component.monetary_unit) {
+          return id + "B";
+        }
+
+        return id + "A";
       }
     },
     computed: {

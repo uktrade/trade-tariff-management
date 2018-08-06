@@ -1,6 +1,8 @@
+$gutter: 6px;
+
 .row {
   position: relative;
-  margin: 0 -15px;
+  margin: 0 $gutter/-2;
 
   @media (min-width: 992px) {
     display: flex;
@@ -9,17 +11,17 @@
 
 [class^="col"] {
   float: left;
-  padding: 0 15px;
+  padding: 0 $gutter/2;
   min-height: 0.125rem;
   width: 100%;
-  width: calc(100% - 30px);
+  width: calc(100% - #{$gutter});
 
   @media (min-width: 992px) {
     width: auto;
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    flex: 0 0 calc(100% - 30px);
+    flex: 0 0 calc(100% - #{$gutter});
 
     .modal & {
       justify-content: flex-start;
@@ -41,14 +43,14 @@ $maxcol: $site-width / 12;
 @each $col in $cols {
   .col-#{$col} {
     max-width: $maxcol * $col;
-    width: calc(#{$single * $col} - 30px);
-    flex: 0 0 calc(#{$single * $col} - 30px);
+    width: calc(#{$single * $col} - #{$gutter});
+    flex: 0 0 calc(#{$single * $col} - #{$gutter});
   }
 
   .col-xs-#{$col} {
     max-width: $maxcol * $col;
-    width: calc(#{$single * $col} - 30px);
-    flex: 0 0 calc(#{$single * $col} - 30px);
+    width: calc(#{$single * $col} - #{$gutter});
+    flex: 0 0 calc(#{$single * $col} - #{$gutter});
   }
 }
 
@@ -56,8 +58,8 @@ $maxcol: $site-width / 12;
   @each $col in $cols {
     .col-sm-#{$col} {
       max-width: $maxcol * $col;
-      width: calc(#{$single * $col} - 30px);
-      flex: 0 0 calc(#{$single * $col} - 30px);
+      width: calc(#{$single * $col} - #{$gutter});
+      flex: 0 0 calc(#{$single * $col} - #{$gutter});
     }
   }
 }
@@ -66,8 +68,8 @@ $maxcol: $site-width / 12;
   @each $col in $cols {
     .col-md-#{$col} {
       max-width: $maxcol * $col;
-      width: calc(#{$single * $col} - 30px);
-      flex: 0 0 calc(#{$single * $col} - 30px);
+      width: calc(#{$single * $col} - #{$gutter});
+      flex: 0 0 calc(#{$single * $col} - #{$gutter});
     }
   }
 }
@@ -76,8 +78,8 @@ $maxcol: $site-width / 12;
   @each $col in $cols {
     .col-lg-#{$col} {
       max-width: $maxcol * $col;
-      width: calc(#{$single * $col} - 30px);
-      flex: 0 0 calc(#{$single * $col} - 30px);
+      width: calc(#{$single * $col} - #{$gutter});
+      flex: 0 0 calc(#{$single * $col} - #{$gutter});
     }
   }
 }
@@ -86,8 +88,8 @@ $maxcol: $site-width / 12;
   @each $col in $cols {
     .col-xl-#{$col} {
       max-width: $maxcol * $col;
-      width: calc(#{$single * $col} - 30px);
-      flex: 0 0 calc(#{$single * $col} - 30px);
+      width: calc(#{$single * $col} - #{$gutter});
+      flex: 0 0 calc(#{$single * $col} - #{$gutter});
     }
   }
 }

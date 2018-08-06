@@ -1279,6 +1279,7 @@
       }
 
       if (self.settings.allowClear) {
+        $control.addClass("allow-clear");
         $wrapper.append($remove);
       }
 
