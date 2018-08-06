@@ -8,5 +8,5 @@ fieldset
         | This is optional, but if specified, must be 1, 2 or 3.
 
     .row
-      .col-md-3
-        input.form-control*{ "v-model" => "measure.reduction_indicator" }
+      .col-md-1
+        input.form-control.single-digit-field v-model="measure.reduction_indicator" min="1" max="3" step="1" maxlength="1" size="1" pattern="[1-3]?"

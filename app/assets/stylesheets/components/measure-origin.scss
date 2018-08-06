@@ -1,0 +1,31 @@
+.measure-origin {
+  .multiple-choice {
+    float: none !important;
+
+    &:after {
+      content: " ";
+      display: table;
+      clear: both;
+      zoom: 1;
+    }
+  }
+
+  label {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .origin-select {
+    position: relative;
+    top: 0;
+  }
+
+  #measure-origin-erga_omnes + label {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  & + .measure-origin {
+    margin-top: 12px;
+  }
+}

@@ -61,6 +61,7 @@ label abbr {
 
 .form-hint {
   margin: 1em 0 1em;
+  max-width: 800px;
 }
 
 .selectize-control.form-control {
@@ -355,4 +356,12 @@ label abbr {
 
 .bulk-edit-measures {
   margin-bottom: 100px;
+}
+
+fieldset + fieldset {
+  margin-top: -30px;
+}
+
+.single-digit-field {
+  width: 50px !important;
 }

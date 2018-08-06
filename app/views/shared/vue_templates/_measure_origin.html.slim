@@ -5,7 +5,7 @@ script type="text/x-template" id="measure-origin-template"
       label v-if="notErgaOmnes"
         = content_tag "custom-select", "", { ":options" => "optionsForSelect", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", ":placeholder": "placeholder", "v-model" => "origin.geographical_area_id", class: "origin-select", "code-class-name" => "prefix--region", ":on-change" => "geographicalAreaChanged" }
       label :for="radioID" v-else=""
-        | ERGA OMNES (all origins)
+        | Erga Omnes (all origins)
 
     .panel.panel-border-narrow v-if="showExclusions"
       label.form-label
