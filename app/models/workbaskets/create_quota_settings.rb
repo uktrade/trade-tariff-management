@@ -20,6 +20,11 @@ module Workbaskets
       )
     end
 
+    def settings
+      main_step_settings.merge(configure_quota_step_settings)
+                        .merge(conditions_footnotes_step_settings)
+    end
+
     def configure_quota_step_settings
       JSON.parse(configure_quota_step_settings_jsonb)
     end
