@@ -42,5 +42,4 @@
           td
             = item.officialjournal_page
           td
-            = link_to "[measures]", measures_path(search: { regulation: {enabled: "1", operator: "is", value: item.regulation_id } })
-
+            = link_to "[measures]", quick_search_measures_url(search_in_measures_by_regulation_rule(item))
