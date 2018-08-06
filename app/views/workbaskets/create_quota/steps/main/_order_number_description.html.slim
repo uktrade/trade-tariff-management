@@ -1,0 +1,12 @@
+fieldset
+  h3.heading-medium
+    | Provide a brief description of the quota
+
+  .form-group
+    label.form-label
+      span.form-hint
+        | This will help you (and others!) identify the quota if you need to edit it later
+
+    .row
+      .col-xs-12.col-md-11.col-lg-9
+        textarea.form-control*{ "v-model" => "measure.quota_description", rows: 4 }
