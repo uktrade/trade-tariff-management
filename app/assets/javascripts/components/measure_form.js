@@ -218,6 +218,10 @@ $(document).ready(function() {
             }
           }
 
+          console.log('-')
+          console.dir(payload)
+          console.log('-')
+
           var data_ops = {
             step: window.current_step,
             mode: submit_button.attr('name'),
@@ -562,7 +566,9 @@ $(document).ready(function() {
       },
       createQuotaConfigureQuotaStepPayload: function() {
         var payload = {
-          // Mauricio BRO!
+          quota_periods: [
+            {'param1': 'Hey'}, {'param2': 'Man!'}
+          ]
           // You can add add 'Configure Quota' step payload options here!
         };
 

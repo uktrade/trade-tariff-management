@@ -36,6 +36,12 @@ module WorkbasketValueObjects
         )
       end
 
+      def configure_quota_step_settings
+       %w(
+          quota_periods
+        )
+      end
+
       def conditions_footnotes_step_settings
         %w(
           conditions
