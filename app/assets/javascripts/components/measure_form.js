@@ -562,7 +562,9 @@ $(document).ready(function() {
       },
       createQuotaConfigureQuotaStepPayload: function() {
         var payload = {
-          // Mauricio BRO!
+          quota_periods: [
+            {'param1': 'Hey'}, {'param2': 'Man!'}
+          ]
           // You can add add 'Configure Quota' step payload options here!
         };
 

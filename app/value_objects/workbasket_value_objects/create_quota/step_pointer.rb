@@ -21,18 +21,24 @@ module WorkbasketValueObjects
       def main_step_settings
         %w(
           regulation_id
-          order_number
-          operation_date
-          measure_type_id
-          description
+          quota_ordernumber
+          quota_description
           quota_is_licensed
           quota_licence
+          operation_date
+          measure_type_id
           commodity_codes
           commodity_codes_exclusions
           additional_codes
           reduction_indicator
           geographical_area_id
           excluded_geographical_areas
+        )
+      end
+
+      def configure_quota_step_settings
+       %w(
+          quota_periods
         )
       end
 

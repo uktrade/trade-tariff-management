@@ -136,7 +136,9 @@ module Workbaskets
       end
 
       def clean_up_persisted_data_on_update!
-        unless step_pointer.review_and_submit_step?
+        if !step_pointer.review_and_submit_step? &&
+           workbasket.type == "create_measures"
+
           workbasket_settings.collection.map(&:destroy) # TODO: refactor it Ruslan
         end
       end
