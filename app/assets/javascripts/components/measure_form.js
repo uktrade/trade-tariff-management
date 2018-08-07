@@ -218,10 +218,6 @@ $(document).ready(function() {
             }
           }
 
-          console.log('-')
-          console.dir(payload)
-          console.log('-')
-
           var data_ops = {
             step: window.current_step,
             mode: submit_button.attr('name'),
