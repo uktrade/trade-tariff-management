@@ -84,6 +84,7 @@ module Measures
         status: :in_progress,
         type: :bulk_edit_of_measures,
         user: current_user,
+        initial_search_results_code: params[:search_code],
         search_code: search_code
       )
 

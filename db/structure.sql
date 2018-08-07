@@ -7384,7 +7384,8 @@ CREATE TABLE public.workbaskets (
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb,
     search_code text,
-    all_batched_loaded boolean DEFAULT false
+    all_batched_loaded boolean DEFAULT false,
+    initial_search_results_code text
 );
 
 
@@ -11456,3 +11457,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180727172730_create_crea
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727173036_add_more_fields_to_create_quota_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fields_to_create_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_to_full_temporary_stop_regulations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180807180500_add_initial_search_results_code_to_workbaskets.rb');
