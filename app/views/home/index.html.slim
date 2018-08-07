@@ -35,7 +35,7 @@
       p.font-xsmall
         | Search for an existing measure on the database to view or make changes
 
-  - if Rails.env.development? || ENV['GOVUK_APP_DOMAIN'] == 'tariffs-dev'
+  - if Rails.env.development? || TradeTariffBackend.development?
     h2.heading-small.nl
       | Quotas
 
