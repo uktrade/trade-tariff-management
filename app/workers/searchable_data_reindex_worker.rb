@@ -6,6 +6,6 @@ class SearchableDataReindexWorker
   sidekiq_options queue: :default, retry: 5
 
   def perform
-    ::Measures::ReindexSearchableData.run
+    ::Measures::ReindexSearchableData.new.run
   end
 end
