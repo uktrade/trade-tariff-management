@@ -328,6 +328,7 @@ class Measure < Sequel::Model
       ops[:footnotes_count] = footnotes.count
     end
 
+    self.manual_add = true
     self.searchable_data = ops.to_json
     self.searchable_data_updated_at = Time.now.utc
 
