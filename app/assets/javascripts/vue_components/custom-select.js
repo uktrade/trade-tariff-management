@@ -224,12 +224,16 @@ Vue.component('custom-select', {
       }
     },
     value: function (value) {
-      $(this.$el).find("select")[0].selectize.setValue(value, false);
+      this.$emit("change-value");
+      this.applyValueInSelect(value);
     },
     options: function (options) {
       $(this.$el).find("select")[0].selectize.clearOptions();
       $(this.$el).find("select")[0].selectize.addOption(options);
       $(this.$el).find("select")[0].selectize.refreshOptions(false);
+      if (this.value) {
+        this.applyValueInSelect(this.value);
+      }
     },
     drilldownValue: function(newVal, oldVal) {
       if (newVal == oldVal) {
@@ -237,6 +241,11 @@ Vue.component('custom-select', {
       }
 
       this.handleDateSentitivity({}, this.start_date, this.end_date);
+    }
+  },
+  methods: {
+    applyValueInSelect: function(value){
+      $(this.$el).find("select")[0].selectize.setValue(value, false);
     }
   },
   destroyed: function () {
