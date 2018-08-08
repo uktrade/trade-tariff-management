@@ -1,5 +1,11 @@
 require "nokogiri"
 
+#
+# xml = File.read("#{Rails.root}/lib/xml_generation_system_files/sample.xml")
+#
+# script = XmlGeneration::XmlXsdValidator.new(xml)
+#
+
 module XmlGeneration
   class XmlXsdValidator
 
