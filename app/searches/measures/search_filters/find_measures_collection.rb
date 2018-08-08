@@ -11,7 +11,7 @@ module Measures
       def searchable_data_not_indexed
         where(
           "searchable_data_updated_at IS NULL OR searchable_data_updated_at::date < ?",
-          Date.today.strftime("%Y-%m-%d")
+          Date.today.midnight.strftime("%Y-%m-%d")
         )
       end
 

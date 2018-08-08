@@ -20,9 +20,13 @@
   # Online converter: https://crontab.guru/#0_22_*_*_*
   #
   UpdatesSynchronizerWorker:
-    cron: "0 22 * * *" # 10 PM every day
+    cron: "0 22 * * *" #
     description: "UpdatesSynchronizerWorker will run at 10 PM every day"
 
   RefreshCacheWorker:
-    cron: "0 5 * * *" # 5 AM every day
+    cron: "0 5 * * *"
     description: "RefreshCacheWorker will run at 5 AM every day"
+
+  SearchableDataReindexWorker:
+    cron: "5 0 * * *"
+    description: "SearchableDataReindexWorker will run at 00:05 every day"
