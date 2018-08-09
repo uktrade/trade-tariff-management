@@ -217,15 +217,10 @@ module Workbaskets
         #
         # TODO: remove me after finishing of active development phase
         #
-        TYPES.map do |type_name|
-          by_type(type_name.to_s).map do |w|
-            settings = w.settings
-
-            if settings.present?
-              settings.collection.map(&:destroy)
-              w.destroy
-            end
-          end
+        by_type('create_measures').map do |w|
+          w.settings
+           .collection
+           .map(&:destroy)
         end
 
         all.map(&:destroy)
