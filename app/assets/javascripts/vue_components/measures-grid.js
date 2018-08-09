@@ -137,6 +137,10 @@ Vue.component("measures-grid", {
     selectAll: function(val) {
       var self = this;
 
+      if (this.selectAllHasChanged) {
+        this.selectAllHasChanged(val);
+      }
+
       if (this.indirectSelectAll) {
         return;
       }
