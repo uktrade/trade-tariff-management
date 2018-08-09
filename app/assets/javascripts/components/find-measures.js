@@ -90,7 +90,7 @@ $(document).ready(function() {
           { value: "approval_rejected", label: "Approval rejected" },
           { value: "ready_for_export", label: "Ready for export" },
           { value: "awaiting_cds_upload_create_new", label: "Awaiting CDS upload - create new" },
-          { value: "awaiting_cds_upload_edit", label "Awaiting CDS upload - edit" },
+          { value: "awaiting_cds_upload_edit", label: "Awaiting CDS upload - edit" },
           { value: "awaiting_cds_upload_overwrite", label: "Awaiting CDS upload - overwrite" },
           { value: "awaiting_cds_upload_delete", label: "Awaiting CDS upload - delete" },
           { value: "sent_to_cds", label: "Sent to CDS" },
