@@ -48,7 +48,7 @@ Vue.component("change-conditions-popup", {
         if (newCondition.measure_condition_components.length === 0) {
           newCondition.measure_condition_components.push({
             duty_expression_id: null,
-            amount: null,
+            duty_amount: null,
             measurement_unit_code: null,
             measurement_unit_qualifier_code: null,
             duty_expression: null,
@@ -75,13 +75,16 @@ Vue.component("change-conditions-popup", {
     },
     canRemoveMeasureCondition: function() {
       return this.conditions.length > 1;
+    },
+    disableUpdate: function() {
+      return this.replacing && this.mode == null;
     }
   },
   methods: {
     normalizeComponent: function(component) {
       return {
         duty_expression_id: this.getDutyExpressionId(component),
-        amount: component.duty_amount,
+        duty_amount: component.duty_amount,
         measurement_unit_code: component.measurement_unit ? component.measurement_unit.measurement_unit_code : null,
         measurement_unit_qualifier_code: component.measurement_unit_qualifier ? component.measurement_unit_qualifier.measurement_unit_qualifier_code : null,
         duty_expression: component.duty_expression,
@@ -101,7 +104,9 @@ Vue.component("change-conditions-popup", {
         certificate_id: condition.certificate ? condition.certificate_id : null,
         certificate_type: condition.certificate_type,
         certificate: condition.certificate,
-        measure_condition_components: condition.measure_condition_components.map(this.normalizeComponent)
+        measure_condition_components: condition.measure_condition_components.filter(function(mcc) {
+          return mcc.duty_expression;
+        }).map(this.normalizeComponent)
       };
     },
     equivalent: function(c1, c2) {
@@ -209,7 +214,7 @@ Vue.component("change-conditions-popup", {
         measure_condition_components: [
           {
             duty_expression_id: null,
-            amount: null,
+            duty_amount: null,
             monetary_unit_code: null,
             measurement_unit_code: null,
             measurement_unit_qualifier_code: null,

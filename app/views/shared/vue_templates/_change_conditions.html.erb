@@ -30,21 +30,7 @@
 
     </div>
 
-    <div class="measure-condition" v-for="(measureCondition, index) in conditions">
-      <measure-condition :condition="measureCondition" :index="index" :hide-help="true">
-        <div class="col-md-2">
-          <div class="form-group">
-            <a class="secondary-button text-danger" href="#" v-on:click.prevent="removeCondition(condition, index)" v-if="canRemoveMeasureCondition">
-              remove
-            </a>
-          </div>
-        </div>
-      </measure-condition>
-    </div>
-
-    <p>
-      <a href="#" v-on:click.prevent="addCondition">Add another condition</a>
-    </p>
+    <conditions-coordinator :conditions="conditions"></conditions-coordinator>
 
     <div v-if="replacing">
       <div class="form-group">
@@ -77,7 +63,7 @@
     </div>
 
     <div class="form-actions">
-      <button class="button" v-on:click.prevent="confirmChanges">
+      <button class="button" v-on:click.prevent="confirmChanges" :disabled="disableUpdate">
         Update selected measures
       </button>
       <a href="#" class="secondary-button" v-on:click.prevent="onClose">

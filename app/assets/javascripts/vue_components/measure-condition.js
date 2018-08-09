@@ -1,6 +1,18 @@
 Vue.component('measure-condition', {
   template: "#condition-template",
-  props: ["condition", "hideHelp"],
+  props: [
+    "condition",
+    "hideHelp",
+    "index",
+    "roomAction",
+    "roomConditionComponents",
+    "roomMinimumPrice",
+    "roomRatio",
+    "roomEntryPrice",
+    "roomAmount",
+    "roomCertificateType",
+    "roomCertificate"
+  ],
   computed: {
     showAction: function() {
       var codes = ["K", "P", "S", "W", "Y"];

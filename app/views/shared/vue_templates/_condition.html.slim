@@ -1,84 +1,101 @@
 script type="text/x-template" id="condition-template"
   div
-    .row
-      .col-xs-12.col-sm-6.col-md-3
+    .static-row
+      .col-xs-12.col-sm-6.col-md-4
         .form-group
-          label.form-label
+          label.form-label v-if="index == 0"
             span.create-measures-sub_header
               | Condition
 
             span.form-hint v-if="hideHelp !== true"
               | This specifies a requirement the import must meet and determines the customs treatment of the goods concerned.
-          = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select condition ―", "code-class-name" => "prefix--condition", ":on-change" => "onConditionCodeSelected", ":allow-clear" => "true" }
+          = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select the condition to apply ―", "code-class-name" => "prefix--condition", ":on-change" => "onConditionCodeSelected", ":allow-clear" => "true" }
 
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showMinimumPrice" do
-        .form-group
-          label.form-label
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomMinimumPrice" do
+        .form-group*{ "v-if" => "showMinimumPrice" }
+          label.form-label v-if="index == 0"
             | Minimum Price (€)
             span.form-hint v-if="hideHelp !== true"
               | Specify the price (in €) at or above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
-
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showRatio" do
-        .form-group
-          label.form-label
+        div v-else=""
+          .form-group
+            label.form-label v-if="index == 0"
+              | Minimum Price (€)
+            | &nbsp;
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomRatio" do
+        .form-group*{ "v-if" => "showRatio" }
+          label.form-label v-if="index == 0"
             | Ratio
             span.form-hint v-if="hideHelp !== true"
               | Specify the ratio at or above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
-
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showEntryPrice" do
-        .form-group
-          label.form-label
+        div v-else=""
+          .form-group
+            label.form-label v-if="index == 0"
+              | Ratio
+            | &nbsp;
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomEntryPrice" do
+        .form-group*{ "v-if" => "showEntryPrice" }
+          label.form-label v-if="index == 0"
             | Entry Price (€)
             span.form-hint v-if="hideHelp !== true"
               | Specify the price (in €) above which this condition will apply.
           input.form-control type="text" v-model="condition.amount"
-
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showAmount" do
-        .form-group
-          label.form-label
+        div v-else=""
+          .form-group
+            label.form-label v-if="index == 0"
+              | Entry Price (€)
+            | &nbsp;
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomAmount" do
+        .form-group*{ "v-if" => "showAmount" }
+          label.form-label v-if="index == 0"
             | Amount
           input.form-control type="text" v-model="condition.amount"
-
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showCertificateType" do
-        .form-group
-          label.form-label
-            | Certificate type
+        div v-else=""
+          .form-group
+            label.form-label v-if="index == 0"
+              | Amount
+            | &nbsp;
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomCertificateType" do
+        .form-group*{ "v-if" => "showCertificateType" }
+          label.form-label v-if="index == 0"
+            | Certificate/license/document type
             span.form-hint v-if="hideHelp !== true"
               | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
           = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate type ―", "code-class-name" => "prefix--certificate-type", ":on-change" => "onCertificateTypeSelected", ":allow-clear" => "true" }
-
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showCertificate" do
-        .form-group
-          label.form-label
-            | Certificate
+        div v-else=""
+          .form-group
+            label.form-label v-if="index == 0"
+              | Certificate/license/document type
+            | &nbsp;
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomCertificate" do
+        .form-group*{ "v-if" => "showCertificate" }
+          label.form-label v-if="index == 0"
+            | Certificate/license/document
             span.form-hint v-if="hideHelp !== true"
               | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
           = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType", "code-class-name" => "prefix--certificate", ":on-change" => "onCertificateSelected", ":allow-clear" => "true" }
-
-      = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "showAction" } do
-        .form-group
-          label.form-label
+        div v-else=""
+          .form-group
+            label.form-label v-if="index == 0"
+              | Certificate/license/document
+            | &nbsp;
+      = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomAction" } do
+        .form-group*{ "v-if" => "showAction" }
+          label.form-label v-if="index == 0"
             | Action
             = content_tag :span, { class: "form-hint", "v-if" => "hideHelp !== true && certificateActionHint" } do
               | Define the action to take when the specified certificate (or no certificate) is presented.
             = content_tag :span, { class: "form-hint", "v-if" => "hideHelp !== true && noCertificateActionHint" } do
               | Define the action to take if the condition is met.
           = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action", ":on-change" => "onActionSelected", ":allow-clear" => "true" }
-
+        div v-else=""
+          .form-group
+            label.form-label v-if="index == 0"
+              | Action
+            | &nbsp;
+      = content_tag :div, { class: "col-flow", "v-if" => "showConditionComponents" } do
+        = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component" }
 
       = content_tag :slot
-    = content_tag :div, { class: "condition-components-wrapper", "v-if" => "showConditionComponents" } do
-      .measure-condition-components
-        div.measure-condition-component v-for="(measureConditionComponent, index) in condition.measure_condition_components"
-          = content_tag "measure-condition-component", { ":measure-condition-component" => "measureConditionComponent", ":index" => "index" } do
-            .col-md-3 v-if="canRemoveComponent"
-              label.form-label
-                | &nbsp;
-              a.text-danger href="#" v-on:click.prevent="removeMeasureConditionComponent(measureConditionComponent)"
-                | Remove
-
-      div
-        a href="#" v-on:click.prevent="addMeasureConditionComponent"
-          | Add another duty expression

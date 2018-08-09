@@ -3,9 +3,15 @@
 }
 
 .measure-condition-component {
-  margin-top: 20px;
+  & + .measure-condition-component {
+    margin-top: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 0;
+  }
 
   &:last-child {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 }
