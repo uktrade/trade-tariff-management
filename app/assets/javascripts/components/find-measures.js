@@ -81,17 +81,22 @@ $(document).ready(function() {
         ],
 
         statuses: [
-          { value: "draft_incomplete", label: "Draft - incomplete" },
-          { value: "draft_ready_for_cross_check", label: "Draft - ready for cross-check" },
-          { value: "submitted_for_cross_check", label: "Submitted for cross-check" },
+          { value: "new_in_progress", label: "New - in progress" },
+          { value: "editing", label: "Editing" },
+          { value: "awaiting_cross_check", label: "Awaiting cross-check" },
           { value: "cross_check_rejected", label: "Cross-check rejected" },
           { value: "ready_for_approval", label: "Ready for approval" },
+          { value: "awaiting_approval", label: "Awaiting approval" },
           { value: "approval_rejected", label: "Approval rejected" },
           { value: "ready_for_export", label: "Ready for export" },
-          { value: "export_pending", label: "Export pending" },
+          { value: "awaiting_cds_upload_create_new", label: "Awaiting CDS upload - create new" },
+          { value: "awaiting_cds_upload_edit", label "Awaiting CDS upload - edit" },
+          { value: "awaiting_cds_upload_overwrite", label: "Awaiting CDS upload - overwrite" },
+          { value: "awaiting_cds_upload_delete", label: "Awaiting CDS upload - delete" },
           { value: "sent_to_cds", label: "Sent to CDS" },
-          { value: "cds_import_error", label: "CDS import error" },
-          { value: "already_in_cds", label: "Already in CDS" }
+          { value: "sent_to_cds_delete", label: "Sent to CDS - delete" },
+          { value: "published", label: "Published" },
+          { value: "cds_error", label: "CDS error" }
         ],
 
         searchCode: code,

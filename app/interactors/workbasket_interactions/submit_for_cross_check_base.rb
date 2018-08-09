@@ -7,7 +7,7 @@ module WorkbasketInteractions
     end
 
     def run!
-      workbasket.move_status_to!(:submitted_for_cross_check)
+      workbasket.move_status_to!(:awaiting_cross_check)
       update_collection!
     end
 
@@ -18,7 +18,7 @@ module WorkbasketInteractions
                   .collection
                   .map do |item|
 
-          item.move_status_to!(:submitted_for_cross_check)
+          item.move_status_to!(:awaiting_cross_check)
         end
       end
   end

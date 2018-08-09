@@ -21,7 +21,7 @@ module WorkbasketValueObjects
           record.workbasket_id = ops[:workbasket_id]
           record.operation_date = ops[:operation_date]
           record.added_by_id = ops[:current_admin_id]
-          record.status = "in_progress"
+          record.status = "new_in_progress"
           record.manual_add = true
           record.operation = "C"
           record.added_at = Time.zone.now

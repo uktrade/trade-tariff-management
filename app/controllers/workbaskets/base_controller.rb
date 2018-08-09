@@ -100,7 +100,7 @@ module Workbaskets
       end
 
       def status_check!
-        unless workbasket.in_progress?
+        unless workbasket.new_in_progress?
           redirect_to read_only_section_url
           return false
         end

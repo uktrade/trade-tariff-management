@@ -5,7 +5,7 @@ FactoryGirl.define do
 
     trait :create_measures do
       type { :create_measures }
-      status { :submitted_for_cross_check }
+      status { :awaiting_cross_check }
     end
   end
 end
