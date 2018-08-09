@@ -2,104 +2,175 @@ script type="text/x-template" id="measure-condition-component-template"
   .static-row.row--flow.measure-condition-component
     .col-md-4
       .form-group
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Action amount
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_code", "v-model" => "measureConditionComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―", "code-class-name" => "prefix--duty-expression", "abbreviation-class-name" => "abbreviation--duty-expression", ":options-filter" => "expressionsFriendlyDuplicate", ":on-change" => "onDutyExpressionSelected", ":allow-clear" => "true" }
 
     .col-md-3 v-if="roomDutyAmountOrPercentage"
       .form-group v-if="showDutyAmountOrPercentage"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (% or €)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         input.form-control v-model="measureConditionComponent.duty_amount"
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (% or €)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomDutyAmountPercentage"
       .form-group v-if="showDutyAmountPercentage"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (%)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         input.form-control v-model="measureConditionComponent.duty_amount"
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (%)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomDutyAmountNegativePercentage"
       .form-group v-if="showDutyAmountNegativePercentage"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (-%)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         input.form-control v-model="measureConditionComponent.duty_amount"
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (-%)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomDutyAmountNumber"
       .form-group v-if="showDutyAmountNumber"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (€)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         input.form-control v-model="measureConditionComponent.duty_amount"
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (€)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomDutyAmountNegativeNumber"
       .form-group v-if="showDutyAmountNegativeNumber"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (-€)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         input.form-control v-model="measureConditionComponent.duty_amount"
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (-€)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomDutyAmountMinimum"
       .form-group v-if="showDutyAmountMinimum"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (at least €)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         input.form-control v-model="measureConditionComponent.duty_amount"
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (at least €)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomDutyAmountMaximum"
       .form-group v-if="showDutyAmountMaximum"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Duty amount (not more than €)
-        input.form-control v-model="measureConditionComponent.duty_amount"
 
-    .col-md-3 v-if="roomDutyRefundAmount"
-      .form-group v-if="showDutyRefundAmount"
-        label.form-label v-if="index === 0"
-          | Refund amount (€)
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         input.form-control v-model="measureConditionComponent.duty_amount"
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
+          | Duty amount (not more than €)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
+    .col-md-3 v-if="roomDutyRefundAmount"
+      .form-group v-if="showDutyRefundAmount"
+        label.form-label v-if="index == 0"
           | Refund amount (€)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
+        input.form-control v-model="measureConditionComponent.duty_amount"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Refund amount (€)
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomMonetaryUnit"
       .form-group v-if="showMonetaryUnit"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Monetary unit
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         = content_tag "custom-select", "", { url: "/monetary_units", "label-field" => "description", "value-field" => "monetary_unit_code", "code-field" => "monetary_unit_code", "v-model" => "measureConditionComponent.monetary_unit_code", "placeholder" => "― select the monetary unit or blank for EURO ―", "date-sensitive" => true, "code-class-name" => "prefix--monetary-unit", ":on-change" => "onMonetaryUnitSelected", ":allow-clear" => "true" }
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Monetary unit
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomMeasurementUnit"
       .form-group v-if="showMeasurementUnit"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Measurement unit
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measureConditionComponent.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit", ":on-change" => "onMeasurementUnitSelected", ":allow-clear" => "true" }
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Measurement unit
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     .col-md-3 v-if="roomMeasurementUnit"
       .form-group v-if="showMeasurementUnit"
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Measurement unit qualifier
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measureConditionComponent.measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit-qualifier", ":on-change" => "onMeasurementUnitQualifierSelected", ":allow-clear" => "true" }
       .form-group v-else=""
-        label.form-label v-if="index === 0"
+        label.form-label v-if="index == 0"
           | Measurement unit qualifier
+
+          span.form-hint-3-line v-if="hideHelp !== true"
+            | &nbsp;
         | &nbsp;
     = content_tag :slot, nil

@@ -108,6 +108,15 @@ $gutter: 6px;
     min-height: 0.125rem;
   }
 
+  .align-bottom {
+    display: inline-flex;
+    justify-content: flex-end;
+
+    .form-group {
+      align-self: flex-end;
+    }
+  }
+
   $cols: 1 2 3 4 5 6 7 8 9 10 11 12;
   $single: 100% / 12;
   $site-width: 1100px;

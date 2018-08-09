@@ -3,13 +3,4 @@ fieldset v-if="showDuties"
     | Specify duties
 
   .measure-components
-    div.measure-component v-for="(measureComponent, index) in measure.measure_components"
-      = content_tag "measure-component", "", { ":measure-component" => "measureComponent", ":index" => "index" }
-
-      div v-if="canRemoveMeasureComponent"
-        a.text-danger href="#" v-on:click.prevent="removeMeasureComponent(measureComponent)"
-          | Remove
-
-  p.add-another-wrapper
-    a href="#" v-on:click.prevent="addMeasureComponent"
-      | Add another duty expression
+    = content_tag "components-coordinator", nil, { ":components" => "measure.measure_components", "type" => "measure_component", "classes" => "measure-component", ":hide-help" => "false", ":index" => "0" }

@@ -117,24 +117,7 @@ label abbr {
 }
 
 .measure-component {
-  padding: 15px 0 0;
-
-  &:first-of-type {
-    padding-top: 0;
-  }
-
-  &:last-of-type {
-    padding-bottom: 15px;
-  }
-
-  &:first-of-type:last-of-type {
-    padding-bottom: 0 !important;
-  }
-
-  & + .measure-component {
-    margin-top: 15px;
-    border-top: 1px solid #000;
-  }
+  padding: 0 0 10px;
 
   .modal & {
     padding: 0;
@@ -198,26 +181,6 @@ label abbr {
 
 .condition-components-wrapper {
   padding-bottom: 15px;
-}
-
-.measure-condition-component {
-  padding: 15px 0 15px;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  .modal & {
-    padding: 0;
-
-    & + .measure-condition-component {
-      margin-top: 0;
-    }
-  }
 }
 
 .search-form {

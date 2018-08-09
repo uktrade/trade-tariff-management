@@ -3,15 +3,4 @@ fieldset
     | Specify conditions
 
   .conditions-target
-    .condition v-for='condition in measure.conditions'
-      = content_tag "measure-condition", "", ":condition" => "condition"
-
-      div v-if="canRemoveCondition"
-        a.text-danger href="#" v-on:click.prevent="removeCondition(condition)"
-          | Remove
-
-    p.add-another-wrapper
-      a href="#" v-on:click.prevent="addCondition" v-if="atLeastOneCondition"
-        | Add another condition
-      a href="#" v-on:click.prevent="addCondition" v-if="noCondition"
-        | Add condition
+    = content_tag "conditions-coordinator", nil, { ":conditions" => "measure.conditions", "type" => "measure_component", ":hide-help" => "false" }

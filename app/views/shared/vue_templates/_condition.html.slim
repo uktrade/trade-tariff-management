@@ -4,8 +4,7 @@ script type="text/x-template" id="condition-template"
       .col-xs-12.col-sm-6.col-md-4
         .form-group
           label.form-label v-if="index == 0"
-            span.create-measures-sub_header
-              | Condition
+            | Condition
 
             span.form-hint v-if="hideHelp !== true"
               | This specifies a requirement the import must meet and determines the customs treatment of the goods concerned.
@@ -57,7 +56,7 @@ script type="text/x-template" id="condition-template"
             label.form-label v-if="index == 0"
               | Amount
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomCertificateType" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-4", "v-if" => "roomCertificateType" do
         .form-group*{ "v-if" => "showCertificateType" }
           label.form-label v-if="index == 0"
             | Certificate/license/document type
@@ -69,7 +68,7 @@ script type="text/x-template" id="condition-template"
             label.form-label v-if="index == 0"
               | Certificate/license/document type
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomCertificate" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-4", "v-if" => "roomCertificate" do
         .form-group*{ "v-if" => "showCertificate" }
           label.form-label v-if="index == 0"
             | Certificate/license/document
@@ -96,6 +95,6 @@ script type="text/x-template" id="condition-template"
               | Action
             | &nbsp;
       = content_tag :div, { class: "col-flow", "v-if" => "showConditionComponents" } do
-        = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component" }
+        = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component", ":hide-help" => "hideHelp !== true && index == 0", ":index" => "index" }
 
       = content_tag :slot

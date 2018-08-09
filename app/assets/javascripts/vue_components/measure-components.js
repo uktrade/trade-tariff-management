@@ -91,6 +91,7 @@ Vue.component("measure-component", $.extend({}, {
   props: [
     "measureComponent",
     "index",
+    "hideHelp",
     "roomDutyAmountOrPercentage",
     "roomDutyAmountPercentage",
     "roomDutyAmountNegativePercentage",
@@ -114,6 +115,7 @@ Vue.component("measure-condition-component", $.extend({}, {
   props: [
     "measureConditionComponent",
     "index",
+    "hideHelp",
     "roomDutyAmountOrPercentage",
     "roomDutyAmountPercentage",
     "roomDutyAmountNegativePercentage",

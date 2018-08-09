@@ -1,10 +1,10 @@
 var template = [
   '<div>',
     '<div class="measure-condition" v-for="(measureCondition, index) in conditions">',
-      '<measure-condition :condition="measureCondition" :index="index" :hide-help="true" :room-action="showAction" :room-condition-components="showConditionComponents" :room-minimum-price="showMinimumPrice" :room-ratio="showRatio" :room-entry-price="showEntryPrice" :room-amount="showAmount" :room-certificate-type="showCertificateType" :room-certificate="showCertificate">',
+      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-action="showAction" :room-condition-components="showConditionComponents" :room-minimum-price="showMinimumPrice" :room-ratio="showRatio" :room-entry-price="showEntryPrice" :room-amount="showAmount" :room-certificate-type="showCertificateType" :room-certificate="showCertificate">',
         '<div class="col-md-2">',
           '<div class="form-group">',
-            '<label for="" class="form-label" v-if="index == 0">&nbsp;</label>',
+            '<label for="" class="form-label" v-if="index == 0">&nbsp;<span class="form-hint-3-line">&nbsp;</span></label>',
             '<a class="secondary-button text-danger" href="#" v-on:click.prevent="removeCondition(condition, index)" v-if="canRemoveMeasureCondition">',
               'Remove condition',
             '</a>',
@@ -20,7 +20,7 @@ var template = [
 
 Vue.component("conditions-coordinator", {
   template: template,
-  props: ["conditions"],
+  props: ["conditions", "hideHelp"],
   data: function() {
     return {
 

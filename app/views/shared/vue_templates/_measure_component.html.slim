@@ -2,67 +2,98 @@ script type="text/x-template" id="measure-component-template"
   .row
     .col-md-4
       .form-group
-        label.form-label
+        label.form-label v-if="index === 0"
           | Duty expression
         = content_tag "custom-select", "", { url: "/duty_expressions", "label-field" => "description", "value-field" => "duty_expression_id", "code-field" => "duty_expression_code", "v-model" => "measureComponent.duty_expression_id", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--duty-expression", "abbreviation-class-name" => "abbreviation--duty-expression", ":options-filter" => "expressionsFriendlyDuplicate", ":on-change" => "onDutyExpressionSelected" }
 
-    .col-md-3 v-if="showDutyAmountOrPercentage"
-      .form-group
-        label.form-label
+    .col-md-3 v-if="roomDutyAmountOrPercentage"
+      .form-group v-if="showDutyAmountOrPercentage"
+        label.form-label v-if="index === 0"
           | Duty amount (% or €)
-        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
-
-    .col-md-3 v-if="showDutyAmountPercentage"
-      .form-group
-        label.form-label
+        input.form-control v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Duty amount (% or €)
+        | &nbsp;
+    .col-md-3 v-if="roomDutyAmountPercentage"
+      .form-group v-if="showDutyAmountPercentage"
+        label.form-label v-if="index === 0"
           | Duty amount (%)
-        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
-
-    .col-md-3 v-if="showDutyAmountNegativePercentage"
-      .form-group
-        label.form-label
+        input.form-control v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Duty amount (%)
+        | &nbsp;
+    .col-md-3 v-if="roomDutyAmountNegativePercentage"
+      .form-group v-if="showDutyAmountNegativePercentage"
+        label.form-label v-if="index === 0"
           | Duty amount (-%)
-        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
-
-    .col-md-3 v-if="showDutyAmountNumber"
-      .form-group
-        label.form-label
+        input.form-control v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Duty amount (-%)
+        | &nbsp;
+    .col-md-3 v-if="roomDutyAmountNumber"
+      .form-group v-if="showDutyAmountNumber"
+        label.form-label v-if="index === 0"
           | Duty amount (€)
-        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
-
-    .col-md-3 v-if="showDutyAmountMinimum"
-      .form-group
-        label.form-label
+        input.form-control v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Duty amount (€)
+        | &nbsp;
+    .col-md-3 v-if="roomDutyAmountMinimum"
+      .form-group v-if="showDutyAmountMinimum"
+        label.form-label v-if="index === 0"
           | Duty amount (at least €)
-        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
-
-    .col-md-3 v-if="showDutyAmountMaximum"
-      .form-group
-        label.form-label
+        input.form-control v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Duty amount (at least €)
+        | &nbsp;
+    .col-md-3 v-if="roomDutyAmountMaximum"
+      .form-group v-if="showDutyAmountMaximum"
+        label.form-label v-if="index === 0"
           | Duty amount (not more than €)
-        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
-
-    .col-md-3 v-if="showDutyRefundAmount"
-      .form-group
-        label.form-label
+        input.form-control v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Duty amount (not more than €)
+        | &nbsp;
+    .col-md-3 v-if="roomDutyRefundAmount"
+      .form-group v-if="showDutyRefundAmount"
+        label.form-label v-if="index === 0"
           | Refund amount (€)
-        input.form-control v-model="measureComponent.amount" type="number" min="0" step="0.0001"
-
-    .col-md-3 v-if="showMonetaryUnit"
-      .form-group
-        label.form-label
+        input.form-control v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001"
+      .form-group v-else=""
+        label.form-label v-if="index == 0"
+          | Refund amount (€)
+        | &nbsp;
+    .col-md-3 v-if="roomMonetaryUnit"
+      .form-group v-if="showMonetaryUnit"
+        label.form-label v-if="index === 0"
           | Monetary unit
         = content_tag "custom-select", "", { url: "/monetary_units", "label-field" => "description", "value-field" => "monetary_unit_code", "code-field" => "monetary_unit_code", "v-model" => "measureComponent.monetary_unit_code", "placeholder" => "― select the monetary unit or blank for EURO ―", "date-sensitive" => true, "code-class-name" => "prefix--monetary-unit", ":on-change" => "onMonetaryUnitSelected" }
-
-    .col-md-3 v-if="showMeasurementUnit"
-      .form-group
-        label.form-label
+      .form-group v-else=""
+        label.form-label v-if="index === 0"
+          | Monetary unit
+        | &nbsp;
+    .col-md-3 v-if="roomMeasurementUnit"
+      .form-group v-if="showMeasurementUnit"
+        label.form-label v-if="index === 0"
           | Measurement unit
-        = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measureComponent.measurement_unit_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit", ":on-change" => "onMeasurementUnitSelected" }
-
-    .col-md-3 v-if="showMeasurementUnit"
-      .form-group
-        label.form-label
+        = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "measureComponent.measurement_unit_code", "placeholder" => "― select the measurement unit ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit", ":on-change" => "onMeasurementUnitSelected" }
+      .form-group v-else=""
+        label.form-label v-if="index === 0"
+          | Measurement unit
+        | &nbsp;
+    .col-md-3 v-if="roomMeasurementUnit"
+      .form-group v-if="showMeasurementUnit"
+        label.form-label v-if="index === 0"
           | Measurement unit qualifier
-        = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measureComponent.measurement_unit_qualifier_code", "placeholder" => "― select the duty expression to use ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit-qualifier", ":on-change" => "onMeasurementUnitQualifierSelected" }
+        = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "measureComponent.measurement_unit_qualifier_code", "placeholder" => "― select the measurement unit qualifier ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit-qualifier", ":on-change" => "onMeasurementUnitQualifierSelected" }
+      .form-group v-else=""
+        label.form-label v-if="index === 0"
+          | Measurement unit qualifier
+        | &nbsp;
     slot

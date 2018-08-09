@@ -1,21 +1,21 @@
 var template = [
   '<div>',
-    '<div :class="classes" v-for="(component, index) in components">',
-      '<measure-condition-component v-if="isMeasureConditionComponent" :measure-condition-component="component" :index="index" :room-duty-amount-or-percentage="showDutyAmountOrPercentage" :room-duty-amount-percentage="showDutyAmountPercentage" :room-duty-amount-negative-percentage="showDutyAmountNegativePercentage" :room-duty-amount-number="showDutyAmountNumber" :room-duty-amount-minimum="showDutyAmountMinimum" :room-duty-amount-maximum="showDutyAmountMaximum" :room-duty-amount-negative-number="showDutyAmountNegativeNumber" :room-duty-refund-amount="showDutyRefundAmount" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
-        '<div class="col-md-1" v-if="canRemoveComponent">',
+    '<div :class="classes" v-for="(component, idx) in components">',
+      '<measure-condition-component v-if="isMeasureConditionComponent" :measure-condition-component="component" :index="Math.max(idx,index)" :room-duty-amount-or-percentage="showDutyAmountOrPercentage" :room-duty-amount-percentage="showDutyAmountPercentage" :room-duty-amount-negative-percentage="showDutyAmountNegativePercentage" :room-duty-amount-number="showDutyAmountNumber" :room-duty-amount-minimum="showDutyAmountMinimum" :room-duty-amount-maximum="showDutyAmountMaximum" :room-duty-amount-negative-number="showDutyAmountNegativeNumber" :room-duty-refund-amount="showDutyRefundAmount" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
+        '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
-            '<label for="" class="form-label" v-if="index == 0">&nbsp;</label>',
-            '<a class="secondary-button text-danger" href="#" v-on:click.prevent="removeComponent(index)">',
+            '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
+            '<a class="secondary-button text-danger" href="#" v-on:click.prevent="removeComponent(idx)">',
               'Remove',
             '</a>',
           '</div>',
         '</div>',
       '</measure-condition-component>',
-      '<measure-component v-if="isMeasureComponent" :measure-component="component" :index="index" :room-duty-amount-or-percentage="showDutyAmountOrPercentage" :room-duty-amount-percentage="showDutyAmountPercentage" :room-duty-amount-negative-percentage="showDutyAmountNegativePercentage" :room-duty-amount-number="showDutyAmountNumber" :room-duty-amount-minimum="showDutyAmountMinimum" :room-duty-amount-maximum="showDutyAmountMaximum" :room-duty-amount-negative-number="showDutyAmountNegativeNumber" :room-duty-refund-amount="showDutyRefundAmount" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
-        '<div class="col-md-1" v-if="canRemoveComponent">',
+      '<measure-component v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-duty-amount-or-percentage="showDutyAmountOrPercentage" :room-duty-amount-percentage="showDutyAmountPercentage" :room-duty-amount-negative-percentage="showDutyAmountNegativePercentage" :room-duty-amount-number="showDutyAmountNumber" :room-duty-amount-minimum="showDutyAmountMinimum" :room-duty-amount-maximum="showDutyAmountMaximum" :room-duty-amount-negative-number="showDutyAmountNegativeNumber" :room-duty-refund-amount="showDutyRefundAmount" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
+        '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
-            '<label for="" class="form-label" v-if="index == 0">&nbsp;</label>',
-            '<a class="secondary-button text-danger" href="#" v-on:click.prevent="removeComponent(index)">',
+            '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
+            '<a class="secondary-button text-danger" href="#" v-on:click.prevent="removeComponent(idx)">',
               'Remove',
             '</a>',
           '</div>',
@@ -31,7 +31,7 @@ var template = [
 
 Vue.component("components-coordinator", {
   template: template,
-  props: ["components", "type", "classes"],
+  props: ["components", "type", "classes", "index"],
   data: function() {
     return {
 
