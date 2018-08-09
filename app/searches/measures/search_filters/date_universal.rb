@@ -98,6 +98,21 @@ module Measures
         def is_not_unspecified_clause
           "#{field_name} IS NOT NULL"
         end
+
+        def is_before_clause
+          compare_sql("<")
+        end
+
+        def is_after_clause
+          compare_sql(">")
+        end
+
+        def compare_sql(compare_operator)
+          res = "#{field_name}::date #{compare_operator} ?"
+          res += " OR #{is_not_specified_clause}" if field_name == "validity_end_date"
+
+          res
+        end
     end
   end
 end
