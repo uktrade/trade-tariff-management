@@ -101,7 +101,7 @@ $(document).ready(function() {
       },
       visibleMeasures: function() {
         return this.measuresForTable.filter(function (measure) {
-          return measure.visible && !measure.deleted;
+          return measure.visible;
         });
       },
       selectedMeasureObjects: function() {
@@ -308,7 +308,7 @@ $(document).ready(function() {
       measuresDeleted: function(deletedMeasures){
         var self = this;
         deletedMeasures.forEach(function(deletedMeasure){
-          var measureInTable = self.visibleMeasures.find(function(msr){
+          var measureInTable = self.measures.find(function(msr){
             return msr.measure_sid == deletedMeasure.measure_sid;
           });
           if (measureInTable) {
@@ -326,6 +326,11 @@ $(document).ready(function() {
         removedMeasures.forEach(function(removedMeasure) {
           var index = self.measures.indexOf(removedMeasure);
           self.measures.splice(index, 1);
+
+          index = self.selectedMeasures.indexOf(removedMeasure.measure_sid);
+          if (index != -1) {
+            self.selectedMeasures.splice(index, 1);
+          }
         });
         this.measuresUpdated();
       },
