@@ -3,6 +3,8 @@
 #
 # TODO: remove me after you update all existing record on DEV and STAGING servers
 #
+# use: ::TemporaryWorkers::SetPublishedStatusWorker.perform_async
+#
 
 module TemporaryWorkers
   class SetPublishedStatusWorker
