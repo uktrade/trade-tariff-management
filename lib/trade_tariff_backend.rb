@@ -50,6 +50,14 @@ module TradeTariffBackend
       ENV["GOVUK_APP_DOMAIN"] == "tariff-management-production.cloudapps.digital"
     end
 
+    def staging?
+      ENV["GOVUK_APP_DOMAIN"] == "tariffs-uat.cloudapps.digital"
+    end
+
+    def development?
+      ENV["GOVUK_APP_DOMAIN"] == "tariffs-dev"
+    end
+
     def data_migration_path
       File.join(Rails.root, 'db', 'data_migrations')
     end

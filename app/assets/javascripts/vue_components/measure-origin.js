@@ -60,9 +60,11 @@ Vue.component("measure-origin", {
   },
   methods: {
     addExclusion: function() {
+      var options = this.getExclusionOptions(this.origin.geographical_area_id);
       this.origin.exclusions.push({
         geographical_area_id: null,
-        options: window.geographical_areas_json[this.origin.geographical_area_id]
+        options: options,
+        uid: new Date().valueOf()
       });
     },
     removeExclusion: function(exclusion) {
@@ -73,9 +75,47 @@ Vue.component("measure-origin", {
       }
 
       this.origin.exclusions.splice(index, 1);
+      this.changeExclusion();
     },
     geographicalAreaChanged: function(newGeographicalArea) {
       this.origin.geographical_area = newGeographicalArea;
+    },
+    changeExclusion: function(){
+      var currentExclusions,
+          self = this;
+      currentExclusions = this.getCurrentExclusionsArray();
+      // reset exclusions:
+      this.origin.exclusions.forEach(function(exclusion){
+        exclusion.options = window.geographical_areas_json[self.origin.geographical_area_id].slice();
+      });
+      // remove current exclusions from options:
+      currentExclusions.forEach(function(chosenExclusionId){
+        self.origin.exclusions.forEach(function(exclusion){
+          var selected = exclusion.geographical_area_id == chosenExclusionId;
+          if (!selected) {
+            var selectedExclusion = exclusion.options.find(function(opt){
+              return opt.geographical_area_id == chosenExclusionId;
+            });
+            var idx = exclusion.options.indexOf(selectedExclusion);
+            exclusion.options.splice(idx, 1);
+          }
+        });
+      });
+    },
+    getCurrentExclusionsArray: function(){
+      return this.origin.exclusions.reduce(function(memo, exclusion){
+        if (exclusion.geographical_area_id) {
+          return memo.concat(exclusion.geographical_area_id);
+        }
+        return memo;
+      }, []);
+    },
+    getExclusionOptions: function(geographicalAreaId){
+      var currentExclusions = this.getCurrentExclusionsArray(),
+          areas = window.geographical_areas_json[geographicalAreaId];
+      return areas.slice().filter(function(area){
+        return !currentExclusions.includes(area.geographical_area_id);
+      });
     }
   }
 });

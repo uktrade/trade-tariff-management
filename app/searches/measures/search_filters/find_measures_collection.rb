@@ -9,7 +9,10 @@ module Measures
       end
 
       def searchable_data_not_indexed
-        where("searchable_data_updated_at IS NULL")
+        where(
+          "searchable_data_updated_at IS NULL OR searchable_data_updated_at::date < ?",
+          Date.today.midnight.strftime("%Y-%m-%d")
+        )
       end
 
       def operation_search_jsonb_default

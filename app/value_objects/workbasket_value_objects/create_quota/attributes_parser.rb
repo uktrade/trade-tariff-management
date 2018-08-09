@@ -7,6 +7,7 @@ module WorkbasketValueObjects
         end_date
         operation_date
         workbasket_name
+        quota_ordernumber
         commodity_codes
         additional_codes
       )
@@ -15,6 +16,10 @@ module WorkbasketValueObjects
         define_method(option_name) do
           ops[option_name]
         end
+      end
+
+      def quota_periods
+        prepare_collection(:quota_periods, :start_date)
       end
 
       private
