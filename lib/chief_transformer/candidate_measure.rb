@@ -115,6 +115,8 @@ class ChiefTransformer
         end
       end
 
+      self.status = 'published'
+
       super
     end
 

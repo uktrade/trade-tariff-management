@@ -6,6 +6,8 @@ class SearchableDataReindexWorker
   sidekiq_options queue: :default, retry: 5
 
   def perform
-    ::Measures::ReindexSearchableData.new.run
+    if Rails.env.production?
+      ::Measures::ReindexSearchableData.new.run
+    end
   end
 end

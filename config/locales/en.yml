@@ -24,18 +24,22 @@ en:
 
   measures:
     states:
-      draft_incomplete: "Draft - incomplete"
-      draft_ready_for_cross_check: "Draft - ready for cross-check"
-      submitted_for_cross_check: "Submitted for cross-check"
+      new_in_progress: "New - in progress"
+      editing: "Editing"
+      awaiting_cross_check: "Awaiting cross-check"
       cross_check_rejected: "Cross-check rejected"
       ready_for_approval: "Ready for approval"
-      submitted_for_approval: "Submitted for approval"
+      awaiting_approval: "Awaiting approval"
       approval_rejected: "Approval rejected"
       ready_for_export: "Ready for export"
-      export_pending: "Export pending"
+      awaiting_cds_upload_create_new: "Awaiting CDS upload - create new"
+      awaiting_cds_upload_edit: "Awaiting CDS upload - edit"
+      awaiting_cds_upload_overwrite: "Awaiting CDS upload - overwrite"
+      awaiting_cds_upload_delete: "Awaiting CDS upload - delete"
       sent_to_cds: "Sent to CDS"
-      cds_import_error: "CDS import error"
-      already_in_cds: "Already in CDS"
+      sent_to_cds_delete: "Sent to CDS - delete"
+      published: "Published"
+      cds_error: "CDS error"
 
   create_measures:
     errors:
