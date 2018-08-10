@@ -49,5 +49,5 @@ script type="text/x-template" id="change-footnotes-popup-template"
               .form-hint
                 | Select this option and leave the footnotes field above empty to remove all existing footnotes in the selection.
 
-      button.button @click.prevent="confirmChanges" :disabled="confirmBtnDisabled" Update
+      button.button @click.prevent="confirmChanges" :disabled="confirmBtnDisabled" Update selected measures
       a.secondary-button href="#" @click.prevent="onClose" Cancel

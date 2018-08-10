@@ -19,7 +19,7 @@ script type="text/x-template" id="footnote-template"
           = content_tag "custom-select", "", { url: "/footnote_types", "label-field" => "description", "value-field" => "footnote_type_id", "code-field" => "footnote_type_id", "v-model" => "footnote.footnote_type_id", "placeholder" => "― select the footnote type to use ―", "date-sensitive" => true, "code-class-name" => "prefix--footnote-type" }
     div v-if="footnote.footnote_type_id"
       .row
-        .col-md-8
+        .col-md-12
           .form-group
             label.form-label
               span.create-measures-sub_header
