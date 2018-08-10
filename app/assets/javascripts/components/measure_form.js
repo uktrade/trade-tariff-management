@@ -60,6 +60,7 @@ $(document).ready(function() {
             selected: false
           }
         },
+        quota_sections: [],
         errors: []
       };
 
@@ -156,7 +157,7 @@ $(document).ready(function() {
       if (this.measure.measure_components.length === 0) {
         this.measure.measure_components.push({
           duty_expression_id: null,
-          amount: null,
+          duty_amount: null,
           measurement_unit_code: null,
           measurement_unit_qualifier_code: null
         });
