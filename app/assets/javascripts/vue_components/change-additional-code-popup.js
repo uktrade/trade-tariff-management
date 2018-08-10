@@ -1,7 +1,10 @@
 Vue.component("change-additional-code-popup", {
   template: "#change-additional-code-popup-template",
   data: function(){
-    return { measuresAdditionalCodes: [] };
+    return {
+      removeAdditionalCodes: [],
+      measuresAdditionalCodes: []
+    };
   },
   props: ["measures", "onClose", "open"],
   mounted: function(){
@@ -22,14 +25,19 @@ Vue.component("change-additional-code-popup", {
       var measuresChangesObjs = [];
       for (var currentAdditionalCode in this.additionalCodesMap) {
         if (this.additionalCodesMap.hasOwnProperty(currentAdditionalCode)) {
-          var newAdditionalCode = this.additionalCodesMap[currentAdditionalCode];
-          var matchingMeasures = this.measures.filter(function(measure){
-            return currentAdditionalCode == (measure.additional_code || "");
-          });
-          measuresChangesObjs.push({
-            matchingMeasures: matchingMeasures,
-            newAdditionalCode: newAdditionalCode
-          });
+          var removeAdditionalCode, newAdditionalCode;
+          removeAdditionalCode = this.removeAdditionalCodes.includes(currentAdditionalCode);
+          newAdditionalCode = removeAdditionalCode ? "" : this.additionalCodesMap[currentAdditionalCode];
+
+          if (!!newAdditionalCode || removeAdditionalCode) {
+            var matchingMeasures = this.measures.filter(function(measure){
+              return currentAdditionalCode == (measure.additional_code || "");
+            });
+            measuresChangesObjs.push({
+              matchingMeasures: matchingMeasures,
+              newAdditionalCode: newAdditionalCode
+            });
+          }
         }
       }
 
@@ -54,9 +62,22 @@ Vue.component("change-additional-code-popup", {
     setAdditionalCode: function(currentAdditionalCode, newAdditionalCode){
       var key = currentAdditionalCode || "";
       this.additionalCodesMap[key] = newAdditionalCode;
+    },
+    additionalCodeForRemoval: function(currentAdditionalCode){
+      this.removeAdditionalCodes.push(currentAdditionalCode);
+    },
+    additionalCodeNotForRemoval: function(currentAdditionalCode){
+      var idx = this.removeAdditionalCodes.indexOf(currentAdditionalCode);
+      if (idx != -1) {
+        this.removeAdditionalCodes.splice(idx, 1);
+      }
     }
   },
   provide: function(){
-    return { setAdditionalCode: this.setAdditionalCode };
+    return {
+      setAdditionalCode: this.setAdditionalCode,
+      additionalCodeForRemoval: this.additionalCodeForRemoval,
+      additionalCodeNotForRemoval: this.additionalCodeNotForRemoval
+    };
   }
 });

@@ -1,7 +1,11 @@
 Vue.component("measure-change-additional-code-input", {
   template: "#measure-change-additional-code-input-template",
   props: ["additionalCode"],
-  inject: ["setAdditionalCode"],
+  inject: [
+    "setAdditionalCode",
+    "additionalCodeForRemoval",
+    "additionalCodeNotForRemoval"
+  ],
   data: function(){
     return {
       removeAdditionalCode: false,
@@ -12,8 +16,10 @@ Vue.component("measure-change-additional-code-input", {
     removeAdditionalCode: function(){
       if (this.removeAdditionalCode) {
         this.setAdditionalCode(this.additionalCode, null);
+        this.additionalCodeForRemoval(this.additionalCode);
       } else {
         this.setAdditionalCode(this.additionalCode, this.newAdditionalCode);
+        this.additionalCodeNotForRemoval(this.additionalCode);
       }
     },
     newAdditionalCode: function(){
