@@ -1,0 +1,23 @@
+.opening-balance {
+  label {
+    font-size: 14px !important;
+    font-weight: 600;
+
+    display: flex;
+    align-items: flex-end;
+  }
+
+  & + .opening-balance {
+    padding-top: 10px;
+  }
+
+  &.opening-balance--criticality {
+    label {
+      height: 3em;
+    }
+  }
+}
+
+.multiple-balances {
+  margin: 0 0 20px !important;
+}

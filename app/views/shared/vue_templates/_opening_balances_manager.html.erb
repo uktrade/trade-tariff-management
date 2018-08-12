@@ -1,54 +1,150 @@
 <script type="text/x-template" id="opening-balances-manager-template">
   <div class="opening-balances">
-    <div v-if="singleBalance">
-      <div v-for="balance in section.opening_balances">
-        <div class="form-group">
-          <label for="" class="form-label">
-            Opening balance
-          </label>
+    <div v-if="noPerPeriod">
+      <div class="form-group">
+        <label for="" class="form-label">
+          Opening balance
+        </label>
 
-          <div class="row">
-            <div class="col-md-3">
-              <input class="form-control" v-model="balance.balance" />
-            </div>
+        <div class="row">
+          <div class="col-md-3">
+            <input class="form-control" v-model="section.balance" />
           </div>
-        </div>
-
-        <div class="form-group" v-if="!omitCriticality">
-          <label for="" class="form-label">
-            Should the quota start as 'critical'?
-          </label>
-
-          <div class="multiple-choice">
-            <input id="single-balance-critical" name="" type="checkbox" value="1" v-model="section.critical">
-            <label for="single-balance-critical">Yes &ndash; flag the quota as critical</label>
-          </div>
-        </div>
-
-        <div class="form-group" v-if="!omitCriticality">
-          <label for="" class="form-label">
-            What's the quota's criticality threshold?
-          </label>
-
-          <div class="row">
-            <div class="col-xs-10 col-sm-4 col-md-2 col-lg-1">
-              <input class="form-control" v-model="section.criticality_threshold" />
-            </div>
-            <div class="col-xs-2 col-sm-1 col-md-1">
-              <span class="input-suffix">%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="" class="form-label">
-            What duty should be charged in-quota
-          </label>
-
-          <components-coordinator :components="section.duty_expressions" type="measure_component" :hide-help="true" :index="0"></components-coordinator>
         </div>
       </div>
 
+      <div class="form-group" v-if="!omitCriticality">
+        <label for="" class="form-label">
+          Should the quota start as 'critical'?
+        </label>
+
+        <div class="multiple-choice">
+          <input id="single-balance-critical" name="" type="checkbox" value="1" v-model="section.critical">
+          <label for="single-balance-critical">Yes &ndash; flag the quota as critical</label>
+        </div>
+      </div>
+
+      <div class="form-group" v-if="!omitCriticality">
+        <label for="" class="form-label">
+          What's the quota's criticality threshold?
+        </label>
+
+        <div class="row">
+          <div class="col-xs-10 col-sm-4 col-md-2 col-lg-1">
+            <input class="form-control" v-model="section.criticality_threshold" />
+          </div>
+          <div class="col-xs-2 col-sm-1 col-md-1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="" class="form-label">
+          What duty should be charged in-quota
+        </label>
+
+        <components-coordinator classes="measure-component unbold" :components="section.duty_expressions" type="measure_component" :hide-help="true" :index="0"></components-coordinator>
+      </div>
     </div>
-  </div>
+
+    <div v-else>
+      <div class="form-group" v-if="!section.staged">
+        <label for="" class="form-label">
+          Opening balance
+        </label>
+
+        <div class="row">
+          <div class="col-md-3">
+            <input class="form-control" v-model="section.balance" />
+          </div>
+        </div>
+      </div>
+
+      <div class="multiple-balances">
+        <div :class="[showCriticality ? 'opening-balance--criticality' : '', 'opening-balance']" v-for="(balance, index) in section.opening_balances">
+          <div class="static-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  &nbsp;
+                </label>
+                Year {{index + 1}}
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Opening balance
+                </label>
+                <input class="form-control" v-model="balance.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Critical
+                </label>
+
+                <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Criticality threshold
+                </label>
+
+                <input class="form-control" v-model="balance.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" v-if="!omitCriticality && !section.criticality_each_period">
+        <label for="" class="form-label">
+          Should the quota start as 'critical'?
+        </label>
+
+        <div class="multiple-choice">
+          <input id="single-balance-critical" name="" type="checkbox" value="1" v-model="section.critical">
+          <label for="single-balance-critical">Yes &ndash; flag the quota as critical</label>
+        </div>
+      </div>
+
+      <div class="form-group" v-if="!omitCriticality && !section.criticality_each_period">
+        <label for="" class="form-label">
+          What's the quota's criticality threshold?
+        </label>
+
+        <div class="row">
+          <div class="col-xs-10 col-sm-4 col-md-2 col-lg-1">
+            <input class="form-control" v-model="section.criticality_threshold" />
+          </div>
+          <div class="col-xs-2 col-sm-1 col-md-1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" v-if="!section.duties_each_period">
+        <label for="" class="form-label">
+          What duty should be charged in-quota?
+        </label>
+        <br>
+
+        <components-coordinator :components="section.duty_expressions" classes="measure-component unbold" type="measure_component" :hide-help="true" :index="0"></components-coordinator>
+      </div>
+
+    </div>
+</div>
 </script>
