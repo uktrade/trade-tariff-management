@@ -25,8 +25,7 @@
     .virtual-scroller
       .item-container
         .items style=("margin-top: 0px;")
-
-          - workbasket_settings.quota_periods.map do |item|
+          - quota_periods.map do |item|
             .table__row data-measure-sid="-485562" height="45"
 
               / .table__column.select-all-column
