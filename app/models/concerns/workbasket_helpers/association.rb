@@ -17,6 +17,7 @@ module WorkbasketHelpers
     def move_status_to!(new_status)
       self.manual_add = true
       self.status = new_status
+
       save
     end
   end

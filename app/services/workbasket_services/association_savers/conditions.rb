@@ -55,7 +55,7 @@ module WorkbasketServices
           {
             action_code: condition_ops[:action_code],
             condition_code: condition_ops[:condition_code],
-            condition_duty_amount: condition_ops[:amount],
+            condition_duty_amount: condition_ops[:duty_amount],
             certificate_type_code: condition_ops[:certificate_type_code],
             certificate_code: condition_ops[:certificate_code],
             component_sequence_number: condition_ops[:component_sequence_number]
