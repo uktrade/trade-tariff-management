@@ -74,12 +74,15 @@ module Workbaskets
     private
 
       def check_if_action_is_permitted!
-        # if !step_pointer.main_step? &&
-        #    !workbasket_settings.validations_passed?(previous_step)
+        if (
+             step_pointer.conditions_footnotes? ||
+             step_pointer.review_and_submit_step?
+           ) &&
+           !workbasket_settings.validations_passed?(previous_step)
 
-        #   redirect_to previous_step_url
-        #   return false
-        # end
+          redirect_to previous_step_url
+          return false
+        end
       end
 
       def workbasket_data_can_be_persisted?
