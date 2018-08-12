@@ -14,6 +14,7 @@ module Workbaskets
         FootnoteDescription
         FootnoteDescriptionPeriod
         FootnoteAssociationMeasure
+        MeasureComponent
         MeasureCondition
         MeasureConditionComponent
         MeasureExcludedGeographicalArea
