@@ -51,6 +51,10 @@ module WorkbasketValueObjects
         )
       end
 
+      def configure_quota?
+        current_step == "configure_quota"
+      end
+
       def conditions_footnotes?
         current_step == "conditions_footnotes"
       end

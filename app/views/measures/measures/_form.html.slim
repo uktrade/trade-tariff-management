@@ -18,7 +18,7 @@
   = render "measures/measures/form_parts/operation_date", f: f
 
   .js-workbasket-errors-container.alert.alert-danger v-if="hasErrors"
-    h3.measure-form-errors-header
+    h3.workbasket-form-errors-header
       | Please, review the following errors:
     ul
       li v-for="error in errors"
