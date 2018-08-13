@@ -80,7 +80,7 @@ module WorkbasketServices
 
         def unit_ops(attrs)
           {
-            duty_amount: attrs[:amount],
+            duty_amount: attrs[:duty_amount],
             monetary_unit_code: attrs[:monetary_unit_code],
             measurement_unit_code: attrs[:measurement_unit_code],
             measurement_unit_qualifier_code: attrs[:measurement_unit_qualifier_code]

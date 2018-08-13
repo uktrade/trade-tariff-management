@@ -147,13 +147,13 @@ module WorkbasketInteractions
 
               duties_source = section_ops["duties_each_period"] == "true" ? opening_balance_ops : section_ops
 
-              period_measure_components = duties_source["duty_expressions"].select do |k, option|
-                option["duty_expression_id"].present?
-              end
+              period_measure_components = {}
 
-              Rails.logger.info ""
-              Rails.logger.info ""
-              Rails.logger.info ""
+              duties_source["duty_expressions"].select do |k, option|
+                option["duty_expression_id"].present?
+              end.map do |k, duty_expression_ops|
+                period_measure_components[k] = ActiveSupport::HashWithIndifferentAccess.new(duty_expression_ops)
+              end
 
               candidates.map do |code|
                 attrs_parser.instance_variable_set(:@start_date, start_point)

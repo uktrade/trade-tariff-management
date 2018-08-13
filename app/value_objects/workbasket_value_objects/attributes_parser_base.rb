@@ -50,11 +50,21 @@ module WorkbasketValueObjects
     end
 
     def measure_components
-      if @measure_components.present?
+      res = if @measure_components.present?
+        Rails.logger.info ""
+        Rails.logger.info "@measure_components: #{@measure_components.inspect}"
+        Rails.logger.info ""
+
         @measure_components
       else
         prepare_collection(:measure_components, :duty_expression_id)
       end
+
+      Rails.logger.info ""
+      Rails.logger.info "res: #{res.inspect}"
+      Rails.logger.info ""
+
+      res
     end
 
     def excluded_geographical_areas
