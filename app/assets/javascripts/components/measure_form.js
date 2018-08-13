@@ -499,6 +499,10 @@ $(document).ready(function() {
           additional_codes: payload.additional_codes,
           commodity_codes: payload.commodity_codes,
           commodity_codes_exclusions: payload.commodity_codes_exclusions,
+          quota_ordernumber: payload.quota_ordernumber,
+          quota_is_licensed: payload.quota_is_licensed,
+          quota_licence: payload.quota_licence,
+          quota_description: payload.quota_description,
           footnotes: [],
           measure_components: [],
           conditions: []
