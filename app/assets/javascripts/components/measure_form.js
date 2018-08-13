@@ -563,10 +563,7 @@ $(document).ready(function() {
       },
       createQuotaConfigureQuotaStepPayload: function() {
         var payload = {
-          quota_periods: [
-            {'param1': 'Hey'}, {'param2': 'Man!'}
-          ]
-          // You can add add 'Configure Quota' step payload options here!
+          quota_periods: this.measure.quota_periods
         };
 
         return payload;
