@@ -34,7 +34,7 @@ module WorkbasketInteractions
                   :candidates_with_errors
 
     def initialize(workbasket, current_step, save_mode, settings_ops={})
-      if self.class::WORKBASKET_TYPE == "CreateQuota"
+      if current_step == 'main' && self.class::WORKBASKET_TYPE == "CreateQuota"
         settings_ops['start_date'] = Date.today.strftime("%Y-%m-%d")
         settings_ops['workbasket_name'] = settings_ops['quota_ordernumber']
       end
