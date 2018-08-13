@@ -23,52 +23,7 @@ module Workbaskets
     end
 
     expose(:quota_periods) do
-      start = Date.today + 1.day
-
-      [
-        OpenStruct.new(
-          validity_start_date: start,
-          validity_end_date: start + 1.year,
-          initial_volume: "4325 Kilogram Net",
-          critical_state: true,
-          critical_threshold: "90%"
-        ),
-        OpenStruct.new(
-          validity_start_date: start + 1.year + 1.day,
-          validity_end_date: start + 2.years,
-          initial_volume: "1000 Kilogram Net",
-          critical_state: true,
-          critical_threshold: "90%"
-        ),
-        OpenStruct.new(
-          validity_start_date: start + 2.year + 1.day,
-          validity_end_date: start + 3.years,
-          initial_volume: "1325 Kilogram Net",
-          critical_state: true,
-          critical_threshold: "90%"
-        ),
-        OpenStruct.new(
-          validity_start_date: start + 3.year + 1.day,
-          validity_end_date: start + 4.years,
-          initial_volume: "2220 Kilogram Net",
-          critical_state: true,
-          critical_threshold: "90%"
-        ),
-        OpenStruct.new(
-          validity_start_date: start + 4.year + 1.day,
-          validity_end_date: start + 5.years,
-          initial_volume: "1567 Kilogram Net",
-          critical_state: true,
-          critical_threshold: "90%"
-        ),
-        OpenStruct.new(
-          validity_start_date: start + 5.year + 1.day,
-          validity_end_date: start + 6.years,
-          initial_volume: "3450 Kilogram Net",
-          critical_state: true,
-          critical_threshold: "90%"
-        ),
-      ]
+      workbasket_settings.quota_periods
     end
 
     private

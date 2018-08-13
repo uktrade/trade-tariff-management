@@ -151,6 +151,10 @@ module WorkbasketInteractions
                 option["duty_expression_id"].present?
               end
 
+              Rails.logger.info ""
+              Rails.logger.info ""
+              Rails.logger.info ""
+
               candidates.map do |code|
                 attrs_parser.instance_variable_set(:@start_date, start_point)
                 attrs_parser.instance_variable_set(:@end_date, end_point)

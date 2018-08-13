@@ -13,6 +13,12 @@
       .table__column.additional_code-column
         a Additional code
 
+      .table__column.validity_start_date-column
+        a Start date
+
+      .table__column.validity_end_date-column
+        a End date
+
       .table__column.duties-column
         a Duties
 
@@ -37,6 +43,12 @@
 
               .table__column.additional_code-column
                 = item.additional_code
+
+              .table__column.validity_start_date-column
+                = item.validity_start_date.strftime("%Y-%m-%d")
+
+              .table__column.validity_end_date-column
+                = item.validity_end_date.try(:strftime, "%Y-%m-%d")
 
               .table__column.duties-column
                 = item.duty_expression
