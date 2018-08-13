@@ -500,7 +500,7 @@ $(document).ready(function() {
           commodity_codes: payload.commodity_codes,
           commodity_codes_exclusions: payload.commodity_codes_exclusions,
           quota_ordernumber: payload.quota_ordernumber,
-          quota_is_licensed: payload.quota_is_licensed,
+          quota_is_licensed: payload.quota_is_licensed === "true",
           quota_licence: payload.quota_licence,
           quota_description: payload.quota_description,
           footnotes: [],
@@ -998,6 +998,11 @@ $(document).ready(function() {
       "measure.additional_code_type_id": function(newVal, oldVal) {
         if (oldVal && !newVal) {
           this.measure.additional_code = null;
+        }
+      },
+      "measure.quota_is_licensed": function(newVal)  {
+        if (!newVal) {
+          this.measure.quota_licence = null;
         }
       }
     }
