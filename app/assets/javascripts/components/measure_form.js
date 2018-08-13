@@ -40,6 +40,8 @@ $(document).ready(function() {
   var app = new Vue({
     el: form,
     data: function() {
+      var self = this;
+
       var data = {
         goods_nomenclature_code: "",
         additional_code_preview: "",
@@ -146,15 +148,25 @@ $(document).ready(function() {
 
         if (window.all_settings.quota_periods) {
           data.quota_sections = objectToArray(window.all_settings.quota_periods).map(function(section) {
+            section.critical = section.critical === "true";
+            section.repeat = section.repeat === "true";
+            section.staged = section.staged === "true";
+            section.criticality_each_period = section.criticality_each_period === "true";
+            section.duties_each_period = section.duties_each_period === "true";
+
             section.duty_expressions = objectToArray(section.duty_expressions).map(function(e) {
               delete e.$order;
-              e.duty_expression_id = e.duty_expression_id.substring(0,2);
+              e.duty_expression_id = self.getDutyExpressionId(e);
+
+              return e;
             });
 
             section.opening_balances = objectToArray(section.opening_balances).map(function(balance) {
               balance.duty_expressions = objectToArray(balance.duty_expressions).map(function(e) {
                 delete e.$order;
-                e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                e.duty_expression_id = self.getDutyExpressionId(e);
+
+                return e;
               });
 
               return balance;
@@ -596,7 +608,9 @@ $(document).ready(function() {
       },
       createQuotaConfigureQuotaStepPayload: function() {
         var payload = {
-          quota_periods: this.quota_sections.map(function(section) {
+          quota_periods: this.quota_sections.map(function(_section) {
+            var section = clone(_section);
+
             section.duty_expressions.forEach(function(e) {
               e.duty_expression_id = e.duty_expression_id.substring(0,2);
             });
@@ -875,13 +889,13 @@ $(document).ready(function() {
       },
       getDutyExpressionId: function(component) {
         var ids = ["01","02","04","19","20"];
-        var id = component.duty_expression.duty_expression_id;
+        var id = component.duty_expression ? component.duty_expression.duty_expression_id : component.duty_expression_id;
 
-        if (ids.indexOf(component.duty_expression.duty_expression_id) === -1) {
+        if (ids.indexOf(id) === -1) {
           return id;
         }
 
-        if (component.monetary_unit) {
+        if (component.monetary_unit || component.monetary_unit_code) {
           return id + "B";
         }
 

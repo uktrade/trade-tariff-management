@@ -18,7 +18,7 @@
           What is the start date of this section?
         </label>
 
-        <date-select v-model="section.start_date"></date-select>
+        <date-select :value.sync="section.start_date"></date-select>
       </div>
 
       <div class="form-group">

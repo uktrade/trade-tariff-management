@@ -10,7 +10,7 @@ Vue.component("quota-section", {
         { id: "custom", label: "Custom" }
       ],
       periods: [
-        { id: "1_repeating", label: "1 year repeating"},
+        // { id: "1_repeating", label: "1 year repeating"},
         { id: "1", label: "1 year" },
         { id: "2", label: "2 years" },
         { id: "3", label: "3 years" },
