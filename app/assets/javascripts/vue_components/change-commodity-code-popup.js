@@ -14,7 +14,8 @@ Vue.component("change-commodity-code-popup", {
       return self.indexOf(code) == index;
     });
     this.commodityCodesMap = this.measuresCommodityCodes.reduce(function(map, commodityCode){
-      map[commodityCode] = null;
+      var key = commodityCode || "";
+      map[key] = null;
       return map;
     }, {});
   },
@@ -24,13 +25,16 @@ Vue.component("change-commodity-code-popup", {
       for (var currentCommodityCode in this.commodityCodesMap) {
         if (this.commodityCodesMap.hasOwnProperty(currentCommodityCode)) {
           var newCommodityCode = this.commodityCodesMap[currentCommodityCode];
-          var matchingMeasures = this.measures.filter(function(measure){
-            return currentCommodityCode == measure.goods_nomenclature.goods_nomenclature_item_id;
-          });
-          measuresChangesObjs.push({
-            matchingMeasures: matchingMeasures,
-            newCommodityCode: newCommodityCode
-          });
+
+          if (!!newCommodityCode) {
+            var matchingMeasures = this.measures.filter(function(measure){
+              return currentCommodityCode == (measure.goods_nomenclature.goods_nomenclature_item_id || "");
+            });
+            measuresChangesObjs.push({
+              matchingMeasures: matchingMeasures,
+              newCommodityCode: newCommodityCode
+            });
+          }
         }
       }
 
@@ -53,7 +57,8 @@ Vue.component("change-commodity-code-popup", {
       this.onClose();
     },
     setCommodityCode: function(currentCommodityCode, newCommodityCode){
-      this.commodityCodesMap[currentCommodityCode] = newCommodityCode;
+      var key = currentCommodityCode || "";
+      this.commodityCodesMap[key] = newCommodityCode;
     }
   },
   provide: function(){
