@@ -17,6 +17,18 @@ function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+function objectToArray(obj) {
+  var arr = [];
+
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k)) {
+      arr.push(obj[k]);
+    }
+  }
+
+  return arr;
+}
+
 $(document).ready(function() {
 
   var form = document.querySelector(".measure-form");
@@ -89,7 +101,8 @@ $(document).ready(function() {
         validity_start_date: null,
         validity_end_date: null,
 
-        existing_quota: null
+        existing_quota: null,
+        quota_sections: []
       };
 
       if (window.__measure) {
@@ -129,6 +142,26 @@ $(document).ready(function() {
               }
             }
           }
+        }
+
+        if (window.all_settings.quota_periods) {
+          data.quota_sections = objectToArray(window.all_settings.quota_periods).map(function(section) {
+            section.duty_expressions = objectToArray(section.duty_expressions).map(function(e) {
+              delete e.$order;
+              e.duty_expression_id = e.duty_expression_id.substring(0,2);
+            });
+
+            section.opening_balances = objectToArray(section.opening_balances).map(function(balance) {
+              balance.duty_expressions = objectToArray(balance.duty_expressions).map(function(e) {
+                delete e.$order;
+                e.duty_expression_id = e.duty_expression_id.substring(0,2);
+              });
+
+              return balance;
+            });
+
+            return section;
+          });
         }
       } else {
         data.measure = default_measure;
@@ -563,7 +596,19 @@ $(document).ready(function() {
       },
       createQuotaConfigureQuotaStepPayload: function() {
         var payload = {
-          quota_periods: this.measure.quota_periods
+          quota_periods: this.quota_sections.map(function(section) {
+            section.duty_expressions.forEach(function(e) {
+              e.duty_expression_id = e.duty_expression_id.substring(0,2);
+            });
+
+            section.opening_balances.forEach(function(balance) {
+              balance.duty_expressions.forEach(function(e) {
+                e.duty_expression_id = e.duty_expression_id.substring(0,2);
+              });
+            });
+
+            return section;
+          })
         };
 
         return payload;
