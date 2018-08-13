@@ -5,7 +5,6 @@ module WorkbasketInteractions
       WORKBASKET_TYPE = "CreateQuota"
 
       ASSOCIATION_LIST = %w(
-        quota_periods
         conditions
         footnotes
         excluded_geographical_areas
