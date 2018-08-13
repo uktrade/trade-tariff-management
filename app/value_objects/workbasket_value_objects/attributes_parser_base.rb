@@ -21,12 +21,13 @@ module WorkbasketValueObjects
 
     def measure_params(code, mode)
       res = {
-        start_date: ops[:start_date],
-        end_date: ops[:end_date],
+        start_date: @start_date || ops[:start_date],
+        end_date: @end_date || ops[:end_date],
         regulation_id: ops[:regulation_id],
         measure_type_id: ops[:measure_type_id],
         reduction_indicator: ops[:reduction_indicator],
-        geographical_area_id: ops[:geographical_area_id]
+        geographical_area_id: ops[:geographical_area_id],
+        ordernumber: ops[:quota_ordernumber]
       }
 
       if mode == :commodity_codes
@@ -46,6 +47,14 @@ module WorkbasketValueObjects
 
     def footnotes
       prepare_collection(:footnotes, :footnote_type_id)
+    end
+
+    def measure_components
+      if @measure_components.present?
+        @measure_components
+      else
+        prepare_collection(:measure_components, :duty_expression_id)
+      end
     end
 
     def excluded_geographical_areas
