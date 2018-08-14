@@ -1,0 +1,86 @@
+- first_measure = workbasket_settings.measures.first
+
+h3.heading-medium Details
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Order number
+      td
+        = attributes_parser.quota_ordernumber
+
+    tr
+      td.heading_column
+        | Type
+      td
+        = "#{first_measure.measure_type_id} #{attributes_parser.measure_type}"
+
+    tr
+      td.heading_column
+        | Operation date
+      td
+        = attributes_parser.operation_date_formatted
+
+    tr
+      td.heading_column
+        | Licensed
+      td
+        = attributes_parser.quota_is_licensed == 'true' ? 'Yes' : 'No'
+
+    tr
+      td.heading_column
+        | Regulation
+      td
+        = attributes_parser.regulation
+
+    tr
+      td.heading_column
+        | Goods
+      td
+        = attributes_parser.commodity_codes_formatted
+
+    tr
+      td.heading_column
+        | Goods exceptions
+      td
+        = attributes_parser.exclusions_formatted
+
+    tr
+      td.heading_column
+        | Additional codes
+      td
+        = attributes_parser.additional_codes_formatted
+
+    tr
+      td.heading_column
+        | Origin
+      td
+        = attributes_parser.origin
+
+    tr
+      td.heading_column
+        | Origin exceptions
+      td
+        = attributes_parser.origin_exceptions
+
+    tr
+      td.heading_column
+        | Conditions
+      td
+        = first_measure.conditions_short_list
+
+    tr
+      td.heading_column
+        | Footnotes
+      td
+        ul
+          - first_measure.footnotes.map do |footnote|
+            li
+              = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
+              br
+              = footnote.description
+
+    tr
+      td.heading_column
+

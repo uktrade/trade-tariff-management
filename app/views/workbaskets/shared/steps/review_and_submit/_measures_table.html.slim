@@ -22,11 +22,12 @@
       .table__column.duties-column
         a Duties
 
-      .table__column.conditions-column
-        a Conditions
+      - if record_type == :measures
+        .table__column.conditions-column
+          a Conditions
 
-      .table__column.footnotes-column
-        a Footnotes
+        .table__column.footnotes-column
+          a Footnotes
 
     .virtual-scroller
       .item-container
@@ -53,8 +54,9 @@
               .table__column.duties-column
                 = item.duty_expression
 
-              .table__column.conditions-column
-                = item.conditions_short_list
+              - if record_type == :measures
+                .table__column.conditions-column
+                  = item.conditions_short_list
 
-              .table__column.footnotes-column
-                = item.footnotes.map { |footnote| "#{footnote.footnote_type_id} - #{footnote.footnote_id}" }.join(', ')
+                .table__column.footnotes-column
+                  = item.footnotes.map { |footnote| "#{footnote.footnote_type_id} - #{footnote.footnote_id}" }.join(', ')

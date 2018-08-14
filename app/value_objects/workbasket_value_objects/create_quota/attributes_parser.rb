@@ -10,6 +10,7 @@ module WorkbasketValueObjects
         quota_ordernumber
         commodity_codes
         additional_codes
+        quota_is_licensed
       )
 
       SIMPLE_OPS.map do |option_name|

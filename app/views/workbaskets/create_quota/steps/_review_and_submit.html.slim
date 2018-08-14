@@ -4,10 +4,10 @@
                           method: :put \
                         } do |f|
 
-  = render "workbaskets/shared/steps/review_and_submit/message", read_only: read_only
-  = render "workbaskets/shared/steps/review_and_submit/details", read_only: read_only
+  = render "workbaskets/create_quota/steps/review_and_submit/message", read_only: read_only
+  = render "workbaskets/create_quota/steps/review_and_submit/details", read_only: read_only
   = render "workbaskets/create_quota/steps/review_and_submit/quota_periods", read_only: read_only
-  = render "workbaskets/shared/steps/review_and_submit/measures", read_only: read_only
+  = render "workbaskets/shared/steps/review_and_submit/measures", read_only: read_only, record_type: :quotas
 
   - if read_only
     .form-actions
