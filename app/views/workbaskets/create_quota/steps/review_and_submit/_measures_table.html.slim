@@ -3,6 +3,13 @@
     .table__header
       / .table__column.select-all-column
       /   input.select-all type="checkbox" value="1"
+
+      .table__column.validity_start_date-column
+        a Start date
+
+      .table__column.validity_end_date-column
+        a End date
+
       .table__column.goods_nomenclature-column
         a
           | Commodity code
@@ -13,21 +20,8 @@
       .table__column.additional_code-column
         a Additional code
 
-      .table__column.validity_start_date-column
-        a Start date
-
-      .table__column.validity_end_date-column
-        a End date
-
       .table__column.duties-column
         a Duties
-
-      - if record_type == :measures
-        .table__column.conditions-column
-          a Conditions
-
-        .table__column.footnotes-column
-          a Footnotes
 
     .virtual-scroller
       .item-container
@@ -39,24 +33,17 @@
               / .table__column.select-all-column
               /   input data-v-caa2d078="" name="measures[]" type="checkbox" value="-485562"
 
+              .table__column.validity_start_date-column
+                = item.validity_start_date.strftime("%d %b %Y")
+
+              .table__column.validity_end_date-column
+                = item.validity_end_date.try(:strftime, "%d %b %Y")
+
               .table__column.goods_nomenclature-column
                 = item.goods_nomenclature_item_id
 
               .table__column.additional_code-column
                 = item.additional_code
 
-              .table__column.validity_start_date-column
-                = item.validity_start_date.strftime("%Y-%m-%d")
-
-              .table__column.validity_end_date-column
-                = item.validity_end_date.try(:strftime, "%Y-%m-%d")
-
               .table__column.duties-column
                 = item.duty_expression
-
-              - if record_type == :measures
-                .table__column.conditions-column
-                  = item.conditions_short_list
-
-                .table__column.footnotes-column
-                  = item.footnotes.map { |footnote| "#{footnote.footnote_type_id} - #{footnote.footnote_id}" }.join(', ')
