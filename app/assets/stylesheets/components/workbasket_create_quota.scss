@@ -5,4 +5,12 @@
   margin-bottom: 30px;
 }
 
+ul.workbasket-review-and-submit-footnotes-list {
+  li {
+    margin-top: 7px;
 
+    &.without_top_margin {
+      margin-top: 0;
+    }
+  }
+}

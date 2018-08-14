@@ -74,9 +74,9 @@ table.create-measures-details-table
       td.heading_column
         | Footnotes
       td
-        ul
-          - first_measure.footnotes.map do |footnote|
-            li
+        ul.workbasket-review-and-submit-footnotes-list
+          - first_measure.footnotes.map.with_index do |footnote, index|
+            li class="#{index.zero? ? 'without_top_margin' : ''}"
               = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
               br
               = footnote.description
