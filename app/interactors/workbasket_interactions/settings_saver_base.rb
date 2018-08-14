@@ -138,6 +138,13 @@ module WorkbasketInteractions
           @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
         end
 
+        if self.class::WORKBASKET_TYPE == "CreateQuota" &&
+           step_pointer.configure_quota? &&
+           quota_periods.blank?
+
+          general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
+        end
+
         if general_errors.present?
           if step_pointer.main_step?
             general_errors.map do |k, v|

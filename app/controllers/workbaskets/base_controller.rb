@@ -136,8 +136,13 @@ module Workbaskets
       end
 
       def clean_up_persisted_data_on_update!
-        if !step_pointer.review_and_submit_step?
-          workbasket_settings.collection.map(&:destroy) # TODO: refactor it Ruslan
+        # TODO: refactor it Ruslan
+        #
+        if !step_pointer.review_and_submit_step? && workbasket_settings.measure_sids.present?
+          workbasket_settings.measure_sids_jsonb = [].to_json
+          workbasket_settings.save
+
+          workbasket_settings.collection.map(&:destroy)
         end
       end
   end

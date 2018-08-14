@@ -20,7 +20,23 @@ module WorkbasketValueObjects
       end
 
       def quota_periods
-        prepare_collection(:quota_periods, :start_date)
+        if ops[:quota_periods].present?
+          ops[:quota_periods].select do |k, option|
+            option['start_date'].present? &&
+            option['period'].present? &&
+            option['period'].to_s != "1_repeating" &&
+            option['measurement_unit_code'].present? &&
+            option['measurement_unit_qualifier_code'].present? && (
+              option["opening_balances"].any? do |k, opening_balance_ops|
+                balance_source = option["staged"] == "true" ? opening_balance_ops : option
+                balance = balance_source["balance"]
+                balance.present?
+              end
+            )
+          end
+        else
+          []
+        end
       end
 
       private
