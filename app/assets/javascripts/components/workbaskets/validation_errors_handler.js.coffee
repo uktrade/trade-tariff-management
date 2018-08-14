@@ -14,8 +14,8 @@ window.WorkbasketBaseValidationErrorsHandler =
   setFormErrors: (response, workbasket_form) ->
     errors_list = response.responseJSON.errors
 
-    if errors_list['general'] isnt undefined
-      errors_list = errors_list['general']
+    if errors_list['measure'] isnt undefined
+      errors_list = errors_list['measure']
 
     $.each errors_list, (key, value) ->
       if value.constructor == Array
