@@ -5,7 +5,7 @@ var template = [
         '<div class="col-md-2">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0">&nbsp;<span class="form-hint-3-line">&nbsp;</span></label>',
-            '<a class="secondary-button text-danger" href="#" v-on:click.prevent="removeCondition(condition, index)" v-if="canRemoveMeasureCondition">',
+            '<a class="secondary-button text-danger" href="#" v-on:click.prevent="removeCondition(measureCondition, index)" v-if="canRemoveMeasureCondition">',
               'Remove condition',
             '</a>',
           '</div>',

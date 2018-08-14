@@ -29,39 +29,66 @@ Vue.component("quota-section", {
         measurement_unit_qualifier_code: null
       });
     },
+    balanceForType: function(type) {
+      if (type == "annual") {
+        return "";
+      } else if (type == "bi_annual") {
+        return {
+          semester1: "",
+          semester2: ""
+        };
+      } else if (type == "quarterly") {
+        return {
+          quarter1: "",
+          quarter2: "",
+          quarter3: "",
+          quarter4: ""
+        };
+      } else if (type == "monthly") {
+        return {
+          month1: "",
+          month2: "",
+          month3: "",
+          month4: "",
+          month5: "",
+          month6: "",
+          month7: "",
+          month8: "",
+          month9: "",
+          month10: "",
+          month11: "",
+          month12: ""
+        };
+      } else if (type == "custom") {
+
+      }
+    },
+    blankOpeningBalance: function(type) {
+      return {
+        balance: this.balanceForType(type),
+        critical: false,
+        criticality_threshold: 90,
+        duty_expressions: [this.emptyDutyExpression()]
+      };
+    },
     resetOpeningBalances: function() {
       var newOpeningBalances = [];
 
       this.section.duty_expressions.splice(0, 100);
 
-      if (this.section.type == "annual") {
+      if (!this.section.duties_each_period) {
+        this.section.duty_expressions.push();
+      }
 
-        if (!this.section.duties_each_period) {
-          this.section.duty_expressions.push(this.emptyDutyExpression());
-        }
+      section.balance = this.balanceForType(this.section.type);
 
-        if (this.section.period == "1" || this.section.period == "1_repeating") {
-          newOpeningBalances.push({
-            balance: "",
-            critical: false,
-            criticality_threshold: 90,
-            duty_expressions: []
-          });
-        } else {
-          var years = parseInt(this.section.period, 10);
+      if (this.section.period == "1" || this.section.period == "1_repeating") {
+        newOpeningBalances.push(this.blankOpeningBalance(this.section.type));
+      } else {
+        var years = parseInt(this.section.period, 10);
 
-          for (var i = 1; i <= years; i++) {
-            var balance = {
-              balance: "",
-              critical: false,
-              criticality_threshold: 90,
-              duty_expressions: []
-            };
-
-            balance.duty_expressions.push(this.emptyDutyExpression());
-
-            newOpeningBalances.push(balance);
-          }
+        for (var i = 1; i <= years; i++) {
+          newOpeningBalances.push(this.blankOpeningBalance(this.section.type));
         }
       }
 
@@ -73,10 +100,22 @@ Vue.component("quota-section", {
       return ["1", "1_repeating"].indexOf(this.section.period) > -1;
     },
     disableCriticality: function() {
-      return ["1", "1_repeating"].indexOf(this.section.period) > -1;
+      var check = ["1_repeating"];
+
+      if (this.section.type == "annual") {
+        check.push("1");
+      }
+
+      return check.indexOf(this.section.period) > -1;
     },
     disableDuties: function() {
-      return ["1", "1_repeating"].indexOf(this.section.period) > -1;
+      var check = ["1_repeating"];
+
+      if (this.section.type == "annual") {
+        check.push("1");
+      }
+
+      return check.indexOf(this.section.period) > -1;
     },
     omitCriticality: function() {
       return window.all_settings.quota_is_licensed == "true";
