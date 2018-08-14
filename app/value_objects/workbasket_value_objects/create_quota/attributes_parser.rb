@@ -25,8 +25,7 @@ module WorkbasketValueObjects
             option['start_date'].present? &&
             option['period'].present? &&
             option['period'].to_s != "1_repeating" &&
-            option['measurement_unit_code'].present? &&
-            option['measurement_unit_qualifier_code'].present? && (
+            option['measurement_unit_code'].present? && (
               option["opening_balances"].any? do |k, opening_balance_ops|
                 balance_source = option["staged"] == "true" ? opening_balance_ops : option
                 balance = balance_source["balance"]
