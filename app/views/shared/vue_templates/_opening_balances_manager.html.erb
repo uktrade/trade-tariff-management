@@ -6,9 +6,147 @@
           Opening balance
         </label>
 
-        <div class="row">
-          <div class="col-md-3">
+        <div class="row" v-if="isAnnual">
+          <div class="col-md-3" >
             <input class="form-control" v-model="section.balance" />
+          </div>
+        </div>
+
+        <div class="row" v-if="isBiAnnual">
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              1st semester
+            </label>
+            <input class="form-control" v-model="section.balance.semester1" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              2nd semester
+            </label>
+            <input class="form-control" v-model="section.balance.semester2" />
+          </div>
+        </div>
+
+        <div class="row" v-if="isQuarterly">
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              1st quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter1" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              2nd quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter2" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              3rd quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter3" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              4th quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter4" />
+          </div>
+        </div>
+
+        <div v-if="isMonthly">
+          <div class="row">
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                1st month
+              </label>
+              <input class="form-control" v-model="section.balance.month1" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                2nd month
+              </label>
+              <input class="form-control" v-model="section.balance.month2" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                3rd month
+              </label>
+              <input class="form-control" v-model="section.balance.month3" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                4th month
+              </label>
+              <input class="form-control" v-model="section.balance.month4" />
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                5th month
+              </label>
+              <input class="form-control" v-model="section.balance.month5" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                6th month
+              </label>
+              <input class="form-control" v-model="section.balance.month6" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                7th month
+              </label>
+              <input class="form-control" v-model="section.balance.month7" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                8th month
+              </label>
+              <input class="form-control" v-model="section.balance.month8" />
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                9th month
+              </label>
+              <input class="form-control" v-model="section.balance.month9" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                10th month
+              </label>
+              <input class="form-control" v-model="section.balance.month10" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                11th month
+              </label>
+              <input class="form-control" v-model="section.balance.month11" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                12th month
+              </label>
+              <input class="form-control" v-model="section.balance.month12" />
+            </div>
           </div>
         </div>
       </div>
@@ -62,10 +200,10 @@
       </div>
 
       <div class="multiple-balances">
-        <div :class="[showCriticality ? 'opening-balance--criticality' : '', 'opening-balance']" v-for="(balance, index) in section.opening_balances">
+        <div :class="[showCriticality ? 'opening-balance--criticality' : '', 'opening-balance']" v-for="(balance, index) in section.opening_balances" v-if="isAnnual">
           <div class="static-row">
             <div class="col-md-1">
-              <div class="form-group">
+              <div class="form-group year-indicator">
                 <label class="form-label" v-if="index == 0">
                   &nbsp;
                 </label>
@@ -105,6 +243,754 @@
 
             <div class="col-flow" v-if="section.duties_each_period">
               <components-coordinator :components="balance.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+        </div>
+
+
+        <div :class="[showCriticality ? 'opening-balance--criticality' : '', 'opening-balance']" v-for="(balance, index) in section.opening_balances" v-if="isBiAnnual">
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group year-indicator">
+                <label class="form-label" v-if="index == 0">
+                  &nbsp;
+                </label>
+                Year {{index + 1}}
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  &nbsp;
+                </label>
+
+                <span class="form-hint">
+                  1st semester
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Opening balance
+                </label>
+                <input class="form-control" v-model="balance.semester1.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Critical
+                </label>
+
+                <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.semester1.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Criticality threshold
+                </label>
+
+                <input class="form-control" v-model="balance.semester1.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.semester1.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <span class="form-hint">
+                  2nd semester
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.semester2.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.semester2.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.semester2.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.semester2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+        </div>
+
+
+        <div :class="[showCriticality ? 'opening-balance--criticality' : '', 'opening-balance']" v-for="(balance, index) in section.opening_balances" v-if="isQuarterly">
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group year-indicator">
+                <label class="form-label" v-if="index == 0">
+                  &nbsp;
+                </label>
+                Year {{index + 1}}
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  &nbsp;
+                </label>
+
+                <span class="form-hint">
+                  1st quarter
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Opening balance
+                </label>
+                <input class="form-control" v-model="balance.quarter1.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Critical
+                </label>
+
+                <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.quarter1.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Criticality threshold
+                </label>
+
+                <input class="form-control" v-model="balance.quarter1.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.quarter1.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  2nd quarter
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.quarter2.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.quarter2.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.quarter2.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.quarter2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label class="form-label"><span class="form-hint">
+                  3rd quarter
+                </span></label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.quarter3.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.quarter3.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.quarter3.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.quarter3.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label class="form-label"><span class="form-hint">
+                  4th quarter
+                </span></label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.quarter4.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.quarter4.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.quarter4.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.quarter4.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+        </div>
+
+        <div :class="[showCriticality ? 'opening-balance--criticality' : '', 'opening-balance']" v-for="(balance, index) in section.opening_balances" v-if="isMonthly">
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group year-indicator">
+                <label class="form-label" v-if="index == 0">
+                  &nbsp;
+                </label>
+                Year {{index + 1}}
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  &nbsp;
+                </label>
+
+                <label class="form-label">
+                  <span class="form-hint">
+                    1st month
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Opening balance
+                </label>
+                <input class="form-control" v-model="balance.month1.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Critical
+                </label>
+
+                <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month1.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <label class="form-label" v-if="index == 0">
+                  Criticality threshold
+                </label>
+
+                <input class="form-control" v-model="balance.month1.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month1.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  2nd month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month2.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month2.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month2.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  3rd month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month3.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month3.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month3.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month3.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  4th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month4.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month4.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month4.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month4.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  5th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month5.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month5.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month5.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month5.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  6th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month6.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month6.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month6.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month6.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  7th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month7.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month7.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month7.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month7.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  8th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month8.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month8.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month8.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month8.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  9th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month9.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month9.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month9.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month9.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  10th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month10.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month10.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month10.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month10.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  11th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month11.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month11.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month11.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month11.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
+            </div>
+          </div>
+
+          <div class="static-row balance-row">
+            <div class="col-md-1">
+              <div class="form-group">
+                &nbsp;
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <span class="form-hint">
+                  12th month
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month12.balance" :disabled="!section.staged" />
+              </div>
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+               <div class="multiple-choice">
+                  <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month12.critical" :disabled="disableCriticality">
+                  <label :for="'balance' + index + '-critical'"></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-1-2" v-if="showCriticality">
+              <div class="form-group">
+                <input class="form-control" v-model="balance.month12.criticality_threshold" :disabled="disableCriticality" />
+              </div>
+            </div>
+
+            <div class="col-flow" v-if="section.duties_each_period">
+              <components-coordinator :components="balance.month12.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
         </div>

@@ -64,12 +64,37 @@ Vue.component("quota-section", {
       }
     },
     blankOpeningBalance: function(type) {
-      return {
-        balance: this.balanceForType(type),
-        critical: false,
-        criticality_threshold: 90,
-        duty_expressions: [this.emptyDutyExpression()]
+      var self = this;
+
+      var ks = {
+        bi_annual: ["semester1", "semester2"],
+        quarterly: ["quarter1", "quarter2", "quarter3", "quarter4"],
+        monthly: ["month1", "month2", "month3", "month4", "month5", "month6", "month7", "month8", "month9", "month10", "month11", "month12"]
       };
+
+      if (type == "annual") {
+        return {
+          balance: "",
+          critical: false,
+          criticality_threshold: 90,
+          duty_expressions: [this.emptyDutyExpression()]
+        };
+      } else if (type == "custom") {
+
+      } else {
+        var obj = {};
+
+        ks[type].forEach(function(k) {
+          obj[k] = {
+            balance: "",
+            critical: false,
+            criticality_threshold: 90,
+            duty_expressions: [self.emptyDutyExpression()]
+          };
+        });
+
+        return obj;
+      }
     },
     resetOpeningBalances: function() {
       var newOpeningBalances = [];
@@ -80,7 +105,7 @@ Vue.component("quota-section", {
         this.section.duty_expressions.push();
       }
 
-      section.balance = this.balanceForType(this.section.type);
+      this.section.balance = this.balanceForType(this.section.type);
 
       if (this.section.period == "1" || this.section.period == "1_repeating") {
         newOpeningBalances.push(this.blankOpeningBalance(this.section.type));

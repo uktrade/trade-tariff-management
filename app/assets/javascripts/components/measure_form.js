@@ -162,12 +162,36 @@ $(document).ready(function() {
             });
 
             section.opening_balances = objectToArray(section.opening_balances).map(function(balance) {
-              balance.duty_expressions = objectToArray(balance.duty_expressions).map(function(e) {
-                delete e.$order;
-                e.duty_expression_id = self.getDutyExpressionId(e);
+              if (section.type == "annual") {
+                balance.critical = balance.critical === "true";
 
-                return e;
-              });
+                balance.duty_expressions = objectToArray(balance.duty_expressions).map(function(e) {
+                  delete e.$order;
+                  e.duty_expression_id = self.getDutyExpressionId(e);
+
+                  return e;
+                });
+              } else if (section.type == "custom") {
+
+              } else {
+                var ks = {
+                  bi_annual: ["semester1", "semester2"],
+                  quarterly: ["quarter1", "quarter2", "quarter3", "quarter4"],
+                  monthly: ["month1", "month2", "month3", "month4", "month5", "month6", "month7", "month8", "month9", "month10", "month11", "month12"]
+                };
+
+                ks[section.type].forEach(function(k) {
+                  balance[k].critical = balance[k].critical === "true";
+
+
+                  balance[k].duty_expressions = objectToArray(balance[k].duty_expressions).map(function(e) {
+                    delete e.$order;
+                    e.duty_expression_id = self.getDutyExpressionId(e);
+
+                    return e;
+                  });
+                });
+              }
 
               return balance;
             });
@@ -620,9 +644,25 @@ $(document).ready(function() {
             });
 
             section.opening_balances.forEach(function(balance) {
-              balance.duty_expressions.forEach(function(e) {
-                e.duty_expression_id = e.duty_expression_id.substring(0,2);
-              });
+              if (section.type == "annual") {
+                balance.duty_expressions.forEach(function(e) {
+                  e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                });
+              } else if (section.type == "custom") {
+
+              } else {
+                var ks = {
+                  bi_annual: ["semester1", "semester2"],
+                  quarterly: ["quarter1", "quarter2", "quarter3", "quarter4"],
+                  monthly: ["month1", "month2", "month3", "month4", "month5", "month6", "month7", "month8", "month9", "month10", "month11", "month12"]
+                };
+
+                ks[section.type].forEach(function(k) {
+                  balance[k].duty_expressions.forEach(function(e) {
+                    e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                  });
+                });
+              }
             });
 
             return section;
