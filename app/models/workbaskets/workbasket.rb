@@ -184,6 +184,17 @@ module Workbaskets
       end
     end
 
+    def clean_up_workbasket!
+      if settings.present?
+        settings.collection
+                .map(&:destroy)
+
+        settings.destroy
+      end
+
+      destroy
+    end
+
     class << self
       def buld_new_workbasket!(type, current_user)
         workbasket = Workbaskets::Workbasket.new(
@@ -222,13 +233,9 @@ module Workbaskets
           create_quota
         ).map do |type_name|
           by_type(type_name).map do |w|
-            w.settings
-             .collection
-             .map(&:destroy)
+            w.clean_up_workbasket!
           end
         end
-
-        all.map(&:destroy)
       end
     end
 
