@@ -643,27 +643,45 @@ $(document).ready(function() {
               e.duty_expression_id = e.duty_expression_id.substring(0,2);
             });
 
-            section.opening_balances.forEach(function(balance) {
-              if (section.type == "annual") {
-                balance.duty_expressions.forEach(function(e) {
+            if (section.type == "custom") {
+              delete section.opening_balances;
+              delete section.critical;
+              delete section.criticality_threshold;
+              delete section.duties_each_period;
+              delete section.criticality_each_period;
+              delete section.staged;
+              delete section.start_date;
+              delete section.period;
+
+              section.periods.forEach(function(period) {
+                period.duty_expressions.forEach(function(e) {
                   e.duty_expression_id = e.duty_expression_id.substring(0,2);
                 });
-              } else if (section.type == "custom") {
+              });
+            } else {
+              delete section.periods;
+              delete section.repeat;
 
-              } else {
-                var ks = {
-                  bi_annual: ["semester1", "semester2"],
-                  quarterly: ["quarter1", "quarter2", "quarter3", "quarter4"],
-                  monthly: ["month1", "month2", "month3", "month4", "month5", "month6", "month7", "month8", "month9", "month10", "month11", "month12"]
-                };
-
-                ks[section.type].forEach(function(k) {
-                  balance[k].duty_expressions.forEach(function(e) {
+              section.opening_balances.forEach(function(balance) {
+                if (section.type == "annual") {
+                  balance.duty_expressions.forEach(function(e) {
                     e.duty_expression_id = e.duty_expression_id.substring(0,2);
                   });
-                });
-              }
-            });
+                } else {
+                  var ks = {
+                    bi_annual: ["semester1", "semester2"],
+                    quarterly: ["quarter1", "quarter2", "quarter3", "quarter4"],
+                    monthly: ["month1", "month2", "month3", "month4", "month5", "month6", "month7", "month8", "month9", "month10", "month11", "month12"]
+                  };
+
+                  ks[section.type].forEach(function(k) {
+                    balance[k].duty_expressions.forEach(function(e) {
+                      e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                    });
+                  });
+                }
+              });
+            }
 
             return section;
           })

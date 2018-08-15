@@ -45,6 +45,7 @@ Vue.component("quota-sections-manager", {
         measurement_unit_qualifier_id: "",
 
         repeat: false,
+        periods: [],
 
         opening_balances: [
           {
@@ -55,6 +56,13 @@ Vue.component("quota-sections-manager", {
           }
         ]
       });
+    },
+    removeSection: function(index) {
+      this.sections.splice(index, 1);
+
+      if (this.sections.length === 0) {
+        this.addSection();
+      }
     }
   }
 });

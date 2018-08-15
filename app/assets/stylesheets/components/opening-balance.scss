@@ -40,3 +40,11 @@
     padding-top: 10px;
   }
 }
+
+.custom-period {
+  margin-bottom: 20px;
+
+  & + .custom-period {
+    margin-top: 50px;
+  }
+}

@@ -13,75 +13,135 @@
     </div>
 
     <div class="panel panel-border-narrow" v-if="section.type">
-      <div class="form-group">
-        <label class="form-label">
-          What is the start date of this section?
-        </label>
+      <div v-if="section.type != 'custom'">
+        <div class="form-group">
+          <label class="form-label">
+            What is the start date of this section?
+          </label>
 
-        <date-select :value.sync="section.start_date"></date-select>
-      </div>
+          <date-select :value.sync="section.start_date"></date-select>
+        </div>
 
-      <div class="form-group">
-        <label for="" class="form-label">
-          How long will this section last?
-        </label>
+        <div class="form-group">
+          <label for="" class="form-label">
+            How long will this section last?
+          </label>
 
-        <div class="row">
-          <div class="col-md-2">
-            <custom-select :options="periods" label-field="label" value-field="id" v-model="section.period"></custom-select>
+          <div class="row">
+            <div class="col-md-2">
+              <custom-select :options="periods" label-field="label" value-field="id" v-model="section.period"></custom-select>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="" class="form-label">
-          Is this section staged?
-        </label>
+        <div class="form-group">
+          <label for="" class="form-label">
+            Is this section staged?
+          </label>
 
-        <div class="multiple-choice">
-          <input :id="'period-' + index + '-staged'" name="" type="checkbox" value="1" v-model="section.staged" :disabled="disableStaged">
-          <label :for="'period-' + index + '-staged'">Yes &ndash; staged (specify a different opening balance for each period)</label>
-        </div>
-      </div>
-
-      <div class="form-group" v-if="!omitCriticality">
-        <label for="" class="form-label">
-          Do you want to specify a different criticality for each period in this section?
-        </label>
-
-        <div class="multiple-choice">
-          <input :id="'period-' + index + '-criticality_each_period'" name="" type="checkbox" value="1" v-model="section.criticality_each_period" :disabled="disableCriticality">
-          <label :for="'period-' + index + '-criticality_each_period'">Yes &ndash; specify a different criticality for each period</label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="" class="form-label">
-          Do you want to specify different duties for each period in this section?
-        </label>
-
-        <div class="multiple-choice">
-          <input :id="'period-' + index + '-duties_each_period'" name="" type="checkbox" value="1" v-model="section.duties_each_period" :disabled="disableDuties">
-          <label :for="'period-' + index + '-duties_each_period'">Yes &ndash; specify different futies for each period</label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="" class="form-label">
-          How will the quota balance(s) in this section be measured?
-        </label>
-
-        <div class="row">
-          <div class="col-md-3">
-            <custom-select url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="section.measurement_unit_code" placeholder="― select measurement unit ―" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit"></custom-select>
-          </div>
-          <div class="col-md-3">
-            <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="section.measurement_unit_qualifier_code" placeholder="― optionally select qualifier ―" date-sensitive=true code-class-name="prefix--measurement-unit-qualifier"></custom-select>
+          <div class="multiple-choice">
+            <input :id="'period-' + index + '-staged'" name="" type="checkbox" value="1" v-model="section.staged" :disabled="disableStaged">
+            <label :for="'period-' + index + '-staged'">Yes &ndash; staged (specify a different opening balance for each period)</label>
           </div>
         </div>
+
+        <div class="form-group" v-if="!omitCriticality">
+          <label for="" class="form-label">
+            Do you want to specify a different criticality for each period in this section?
+          </label>
+
+          <div class="multiple-choice">
+            <input :id="'period-' + index + '-criticality_each_period'" name="" type="checkbox" value="1" v-model="section.criticality_each_period" :disabled="disableCriticality">
+            <label :for="'period-' + index + '-criticality_each_period'">Yes &ndash; specify a different criticality for each period</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="" class="form-label">
+            Do you want to specify different duties for each period in this section?
+          </label>
+
+          <div class="multiple-choice">
+            <input :id="'period-' + index + '-duties_each_period'" name="" type="checkbox" value="1" v-model="section.duties_each_period" :disabled="disableDuties">
+            <label :for="'period-' + index + '-duties_each_period'">Yes &ndash; specify different futies for each period</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="" class="form-label">
+            How will the quota balance(s) in this section be measured?
+          </label>
+
+          <div class="row">
+            <div class="col-md-3">
+              <custom-select url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="section.measurement_unit_code" placeholder="― select measurement unit ―" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit"></custom-select>
+            </div>
+            <div class="col-md-3">
+              <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="section.measurement_unit_qualifier_code" placeholder="― optionally select qualifier ―" date-sensitive=true code-class-name="prefix--measurement-unit-qualifier"></custom-select>
+            </div>
+          </div>
+        </div>
+
+        <opening-balances-manager :section="section" v-if="section.measurement_unit_code"></opening-balances-manager>
       </div>
 
-      <opening-balances-manager :section="section" v-if="section.measurement_unit_code"></opening-balances-manager>
+      <div v-else>
+        <div class="form-group">
+          <label for="" class="form-label">
+            Repeat this section every year?
+          </label>
+
+          <div class="multiple-choice">
+            <input :id="'period-' + index + '-repeat'" name="" type="checkbox" value="1" v-model="section.repeat">
+            <label :for="'period-' + index + '-repeat'">Yes &ndash; repeat until further notice</label>
+          </div>
+        </div>
+
+        <div class='custom-period' v-for="(period, idx) in section.periods">
+          <div class="form-group">
+            <label class="form-label">
+              What is the start date of this period?
+            </label>
+
+            <date-select :value.sync="period.start_date"></date-select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              What is the end date of this period?
+            </label>
+
+            <date-select :value.sync="period.end_date"></date-select>
+          </div>
+
+          <div class="form-group">
+            <label for="" class="form-label">
+              How will the quota balance(s) in this period be measured?
+            </label>
+
+            <div class="row">
+              <div class="col-md-3">
+                <custom-select url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="period.measurement_unit_code" placeholder="― select measurement unit ―" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit"></custom-select>
+              </div>
+              <div class="col-md-3">
+                <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="period.measurement_unit_qualifier_code" placeholder="― optionally select qualifier ―" date-sensitive=true code-class-name="prefix--measurement-unit-qualifier"></custom-select>
+              </div>
+            </div>
+          </div>
+
+          <opening-balances-manager :section="section" :period="period" v-if="period.measurement_unit_code"></opening-balances-manager>
+
+          <p>
+            <a href="#" v-on:click.prevent="removePeriod(idx)">Remove period</a>
+          </p>
+        </div>
+
+        <p>
+          <a href="#" v-on:click.prevent="addPeriod">Add another custom period this year</a>
+        </p>
+      </div>
+
+      <slot></slot>
     </div>
   </div>
 </script>
