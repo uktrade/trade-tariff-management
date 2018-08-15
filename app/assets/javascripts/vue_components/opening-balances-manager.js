@@ -6,7 +6,7 @@ Vue.component("opening-balances-manager", {
       return ["1", "1_repeating"].indexOf(this.section.period) > -1;
     },
     noPerPeriod: function() {
-      return this.section.type == "annual" &&
+      return this.section.type != "custom" &&
              (
                this.single ||
                ( !this.section.staged && !this.section.criticality_each_period && !this.section.duties_each_period )
@@ -17,6 +17,18 @@ Vue.component("opening-balances-manager", {
     },
     multipleBalances: function() {
       return !this.singleBalance;
+    },
+    isAnnual: function() {
+      return this.section.type == "annual";
+    },
+    isBiAnnual: function() {
+      return this.section.type == "bi_annual";
+    },
+    isQuarterly: function() {
+      return this.section.type == "quarterly";
+    },
+    isMonthly: function() {
+      return this.section.type == "monthly";
     },
     isCustom: function() {
       return this.section.type == "custom";

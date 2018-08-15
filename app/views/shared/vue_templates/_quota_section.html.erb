@@ -81,7 +81,7 @@
         </div>
       </div>
 
-      <opening-balances-manager :section="section"></opening-balances-manager>
+      <opening-balances-manager :section="section" v-if="section.measurement_unit_code"></opening-balances-manager>
     </div>
   </div>
 </script>
