@@ -81,7 +81,7 @@ Vue.component("quota-section", {
         };
       } else if (type == "custom") {
 
-      } else {
+      } else if (type) {
         var obj = {};
 
         ks[type].forEach(function(k) {
@@ -101,23 +101,55 @@ Vue.component("quota-section", {
 
       this.section.duty_expressions.splice(0, 100);
 
-      if (!this.section.duties_each_period) {
-        this.section.duty_expressions.push();
-      }
-
-      this.section.balance = this.balanceForType(this.section.type);
-
-      if (this.section.period == "1" || this.section.period == "1_repeating") {
-        newOpeningBalances.push(this.blankOpeningBalance(this.section.type));
+      if (this.section.periods) {
+        this.section.periods.splice(0, 100);
       } else {
-        var years = parseInt(this.section.period, 10);
-
-        for (var i = 1; i <= years; i++) {
-          newOpeningBalances.push(this.blankOpeningBalance(this.section.type));
-        }
+        this.section.periods = [];
       }
 
-      this.section.opening_balances = newOpeningBalances;
+      if (this.section.type == "custom") {
+        this.addPeriod();
+      } else {
+
+        if (!this.section.duties_each_period) {
+          this.section.duty_expressions.push(this.emptyDutyExpression());
+        }
+
+        this.section.balance = this.balanceForType(this.section.type);
+
+        if (this.section.period == "1" || this.section.period == "1_repeating") {
+          newOpeningBalances.push(this.blankOpeningBalance(this.section.type));
+        } else {
+          var years = parseInt(this.section.period, 10);
+
+          for (var i = 1; i <= years; i++) {
+            newOpeningBalances.push(this.blankOpeningBalance(this.section.type));
+          }
+        }
+
+        this.section.opening_balances = newOpeningBalances;
+      }
+    },
+    removePeriod: function(index) {
+      this.section.periods.splice(index, 1);
+
+      if (this.section.periods.length === 0) {
+        this.addPeriod();
+      }
+    },
+    addPeriod: function() {
+      this.section.periods.push({
+        start_date: "",
+        end_date: "",
+        balance: "",
+
+        duty_expressions: [this.emptyDutyExpression()],
+        critical: false,
+        criticality_threshold: 80,
+
+        measurement_unit_id: "",
+        measurement_unit_qualifier_id: ""
+      });
     }
   },
   computed: {

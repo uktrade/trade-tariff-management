@@ -1,13 +1,12 @@
 Vue.component("opening-balances-manager", {
   template: "#opening-balances-manager-template",
-  props: ["section"],
+  props: ["section", "period"],
   computed: {
     single: function() {
       return ["1", "1_repeating"].indexOf(this.section.period) > -1;
     },
     noPerPeriod: function() {
-      return this.section.type != "custom" &&
-             (
+      return (
                this.single ||
                ( !this.section.staged && !this.section.criticality_each_period && !this.section.duties_each_period )
              );
