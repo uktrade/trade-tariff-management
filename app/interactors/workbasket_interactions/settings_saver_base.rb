@@ -122,6 +122,7 @@ module WorkbasketInteractions
           if quota_ordernumber.present?
             unless order_number_saver.valid?
               general_errors[:quota_ordernumber] = order_number_saver.errors
+                                                                     .join('. ')
             end
 
           else

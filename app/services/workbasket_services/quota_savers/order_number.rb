@@ -10,6 +10,7 @@ module WorkbasketServices
                     :order_number,
                     :quota_origin,
                     :persist_data,
+                    :origin_area,
                     :periods,
                     :errors
 
@@ -18,9 +19,10 @@ module WorkbasketServices
         @order_number_ops = order_number_ops
         @persist_data = persist_data
         @excluded_areas_ops = order_number_ops['excluded_geographical_areas']
+        @origin_area = order_number_ops["geographical_area_id"]
         @periods = order_number_ops['quota_periods']
 
-        @errors = {}
+        @errors = []
       end
 
       def valid?
@@ -38,8 +40,8 @@ module WorkbasketServices
         set_first_period_date
 
         build_order_number
-        build_quota_origin
-        build_excluded_areas_ops
+        build_quota_origin if origin_area.present?
+        build_excluded_areas_ops if excluded_areas_ops.present?
       end
 
       def validate!
@@ -48,22 +50,20 @@ module WorkbasketServices
                              .name
                              .to_sym
 
+          Rails.logger.info ""
+          Rails.logger.info "record_key: #{record_key}"
+          Rails.logger.info ""
+
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
             record, get_validator(record_key), {}
           ).errors
            .map do |k, v|
-            if @errors[record_key].present?
-              if @errors[record_key][k].present?
-                @errors[record_key][k] << v
-              else
-                @errors[record_key][k] = [v]
-              end
-
-            else
-              @errors[record_key] = { k.to_sym => [v] }
-            end
+            @errors << v
           end
         end
+
+        @errors = @errors.flatten
+                         .uniq
       end
 
       def persist!
@@ -80,16 +80,25 @@ module WorkbasketServices
             quota_origin,
             excluded_areas
           ].flatten
+           .reject do |el|
+            el.blank?
+          end
         end
 
         def set_first_period_date
-          @first_period_start_date = periods.map do |k, v|
-            v['start_date']
-          end.reject do |p|
-            p.blank?
-          end.sort do |a, b|
-            a.to_date <=> b.to_date
-          end.first
+          @first_period_start_date = if periods.present?
+            periods.map do |k, v|
+              v['start_date']
+            end.reject do |p|
+              p.blank?
+            end.sort do |a, b|
+              a.to_date <=> b.to_date
+            end.first
+               .try(:date)
+
+          else
+            Date.today
+          end
         end
 
         def build_order_number
@@ -102,7 +111,7 @@ module WorkbasketServices
         end
 
         def build_quota_origin
-          area = geographical_area(order_number_ops["geographical_area_id"])
+          area = geographical_area(origin_area)
 
           @quota_origin = QuotaOrderNumberOrigin.new(
             validity_start_date: order_number.validity_start_date,
@@ -115,23 +124,25 @@ module WorkbasketServices
         end
 
         def build_excluded_areas_ops
-          if excluded_areas_ops.present?
-            @excluded_areas = excluded_areas_ops.reject do |el|
-              el.blank?
-            end.map do |area_code|
-              area = geographical_area(area_code)
+          @excluded_areas = excluded_areas_ops.reject do |el|
+            el.blank?
+          end.map do |area_code|
+            area = geographical_area(area_code)
 
-              exclusion = QuotaOrderNumberOriginExclusion.new
-              exclusion.quota_order_number_origin_sid = quota_origin.quota_order_number_origin_sid
-              exclusion.excluded_geographical_area_sid = area.geographical_area_sid
-              assign_system_ops!(exclusion)
+            exclusion = QuotaOrderNumberOriginExclusion.new
+            exclusion.quota_order_number_origin_sid = quota_origin.quota_order_number_origin_sid
+            exclusion.excluded_geographical_area_sid = area.geographical_area_sid
+            assign_system_ops!(exclusion)
 
-              exclusion
-            end
+            exclusion
           end
         end
 
         def get_validator(klass_name)
+          Rails.logger.info ""
+          Rails.logger.info " klass_name: #{klass_name}"
+          Rails.logger.info ""
+
           case klass_name.to_s
           when "QuotaOrderNumber"
             QuotaOrderNumberValidator
@@ -141,7 +152,6 @@ module WorkbasketServices
             QuotaOrderNumberOriginExclusionValidator
           end
         end
-      end
     end
   end
 end

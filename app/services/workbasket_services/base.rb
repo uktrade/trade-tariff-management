@@ -16,7 +16,7 @@ module WorkbasketServices
       end
 
       def set_system_data(record)
-        saver_class.assign_system_ops!(record)
+        saver_class.send(:assign_system_ops!, record)
         set_primary_key(record)
       end
   end
