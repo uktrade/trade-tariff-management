@@ -1,6 +1,6 @@
 module WorkbasketServices
-  module AssociationSavers
-    class SingleAssociation < ::WorkbasketServices::AssociationSavers::AssociationBase
+  module MeasureAssociationSavers
+    class SingleAssociation < ::WorkbasketServices::MeasureAssociationSavers::AssociationBase
 
       attr_accessor :measure,
                     :system_ops,
@@ -36,7 +36,7 @@ module WorkbasketServices
       private
 
         def validate!
-          ::Measures::ConformanceErrorsParser.new(
+          ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
             record, validator, {}
           ).errors
            .map do |k, v|

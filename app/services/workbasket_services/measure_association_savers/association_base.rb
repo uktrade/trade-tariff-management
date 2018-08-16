@@ -1,6 +1,6 @@
 module WorkbasketServices
   module AssociationSavers
-    class AssociationBase < ::WorkbasketServices::AssociationSavers::Base
+    class AssociationBase < ::WorkbasketServices::Base
 
       class << self
         def errors_in_collection(measure, system_ops, collection)

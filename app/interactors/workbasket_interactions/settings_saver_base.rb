@@ -118,8 +118,15 @@ module WorkbasketInteractions
           general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
         end
 
-        if self.class::WORKBASKET_TYPE == "CreateQuota" && quota_ordernumber.blank?
-          general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
+        if self.class::WORKBASKET_TYPE == "CreateQuota"
+          if quota_ordernumber.present?
+            unless order_number_saver.valid?
+              general_errors[:quota_ordernumber] = order_number_saver.errors
+            end
+
+          else
+            general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
+          end
         end
 
         if candidates.blank?
@@ -236,7 +243,7 @@ module WorkbasketInteractions
         def get_association_errors(name, measure)
           klass_name = name.split("_").map(&:capitalize).join('')
 
-          "::WorkbasketServices::AssociationSavers::#{klass_name}".constantize.errors_in_collection(
+          "::WorkbasketServices::MeasureAssociationSavers::#{klass_name}".constantize.errors_in_collection(
             measure, system_ops.merge(type_of: name), public_send(name)
           )
         end
@@ -260,7 +267,7 @@ module WorkbasketInteractions
         end
 
         def measure_errors(measure)
-          ::Measures::ConformanceErrorsParser.new(
+          ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
             measure, MeasureValidator, {}
           ).errors
         end

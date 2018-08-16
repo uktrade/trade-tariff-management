@@ -1,13 +1,11 @@
 module WorkbasketServices
-  module AssociationSavers
-    class ExcludedGeographicalAreas < ::WorkbasketServices::AssociationSavers::SingleAssociation
+  module MeasureAssociationSavers
+    class ExcludedGeographicalAreas < ::WorkbasketServices::MeasureAssociationSavers::SingleAssociation
 
       private
 
         def generate_record!
-          area = GeographicalArea.actual.where(
-            geographical_area_id: record_ops[:excluded_geographical_area]
-          ).first
+          area = geographical_area(record_ops[:excluded_geographical_area])
 
           @record = MeasureExcludedGeographicalArea.new(
             excluded_geographical_area: area.geographical_area_id

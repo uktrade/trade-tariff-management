@@ -1,6 +1,6 @@
 module WorkbasketServices
-  module AssociationSavers
-    class MeasureComponents < ::WorkbasketServices::AssociationSavers::SingleAssociation
+  module MeasureAssociationSavers
+    class MeasureComponents < ::WorkbasketServices::MeasureAssociationSavers::SingleAssociation
 
       private
 

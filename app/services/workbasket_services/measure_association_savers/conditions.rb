@@ -1,6 +1,6 @@
 module WorkbasketServices
-  module AssociationSavers
-    class Conditions < ::WorkbasketServices::AssociationSavers::MultipleAssociation
+  module MeasureAssociationSavers
+    class Conditions < ::WorkbasketServices::MeasureAssociationSavers::MultipleAssociation
 
       attr_accessor :measure,
                     :system_ops,

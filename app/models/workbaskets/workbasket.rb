@@ -219,7 +219,7 @@ module Workbaskets
 
         measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
-        ::Measures::ConformanceErrorsParser.new(
+        ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
           measure, MeasureValidator, {}
         ).errors
       end

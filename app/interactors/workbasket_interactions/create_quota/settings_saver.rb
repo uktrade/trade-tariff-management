@@ -17,6 +17,12 @@ module WorkbasketInteractions
         end
       end
 
+      def order_number_saver
+        @order_number_saver ||= ::WorkbasketServices::QuotaSavers::OrderNumber.new(
+          self, settings_params
+        )
+      end
+
       def persist!
         #
         # TODO: refactor me Ruslan!
@@ -31,75 +37,12 @@ module WorkbasketInteractions
         Rails.logger.info ""
 
         all_settings = settings.settings
-        periods = all_settings['quota_periods']
 
-        first_period_start_date = periods.map do |k, v|
-          v['start_date']
-        end.reject { |p| p.blank? }
-           .sort do |a, b|
-          a.to_date <=> b.to_date
-        end.first
+
 
         Rails.logger.info ""
         Rails.logger.info "FIRST PERIOD START: #{first_period_start_date}"
         Rails.logger.info ""
-
-        quota_order_number = QuotaOrderNumber.new(
-          quota_order_number_id: all_settings["quota_ordernumber"],
-          validity_start_date: first_period_start_date
-        )
-        quota_order_number = assign_system_ops!(quota_order_number)
-        set_primary_key(quota_order_number)
-
-        quota_order_number.save
-
-        Rails.logger.info ""
-        Rails.logger.info "quota_order_number: #{quota_order_number.inspect}"
-        Rails.logger.info ""
-
-        quota_order_number_origin = QuotaOrderNumberOrigin.new(
-          validity_start_date: quota_order_number.validity_start_date
-        )
-        quota_order_number_origin.quota_order_number_sid = quota_order_number.quota_order_number_sid
-
-        geographical_area = GeographicalArea.actual
-                                            .where(geographical_area_id: all_settings["geographical_area_id"])
-                                            .first
-
-        quota_order_number_origin.geographical_area_id = geographical_area.geographical_area_id
-        quota_order_number_origin.geographical_area_sid = geographical_area.geographical_area_sid
-        quota_order_number_origin.validity_start_date = quota_order_number.validity_start_date
-
-        quota_order_number_origin = assign_system_ops!(quota_order_number_origin)
-        set_primary_key(quota_order_number_origin)
-
-        quota_order_number_origin.save
-
-        Rails.logger.info ""
-        Rails.logger.info "quota_order_number_origin: #{quota_order_number_origin.inspect}"
-        Rails.logger.info ""
-
-        if all_settings['excluded_geographical_areas'].present?
-
-          Rails.logger.info ""
-          Rails.logger.info "excluded_geographical_areas detected: #{all_settings['excluded_geographical_areas'].inspect}"
-          Rails.logger.info ""
-
-          all_settings['excluded_geographical_areas'].reject { |el| el.blank? }
-                                                     .map do |area_code|
-            area = GeographicalArea.actual
-                                   .where(geographical_area_id: area_code)
-                                   .first
-
-            exclusion = QuotaOrderNumberOriginExclusion.new
-
-            exclusion.quota_order_number_origin_sid = quota_order_number_origin.quota_order_number_origin_sid
-            exclusion.excluded_geographical_area_sid = area.geographical_area_sid
-
-            exclusion = assign_system_ops!(exclusion)
-            exclusion.save
-          end
-        end
 
         periods.map do |position, section_ops|
 
@@ -175,10 +118,6 @@ module WorkbasketInteractions
         if settings.save
           settings.set_searchable_data_for_created_measures!
         end
-      end
-
-      def set_primary_key(record)
-        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
       end
     end
   end

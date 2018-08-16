@@ -78,7 +78,7 @@ class MeasureSaver
     end
 
     def validate!
-      normalizer = ::Measures::ConformanceErrorsParser.new(
+      normalizer = ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
         measure, MeasureValidator, @errors
       )
 
