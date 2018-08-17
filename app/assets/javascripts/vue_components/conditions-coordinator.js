@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div class="measure-condition" v-for="(measureCondition, index) in conditions">',
-      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-action="showAction" :room-condition-components="showConditionComponents" :room-minimum-price="showMinimumPrice" :room-ratio="showRatio" :room-entry-price="showEntryPrice" :room-amount="showAmount" :room-certificate-type="showCertificateType" :room-certificate="showCertificate">',
+      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-action="showAction" :room-condition-components="showConditionComponents" :room-minimum-price="showMinimumPrice" :room-ratio="showRatio" :room-entry-price="showEntryPrice" :room-amount="showAmount" :room-certificate-type="showCertificateType" :room-certificate="showCertificate" :room-maximum-price-per-unit="showMaximumPricePerUnit" :room-maximum-quantity="showMaximumQuantity" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
         '<div class="col-md-2">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0">&nbsp;<span class="form-hint-3-line">&nbsp;</span></label>',
@@ -66,6 +66,34 @@ Vue.component("conditions-coordinator", {
     canRemoveMeasureCondition: function() {
       return this.conditions.length > 1;
     },
+    showMaximumQuantity: function() {
+      var codes = ["E1", "I1"];
+
+      return this.any(this.conditions, function(condition) {
+        return condition.condition_code && codes.indexOf(condition.condition_code) > -1;
+      });
+    },
+    showMaximumPricePerUnit: function() {
+      var codes = ["E2", "I2"];
+
+      return this.any(this.conditions, function(condition) {
+        return condition.condition_code && codes.indexOf(condition.condition_code) > -1;
+      });
+    },
+    showMonetaryUnit: function() {
+      var codes = ["E2", "I2", "M1", "M2"];
+
+      return this.any(this.conditions, function(condition) {
+        return condition.condition_code && codes.indexOf(condition.condition_code) > -1;
+      });
+    },
+    showMeasurementUnit: function() {
+      var codes = ["E2", "I2", "M1", "M2"];
+
+      return this.any(this.conditions, function(condition) {
+        return condition.condition_code && codes.indexOf(condition.condition_code) > -1;
+      });
+    },
     showAction: function() {
       var codes = ["K", "P", "S", "W", "Y"];
 
@@ -109,14 +137,14 @@ Vue.component("conditions-coordinator", {
       });
     },
     showCertificateType: function() {
-      var codes = ["B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
+      var codes = ["B", "C", "E3", "I3", "H", "Q", "Z", "V", "E"];
 
       return this.any(this.conditions, function(condition) {
         return codes.indexOf(condition.condition_code) > -1;
       });
     },
     showCertificate: function() {
-      var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
+      var codes = ["A", "B", "C", "E3", "I3", "H", "Q", "Z", "V", "E"];
 
       return this.any(this.conditions, function(condition) {
         return codes.indexOf(condition.condition_code) > -1;
