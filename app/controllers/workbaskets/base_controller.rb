@@ -26,8 +26,8 @@ module Workbaskets
 
     expose(:settings_params) do
       ops = params[:settings]
-      ops.send("permitted=", true)
-      ops = ops.to_h
+      ops.send("permitted=", true) if ops.present?
+      ops = (ops || {}).to_h
 
       ops
     end

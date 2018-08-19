@@ -19,7 +19,7 @@ module WorkbasketInteractions
 
       def order_number_saver
         @order_number_saver ||= ::WorkbasketServices::QuotaSavers::OrderNumber.new(
-          self, settings_params
+          self, settings.settings
         )
       end
 
