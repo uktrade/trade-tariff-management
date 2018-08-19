@@ -50,10 +50,6 @@ module WorkbasketServices
                              .name
                              .to_sym
 
-          Rails.logger.info ""
-          Rails.logger.info "record_key: #{record_key}"
-          Rails.logger.info ""
-
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
             record, get_validator(record_key), {}
           ).errors
@@ -139,10 +135,6 @@ module WorkbasketServices
         end
 
         def get_validator(klass_name)
-          Rails.logger.info ""
-          Rails.logger.info " klass_name: #{klass_name}"
-          Rails.logger.info ""
-
           case klass_name.to_s
           when "QuotaOrderNumber"
             QuotaOrderNumberValidator
