@@ -16,7 +16,7 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
 
     order_number_id.blank? || (
       order_number_id.present? &&
-      (/^09(\d){4,}\z/.match?(order_number_id))
+      (/^09(\d){4}\z/.match?(order_number_id))
     )
   end
 end
