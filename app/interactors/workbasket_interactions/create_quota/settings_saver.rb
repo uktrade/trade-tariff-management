@@ -4,19 +4,6 @@ module WorkbasketInteractions
 
       WORKBASKET_TYPE = "CreateQuota"
 
-      ASSOCIATION_LIST = %w(
-        measure_components
-        conditions
-        footnotes
-        excluded_geographical_areas
-      )
-
-      ASSOCIATION_LIST.map do |name|
-        define_method("#{name}_errors") do |measure|
-          get_association_errors(name, measure)
-        end
-      end
-
       def order_number_saver
         @order_number_saver ||= ::WorkbasketServices::QuotaSavers::OrderNumber.new(
           self, settings.settings, persist_mode?

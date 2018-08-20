@@ -23,6 +23,13 @@ module WorkbasketInteractions
       quota_periods
     )
 
+    ASSOCIATION_LIST = %w(
+      measure_components
+      conditions
+      footnotes
+      excluded_geographical_areas
+    )
+
     attr_accessor :current_step,
                   :save_mode,
                   :settings,
@@ -104,6 +111,12 @@ module WorkbasketInteractions
     end
 
     private
+
+      ASSOCIATION_LIST.map do |name|
+        define_method("#{name}_errors") do |measure|
+          get_association_errors(name, measure)
+        end
+      end
 
       def check_required_params!
         general_errors = {}
@@ -231,7 +244,7 @@ module WorkbasketInteractions
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
 
-          self.class::ASSOCIATION_LIST.map do |name|
+          ASSOCIATION_LIST.map do |name|
             if public_send(name).present?
               association_errors = send("#{name}_errors", measure)
               errors_collection[name] = association_errors if association_errors.present?
