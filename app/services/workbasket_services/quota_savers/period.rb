@@ -19,6 +19,8 @@ module WorkbasketServices
                                    .order_number
         @section_ops = section_ops
         @balance_ops = balance_ops
+        @start_point = balance_ops[:start_point]
+        @end_point = balance_ops[:end_point]
       end
 
 
@@ -30,9 +32,6 @@ module WorkbasketServices
           add_measures_for_definition!
           @quota_period_sids << quota_definition.quota_definition_sid
         end
-
-        @start_point = end_point + 1.day
-        @end_point = start_point + 1.year
       end
 
       private
