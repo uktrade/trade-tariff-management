@@ -11466,5 +11466,9 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180727173036_add_more_fi
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fields_to_create_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_to_full_temporary_stop_regulations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180807180500_add_initial_search_results_code_to_workbaskets.rb');
+<<<<<<< HEAD
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180820092723_add_internal_fields_to_duty_expressions.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180823124148_add_workbasket_type_of_quota_to_quota_definitions.rb');
+=======
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180820092723_add_internal_fields_to_duty_expressions.rb');
+>>>>>>> 5c8e09ab... [NEW CONDITIONS MECHANIC] added internal columns for related database tables
