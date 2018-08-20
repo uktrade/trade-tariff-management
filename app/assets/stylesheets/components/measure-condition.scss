@@ -1,9 +1,9 @@
-.condition {
-  border-bottom: 1px solid $border-colour;
+.condition,
+.measure-condition {
   padding-bottom: 10px;
 
   .form-group {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
   }
 
   & + & {
@@ -12,6 +12,5 @@
 
   &:last-of-type {
     margin-bottom: 10px;
-    border-bottom: 0;
   }
 }

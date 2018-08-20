@@ -2,19 +2,22 @@ module Workbaskets
   class Workbasket < Sequel::Model
 
     STATUS_LIST = [
-      :in_progress,
-      :draft_incomplete,
-      :draft_ready_for_cross_check,
-      :submitted_for_cross_check,
-      :cross_check_rejected,
-      :ready_for_approval,
-      :submitted_for_approval,
-      :approval_rejected,
-      :ready_for_export,
-      :export_pending,
-      :sent_to_cds,
-      :cds_import_error,
-      :already_in_cds
+      :new_in_progress, # "New - in progress"
+      :editing, # "Editing"
+      :awaiting_cross_check, # "Awaiting cross-check"
+      :cross_check_rejected, # "Cross-check rejected"
+      :ready_for_approval, # "Ready for approval"
+      :awaiting_approval, # "Awaiting approval"
+      :approval_rejected, # "Approval rejected"
+      :ready_for_export, # "Ready for export"
+      :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
+      :awaiting_cds_upload_edit, # "Awaiting CDS upload - edit"
+      :awaiting_cds_upload_overwrite, # "Awaiting CDS upload - overwrite"
+      :awaiting_cds_upload_delete, # "Awaiting CDS upload - delete"
+      :sent_to_cds, # "Sent to CDS"
+      :sent_to_cds_delete, # "Sent to CDS - delete"
+      :published, # "Published"
+      :cds_error # "CDS error"
     ]
 
     TYPES = [
@@ -25,7 +28,8 @@ module Workbaskets
 
     SENT_TO_CDS_STATES = [
       :sent_to_cds,
-      :already_in_cds
+      :sent_to_cds_delete,
+      :published
     ]
 
     one_to_many :events, key: :workbasket_id,
@@ -54,7 +58,7 @@ module Workbaskets
                      predicates: true
 
     enumerize :status, in: STATUS_LIST,
-                       default: :in_progress,
+                       default: :new_in_progress,
                        predicates: true
 
     validates do
@@ -72,7 +76,7 @@ module Workbaskets
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status("submitted_for_cross_check")
+        ).in_status("awaiting_cross_check")
          .order(:operation_date)
       end
 
@@ -213,15 +217,10 @@ module Workbaskets
         #
         # TODO: remove me after finishing of active development phase
         #
-        TYPES.map do |type_name|
-          by_type(type_name.to_s).map do |w|
-            settings = w.settings
-
-            if settings.present?
-              settings.collection.map(&:destroy)
-              w.destroy
-            end
-          end
+        by_type('create_measures').map do |w|
+          w.settings
+           .collection
+           .map(&:destroy)
         end
 
         all.map(&:destroy)

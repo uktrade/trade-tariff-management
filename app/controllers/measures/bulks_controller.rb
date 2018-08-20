@@ -81,7 +81,7 @@ module Measures
 
     def create
       self.workbasket = Workbaskets::Workbasket.new(
-        status: :in_progress,
+        status: :new_in_progress,
         type: :bulk_edit_of_measures,
         user: current_user,
         initial_search_results_code: params[:search_code],

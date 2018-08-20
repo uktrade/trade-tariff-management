@@ -31,7 +31,6 @@ Vue.component("pop-up", {
 
     MicroModal.init({
       onClose: function() {
-
         if (self.onClose) {
           self.onClose();
         }
@@ -39,14 +38,28 @@ Vue.component("pop-up", {
     });
 
     if (this.open) {
-      MicroModal.show("modal-" + this.id);
+      MicroModal.show("modal-" + this.id, {
+        onClose: function() {
+          if (self.onClose) {
+            self.onClose();
+          }
+        }
+      });
     }
 
   },
   watch: {
     open: function (newVal, oldVal) {
+      var self = this;
+
       if (!oldVal && newVal) {
-        MicroModal.show("modal-" + this.id);
+        MicroModal.show("modal-" + this.id, {
+          onClose: function() {
+            if (self.onClose) {
+              self.onClose();
+            }
+          }
+        });
       } else {
         MicroModal.close("modal-" + this.id);
       }

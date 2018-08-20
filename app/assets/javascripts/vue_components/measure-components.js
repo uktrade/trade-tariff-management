@@ -88,7 +88,21 @@ var componentCommonFunctionality = {
 
 Vue.component("measure-component", $.extend({}, {
   template: "#measure-component-template",
-  props: ["measureComponent", "index"],
+  props: [
+    "measureComponent",
+    "index",
+    "hideHelp",
+    "roomDutyAmountOrPercentage",
+    "roomDutyAmountPercentage",
+    "roomDutyAmountNegativePercentage",
+    "roomDutyAmountNumber",
+    "roomDutyAmountMinimum",
+    "roomDutyAmountMaximum",
+    "roomDutyAmountNegativeNumber",
+    "roomDutyRefundAmount",
+    "roomMonetaryUnit",
+    "roomMeasurementUnit"
+  ],
   data: function() {
     return {
       thing: "measureComponent"
@@ -98,10 +112,29 @@ Vue.component("measure-component", $.extend({}, {
 
 Vue.component("measure-condition-component", $.extend({}, {
   template: "#measure-condition-component-template",
-  props: ["measureConditionComponent", "index"],
+  props: [
+    "measureConditionComponent",
+    "index",
+    "hideHelp",
+    "roomDutyAmountOrPercentage",
+    "roomDutyAmountPercentage",
+    "roomDutyAmountNegativePercentage",
+    "roomDutyAmountNumber",
+    "roomDutyAmountMinimum",
+    "roomDutyAmountMaximum",
+    "roomDutyAmountNegativeNumber",
+    "roomDutyRefundAmount",
+    "roomMonetaryUnit",
+    "roomMeasurementUnit"
+  ],
   data: function() {
     return {
       thing: "measureConditionComponent"
     };
+  },
+  computed: {
+    hideHelp: function() {
+      return this.index > 0;
+    }
   }
 }, componentCommonFunctionality));

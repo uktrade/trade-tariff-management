@@ -1,10 +1,16 @@
 <script type="text/x-template" id="measure-change-commodity-code-input-template">
   <div class="row">
     <div class="col-xs-5">
-      <p>{{commodityCode}}</p>
+      <p>
+        <label :for="labelUid">
+          {{commodityCode}}
+        </label>
+      </p>
     </div>
     <div class="col-xs-7">
-      <p><input type="text" @change="updateCommodityCode" class="form-control" /></p>
+      <p>
+        <input type="text" @change="updateCommodityCode" class="form-control" :id="labelUid"/>
+      </p>
     </div>
   </div>
 </script>
@@ -41,7 +47,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label">
+          <div class="form-label">
             <span class="row">
               <span class="col-md-5">
                 Current code
@@ -56,7 +62,7 @@
             </span>
             <measure-change-commodity-code-input v-for="commodityCode in measuresCommodityCodes" :commodity-code="commodityCode">
             </measure-change-commodity-code-input>
-          </label>
+          </div>
         </div>
       </div>
       <div class="col-md-6">

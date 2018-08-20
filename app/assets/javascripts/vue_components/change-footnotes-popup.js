@@ -82,12 +82,10 @@ Vue.component("change-footnotes-popup", {
 
     if (this.uniqMeasuresFootnotes.length == 1) {
       this.measuresFootnotes = this.uniqMeasuresFootnotes;
-      this.confirmBtnDisabled = false;
       this.onlyOneMeasure = true;
     }
 
     if (allMeasuresFootnotes.length == 0) {
-      this.confirmBtnDisabled = false;
       this.hideUpdateMode = true;
     }
 
