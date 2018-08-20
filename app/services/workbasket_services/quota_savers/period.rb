@@ -6,7 +6,8 @@ module WorkbasketServices
                     :attrs_parser,
                     :order_number,
                     :section_ops,
-                    :balance_ops
+                    :balance_ops,
+                    :quota_definition,
                     :start_point,
                     :end_point
 
@@ -25,12 +26,11 @@ module WorkbasketServices
 
 
       def persist!
-        quota_definition = QuotaDefinition.new(quota_definition_ops)
+        @quota_definition = QuotaDefinition.new(quota_definition_ops)
         set_system_data(quota_definition)
 
         if quota_definition.save
           add_measures_for_definition!
-          @quota_period_sids << quota_definition.quota_definition_sid
         end
       end
 
