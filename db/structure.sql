@@ -3707,7 +3707,8 @@ CREATE TABLE public.measure_components_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_duty_expression_id text
 );
 
 
@@ -3730,7 +3731,8 @@ CREATE VIEW public.measure_components AS
     measure_components1."national",
     measure_components1.status,
     measure_components1.workbasket_id,
-    measure_components1.workbasket_sequence_number
+    measure_components1.workbasket_sequence_number,
+    measure_components1.original_duty_expression_id
    FROM public.measure_components_oplog measure_components1
   WHERE ((measure_components1.oid IN ( SELECT max(measure_components2.oid) AS max
            FROM public.measure_components_oplog measure_components2
@@ -3890,7 +3892,8 @@ CREATE TABLE public.measure_condition_components_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_duty_expression_id text
 );
 
 
@@ -3913,7 +3916,8 @@ CREATE VIEW public.measure_condition_components AS
     measure_condition_components1."national",
     measure_condition_components1.status,
     measure_condition_components1.workbasket_id,
-    measure_condition_components1.workbasket_sequence_number
+    measure_condition_components1.workbasket_sequence_number,
+    measure_condition_components1.original_duty_expression_id
    FROM public.measure_condition_components_oplog measure_condition_components1
   WHERE ((measure_condition_components1.oid IN ( SELECT max(measure_condition_components2.oid) AS max
            FROM public.measure_condition_components_oplog measure_condition_components2
@@ -3964,7 +3968,8 @@ CREATE TABLE public.measure_conditions_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_measure_condition_code text
 );
 
 
@@ -3992,7 +3997,8 @@ CREATE VIEW public.measure_conditions AS
     measure_conditions1."national",
     measure_conditions1.status,
     measure_conditions1.workbasket_id,
-    measure_conditions1.workbasket_sequence_number
+    measure_conditions1.workbasket_sequence_number,
+    measure_conditions1.original_measure_condition_code
    FROM public.measure_conditions_oplog measure_conditions1
   WHERE ((measure_conditions1.oid IN ( SELECT max(measure_conditions2.oid) AS max
            FROM public.measure_conditions_oplog measure_conditions2
@@ -11458,3 +11464,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180727173036_add_more_fi
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fields_to_create_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_to_full_temporary_stop_regulations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180807180500_add_initial_search_results_code_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180820092723_add_internal_fields_to_duty_expressions.rb');

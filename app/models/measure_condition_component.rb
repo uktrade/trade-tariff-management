@@ -60,6 +60,7 @@ class MeasureConditionComponent < Sequel::Model
 
   def to_json(options = {})
     {
+      original_duty_expression_id: original_duty_expression_id,
       duty_amount: duty_amount,
       duty_expression: duty_expression.to_json,
       measurement_unit: measurement_unit.to_json,
