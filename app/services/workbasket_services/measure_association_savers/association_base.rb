@@ -1,5 +1,5 @@
 module WorkbasketServices
-  module AssociationSavers
+  module MeasureAssociationSavers
     class AssociationBase < ::WorkbasketServices::Base
 
       class << self

@@ -29,7 +29,7 @@ module WorkbasketServices
         generate_records!
         validate!
 
-        if @errors.blank? && persist_data
+        if @errors.blank? && persist_data.present?
           persist!
         end
 

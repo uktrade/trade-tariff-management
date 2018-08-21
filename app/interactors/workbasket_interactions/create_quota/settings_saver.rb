@@ -4,10 +4,10 @@ module WorkbasketInteractions
 
       WORKBASKET_TYPE = "CreateQuota"
 
+      attr_accessor :order_number
+
       def order_number_saver
-        @order_number_saver ||= ::WorkbasketServices::QuotaSavers::OrderNumber.new(
-          self, settings.settings, persist_mode?
-        )
+        @order_number_saver ||= build_order_number!
       end
 
       def persist!
@@ -15,9 +15,11 @@ module WorkbasketInteractions
         @measure_sids = []
         @quota_period_sids = []
 
+        @order_number = persist_order_number!
+
         quota_periods.map do |position, section_ops|
           @start_point = section_ops['start_date'].to_date
-          @end_point = start_point + 1.year
+          @end_point = @start_point + 1.year
 
           section_ops["opening_balances"].map do |k, balance_ops|
             balance_ops[:start_point] = @start_point
@@ -42,8 +44,17 @@ module WorkbasketInteractions
 
       private
 
-        def persist_mode?
-          step_pointer.review_and_submit_step?
+        def build_order_number!(persist_mode=false)
+          ::WorkbasketServices::QuotaSavers::OrderNumber.new(
+            self, settings.settings, persist_mode
+          )
+        end
+
+        def persist_order_number!
+          saver = build_order_number!(true)
+          saver.valid?
+
+          saver.order_number
         end
     end
   end

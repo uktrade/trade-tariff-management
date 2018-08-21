@@ -4,6 +4,7 @@ module WorkbasketServices
 
       attr_accessor :saver_class,
                     :attrs_parser,
+                    :all_settings,
                     :order_number,
                     :section_ops,
                     :balance_ops,
@@ -16,17 +17,15 @@ module WorkbasketServices
         @attrs_parser = saver_class.attrs_parser
         @all_settings = saver_class.settings
                                    .settings
-        @order_number = saver_class.order_number_saver
-                                   .order_number
+        @order_number = saver_class.order_number
         @section_ops = section_ops
         @balance_ops = balance_ops
         @start_point = balance_ops[:start_point]
         @end_point = balance_ops[:end_point]
       end
 
-
       def persist!
-        @quota_definition = QuotaDefinition.new(quota_definition_ops)
+        @quota_definition = QuotaDefinition.new(definition_ops)
         set_system_data(quota_definition)
 
         if quota_definition.save
@@ -68,7 +67,7 @@ module WorkbasketServices
           section_ops["measurement_unit_qualifier_code"]
         end
 
-        def defition_ops
+        def definition_ops
           {
             volume: balance,
             initial_volume: balance,
@@ -96,7 +95,9 @@ module WorkbasketServices
               )
             end
 
-            saver_class.candidate_validation_errors(code, saver_class.validation_mode)
+            saver_class.send(
+              :candidate_validation_errors, code, saver_class.send(:validation_mode)
+            )
           end
         end
 
