@@ -18,23 +18,7 @@ module WorkbasketInteractions
         @order_number = persist_order_number!
 
         quota_periods.map do |position, section_ops|
-          @start_point = section_ops['start_date'].to_date
-          @end_point = @start_point + 1.year
-
-          section_ops["opening_balances"].map do |k, balance_ops|
-            balance_ops[:start_point] = @start_point
-            balance_ops[:end_point] = @end_point
-
-            period_saver = ::WorkbasketServices::QuotaSavers::Period.new(
-              self, section_ops, balance_ops
-            )
-            period_saver.persist!
-
-            @quota_period_sids << period_saver.quota_definition.quota_definition_sid
-
-            @start_point = @end_point + 1.day
-            @end_point = @start_point + 1.year
-          end
+          save_period_by_type(position, section_ops)
         end
 
         settings.measure_sids_jsonb = @measure_sids.to_json
@@ -55,6 +39,61 @@ module WorkbasketInteractions
           saver.valid?
 
           saver.order_number
+        end
+
+        def save_period_by_type(position, section_ops)
+          case section_ops['type']
+          when "annual"
+
+            @start_point = section_ops['start_date'].to_date
+            @end_point = @start_point + 1.year
+
+            section_ops["opening_balances"].map do |k, balance_ops|
+              add_period!(section_ops, balance_ops)
+            end
+
+          when "bi_annual", "quarterly", "monthly"
+
+            @start_point = section_ops['start_date'].to_date
+            @end_point = @start_point + 1.year
+
+            section_ops["opening_balances"].map do |k, opening_balance_ops|
+              opening_balance_ops.map do |target_key, balance_part_ops|
+                add_period!(section_ops, balance_part_ops)
+              end
+            end
+
+          when "custom"
+
+            # TODO
+
+          end
+        end
+
+        def add_period!(section_ops, balance_source)
+          balance_ops[:start_point] = @start_point
+          balance_ops[:end_point] = @end_point
+
+          period_saver = populator_class_for(section_ops['type']).new(
+            self, section_ops, balance_source
+          )
+          period_saver.persist!
+
+          @quota_period_sids << period_saver.quota_definition.quota_definition_sid
+
+          @start_point = @end_point + 1.day
+          @end_point = @start_point + 1.year
+        end
+
+        def populator_class_for(period_type)
+          target_klass_name = case period_type
+          when "annual"
+            "AnnualPeriod"
+          when ""
+            "MultiplePartsPeriod"
+          end
+
+          "::WorkbasketServices::QuotaSavers::#{target_klass_name}".constantize
         end
     end
   end

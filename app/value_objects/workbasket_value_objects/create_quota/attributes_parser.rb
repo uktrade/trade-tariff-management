@@ -76,6 +76,7 @@ module WorkbasketValueObjects
             end
 
           when "custom"
+
             section_ops["periods"].present? &&
             section_ops["periods"].size > 0 &&
             section_ops["periods"].all? do |k, opening_balance_ops|
