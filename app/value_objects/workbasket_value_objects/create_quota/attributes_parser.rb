@@ -22,10 +22,7 @@ module WorkbasketValueObjects
       def quota_periods
         if ops[:quota_periods].present?
           ops[:quota_periods].select do |k, section_ops|
-            section_ops['start_date'].present? &&
-            section_ops['period'].present? &&
-            section_ops['period'].to_s != "1_repeating" &&
-            section_ops['measurement_unit_code'].present? &&
+            general_requirements_passed?(section_ops) &&
             quota_type_specific_requirements_passed?(section_ops, section_ops['type'])
           end
         else
@@ -43,6 +40,15 @@ module WorkbasketValueObjects
           if step == "conditions_footnotes"
             @ops = ops.merge(workbasket_settings.configure_quota_step_settings)
           end
+        end
+
+        def general_requirements_passed?(section_ops)
+          return true if section_ops['type'] == 'custom'
+
+          section_ops['start_date'].present? &&
+          section_ops['period'].present? &&
+          section_ops['period'].to_s != "1_repeating" &&
+          section_ops['measurement_unit_code'].present?
         end
 
         def quota_type_specific_requirements_passed?(section_ops, period_type)
@@ -67,6 +73,16 @@ module WorkbasketValueObjects
 
                 balance.present?
               end
+            end
+
+          when "custom"
+            section_ops["periods"].present? &&
+            section_ops["periods"].size > 0 &&
+            section_ops["periods"].all? do |k, opening_balance_ops|
+              opening_balance_ops["start_date"].present? &&
+              opening_balance_ops["end_date"].present? &&
+              opening_balance_ops["balance"].present? &&
+              opening_balance_ops['measurement_unit_code'].present?
             end
 
           end
