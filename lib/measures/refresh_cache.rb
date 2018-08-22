@@ -21,13 +21,13 @@ module Measures
 
       def clear_keys!
         KEYS_TO_CLEAR.map do |cache_key|
-          Rails.cache.delete(cache_key)
+          Rails.cache.delete(cache_key.to_s)
         end
       end
 
       def recache_keys!
         TimeMachine.at(Date.current) do
-          form = MeasureForm.new(Measure.last)
+          form = ::WorkbasketForms::BaseForm.new(Measure.last)
 
           form.geographical_areas_json
           form.all_geographical_areas

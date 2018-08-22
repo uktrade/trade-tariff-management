@@ -89,7 +89,7 @@ module WorkbasketForms
       @ga_json ||= Rails.cache.fetch(:measures_form_geographical_areas_json, expires_in: 8.hours) do
         list = {}
 
-        GeographicalArea.actual.all.each do |group|
+        GeographicalArea.actual.map do |group|
           list[group.geographical_area_id] = group.contained_geographical_areas.map do |child|
             {
               geographical_area_id: child.geographical_area_id,
@@ -105,7 +105,6 @@ module WorkbasketForms
     def all_geographical_areas
       @all_ga ||= Rails.cache.fetch(:measures_form_geographical_areas, expires_in: 8.hours) do
         GeographicalArea.actual
-                        .all
                         .map(&:to_json)
       end
     end
@@ -114,16 +113,15 @@ module WorkbasketForms
       @all_gc ||= Rails.cache.fetch(:measures_form_geographical_countries, expires_in: 8.hours) do
         GeographicalArea.actual
                         .countries
-                        .all
                         .map(&:to_json)
       end
     end
 
     def geographical_groups_except_erga_omnes
       @ggeeo ||= Rails.cache.fetch(:measures_form_geographical_groups_except_erga_omnes, expires_in: 8.hours) do
-        GeographicalArea.actual.groups
+        GeographicalArea.actual
+                        .groups
                         .except_erga_omnes
-                        .all
                         .map(&:to_json)
       end
     end
