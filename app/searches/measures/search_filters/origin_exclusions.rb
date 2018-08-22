@@ -37,7 +37,12 @@ module Measures
 
       def initialize(operator, exclusions_list)
         @operator = operator
-        @exclusions_list = filtered_collection_params(exclusions_list)
+
+        @exclusions_list = if exclusions_list.present?
+          filtered_collection_params(exclusions_list)
+        else
+          []
+        end
       end
 
       def sql_rules

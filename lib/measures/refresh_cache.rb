@@ -21,18 +21,20 @@ module Measures
 
       def clear_keys!
         KEYS_TO_CLEAR.map do |cache_key|
-          Rails.cache.delete(cache_key)
+          Rails.cache.delete(cache_key.to_s)
         end
       end
 
       def recache_keys!
-        form = MeasureForm.new(Measure.last)
+        TimeMachine.at(Date.current) do
+          form = ::WorkbasketForms::BaseForm.new(Measure.last)
 
-        form.geographical_areas_json
-        form.all_geographical_areas
-        form.all_geographical_countries
-        form.geographical_groups_except_erga_omnes
-        form.geographical_area_erga_omnes
+          form.geographical_areas_json
+          form.all_geographical_areas
+          form.all_geographical_countries
+          form.geographical_groups_except_erga_omnes
+          form.geographical_area_erga_omnes
+        end
       end
 
       def notify_via_sentry!(message)
