@@ -13,7 +13,7 @@ module WorkbasketServices
                     :start_point,
                     :end_point
 
-      def initialize(saver_class, section_ops, target_key, balance_ops)
+      def initialize(saver_class, target_key, section_ops, balance_ops)
         @saver_class = saver_class
         @attrs_parser = saver_class.attrs_parser
         @all_settings = saver_class.settings

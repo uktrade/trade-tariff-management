@@ -42,7 +42,7 @@ module WorkbasketInteractions
         end
 
         def save_period_by_type(position, section_ops)
-          setup_initial_date_range!(section_ops['type'])
+          setup_initial_date_range!(section_ops)
 
           case section_ops['type']
           when "annual"
@@ -55,7 +55,7 @@ module WorkbasketInteractions
 
             section_ops["opening_balances"].map do |k, opening_balance_ops|
               opening_balance_ops.map do |target_key, balance_part_ops|
-                add_period!(section_ops, balance_part_ops)
+                add_period!(section_ops, balance_part_ops, target_key)
               end
             end
 
@@ -66,13 +66,17 @@ module WorkbasketInteractions
           end
         end
 
-        def add_period!(section_ops, balance_source)
+        def add_period!(section_ops, balance_ops, target_key=nil)
           balance_ops[:start_point] = @start_point
           balance_ops[:end_point] = @end_point
 
-          period_saver = populator_class_for(section_ops['type']).new(
-            self, section_ops, balance_source
-          )
+          quota_ops = if target_key.present?
+            [self, target_key, section_ops, balance_ops]
+          else
+            [self, section_ops, balance_ops]
+          end
+
+          period_saver = populator_class_for(section_ops['type']).new(*quota_ops)
           period_saver.persist!
 
           @quota_period_sids << period_saver.quota_definition.quota_definition_sid
@@ -82,7 +86,8 @@ module WorkbasketInteractions
           ).date_range
         end
 
-        def setup_initial_date_range!(period_type)
+        def setup_initial_date_range!(section_ops)
+          period_type = section_ops['type']
           return true if period_type == 'custom'
 
           @start_point = section_ops['start_date'].to_date
@@ -93,8 +98,10 @@ module WorkbasketInteractions
           target_klass_name = case period_type
           when "annual"
             "AnnualPeriod"
-          when ""
+          when "bi_annual", "quarterly", "monthly"
             "MultiplePartsPeriod"
+          when "custom"
+            # TODO
           end
 
           "::WorkbasketServices::QuotaSavers::#{target_klass_name}".constantize
