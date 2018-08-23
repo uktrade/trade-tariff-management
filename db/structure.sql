@@ -6064,7 +6064,8 @@ CREATE TABLE public.quota_definitions_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    workbasket_type_of_quota text
 );
 
 
@@ -6095,7 +6096,8 @@ CREATE VIEW public.quota_definitions AS
     quota_definitions1."national",
     quota_definitions1.status,
     quota_definitions1.workbasket_id,
-    quota_definitions1.workbasket_sequence_number
+    quota_definitions1.workbasket_sequence_number,
+    quota_definitions1.workbasket_type_of_quota
    FROM public.quota_definitions_oplog quota_definitions1
   WHERE ((quota_definitions1.oid IN ( SELECT max(quota_definitions2.oid) AS max
            FROM public.quota_definitions_oplog quota_definitions2
@@ -11465,3 +11467,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fi
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_to_full_temporary_stop_regulations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180807180500_add_initial_search_results_code_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180820092723_add_internal_fields_to_duty_expressions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180823124148_add_workbasket_type_of_quota_to_quota_definitions.rb');
