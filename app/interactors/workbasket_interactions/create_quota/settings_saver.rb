@@ -61,7 +61,9 @@ module WorkbasketInteractions
 
           when "custom"
 
-            # TODO
+            section_ops["periods"].map do |k, balance_ops|
+              add_custom_period!(section_ops, balance_ops)
+            end
 
           end
         end
@@ -86,6 +88,18 @@ module WorkbasketInteractions
           ).date_range
         end
 
+        def add_custom_period!(section_ops, balance_ops)
+          balance_ops[:start_point] = balance_ops['start_date']
+          balance_ops[:end_point] = balance_ops['end_date']
+
+          period_saver = populator_class_for(section_ops['type']).new(
+            self, section_ops, balance_ops
+          )
+          period_saver.persist!
+
+          @quota_period_sids << period_saver.quota_definition.quota_definition_sid
+        end
+
         def setup_initial_date_range!(section_ops)
           period_type = section_ops['type']
           return true if period_type == 'custom'
@@ -96,12 +110,10 @@ module WorkbasketInteractions
 
         def populator_class_for(period_type)
           target_klass_name = case period_type
-          when "annual"
+          when "annual", "custom"
             "AnnualPeriod"
           when "bi_annual", "quarterly", "monthly"
             "MultiplePartsPeriod"
-          when "custom"
-            # TODO
           end
 
           "::WorkbasketServices::QuotaSavers::#{target_klass_name}".constantize
