@@ -39,8 +39,15 @@ module Workbaskets
     end
 
     def quota_periods
-      QuotaDefinition.where(quota_definition_sid: quota_period_sids)
-                     .order(:quota_definition_sid)
+      @quota_periods ||= QuotaDefinition.where(quota_definition_sid: quota_period_sids)
+                                        .order(:quota_definition_sid)
+                                        .all
+    end
+
+    def quota_periods_by_type(type_of_quota)
+      quota_periods.select do |quota_period|
+        quota_period.workbasket_type_of_quota == type_of_quota
+      end
     end
   end
 end

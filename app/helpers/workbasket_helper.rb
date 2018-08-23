@@ -22,4 +22,34 @@ module WorkbasketHelper
       "Review and submit"
     end
   end
+
+  def workbasket_quota_periods_overview
+    annual = workbasket_get_quota_periods('annual')
+    bi_annual = workbasket_get_quota_periods('bi_annual')
+    quarterly = workbasket_get_quota_periods('quarterly')
+    monthly = workbasket_get_quota_periods('monthly')
+
+    message = [
+      annual,
+      bi_annual,
+      quarterly,
+      monthly
+    ].reject do |q|
+      q.blank?
+    end.to_sentence
+
+    "#{message} #{'period'.pluralize(workbasket_settings.quota_periods.count)}"
+  end
+
+  def workbasket_get_quota_periods(type_of_quota)
+    number_of_quotas = workbasket_settings.quota_periods_by_type(type_of_quota)
+                                          .count
+
+    unless number_of_quotas.zero?
+      description = type_of_quota.split("_")
+                                 .join("-")
+
+      "#{number_of_quotas} #{description}"
+    end
+  end
 end

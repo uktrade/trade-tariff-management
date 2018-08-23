@@ -13,7 +13,7 @@
       =<> pluralize(attributes_parser.commodity_codes_exclusions.count, "exception", "exceptions")
       | ), comprising
 
-    =<> pluralize(workbasket_settings.quota_periods.count, "annual period", "annual periods")
+    =<> workbasket_quota_periods_overview
     | over
 
     =<> pluralize(workbasket_settings.quota_periods.count, "year", "years")
