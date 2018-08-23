@@ -28,12 +28,14 @@ module WorkbasketHelper
     bi_annual = workbasket_get_quota_periods('bi_annual')
     quarterly = workbasket_get_quota_periods('quarterly')
     monthly = workbasket_get_quota_periods('monthly')
+    custom = workbasket_get_quota_periods('custom')
 
     message = [
       annual,
       bi_annual,
       quarterly,
-      monthly
+      monthly,
+      custom
     ].reject do |q|
       q.blank?
     end.to_sentence

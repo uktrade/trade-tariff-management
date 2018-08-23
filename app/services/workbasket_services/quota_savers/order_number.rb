@@ -84,13 +84,22 @@ module WorkbasketServices
         def set_first_period_date
           @first_period_start_date = if periods.present?
             periods.map do |k, v|
-              v['start_date']
+              if v['type'].to_s == 'custom'
+                v['periods'].map do |k, v|
+                  v['start_date']
+                end.sort do |a, b|
+                  a.to_date <=> b.to_date
+                end.first
+
+              else
+                v['start_date']
+              end
             end.reject do |p|
               p.blank?
             end.sort do |a, b|
               a.to_date <=> b.to_date
             end.first
-               .try(:date)
+               .to_date
 
           else
             Date.today
@@ -98,6 +107,10 @@ module WorkbasketServices
         end
 
         def build_order_number
+          Rails.logger.info ""
+          Rails.logger.info " first_period_start_date: #{first_period_start_date}"
+          Rails.logger.info ""
+
           @order_number = QuotaOrderNumber.new(
             quota_order_number_id: order_number_ops["quota_ordernumber"],
             validity_start_date: first_period_start_date
