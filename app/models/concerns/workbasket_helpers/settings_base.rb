@@ -25,6 +25,12 @@ module WorkbasketHelpers
       end
     end
 
+    def collection_by_type(type_of_record)
+      collection.select do |rec|
+        rec.class.name == type_of_record.to_s
+      end
+    end
+
     def main_step_settings
       JSON.parse(main_step_settings_jsonb)
     end

@@ -41,7 +41,7 @@
                 = item.initial_volume.to_f
 
               .table__column.conditions-column
-                = item.critical_state.present? ? 'Yes' : 'No'
+                = item.critical_state.to_s == 'Y' ? 'Yes' : 'No'
 
               .table__column.footnotes-column
                 = item.critical_threshold
