@@ -16,10 +16,10 @@
     =<> workbasket_quota_periods_overview
     | over
 
-    =<> pluralize(workbasket_settings.quota_periods.count, "year", "years")
+    =< workbasket_quota_periods_years_length
     | .
 
   p
     | This quota will have
-    =<> pluralize(workbasket_settings.measure_sids.count, "associated measure", "associated measures")
+    =< pluralize(workbasket_settings.measure_sids.count, "associated measure", "associated measures")
     | .

@@ -52,4 +52,10 @@ module WorkbasketHelper
       "#{number_of_quotas} #{description}"
     end
   end
+
+  def workbasket_quota_periods_years_length
+    pluralize(
+      workbasket_settings.period_in_years, "year", "years"
+    )
+  end
 end

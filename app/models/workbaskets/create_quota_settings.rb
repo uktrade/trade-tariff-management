@@ -49,5 +49,26 @@ module Workbaskets
         quota_period.workbasket_type_of_quota == type_of_quota
       end
     end
+
+    def ordered_quota_periods
+      quota_periods.sort do |a, b|
+        a.validity_start_date <=> b.validity_start_date
+      end
+    end
+
+    def earliest_period_date
+      ordered_quota_periods.first
+                           .validity_start_date
+    end
+
+    def latest_period_date
+      ordered_quota_periods.last
+                           .validity_start_date
+    end
+
+    def period_in_years
+      diff = (latest_period_date.year - earliest_period_date.year)
+      diff + 1
+    end
   end
 end
