@@ -285,13 +285,13 @@ $(document).ready(function() {
       },
       saveForCrossCheck: function() {
         window.__save_bulk_edit_of_measures_mode = "save_group_for_cross_check";
-        this.startSavingProcess();
+        this.startSavingProcess('save_group_for_cross_check');
       },
       saveProgress: function () {
         window.__save_bulk_edit_of_measures_mode = "save_progress";
-        this.startSavingProcess();
+        this.startSavingProcess('save_progress');
       },
-      startSavingProcess: function() {
+      startSavingProcess: function(mode) {
         BulkEditOfMeasuresSaveActions.toogleSaveSpinner();
 
         window.__sb_measures_collection =  this.measures;
@@ -300,7 +300,7 @@ $(document).ready(function() {
         window.__sb_total_pages = Math.ceil(window.__sb_total_count / window.__sb_per_page);
         window.__sb_current_batch = 1;
 
-        BulkEditOfMeasuresSaveActions.sendSaveRequest();
+        BulkEditOfMeasuresSaveActions.sendSaveRequest(mode);
       },
       measuresUpdated: function() {
         DB.insertOrReplaceBulk(this.search_code, this.measures);

@@ -7,6 +7,8 @@ module Measures
       :update, :destroy
     ]
 
+    before_action :require_no_to_be_awaiting_for_review!, only: [:edit, :update]
+
     expose(:current_page) do
       params[:page]
     end
@@ -98,10 +100,27 @@ module Measures
       end
     end
 
+    expose(:submit_group_for_cross_check) do
+      params[:mode] == "save_group_for_cross_check"
+    end
+
     def update
       if bulk_saver.valid?
-        render json: bulk_saver.success_response,
-               status: :ok
+        if submit_group_for_cross_check
+          bulk_saver.persist!
+        end
+
+        if submit_group_for_cross_check && params[:final_batch].to_s == "true"
+          render json: {
+            number_of_updated_measures: bulk_saver.collection_ops.count,
+            redirect_url: edit_measures_bulk_url(workbasket.id, search_code: workbasket.search_code, submitted: true),
+            success: :ok
+          }, status: :ok
+
+        else
+          render json: bulk_saver.success_response,
+                 status: :ok
+        end
       else
         render json: bulk_saver.error_response,
                status: :unprocessable_entity
@@ -113,5 +132,15 @@ module Measures
 
       render json: {}, head: :ok
     end
+
+    private
+
+      def require_no_to_be_awaiting_for_review!
+        if workbasket.status == "awaiting_cross_check" && params[:submitted].blank?
+          redirect_to edit_measures_bulk_url(workbasket.id, search_code: workbasket.search_code, submitted: true)
+
+          return false
+        end
+      end
   end
 end

@@ -1,6 +1,6 @@
 window.BulkEditOfMeasuresSaveActions =
 
-  sendSaveRequest: ->
+  sendSaveRequest: (mode) ->
     bottom_limit = (window.__sb_current_batch - 1) * window.__sb_per_page
     top_limit = bottom_limit + window.__sb_per_page
     final_batch = false
@@ -12,7 +12,8 @@ window.BulkEditOfMeasuresSaveActions =
     measures_collection = JSON.parse(JSON.stringify(window.__sb_measures_collection))
 
     data = {
-      final_batch: final_batch
+      mode: mode,
+      final_batch: final_batch,
       bulk_measures_collection: measures_collection.slice(bottom_limit, top_limit)
     }
 
@@ -25,24 +26,29 @@ window.BulkEditOfMeasuresSaveActions =
       processData: false
       contentType: 'application/json'
       success: (response) ->
-        BulkEditOfMeasuresSaveActions.sendNextBatch()
+        BulkEditOfMeasuresSaveActions.sendNextBatch(mode, response)
       error: (response) ->
         BulkEditOfMeasuresSaveActions.handleErrors(response)
-        BulkEditOfMeasuresSaveActions.sendNextBatch()
+        BulkEditOfMeasuresSaveActions.sendNextBatch(mode, response)
 
     return false
 
-  sendNextBatch: () ->
+  sendNextBatch: (mode, response) ->
     window.__sb_current_batch = window.__sb_current_batch + 1
     if window.__sb_current_batch <= window.__sb_total_pages
 
       setTimeout (->
-        BulkEditOfMeasuresSaveActions.sendSaveRequest()
+        BulkEditOfMeasuresSaveActions.sendSaveRequest(mode)
       ), 3000
     else
       BulkEditOfMeasuresSaveActions.toogleSaveSpinner()
       BulkEditOfMeasuresSaveActions.unlockButtons()
       BulkEditOfMeasuresSaveActions.showSummaryPopup()
+
+      if mode == "save_group_for_cross_check" && response.redirect_url isnt undefined
+        setTimeout (->
+          window.location = response.redirect_url
+        ), 1000
 
     return false
 

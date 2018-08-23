@@ -1,5 +1,5 @@
 .bulk-edit-of-measures-actions-block
-  - if workbasket_author?
+  - if workbasket_author? && params[:submitted].blank?
     .submit_group_for_cross_check_block
       = link_to "Submit group for cross-check", "#", class: "secondary-button js-bulk-edit-of-measures-submit-for-cross-check", "v-on:click.prevent" => "saveForCrossCheck"
 
