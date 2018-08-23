@@ -1,3 +1,5 @@
+require 'goods_nomenclature_mapper'
+
 class GoodsNomenclature < Sequel::Model
   extend ActiveModel::Naming
 
@@ -169,6 +171,42 @@ class GoodsNomenclature < Sequel::Model
 
   def good_nomenclature?
     !(chapter? || heading? || commodity?)
+  end
+
+  def declarable?
+    producline_suffix == '80' && children.none?
+  end
+
+  # To be refactored out
+  one_to_many :commodities, dataset: -> {
+    actual_or_relevant(Commodity)
+             .filter("goods_nomenclatures.goods_nomenclature_item_id LIKE ?", heading_id)
+             .where(Sequel.~(goods_nomenclatures__goods_nomenclature_item_id: HiddenGoodsNomenclature.codes ))
+  }
+
+  def children
+    func = Proc.new {
+      ::GoodsNomenclatureMapper.new(
+        commodities_dataset.
+          eager(:goods_nomenclature_indents, :goods_nomenclature_descriptions).
+          all
+      ).all.
+        detect do |item|
+        item.goods_nomenclature_sid == goods_nomenclature_sid
+      end.try(:children) || []
+    }
+
+    if Rails.env.test? || Rails.env.development?
+      # Do not cache it in Test and Development environments.
+      #
+      func.call
+    else
+      # Cache for 3 hours
+      #
+      Rails.cache.fetch("commodity_#{goods_nomenclature_sid}_children", expires_in: 3.hours) do
+        func.call
+      end
+    end
   end
 
   def record_code

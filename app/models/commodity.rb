@@ -1,5 +1,3 @@
-require 'goods_nomenclature_mapper'
-
 class Commodity < GoodsNomenclature
   include Declarable
 
@@ -85,31 +83,6 @@ class Commodity < GoodsNomenclature
 
   def uptree
     @_uptree ||= [ancestors, heading, chapter, self].flatten.compact
-  end
-
-  def children
-    func = Proc.new {
-      ::GoodsNomenclatureMapper.new(
-        heading.commodities_dataset.
-                eager(:goods_nomenclature_indents, :goods_nomenclature_descriptions).
-                all
-      ).all.
-        detect do |item|
-        item.goods_nomenclature_sid == goods_nomenclature_sid
-      end.try(:children) || []
-    }
-
-    if Rails.env.test? || Rails.env.development?
-      # Do not cache it in Test and Development environments.
-      #
-      func.call
-    else
-      # Cache for 3 hours
-      #
-      Rails.cache.fetch("commodity_#{goods_nomenclature_sid}_children", expires_in: 3.hours) do
-        func.call
-      end
-    end
   end
 
   def to_param
