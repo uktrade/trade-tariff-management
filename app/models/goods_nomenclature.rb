@@ -104,6 +104,10 @@ class GoodsNomenclature < Sequel::Model
                          foreign_key: :goods_nomenclature_sid
 
   dataset_module do
+    def by_code(code = "")
+      filter(goods_nomenclature_item_id: code.to_s.first(10))
+    end
+
     def declarable
       filter(producline_suffix: "80")
     end
