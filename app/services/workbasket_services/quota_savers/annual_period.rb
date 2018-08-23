@@ -1,6 +1,6 @@
 module WorkbasketServices
   module QuotaSavers
-    class Period < ::WorkbasketServices::Base
+    class AnnualPeriod < ::WorkbasketServices::Base
 
       attr_accessor :saver_class,
                     :attrs_parser,

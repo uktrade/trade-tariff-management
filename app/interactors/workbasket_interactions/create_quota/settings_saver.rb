@@ -42,20 +42,16 @@ module WorkbasketInteractions
         end
 
         def save_period_by_type(position, section_ops)
+          setup_initial_date_range!(section_ops['type'])
+
           case section_ops['type']
           when "annual"
-
-            @start_point = section_ops['start_date'].to_date
-            @end_point = @start_point + 1.year
 
             section_ops["opening_balances"].map do |k, balance_ops|
               add_period!(section_ops, balance_ops)
             end
 
           when "bi_annual", "quarterly", "monthly"
-
-            @start_point = section_ops['start_date'].to_date
-            @end_point = @start_point + 1.year
 
             section_ops["opening_balances"].map do |k, opening_balance_ops|
               opening_balance_ops.map do |target_key, balance_part_ops|
@@ -81,8 +77,16 @@ module WorkbasketInteractions
 
           @quota_period_sids << period_saver.quota_definition.quota_definition_sid
 
-          @start_point = @end_point + 1.day
-          @end_point = @start_point + 1.year
+          @start_point, @end_point = period_next_date_generator_class.new(
+            section_ops['type'], @end_point
+          ).date_range
+        end
+
+        def setup_initial_date_range!(period_type)
+          return true if period_type == 'custom'
+
+          @start_point = section_ops['start_date'].to_date
+          @end_point = @start_point + period_next_date_generator_class.period_length(period_type)
         end
 
         def populator_class_for(period_type)
@@ -94,6 +98,10 @@ module WorkbasketInteractions
           end
 
           "::WorkbasketServices::QuotaSavers::#{target_klass_name}".constantize
+        end
+
+        def period_next_date_generator_class
+          ::WorkbasketValueObjects::CreateQuota::PeriodNextDateGenerator
         end
     end
   end

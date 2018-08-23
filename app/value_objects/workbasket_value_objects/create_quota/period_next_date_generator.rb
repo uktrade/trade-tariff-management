@@ -1,22 +1,23 @@
 module WorkbasketValueObjects
   module CreateQuota
-    class PeriodDateRangePopulator
+    class PeriodNextDateGenerator
 
       attr_accessor :mode,
                     :start_date,
-                    :end_date,
-                    :position
+                    :end_date
 
-      def initialize(mode, start_date, position)
+      def initialize(mode, start_date)
         @mode = mode
         @start_date = start_date
-        @position = position
+
+        generate
+        self
       end
 
-      def run
+      def generate
         case mode
         when "annual"
-          @start_date = start_date
+          @start_date = start_date + 1.day
           @end_date = start_date + 1.year
         when "bi_annual"
           step_range_period(6)
@@ -25,6 +26,27 @@ module WorkbasketValueObjects
           @end_date = start_date + position.months
         when "quarterly"
           step_range_period(3)
+        end
+      end
+
+      def date_range
+        [
+          start_date, end_date
+        ]
+      end
+
+      class << self
+        def period_length(period_type)
+          case period_type
+          when 'annual'
+            1.year
+          when 'bi_annual'
+            6.months
+          when 'quarterly'
+            3.months
+          when 'monthly'
+            1.month
+          end
         end
       end
 
