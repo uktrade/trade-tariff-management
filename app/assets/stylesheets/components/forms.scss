@@ -18,6 +18,10 @@ input.date-picker {
   &[disabled] {
     opacity: 0.5;
   }
+
+  &.error {
+    border-color: $red;
+  }
 }
 
 .modal .form-group {
