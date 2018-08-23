@@ -308,7 +308,7 @@ $(document).ready(function() {
       measuresDeleted: function(deletedMeasures){
         var self = this;
         deletedMeasures.forEach(function(deletedMeasure){
-          var measureInTable = self.measures.find(function(msr){
+          var measureInTable = self.measuresForTable.find(function(msr){
             return msr.measure_sid == deletedMeasure.measure_sid;
           });
           if (measureInTable) {
