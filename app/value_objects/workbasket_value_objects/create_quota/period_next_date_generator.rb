@@ -8,25 +8,8 @@ module WorkbasketValueObjects
 
       def initialize(mode, start_date)
         @mode = mode
-        @start_date = start_date
-
-        generate
-        self
-      end
-
-      def generate
-        case mode
-        when "annual"
-          @start_date = start_date + 1.day
-          @end_date = start_date + 1.year
-        when "bi_annual"
-          step_range_period(6)
-        when "monthly"
-          @start_date = start_date + (position - 1).months
-          @end_date = start_date + position.months
-        when "quarterly"
-          step_range_period(3)
-        end
+        @start_date = start_date + 1.day
+        @end_date = start_date + self.class.period_length(mode)
       end
 
       def date_range
