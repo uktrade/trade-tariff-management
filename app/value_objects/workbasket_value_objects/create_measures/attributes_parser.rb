@@ -17,10 +17,6 @@ module WorkbasketValueObjects
         end
       end
 
-      def measure_components
-        prepare_collection(:measure_components, :duty_expression_id)
-      end
-
       private
 
         def prepare_ops

@@ -25,6 +25,12 @@ module WorkbasketHelpers
       end
     end
 
+    def collection_by_type(type_of_record)
+      collection.select do |rec|
+        rec.class.name == type_of_record.to_s
+      end
+    end
+
     def main_step_settings
       JSON.parse(main_step_settings_jsonb)
     end
@@ -73,6 +79,17 @@ module WorkbasketHelpers
 
     def end_date
       settings['end_date']
+    end
+
+    def clean_up_temporary_data!
+      if measure_sids.present?
+        collection.map(&:destroy)
+
+        self.measure_sids_jsonb = [].to_json
+        self.quota_period_sids_jsonb = [].to_json if defined?(quota_period_sids_jsonb)
+
+        save
+      end
     end
   end
 end

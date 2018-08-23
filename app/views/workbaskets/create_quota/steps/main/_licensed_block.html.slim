@@ -11,7 +11,7 @@ fieldset
           label for="toggle-type"
             | Yes - use of this quota requires oresentation of a licence
 
-  .form-group.js-workbasket-create-quota-licence-block.hidden
+  .form-group.js-workbasket-create-quota-licence-block v-if="measure.quota_is_licensed"
     label.form-label
       span.create-measures-sub_header
         | Licence

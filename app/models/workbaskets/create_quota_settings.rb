@@ -14,6 +14,7 @@ module Workbaskets
         FootnoteDescription
         FootnoteDescriptionPeriod
         FootnoteAssociationMeasure
+        MeasureComponent
         MeasureCondition
         MeasureConditionComponent
         MeasureExcludedGeographicalArea
@@ -38,8 +39,36 @@ module Workbaskets
     end
 
     def quota_periods
-      QuotaDefinition.where(quota_definition_sid: quota_period_sids)
-                     .order(:quota_definition_sid)
+      @quota_periods ||= QuotaDefinition.where(quota_definition_sid: quota_period_sids)
+                                        .order(:quota_definition_sid)
+                                        .all
+    end
+
+    def quota_periods_by_type(type_of_quota)
+      quota_periods.select do |quota_period|
+        quota_period.workbasket_type_of_quota == type_of_quota
+      end
+    end
+
+    def ordered_quota_periods
+      quota_periods.sort do |a, b|
+        a.validity_start_date <=> b.validity_start_date
+      end
+    end
+
+    def earliest_period_date
+      ordered_quota_periods.first
+                           .validity_start_date
+    end
+
+    def latest_period_date
+      ordered_quota_periods.last
+                           .validity_start_date
+    end
+
+    def period_in_years
+      diff = (latest_period_date.year - earliest_period_date.year)
+      diff + 1
     end
   end
 end
