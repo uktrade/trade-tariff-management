@@ -9,7 +9,7 @@
     </div>
     <div class="col-xs-7">
       <p>
-        <input type="text" @change="updateCommodityCode" class="form-control" :id="labelUid" :class="{ error:wrongCommodityCode }"/>
+        <input type="text" @change="updateCommodityCode" class="form-control" :id="labelUid"/>
       </p>
     </div>
   </div>
@@ -60,7 +60,7 @@
             <span class="form-hint">
               Leave row fields blank / unchecked to keep existing code unchanged.
             </span>
-            <measure-change-commodity-code-input v-for="commodityCode in measuresCommodityCodes" :commodity-code="commodityCode" :wrong-codes="wrongCodes">
+            <measure-change-commodity-code-input v-for="commodityCode in measuresCommodityCodes" :commodity-code="commodityCode">
             </measure-change-commodity-code-input>
           </div>
         </div>
@@ -78,9 +78,6 @@
       <button class="button" v-on:click.prevent="confirmChanges">
         Update selected measures
       </button>
-      <span class="loading-spinner-wrapper" v-if="validatingCodes">
-        <%= render "measures/bulks/loading_spinner", message: "Validating commodity codes..." %>
-      </span>
       <a href="#" class="secondary-button" v-on:click.prevent="onClose">
         Cancel
       </a>
