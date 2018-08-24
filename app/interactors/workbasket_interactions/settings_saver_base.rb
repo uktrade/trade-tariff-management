@@ -266,6 +266,7 @@ module WorkbasketInteractions
           measure = Measure.new(
             attrs_parser.measure_params(code, mode)
           )
+
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
           if @persist.present?

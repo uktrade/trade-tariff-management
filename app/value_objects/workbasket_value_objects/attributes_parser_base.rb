@@ -27,7 +27,7 @@ module WorkbasketValueObjects
         measure_type_id: ops[:measure_type_id],
         reduction_indicator: ops[:reduction_indicator],
         geographical_area_id: ops[:geographical_area_id],
-        ordernumber: ops[:quota_ordernumber]
+        quota_ordernumber: ops[:quota_ordernumber]
       }
 
       if mode == :commodity_codes

@@ -141,7 +141,7 @@ module WorkbasketServices
             exclusion = QuotaOrderNumberOriginExclusion.new
             exclusion.quota_order_number_origin_sid = quota_origin.quota_order_number_origin_sid
             exclusion.excluded_geographical_area_sid = area.geographical_area_sid
-            assign_system_ops!(exclusion)
+            set_system_data(exclusion)
 
             exclusion
           end
