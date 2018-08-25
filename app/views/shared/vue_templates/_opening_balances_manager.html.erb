@@ -212,9 +212,147 @@
           Opening balance
         </label>
 
-        <div class="row">
-          <div class="col-md-3">
+        <div class="row" v-if="isAnnual">
+          <div class="col-md-3" >
             <input class="form-control" v-model="section.balance" />
+          </div>
+        </div>
+
+        <div class="row" v-if="isBiAnnual">
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              1st semester
+            </label>
+            <input class="form-control" v-model="section.balance.semester1" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              2nd semester
+            </label>
+            <input class="form-control" v-model="section.balance.semester2" />
+          </div>
+        </div>
+
+        <div class="row" v-if="isQuarterly">
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              1st quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter1" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              2nd quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter2" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              3rd quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter3" />
+          </div>
+
+          <div class="col-md-2 unbold">
+            <label class="form-label">
+              4th quarter
+            </label>
+            <input class="form-control" v-model="section.balance.quarter4" />
+          </div>
+        </div>
+
+        <div v-if="isMonthly">
+          <div class="row">
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                1st month
+              </label>
+              <input class="form-control" v-model="section.balance.month1" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                2nd month
+              </label>
+              <input class="form-control" v-model="section.balance.month2" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                3rd month
+              </label>
+              <input class="form-control" v-model="section.balance.month3" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                4th month
+              </label>
+              <input class="form-control" v-model="section.balance.month4" />
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                5th month
+              </label>
+              <input class="form-control" v-model="section.balance.month5" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                6th month
+              </label>
+              <input class="form-control" v-model="section.balance.month6" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                7th month
+              </label>
+              <input class="form-control" v-model="section.balance.month7" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                8th month
+              </label>
+              <input class="form-control" v-model="section.balance.month8" />
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                9th month
+              </label>
+              <input class="form-control" v-model="section.balance.month9" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                10th month
+              </label>
+              <input class="form-control" v-model="section.balance.month10" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                11th month
+              </label>
+              <input class="form-control" v-model="section.balance.month11" />
+            </div>
+
+            <div class="col-md-2 unbold">
+              <label class="form-label">
+                12th month
+              </label>
+              <input class="form-control" v-model="section.balance.month12" />
+            </div>
           </div>
         </div>
       </div>
