@@ -37,7 +37,7 @@
       <custom-select :options="conditionsForType" label-field="label" value-field="value"  v-model="type.operator" v-bind:disabled="typeDisabled" name="search[type][operator]"></custom-select>
     </div>
     <div class="find-measure__short">
-      <custom-select url="/measure_types" code-field="measure_type_id" label-field="description" value-field="measure_type_id" code-class-name="prefix--measure-type"  placeholder="― start typing ―" min-length="1" v-model="type.value" v-bind:disabled="typeDisabled" name="search[type][value]"></custom-select>
+      <custom-select url="/measure_types?quota=false" code-field="measure_type_id" label-field="description" value-field="measure_type_id" code-class-name="prefix--measure-type"  placeholder="― start typing ―" min-length="1" v-model="type.value" v-bind:disabled="typeDisabled" name="search[type][value]"></custom-select>
     </div>
   </div>
   <div class="find-measures__row">
