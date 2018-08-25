@@ -41,6 +41,12 @@ class MeasureType < Sequel::Model
     def q_search(filter_ops)
       scope = actual
 
+      if filter_ops[:quota].present? && filter_ops[:quota] == "true"
+        scope = scope.where(order_number_capture_code: 1)
+      elsif filter_ops[:quota].present? && filter_ops[:quota] == "false"
+        scope = scope.where(Sequel.~(order_number_capture_code: 1))
+      end
+
       if filter_ops[:q].present?
         q_rule = "#{filter_ops[:q]}%"
 
