@@ -100,6 +100,9 @@ Vue.component("quota-section", {
       var newOpeningBalances = [];
 
       this.section.duty_expressions.splice(0, 100);
+      this.section.staged = false;
+      this.section.duties_each_period = false;
+      this.section.criticality_each_period = false;
 
       if (this.section.periods) {
         this.section.periods.splice(0, 100);
