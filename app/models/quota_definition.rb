@@ -1,6 +1,7 @@
 class QuotaDefinition < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :oplog, primary_key: :quota_definition_sid

@@ -43,7 +43,7 @@ Vue.component("components-coordinator", {
         return func(element);
       }).length > 0;
     },
-    removeCondition: function(index) {
+    removeComponent: function(index) {
       this.components.splice(index, 1);
     },
     addComponent: function() {

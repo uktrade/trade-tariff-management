@@ -10,7 +10,10 @@
       = link_to "Back to search results", measures_url(search_code: workbasket.initial_search_results_code)
 
 h2.heading-large
-  = workbasket_author? ? 'Edit measures' : 'Review measures'
+  - if params[:submitted].present?
+    | Submitted for Cross-Check
+  - else
+    = workbasket_author? ? 'Edit measures' : 'Review measures'
 
 /p
   a

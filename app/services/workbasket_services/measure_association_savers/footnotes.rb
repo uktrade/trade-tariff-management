@@ -1,6 +1,6 @@
 module WorkbasketServices
-  module AssociationSavers
-    class Footnotes < ::WorkbasketServices::AssociationSavers::MultipleAssociation
+  module MeasureAssociationSavers
+    class Footnotes < ::WorkbasketServices::MeasureAssociationSavers::MultipleAssociation
 
       attr_accessor :measure,
                     :system_ops,

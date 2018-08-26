@@ -29,8 +29,12 @@ module Measures
       if ops["regulation"].present?
         res[:regulation_id] = if ops["regulation"]["base_regulation_id"].present?
           ops["regulation"]["base_regulation_id"]
+
         elsif ops["regulation"]["modification_regulation_id"].present?
           ops["regulation"]["modification_regulation_id"]
+
+        elsif ops["regulation"]["regulation_id"].present?
+          ops["regulation"]["regulation_id"]
         end
       end
 

@@ -1,0 +1,50 @@
+.opening-balance {
+  label {
+    font-size: 14px !important;
+    font-weight: 600;
+
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .year-indicator {
+    position: relative;
+    top: 8px;
+    font-size: 16px !important;
+  }
+
+  .form-hint {
+    font-size: 16px !important;
+    position: relative;
+    top: 10px;
+    margin: 0;
+  }
+
+  & + .opening-balance {
+    padding-top: 10px;
+  }
+
+  &.opening-balance--criticality {
+    .static-row:nth-child(1) [class*="col-"] > .form-group > label:nth-child(1) {
+      height: 3em;
+    }
+  }
+}
+
+.multiple-balances {
+  margin: 0 0 20px !important;
+}
+
+.balance-row {
+  & + .balance-row {
+    padding-top: 10px;
+  }
+}
+
+.custom-period {
+  margin-bottom: 20px;
+
+  & + .custom-period {
+    margin-top: 50px;
+  }
+}

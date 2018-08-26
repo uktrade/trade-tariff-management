@@ -1,6 +1,6 @@
 module WorkbasketServices
-  module AssociationSavers
-    class MultipleAssociation < ::WorkbasketServices::AssociationSavers::AssociationBase
+  module MeasureAssociationSavers
+    class MultipleAssociation < ::WorkbasketServices::MeasureAssociationSavers::AssociationBase
 
       def valid?
         generate_records!
@@ -17,7 +17,7 @@ module WorkbasketServices
 
         def validate!(record)
           if validator(record.class.name).present?
-            ::Measures::ConformanceErrorsParser.new(
+            ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
               record, validator(record.class.name), {}
             ).errors
              .map do |k, v|

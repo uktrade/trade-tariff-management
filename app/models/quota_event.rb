@@ -1,5 +1,14 @@
 class QuotaEvent
-  EVENTS = %w(balance exhaustion balance critical reopening unblocking unsuspension)
+
+  EVENTS = %w(
+    balance
+    exhaustion
+    balance
+    critical
+    reopening
+    unblocking
+    unsuspension
+  )
 
   # Generate SELECT .. UNION from all event types
   def self.for_quota_definition(quota_sid)

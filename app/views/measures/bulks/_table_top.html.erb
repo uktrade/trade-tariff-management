@@ -1,6 +1,6 @@
 <div class="table-top">
   <div class="row">
-    <% if workbasket_author? %>
+    <% if workbasket_author? && params[:submitted].blank? %>
       <div class="col-md-3">
         <button-dropdown :disabled="noSelectedMeasures">
           <template slot="text">&ndash; select bulk action &ndash;</template>

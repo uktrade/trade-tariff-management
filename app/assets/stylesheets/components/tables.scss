@@ -23,7 +23,7 @@ table {
   }
 
   .table__column--highlight {
-    background: $panel-colour;
+    background: transparentize($panel-colour, 0.4);
   }
 
   .select-all-column {

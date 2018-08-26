@@ -20,6 +20,8 @@ module WorkbasketValueObjects
 
       def main_step_settings
         %w(
+          start_date
+          end_date
           regulation_id
           quota_ordernumber
           quota_description
@@ -47,6 +49,10 @@ module WorkbasketValueObjects
           conditions
           footnotes
         )
+      end
+
+      def configure_quota?
+        current_step == "configure_quota"
       end
 
       def conditions_footnotes?

@@ -1,17 +1,17 @@
 window.WorkbasketBaseValidationErrorsHandler =
 
-  handleErrorsResponse: (response, measure_form) ->
+  handleErrorsResponse: (response, workbasket_form) ->
     WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
     WorkbasketBaseSaveActions.hideSuccessMessage()
 
     if response.responseJSON.step == "main"
-      WorkbasketBaseValidationErrorsHandler.setFormErrors(response, measure_form)
+      WorkbasketBaseValidationErrorsHandler.setFormErrors(response, workbasket_form)
     else
-      WorkbasketBaseValidationErrorsHandler.renderErrorsBlock(response, measure_form)
+      WorkbasketBaseValidationErrorsHandler.renderErrorsBlock(response, workbasket_form)
 
     WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner()
 
-  setFormErrors: (response, measure_form) ->
+  setFormErrors: (response, workbasket_form) ->
     errors_list = response.responseJSON.errors
 
     if errors_list['measure'] isnt undefined
@@ -21,18 +21,18 @@ window.WorkbasketBaseValidationErrorsHandler =
       if value.constructor == Array
         value.forEach (innerError) ->
           if innerError.constructor == Array
-            measure_form.errors.push innerError[0]
+            workbasket_form.errors.push innerError[0]
             setTimeout (->
               WorkbasketBaseValidationErrorsHandler.renderAffectedCommoditiesBlock innerError
             ), 1000
           else
-            measure_form.errors.push innerError
+            workbasket_form.errors.push innerError
       else
-        measure_form.errors.push value
+        workbasket_form.errors.push value
 
     return false
 
-  renderErrorsBlock: (response, measure_form) ->
+  renderErrorsBlock: (response, workbasket_form) ->
     WorkbasketBaseValidationErrorsHandler.showCustomErrorsBlock()
 
     grouped_errors = response.responseJSON.errors
@@ -40,7 +40,7 @@ window.WorkbasketBaseValidationErrorsHandler =
 
     if general_errors isnt undefined
       $.each general_errors, (key, value) ->
-        group_block = $(".js-workbasket-custom-errors[data-errors-container='measure']")
+        group_block = $(".js-workbasket-custom-errors[data-errors-container='general']")
         group_block.removeClass('hidden')
         list_block = group_block.find("ul")
         list_block.append("<li><div class='workbasket-error-block with_left_margin'>" + value + "</div></li>")

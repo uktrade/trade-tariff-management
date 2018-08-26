@@ -23,9 +23,8 @@ module Db
       end
 
       def delete_target_db_records!
-        data.map do |item|
-          item.manual_add = true
-          item.delete
+        data.map do |workbasket|
+          workbasket.clean_up_workbasket!
         end
       end
 

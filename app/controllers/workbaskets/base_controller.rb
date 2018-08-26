@@ -26,8 +26,8 @@ module Workbaskets
 
     expose(:settings_params) do
       ops = params[:settings]
-      ops.send("permitted=", true)
-      ops = ops.to_h
+      ops.send("permitted=", true) if ops.present?
+      ops = (ops || {}).to_h
 
       ops
     end
@@ -136,10 +136,8 @@ module Workbaskets
       end
 
       def clean_up_persisted_data_on_update!
-        if !step_pointer.review_and_submit_step? &&
-           workbasket.type == "create_measures"
-
-          workbasket_settings.collection.map(&:destroy) # TODO: refactor it Ruslan
+        unless step_pointer.review_and_submit_step?
+          workbasket_settings.clean_up_temporary_data!
         end
       end
   end

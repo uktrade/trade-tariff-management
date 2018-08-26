@@ -184,6 +184,44 @@ module Workbaskets
       end
     end
 
+    begin :need_to_refactor
+      def collection_models
+        %w(
+          Measure
+          Footnote
+          FootnoteDescription
+          FootnoteDescriptionPeriod
+          FootnoteAssociationMeasure
+          MeasureComponent
+          MeasureCondition
+          MeasureConditionComponent
+          MeasureExcludedGeographicalArea
+        )
+      end
+
+      def bulk_edit_collection
+        collection_models.map do |db_model|
+          db_model.constantize
+                  .by_workbasket(id)
+                  .all
+        end.flatten
+           .sort do |a, b|
+           a.workbasket_sequence_number <=> b.workbasket_sequence_number
+        end
+      end
+    end
+
+    def clean_up_workbasket!
+      if settings.present?
+        settings.collection
+                .map(&:destroy)
+
+        settings.destroy
+      end
+
+      destroy
+    end
+
     class << self
       def buld_new_workbasket!(type, current_user)
         workbasket = Workbaskets::Workbasket.new(
@@ -208,7 +246,7 @@ module Workbaskets
 
         measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
-        ::Measures::ConformanceErrorsParser.new(
+        ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
           measure, MeasureValidator, {}
         ).errors
       end
@@ -217,13 +255,14 @@ module Workbaskets
         #
         # TODO: remove me after finishing of active development phase
         #
-        by_type('create_measures').map do |w|
-          w.settings
-           .collection
-           .map(&:destroy)
+        %w(
+          create_measures
+          create_quota
+        ).map do |type_name|
+          by_type(type_name).map do |w|
+            w.clean_up_workbasket!
+          end
         end
-
-        all.map(&:destroy)
       end
     end
 
