@@ -105,7 +105,7 @@ module Measures
       end
 
       def method_goods_nomenclature_item_values(goods_nomenclature_item_id)
-        goods_nomenclature = Commodity.actual
+        goods_nomenclature = GoodsNomenclature.actual
                                       .by_code(goods_nomenclature_item_id)
                                       .with_validity_end_date_nil_or_after(
                                         measure_params[:start_date].to_date
