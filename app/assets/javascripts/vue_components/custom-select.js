@@ -19,7 +19,8 @@ Vue.component('custom-select', {
     "codeClassName",
     "abbreviationClassName",
     "optionsFilter",
-    "disabled"
+    "disabled",
+    "compact"
   ],
   data: function() {
     return {
@@ -156,7 +157,7 @@ Vue.component('custom-select', {
             abbreviation = data.abbreviation + " - ";
           }
 
-          return "<div class='item'>" + data[codeField] + " - " + abbreviation + data[options.labelField] + "</div>";
+          return "<div class='item'>" + data[codeField] + (vm.compact !== true ? (" - " + abbreviation + data[options.labelField]) : "") + "</div>";
         }
       };
     }

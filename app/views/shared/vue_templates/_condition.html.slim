@@ -1,158 +1,75 @@
 script type="text/x-template" id="condition-template"
   div
-    .static-row
-      .col-xs-12.col-sm-6.col-md-4
+    .row
+      .col-xs-12.col-sm-6.col-md-1
         .form-group
           label.form-label v-if="index == 0"
             | Condition
+          = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--condition", ":on-change" => "onConditionCodeSelected", ":options-filter" => "splitConditions", ":compact" => true }
 
-            span.form-hint v-if="hideHelp !== true"
-              | This specifies a requirement the import must meet and determines the customs treatment of the goods concerned.
-          = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select the condition to apply ―", "code-class-name" => "prefix--condition", ":on-change" => "onConditionCodeSelected", ":allow-clear" => "true", ":options-filter" => "splitConditions" }
-
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomMinimumPrice" do
-        .form-group*{ "v-if" => "showMinimumPrice" }
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomReferencedValue" do
+        .form-group*{ "v-if" => "showReferencedValue" }
           label.form-label v-if="index == 0"
-            | Minimum Price (€)
-            span.form-hint v-if="hideHelp !== true"
-              | Specify the price (in €) at or above which this condition will apply.
+            | Referenced value
           input.form-control type="text" v-model="condition.amount"
         div v-else=""
           .form-group
             label.form-label v-if="index == 0"
-              | Minimum Price (€)
+              | Referenced value
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomRatio" do
-        .form-group*{ "v-if" => "showRatio" }
-          label.form-label v-if="index == 0"
-            | Ratio
-            span.form-hint v-if="hideHelp !== true"
-              | Specify the ratio at or above which this condition will apply.
-          input.form-control type="text" v-model="condition.amount"
-        div v-else=""
-          .form-group
-            label.form-label v-if="index == 0"
-              | Ratio
-            | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomEntryPrice" do
-        .form-group*{ "v-if" => "showEntryPrice" }
-          label.form-label v-if="index == 0"
-            | Entry Price (€)
-            span.form-hint v-if="hideHelp !== true"
-              | Specify the price (in €) above which this condition will apply.
-          input.form-control type="text" v-model="condition.amount"
-        div v-else=""
-          .form-group
-            label.form-label v-if="index == 0"
-              | Entry Price (€)
-            | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomMaximumPricePerUnit" do
-        .form-group*{ "v-if" => "showMaximumPricePerUnit" }
-          label.form-label v-if="index == 0"
-            | Maximum price per unit (€)
-            span.form-hint v-if="hideHelp !== true"
-              | Specify the maximum price per unit at or below which this condition will apply.
-          input.form-control type="text" v-model="condition.amount"
-        div v-else=""
-          .form-group
-            label.form-label v-if="index == 0"
-              | Maximum price per unit (€)
-            | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomMaximumQuantity" do
-        .form-group*{ "v-if" => "showMaximumQuantity" }
-          label.form-label v-if="index == 0"
-            | Maximum quantity
-            span.form-hint v-if="hideHelp !== true"
-              | Specify the maxium quantity at or below which this condition will apply.
-          input.form-control type="text" v-model="condition.amount"
-        div v-else=""
-          .form-group
-            label.form-label v-if="index == 0"
-              | Maximum quantity
-            | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomAmount" do
-        .form-group*{ "v-if" => "showAmount" }
-          label.form-label v-if="index == 0"
-            | Amount
-          input.form-control type="text" v-model="condition.amount"
-        div v-else=""
-          .form-group
-            label.form-label v-if="index == 0"
-              | Amount
-            | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-4", "v-if" => "roomMonetaryUnit" do
-        .form-group*{ "v-if" => "showMonetaryUnit" }
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomMeasurementUnit" do
+        .form-group*{ "v-if" => "showMeasurementUnit" }
           label.form-label v-if="index == 0"
             | Unit of measure
             span.form-hint v-if="hideHelp !== true"
               | &nbsp;
-          = content_tag "custom-select", "", { url: "/monetary_units", "label-field" => "description", "value-field" => "monetary_unit_code", "code-field" => "monetary_unit_code", "v-model" => "condition.monetary_unit_code", "placeholder" => "― select unit of measure ―", "date-sensitive" => true, "code-class-name" => "prefix--monetary-unit", ":on-change" => "onMonetaryUnitSelected" }
+          = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "condition.measurement_unit_code", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit", ":on-change" => "onMeasurementUnitSelected", ":compact" => true }
         div v-else=""
           .form-group
             label.form-label v-if="index == 0"
               | Unit of measure
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-4", "v-if" => "roomMeasurementUnit" do
-        .form-group*{ "v-if" => "showMeasurementUnit" }
-          label.form-label v-if="index == 0"
-            | Measurement unit
-            span.form-hint v-if="hideHelp !== true"
-              | &nbsp;
-          = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "condition.measurement_unit_code", "placeholder" => "― select the measurement unit ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit", ":on-change" => "onMeasurementUnitSelected" }
-        div v-else=""
-          .form-group
-            label.form-label v-if="index == 0"
-              | Measurement unit
-            | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-4", "v-if" => "roomMeasurementUnit" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomMeasurementUnit" do
         .form-group*{ "v-if" => "showMeasurementUnit" }
           label.form-label v-if="index == 0"
             | Qualifier
-            span.form-hint v-if="hideHelp !== true"
-              | &nbsp;
-          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "condition.measurement_unit_qualifier_code", "placeholder" => "― select the measurement unit qualifier ―", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit-qualifier", ":on-change" => "onMeasurementUnitQualifierSelected" }
+          = content_tag "custom-select", "", { url: "/measurement_unit_qualifiers", "label-field" => "description", "value-field" => "measurement_unit_qualifier_code", "code-field" => "measurement_unit_qualifier_code", "v-model" => "condition.measurement_unit_qualifier_code", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit-qualifier", ":on-change" => "onMeasurementUnitQualifierSelected", ":compact" => true }
         div v-else=""
           .form-group
             label.form-label v-if="index == 0"
               | Qualifier
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-4", "v-if" => "roomCertificateType" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomCertificateType" do
         .form-group*{ "v-if" => "showCertificateType" }
           label.form-label v-if="index == 0"
-            | Certificate/license/document type
-            span.form-hint v-if="hideHelp !== true"
-              | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
-          = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate type ―", "code-class-name" => "prefix--certificate-type", ":on-change" => "onCertificateTypeSelected", ":allow-clear" => "true" }
+            | Certificate type(s)
+          = content_tag "custom-select", "", { url: "/certificate_types", "v-model" => "condition.certificate_type_code", "codeField" => "certificate_type_code", "valueField" => "certificate_type_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--certificate-type", ":on-change" => "onCertificateTypeSelected", ":compact" => true }
         div v-else=""
           .form-group
             label.form-label v-if="index == 0"
-              | Certificate/license/document type
+              | Certificate type(s)
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-4", "v-if" => "roomCertificate" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomCertificate" do
         .form-group*{ "v-if" => "showCertificate" }
           label.form-label v-if="index == 0"
-            | Certificate/license/document
-            span.form-hint v-if="hideHelp !== true"
-              | Select the type of certificate that will be required, or select 'no certificate presented' to define the action for that case.
-          = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, placeholder: "― select certificate ―", "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType", "code-class-name" => "prefix--certificate", ":on-change" => "onCertificateSelected", ":allow-clear" => "true" }
+            | Certificate
+          = content_tag "custom-select", "", { url: "/certificates", "v-model" => "condition.certificate_code", "codeField" => "certificate_code", "valueField" => "certificate_code", "labelField" => "description", "date-sensitive" => true, "drilldown-name" => "certificate_type_code", ":drilldown-value" => "condition.certificate_type_code", ":drilldown-required" => "showCertificateType", "code-class-name" => "prefix--certificate", ":on-change" => "onCertificateSelected", ":compact" => true }
         div v-else=""
           .form-group
             label.form-label v-if="index == 0"
-              | Certificate/license/document
+              | Certificate
             | &nbsp;
-      = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-3", "v-if" => "roomAction" } do
+      = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomAction" } do
         .form-group*{ "v-if" => "showAction" }
           label.form-label v-if="index == 0"
             | Action
-            = content_tag :span, { class: "form-hint", "v-if" => "hideHelp !== true" } do
-              | &nbsp;
-          = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action", ":on-change" => "onActionSelected", ":allow-clear" => "true" }
+          = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action", ":on-change" => "onActionSelected", ":compact" => true }
         div v-else=""
           .form-group
             label.form-label v-if="index == 0"
               | Action
             | &nbsp;
       = content_tag :div, { class: "col-flow", "v-if" => "showConditionComponents" } do
-        = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component", ":hide-help" => "hideHelp !== true && index == 0", ":index" => "index" }
+        = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component", ":hide-help" => "hideHelp !== true && index == 0", ":index" => "index", ":compact" => true }
 
       = content_tag :slot

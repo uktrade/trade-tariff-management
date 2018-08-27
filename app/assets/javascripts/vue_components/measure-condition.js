@@ -30,33 +30,8 @@ Vue.component('measure-condition', {
 
       return codes.indexOf(this.condition.action_code) > -1;
     },
-    showMinimumPrice: function() {
-      var codes = ["F", "G", "L", "N"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showMaximumQuantity: function() {
-      var codes = ["E1", "I1"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showMaximumPricePerUnit: function() {
-      var codes = ["E2", "I2"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showRatio: function() {
-      var codes = ["R", "U"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showEntryPrice: function() {
-      var codes = ["V"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showAmount: function() {
-      var codes = ["E", "I", "M"];
+    showReferencedValue: function() {
+      var codes = ["E1", "E2", "F", "G", "I1", "I2", "L", "M1", "M2", "N", "R", "S", "U", "V"];
 
       return codes.indexOf(this.condition.condition_code) > -1;
     },
@@ -84,7 +59,7 @@ Vue.component('measure-condition', {
       return codes.indexOf(this.condition.condition_code) > -1;
     },
     showMeasurementUnit: function() {
-      var codes = ["E2", "I2", "M1", "M2"];
+      var codes = ["E1", "E2", "F", "G", "I1", "I2", "L", "M1", "M2", "N", "S", "V"];
 
       return codes.indexOf(this.condition.condition_code) > -1;
     }
