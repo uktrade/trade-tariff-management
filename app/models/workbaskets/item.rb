@@ -266,15 +266,7 @@ module Workbaskets
       end
 
       def log_it(message)
-        if Rails.env.development?
-          p ""
-          p "-" * 100
-          p ""
-          p " #{message}"
-          p ""
-          p "-" * 100
-          p ""
-        end
+        Rails.logger.debug(message)
       end
     end
 
