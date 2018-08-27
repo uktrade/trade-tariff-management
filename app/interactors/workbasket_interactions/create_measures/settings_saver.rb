@@ -11,7 +11,6 @@ module WorkbasketInteractions
         start_date
         end_date
         workbasket_name
-        quota_ordernumber
         operation_date
         commodity_codes
         commodity_codes_exclusions
@@ -21,7 +20,6 @@ module WorkbasketInteractions
         conditions
         footnotes
         excluded_geographical_areas
-        quota_periods
       )
 
       ASSOCIATION_LIST = %w(
@@ -42,11 +40,6 @@ module WorkbasketInteractions
                     :candidates_with_errors
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
-        if current_step == 'main' && self.class::WORKBASKET_TYPE == "CreateQuota"
-          settings_ops['start_date'] = Date.today.strftime("%Y-%m-%d")
-          settings_ops['workbasket_name'] = settings_ops['quota_ordernumber']
-        end
-
         @workbasket = workbasket
         @save_mode = save_mode
         @current_step = current_step
@@ -84,14 +77,10 @@ module WorkbasketInteractions
       def persist!
         @persist = true
         @measure_sids = []
-        @quota_period_sids = [] if self.class::WORKBASKET_TYPE == "CreateQuota"
 
         validate!
 
         settings.measure_sids_jsonb = @measure_sids.to_json
-        if self.class::WORKBASKET_TYPE == "CreateQuota"
-          settings.quota_period_sids_jsonb = @quota_period_sids.to_json
-        end
 
         if settings.save
           settings.set_searchable_data_for_created_measures!
@@ -128,20 +117,8 @@ module WorkbasketInteractions
             end
           end
 
-          if self.class::WORKBASKET_TYPE == "CreateMeasures" && workbasket_name.blank?
+          if workbasket_name.blank?
             general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
-          end
-
-          if self.class::WORKBASKET_TYPE == "CreateQuota"
-            if quota_ordernumber.present?
-              unless order_number_saver.valid?
-                general_errors[:quota_ordernumber] = order_number_saver.errors
-                                                                       .join('. ')
-              end
-
-            else
-              general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
-            end
           end
 
           if candidates.blank?
@@ -158,13 +135,6 @@ module WorkbasketInteractions
             ) && candidates.blank?
 
             @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
-          end
-
-          if self.class::WORKBASKET_TYPE == "CreateQuota" &&
-             step_pointer.configure_quota? &&
-             quota_periods.blank?
-
-            general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
           end
 
           if general_errors.present?
