@@ -148,22 +148,18 @@ module WorkbasketValueObjects
     private
 
       def setup_commodity_code_analyzer
-        if ops[:start_date].present?
-          @commodity_codes_analyzer = ::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.new(
-            start_date: ops[:start_date].to_date,
-            commodity_codes: commodity_codes || [],
-            commodity_codes_exclusions: commodity_codes_exclusions
-          )
-        end
+        @commodity_codes_analyzer = ::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.new(
+          start_date: ops[:start_date],
+          commodity_codes: commodity_codes || [],
+          commodity_codes_exclusions: commodity_codes_exclusions
+        )
       end
 
       def setup_additional_code_analyzer
-        if ops[:start_date].present?
-          @additional_codes_analyzer = ::WorkbasketValueObjects::Shared::AdditionalCodesAnalyzer.new(
-            start_date: ops[:start_date].to_date,
-            additional_codes: additional_codes || []
-          )
-        end
+        @additional_codes_analyzer = ::WorkbasketValueObjects::Shared::AdditionalCodesAnalyzer.new(
+          start_date: ops[:start_date],
+          additional_codes: additional_codes || []
+        )
       end
 
       def date_to_format(date)

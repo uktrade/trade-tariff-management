@@ -9,7 +9,7 @@ module WorkbasketValueObjects
 
       def initialize(ops={})
         @collection = nil
-        @start_date = ops[:start_date]
+        @start_date = ops[:start_date].present? ? ops[:start_date].to_date : nil # FIXME start date not used, also should use TimeMachine.at in other places
         @additional_codes = ops[:additional_codes]
 
         setup_collection!
@@ -41,9 +41,10 @@ module WorkbasketValueObjects
 
         def fetch_additional_codes
           @additional_codes_detected = list_of_codes.map do |code|
-            AdditionalCode.by_code(code)
-          end.reject { |el| el.blank? }
-             .map(&:code)
+            TimeMachine.at(start_date) do
+              AdditionalCode.by_code(code)
+            end
+          end.reject { |el| el.blank? }.map(&:code)
         end
 
         def clean_array(list)
