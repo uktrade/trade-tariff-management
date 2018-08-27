@@ -58,11 +58,12 @@ module Measures
         TimeMachine.at(measure_params[:start_date]) do
           @additional_code = AdditionalCode.by_code(additional_code)
         end
-        {
-          additional_code_type_id: @additional_code.additional_code_type_id,
-          additional_code_sid: @additional_code.additional_code_sid,
-          additional_code_id: @additional_code.additional_code
-        }
+        if @additional_code.present?
+          {
+            additional_code_type_id: @additional_code.additional_code_type_id,
+            additional_code_sid: @additional_code.additional_code_sid,
+            additional_code_id: @additional_code.additional_code
+          }
       end
 
       def method_regulation_values(base_regulation_id)
