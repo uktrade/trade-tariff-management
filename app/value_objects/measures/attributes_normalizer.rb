@@ -64,6 +64,9 @@ module Measures
             additional_code_sid: @additional_code.additional_code_sid,
             additional_code_id: @additional_code.additional_code
           }
+        else
+          {}
+        end
       end
 
       def method_regulation_values(base_regulation_id)
