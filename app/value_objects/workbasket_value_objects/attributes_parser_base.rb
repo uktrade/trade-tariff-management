@@ -2,7 +2,8 @@ module WorkbasketValueObjects
   class AttributesParserBase
 
     attr_accessor :workbasket_settings,
-                  :codes_analyzer,
+                  :commodity_codes_analyzer,
+                  :additional_codes_analyzer,
                   :step,
                   :ops
 
@@ -15,11 +16,13 @@ module WorkbasketValueObjects
         ActiveSupport::HashWithIndifferentAccess.new(workbasket_settings.settings)
       end
 
-      prepare_ops
-      setup_code_analyzer
+      prepare_ops # Implemented in base class
+      setup_commodity_code_analyzer
+      setup_additional_code_analyzer
     end
 
-    def measure_params(code, mode)
+    def measure_params(goods_nomenclature_code_and_additional_code)
+      goods_nomenclature_code, additional_code = goods_nomenclature_code_and_additional_code
       res = {
         start_date: @start_date || ops[:start_date],
         end_date: @end_date || ops[:end_date],
@@ -27,14 +30,10 @@ module WorkbasketValueObjects
         measure_type_id: ops[:measure_type_id],
         reduction_indicator: ops[:reduction_indicator],
         geographical_area_id: ops[:geographical_area_id],
-        quota_ordernumber: ops[:quota_ordernumber]
+        quota_ordernumber: ops[:quota_ordernumber],
+        goods_nomenclature_code: goods_nomenclature_code,
+        additional_code: additional_code
       }
-
-      if mode == :commodity_codes
-        res[:goods_nomenclature_code] = code
-      else
-        res[:additional_code] = code
-      end
 
       ::Measures::AttributesNormalizer.new(
         ActiveSupport::HashWithIndifferentAccess.new(res)
@@ -71,7 +70,16 @@ module WorkbasketValueObjects
     end
 
     def candidates
-      codes_analyzer.try(:collection)
+      a_codes = additional_codes_analyzer.collection
+      gn_codes = commodity_codes_analyzer.collection
+
+      if gn_codes.empty?
+        gn_codes = [nil]
+      elsif a_codes.empty?
+        a_codes = [nil]
+      end
+      # Return a list of GN codes and additional codes, allowing for empty arrays
+      gn_codes.product(a_codes)
     end
 
     begin :decoration_methods
@@ -110,15 +118,15 @@ module WorkbasketValueObjects
       end
 
       def commodity_codes_formatted
-        codes_analyzer.commodity_codes_formatted
+        commodity_codes_analyzer.commodity_codes_formatted
       end
 
       def exclusions_formatted
-        codes_analyzer.exclusions_formatted
+        commodity_codes_analyzer.exclusions_formatted
       end
 
       def additional_codes_formatted
-        codes_analyzer.additional_codes_formatted
+        additional_codes_analyzer.additional_codes_formatted
       end
 
       def origin
@@ -139,13 +147,21 @@ module WorkbasketValueObjects
 
     private
 
-      def setup_code_analyzer
+      def setup_commodity_code_analyzer
         if ops[:start_date].present?
-          @codes_analyzer = ::WorkbasketValueObjects::Shared::CodesAnalyzer.new(
+          @commodity_codes_analyzer = ::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.new(
             start_date: ops[:start_date].to_date,
             commodity_codes: commodity_codes || [],
-            additional_codes: additional_codes || [],
             commodity_codes_exclusions: commodity_codes_exclusions
+          )
+        end
+      end
+
+      def setup_additional_code_analyzer
+        if ops[:start_date].present?
+          @additional_codes_analyzer = ::WorkbasketValueObjects::Shared::AdditionalCodesAnalyzer.new(
+            start_date: ops[:start_date].to_date,
+            additional_codes: additional_codes || []
           )
         end
       end

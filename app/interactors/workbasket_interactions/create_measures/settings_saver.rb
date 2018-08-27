@@ -155,17 +155,13 @@ module WorkbasketInteractions
         end
 
         def validate_candidates!
-          candidates.map do |code|
-            candidate_errors = candidate_validation_errors(code, validation_mode)
+          candidates.map do |gn_and_additional_codes|
+            candidate_errors = candidate_validation_errors(gn_and_additional_codes)
 
             if candidate_errors.present?
-              @candidates_with_errors[code.to_s] = candidate_errors
+              @candidates_with_errors[gn_and_additional_codes.to_s] = candidate_errors
             end
           end
-        end
-
-        def validation_mode
-          commodity_codes.present? ? :commodity_codes : :additional_codes
         end
 
         def current_admin
@@ -207,10 +203,10 @@ module WorkbasketInteractions
         end
 
         begin :measures_related_methods
-          def candidate_validation_errors(code, mode)
+          def candidate_validation_errors(gn_and_additional_codes)
             errors_collection = {}
 
-            measure = generate_new_measure!(code, mode)
+            measure = generate_new_measure!(gn_and_additional_codes)
 
             m_errors = measure_errors(measure)
             errors_collection[:measure] = m_errors if m_errors.present?
@@ -233,9 +229,9 @@ module WorkbasketInteractions
             )
           end
 
-          def generate_new_measure!(code, mode)
+          def generate_new_measure!(gn_and_additional_codes)
             measure = Measure.new(
-              attrs_parser.measure_params(code, mode)
+              attrs_parser.measure_params(gn_and_additional_codes)
             )
 
             measure.measure_sid = Measure.max(:measure_sid).to_i + 1
