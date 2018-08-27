@@ -54,16 +54,13 @@ module Measures
 
     private
 
-      def method_additional_code_values(additional_code_id)
-        additional_code = AdditionalCode.actual.where(
-          additional_code: additional_code_id,
-          additional_code_type_id: measure_params[:additional_code_type_id]
-        ).first
+      def method_additional_code_values(additional_code)
+        additional_code = AdditionalCode.actual.by_code(additional_code)
 
         {
           additional_code_type_id: additional_code.additional_code_type_id,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_id: additional_code_id
+          additional_code_id: additional_code.additional_code
         }
       end
 
