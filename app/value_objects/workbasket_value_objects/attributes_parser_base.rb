@@ -73,9 +73,9 @@ module WorkbasketValueObjects
       a_codes = additional_codes_analyzer.collection
       gn_codes = commodity_codes_analyzer.collection
 
-      if gn_codes.empty?
+      if gn_codes.blank?
         gn_codes = [nil]
-      elsif a_codes.empty?
+      elsif a_codes.blank?
         a_codes = [nil]
       end
       # Return a list of GN codes and additional codes, allowing for empty arrays

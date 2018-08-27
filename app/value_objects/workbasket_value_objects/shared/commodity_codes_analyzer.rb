@@ -51,9 +51,10 @@ module WorkbasketValueObjects
         def list_of_codes
           if commodity_codes.present?
             commodity_codes.split( /\r?\n/ )
-          end.map(&:strip)
-             .reject { |el| el.blank? }
-             .uniq
+                           .map(&:strip)
+                           .reject { |el| el.blank? }
+                           .uniq
+          end
         end
 
         def fetch_commodity_codes(codes_list)
