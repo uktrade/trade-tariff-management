@@ -86,6 +86,7 @@ gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "rack-timeout", "~> 0.4"
 gem "bootscale", "~> 0.5", require: false
+gem "sentry-raven"
 
 # We freezed it, as it installs higher version by default,
 # which conflicts with cloud foundary's ruby_buildpack
@@ -95,7 +96,6 @@ gem "ffi", "1.9.18"
 
 group :production do
   gem "rails_12factor"
-  gem "sentry-raven"
 end
 
 group :development do
