@@ -40,11 +40,12 @@ module WorkbasketValueObjects
         end
 
         def fetch_additional_codes
-          @additional_codes_detected = list_of_codes.map do |code|
-            TimeMachine.at(start_date) do
+          TimeMachine.at(start_date) do
+            @additional_codes_detected = list_of_codes.map do |code|
               AdditionalCode.by_code(code)
-            end
-          end.reject { |el| el.blank? }.map(&:code)
+            end.reject { |el| el.blank? }.map(&:code)
+          end
+          @additional_codes_detected
         end
 
         def clean_array(list)
