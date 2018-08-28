@@ -167,8 +167,7 @@ shared_context "measure_saver_base_context" do
       measure_type_series_id: measure_type_series.measure_type_series_id,
       measure_type_id: measure_type.measure_type_id,
       goods_nomenclature_code: commodity_code,
-      additional_code: additional_code.additional_code,
-      additional_code_type_id: additional_code_type.additional_code_type_id,
+      additional_code: additional_code.code,
       geographical_area_id: geographical_area.geographical_area_id,
       excluded_geographical_areas: []
     }

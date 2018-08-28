@@ -40,8 +40,8 @@ describe "Measure Saver: Saving of Measure" do
       expect(measure.goods_nomenclature_sid).to be_eql(commodity.goods_nomenclature_sid)
 
       expect(measure.geographical_area_id).to be_eql(geographical_area.geographical_area_id)
-
-      expect(measure.additional_code_type_id).to be_eql(additional_code_type.additional_code_type_id)
+      
+      expect(measure.additional_code_type_id).to be_eql(additional_code.additional_code_type_id)
       expect(measure.additional_code_sid).to be_eql(additional_code.additional_code_sid)
       expect(measure.additional_code_id).to be_eql(additional_code.additional_code)
 
