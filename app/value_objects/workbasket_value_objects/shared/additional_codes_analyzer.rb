@@ -34,9 +34,10 @@ module WorkbasketValueObjects
         def list_of_codes
           if additional_codes.present?
             additional_codes.split(",")
-          end.map(&:strip)
-             .reject { |el| el.blank? }
-             .uniq
+                            .map(&:strip)
+                            .reject { |el| el.blank? }
+                            .uniq
+          end
         end
 
         def fetch_additional_codes
