@@ -37,10 +37,6 @@ class Commodity < GoodsNomenclature
     def declarable
       filter(producline_suffix: "80")
     end
-
-    def with_validity_end_date_nil_or_after(start_date)
-      where("validity_end_date IS NULL OR validity_end_date > ?", start_date)
-    end
   end
 
   def ancestors

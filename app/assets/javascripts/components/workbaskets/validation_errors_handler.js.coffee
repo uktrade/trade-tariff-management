@@ -37,25 +37,36 @@ window.WorkbasketBaseValidationErrorsHandler =
 
     grouped_errors = response.responseJSON.errors
     general_errors = grouped_errors['general']
+    measure_errors = grouped_errors['measure']
 
-    if general_errors isnt undefined
-      $.each general_errors, (key, value) ->
-        group_block = $(".js-workbasket-custom-errors[data-errors-container='general']")
-        group_block.removeClass('hidden')
-        list_block = group_block.find("ul")
-        list_block.append("<li><div class='workbasket-error-block with_left_margin'>" + value + "</div></li>")
-
-    delete grouped_errors['general']
+    flattened_errors = []
 
     $.each grouped_errors, (group_key, errors_collection) ->
-      group_block = $(".js-workbasket-custom-errors[data-errors-container='" + group_key + "']")
+      group_block = $(".js-workbasket-custom-errors[data-errors-container='general']")
       group_block.removeClass('hidden')
       list_block = group_block.find("ul")
-
       $.each errors_collection, (key, value) ->
-        value.forEach (error) ->
-          result_html = WorkbasketBaseValidationErrorsHandler.customErrorHtml(error)
-          list_block.append(result_html)
+        list_block.append("<li><div class='workbasket-error-block with_left_margin'>" + value + "</div></li>")
+
+
+    # if general_errors isnt undefined
+    #   $.each general_errors, (key, value) ->
+    #     group_block = $(".js-workbasket-custom-errors[data-errors-container='general']")
+    #     group_block.removeClass('hidden')
+    #     list_block = group_block.find("ul")
+    #     list_block.append("<li><div class='workbasket-error-block with_left_margin'>" + value + "</div></li>")
+
+    #   delete grouped_errors['general']
+
+    # $.each grouped_errors, (group_key, errors_collection) ->
+    #   group_block = $(".js-workbasket-custom-errors[data-errors-container='" + group_key + "']")
+    #   group_block.removeClass('hidden')
+    #   list_block = group_block.find("ul")
+
+    #   $.each errors_collection, (key, value) ->
+    #     value.forEach (error) ->
+    #       result_html = WorkbasketBaseValidationErrorsHandler.customErrorHtml(error)
+    #       list_block.append(result_html)
 
   customErrorHtml: (error) ->
     text = error[0]

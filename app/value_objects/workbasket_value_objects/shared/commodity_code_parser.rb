@@ -8,13 +8,13 @@ module WorkbasketValueObjects
 
       def initialize(start_date, code)
         @start_date = start_date
-
-        @commodity = GoodsNomenclature.by_code(code) # also include declarable headings
-                              .with_validity_end_date_nil_or_after(start_date)
-                              .all
-                              .sort do |a, b|
-          a.producline_suffix.to_i <=> b.producline_suffix.to_i
-        end.first
+        TimeMachine.at(start_date) do
+          @commodity = GoodsNomenclature.by_code(code) # also include declarable headings
+                                .all
+                                .sort do |a, b|
+            a.producline_suffix.to_i <=> b.producline_suffix.to_i
+          end.first
+        end
       end
 
       def codes

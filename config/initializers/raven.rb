@@ -5,4 +5,10 @@ if defined?(Raven) && ENV["VCAP_APPLICATION"].present?
   Raven.configure do |config|
     config.tags = tags
   end
+else
+  Raven.configure do |config|
+    logger = ::Raven::Logger.new(STDOUT)
+    logger.level = "error"
+    config.logger = logger
+  end
 end
