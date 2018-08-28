@@ -1,34 +1,3 @@
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-    var context = this, args = arguments;
-    var later = function() {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
-};
-
-function clone(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-
-function objectToArray(obj) {
-  var arr = [];
-
-  for (var k in obj) {
-    if (obj.hasOwnProperty(k)) {
-      arr.push(obj[k]);
-    }
-  }
-
-  return arr;
-}
-
 $(document).ready(function() {
 
   var form = document.querySelector(".measure-form");
@@ -85,7 +54,7 @@ $(document).ready(function() {
         measure_type_id: null,
         quota_is_licensed: null,
         quota_licence: null,
-        quota_ordernumber: null,
+        quota_ordernumber: "09",
         quota_status: "open",
         quota_criticality_threshold: null,
         quota_description: null,
