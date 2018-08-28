@@ -143,7 +143,7 @@ module WorkbasketInteractions
           end
         end
 
-        if candidates.blank?
+        if candidates.flatten.compact.blank?
           general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
         end
 
@@ -154,7 +154,7 @@ module WorkbasketInteractions
         if settings_params['start_date'].present? && (
             commodity_codes.present? ||
             additional_codes.present?
-          ) && candidates.blank?
+          ) && candidates.flatten.compact.blank?
 
           @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
         end
