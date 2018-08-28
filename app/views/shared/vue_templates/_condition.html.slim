@@ -39,7 +39,7 @@ script type="text/x-template" id="condition-template"
             label.form-label v-if="index == 0"
               | Qualifier
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomCertificateType" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-2", "v-if" => "roomCertificateType" do
         .form-group*{ "v-if" => "showCertificateType" }
           label.form-label v-if="index == 0"
             | Certificate type(s)
@@ -59,17 +59,12 @@ script type="text/x-template" id="condition-template"
             label.form-label v-if="index == 0"
               | Certificate
             | &nbsp;
-      = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomAction" } do
-        .form-group*{ "v-if" => "showAction" }
+      = content_tag :div, { class: "col-xs-12 col-sm-6 col-md-1" } do
+        .form-group
           label.form-label v-if="index == 0"
             | Action
           = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action", ":on-change" => "onActionSelected", ":compact" => true }
-        div v-else=""
-          .form-group
-            label.form-label v-if="index == 0"
-              | Action
-            | &nbsp;
-      = content_tag :div, { class: "col-flow", "v-if" => "showConditionComponents" } do
+      = content_tag :div, { class: "col-flow" } do
         = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component", ":hide-help" => "hideHelp !== true && index == 0", ":index" => "index", ":compact" => true }
 
       = content_tag :slot

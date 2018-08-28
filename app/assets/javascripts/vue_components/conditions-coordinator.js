@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div class="measure-condition" v-for="(measureCondition, index) in conditions">',
-      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-action="showAction" :room-condition-components="showConditionComponents" :room-minimum-price="showMinimumPrice" :room-ratio="showRatio" :room-entry-price="showEntryPrice" :room-amount="showAmount" :room-certificate-type="showCertificateType" :room-certificate="showCertificate" :room-maximum-price-per-unit="showMaximumPricePerUnit" :room-maximum-quantity="showMaximumQuantity" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
+      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-referenced-value="showReferencedValue" :room-certificate-type="showCertificateType" :room-certificate="showCertificate" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
         '<div class="col-md-2">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0">&nbsp;<span class="form-hint-3-line">&nbsp;</span></label>',
@@ -66,15 +66,8 @@ Vue.component("conditions-coordinator", {
     canRemoveMeasureCondition: function() {
       return this.conditions.length > 1;
     },
-    showMaximumQuantity: function() {
-      var codes = ["E1", "I1"];
-
-      return this.any(this.conditions, function(condition) {
-        return condition.condition_code && codes.indexOf(condition.condition_code) > -1;
-      });
-    },
-    showMaximumPricePerUnit: function() {
-      var codes = ["E2", "I2"];
+    showReferencedValue: function() {
+      var codes = ["E1", "E2", "F", "G", "I1", "I2", "L", "M1", "M2", "N", "R", "S", "U", "V"];
 
       return this.any(this.conditions, function(condition) {
         return condition.condition_code && codes.indexOf(condition.condition_code) > -1;
@@ -88,63 +81,21 @@ Vue.component("conditions-coordinator", {
       });
     },
     showMeasurementUnit: function() {
-      var codes = ["E2", "I2", "M1", "M2"];
+      var codes = ["E1", "E2", "F", "G", "I1", "I2", "L", "M1", "M2", "N", "S", "V"];
 
       return this.any(this.conditions, function(condition) {
         return condition.condition_code && codes.indexOf(condition.condition_code) > -1;
       });
     },
-    showAction: function() {
-      var codes = ["K", "P", "S", "W", "Y"];
-
-      return this.any(this.conditions, function(condition) {
-        return condition.condition_code && codes.indexOf(condition.condition_code) === -1;
-      });
-    },
-    showConditionComponents: function() {
-      var codes = ["01", "02", "03", "11", "12", "13", "15", "27", "34", "36"];
-
-      return this.any(this.conditions, function(condition) {
-        return codes.indexOf(condition.action_code) > -1;
-      });
-    },
-    showMinimumPrice: function() {
-      var codes = ["F", "G", "L", "N"];
-
-      return this.any(this.conditions, function(condition) {
-        return codes.indexOf(condition.condition_code) > -1;
-      });
-    },
-    showRatio: function() {
-      var codes = ["R", "U"];
-
-      return this.any(this.conditions, function(condition) {
-        return codes.indexOf(condition.condition_code) > -1;
-      });
-    },
-    showEntryPrice: function() {
-      var codes = ["V"];
-
-      return this.any(this.conditions, function(condition) {
-        return codes.indexOf(condition.condition_code) > -1;
-      });
-    },
-    showAmount: function() {
-      var codes = ["E", "I", "M"];
-
-      return this.any(this.conditions, function(condition) {
-        return codes.indexOf(condition.condition_code) > -1;
-      });
-    },
     showCertificateType: function() {
-      var codes = ["B", "C", "E3", "I3", "H", "Q", "Z", "V", "E"];
+      var codes = ["B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
 
       return this.any(this.conditions, function(condition) {
         return codes.indexOf(condition.condition_code) > -1;
       });
     },
     showCertificate: function() {
-      var codes = ["A", "B", "C", "E3", "I3", "H", "Q", "Z", "V", "E"];
+      var codes = ["A", "B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
 
       return this.any(this.conditions, function(condition) {
         return codes.indexOf(condition.condition_code) > -1;

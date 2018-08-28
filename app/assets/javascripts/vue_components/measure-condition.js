@@ -6,12 +6,8 @@ Vue.component('measure-condition', {
     "condition",
     "hideHelp",
     "index",
-    "roomAction",
     "roomConditionComponents",
-    "roomMinimumPrice",
-    "roomRatio",
-    "roomEntryPrice",
-    "roomAmount",
+    "roomReferencedValue",
     "roomMonetaryUnit",
     "roomCertificateType",
     "roomCertificate",
@@ -20,11 +16,6 @@ Vue.component('measure-condition', {
     "roomMeasurementUnit"
   ],
   computed: {
-    showAction: function() {
-      var codes = ["K", "P", "S", "W", "Y"];
-
-      return this.condition.condition_code && codes.indexOf(this.condition.condition_code) === -1;
-    },
     showConditionComponents: function() {
       var codes = ["01", "02", "03", "11", "12", "13", "15", "27", "34", "36"];
 
@@ -36,12 +27,12 @@ Vue.component('measure-condition', {
       return codes.indexOf(this.condition.condition_code) > -1;
     },
     showCertificateType: function() {
-      var codes = ["B", "C", "E3", "I3", "H", "Q", "Z", "V"];
+      var codes = ["B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
 
       return codes.indexOf(this.condition.condition_code) > -1;
     },
     showCertificate: function() {
-      var codes = ["A", "B", "C", "E3", "I3", "H", "Q", "Z", "V"];
+      var codes = ["A", "B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
 
       return codes.indexOf(this.condition.condition_code) > -1;
     },
