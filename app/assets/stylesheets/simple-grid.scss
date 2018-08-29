@@ -61,6 +61,10 @@ $gutter: 6px;
         max-width: $maxcol * $col;
       }
     }
+
+    .col-md-1-5 {
+      max-width: $maxcol * 1.2;
+    }
   }
 
   @media (min-width: 1024px) {

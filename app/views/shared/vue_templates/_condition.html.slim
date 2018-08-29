@@ -7,7 +7,7 @@ script type="text/x-template" id="condition-template"
             | Condition
           = content_tag "custom-select", "", { url: "/measure_condition_codes", "v-model" => "condition.condition_code", "codeField" => "condition_code", "valueField" => "condition_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--condition", ":on-change" => "onConditionCodeSelected", ":options-filter" => "splitConditions", ":compact" => true }
 
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomReferencedValue" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1-5", "v-if" => "roomReferencedValue" do
         .form-group*{ "v-if" => "showReferencedValue" }
           label.form-label v-if="index == 0"
             | Referenced value
@@ -17,12 +17,10 @@ script type="text/x-template" id="condition-template"
             label.form-label v-if="index == 0"
               | Referenced value
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1", "v-if" => "roomMeasurementUnit" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1-5", "v-if" => "roomMeasurementUnit" do
         .form-group*{ "v-if" => "showMeasurementUnit" }
           label.form-label v-if="index == 0"
             | Unit of measure
-            span.form-hint v-if="hideHelp !== true"
-              | &nbsp;
           = content_tag "custom-select", "", { url: "/measurement_units", "label-field" => "description", "value-field" => "measurement_unit_code", "code-field" => "measurement_unit_code", "v-model" => "condition.measurement_unit_code", "date-sensitive" => true, "code-class-name" => "prefix--measurement-unit", "abbreviation-class-name" => "abbreviation--measurement-unit", ":on-change" => "onMeasurementUnitSelected", ":compact" => true }
         div v-else=""
           .form-group
@@ -39,7 +37,7 @@ script type="text/x-template" id="condition-template"
             label.form-label v-if="index == 0"
               | Qualifier
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-2", "v-if" => "roomCertificateType" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1-5", "v-if" => "roomCertificateType" do
         .form-group*{ "v-if" => "showCertificateType" }
           label.form-label v-if="index == 0"
             | Certificate type(s)
@@ -64,7 +62,7 @@ script type="text/x-template" id="condition-template"
           label.form-label v-if="index == 0"
             | Action
           = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action", ":on-change" => "onActionSelected", ":compact" => true }
-      = content_tag :div, { class: "col-flow" } do
+      = content_tag :div, { class: "col-md-6" } do
         = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component", ":hide-help" => "hideHelp !== true && index == 0", ":index" => "index", ":compact" => true }
 
       = content_tag :slot

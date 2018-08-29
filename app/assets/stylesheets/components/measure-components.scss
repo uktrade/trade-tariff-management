@@ -1,6 +1,16 @@
 .measure-component {
+  border-bottom: 1px solid $border-colour;
+
   .form-group {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
+  }
+
+  & + & {
+    padding-top: 6px;
+  }
+
+  &:last-of-type {
+    margin-bottom: 3px;
   }
 
   .measure-form & {
@@ -10,6 +20,6 @@
   }
 
   .form-label {
-    font-size: 16px !important;
+    font-size: 14px !important;
   }
 }

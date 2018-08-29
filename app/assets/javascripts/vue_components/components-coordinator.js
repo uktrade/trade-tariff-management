@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div :class="classes" v-for="(component, idx) in components">',
-      '<measure-condition-component v-if="isMeasureConditionComponent" :measure-condition-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit">',
+      '<measure-condition-component v-if="isMeasureConditionComponent" :measure-condition-component="component" :index="Math.max(idx,index)" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit" :room-monetary-unit="showMonetaryUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
@@ -11,7 +11,7 @@ var template = [
           '</div>',
         '</div>',
       '</measure-condition-component>',
-      '<measure-component v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit">',
+      '<measure-component v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
@@ -22,10 +22,8 @@ var template = [
         '</div>',
       '</measure-component>',
     '</div>',
-    '<p>',
-      '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureConditionComponent">Add another component</a>',
-      '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureComponent">Add another duty expression</a>',
-    '</p>',
+    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureConditionComponent">Add another component</a>',
+    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureComponent">Add another duty expression</a>',
   '</div>'
 ].join("");
 
@@ -67,6 +65,20 @@ Vue.component("components-coordinator", {
     },
     showMonetaryUnit: function() {
       return false;
-    }
+    },
+    showDutyAmount: function() {
+      var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];
+
+      return this.any(this.components, function(component) {
+        return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
+      });
+    },
+    showMeasurementUnit: function() {
+      var ids = ["12", "14", "21", "23", "25", "27", "29", "36", "37", "01A", "02A", "04A", "15A", "17A", "19A", "20A", "35A"];
+
+      return this.any(this.components, function(component) {
+        return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
+      });
+    },
   }
 });

@@ -98,10 +98,6 @@ label abbr {
     padding-top: 0;
   }
 
-  &:last-of-type {
-    padding-bottom: 15px;
-  }
-
   &:first-of-type:last-of-type {
     padding-bottom: 0 !important;
   }

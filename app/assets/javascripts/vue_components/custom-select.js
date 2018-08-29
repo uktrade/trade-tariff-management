@@ -20,7 +20,8 @@ Vue.component('custom-select', {
     "abbreviationClassName",
     "optionsFilter",
     "disabled",
-    "compact"
+    "compact",
+    "showCompactAbbreviation"
   ],
   data: function() {
     return {
@@ -46,6 +47,10 @@ Vue.component('custom-select', {
     if (this.onChange) {
       options.onChange = function(value) {
         var item = this.options[value];
+
+        if (item) {
+          item = clone(item);
+        }
 
         try {
           vm.onChange(item);
@@ -154,10 +159,18 @@ Vue.component('custom-select', {
           var abbreviation = "";
 
           if (abbreviationClassName && data.abbreviation) {
-            abbreviation = data.abbreviation + " - ";
+            abbreviation = data.abbreviation;
           }
 
-          return "<div class='item'>" + data[codeField] + (vm.compact !== true ? (" - " + abbreviation + data[options.labelField]) : "") + "</div>";
+          var complement = " - " + abbreviation + data[options.labelField] + " - ";
+
+          if (vm.compact === true && vm.showCompactAbbreviation === true) {
+            complement = " " + abbreviation;
+          } else if (vm.compact === true) {
+            complement = "";
+          }
+
+          return "<div class='item'>" + data[codeField] + complement + "</div>";
         }
       };
     }
