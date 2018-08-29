@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div class="measure-condition" v-for="(measureCondition, index) in conditions">',
-      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-referenced-value="showReferencedValue" :room-certificate-type="showCertificateType" :room-certificate="showCertificate" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
+      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-referenced-value="showReferencedValue" :room-certificate-type="showCertificateType" :room-certificate="showCertificate" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit" :show-conditions-duty-amount="showConditionsDutyAmount" :show-conditions-measurement-unit="showConditionsMeasurementUnit">',
         '<div class="col-md-2">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0">&nbsp;<span class="form-hint-3-line">&nbsp;</span></label>',
@@ -99,6 +99,27 @@ Vue.component("conditions-coordinator", {
 
       return this.any(this.conditions, function(condition) {
         return codes.indexOf(condition.condition_code) > -1;
+      });
+    },
+    showConditionsDutyAmount: function() {
+      var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];
+      var any = this.any;
+
+      return any(this.conditions, function(condition) {
+        return any(condition.measure_condition_components, function(component) {
+          return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
+        });
+      });
+    },
+    showConditionsMeasurementUnit: function() {
+      var ids = ["12", "14", "21", "23", "25", "27", "29", "36", "37", "01A", "02A", "04A", "15A", "17A", "19A", "20A", "35A"];
+
+      var any = this.any;
+
+      return any(this.conditions, function(condition) {
+        return any(condition.measure_condition_components, function(component) {
+          return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
+        });
       });
     }
   }

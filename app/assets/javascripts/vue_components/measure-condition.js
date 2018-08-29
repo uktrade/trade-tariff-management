@@ -13,7 +13,9 @@ Vue.component('measure-condition', {
     "roomCertificate",
     "roomMaximumQuantity",
     "roomMaximumPricePerUnit",
-    "roomMeasurementUnit"
+    "roomMeasurementUnit",
+    "showConditionsDutyAmount",
+    "showConditionsMeasurementUnit"
   ],
   computed: {
     showConditionComponents: function() {

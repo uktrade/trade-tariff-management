@@ -63,6 +63,6 @@ script type="text/x-template" id="condition-template"
             | Action
           = content_tag "custom-select", "", { url: "/measure_actions", "v-model" => "condition.action_code", "codeField" => "action_code", "valueField" => "action_code", "labelField" => "description", "date-sensitive" => true, "code-class-name" => "prefix--measure-action", ":on-change" => "onActionSelected", ":compact" => true }
       = content_tag :div, { class: "col-md-6" } do
-        = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component", ":hide-help" => "hideHelp !== true && index == 0", ":index" => "index", ":compact" => true }
+        = content_tag "components-coordinator", nil, { ":components" => "condition.measure_condition_components", "type" => "measure_condition_component", "classes" => "measure-condition-component", ":hide-help" => "hideHelp !== true && index == 0", ":index" => "index", ":compact" => true, ":show-conditions-duty-amount" => "showConditionsDutyAmount", ":show-conditions-measurement-unit" => "showConditionsMeasurementUnit" }
 
       = content_tag :slot

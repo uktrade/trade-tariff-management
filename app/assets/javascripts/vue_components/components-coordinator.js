@@ -29,7 +29,14 @@ var template = [
 
 Vue.component("components-coordinator", {
   template: template,
-  props: ["components", "type", "classes", "index"],
+  props: [
+    "components",
+    "type",
+    "classes",
+    "index",
+    "showConditionsDutyAmount",
+    "showConditionsMeasurementUnit"
+  ],
   data: function() {
     return {
 
@@ -69,12 +76,20 @@ Vue.component("components-coordinator", {
     showDutyAmount: function() {
       var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];
 
+      if (this.showConditionsDutyAmount === true) {
+        return true;
+      }
+
       return this.any(this.components, function(component) {
         return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
       });
     },
     showMeasurementUnit: function() {
       var ids = ["12", "14", "21", "23", "25", "27", "29", "36", "37", "01A", "02A", "04A", "15A", "17A", "19A", "20A", "35A"];
+
+      if (this.showConditionsMeasurementUnit === true) {
+        return true;
+      }
 
       return this.any(this.components, function(component) {
         return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
