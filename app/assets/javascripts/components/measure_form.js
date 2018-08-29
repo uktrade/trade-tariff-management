@@ -736,6 +736,7 @@ $(document).ready(function() {
             var section = clone(_section);
 
             section.duty_expressions.forEach(function(e) {
+              e.original_duty_expression_id = e.duty_expression_id.slice(0);
               e.duty_expression_id = e.duty_expression_id.substring(0,2);
             });
 
@@ -751,6 +752,7 @@ $(document).ready(function() {
 
               section.periods.forEach(function(period) {
                 period.duty_expressions.forEach(function(e) {
+                  e.original_duty_expression_id = e.duty_expression_id.slice(0);
                   e.duty_expression_id = e.duty_expression_id.substring(0,2);
                 });
               });
@@ -761,6 +763,7 @@ $(document).ready(function() {
               section.opening_balances.forEach(function(balance) {
                 if (section.type == "annual") {
                   balance.duty_expressions.forEach(function(e) {
+                    e.original_duty_expression_id = e.duty_expression_id.slice(0);
                     e.duty_expression_id = e.duty_expression_id.substring(0,2);
                   });
                 } else {
@@ -772,6 +775,7 @@ $(document).ready(function() {
 
                   ks[section.type].forEach(function(k) {
                     balance[k].duty_expressions.forEach(function(e) {
+                      e.original_duty_expression_id = e.duty_expression_id.slice(0);
                       e.duty_expression_id = e.duty_expression_id.substring(0,2);
                     });
                   });
@@ -794,11 +798,13 @@ $(document).ready(function() {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);
 
+            c.original_measure_condition_code = c.condition_code.slice(0);
             c.condition_code = c.condition_code.substring(0, 1);
 
             c.measure_condition_components = c.measure_condition_components.map(function(component) {
               var c = clone(component);
               if (c.duty_expression_id) {
+                c.original_duty_expression_id = c.duty_expression_id.slice(0);
                 // to ignore A and B
                 c.duty_expression_id = c.duty_expression_id.substring(0, 2);
               }
@@ -859,6 +865,8 @@ $(document).ready(function() {
             var c = clone(component);
 
             if (c.duty_expression_id) {
+              c.original_duty_expression_id = c.duty_expression_id.slice(0);
+
               // to ignore A and B
               c.duty_expression_id = c.duty_expression_id.substring(0, 2);
             }
@@ -873,11 +881,13 @@ $(document).ready(function() {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);
 
+            c.original_measure_condition_code = c.condition_code.slice(0);
             c.condition_code = c.condition_code.substring(0, 1);
 
             c.measure_condition_components = c.measure_condition_components.map(function(component) {
               var c = clone(component);
               if (c.duty_expression_id) {
+                c.original_duty_expression_id = c.duty_expression_id.slice(0);
                 // to ignore A and B
                 c.duty_expression_id = c.duty_expression_id.substring(0, 2);
               }
@@ -928,6 +938,7 @@ $(document).ready(function() {
               var c = clone(component);
 
               if (c.duty_expression_id) {
+                c.original_duty_expression_id = c.duty_expression_id.slice(0);
                 // to ignore A and B
                 c.duty_expression_id = c.duty_expression_id.substring(0, 2);
               }
@@ -943,11 +954,13 @@ $(document).ready(function() {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);
 
+            c.original_measure_condition_code = c.condition_code.slice(0);
             c.condition_code = c.condition_code.substring(0, 1);
 
             c.measure_condition_components = c.measure_condition_components.map(function(component) {
               var c = clone(component);
               if (c.duty_expression_id) {
+                c.original_duty_expression_id = c.duty_expression_id.slice(0);
                 // to ignore A and B
                 c.duty_expression_id = c.duty_expression_id.substring(0, 2);
               }
@@ -1052,7 +1065,22 @@ $(document).ready(function() {
         this.measure.conditions.splice(index, 1);
       },
       getDutyExpressionId: function(component) {
-        var ids = ["01","02","04","19","20"];
+        var ids = [
+          "01",
+          "02",
+          "04",
+          "15",
+          "17",
+          "19",
+          "20",
+          "35",
+          "36"
+        ];
+
+        if (component.original_duty_expression_id) {
+          return component.original_duty_expression_id;
+        }
+
         var id = component.duty_expression ? component.duty_expression.duty_expression_id : component.duty_expression_id;
 
         if (ids.indexOf(id) === -1) {

@@ -37,7 +37,7 @@ script type="text/x-template" id="condition-template"
             label.form-label v-if="index == 0"
               | Qualifier
             | &nbsp;
-      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-1-5", "v-if" => "roomCertificateType" do
+      = content_tag :div, class: "col-xs-12 col-sm-6 col-md-2", "v-if" => "roomCertificateType" do
         .form-group*{ "v-if" => "showCertificateType" }
           label.form-label v-if="index == 0"
             | Certificate type(s)

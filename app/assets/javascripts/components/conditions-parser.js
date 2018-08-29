@@ -57,6 +57,10 @@ window.ConditionsParser = {
     return newOptions;
   },
   getConditionCode: function(condition) {
+    if (condition.original_measure_condition_code) {
+      return condition.original_measure_condition_code;
+    }
+
     if (condition.condition_code == "E") {
       if (condition.certificate_type_code) {
         return "E3";
