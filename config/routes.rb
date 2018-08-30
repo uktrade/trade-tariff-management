@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   end
 
   scope module: :measures do
-    resources :measures, only: [:new, :create, :index] do
+    resources :measures, only: [:index] do
       collection do
         post :search
 

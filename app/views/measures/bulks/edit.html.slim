@@ -24,7 +24,7 @@ script
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"
 
 - cache [ "measure_form_js_variabless", expires_in: 8.hours ] do
-  = render "measures/measures/js_variables", form: MeasureForm.new(Measure.new)
+  = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
 
 form.bulk-edit-measures
   = render "table_top"

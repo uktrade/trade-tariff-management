@@ -1,20 +1,8 @@
 require "rails_helper"
 
-shared_context "measure_saver_base_context" do
+shared_context "create_measures_base_context" do
 
   include_context "form_savers_base_context"
-
-  let(:measure_saver) do
-    ::MeasureSaver.new(user, ops)
-  end
-
-  let(:measure_errors) do
-    measure_saver.errors
-  end
-
-  let(:measure) do
-    measure_saver.measure
-  end
 
   let(:base_regulation) do
     create(:base_regulation,

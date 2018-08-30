@@ -5,18 +5,6 @@ module Measures
 
     skip_around_action :configure_time_machine, only: [:index, :search]
 
-    expose(:measure_saver) do
-      measure_ops = params[:measure]
-      measure_ops.send("permitted=", true)
-      measure_ops = measure_ops.to_h
-
-      ::MeasureSaver.new(current_user, measure_ops)
-    end
-
-    expose(:measure) do
-      measure_saver.measure
-    end
-
     expose(:search_ops) do
       ops = params[:search]
 
@@ -46,10 +34,6 @@ module Measures
       search_results.map(&:to_table_json)
     end
 
-    expose(:form) do
-      MeasureForm.new(Measure.new)
-    end
-
     def index
       respond_to do |format|
         format.json { render json: json_response }
@@ -70,20 +54,6 @@ module Measures
 
     def search
       perform_search
-    end
-
-    def create
-      if measure_saver.valid?
-        measure_saver.persist!
-
-        render json: {
-          measure_sid: measure.measure_sid,
-          goods_nomenclature_item_id: measure.goods_nomenclature_item_id
-        }, status: :ok
-      else
-        render json: { errors: measure_saver.errors },
-               status: :unprocessable_entity
-      end
     end
 
     private
