@@ -23,6 +23,13 @@ module WorkbasketHelper
     end
   end
 
+  def create_regulation_section_header
+    case current_step
+    when "main"
+      "Create a regulation"
+    end
+  end
+
   def workbasket_quota_periods_overview
     annual = workbasket_get_quota_periods('annual')
     bi_annual = workbasket_get_quota_periods('bi_annual')
