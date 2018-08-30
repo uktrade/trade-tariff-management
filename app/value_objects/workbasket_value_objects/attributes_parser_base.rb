@@ -76,9 +76,11 @@ module WorkbasketValueObjects
       if gn_codes.blank?
         gn_codes = [nil]
       end
+
       if a_codes.blank?
         a_codes = [nil]
       end
+
       # Return a list of GN codes and additional codes, allowing for empty arrays
       gn_codes.product(a_codes)
     end

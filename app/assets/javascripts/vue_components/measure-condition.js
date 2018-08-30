@@ -1,66 +1,40 @@
+//= require ../components/conditions-parser
+
 Vue.component('measure-condition', {
   template: "#condition-template",
   props: [
     "condition",
     "hideHelp",
     "index",
-    "roomAction",
     "roomConditionComponents",
-    "roomMinimumPrice",
-    "roomRatio",
-    "roomEntryPrice",
-    "roomAmount",
+    "roomReferencedValue",
+    "roomMonetaryUnit",
     "roomCertificateType",
-    "roomCertificate"
+    "roomCertificate",
+    "roomMaximumQuantity",
+    "roomMaximumPricePerUnit",
+    "roomMeasurementUnit",
+    "showConditionsDutyAmount",
+    "showConditionsMeasurementUnit"
   ],
   computed: {
-    showAction: function() {
-      var codes = ["K", "P", "S", "W", "Y"];
-
-      return this.condition.condition_code && codes.indexOf(this.condition.condition_code) === -1;
-    },
     showConditionComponents: function() {
       var codes = ["01", "02", "03", "11", "12", "13", "15", "27", "34", "36"];
 
       return codes.indexOf(this.condition.action_code) > -1;
     },
-    showMinimumPrice: function() {
-      var codes = ["F", "G", "L", "N"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showRatio: function() {
-      var codes = ["R", "U"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showEntryPrice: function() {
-      var codes = ["V"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    showAmount: function() {
-      var codes = ["E", "I", "M"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    certificateActionHint: function() {
-      var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z"];
-
-      return codes.indexOf(this.condition.condition_code) > -1;
-    },
-    noCertificateActionHint: function() {
-      var codes = ["D", "F", "G", "L", "M", "N", "R", "U", "V"];
+    showReferencedValue: function() {
+      var codes = ["E1", "E2", "F", "G", "I1", "I2", "L", "M1", "M2", "N", "R", "S", "U", "V"];
 
       return codes.indexOf(this.condition.condition_code) > -1;
     },
     showCertificateType: function() {
-      var codes = ["B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
+      var codes = ["B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
 
       return codes.indexOf(this.condition.condition_code) > -1;
     },
     showCertificate: function() {
-      var codes = ["A", "B", "C", "E", "I", "H", "Q", "Z", "V", "E"];
+      var codes = ["A", "B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
 
       return codes.indexOf(this.condition.condition_code) > -1;
     },
@@ -71,6 +45,16 @@ Vue.component('measure-condition', {
     },
     canRemoveComponent: function() {
       return this.condition.measure_condition_components.length > 1;
+    },
+    showMonetaryUnit: function() {
+      var codes = ["E2", "I2", "M1", "M2"];
+
+      return codes.indexOf(this.condition.condition_code) > -1;
+    },
+    showMeasurementUnit: function() {
+      var codes = ["E1", "E2", "F", "G", "I1", "I2", "L", "M1", "M2", "N", "S", "V"];
+
+      return codes.indexOf(this.condition.condition_code) > -1;
     }
   },
   watch: {
@@ -95,6 +79,9 @@ Vue.component('measure-condition', {
     }
   },
   methods: {
+    splitConditions: function(options) {
+      return ConditionsParser.parse(options);
+    },
     addMeasureConditionComponent: function() {
       this.condition.measure_condition_components.push({
         duty_expression_id: null,
@@ -127,5 +114,14 @@ Vue.component('measure-condition', {
     onActionSelected: function(obj) {
       this.condition.measure_action = obj;
     },
+    onMonetaryUnitSelected: function(obj) {
+      this.condition.monetary_unit = obj;
+    },
+    onMeasurementUnitSelected: function(item) {
+      this.condition.measurement_unit = item;
+    },
+    onMeasurementUnitQualifierSelected: function(item) {
+      this.condition.measurement_unit_qualifier = item;
+    }
   }
 });

@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div :class="classes" v-for="(component, idx) in components">',
-      '<measure-condition-component v-if="isMeasureConditionComponent" :measure-condition-component="component" :index="Math.max(idx,index)" :room-duty-amount-or-percentage="showDutyAmountOrPercentage" :room-duty-amount-percentage="showDutyAmountPercentage" :room-duty-amount-negative-percentage="showDutyAmountNegativePercentage" :room-duty-amount-number="showDutyAmountNumber" :room-duty-amount-minimum="showDutyAmountMinimum" :room-duty-amount-maximum="showDutyAmountMaximum" :room-duty-amount-negative-number="showDutyAmountNegativeNumber" :room-duty-refund-amount="showDutyRefundAmount" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
+      '<measure-condition-component v-if="isMeasureConditionComponent" :measure-condition-component="component" :index="Math.max(idx,index)" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit" :room-monetary-unit="showMonetaryUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
@@ -11,7 +11,7 @@ var template = [
           '</div>',
         '</div>',
       '</measure-condition-component>',
-      '<measure-component v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-duty-amount-or-percentage="showDutyAmountOrPercentage" :room-duty-amount-percentage="showDutyAmountPercentage" :room-duty-amount-negative-percentage="showDutyAmountNegativePercentage" :room-duty-amount-number="showDutyAmountNumber" :room-duty-amount-minimum="showDutyAmountMinimum" :room-duty-amount-maximum="showDutyAmountMaximum" :room-duty-amount-negative-number="showDutyAmountNegativeNumber" :room-duty-refund-amount="showDutyRefundAmount" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit">',
+      '<measure-component v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
@@ -22,16 +22,21 @@ var template = [
         '</div>',
       '</measure-component>',
     '</div>',
-    '<p>',
-      '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureConditionComponent">Add another component</a>',
-      '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureComponent">Add another duty expression</a>',
-    '</p>',
+    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureConditionComponent">Add another component</a>',
+    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureComponent">Add another duty expression</a>',
   '</div>'
 ].join("");
 
 Vue.component("components-coordinator", {
   template: template,
-  props: ["components", "type", "classes", "index"],
+  props: [
+    "components",
+    "type",
+    "classes",
+    "index",
+    "showConditionsDutyAmount",
+    "showConditionsMeasurementUnit"
+  ],
   data: function() {
     return {
 
@@ -65,75 +70,30 @@ Vue.component("components-coordinator", {
     isMeasureComponent: function() {
       return this.type == "measure_component";
     },
-    showDutyAmountOrPercentage: function() {
-      var ids = ["01", "02", "04", "19", "20"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
-    showDutyAmountPercentage: function() {
-      var ids = ["23", "01A", "04A", "19A", "20A"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
-    showDutyAmountNegativePercentage: function() {
-      var ids = ["36", "02A"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
-    showDutyAmountNumber: function() {
-      var ids = ["01B", "04B", "19B", "20B", "06", "07", "09", "11", "12", "13", "14", "21", "25", "27", "29", "31"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
-    showDutyAmountMinimum: function() {
-      var ids = ["15"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
-    showDutyAmountMaximum: function() {
-      var ids = ["17", "35"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
-    showDutyAmountNegativeNumber: function() {
-      var ids = ["02B"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
-    showDutyRefundAmount: function() {
-      var ids = ["40", "41", "42", "43", "44"];
-
-      return this.any(this.components, function(component) {
-        return ids.indexOf(component.duty_expression_id) > -1;
-      });
-    },
     showMonetaryUnit: function() {
-      return this.showDutyAmountOrPercentage ||
-             this.showDutyAmountNumber ||
-             this.showDutyAmountMinimum ||
-             this.showDutyAmountMaximum ||
-             this.showDutyRefundAmount;
+      return false;
     },
-    showMeasurementUnit: function() {
-      var ids = ["23", "36", "37", "01A", "04A", "19A", "20A", "02A"];
+    showDutyAmount: function() {
+      var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];
+
+      if (this.showConditionsDutyAmount === true) {
+        return true;
+      }
 
       return this.any(this.components, function(component) {
         return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
       });
-    }
+    },
+    showMeasurementUnit: function() {
+      var ids = ["12", "14", "21", "23", "25", "27", "29", "36", "37", "01A", "02A", "04A", "15A", "17A", "19A", "20A", "35A"];
+
+      if (this.showConditionsMeasurementUnit === true) {
+        return true;
+      }
+
+      return this.any(this.components, function(component) {
+        return component.duty_expression_id && ids.indexOf(component.duty_expression_id) === -1;
+      });
+    },
   }
 });

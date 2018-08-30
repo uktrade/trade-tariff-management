@@ -1,16 +1,26 @@
 .condition,
 .measure-condition {
-  padding-bottom: 10px;
+  border-bottom: 1px solid $border-colour;
 
   .form-group {
     margin-bottom: 0 !important;
   }
 
   & + & {
-    padding-top: 10px;
+    padding-top: 6px;
   }
 
   &:last-of-type {
-    margin-bottom: 10px;
+    margin-bottom: 3px;
+  }
+
+  .measure-form & {
+    [class*="col-"] {
+      justify-content: flex-start !important;
+    }
+  }
+
+  .form-label {
+    font-size: 14px !important;
   }
 }

@@ -4,7 +4,7 @@
 
 .measure-condition-component {
   & + .measure-condition-component {
-    margin-top: 10px;
+    margin-top: 6px;
   }
 
   .form-group {
@@ -12,12 +12,10 @@
   }
 
   &:last-child {
-    margin-bottom: 10px;
+    margin-bottom: 3px;
   }
-}
 
-
-.form-hint-3-line {
-  display: block;
-  height: 4.92em;
+  .form-label {
+    font-size: 16px !important;
+  }
 }
