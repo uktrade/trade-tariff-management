@@ -1,4 +1,4 @@
-$gutter: 6px;
+$gutter: 15px;
 
 .row {
   position: relative;
@@ -39,18 +39,21 @@ $gutter: 6px;
 
   @each $col in $cols {
     .col-#{$col} {
-      max-width: $maxcol * $col;
+      max-width: $single * $col;
+      flex-basis: calc(#{$single * $col} - #{$gutter});
     }
 
     .col-xs-#{$col} {
-      max-width: $maxcol * $col;
+      max-width: $single * $col;
+      flex-basis: calc(#{$single * $col} - #{$gutter});
     }
   }
 
   @media (min-width: 768px) {
     @each $col in $cols {
       .col-sm-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
   }
@@ -58,19 +61,21 @@ $gutter: 6px;
   @media (min-width: 992px) {
     @each $col in $cols {
       .col-md-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
 
     .col-md-1-5 {
-      max-width: $maxcol * 1.2;
+      max-width: $single * 1.2;
     }
   }
 
   @media (min-width: 1024px) {
     @each $col in $cols {
       .col-lg-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
   }
@@ -78,7 +83,8 @@ $gutter: 6px;
   @media (min-width: 1600px) {
     @each $col in $cols {
       .col-xl-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
   }
@@ -97,6 +103,7 @@ $gutter: 6px;
   }
 }
 
+$gutter: 6px;
 
 .static-row {
   position: relative;
@@ -111,6 +118,22 @@ $gutter: 6px;
     padding: 0 $gutter/2;
     min-height: 0.125rem;
     flex-shrink: 0;
+
+    @media (min-width: 992px) {
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      flex: 0 0 calc(100% - #{$gutter});
+
+      .modal & {
+        justify-content: flex-start;
+      }
+
+      &.align-bottom {
+        justify-content: flex-end !important;
+      }
+    }
   }
 
   .align-bottom {
@@ -130,12 +153,12 @@ $gutter: 6px;
   @each $col in $cols {
     .col-#{$col} {
       width: $maxcol * $col;
-      min-width: $maxcol * $col;
+      max-width: $maxcol * $col;
     }
 
     .col-xs-#{$col} {
       width: $maxcol * $col;
-      min-width: $maxcol * $col;
+      max-width: $maxcol * $col;
     }
   }
 
@@ -143,7 +166,7 @@ $gutter: 6px;
     @each $col in $cols {
       .col-sm-#{$col} {
         width: $maxcol * $col;
-        min-width: $maxcol * $col;
+        max-width: $maxcol * $col;
       }
     }
   }
@@ -151,8 +174,8 @@ $gutter: 6px;
   @media (min-width: 992px) {
     @each $col in $cols {
       .col-md-#{$col} {
+        max-width: $maxcol * $col;
         width: $maxcol * $col;
-        min-width: $maxcol * $col;
       }
 
       .col-md-1-2 {
