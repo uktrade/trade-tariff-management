@@ -1,0 +1,33 @@
+div v-if="showValidityPeriod"
+  h4.heading-small
+    | Specify the regulation's validity period
+
+  = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "measure.validity_start_date" }
+  = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "measure.validity_end_date" }
+  .form-group
+    label.form-label
+      | Start date
+    = content_tag "date-select", "", { "v-bind:value.sync" => "measure.validity_start_date"  }
+
+  .form-group
+    label.form-label
+      | End date
+      span.form-hint
+        | Optional - leave blank if the regulation will remain in force indefinitely.
+    = content_tag "date-select", "", { "v-bind:value.sync" => "measure.validity_end_date"  }
+
+  h4.heading-small
+    | Specify the effective end date
+
+  = f.input :effective_end_date, as: :hidden, input_html: { "v-model" => "measure.regulation_effective_end_date" }
+  .form-group
+    = content_tag "date-select", "", { "v-bind:value.sync" => "measure.regulation_effective_end_date"  }
+
+  div v-if="showRegulationGroup"
+    h4.heading-small
+      | Specify the regulation group
+
+    .row
+      .col-md-6
+        .form-group
+          = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "measure.regulation_regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }

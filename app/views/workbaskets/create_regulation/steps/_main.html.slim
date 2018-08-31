@@ -3,45 +3,8 @@
 = render "workbaskets/create_regulation/steps/main/antidumping_regulation", f: f
 = render "workbaskets/create_regulation/steps/main/regulation_identifier", f: f
 = render "workbaskets/create_regulation/steps/main/regulation_name", f: f
+= render "workbaskets/create_regulation/steps/main/validity_period", f: f
 
-    /div v-if="showValidityPeriod"
-    /  h4.heading-small
-    /    | Specify the regulation's validity period
-    /
-    /  = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "regulation.validity_start_date" }
-    /  = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "regulation.validity_end_date" }
-    /  .form-group v-bind:class="{ 'form-group-error': regulation.errors.validity_start_date }"
-    /    label.form-label
-    /      | Start date
-    /    span.error-message v-if="regulation.errors.validity_start_date" v-html="regulation.errors.validity_start_date[0]"
-    /    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_start_date"  }
-    /
-    /  .form-group v-bind:class="{ 'form-group-error': regulation.errors.validity_end_date }"
-    /    label.form-label
-    /      | End date
-    /      span.form-hint
-    /        | Optional - leave blank if the regulation will remain in force indefinitely.
-    /    span.error-message v-if="regulation.errors.validity_end_date" v-html="regulation.errors.validity_end_date[0]"
-    /    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_end_date"  }
-    /
-    /  h4.heading-small
-    /    | Specify the effective end date
-    /
-    /  = f.input :effective_end_date, as: :hidden, input_html: { "v-model" => "regulation.effective_end_date" }
-    /  .form-group v-bind:class="{ 'form-group-error': regulation.errors.effective_end_date }"
-    /    span.error-message v-if="regulation.errors.effective_end_date" v-html="regulation.errors.effective_end_date[0]"
-    /    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.effective_end_date"  }
-    /
-    /  div v-if="showRegulationGroup"
-    /    h4.heading-small
-    /      | Specify the regulation group
-    /
-    /    .row
-    /      .col-md-6
-    /        .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
-    /          span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
-    /          = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }
-    /
     /div v-if="showPublishedDate"
     /  h4.heading-small
     /    | Specify the published date
