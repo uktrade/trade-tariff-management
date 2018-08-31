@@ -10,7 +10,8 @@ module WorkbasketForms
                   :number_suffix,
                   :replacement_indicator,
                   :information_text,
-                  :effective_end_date
+                  :effective_end_date,
+                  :published_date
 
     def regulation_roles
       RegulationRoleTypeDescription.all.map do |role|

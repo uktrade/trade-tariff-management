@@ -1,0 +1,6 @@
+div v-if="showPublishedDate"
+  h4.heading-small
+    | Specify the published date
+  = f.input :published_date, as: :hidden, input_html: { "v-model" => "measure.regulation_published_date" }
+  .form-group
+    = content_tag "date-select", "", { "v-bind:value.sync" => "measure.regulation_published_date"  }

@@ -4,15 +4,8 @@
 = render "workbaskets/create_regulation/steps/main/regulation_identifier", f: f
 = render "workbaskets/create_regulation/steps/main/regulation_name", f: f
 = render "workbaskets/create_regulation/steps/main/validity_period", f: f
+= render "workbaskets/create_regulation/steps/main/published_date", f: f
 
-    /div v-if="showPublishedDate"
-    /  h4.heading-small
-    /    | Specify the published date
-    /  = f.input :published_date, as: :hidden, input_html: { "v-model" => "regulation.published_date" }
-    /  .form-group v-bind:class="{ 'form-group-error': regulation.errors.published_date }"
-    /    span.error-message v-if="regulation.errors.published_date" v-html="regulation.errors.published_date[0]"
-    /    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.published_date"  }
-    /
     /div v-if="isExplicitAbrogation"
     /  h4.heading-small
     /    | Specify the abrogation date
