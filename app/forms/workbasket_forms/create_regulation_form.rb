@@ -11,7 +11,9 @@ module WorkbasketForms
                   :replacement_indicator,
                   :information_text,
                   :effective_end_date,
-                  :published_date
+                  :published_date,
+                  :abrogation_date,
+                  :pdf_data
 
     def regulation_roles
       RegulationRoleTypeDescription.all.map do |role|

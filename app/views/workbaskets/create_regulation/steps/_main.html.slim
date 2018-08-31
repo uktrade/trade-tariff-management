@@ -5,36 +5,6 @@
 = render "workbaskets/create_regulation/steps/main/regulation_name", f: f
 = render "workbaskets/create_regulation/steps/main/validity_period", f: f
 = render "workbaskets/create_regulation/steps/main/published_date", f: f
-
-    /div v-if="isExplicitAbrogation"
-    /  h4.heading-small
-    /    | Specify the abrogation date
-    /  = f.input :abrogation_date, as: :hidden, input_html: { "v-model" => "regulation.abrogation_date" }
-    /  .form-group v-bind:class="{ 'form-group-error': regulation.errors.abrogation_date }"
-    /    span.error-message v-if="regulation.errors.abrogation_date" v-html="regulation.errors.abrogation_date[0]"
-    /    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.abrogation_date"  }
-    /
-    /h4.heading-small
-    /  | Upload the regulation
-    /
-    /= f.input :pdf_data, as: :file, hint: "Upload the regulation document itself, in PDF format.", label: false
-    /
-    // TODO: Return me back later
-    //       Hidden because of
-    //       `on create set dummy values for the OJ page and number e.g. 00 00 and hide from the form`
-    //       from https://trello.com/c/EbZmbJYu/158-create-regulation-phase-1
-    //
-    /- if false
-    /  .row
-    /    .col-md-4
-    /      = f.input :officialjournal_number, label: "Official journal number", input_html: { "v-model" => "regulation.officialjournal_number" }
-    /    .col-md-4
-    /      = f.input :officialjournal_page, label: "Official journal page", input_html: { "v-model" => "regulation.officialjournal_page" }
-    /
-    /h4.heading-small
-    /  | Specify the operation date
-    /
-    /= f.input :operation_date, as: :hidden, input_html: { "v-model" => "regulation.operation_date" }
-    /.form-group v-bind:class="{ 'form-group-error': regulation.errors.operation_date }"
-    /  span.error-message v-if="regulation.errors.operation_date" v-html="regulation.errors.operation_date[0]"
-    /  = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.operation_date"  }
+= render "workbaskets/create_regulation/steps/main/abrogation_date", f: f
+= render "workbaskets/create_regulation/steps/main/regulation_upload", f: f
+= render "workbaskets/shared/steps/main/operation_date", f: f
