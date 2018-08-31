@@ -1,0 +1,18 @@
+h4.heading-small
+  | Specify the regulation identifier
+
+.row
+  .col-md-3
+    = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "measure.regulation_prefix" } do
+      = f.input :prefix, as: :select, collection: form.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -", "code-class-name" => "prefix--l1"
+  .col-md-3
+    = f.input :publication_year, label: "Publication year", input_html: { placeholder: "YY", "v-model" => "measure.regulation_publication_year" }
+  .col-md-3
+    = f.input :regulation_number, label: "Regulation number", input_html: { placeholder: "####", "v-model" => "measure.regulation_regulation_number" }
+  .col-md-3
+    = f.input :number_suffix, label: "Number suffix", input_html: { placeholder: "#", "v-model" => "measure.regulation_number_suffix" }
+
+.row
+  .col-md-4
+    = content_tag "custom-select", { "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "measure.regulation_replacement_indicator", "code-class-name" => "prefix--l1" } do
+      = f.input :replacement_indicator, as: :select, collection: form.replacement_indicators, value_method: :first, label_method: :last, label: "Replacement indicator", include_blank: true, prompt: "- select replacement indicator -"
