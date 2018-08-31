@@ -1,0 +1,5 @@
+h4.heading-small
+  | Give the regulation name
+.row
+  .col-md-12
+    = f.input :information_text, as: :text, label: false, input_html: { rows: 4, "v-model" => "measure.regulation_information_text" }

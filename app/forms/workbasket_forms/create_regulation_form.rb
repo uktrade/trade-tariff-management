@@ -8,7 +8,8 @@ module WorkbasketForms
                   :publication_year,
                   :regulation_number,
                   :number_suffix,
-                  :replacement_indicator
+                  :replacement_indicator,
+                  :information_text
 
     def regulation_roles
       RegulationRoleTypeDescription.all.map do |role|

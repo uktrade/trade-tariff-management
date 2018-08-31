@@ -2,12 +2,8 @@
 = render "workbaskets/create_regulation/steps/main/base_regulation", f: f
 = render "workbaskets/create_regulation/steps/main/antidumping_regulation", f: f
 = render "workbaskets/create_regulation/steps/main/regulation_identifier", f: f
+= render "workbaskets/create_regulation/steps/main/regulation_name", f: f
 
-    /h4.heading-small
-    /  | Give the regulation name
-    /
-    /= f.input :information_text, as: :text, label: false, input_html: { rows: 4, "v-model" => "regulation.information_text" }
-    /
     /div v-if="showValidityPeriod"
     /  h4.heading-small
     /    | Specify the regulation's validity period
