@@ -44,7 +44,15 @@ $(document).ready(function() {
           }
         },
         quota_sections: [],
-        errors: []
+        errors: [],
+
+        antidumpingRoles: ["2", "3"],
+        communityCodes: [
+            { value: "1", text: "Economic" },
+            { value: "2", text: "Atomic" },
+            { value: "3", text: "Coal" },
+            { value: "4", text: "Economic/Coal"}
+        ]
       };
 
       var default_measure = {
@@ -73,7 +81,25 @@ $(document).ready(function() {
         validity_end_date: null,
 
         existing_quota: null,
-        quota_sections: []
+        quota_sections: [],
+
+        regulation_role: null,
+        regulation_prefix: null,
+        regulation_publication_year: null,
+        regulation_regulation_number: null,
+        regulation_number_suffix: null,
+        regulation_information_text: null,
+        regulation_effective_end_date: null,
+        regulation_regulation_group_id: null,
+        regulation_base_regulation_id: null,
+        regulation_base_regulation_role: null,
+        regulation_replacement_indicator: "0",
+        regulation_community_code: null,
+        regulation_officialjournal_number: null,
+        regulation_officialjournal_page: null,
+        regulation_antidumping_regulation_role: null,
+        regulation_related_antidumping_regulation_id: null
+
       };
 
       if (window.__measure) {
@@ -188,6 +214,10 @@ $(document).ready(function() {
         }
       } else {
         data.measure = default_measure;
+      }
+
+      if (!data.measure.regulation_replacement_indicator) {
+        data.measure.regulation_replacement_indicator = "0";
       }
 
       return data;
@@ -948,7 +978,23 @@ $(document).ready(function() {
         }
 
         return id + "A";
+      },
+
+      onBaseRegulationChange: function(item) {
+        if (!item) {
+          return;
+        }
+
+        this.measure.regulation_base_regulation_role = item.role;
+      },
+      onRelatedAntidumpingRegulationChange: function(item) {
+        if (!item) {
+          return;
+        }
+
+        this.measure.regulation_antidumping_regulation_role = item.role;
       }
+
     },
     computed: {
       showAddMoreQuotaPeriods: function() {
@@ -1015,6 +1061,30 @@ $(document).ready(function() {
       },
       usingExistingQuota: function() {
         return this.measure.existing_quota === "existing";
+      },
+
+      dependentOnBaseRegulation: function() {
+        return $.inArray(this.measure.regulation_role, ['4', '6', '7']) !== -1;
+      },
+      canHaveRelatedAntidumpingLink: function() {
+        var roles = ["2", "3"];
+
+        return roles.indexOf(this.measure.regulation_role) > -1;
+      },
+      showCommunityCode: function() {
+        return $.inArray(this.measure.regulation_role, ["1", "2", "3"]) !== -1;
+      },
+      showValidityPeriod: function() {
+        return $.inArray(this.measure.regulation_role, ["1", "2", "3", "4", "8"]) !== -1;
+      },
+      showRegulationGroup: function() {
+        return $.inArray(this.measure.regulation_role, ["1", "2", "3"]) !== -1;
+      },
+      showPublishedDate: function() {
+        return $.inArray(this.measure.regulation_role, ["5", "6", "7", "8"]) !== -1;
+      },
+      isExplicitAbrogation: function() {
+        return this.measure.regulation_role === "7";
       }
     },
     watch: {
