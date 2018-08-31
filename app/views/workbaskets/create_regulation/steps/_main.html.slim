@@ -1,25 +1,7 @@
 = render "workbaskets/create_regulation/steps/main/regulation_type", f: f
 = render "workbaskets/create_regulation/steps/main/base_regulation", f: f
+= render "workbaskets/create_regulation/steps/main/antidumping_regulation", f: f
 
-    /div v-if="dependentOnBaseRegulation"
-    /  h4.heading-small
-    /    | Specify the base regulation
-    /  .row
-    /    .col-md-6
-    /      .form-group v-bind:class="{ 'form-group-error': regulation.errors.base_regulation_id }"
-    /        span.error-message v-if="regulation.errors.base_regulation_id" v-html="regulation.errors.base_regulation_id[0]"
-    /        = f.input :base_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.base_regulation_role" }
-    /        = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.base_regulation_id", placeholder: "- select base regulation -", ":on-change" => "onBaseRegulationChange", "name" => "regulation_form[base_regulation_id]", "code-class-name" => "prefix--regulation" }
-    /
-    /div v-if="canHaveRelatedAntidumpingLink"
-    /  h4.heading-small
-    /    | Specify a related antidumping regulation
-    /  .row
-    /    .col-md-6
-    /      .form-group v-bind:class="{ 'form-group-error': regulation.errors.related_antidumping_regulation_id }"
-    /        span.error-message v-if="regulation.errors.related_antidumping_regulation_id" v-html="regulation.errors.related_antidumping_regulation_id[0]"
-    /        = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
-    /        = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles", "code-class-name" => "prefix--regulation" }
     /
     /
     // TODO: Return me back later
