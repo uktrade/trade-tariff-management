@@ -1,7 +1,8 @@
 module WorkbasketForms
   class CreateRegulationForm < ::WorkbasketForms::BaseForm
 
-    attr_accessor :role
+    attr_accessor :role,
+                  :base_regulation_role
 
     def regulation_roles
       RegulationRoleTypeDescription.all.map do |role|
