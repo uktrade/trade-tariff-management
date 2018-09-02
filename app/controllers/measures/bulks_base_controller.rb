@@ -20,6 +20,12 @@ module Measures
 
       helper_method :workbasket_author?
 
+      def workbasket_is_editable?
+        workbasket_author? && workbasket.editable?
+      end
+
+      helper_method :workbasket_is_editable?
+
       def require_to_be_workbasket_owner!
         unless workbasket_author?
           render nothing: true, status: :ok

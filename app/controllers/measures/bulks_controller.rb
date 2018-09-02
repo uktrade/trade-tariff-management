@@ -7,7 +7,7 @@ module Measures
       :update, :destroy
     ]
 
-    before_action :require_no_to_be_awaiting_for_review!, only: [:edit, :update]
+    before_action :require_to_be_editable!, only: [:edit, :update]
 
     expose(:current_page) do
       params[:page]
@@ -135,9 +135,12 @@ module Measures
 
     private
 
-      def require_no_to_be_awaiting_for_review!
-        if workbasket.status == "awaiting_cross_check" && params[:submitted].blank?
-          redirect_to edit_measures_bulk_url(workbasket.id, search_code: workbasket.search_code, submitted: true)
+      def require_to_be_editable!
+        unless workbasket.editable?
+          redirect_to edit_measures_bulk_url(
+            workbasket.id,
+            search_code: workbasket.search_code
+          )
 
           return false
         end
