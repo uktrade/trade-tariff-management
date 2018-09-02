@@ -226,7 +226,12 @@ module Workbaskets
         settings.destroy
       end
 
+      clean_up_related_cache!
       destroy
+    end
+
+    def clean_up_related_cache!
+      Rails.cache.write("#{id}_sequence_number", nil)
     end
 
     class << self
