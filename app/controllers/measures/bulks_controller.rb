@@ -91,7 +91,7 @@ module Measures
       )
 
       if workbasket.save
-        redirect_to edit_measures_bulk_url(
+        redirect_to work_with_selected_measures_measures_bulk_url(
           workbasket.id,
           search_code: workbasket.search_code
         )

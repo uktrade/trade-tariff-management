@@ -22,6 +22,10 @@ module Workbaskets
       create_measure_url(workbasket.id)
     end
 
+    expose(:submitted_url) do
+      submitted_for_cross_check_create_measure_url(workbasket.id)
+    end
+
     private
 
       def check_if_action_is_permitted!
