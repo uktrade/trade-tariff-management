@@ -1,5 +1,5 @@
 div v-if="showValidityPeriod"
-  h4.heading-small
+  h3.heading-medium
     | Specify the regulation's validity period
 
   = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "measure.validity_start_date" }
@@ -16,7 +16,7 @@ div v-if="showValidityPeriod"
         | Optional - leave blank if the regulation will remain in force indefinitely.
     = content_tag "date-select", "", { "v-bind:value.sync" => "measure.validity_end_date"  }
 
-  h4.heading-small
+  h3.heading-medium
     | Specify the effective end date
 
   = f.input :effective_end_date, as: :hidden, input_html: { "v-model" => "measure.regulation_effective_end_date" }
@@ -24,7 +24,7 @@ div v-if="showValidityPeriod"
     = content_tag "date-select", "", { "v-bind:value.sync" => "measure.regulation_effective_end_date"  }
 
   div v-if="showRegulationGroup"
-    h4.heading-small
+    h3.heading-medium
       | Specify the regulation group
 
     .row
