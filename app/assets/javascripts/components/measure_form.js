@@ -252,7 +252,14 @@ $(document).ready(function() {
             WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
             var http_method = "PUT";
 
-            if ( window.save_url.indexOf('create_measures') == -1 ) {
+            if (window.save_url.indexOf('create_regulation') > 0) {
+              // Crate Regulation
+              
+              if (window.current_step == 'main') {
+                  var payload = self.createRegulationMainStepPayLoad();
+              }
+                
+            } else if ( window.save_url.indexOf('create_measures') == -1 ) {
               // Create Quota
               //
 
@@ -614,6 +621,31 @@ $(document).ready(function() {
 
         return measure;
       },
+
+      createRegulationMainStepPayLoad: function() {
+          return {
+            role: this.measure.regulation_role,
+            prefix: this.measure.regulation_prefix,
+            publication_year: this.measure.regulation_publication_year,
+            regulation_number: this.measure.regulation_regulation_number,
+            number_suffix: this.measure.regulation_number_suffix,
+            information_text: this.measure.regulation_information_text,
+            effective_end_date: this.measure.regulation_effective_end_date,
+            regulation_group_id: this.measure.regulation_regulation_group_id,
+            base_regulation_id: this.measure.regulation_base_regulation_id,
+            base_regulation_role: this.measure.regulation_base_regulation_role,
+            replacement_indicator: this.measure.regulation_replacement_indicator,
+            community_code: this.measure.regulation_community_code,
+            officialjournal_number: this.measure.regulation_officialjournal_number,
+            officialjournal_page: this.measure.regulation_officialjournal_page,
+            antidumping_regulation_role: this.measure.regulation_antidumping_regulation_role,
+            related_antidumping_regulation_id: this.measure.regulation_related_antidumping_regulation_id,
+            validity_start_date: this.measure.validity_start_date,
+            validity_end_date: this.measure.validity_end_date,
+            operation_date: this.measure.operation_date
+        };
+      }, 
+        
       createQuotaMainStepPayload: function() {
         var payload = {
           operation_date: this.measure.operation_date,

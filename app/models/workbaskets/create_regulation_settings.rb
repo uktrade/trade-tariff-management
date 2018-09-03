@@ -13,5 +13,9 @@ module Workbaskets
       main_step_settings_jsonb
     end
 
+    def measure_sids_jsonb
+      '{}'
+    end
+
   end
 end

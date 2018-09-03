@@ -14,6 +14,30 @@ module WorkbasketValueObjects
         )
       end
 
+      def main_step_settings
+        %w(
+            role
+            prefix
+            publication_year
+            regulation_number
+            number_suffix
+            information_text
+            effective_end_date
+            regulation_group_id
+            base_regulation_id
+            base_regulation_role
+            replacement_indicator
+            community_code
+            officialjournal_number
+            officialjournal_page
+            antidumping_regulation_role
+            related_antidumping_regulation_id
+            validity_start_date
+            validity_end_date
+            operation_date
+        )
+      end
+
     end
   end
 end
