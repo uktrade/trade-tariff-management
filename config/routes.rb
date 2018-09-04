@@ -81,7 +81,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :create_quota, only: [:new, :show, :edit, :update]
+    resources :create_quota, only: [:new, :show, :edit, :update] do
+      member do
+        get :submitted_for_cross_check
+      end
+    end
   end
 
   namespace :regulation_form_api do
