@@ -347,24 +347,8 @@ module WorkbasketInteractions
       end
 
       def post_saving_updates!
-        save_pdf_document!
-
         if ABROGATION_REGULATION_ROLES.include?(original_params[:role].to_s)
           set_abrogation_regulation_for_base_regulation!
-        end
-      end
-
-      def save_pdf_document!
-        if original_params[:pdf_data].present?
-          doc = RegulationDocument.new(
-              regulation_id: regulation.public_send(target_class.primary_key[0]),
-              regulation_role: regulation.public_send(target_class.primary_key[1]),
-              regulation_id_key: target_class.primary_key[0],
-              regulation_role_key: target_class.primary_key[1]
-          )
-          doc.pdf = original_params[:pdf_data]
-          doc.national = true
-          doc.save
         end
       end
 
@@ -383,6 +367,24 @@ module WorkbasketInteractions
         original_params[:operation_date].to_date if original_params[:operation_date].present?
       end
 
+      class << self
+        def attach_pdf_to!(pdf_data, workbasket)
+          regulation = workbasket.settings
+                                 .regulation
+          target_class = regulation.class
+
+          doc = RegulationDocument.new(
+            regulation_id: regulation.public_send(target_class.primary_key[0]),
+            regulation_role: regulation.public_send(target_class.primary_key[1]),
+            regulation_id_key: target_class.primary_key[0],
+            regulation_role_key: target_class.primary_key[1]
+          )
+          doc.pdf = pdf_data
+          doc.national = true
+
+          doc.save
+        end
+      end
     end
   end
 end

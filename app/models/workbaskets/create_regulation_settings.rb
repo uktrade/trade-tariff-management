@@ -14,6 +14,10 @@ module Workbaskets
       )
     end
 
+    def regulation
+      collection.first
+    end
+
     def settings
       JSON.parse(main_step_settings_jsonb)
     end

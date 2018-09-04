@@ -32,6 +32,11 @@ module Workbaskets
     end
 
     def attach_pdf
+      ::WorkbasketInteractions::CreateRegulation::SettingsSaver.attach_pdf_to!(
+        params[:workbasket_forms_create_regulation_form][:pdf_data],
+        workbasket
+      )
+
       head :ok
     end
 

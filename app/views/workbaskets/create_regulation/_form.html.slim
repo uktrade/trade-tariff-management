@@ -5,7 +5,7 @@ script
                         html: { \
                           class: "regulation-form create-measures-v2", \
                           method: :put, data: { \
-                            attach_pdf_url: create_regulation_attach_pdf_url(workbasket.id) \
+                            attach_pdf_url: attach_pdf_create_regulation_url(workbasket.id) \
                           } \
                         } do |f|
 
