@@ -1,4 +1,4 @@
-$gutter: 15px;
+$gutter: 6px;
 
 .row {
   position: relative;
@@ -103,8 +103,6 @@ $gutter: 15px;
   }
 }
 
-$gutter: 6px;
-
 .static-row {
   position: relative;
   margin: 0 $gutter/-2;
@@ -176,6 +174,14 @@ $gutter: 6px;
       .col-md-#{$col} {
         max-width: $maxcol * $col;
         width: $maxcol * $col;
+      }
+
+      .col-md-0-6 {
+        max-width: $maxcol * 0.6;
+      }
+
+      .col-md-0-8 {
+        max-width: $maxcol * 0.8;
       }
 
       .col-md-1-2 {
