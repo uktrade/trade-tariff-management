@@ -88,7 +88,7 @@ Vue.component("conditions-coordinator", {
       });
     },
     showCertificateType: function() {
-      var codes = ["B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
+      var codes = ["A", "B", "C", "E3", "I3", "H", "K", "P", "Q", "R", "Y", "Z"];
 
       return this.any(this.conditions, function(condition) {
         return codes.indexOf(condition.condition_code) > -1;
