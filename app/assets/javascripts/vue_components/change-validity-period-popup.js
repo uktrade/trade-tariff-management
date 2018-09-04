@@ -110,20 +110,22 @@ Vue.component("change-validity-period-popup", {
   },
   computed: {
     disableSubmit: function() {
-      var startDate = this.startDate;
-      var endDate = this.endDate;
-      var openEnded = this.makeOpenEnded;
-      var regulation_id = this.regulation_id;
-
-      if (!startDate || moment(startDate, "DD/MM/YYYY", true).isValid() == false) {
-        return true;
-      }
-
-      if (!openEnded && (!regulation_id || !endDate || moment(endDate, "DD/MM/YYYY", true).isValid() == false)) {
-        return true;
-      }
-
       return false;
+    },
+    showMakeOpenEnded: function() {
+      return any(this.measures, function(measure) {
+        return measure.validity_end_date && measure.validity_end_date != "-";
+      });
+    },
+    showJustificationRegulation: function() {
+      var endDate = this.endDate;
+      if (!endDate || moment(endDate, "DD/MM/YYYY", true).isValid() == false) {
+        return false;
+      }
+
+      return any(this.measures, function(measure) {
+        return !measure.validity_end_date || measure.validity_end_date == "-";
+      });
     }
   },
   watch: {
