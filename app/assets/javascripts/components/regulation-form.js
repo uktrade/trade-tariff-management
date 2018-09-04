@@ -60,7 +60,7 @@ $(document).ready(function() {
               settings: payload
             },
             success: function(response) {
-              if ( $('input[type=file]').val().length > 0 ) {
+              if ( $('input[type=file]').val() && $('input[type=file]').val().length > 0 ) {
                 var formData = new FormData($("form.regulation-form")[0])
                 formData.append('image', $('input[type=file]')[0].files[0]);
 

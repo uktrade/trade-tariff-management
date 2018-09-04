@@ -74,7 +74,7 @@ table.create-measures-details-table
       td
         = attributes_parser.published_date_formatted
 
-    tr v-if="showPublishedDate"
+    tr v-if="isExplicitAbrogation"
       td.heading_column
         | Abrogation date
       td

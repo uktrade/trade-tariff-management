@@ -35,7 +35,8 @@ module WorkbasketValueObjects
             start_date
             end_date
             operation_date
-            pdf_data
+            published_date
+            abrogation_date
         )
       end
 
