@@ -74,7 +74,9 @@ Rails.application.routes.draw do
   scope module: :workbaskets do
     resources :create_measures, only: [:new, :show, :edit, :update]
     resources :create_quota, only: [:new, :show, :edit, :update]
-    resources :create_regulation, only: [:new, :show, :edit, :update]
+    resources :create_regulation, only: [:new, :show, :edit, :update] do
+      put :attach_pdf
+    end
   end
 
   namespace :regulation_form_api do

@@ -31,6 +31,10 @@ module Workbaskets
       end
     end
 
+    def attach_pdf
+      head :ok
+    end
+
     private
 
     def check_if_action_is_permitted!

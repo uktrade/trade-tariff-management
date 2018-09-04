@@ -60,7 +60,40 @@ $(document).ready(function() {
               settings: payload
             },
             success: function(response) {
-              WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
+
+              console.log('-----started-----');
+
+              if ( $('input[type=file]').val().length > 0 ) {
+
+                console.log('---file exist!---');
+
+                var formData = new FormData($("form.regulation-form")[0])
+                formData.append('image', $('input[type=file]')[0].files[0]);
+
+                console.log('-----payload prepared----')
+                console.log($("form.regulation-form").data('attach-pdf-url'))
+
+                $.ajax({
+                  url: $("form.regulation-form").data('attach-pdf-url'),
+                  data: formData,
+                  type: http_method,
+                  contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                  processData: false, // NEEDED, DON'T OMIT THIS
+                  success: function(resp) {
+
+                    console.log('-----upload successfuly finished----');
+
+                    WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
+                  }
+                });
+
+              } else {
+
+                console.log('---file ended!---');
+
+                WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
+
+              }
             },
             error: function(response) {
               WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
