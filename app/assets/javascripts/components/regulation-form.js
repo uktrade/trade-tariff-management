@@ -49,18 +49,16 @@ $(document).ready(function() {
             var payload = self.createRegulationMainStepPayLoad();
           }
 
-          var data_ops = {
-            step: window.current_step,
-            mode: submit_button.attr('name'),
-            settings: payload
-          };
-
           self.errors = [];
 
           $.ajax({
             url: window.save_url,
             type: http_method,
-            data: data_ops,
+            data: {
+              step: window.current_step,
+              mode: submit_button.attr('name'),
+              settings: payload
+            },
             success: function(response) {
               WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
             },
