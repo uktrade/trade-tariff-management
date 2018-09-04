@@ -116,7 +116,8 @@ $(document).ready(function() {
           officialjournal_page: payload.officialjournal_page,
           antidumping_regulation_role: payload.antidumping_regulation_role,
           related_antidumping_regulation_id: payload.related_antidumping_regulation_id,
-          published_date: payload.published_date
+          published_date: payload.published_date,
+          abrogation_date: payload.abrogation_date
         };
       },
       emptyRegulation: function() {
@@ -140,7 +141,8 @@ $(document).ready(function() {
           antidumping_regulation_role: null,
           related_antidumping_regulation_id: null,
           published_date: null,
-          operation_date: null
+          operation_date: null,
+          abrogation_date: null
         }
       },
       createRegulationMainStepPayLoad: function() {
@@ -166,7 +168,8 @@ $(document).ready(function() {
           end_date: this.regulation.validity_end_date,
           validity_end_date: this.regulation.validity_end_date,
           operation_date: this.regulation.operation_date,
-          published_date: this.regulation.published_date
+          published_date: this.regulation.published_date,
+          abrogation_date: this.regulation.abrogation_date
         };
       },
       onBaseRegulationChange: function(item) {
