@@ -6,11 +6,16 @@ module Workbaskets
     def collection_models
       %w(
         BaseRegulation
+        ModificationRegulation
+        ProrogationRegulation
+        CompleteAbrogationRegulation
+        ExplicitAbrogationRegulation
+        FullTemporaryStopRegulation
       )
     end
 
     def settings
-      main_step_settings_jsonb
+      JSON.parse(main_step_settings_jsonb)
     end
 
     def measure_sids_jsonb

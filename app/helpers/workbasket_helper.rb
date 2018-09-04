@@ -27,6 +27,8 @@ module WorkbasketHelper
     case current_step
     when "main"
       "Create a regulation"
+    when "review_and_submit"
+      "Review and submit"
     end
   end
 

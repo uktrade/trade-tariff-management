@@ -3,6 +3,7 @@ class CompleteAbrogationRegulation < Sequel::Model
   include ::XmlGeneration::BaseHelper
   include ::RegulationDocumentContext
   include ::RegulationAbrogationContext
+  include ::WorkbasketHelpers::Association
 
   set_primary_key [:complete_abrogation_regulation_id, :complete_abrogation_regulation_role]
 

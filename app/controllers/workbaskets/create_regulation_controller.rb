@@ -11,6 +11,26 @@ module Workbaskets
       )
     end
 
+    expose(:previous_step_url) do
+      edit_create_regulation_url(
+          workbasket.id,
+          step: previous_step
+      )
+    end
+
+    expose(:read_only_section_url) do
+      create_regulation_url(workbasket.id)
+    end
+
+    def update
+      saver.save!
+      if saver.valid?
+        handle_success_saving!
+      else
+        handle_errors!
+      end
+    end
+
     private
 
     def check_if_action_is_permitted!
@@ -18,7 +38,7 @@ module Workbaskets
     end
 
     def workbasket_data_can_be_persisted?
-      saver_mode == 'continue'
+      true
     end
 
   end

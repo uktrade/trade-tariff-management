@@ -548,6 +548,24 @@ $(document).ready(function() {
           quota_is_licensed: payload.quota_is_licensed === "true",
           quota_licence: payload.quota_licence,
           quota_description: payload.quota_description,
+
+          regulation_role: payload.role,
+          regulation_prefix: payload.prefix,
+          regulation_publication_year: payload.publication_year,
+          regulation_regulation_number: payload.regulation_number,
+          regulation_number_suffix: payload.number_suffix,
+          regulation_information_text: payload.information_text,
+          regulation_effective_end_date: payload.effective_end_date,
+          regulation_regulation_group_id: payload.regulation_group_id,
+          regulation_base_regulation_id: payload.base_regulation_id,
+          regulation_base_regulation_role: payload.base_regulation_role,
+          regulation_replacement_indicator: payload.replacement_indicator,
+          regulation_community_code: payload.community_code,
+          regulation_officialjournal_number: payload.officialjournal_number,
+          regulation_officialjournal_page: payload.officialjournal_page,
+          regulation_antidumping_regulation_role: payload.antidumping_regulation_role,
+          regulation_related_antidumping_regulation_id: payload.related_antidumping_regulation_id,
+
           footnotes: [],
           measure_components: [],
           conditions: []
@@ -640,7 +658,9 @@ $(document).ready(function() {
             officialjournal_page: this.measure.regulation_officialjournal_page,
             antidumping_regulation_role: this.measure.regulation_antidumping_regulation_role,
             related_antidumping_regulation_id: this.measure.regulation_related_antidumping_regulation_id,
+            start_date: this.measure.validity_start_date,
             validity_start_date: this.measure.validity_start_date,
+            end_date: this.measure.validity_end_date,
             validity_end_date: this.measure.validity_end_date,
             operation_date: this.measure.operation_date
         };

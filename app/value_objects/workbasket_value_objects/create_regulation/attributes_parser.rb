@@ -4,10 +4,13 @@ module WorkbasketValueObjects
 
       SIMPLE_OPS = %w(
         operation_date
+        role
         prefix
         publication_year
         regulation_number
         number_suffix
+        information_text
+        regulation_group_id
       )
 
       SIMPLE_OPS.map do |option_name|
@@ -16,14 +19,51 @@ module WorkbasketValueObjects
         end
       end
 
+      ALIASES = {
+          role: :method_regulation_role,
+          effective_end_date: :method_effective_end_date,
+      }
+
+      attr_accessor :ops,
+                    :normalized_params,
+                    :target_class
+
       def initialize(workbasket_settings, step, ops = nil)
         @workbasket_settings = workbasket_settings
         @step = step
-        @ops = ops.present? ?
-                   ops :
-                   ActiveSupport::HashWithIndifferentAccess.new(
-                       workbasket_settings.settings
-                   )
+        @ops = if ops.present?
+                 ops
+               else
+                 ActiveSupport::HashWithIndifferentAccess.new(
+                     workbasket_settings.settings
+                 )
+               end
+
+        @normalized_params = {}
+        @ops.map do |k, v|
+          if ALIASES.keys.include?(k.to_sym)
+            if ALIASES[k.to_sym].to_s.starts_with?("method_")
+              @normalized_params.merge!(
+                  send(ALIASES[k.to_sym], @ops[k])
+              )
+            else
+              @normalized_params[ALIASES[k.to_sym]] = v
+            end
+          else
+            @normalized_params[k] = v
+          end
+        end
+
+        stub_some_attributes
+        @normalized_params = ActiveSupport::HashWithIndifferentAccess.new(normalized_params)
+
+      end
+
+      def stub_some_attributes
+        @normalized_params[:officialjournal_number] = '00'
+        @normalized_params[:officialjournal_page] = 0
+
+        @normalized_params[:community_code] = 1 if target_class == BaseRegulation
       end
 
       def fetch_regulation_number
@@ -33,7 +73,43 @@ module WorkbasketValueObjects
       end
 
       def workbasket_name
-        "Create Regulation #{fetch_regulation_number}"
+        fetch_regulation_number
+      end
+
+      def method_regulation_role(role)
+        ops = {}
+
+        @target_class = case role
+                          when "1", "2", "3"
+                            BaseRegulation
+                          when "4"
+                            ModificationRegulation
+                          when "5"
+                            ProrogationRegulation
+                          when "6"
+                            CompleteAbrogationRegulation
+                          when "7"
+                            ExplicitAbrogationRegulation
+                          when "8"
+                            FullTemporaryStopRegulation
+                        end
+
+        ops[target_class.primary_key[1]] = role
+        ops[target_class.primary_key[0]] = fetch_regulation_number
+
+        ops
+      end
+
+      def method_effective_end_date(effective_end_date)
+        ops = {}
+
+        if role == "8"
+          ops[:effective_enddate] = effective_end_date
+        else
+          ops[:effective_end_date] = effective_end_date
+        end
+
+        ops
       end
 
     end

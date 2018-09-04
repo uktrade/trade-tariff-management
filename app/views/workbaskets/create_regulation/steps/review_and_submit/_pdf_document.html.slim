@@ -1,0 +1,5 @@
+- if pdf_document.present?
+  p
+    =<> link_to "Download PDF document", attributes_parser.pdf_url, target: "_blank", style: "margin-right: 15px;"
+    =<> ' | '
+    =<> link_to "Add new regulation", new_regulation_url, style: "margin-left: 15px;"

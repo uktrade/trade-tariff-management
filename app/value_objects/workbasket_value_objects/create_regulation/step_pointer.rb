@@ -32,9 +32,10 @@ module WorkbasketValueObjects
             officialjournal_page
             antidumping_regulation_role
             related_antidumping_regulation_id
-            validity_start_date
-            validity_end_date
+            start_date
+            end_date
             operation_date
+            pdf_data
         )
       end
 

@@ -2,6 +2,7 @@ class FullTemporaryStopRegulation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::RegulationDocumentContext
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :oplog, primary_key: [:full_temporary_stop_regulation_id,

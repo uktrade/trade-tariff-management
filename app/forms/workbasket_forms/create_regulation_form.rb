@@ -16,20 +16,21 @@ module WorkbasketForms
                   :pdf_data
 
     def regulation_roles
-      RegulationRoleTypeDescription.all.map do |role|
+      roles = RegulationRoleTypeDescription.all.map do |role|
         [ role.regulation_role_type_id, role.description ]
       end
+      Hash[roles]
     end
 
     def prefixes
-      [
-          [ "C", "Draft" ],
-          [ "D", "Decision" ],
-          [ "A", "Agreement" ],
-          [ "I", "Information" ],
-          [ "J", "Judgement" ],
-          [ "R", "Regulation" ]
-      ]
+      {
+          "C" => "Draft",
+          "D" => "Decision",
+          "A" => "Agreement",
+          "I" => "Information",
+          "J" => "Judgement",
+          "R" => "Regulation"
+      }
     end
 
     def replacement_indicators
