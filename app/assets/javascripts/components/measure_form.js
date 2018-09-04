@@ -44,15 +44,7 @@ $(document).ready(function() {
           }
         },
         quota_sections: [],
-        errors: [],
-
-        antidumpingRoles: ["2", "3"],
-        communityCodes: [
-            { value: "1", text: "Economic" },
-            { value: "2", text: "Atomic" },
-            { value: "3", text: "Coal" },
-            { value: "4", text: "Economic/Coal"}
-        ]
+        errors: []
       };
 
       var default_measure = {
@@ -81,26 +73,7 @@ $(document).ready(function() {
         validity_end_date: null,
 
         existing_quota: null,
-        quota_sections: [],
-
-        regulation_role: null,
-        regulation_prefix: null,
-        regulation_publication_year: null,
-        regulation_regulation_number: null,
-        regulation_number_suffix: null,
-        regulation_information_text: null,
-        regulation_effective_end_date: null,
-        regulation_regulation_group_id: null,
-        regulation_base_regulation_id: null,
-        regulation_base_regulation_role: null,
-        regulation_replacement_indicator: "0",
-        regulation_community_code: null,
-        regulation_officialjournal_number: null,
-        regulation_officialjournal_page: null,
-        regulation_antidumping_regulation_role: null,
-        regulation_related_antidumping_regulation_id: null,
-        regulation_published_date: null
-
+        quota_sections: []
       };
 
       if (window.__measure) {
@@ -217,10 +190,6 @@ $(document).ready(function() {
         data.measure = default_measure;
       }
 
-      if (!data.measure.regulation_replacement_indicator) {
-        data.measure.regulation_replacement_indicator = "0";
-      }
-
       return data;
     },
     mounted: function() {
@@ -253,14 +222,7 @@ $(document).ready(function() {
             WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
             var http_method = "PUT";
 
-            if (window.save_url.indexOf('create_regulation') > 0) {
-              // Crate Regulation
-              
-              if (window.current_step == 'main') {
-                  var payload = self.createRegulationMainStepPayLoad();
-              }
-                
-            } else if ( window.save_url.indexOf('create_measures') == -1 ) {
+            if ( window.save_url.indexOf('create_measures') == -1 ) {
               // Create Quota
               //
 
@@ -549,25 +511,6 @@ $(document).ready(function() {
           quota_is_licensed: payload.quota_is_licensed === "true",
           quota_licence: payload.quota_licence,
           quota_description: payload.quota_description,
-
-          regulation_role: payload.role,
-          regulation_prefix: payload.prefix,
-          regulation_publication_year: payload.publication_year,
-          regulation_regulation_number: payload.regulation_number,
-          regulation_number_suffix: payload.number_suffix,
-          regulation_information_text: payload.information_text,
-          regulation_effective_end_date: payload.effective_end_date,
-          regulation_regulation_group_id: payload.regulation_group_id,
-          regulation_base_regulation_id: payload.base_regulation_id,
-          regulation_base_regulation_role: payload.base_regulation_role,
-          regulation_replacement_indicator: payload.replacement_indicator,
-          regulation_community_code: payload.community_code,
-          regulation_officialjournal_number: payload.officialjournal_number,
-          regulation_officialjournal_page: payload.officialjournal_page,
-          regulation_antidumping_regulation_role: payload.antidumping_regulation_role,
-          regulation_related_antidumping_regulation_id: payload.related_antidumping_regulation_id,
-          regulation_published_date: payload.published_date,
-
           footnotes: [],
           measure_components: [],
           conditions: []
@@ -641,34 +584,6 @@ $(document).ready(function() {
 
         return measure;
       },
-
-      createRegulationMainStepPayLoad: function() {
-          return {
-            role: this.measure.regulation_role,
-            prefix: this.measure.regulation_prefix,
-            publication_year: this.measure.regulation_publication_year,
-            regulation_number: this.measure.regulation_regulation_number,
-            number_suffix: this.measure.regulation_number_suffix,
-            information_text: this.measure.regulation_information_text,
-            effective_end_date: this.measure.regulation_effective_end_date,
-            regulation_group_id: this.measure.regulation_regulation_group_id,
-            base_regulation_id: this.measure.regulation_base_regulation_id,
-            base_regulation_role: this.measure.regulation_base_regulation_role,
-            replacement_indicator: this.measure.regulation_replacement_indicator,
-            community_code: this.measure.regulation_community_code,
-            officialjournal_number: this.measure.regulation_officialjournal_number,
-            officialjournal_page: this.measure.regulation_officialjournal_page,
-            antidumping_regulation_role: this.measure.regulation_antidumping_regulation_role,
-            related_antidumping_regulation_id: this.measure.regulation_related_antidumping_regulation_id,
-            start_date: this.measure.validity_start_date,
-            validity_start_date: this.measure.validity_start_date,
-            end_date: this.measure.validity_end_date,
-            validity_end_date: this.measure.validity_end_date,
-            operation_date: this.measure.operation_date,
-            published_date: this.measure.regulation_published_date
-        };
-      }, 
-        
       createQuotaMainStepPayload: function() {
         var payload = {
           operation_date: this.measure.operation_date,
@@ -1033,23 +948,7 @@ $(document).ready(function() {
         }
 
         return id + "A";
-      },
-
-      onBaseRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.measure.regulation_base_regulation_role = item.role;
-      },
-      onRelatedAntidumpingRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.measure.regulation_antidumping_regulation_role = item.role;
       }
-
     },
     computed: {
       showAddMoreQuotaPeriods: function() {
@@ -1116,30 +1015,6 @@ $(document).ready(function() {
       },
       usingExistingQuota: function() {
         return this.measure.existing_quota === "existing";
-      },
-
-      dependentOnBaseRegulation: function() {
-        return $.inArray(this.measure.regulation_role, ['4', '6', '7']) !== -1;
-      },
-      canHaveRelatedAntidumpingLink: function() {
-        var roles = ["2", "3"];
-
-        return roles.indexOf(this.measure.regulation_role) > -1;
-      },
-      showCommunityCode: function() {
-        return $.inArray(this.measure.regulation_role, ["1", "2", "3"]) !== -1;
-      },
-      showValidityPeriod: function() {
-        return $.inArray(this.measure.regulation_role, ["1", "2", "3", "4", "8"]) !== -1;
-      },
-      showRegulationGroup: function() {
-        return $.inArray(this.measure.regulation_role, ["1", "2", "3"]) !== -1;
-      },
-      showPublishedDate: function() {
-        return $.inArray(this.measure.regulation_role, ["5", "6", "7", "8"]) !== -1;
-      },
-      isExplicitAbrogation: function() {
-        return this.measure.regulation_role === "7";
       }
     },
     watch: {

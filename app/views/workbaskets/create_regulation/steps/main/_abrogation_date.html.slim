@@ -1,7 +1,7 @@
 div v-if="isExplicitAbrogation"
   h3.heading-medium
     | Specify the abrogation date
-  = f.input :abrogation_date, as: :hidden, input_html: { "v-model" => "measure.regulation_abrogation_date" }
+  = f.input :abrogation_date, as: :hidden, input_html: { "v-model" => "regulation.abrogation_date" }
   .form-group
-    = content_tag "date-select", "", { "v-bind:value.sync" => "measure.regulation_abrogation_date"  }
+    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.abrogation_date"  }
 
