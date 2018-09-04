@@ -100,6 +100,14 @@ module Measures
       end
     end
 
+    def persist_work_with_selected_measures
+      #TODO: implement saving here
+      redirect_to edit_measures_bulk_url(
+        workbasket.id,
+        search_code: workbasket.search_code
+      )
+    end
+
     expose(:submit_group_for_cross_check) do
       params[:mode] == "save_group_for_cross_check"
     end

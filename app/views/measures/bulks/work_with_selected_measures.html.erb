@@ -5,10 +5,10 @@
     </h1>
 
     <div class="row">
-      <div class="col-md-7">
+      <div class="col-md-7 col-lg-5">
         <info-message>
           <p>
-            You are about  to work with <%= pagination_metadata[:total_count] %> selected measures. When you have finished editing, these will be subemitted into workflow as a single workbasket.
+            You are about  to work with <%= pagination_metadata[:total_count] %> selected measures. When you have finished editing, these will be submitted into workflow as a single workbasket.
           </p>
 
           <p>
@@ -24,13 +24,13 @@
         <span class="form-hint">
           Start typing in the field to see available regulations.
           <br>
-          If the regulation you need is not in the list, you can <a>add it from here</a>.
+          If the regulation you need is not in the list, you can <%= link_to "add it from here", new_regulation_url, target: "_blank" %>.
           <br>
-          If you're not sure of the regulation name or ID, you can <a>search here</a>.
+          If you're not sure of the regulation name or ID, you can <%= link_to "search here", regulations_url, target: "_blank" %>.
         </span>
       </label>
       <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-5 col-lg-3">
           <custom-select url="/regulations.json" label-field="description" value-field="regulation_id" placeholder="― start typing ―" min-length="2" v-model="regulation_id" date-sensitive="true" :disabled="notFromRegulation" :on-change="regulationSelected"></custom-select>
           <input type="hidden" name="regulation_id" v-model="regulation_id" />
           <input type="hidden" name="regulation_role" v-model="regulation_role" />
@@ -55,7 +55,7 @@
         </span>
       </label>
       <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-7 col-lg-5">
           <textarea name="reason" id="reason" rows="4" class="form-control" v-model="reason"></textarea>
         </div>
       </div>
@@ -80,7 +80,7 @@
         </span>
       </label>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-lg-4">
           <input type="text" name="title" class="form-control" v-model="title">
         </div>
       </div>
