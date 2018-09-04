@@ -371,7 +371,7 @@ module WorkbasketInteractions
       end
 
       def operation_date
-        original_params[:operation_date].to_date
+        original_params[:operation_date].to_date if original_params[:operation_date].present?
       end
 
     end
