@@ -1408,6 +1408,7 @@ CREATE TABLE public.create_regulation_workbasket_settings (
     id integer NOT NULL,
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
