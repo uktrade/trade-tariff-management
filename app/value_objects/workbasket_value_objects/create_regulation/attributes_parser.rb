@@ -39,6 +39,10 @@ module WorkbasketValueObjects
                  )
                end
 
+        @ops = @ops.select do |k, v|
+          v.present?
+        end
+
         @normalized_params = {}
         @ops.map do |k, v|
           if ALIASES.keys.include?(k.to_sym)
