@@ -82,6 +82,5 @@ Rails.application.routes.draw do
     resources :base_regulations, only: [:index]
   end
 
-  resources :regulations
   resources :users, only: [:index]
 end
