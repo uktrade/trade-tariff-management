@@ -5,12 +5,18 @@ module WorkbasketValueObjects
       SIMPLE_OPS = %w(
         operation_date
         role
+        base_regulation_id
+        related_antidumping_regulation_id
         prefix
         publication_year
         regulation_number
         number_suffix
+        replacement_indicator
         information_text
+        effective_end_date
         regulation_group_id
+        published_date
+        abrogation_date
       )
 
       SIMPLE_OPS.map do |option_name|
@@ -114,6 +120,18 @@ module WorkbasketValueObjects
         end
 
         ops
+      end
+
+      def effective_end_date_formatted
+        date_to_format(effective_end_date)
+      end
+
+      def published_date_formatted
+        date_to_format(published_date)
+      end
+
+      def abrogation_date_formatted
+        date_to_format(abrogation_date)
       end
 
     end

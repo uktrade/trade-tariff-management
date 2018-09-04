@@ -144,6 +144,12 @@ module WorkbasketValueObjects
         areas = ops[:excluded_geographical_areas]
         areas.present? ? areas.join(", ") : "-"
       end
+
+      def date_to_format(date)
+        date.try(:to_date)
+            .try(:strftime, "%d %B %Y")
+      end
+
     end
 
     private
@@ -161,11 +167,6 @@ module WorkbasketValueObjects
           start_date: ops[:start_date],
           additional_codes: additional_codes || []
         )
-      end
-
-      def date_to_format(date)
-        date.try(:to_date)
-            .try(:strftime, "%d %B %Y")
       end
 
       def prepare_collection(namespace, key_option)

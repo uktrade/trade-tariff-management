@@ -1,5 +1,3 @@
-- if pdf_document.present?
+- if workbasket_settings.pdf_document.present?
   p
-    =<> link_to "Download PDF document", attributes_parser.pdf_url, target: "_blank", style: "margin-right: 15px;"
-    =<> ' | '
-    =<> link_to "Add new regulation", new_regulation_url, style: "margin-left: 15px;"
+    =<> link_to "Download PDF document", workbasket_settings.regulation.pdf_url, target: "_blank", style: "margin-right: 15px;"

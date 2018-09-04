@@ -18,6 +18,10 @@ module Workbaskets
       collection.first
     end
 
+    def pdf_document
+      regulation.pdf_document_record
+    end
+
     def settings
       JSON.parse(main_step_settings_jsonb)
     end

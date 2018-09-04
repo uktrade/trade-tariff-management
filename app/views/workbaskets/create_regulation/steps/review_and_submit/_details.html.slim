@@ -14,12 +14,29 @@ table.create-measures-details-table
       td
         = form.regulation_roles[attributes_parser.role]
 
+    tr v-if="dependentOnBaseRegulation"
+      td.heading_column
+        | Base regulation
+      td
+        = attributes_parser.base_regulation_id
+
+    tr v-if="canHaveRelatedAntidumpingLink"
+      td.heading_column
+        | Related antidumping regulation
+      td
+        = attributes_parser.related_antidumping_regulation_id
+
     tr
       td.heading_column
         | Regulation
       td
         = attributes_parser.fetch_regulation_number
 
+    tr
+      td.heading_column
+        | Replacement
+      td
+        = form.replacement_indicators[attributes_parser.replacement_indicator]
 
     tr
       td.heading_column
@@ -27,20 +44,38 @@ table.create-measures-details-table
       td
         = attributes_parser.information_text
 
-    tr
+    tr v-if="showValidityPeriod"
       td.heading_column
         | Start date
       td
         = attributes_parser.start_date_formatted
 
-    tr
+    tr v-if="showValidityPeriod"
       td.heading_column
         | End date
       td
         = attributes_parser.end_date_formatted
 
-    tr
+    tr v-if="showValidityPeriod"
       td.heading_column
-        | Regulation Group
+        | Effective end date
+      td
+        = attributes_parser.effective_end_date_formatted
+
+    tr v-if="showValidityPeriod && showRegulationGroup"
+      td.heading_column
+        | Regulation group
       td
         = attributes_parser.regulation_group_id
+
+    tr v-if="showPublishedDate"
+      td.heading_column
+        | Published date
+      td
+        = attributes_parser.published_date_formatted
+
+    tr v-if="showPublishedDate"
+      td.heading_column
+        | Abrogation date
+      td
+        = attributes_parser.abrogation_date_formatted
