@@ -191,32 +191,26 @@ module WorkbasketInteractions
         errors.blank?
       end
 
-      def create_system_ops
+      def system_ops
         {
-            workbasket_id: workbasket.id,
-            operation_date: operation_date,
-            added_by_id: current_admin.id,
-            added_at: Time.zone.now,
-            operation: "C"
+          workbasket_id: workbasket.id,
+          operation_date: operation_date,
+          added_by_id: current_admin.id,
+          added_at: Time.zone.now,
         }
+      end
+
+      def create_system_ops
+        system_ops.merge(operation: "C")
       end
 
       def update_system_ops
-        {
-            workbasket_id: workbasket.id,
-            operation_date: operation_date,
-            added_by_id: current_admin.id,
-            added_at: Time.zone.now,
-            operation: "U"
-        }
+        system_ops.merge(operation: "U")
       end
 
       def persist!
-        # regulation.manual_add = true
-        # regulation.try("approved_flag=", true)
-        # regulation.try("stopped_flag=", false)
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            regulation, create_system_ops
+          regulation, create_system_ops
         ).assign!
 
         regulation.save
@@ -295,7 +289,7 @@ module WorkbasketInteractions
         REGULATION_CODE_KEYS.map do |k|
           original_params[k]
         end.join
-            .delete(" ")
+           .delete(" ")
       end
 
       def target_class_required_params
@@ -377,9 +371,11 @@ module WorkbasketInteractions
       def set_abrogation_regulation_for_base_regulation!
         base_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0]))
         base_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1]))
+
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            base_regulation, update_system_ops
+          base_regulation, update_system_ops
         ).assign!
+
         base_regulation.save
       end
 
