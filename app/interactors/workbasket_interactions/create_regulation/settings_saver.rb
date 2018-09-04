@@ -191,7 +191,7 @@ module WorkbasketInteractions
         errors.blank?
       end
 
-      def system_ops
+      def create_system_ops
         {
             workbasket_id: workbasket.id,
             operation_date: operation_date,
@@ -201,12 +201,22 @@ module WorkbasketInteractions
         }
       end
 
+      def update_system_ops
+        {
+            workbasket_id: workbasket.id,
+            operation_date: operation_date,
+            added_by_id: current_admin.id,
+            added_at: Time.zone.now,
+            operation: "U"
+        }
+      end
+
       def persist!
         # regulation.manual_add = true
         # regulation.try("approved_flag=", true)
         # regulation.try("stopped_flag=", false)
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            regulation, system_ops
+            regulation, create_system_ops
         ).assign!
 
         regulation.save
@@ -367,6 +377,9 @@ module WorkbasketInteractions
       def set_abrogation_regulation_for_base_regulation!
         base_regulation.public_send("#{regulation.primary_key[0]}=", regulation.public_send(regulation.primary_key[0]))
         base_regulation.public_send("#{regulation.primary_key[1]}=", regulation.public_send(regulation.primary_key[1]))
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            base_regulation, update_system_ops
+        ).assign!
         base_regulation.save
       end
 
