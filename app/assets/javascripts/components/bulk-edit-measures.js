@@ -75,6 +75,11 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
+      history.pushState(null, null, location.href);
+      window.onpopstate = function () {
+        history.go(1);
+      };
+
       DB.getMeasuresBulk(self.search_code, function(row) {
         if (row === undefined) {
           self.loadMeasures(1, self.loadNextPage.bind(self));
