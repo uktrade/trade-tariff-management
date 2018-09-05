@@ -13,7 +13,8 @@ Vue.component("measures-grid", {
     "sortDirChanged",
     "selectionType",
     "selectAllHasChanged",
-    "clientSelection"
+    "clientSelection",
+    "disableScroller"
   ],
   data: function() {
     var self = this;
