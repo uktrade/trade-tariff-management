@@ -56,7 +56,7 @@ $(document).ready(function() {
         measure_type_id: null,
         quota_is_licensed: null,
         quota_licence: null,
-        quota_ordernumber: "09",
+        quota_ordernumber: null,
         quota_status: "open",
         quota_criticality_threshold: null,
         quota_description: null,
