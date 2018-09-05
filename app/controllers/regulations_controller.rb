@@ -10,14 +10,6 @@ class RegulationsController < ::BaseController
     list
   end
 
-  expose(:regulation_saver) do
-    regulation_ops = params[:regulation_form]
-    regulation_ops.send("permitted=", true)
-    regulation_ops = regulation_ops.to_h
-
-    ::RegulationSaver.new(current_user, regulation_ops)
-  end
-
   expose(:search_ops) {
     (params[:search] || {}).merge(
       page: params[:page]
@@ -44,6 +36,10 @@ class RegulationsController < ::BaseController
     regulation.pdf_document_record
   end
 
+  expose(:refulation_form) do
+    ::WorkbasketForms::CreateRegulationForm.new(nil)
+  end
+
   def collection
     ::BaseOrModificationRegulationSearch.new(params[:q]).result
   end
@@ -55,31 +51,10 @@ class RegulationsController < ::BaseController
     end
   end
 
-  def new
-    @form = RegulationForm.new
-  end
-
   def show
     self.regulation = params[:target_class].constantize.filter(
       oid: params[:id]
     ).first
   end
 
-  def create
-    if regulation_saver.valid?
-      regulation_saver.persist!
-
-      redirect_to regulation_url(
-        regulation.oid,
-        target_class: regulation.class.to_s
-      )
-    else
-      @form = RegulationForm.new nil, params[:regulation_form]
-      regulation_saver.errors.each do |k,v|
-        @form.errors.add(k, v)
-      end
-
-      render :new
-    end
-  end
 end

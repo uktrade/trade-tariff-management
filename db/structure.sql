@@ -1388,6 +1388,39 @@ ALTER SEQUENCE create_quota_workbasket_settings_id_seq OWNED BY create_quota_wor
 
 
 --
+-- Name: create_regulation_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_regulation_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_regulation_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_regulation_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_regulation_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_regulation_workbasket_settings_id_seq OWNED BY public.create_regulation_workbasket_settings.id;
+
+
+--
 -- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7661,6 +7694,13 @@ ALTER TABLE ONLY create_quota_workbasket_settings ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: create_regulation_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_regulation_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_regulation_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: db_rollbacks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8511,6 +8551,14 @@ ALTER TABLE ONLY create_measures_workbasket_settings
 
 ALTER TABLE ONLY create_quota_workbasket_settings
     ADD CONSTRAINT create_quota_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_regulation_workbasket_settings create_regulation_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_regulation_workbasket_settings
+    ADD CONSTRAINT create_regulation_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -11501,3 +11549,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180807180500_add_initial_search_results_code_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180820092723_add_internal_fields_to_duty_expressions.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180823124148_add_workbasket_type_of_quota_to_quota_definitions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180830115631_create_create_regulation_workbasket_settings.rb');

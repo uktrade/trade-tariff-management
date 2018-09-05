@@ -1,0 +1,37 @@
+div v-if="showValidityPeriod"
+  h3.heading-medium
+    | Specify the regulation's validity period
+
+  = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "regulation.validity_start_date" }
+  = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "regulation.validity_end_date" }
+  .form-group v-bind:class="{ 'form-group-error': errors.validity_start_date }"
+    label.form-label
+      | Start date
+    span.error-message v-if="errors.validity_start_date" v-html="errors.validity_start_date"
+    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_start_date"  }
+
+  .form-group v-bind:class="{ 'form-group-error': errors.validity_end_date }"
+    label.form-label
+      | End date
+      span.form-hint
+        | Optional - leave blank if the regulation will remain in force indefinitely.
+    span.error-message v-if="errors.validity_end_date" v-html="errors.validity_end_date"
+    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_end_date"  }
+
+  h3.heading-medium
+    | Specify the effective end date
+
+  = f.input :effective_end_date, as: :hidden, input_html: { "v-model" => "regulation.effective_end_date" }
+  .form-group v-bind:class="{ 'form-group-error': errors.effective_end_date }"
+    span.error-message v-if="errors.effective_end_date" v-html="errors.effective_end_date"
+    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.effective_end_date"  }
+
+  div v-if="showRegulationGroup"
+    h3.heading-medium
+      | Specify the regulation group
+
+    .row
+      .col-md-6
+        .form-group v-bind:class="{ 'form-group-error': errors.regulation_group_id }"
+          span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
+          = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }
