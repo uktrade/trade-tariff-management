@@ -80,7 +80,10 @@ $(document).ready(function() {
               }
             },
             error: function(response) {
-              WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
+              WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
+              WorkbasketBaseSaveActions.hideSuccessMessage();
+              self.errors = response.responseJSON.errors;
+              WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
             }
           });
         });
