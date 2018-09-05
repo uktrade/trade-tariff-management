@@ -22,6 +22,8 @@ require 'fakefs/spec_helpers'
 require 'sidekiq/testing'
 
 require 'capybara/rspec'
+require 'capybara/rails'
+require 'selenium/webdriver'
 
 require Rails.root.join("spec/support/tariff_validation_matcher.rb")
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
@@ -44,6 +46,7 @@ RSpec.configure do |config|
   config.include RescueHelper
   config.include ChiefDataHelper
   config.include ActiveSupport::Testing::TimeHelpers
+  config.include Capybara::DSL
 
   redis = Redis.new(:db => 15)
   RedisLockDb.redis = redis
@@ -61,3 +64,20 @@ RSpec.configure do |config|
     Sidekiq::Worker.clear_all
   end
 end
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+      chromeOptions: { args: %w(headless disable-gpu) }
+  )
+
+  Capybara::Selenium::Driver.new app,
+                                 browser: :chrome,
+                                 desired_capabilities: capabilities
+end
+
+Capybara.javascript_driver = :headless_chrome
+

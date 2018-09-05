@@ -2,15 +2,7 @@ require "rails_helper"
 
 describe "Create Regulation", js: true do
 
-  let!(:user)   { create :user, :gds_editor }
-
-  # before do
-  #   create(:user)
-  # end
-
-  # let(:user) do
-  #   create(:user)
-  # end
+  let!(:user)   { create :user }
 
   it "follow create regulation page" do
     visit '/'
