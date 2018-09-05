@@ -14,7 +14,7 @@ class RegulationsSearchForm
   end
 
   def roles
-    RegulationForm.regulation_roles
+    ::WorkbasketForms::CreateRegulationForm.new(nil).regulation_roles
   end
 
   def regulation_groups

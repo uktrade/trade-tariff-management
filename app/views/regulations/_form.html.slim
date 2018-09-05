@@ -5,7 +5,7 @@
     .row
       .col-md-6
         = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.role", "code-class-name" => "prefix--l1" } do
-          = f.input :role, as: :select, collection: RegulationForm.regulation_roles, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select regulation type -"
+          = f.input :role, as: :select, collection: refulation_form.regulation_roles, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select regulation type -"
 
     div v-if="dependentOnBaseRegulation"
       h4.heading-small
@@ -50,7 +50,7 @@
     .row
       .col-md-3
         = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.prefix" } do
-          = f.input :prefix, as: :select, collection: RegulationForm.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -", "code-class-name" => "prefix--l1"
+          = f.input :prefix, as: :select, collection: regulation_form.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -", "code-class-name" => "prefix--l1"
       .col-md-3
         = f.input :publication_year, label: "Publication year", input_html: { placeholder: "YY", "v-model" => "regulation.publication_year" }
       .col-md-3

@@ -2,6 +2,7 @@ class ProrogationRegulation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::RegulationDocumentContext
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: [:prorogation_regulation_id,
                                :prorogation_regulation_role]
