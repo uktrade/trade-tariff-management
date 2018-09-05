@@ -2,22 +2,28 @@ module Workbaskets
   class Workbasket < Sequel::Model
 
     STATUS_LIST = [
-      :new_in_progress, # "New - in progress"
-      :editing, # "Editing"
-      :awaiting_cross_check, # "Awaiting cross-check"
-      :cross_check_rejected, # "Cross-check rejected"
-      :ready_for_approval, # "Ready for approval"
-      :awaiting_approval, # "Awaiting approval"
-      :approval_rejected, # "Approval rejected"
-      :ready_for_export, # "Ready for export"
+      :new_in_progress,                # "New - in progress"
+      :editing,                        # "Editing"
+      :awaiting_cross_check,           # "Awaiting cross-check"
+      :cross_check_rejected,           # "Cross-check rejected"
+      :ready_for_approval,             # "Ready for approval"
+      :awaiting_approval,              # "Awaiting approval"
+      :approval_rejected,              # "Approval rejected"
+      :ready_for_export,               # "Ready for export"
       :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
-      :awaiting_cds_upload_edit, # "Awaiting CDS upload - edit"
-      :awaiting_cds_upload_overwrite, # "Awaiting CDS upload - overwrite"
-      :awaiting_cds_upload_delete, # "Awaiting CDS upload - delete"
-      :sent_to_cds, # "Sent to CDS"
-      :sent_to_cds_delete, # "Sent to CDS - delete"
-      :published, # "Published"
-      :cds_error # "CDS error"
+      :awaiting_cds_upload_edit,       # "Awaiting CDS upload - edit"
+      :awaiting_cds_upload_overwrite,  # "Awaiting CDS upload - overwrite"
+      :awaiting_cds_upload_delete,     # "Awaiting CDS upload - delete"
+      :sent_to_cds,                    # "Sent to CDS"
+      :sent_to_cds_delete,             # "Sent to CDS - delete"
+      :published,                      # "Published"
+      :cds_error                       # "CDS error"
+    ]
+
+    EDITABLE_STATES = [
+      :new_in_progress,  # "New - in progress"
+      :editing,          # "Editing"
+      :approval_rejected # "Approval rejected"
     ]
 
     TYPES = [
@@ -109,6 +115,10 @@ module Workbaskets
       def after_create
         build_related_settings_table!
       end
+    end
+
+    def editable?
+      status.in?(EDITABLE_STATES)
     end
 
     def move_status_to!(new_status)
@@ -222,7 +232,12 @@ module Workbaskets
         settings.destroy
       end
 
+      clean_up_related_cache!
       destroy
+    end
+
+    def clean_up_related_cache!
+      Rails.cache.write("#{id}_sequence_number", nil)
     end
 
     class << self
