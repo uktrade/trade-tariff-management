@@ -217,6 +217,15 @@ module WorkbasketInteractions
         post_saving_updates!
       end
 
+      def filtered_ops
+        ops = regulation_params.select do |k ,v|
+          whitelist_params.include?(k.to_sym) &&
+              !target_class.primary_key.include?(k)
+        end
+
+        ops
+      end
+
       private
 
       def set_published_date
@@ -227,15 +236,6 @@ module WorkbasketInteractions
         BASE_OR_MODIFICATION.include?(target_class.to_s) &&
             regulation_params[:published_date].blank? &&
             regulation_params[:validity_start_date].present?
-      end
-
-      def filtered_ops
-        ops = regulation_params.select do |k ,v|
-          whitelist_params.include?(k.to_sym) &&
-              !target_class.primary_key.include?(k)
-        end
-
-        ops
       end
 
       def set_base_regulation
