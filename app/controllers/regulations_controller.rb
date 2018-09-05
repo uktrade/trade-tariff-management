@@ -36,6 +36,10 @@ class RegulationsController < ::BaseController
     regulation.pdf_document_record
   end
 
+  expose(:refulation_form) do
+    ::WorkbasketForms::CreateRegulationForm.new(nil)
+  end
+
   def collection
     ::BaseOrModificationRegulationSearch.new(params[:q]).result
   end
