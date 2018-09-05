@@ -7451,10 +7451,6 @@ CREATE TABLE public.workbaskets (
     last_status_change_at timestamp without time zone,
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
-    regulation_id text,
-    regulation_role text,
-    changes_do_not_come_from_legislation boolean DEFAULT false,
-    reason_of_changes text,
     operation_date date,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb,
@@ -11568,3 +11564,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180823124148_add_workbas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180830115631_create_create_regulation_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905171759_create_bulk_edit_of_measures_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172132_add_extra_columns_to_bulk_edit_of_measures_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_longer_used_options_from_workbaskets.rb');
