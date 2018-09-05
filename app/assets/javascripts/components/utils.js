@@ -47,3 +47,9 @@ function objectToArray(obj) {
 
   return arr;
 }
+
+function any(arr, func) {
+  return arr.filter(function(obj) {
+    return func(obj);
+  }).length > 0;
+}

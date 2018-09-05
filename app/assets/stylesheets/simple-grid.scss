@@ -39,18 +39,21 @@ $gutter: 6px;
 
   @each $col in $cols {
     .col-#{$col} {
-      max-width: $maxcol * $col;
+      max-width: $single * $col;
+      flex-basis: calc(#{$single * $col} - #{$gutter});
     }
 
     .col-xs-#{$col} {
-      max-width: $maxcol * $col;
+      max-width: $single * $col;
+      flex-basis: calc(#{$single * $col} - #{$gutter});
     }
   }
 
   @media (min-width: 768px) {
     @each $col in $cols {
       .col-sm-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
   }
@@ -58,19 +61,21 @@ $gutter: 6px;
   @media (min-width: 992px) {
     @each $col in $cols {
       .col-md-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
 
     .col-md-1-5 {
-      max-width: $maxcol * 1.2;
+      max-width: $single * 1.2;
     }
   }
 
   @media (min-width: 1024px) {
     @each $col in $cols {
       .col-lg-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
   }
@@ -78,13 +83,15 @@ $gutter: 6px;
   @media (min-width: 1600px) {
     @each $col in $cols {
       .col-xl-#{$col} {
-        max-width: $maxcol * $col;
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
   }
 }
 
 .row::after,
+.bootstrap-row::after,
 .static-row::after {
   content: "";
   display: table;
@@ -96,7 +103,6 @@ $gutter: 6px;
     flex-basis: auto !important;
   }
 }
-
 
 .static-row {
   position: relative;
@@ -111,6 +117,22 @@ $gutter: 6px;
     padding: 0 $gutter/2;
     min-height: 0.125rem;
     flex-shrink: 0;
+
+    @media (min-width: 992px) {
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      flex: 0 0 calc(100% - #{$gutter});
+
+      .modal & {
+        justify-content: flex-start;
+      }
+
+      &.align-bottom {
+        justify-content: flex-end !important;
+      }
+    }
   }
 
   .align-bottom {
@@ -130,12 +152,12 @@ $gutter: 6px;
   @each $col in $cols {
     .col-#{$col} {
       width: $maxcol * $col;
-      min-width: $maxcol * $col;
+      max-width: $maxcol * $col;
     }
 
     .col-xs-#{$col} {
       width: $maxcol * $col;
-      min-width: $maxcol * $col;
+      max-width: $maxcol * $col;
     }
   }
 
@@ -143,7 +165,7 @@ $gutter: 6px;
     @each $col in $cols {
       .col-sm-#{$col} {
         width: $maxcol * $col;
-        min-width: $maxcol * $col;
+        max-width: $maxcol * $col;
       }
     }
   }
@@ -151,8 +173,16 @@ $gutter: 6px;
   @media (min-width: 992px) {
     @each $col in $cols {
       .col-md-#{$col} {
+        max-width: $maxcol * $col;
         width: $maxcol * $col;
-        min-width: $maxcol * $col;
+      }
+
+      .col-md-0-6 {
+        max-width: $maxcol * 0.6;
+      }
+
+      .col-md-0-8 {
+        max-width: $maxcol * 0.8;
       }
 
       .col-md-1-2 {
@@ -184,3 +214,94 @@ $gutter: 6px;
   }
 }
 
+$gutter: 15px;
+
+.bootstrap-row {
+  position: relative;
+  margin: 0 $gutter/-2;
+
+  @media (min-width: 992px) {
+    display: flex;
+  }
+
+  [class^="col"] {
+    float: left;
+    padding: 0 $gutter/2;
+    min-height: 0.125rem;
+    width: 100%;
+    width: calc(100% - #{$gutter});
+
+    @media (min-width: 992px) {
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      flex: 0 0 calc(100% - #{$gutter});
+
+      .modal & {
+        justify-content: flex-start;
+      }
+
+      &.align-bottom {
+        justify-content: flex-end !important;
+      }
+    }
+  }
+
+  $cols: 1 2 3 4 5 6 7 8 9 10 11 12;
+  $single: 100% / 12;
+  $site-width: 1100px;
+  $maxcol: $site-width / 12;
+
+  @each $col in $cols {
+    .col-#{$col} {
+      max-width: $single * $col;
+      flex-basis: calc(#{$single * $col} - #{$gutter});
+    }
+
+    .col-xs-#{$col} {
+      max-width: $single * $col;
+      flex-basis: calc(#{$single * $col} - #{$gutter});
+    }
+  }
+
+  @media (min-width: 768px) {
+    @each $col in $cols {
+      .col-sm-#{$col} {
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
+      }
+    }
+  }
+
+  @media (min-width: 992px) {
+    @each $col in $cols {
+      .col-md-#{$col} {
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
+      }
+    }
+
+    .col-md-1-5 {
+      max-width: $single * 1.2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    @each $col in $cols {
+      .col-lg-#{$col} {
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
+      }
+    }
+  }
+
+  @media (min-width: 1600px) {
+    @each $col in $cols {
+      .col-xl-#{$col} {
+        max-width: $single * $col;
+        flex-basis: calc(#{$single * $col} - #{$gutter});
+      }
+    }
+  }
+}

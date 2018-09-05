@@ -91,13 +91,21 @@ module Measures
       )
 
       if workbasket.save
-        redirect_to edit_measures_bulk_url(
+        redirect_to work_with_selected_measures_measures_bulk_url(
           workbasket.id,
           search_code: workbasket.search_code
         )
       else
         redirect_to measures_url(notice: "You have to select at least of 1 measure from list!")
       end
+    end
+
+    def persist_work_with_selected_measures
+      #TODO: implement saving here
+      redirect_to edit_measures_bulk_url(
+        workbasket.id,
+        search_code: workbasket.search_code
+      )
     end
 
     expose(:submit_group_for_cross_check) do
