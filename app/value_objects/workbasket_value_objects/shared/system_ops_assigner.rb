@@ -21,9 +21,9 @@ module WorkbasketValueObjects
           record.workbasket_id = ops[:workbasket_id]
           record.operation_date = ops[:operation_date]
           record.added_by_id = ops[:current_admin_id]
+          record.operation = ops[:operation] || "C"
           record.status = "new_in_progress"
           record.manual_add = true
-          record.operation = "C"
           record.added_at = Time.zone.now
           record.national = false
           record.try("approved_flag=", true)

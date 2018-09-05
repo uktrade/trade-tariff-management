@@ -4,8 +4,14 @@ shared_context "regulation_saver_base_context" do
 
   include_context "form_savers_base_context"
 
+  let(:workbasket) do
+    ::Workbaskets::Workbasket::buld_new_workbasket!(:create_regulation, user)
+  end
+
   let(:regulation_saver) do
-    ::RegulationSaver.new(user, ops)
+    ::WorkbasketInteractions::CreateRegulation::SettingsSaver.new(
+        workbasket, 'main', 'continue', ops
+    )
   end
 
   let(:regulation) do
@@ -77,7 +83,7 @@ shared_context "regulation_saver_base_context" do
   private
 
     def attributes_to_check
-      attrs = regulation_saver.regulation_params
+      attrs = regulation_saver.filtered_ops
 
       if [ "CompleteAbrogationRegulation",
            "ExplicitAbrogationRegulation" ].include?(regulation.class.name)

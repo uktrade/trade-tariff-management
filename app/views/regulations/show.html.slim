@@ -19,7 +19,7 @@ header
   p
     =<> link_to "Download PDF document", regulation.pdf_url, target: "_blank", style: "margin-right: 15px;"
     =<> ' | '
-    =<> link_to "Add new regulation", new_regulation_url, style: "margin-left: 15px;"
+    =<> link_to "Add new regulation", new_create_regulation_url, style: "margin-left: 15px;"
 
 = render "regulations/regulation_db_fields", record: regulation
 

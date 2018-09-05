@@ -98,10 +98,6 @@ label abbr {
     padding-top: 0;
   }
 
-  &:last-of-type {
-    padding-bottom: 15px;
-  }
-
   &:first-of-type:last-of-type {
     padding-bottom: 0 !important;
   }
@@ -113,6 +109,10 @@ label abbr {
       padding-top: 15px;
       margin-top: 0;
     }
+  }
+
+  .form-hint {
+    min-height: 3.95em;
   }
 }
 

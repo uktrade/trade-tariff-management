@@ -23,7 +23,8 @@ module Workbaskets
     TYPES = [
       :create_measures,
       :bulk_edit_of_measures,
-      :create_quota
+      :create_quota,
+      :create_regulation
     ]
 
     SENT_TO_CDS_STATES = [
@@ -43,6 +44,9 @@ module Workbaskets
 
     one_to_one :create_quota_settings, key: :workbasket_id,
                                        class_name: "Workbaskets::CreateQuotaSettings"
+
+    one_to_one :create_regulation_settings, key: :workbasket_id,
+                                            class_name: "Workbaskets::CreateRegulationSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -123,6 +127,8 @@ module Workbaskets
         #
       when :create_quota
         create_quota_settings
+      when :create_regulation
+        create_regulation_settings
       end
     end
 
@@ -255,6 +261,7 @@ module Workbaskets
         %w(
           create_measures
           create_quota
+          create_regulation
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -278,6 +285,10 @@ module Workbaskets
           #
         when :create_quota
           ::Workbaskets::CreateQuotaSettings.new(
+            workbasket_id: id
+          )
+        when :create_regulation
+          ::Workbaskets::CreateRegulationSettings.new(
             workbasket_id: id
           )
         end
