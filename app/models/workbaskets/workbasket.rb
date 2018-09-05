@@ -45,6 +45,9 @@ module Workbaskets
     one_to_many :items, key: :workbasket_id,
                         class_name: "Workbaskets::Item"
 
+    one_to_one :bulk_edit_of_measures_settings, key: :workbasket_id,
+                                                class_name: "Workbaskets::BulkEditOfMeasuresSettings"
+
     one_to_one :create_measures_settings, key: :workbasket_id,
                                           class_name: "Workbaskets::CreateMeasuresSettings"
 
@@ -131,10 +134,7 @@ module Workbaskets
       when :create_measures
         create_measures_settings
       when :bulk_edit_of_measures
-        # TODO: need to refactor Bulk Edit stuff
-        #       to store settings, specific for Bulk Edit of measures
-        #       in separated DB table
-        #
+        bulk_edit_of_measures_settings
       when :create_quota
         create_quota_settings
       when :create_regulation
@@ -294,10 +294,9 @@ module Workbaskets
             workbasket_id: id
           )
         when :bulk_edit_of_measures
-          # TODO: need to refactor Bulk Edit stuff
-          #       to store settings, specific for Bulk Edit of measures
-          #       in separated DB table
-          #
+          ::Workbaskets::BulkEditOfMeasuresSettings.new(
+            workbasket_id: id
+          )
         when :create_quota
           ::Workbaskets::CreateQuotaSettings.new(
             workbasket_id: id
