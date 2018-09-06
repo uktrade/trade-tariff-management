@@ -108,6 +108,7 @@ group :development, :test do
   gem "dotenv-rails", ">= 2.1.1"
   gem "pry-byebug"
   gem "pry-rails"
+  gem 'fileutils'
 end
 
 group :test do

@@ -681,6 +681,7 @@ GEM
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
+    fileutils (1.1.0)
     foreman (0.84.0)
       thor (~> 0.19.1)
     gds-sso (13.6.0)
@@ -1013,6 +1014,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.8.0)
   fakefs (~> 0.11.0)
   ffi (= 1.9.18)
+  fileutils
   foreman
   forgery!
   gds-sso (~> 13, >= 12.1.0)
