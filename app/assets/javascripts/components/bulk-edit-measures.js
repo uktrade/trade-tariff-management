@@ -22,13 +22,13 @@ $(document).ready(function() {
           {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string", changeProp: "measure_type" },
           {enabled: true, title: "Start date", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },
           {enabled: true, title: "End date", field: "validity_end_date", sortable: true, type: "date", changeProp: "validity_end_date" },
-          {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "string", changeProp: "goods_nomenclature" },
+          {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "number", changeProp: "goods_nomenclature" },
           {enabled: true, title: "Additional code", field: "additional_code", sortable: true, type: "string", changeProp: "additional_code" },
-          {enabled: true, title: "Origin", field: "geographical_area", sortable: false, changeProp: "geographical_area" },
-          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas", sortable: false, changeProp: "excluded_geographical_areas" },
-          {enabled: true, title: "Duties", field: "duties", sortable: false, changeProp: "duties" },
-          {enabled: true, title: "Conditions", field: "conditions", sortable: false, changeProp: "conditions" },
-          {enabled: true, title: "Footnotes", field: "footnotes", sortable: false, changeProp: "footnotes" },
+          {enabled: true, title: "Origin", field: "geographical_area", sortable: true, type: "string", changeProp: "geographical_area" },
+          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas", sortable: true, type: "comma_string", changeProp: "excluded_geographical_areas" },
+          {enabled: true, title: "Duties", field: "duties", sortable: true, type: "duties", changeProp: "duties" },
+          {enabled: true, title: "Conditions", field: "conditions", sortable: true, type: "comma_string", changeProp: "conditions" },
+          {enabled: true, title: "Footnotes", field: "footnotes", sortable: true, type: "comma_string", changeProp: "footnotes" },
           {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "date", changeProp: "last_updated" },
           {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
@@ -64,7 +64,9 @@ $(document).ready(function() {
           page: window.__pagination_metadata.page,
           per_page: window.__pagination_metadata.per_page,
           pages: Math.ceil(window.__pagination_metadata.total_count / window.__pagination_metadata.per_page)
-        }
+        },
+        sortBy: "measure_sid",
+        sortDir: "desc"
       };
 
       var query = parseQueryString(window.location.search.substring(1));
@@ -106,9 +108,17 @@ $(document).ready(function() {
         return this.selectedMeasures.length === 0;
       },
       visibleMeasures: function() {
-        return this.measuresForTable.filter(function (measure) {
+        var measures = this.measuresForTable.filter(function(measure) {
           return measure.visible;
         });
+
+        measures.sort(this.getSortingFunc());
+
+        if (this.sortDir == "desc") {
+          measures.reverse();
+        }
+
+        return measures;
       },
 
       visibleMeasuresPage: function() {
@@ -366,6 +376,93 @@ $(document).ready(function() {
       },
       allMeasuresRemoved: function() {
         DB.destroyMeasuresBulk(this.search_code);
+      },
+      onSortByChange: function(val) {
+        this.sortBy = val;
+      },
+      onSortDirChanged: function(val) {
+        this.sortDir = val;
+      },
+      findColumn: function(field) {
+        for (var k in this.columns) {
+          var o = this.columns[k];
+
+          if (o.field == field) {
+            return o;
+          }
+        }
+      },
+      getSortingFunc: function() {
+        var column = this.findColumn(this.sortBy);
+        var sortBy = this.sortBy;
+
+        switch (column.type) {
+          case "number":
+            return function(a, b) {
+              return parseInt(a[sortBy], 10) - parseInt(b[sortBy], 10);
+            };
+          case "string":
+            return function(a, b) {
+              a = a[sortBy];
+              b = b[sortBy];
+
+            	if (a == null || a == "-") {
+            		return -1;
+            	}
+            	
+            	if (b == null || b == "-") {
+            		return 1;
+            	}
+              
+              return ('' + a.attr).localeCompare(b.attr);
+            };
+          case "date":
+            return function(a, b) {
+              a = a[sortBy];
+              b = b[sortBy];
+
+            	if (a == null || a == "-") {
+            		return -1;
+            	}
+            	
+            	if (b == null || b == "-") {
+            		return 1;
+            	}
+              
+              return moment(a, "DD MMM YYYY", true).diff(moment(b, "DD MMM YYYY", true), "days");
+            };
+          case "comma_string":
+            return function(a, b) {
+              a = a[sortBy]
+              b = b[sortBy]
+              
+            	if (a == null || a == "-") {
+            		return -1;
+            	}
+            	
+            	if (b == null || b == "-") {
+            		return 1;
+            	}
+              
+              var as = a.split(",").length;
+              var bs = b.split(",").length;
+
+              if (as < bs) {
+                return -1;
+              } else if (as > bs) {
+                return 1;
+              }
+
+              return ('' + a.attr).localeCompare(b.attr);
+            };
+          case "duties":
+            return function(a, b) {
+              a = a[sortBy]
+              b = b[sortBy]
+              
+              return parseFloat(a) - parseFloat(b);
+            };
+        }
       }
     },
     watch: {

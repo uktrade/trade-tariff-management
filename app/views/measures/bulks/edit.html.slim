@@ -29,7 +29,7 @@ script
 form.bulk-edit-measures
   = render "table_top"
 
-  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true, ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true" } do
+  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
     p Loading measures table...
 
   = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
