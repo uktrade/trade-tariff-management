@@ -30,9 +30,19 @@ module WorkbasketServices
           persist_record!(footnote_description_period)
           persist_record!(footnote)
           persist_record!(footnote_description)
+          swap_workbasket_sequence_number(footnote_description_period, footnote)
         end
 
         persist_record!(footnote_association_measure)
+      end
+
+      def swap_workbasket_sequence_number(record1, record2)
+        sequence_number1 = record1.workbasket_sequence_number
+        sequence_number2 = record2.workbasket_sequence_number
+        record2.workbasket_sequence_number = sequence_number1
+        record2.save
+        record1.workbasket_sequence_number = sequence_number2
+        record1.save
       end
 
       private
