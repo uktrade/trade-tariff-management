@@ -2,22 +2,28 @@ module Workbaskets
   class Workbasket < Sequel::Model
 
     STATUS_LIST = [
-      :new_in_progress, # "New - in progress"
-      :editing, # "Editing"
-      :awaiting_cross_check, # "Awaiting cross-check"
-      :cross_check_rejected, # "Cross-check rejected"
-      :ready_for_approval, # "Ready for approval"
-      :awaiting_approval, # "Awaiting approval"
-      :approval_rejected, # "Approval rejected"
-      :ready_for_export, # "Ready for export"
+      :new_in_progress,                # "New - in progress"
+      :editing,                        # "Editing"
+      :awaiting_cross_check,           # "Awaiting cross-check"
+      :cross_check_rejected,           # "Cross-check rejected"
+      :ready_for_approval,             # "Ready for approval"
+      :awaiting_approval,              # "Awaiting approval"
+      :approval_rejected,              # "Approval rejected"
+      :ready_for_export,               # "Ready for export"
       :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
-      :awaiting_cds_upload_edit, # "Awaiting CDS upload - edit"
-      :awaiting_cds_upload_overwrite, # "Awaiting CDS upload - overwrite"
-      :awaiting_cds_upload_delete, # "Awaiting CDS upload - delete"
-      :sent_to_cds, # "Sent to CDS"
-      :sent_to_cds_delete, # "Sent to CDS - delete"
-      :published, # "Published"
-      :cds_error # "CDS error"
+      :awaiting_cds_upload_edit,       # "Awaiting CDS upload - edit"
+      :awaiting_cds_upload_overwrite,  # "Awaiting CDS upload - overwrite"
+      :awaiting_cds_upload_delete,     # "Awaiting CDS upload - delete"
+      :sent_to_cds,                    # "Sent to CDS"
+      :sent_to_cds_delete,             # "Sent to CDS - delete"
+      :published,                      # "Published"
+      :cds_error                       # "CDS error"
+    ]
+
+    EDITABLE_STATES = [
+      :new_in_progress,  # "New - in progress"
+      :editing,          # "Editing"
+      :approval_rejected # "Approval rejected"
     ]
 
     TYPES = [
@@ -38,6 +44,9 @@ module Workbaskets
 
     one_to_many :items, key: :workbasket_id,
                         class_name: "Workbaskets::Item"
+
+    one_to_one :bulk_edit_of_measures_settings, key: :workbasket_id,
+                                                class_name: "Workbaskets::BulkEditOfMeasuresSettings"
 
     one_to_one :create_measures_settings, key: :workbasket_id,
                                           class_name: "Workbaskets::CreateMeasuresSettings"
@@ -111,6 +120,10 @@ module Workbaskets
       end
     end
 
+    def editable?
+      status.in?(EDITABLE_STATES)
+    end
+
     def move_status_to!(new_status)
       self.status = new_status
       save
@@ -121,10 +134,7 @@ module Workbaskets
       when :create_measures
         create_measures_settings
       when :bulk_edit_of_measures
-        # TODO: need to refactor Bulk Edit stuff
-        #       to store settings, specific for Bulk Edit of measures
-        #       in separated DB table
-        #
+        bulk_edit_of_measures_settings
       when :create_quota
         create_quota_settings
       when :create_regulation
@@ -222,7 +232,12 @@ module Workbaskets
         settings.destroy
       end
 
+      clean_up_related_cache!
       destroy
+    end
+
+    def clean_up_related_cache!
+      Rails.cache.write("#{id}_sequence_number", nil)
     end
 
     class << self
@@ -279,10 +294,9 @@ module Workbaskets
             workbasket_id: id
           )
         when :bulk_edit_of_measures
-          # TODO: need to refactor Bulk Edit stuff
-          #       to store settings, specific for Bulk Edit of measures
-          #       in separated DB table
-          #
+          ::Workbaskets::BulkEditOfMeasuresSettings.new(
+            workbasket_id: id
+          )
         when :create_quota
           ::Workbaskets::CreateQuotaSettings.new(
             workbasket_id: id
