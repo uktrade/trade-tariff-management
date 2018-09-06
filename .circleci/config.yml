@@ -30,7 +30,7 @@ jobs:
       - checkout
       - run:
           name: Install System Dependencies
-          command: sudo apt-get update -qq && sudo apt-get install -y build-essential postgresql libpq-dev nodejs rake qt4-default libqt4-dev libqtwebkit-dev
+          command: sudo apt-get update -qq && sudo apt-get install -y build-essential postgresql libpq-dev nodejs rake
       - run:
           name: Install bundler
           command: gem install bundler
