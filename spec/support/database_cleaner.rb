@@ -4,7 +4,11 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
+    if Capybara.current_driver == :rack_test
+      DatabaseCleaner.strategy = :transaction
+    else
+      DatabaseCleaner.strategy = :truncation
+    end
   end
 
   config.before(:each, :truncation => true) do
@@ -12,11 +16,6 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    if Capybara.current_driver == :rack_test
-      DatabaseCleaner.strategy = :transaction
-    else
-      DatabaseCleaner.strategy = :truncation
-    end
     DatabaseCleaner.start
   end
 

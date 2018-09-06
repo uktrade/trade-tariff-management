@@ -124,6 +124,7 @@ group :test do
   gem 'codeclimate-test-reporter', require: nil
   gem "rspec_junit_formatter"
   gem 'capybara'
+  gem 'capybara-webkit'
   gem 'selenium-webdriver'
   gem 'launchy'
 end
