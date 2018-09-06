@@ -7,10 +7,18 @@ module Measures
       :update, :destroy
     ]
 
-    before_action :require_to_be_editable!, only: [:edit, :update]
-
     expose(:current_page) do
       params[:page]
+    end
+
+    expose(:main_step_settings) do
+      {
+        regulation_id: params[:regulation_id],
+        regulation_role: params[:regulation_role],
+        start_date: params[:start_date],
+        reason: params[:reason],
+        title: params[:title]
+      }
     end
 
     expose(:workbasket_settings) do
@@ -118,7 +126,7 @@ module Measures
     end
 
     def persist_work_with_selected_measures
-      #TODO: implement saving here
+      workbasket_settings.set_settings_for!("main", main_step_settings)
 
       redirect_to edit_url
     end
@@ -151,15 +159,5 @@ module Measures
 
       render json: {}, head: :ok
     end
-
-    private
-
-      def require_to_be_editable!
-        unless workbasket.editable?
-          redirect_to edit_url
-
-          return false
-        end
-      end
   end
 end

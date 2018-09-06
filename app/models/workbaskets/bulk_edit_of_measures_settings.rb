@@ -3,10 +3,6 @@ module Workbaskets
 
     include ::WorkbasketHelpers::SettingsBase
 
-    validates do
-      presence_of :search_code
-    end
-
     def collection_models
       %w(
         Measure
