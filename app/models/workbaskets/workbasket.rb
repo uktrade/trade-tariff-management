@@ -1,6 +1,13 @@
 module Workbaskets
   class Workbasket < Sequel::Model
 
+    TYPES = [
+      :create_measures,
+      :bulk_edit_of_measures,
+      :create_quota,
+      :create_regulation
+    ]
+
     STATUS_LIST = [
       :new_in_progress,                # "New - in progress"
       :editing,                        # "Editing"
@@ -24,13 +31,6 @@ module Workbaskets
       :new_in_progress,  # "New - in progress"
       :editing,          # "Editing"
       :approval_rejected # "Approval rejected"
-    ]
-
-    TYPES = [
-      :create_measures,
-      :bulk_edit_of_measures,
-      :create_quota,
-      :create_regulation
     ]
 
     SENT_TO_CDS_STATES = [
@@ -78,8 +78,6 @@ module Workbaskets
       presence_of :status,
                   :user_id,
                   :type
-
-      presence_of :search_code, if: :bulk_edit_of_measures?
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
       inclusion_of :type, in: TYPES.map(&:to_s)
@@ -146,23 +144,6 @@ module Workbaskets
       @sequence_number = (@sequence_number || 0) + 1
     end
 
-    def track_current_page_loaded!(current_page)
-      res = JSON.parse(batches_loaded)
-      res[current_page] = true
-
-      self.batches_loaded = res.to_json
-    end
-
-    def batches_loaded_pages
-      JSON.parse(batches_loaded)
-    end
-
-    def get_item_by_id(target_id)
-      items.detect do |i|
-        i.record_id.to_s == target_id
-      end
-    end
-
     def debug_collection
       #
       # TODO: remove me after finishing of active development phase
@@ -194,33 +175,6 @@ module Workbaskets
         end
 
         Rails.logger.debug "             #{custom_note}"
-      end
-    end
-
-    begin :need_to_refactor
-      def collection_models
-        %w(
-          Measure
-          Footnote
-          FootnoteDescription
-          FootnoteDescriptionPeriod
-          FootnoteAssociationMeasure
-          MeasureComponent
-          MeasureCondition
-          MeasureConditionComponent
-          MeasureExcludedGeographicalArea
-        )
-      end
-
-      def bulk_edit_collection
-        collection_models.map do |db_model|
-          db_model.constantize
-                  .by_workbasket(id)
-                  .all
-        end.flatten
-           .sort do |a, b|
-           a.workbasket_sequence_number <=> b.workbasket_sequence_number
-        end
       end
     end
 
@@ -270,10 +224,8 @@ module Workbaskets
       end
 
       def clean_up!
-        #
-        # TODO: remove me after finishing of active development phase
-        #
         %w(
+          bulk_edit_of_measures
           create_measures
           create_quota
           create_regulation

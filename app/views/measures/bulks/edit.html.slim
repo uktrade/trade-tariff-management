@@ -7,7 +7,7 @@
       = link_to "Find Measures", measures_url
 
     li
-      = link_to "Back to search results", measures_url(search_code: workbasket.initial_search_results_code)
+      = link_to "Back to search results", measures_url(search_code: workbasket_settings.initial_search_results_code)
 
 h2.heading-large
   - if workbasket.awaiting_cross_check?

@@ -592,7 +592,12 @@ CREATE TABLE public.bulk_edit_of_measures_settings (
     main_step_validation_passed boolean DEFAULT false,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb
+    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    search_code text,
+    initial_search_results_code text,
+    all_batched_loaded boolean DEFAULT false,
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -7451,12 +7456,7 @@ CREATE TABLE public.workbaskets (
     last_status_change_at timestamp without time zone,
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
-    operation_date date,
-    initial_items_populated boolean DEFAULT false,
-    batches_loaded jsonb DEFAULT '{}'::jsonb,
-    search_code text,
-    all_batched_loaded boolean DEFAULT false,
-    initial_search_results_code text
+    operation_date date
 );
 
 
@@ -11565,3 +11565,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180830115631_create_crea
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905171759_create_bulk_edit_of_measures_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172132_add_extra_columns_to_bulk_edit_of_measures_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_longer_used_options_from_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
