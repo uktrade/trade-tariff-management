@@ -169,7 +169,7 @@ FactoryGirl.define do
       measure_component_applicable_code { 0 }
       origin_dest_code                  { 0 }
       order_number_capture_code         { 2 }
-      measure_explosion_level           { 20 }
+      measure_explosion_level           { 10 }
       measure_type_series_id            { "P" }
     end
   end
