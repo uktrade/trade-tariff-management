@@ -4,22 +4,26 @@ module WorkbasketInteractions
 
       attr_accessor :workbasket_item,
                     :workbasket,
+                    :operation_date,
                     :existing_measure,
                     :measure
 
       def initialize(workbasket_item)
         @workbasket_item = workbasket_item
         @workbasket = workbasket_item.workbasket
+        @operation_date = workbasket.operation_date.midnight
         @existing_measure = workbasket_item.record
       end
 
       def persist!
         end_date_existing_measure!
 
-        add_new_measure!
-        add_duty_expressions!
-        add_conditions!
-        add_footnotes!
+        unless workbasket_item.deleted?
+          add_new_measure!
+          add_duty_expressions!
+          add_conditions!
+          add_footnotes!
+        end
 
         measure.set_searchable_data!
       end
@@ -27,7 +31,11 @@ module WorkbasketInteractions
       private
 
         def end_date_existing_measure!
-          existing_measure.validity_end_date = (workbasket.operation_date - 1.day).midnight
+          existing_measure.validity_end_date = if workbasket_item.deleted?
+            operation_date
+          else
+            (operation_date - 1.day).midnight
+          end
 
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
             existing_measure, system_ops.merge(operation: "U")
@@ -42,7 +50,7 @@ module WorkbasketInteractions
               measure_ops
             ).converted_ops
           )
-          measure.validity_start_date = workbasket.operation_date.midnight
+          measure.validity_start_date = operation_date
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
           set_oplog_attrs_and_save!(measure)
@@ -102,7 +110,7 @@ module WorkbasketInteractions
 
         def system_ops
           {
-            operation_date: workbasket.operation_date,
+            operation_date: operation_date,
             current_admin_id: workbasket.user_id,
             workbasket_id: workbasket.id,
             status: "awaiting_cross_check"
