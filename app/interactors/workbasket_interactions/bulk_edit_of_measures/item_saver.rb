@@ -45,7 +45,7 @@ module WorkbasketInteractions
           if measure_components.present?
             ::WorkbasketServices::MeasureAssociationSavers::MeasureComponents.validate_and_persist!(
               measure,
-              system_ops.merge(type_of: :measure_components),
+              association_system_ops.merge(type_of: :measure_components),
               measure_components
             )
           end
@@ -57,7 +57,7 @@ module WorkbasketInteractions
           if conditions.present?
             ::WorkbasketServices::MeasureAssociationSavers::Conditions.validate_and_persist!(
               measure,
-              system_ops.merge(type_of: :conditions),
+              association_system_ops.merge(type_of: :conditions),
               conditions
             )
           end
@@ -69,7 +69,7 @@ module WorkbasketInteractions
           if footnotes.present?
             ::WorkbasketServices::MeasureAssociationSavers::Footnotes.validate_and_persist!(
               measure,
-              system_ops.merge(type_of: :footnotes),
+              association_system_ops.merge(type_of: :footnotes),
               footnotes
             )
           end
@@ -79,17 +79,30 @@ module WorkbasketInteractions
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
 
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            record, system_ops
-          ).send(:assign_bulk_edit_options!)
+            record, measure_system_ops
+          ).assign!
 
           record.save
         end
 
-        def system_ops
+        def measure_system_ops
+          general_system_ops.merge(
+            operation: "U"
+          )
+        end
+
+        def association_system_ops
+          general_system_ops.merge(
+            operation: "C"
+          )
+        end
+
+        def general_system_ops
           {
             operation_date: workbasket.operation_date,
             current_admin_id: workbasket.user_id,
-            workbasket_id: workbasket.id
+            workbasket_id: workbasket.id,
+            status: "awaiting_cross_check"
           }
         end
 
