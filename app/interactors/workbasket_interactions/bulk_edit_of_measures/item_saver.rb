@@ -23,6 +23,7 @@ module WorkbasketInteractions
           add_duty_expressions!
           add_conditions!
           add_footnotes!
+          add_excluded_geographical_areas!
 
           measure.set_searchable_data!
         end
@@ -89,6 +90,18 @@ module WorkbasketInteractions
               measure,
               system_ops.merge(type_of: :footnotes),
               footnotes
+            )
+          end
+        end
+
+        def add_excluded_geographical_areas!
+          excluded_geographical_areas = measure_ops[:excluded_geographical_areas]
+
+          if excluded_geographical_area.present?
+            ::WorkbasketServices::MeasureAssociationSavers::ExcludedGeographicalAreas.validate_and_persist!(
+              measure,
+              system_ops.merge(type_of: :excluded_geographical_areas),
+              excluded_geographical_areas
             )
           end
         end
