@@ -7,10 +7,33 @@ module Measures
       :update, :destroy
     ]
 
-    before_action :require_no_to_be_awaiting_for_review!, only: [:edit, :update]
-
     expose(:current_page) do
       params[:page]
+    end
+
+    expose(:main_step_settings) do
+      {
+        regulation_id: params[:regulation_id],
+        regulation_role: params[:regulation_role],
+        start_date: params[:start_date],
+        reason: params[:reason],
+        title: params[:title]
+      }
+    end
+
+    expose(:workbasket_settings) do
+      workbasket.settings
+    end
+
+    expose(:edit_url) do
+      edit_measures_bulk_url(
+        workbasket.id,
+        search_code: workbasket_settings.search_code
+      )
+    end
+
+    expose(:submit_group_for_cross_check) do
+      params[:mode] == "save_group_for_cross_check"
     end
 
     expose(:workbasket_container) do
@@ -20,7 +43,7 @@ module Measures
     end
 
     expose(:cached_search_ops) do
-      if workbasket.initial_items_populated.present?
+      if workbasket_settings.initial_items_populated.present?
         {
           measure_sids: workbasket_items.pluck(:record_id),
           page: current_page
@@ -74,10 +97,7 @@ module Measures
         end
 
       else
-        redirect_to edit_measures_bulk_url(
-          workbasket.id,
-          search_code: workbasket.search_code
-        )
+        redirect_to edit_url
       end
     end
 
@@ -85,31 +105,31 @@ module Measures
       self.workbasket = Workbaskets::Workbasket.new(
         status: :new_in_progress,
         type: :bulk_edit_of_measures,
-        user: current_user,
-        initial_search_results_code: params[:search_code],
-        search_code: search_code
+        user: current_user
       )
 
       if workbasket.save
+        workbasket_settings.update(
+          initial_search_results_code: params[:search_code],
+          search_code: search_code
+        )
+
         redirect_to work_with_selected_measures_measures_bulk_url(
           workbasket.id,
-          search_code: workbasket.search_code
+          search_code: workbasket_settings.search_code
         )
       else
-        redirect_to measures_url(notice: "You have to select at least of 1 measure from list!")
+        redirect_to measures_url(
+          notice: "You have to select at least of 1 measure from list!"
+        )
       end
     end
 
     def persist_work_with_selected_measures
-      #TODO: implement saving here
-      redirect_to edit_measures_bulk_url(
-        workbasket.id,
-        search_code: workbasket.search_code
-      )
-    end
+      workbasket_settings.set_settings_for!("main", main_step_settings)
+      workbasket_settings.set_workbasket_system_data!
 
-    expose(:submit_group_for_cross_check) do
-      params[:mode] == "save_group_for_cross_check"
+      redirect_to edit_url
     end
 
     def update
@@ -121,7 +141,7 @@ module Measures
         if submit_group_for_cross_check && params[:final_batch].to_s == "true"
           render json: {
             number_of_updated_measures: bulk_saver.collection_ops.count,
-            redirect_url: edit_measures_bulk_url(workbasket.id, search_code: workbasket.search_code, submitted: true),
+            redirect_url: edit_url,
             success: :ok
           }, status: :ok
 
@@ -140,15 +160,5 @@ module Measures
 
       render json: {}, head: :ok
     end
-
-    private
-
-      def require_no_to_be_awaiting_for_review!
-        if workbasket.status == "awaiting_cross_check" && params[:submitted].blank?
-          redirect_to edit_measures_bulk_url(workbasket.id, search_code: workbasket.search_code, submitted: true)
-
-          return false
-        end
-      end
   end
 end
