@@ -68,7 +68,7 @@ module WorkbasketInteractions
                 if c_ops[:measure_condition_components].present?
                   condition_ops[:measure_condition_components] = normalize_duty_expressions!(
                     c_ops[:measure_condition_components]
-                  )
+                  ) || []
                 else
                   condition_ops[:measure_condition_components] = []
                 end
