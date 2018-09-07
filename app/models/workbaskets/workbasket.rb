@@ -205,24 +205,6 @@ module Workbaskets
         workbasket
       end
 
-      def validate_measure!(measure_params={})
-        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
-
-        errors = {}
-
-        measure = Measure.new(
-          ::Measures::BulkParamsConverter.new(
-            measure_params
-          ).converted_ops
-        )
-
-        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-
-        ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-          measure, MeasureValidator, {}
-        ).errors
-      end
-
       def clean_up!
         %w(
           bulk_edit_of_measures
