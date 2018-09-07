@@ -39,7 +39,7 @@ gem "shrine"
 gem "aws-sdk"
 gem "aws-sdk-rails"
 gem "aws-sdk-s3"
-gem "rubyzip"
+gem "rubyzip", "~> 1.2.2"
 
 # Helpers
 gem "hashie", "~> 3.4"
