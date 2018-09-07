@@ -409,11 +409,11 @@ $(document).ready(function() {
             	if (a == null || a == "-") {
             		return -1;
             	}
-            	
+
             	if (b == null || b == "-") {
             		return 1;
             	}
-              
+
               return ('' + a.attr).localeCompare(b.attr);
             };
           case "date":
@@ -424,26 +424,26 @@ $(document).ready(function() {
             	if (a == null || a == "-") {
             		return -1;
             	}
-            	
+
             	if (b == null || b == "-") {
             		return 1;
             	}
-              
+
               return moment(a, "DD MMM YYYY", true).diff(moment(b, "DD MMM YYYY", true), "days");
             };
           case "comma_string":
             return function(a, b) {
               a = a[sortBy]
               b = b[sortBy]
-              
+
             	if (a == null || a == "-") {
             		return -1;
             	}
-            	
+
             	if (b == null || b == "-") {
             		return 1;
             	}
-              
+
               var as = a.split(",").length;
               var bs = b.split(",").length;
 
@@ -459,7 +459,7 @@ $(document).ready(function() {
             return function(a, b) {
               a = a[sortBy]
               b = b[sortBy]
-              
+
               return parseFloat(a) - parseFloat(b);
             };
         }

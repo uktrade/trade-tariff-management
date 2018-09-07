@@ -56,6 +56,12 @@ Vue.component("measures-grid", {
     sendCheckedTrigger: function(event) {
       var self = this;
 
+      this.indirectSelectAll = true;
+
+      setTimeout(function() {
+        self.indirectSelectAll = false;
+      }, 500);
+
       if (event.target.checked) {
         this.onItemSelected(parseInt(event.target.value, 10));
         window.requestAnimationFrame(function() {
@@ -140,12 +146,12 @@ Vue.component("measures-grid", {
     selectAll: function(val) {
       var self = this;
 
-      if (this.selectAllHasChanged) {
-        this.selectAllHasChanged(val);
-      }
-
       if (this.indirectSelectAll) {
         return;
+      }
+
+      if (this.selectAllHasChanged) {
+        this.selectAllHasChanged(val);
       }
 
       if (this.onSelectAllChanged) {
@@ -186,7 +192,7 @@ Vue.component("measures-grid", {
 
         setTimeout(function() {
           self.indirectSelectAll = false;
-        }, 50);
+        }, 200);
       }
 
       if (this.onItemSelected) {
