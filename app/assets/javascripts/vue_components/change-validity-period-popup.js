@@ -5,17 +5,21 @@ Vue.component("change-validity-period-popup", {
       startDate: null,
       endDate: null,
       makeOpenEnded: null,
+      regulation_id: null,
+      regulation_role: null,
       earliestStartDate: null,
       latestStartDate: null,
       earliestEndDate: null,
       latestEndDate: null,
-      openEndedMeasures: null,
+      openEndedMeasures: 0,
       sameStartDate: null,
       sameEndDate: null
     };
   },
   props: ["measures", "onClose", "open"],
   mounted: function() {
+    var self = this;
+
     var startDates = this.measures.map(function(measure) {
       return moment(measure.validity_start_date, "DD MMM YYYY", true);
     });
@@ -24,10 +28,10 @@ Vue.component("change-validity-period-popup", {
     this.openEndedMeasures = 0;
 
     this.measures.forEach(function(measure) {
-      if (measure.validity_end_date) {
+      if (measure.validity_end_date && measure.validity_end_date != "-") {
         endDates.push(moment(measure.validity_end_date, "DD MMM YYYY", true));
       } else {
-        this.openEndedMeasures += 1;
+        self.openEndedMeasures += 1;
       }
     });
 
@@ -48,6 +52,8 @@ Vue.component("change-validity-period-popup", {
       this.earliestEndDate = endDates[0].format("DD MMM YYYY");
       this.latestEndDate = endDates[endDates.length - 1].format("DD MMM YYYY");
       this.sameEndDate = endDates[0].isSame(endDates[endDates.length - 1], "day");
+    } else {
+      this.sameEndDate = true;
     }
   },
   methods: {
@@ -83,6 +89,12 @@ Vue.component("change-validity-period-popup", {
             measure.changes.push("validity_end_date");
           }
         }
+
+        if (this.regulation_id) {
+          measure.changes.push("justification_regulation");
+          measure.justification_regulation_id = this.regulation_id;
+          measure.justification_regulation_role = this.regulation_role;
+        }
       });
 
       this.$emit("measures-updated");
@@ -91,5 +103,36 @@ Vue.component("change-validity-period-popup", {
     triggerClose: function() {
       this.onClose();
     },
+    regulationSelected: function(obj) {
+      this.regulation_id = obj.regulation_id;
+      this.regulation_role = obj.role;
+    }
+  },
+  computed: {
+    disableSubmit: function() {
+      return false;
+    },
+    showMakeOpenEnded: function() {
+      return any(this.measures, function(measure) {
+        return measure.validity_end_date && measure.validity_end_date != "-";
+      });
+    },
+    showJustificationRegulation: function() {
+      var endDate = this.endDate;
+      if (!endDate || moment(endDate, "DD/MM/YYYY", true).isValid() == false) {
+        return false;
+      }
+
+      return any(this.measures, function(measure) {
+        return !measure.validity_end_date || measure.validity_end_date == "-";
+      });
+    }
+  },
+  watch: {
+    makeOpenEnded: function(val) {
+      if (val) {
+        this.endDate = null;
+      }
+    }
   }
 });

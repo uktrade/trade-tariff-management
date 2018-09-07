@@ -29,6 +29,10 @@
       height: 3em;
     }
   }
+
+  [class*="col-"] {
+    justify-content: flex-start !important;
+  }
 }
 
 .multiple-balances {

@@ -18,6 +18,22 @@ var componentCommonFunctionality = {
       this[this.thing].measurement_unit_qualifier = item;
     }
   },
+  mounted: function() {
+    var self = this;
+
+    $.get("/monetary_units?q=EUR", function(data) {
+      data.forEach(function(unit) {
+        if (unit.monetary_unit_code == "EUR") {
+          self.euro = unit;
+        }
+      });
+
+      if (self.showMonetaryUnit) {
+        self[self.thing].monetary_unit_code = self.euro.monetary_unit_code;
+        self[self.thing].monetary_unit = self.euro;
+      }
+    });
+  },
   watch: {
     showMeasurementUnit: function(val) {
       if (!val) {
@@ -31,6 +47,9 @@ var componentCommonFunctionality = {
       if (!val) {
         this[this.thing].monetary_unit = null;
         this[this.thing].monetary_unit_code = null;
+      } else if(this.euro) {
+        this[this.thing].monetary_unit_code = this.euro.monetary_unit_code;
+        this[this.thing].monetary_unit = this.euro;
       }
     }
   }
@@ -48,12 +67,15 @@ Vue.component("measure-component", $.extend({}, {
   ],
   data: function() {
     return {
-      thing: "measureComponent"
+      thing: "measureComponent",
+      euro: null
     };
   },
   computed: {
     showMonetaryUnit: function() {
-      return false;
+      var ids = ["12", "14", "21", "23", "25", "27", "29", "36", "37", "01A", "02A", "04A", "15A", "17A", "19A", "20A", "35A", "99"];
+
+      return this.measureComponent.duty_expression_id && ids.indexOf(this.measureComponent.duty_expression_id) === -1;
     },
     showDutyAmount: function() {
       var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];
@@ -79,12 +101,15 @@ Vue.component("measure-condition-component", $.extend({}, {
   ],
   data: function() {
     return {
-      thing: "measureConditionComponent"
+      thing: "measureConditionComponent",
+      euro: null
     };
   },
   computed: {
     showMonetaryUnit: function() {
-      return false;
+      var ids = ["12", "14", "21", "23", "25", "27", "29", "36", "37", "01A", "02A", "04A", "15A", "17A", "19A", "20A", "35A", "99"];
+
+      return this.measureConditionComponent.duty_expression_id && ids.indexOf(this.measureConditionComponent.duty_expression_id) === -1;
     },
     showDutyAmount: function() {
       var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];

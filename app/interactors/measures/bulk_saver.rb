@@ -20,12 +20,14 @@ module Measures
     attr_accessor :current_admin,
                   :collection_ops,
                   :errors_collection,
-                  :workbasket
+                  :workbasket,
+                  :workbasket_settings
 
     def initialize(current_admin, workbasket, collection_ops=[])
       @errors_collection = {}
       @current_admin = current_admin
       @workbasket = workbasket
+      @workbasket_settings = workbasket.settings
 
       @collection_ops = collection_ops.map do |item_ops|
         ActiveSupport::HashWithIndifferentAccess.new(item_ops)
@@ -38,14 +40,10 @@ module Measures
     end
 
     def persist!
-      Rails.logger.info ""
-      Rails.logger.info " PERSIST! "
-      Rails.logger.info ""
-
-      Rails.cache.write("#{workbasket.id}_sequence_number", nil)
+      workbasket.clean_up_related_cache!
 
       workbasket.items.map do |item|
-        item.persist_measure!
+        item.persist!
       end
 
       workbasket.status = "awaiting_cross_check"
@@ -70,7 +68,7 @@ module Measures
 
       def validate_collection!
         collection_ops.each_with_index do |measure_params, index|
-          item = workbasket.get_item_by_id(
+          item = workbasket_settings.get_item_by_id(
             measure_params[:measure_sid].to_s
           )
           item.new_data = measure_params.to_json

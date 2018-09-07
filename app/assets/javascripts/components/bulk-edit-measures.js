@@ -45,6 +45,7 @@ $(document).ready(function() {
           { value: 'remove_from_group', label: 'Remove from group...' },
           { value: 'delete', label: 'Delete measures' },
         ],
+        currentPage: 1,
         measures: [],
         changingDuties: false,
         changingConditions: false,
@@ -75,6 +76,11 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
+      history.pushState(null, null, location.href);
+      window.onpopstate = function () {
+        history.go(1);
+      };
+
       DB.getMeasuresBulk(self.search_code, function(row) {
         if (row === undefined) {
           self.loadMeasures(1, self.loadNextPage.bind(self));
@@ -103,6 +109,15 @@ $(document).ready(function() {
         return this.measuresForTable.filter(function (measure) {
           return measure.visible;
         });
+      },
+
+      visibleMeasuresPage: function() {
+        var offset = (this.currentPage - 1) * this.pagination.per_page;
+
+        return this.visibleMeasures.slice(offset, offset + this.pagination.per_page);
+      },
+      visibleCount: function() {
+        return this.visibleMeasures.length;
       },
       selectedMeasureObjects: function() {
         var selectedSids = this.selectedMeasures;
@@ -283,6 +298,13 @@ $(document).ready(function() {
 
         this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
       },
+      onPageChange: function(page) {
+        this.currentPage = page;
+
+        $("html, body").animate({
+          scrollTop: $(this.$el).offset().top
+        }, 500);
+      },
       saveForCrossCheck: function() {
         window.__save_bulk_edit_of_measures_mode = "save_group_for_cross_check";
         this.startSavingProcess('save_group_for_cross_check');
@@ -320,6 +342,14 @@ $(document).ready(function() {
       },
       selectAllHasChanged: function(value) {
         this.selectedAllMeasures = value;
+
+        if (value) {
+          this.selectedMeasures = this.visibleMeasures.map(function(m) {
+            return m.measure_sid;
+          });
+        } else {
+          this.selectedMeasures.splice(0, this.selectedMeasures.length);
+        }
       },
       measuresRemoved: function(removedMeasures) {
         var self = this;
@@ -336,6 +366,15 @@ $(document).ready(function() {
       },
       allMeasuresRemoved: function() {
         DB.destroyMeasuresBulk(this.search_code);
+      }
+    },
+    watch: {
+      visibleMeasures: function(val) {
+        if (this.selectedAllMeasures) {
+          this.selectedMeasures = val.map(function(m) {
+            return m.measure_sid;
+          });
+        }
       }
     }
   });
