@@ -44,6 +44,9 @@ module WorkbasketInteractions
             else
               @normalized_ops[:measure_components] = prepared_collection
             end
+
+          else
+            @normalized_ops[:measure_components] = []
           end
         end
 
@@ -66,6 +69,8 @@ module WorkbasketInteractions
                   condition_ops[:measure_condition_components] = normalize_duty_expressions!(
                     c_ops[:measure_condition_components]
                   )
+                else
+                  condition_ops[:measure_condition_components] = []
                 end
 
                 prepared_collection << condition_ops
@@ -92,6 +97,8 @@ module WorkbasketInteractions
             end
 
             @normalized_ops[:footnotes] = prepared_collection
+          else
+            @normalized_ops[:footnotes] = []
           end
         end
 
