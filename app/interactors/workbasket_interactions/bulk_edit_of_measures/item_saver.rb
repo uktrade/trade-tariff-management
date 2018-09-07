@@ -4,15 +4,19 @@ module WorkbasketInteractions
 
       attr_accessor :workbasket_item,
                     :workbasket,
+                    :existing_measure,
                     :measure
 
       def initialize(workbasket_item)
         @workbasket_item = workbasket_item
         @workbasket = workbasket_item.workbasket
+        @existing_measure = workbasket_item.record
       end
 
       def persist!
-        add_measure!
+        end_date_existing_measure!
+
+        add_new_measure!
         add_duty_expressions!
         add_conditions!
         add_footnotes!
@@ -22,21 +26,26 @@ module WorkbasketInteractions
 
       private
 
-        def measure_ops
-          @measure_ops ||= ::WorkbasketInteractions::BulkEditOfMeasures::ItemOpsNormalizer.new(
-            workbasket_item.hash_data
-          ).normalized_ops
+        def end_date_existing_measure!
+          existing_measure.validity_end_date = (workbasket.operation_date - 1.day).midnight
+
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            existing_measure, system_ops.merge(operation: "U")
+          ).assign!
+
+          existing_measure.save
         end
 
-        def add_measure!
+        def add_new_measure!
           @measure = Measure.new(
             ::Measures::BulkParamsConverter.new(
               measure_ops
             ).converted_ops
           )
-          @measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+          measure.validity_start_date = workbasket.operation_date.midnight
+          measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
-          set_oplog_attrs_and_save!(@measure)
+          set_oplog_attrs_and_save!(measure)
         end
 
         def add_duty_expressions!
@@ -45,7 +54,7 @@ module WorkbasketInteractions
           if measure_components.present?
             ::WorkbasketServices::MeasureAssociationSavers::MeasureComponents.validate_and_persist!(
               measure,
-              association_system_ops.merge(type_of: :measure_components),
+              system_ops.merge(type_of: :measure_components),
               measure_components
             )
           end
@@ -57,7 +66,7 @@ module WorkbasketInteractions
           if conditions.present?
             ::WorkbasketServices::MeasureAssociationSavers::Conditions.validate_and_persist!(
               measure,
-              association_system_ops.merge(type_of: :conditions),
+              system_ops.merge(type_of: :conditions),
               conditions
             )
           end
@@ -69,35 +78,29 @@ module WorkbasketInteractions
           if footnotes.present?
             ::WorkbasketServices::MeasureAssociationSavers::Footnotes.validate_and_persist!(
               measure,
-              association_system_ops.merge(type_of: :footnotes),
+              system_ops.merge(type_of: :footnotes),
               footnotes
             )
           end
+        end
+
+        def measure_ops
+          @measure_ops ||= ::WorkbasketInteractions::BulkEditOfMeasures::ItemOpsNormalizer.new(
+            workbasket_item.hash_data
+          ).normalized_ops
         end
 
         def set_oplog_attrs_and_save!(record)
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
 
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            record, measure_system_ops
+            record, system_ops
           ).assign!
 
           record.save
         end
 
-        def measure_system_ops
-          general_system_ops.merge(
-            operation: "U"
-          )
-        end
-
-        def association_system_ops
-          general_system_ops.merge(
-            operation: "C"
-          )
-        end
-
-        def general_system_ops
+        def system_ops
           {
             operation_date: workbasket.operation_date,
             current_admin_id: workbasket.user_id,
