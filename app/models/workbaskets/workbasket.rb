@@ -150,10 +150,11 @@ module Workbaskets
       #
       settings.collection
               .map.with_index do |el, index|
-        Rails.logger.debug " [#{index}] Class: #{el.class.name}"
-        Rails.logger.debug "             Workbasket ID: #{el.workbasket_id}"
-        Rails.logger.debug "             Sequence number: #{el.workbasket_sequence_number}"
-        Rails.logger.debug "             Status: #{el.status}"
+
+        puts " [#{index}] Class: #{el.class.name}"
+        puts "             Workbasket ID: #{el.workbasket_id}"
+        puts "             Sequence number: #{el.workbasket_sequence_number}"
+        puts "             Status: #{el.status}"
 
         custom_note = case el.class.name
         when "Measure"
@@ -174,7 +175,7 @@ module Workbaskets
           "footnote_type_id: #{el.footnote_type_id}, footnote_id: #{el.footnote_id}, measure_sid: #{el.measure_sid}"
         end
 
-        Rails.logger.debug "             #{custom_note}"
+        puts "             #{custom_note}"
       end
     end
 

@@ -18,6 +18,7 @@ module WorkbasketInteractions
           normalize_duty_expressions!
           normalize_conditions!
           normalize_footnotes!
+          normalize_excluded_geographical_areas!
 
           @normalized_ops = ActiveSupport::HashWithIndifferentAccess.new(normalized_ops)
         end
@@ -101,6 +102,21 @@ module WorkbasketInteractions
             @normalized_ops[:footnotes] = prepared_collection
           else
             @normalized_ops[:footnotes] = {}
+          end
+        end
+
+        def normalize_excluded_geographical_areas!
+          excluded_geographical_areas = ops[:excluded_geographical_areas]
+
+          if excluded_geographical_areas.present?
+            @normalized_ops[:excluded_geographical_areas] = excluded_geographical_areas.select do |area|
+              area['geographical_area_id'].present?
+            end.map do |area|
+              area['geographical_area_id']
+            end
+
+          else
+            @normalized_ops[:excluded_geographical_areas] = []
           end
         end
 

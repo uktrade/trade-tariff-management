@@ -6,17 +6,7 @@ module WorkbasketServices
         generate_records!
         validate_records!
 
-        Rails.logger.info ""
-        Rails.logger.info " MultipleAssociation errors: #{@errors.inspect}"
-        Rails.logger.info ""
-        Rails.logger.info " measure.new?: #{measure.new?}"
-        Rails.logger.info ""
-
         if @errors.blank? && !measure.new?
-          Rails.logger.info ""
-          Rails.logger.info " persist! in MultipleAssociation"
-          Rails.logger.info ""
-
           persist!
         end
 
