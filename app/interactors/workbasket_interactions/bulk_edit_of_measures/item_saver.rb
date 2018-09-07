@@ -53,8 +53,6 @@ module WorkbasketInteractions
           measure.validity_start_date = operation_date
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
-
-
           set_oplog_attrs_and_save!(measure)
         end
 
