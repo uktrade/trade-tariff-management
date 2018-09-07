@@ -42,7 +42,6 @@ module WorkbasketInteractions
           ).assign!
 
           existing_measure.save
-          existing_measure.set_searchable_data!
         end
 
         def add_new_measure!
@@ -53,6 +52,7 @@ module WorkbasketInteractions
           )
           measure.validity_start_date = operation_date
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+          measure.original_measure_sid = existing_measure.measure_sid
 
           set_oplog_attrs_and_save!(measure)
         end

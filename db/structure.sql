@@ -4837,7 +4837,8 @@ CREATE TABLE public.measures_oplog (
     workbasket_id integer,
     searchable_data jsonb DEFAULT '{}'::jsonb,
     searchable_data_updated_at timestamp without time zone,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_measure_sid text
 );
 
 
@@ -4881,7 +4882,8 @@ CREATE VIEW public.measures AS
     measures1.workbasket_id,
     measures1.searchable_data,
     measures1.searchable_data_updated_at,
-    measures1.workbasket_sequence_number
+    measures1.workbasket_sequence_number,
+    measures1.original_measure_sid
    FROM public.measures_oplog measures1
   WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
            FROM public.measures_oplog measures2
@@ -11566,3 +11568,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180905171759_create_bulk
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172132_add_extra_columns_to_bulk_edit_of_measures_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_longer_used_options_from_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_original_measure_sid_to_measures_oplog.rb');
