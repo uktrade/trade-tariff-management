@@ -87,7 +87,7 @@ module WorkbasketInteractions
 
         def system_ops
           {
-            operation_date: Date.today + 1.day,
+            operation_date: workbasket.operation_date,
             current_admin_id: workbasket.user_id,
             workbasket_id: workbasket.id
           }

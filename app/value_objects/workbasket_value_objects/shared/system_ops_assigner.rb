@@ -24,25 +24,27 @@ module WorkbasketValueObjects
           record.operation = ops[:operation] || "C"
           record.status = "new_in_progress"
           record.manual_add = true
-          record.added_at = Time.zone.now
-          record.national = false
-          record.try("approved_flag=", true)
-          record.try("stopped_flag=", false)
+
+          set_system_ops!
         end
 
         def assign_bulk_edit_options!
           record.workbasket_id = ops[:workbasket_id]
           record.operation_date = ops[:operation_date]
           record.added_by_id = ops[:current_admin_id]
+          record.operation = ops[:operation] || "C"
           record.status = "awaiting_cross_check"
-          record.manual_add = true
-          record.operation = "C"
+
+          set_system_ops!
+          assign_unique_sequence_number!
+        end
+
+        def set_system_ops!
           record.added_at = Time.zone.now
           record.national = false
+
           record.try("approved_flag=", true)
           record.try("stopped_flag=", false)
-
-          assign_unique_sequence_number!
         end
 
         def assign_unique_sequence_number!
