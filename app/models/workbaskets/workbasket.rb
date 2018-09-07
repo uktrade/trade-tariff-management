@@ -180,8 +180,10 @@ module Workbaskets
 
     def clean_up_workbasket!
       if settings.present?
-        settings.collection
-                .map(&:destroy)
+        settings.collection.map do |item|
+          item.manual_add = true
+          item.destroy
+        end
 
         settings.destroy
       end
