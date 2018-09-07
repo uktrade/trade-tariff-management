@@ -78,6 +78,8 @@ module WorkbasketInteractions
             end
 
             @normalized_ops[:measure_conditions] = prepared_collection
+          else
+            @normalized_ops[:measure_conditions] = []
           end
         end
 
