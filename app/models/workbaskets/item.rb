@@ -67,6 +67,10 @@ module Workbaskets
       ::WorkbasketInteractions::BulkEditOfMeasures::ItemSaver.new(self).persist!
     end
 
+    def deleted?
+      new_data_parsed['deleted'].present?
+    end
+
     def validation_errors_parsed
       @validation_errors_parsed ||= JSON.parse(validation_errors)
     end
