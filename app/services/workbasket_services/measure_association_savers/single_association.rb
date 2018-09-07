@@ -22,7 +22,17 @@ module WorkbasketServices
         generate_record!
         validate!
 
+        Rails.logger.info ""
+        Rails.logger.info " SingleAssociation errors: #{@errors.inspect}"
+        Rails.logger.info ""
+        Rails.logger.info " measure.new?: #{measure.new?}"
+        Rails.logger.info ""
+
         if @errors.blank? && !measure.new?
+          Rails.logger.info ""
+          Rails.logger.info " persist! in SingleAssociation"
+          Rails.logger.info ""
+
           persist!
         end
 

@@ -62,6 +62,10 @@ module WorkbasketInteractions
           measure_components = measure_ops[:measure_components]
 
           if measure_components.present?
+            Rails.logger.info ""
+            Rails.logger.info " measure_components: #{measure_components.inspect}"
+            Rails.logger.info ""
+
             ::WorkbasketServices::MeasureAssociationSavers::MeasureComponents.validate_and_persist!(
               measure,
               system_ops.merge(type_of: :measure_components),
@@ -74,6 +78,10 @@ module WorkbasketInteractions
           conditions = measure_ops[:measure_conditions]
 
           if conditions.present?
+            Rails.logger.info ""
+            Rails.logger.info " conditions: #{conditions.inspect}"
+            Rails.logger.info ""
+
             ::WorkbasketServices::MeasureAssociationSavers::Conditions.validate_and_persist!(
               measure,
               system_ops.merge(type_of: :conditions),
@@ -86,6 +94,10 @@ module WorkbasketInteractions
           footnotes = measure_ops[:footnotes]
 
           if footnotes.present?
+            Rails.logger.info ""
+            Rails.logger.info " footnotes: #{footnotes.inspect}"
+            Rails.logger.info ""
+
             ::WorkbasketServices::MeasureAssociationSavers::Footnotes.validate_and_persist!(
               measure,
               system_ops.merge(type_of: :footnotes),
@@ -98,6 +110,10 @@ module WorkbasketInteractions
           excluded_geographical_areas = measure_ops[:excluded_geographical_areas]
 
           if excluded_geographical_area.present?
+            Rails.logger.info ""
+            Rails.logger.info " excluded_geographical_areas: #{excluded_geographical_areas.inspect}"
+            Rails.logger.info ""
+
             ::WorkbasketServices::MeasureAssociationSavers::ExcludedGeographicalAreas.validate_and_persist!(
               measure,
               system_ops.merge(type_of: :excluded_geographical_areas),

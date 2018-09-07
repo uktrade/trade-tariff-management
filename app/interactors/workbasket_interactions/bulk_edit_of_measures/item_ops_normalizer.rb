@@ -26,11 +26,11 @@ module WorkbasketInteractions
           measure_components = source || ops[:measure_components]
 
           if measure_components.present?
-            prepared_collection = []
+            prepared_collection = {}
 
-            measure_components.map do |d_ops|
+            measure_components.map.with_index do |d_ops, index|
               if d_ops[:duty_expression].present? && d_ops[:duty_expression][:duty_expression_id].present?
-                prepared_collection << {
+                prepared_collection[index] = {
                   duty_expression_id: d_ops[:duty_expression][:duty_expression_id],
                   duty_amount: d_ops[:duty_amount]
                 }.merge(
@@ -46,7 +46,7 @@ module WorkbasketInteractions
             end
 
           else
-            @normalized_ops[:measure_components] = []
+            @normalized_ops[:measure_components] = {}
           end
         end
 
@@ -54,9 +54,9 @@ module WorkbasketInteractions
           conditions = ops[:measure_conditions]
 
           if conditions.present?
-            prepared_collection = []
+            prepared_collection = {}
 
-            conditions.map do |c_ops|
+            conditions.map.with_index do |c_ops, index|
               if c_ops[:measure_condition_code][:condition_code].present?
                 condition_ops = {
                   action_code: parsed_value(c_ops, :measure_action, :action_code),
@@ -68,18 +68,18 @@ module WorkbasketInteractions
                 if c_ops[:measure_condition_components].present?
                   condition_ops[:measure_condition_components] = normalize_duty_expressions!(
                     c_ops[:measure_condition_components]
-                  ) || []
+                  ) || {}
                 else
-                  condition_ops[:measure_condition_components] = []
+                  condition_ops[:measure_condition_components] = {}
                 end
 
-                prepared_collection << condition_ops
+                prepared_collection[index] = condition_ops
               end
             end
 
             @normalized_ops[:measure_conditions] = prepared_collection
           else
-            @normalized_ops[:measure_conditions] = []
+            @normalized_ops[:measure_conditions] = {}
           end
         end
 
@@ -87,11 +87,11 @@ module WorkbasketInteractions
           footnotes = ops[:footnotes]
 
           if footnotes.present?
-            prepared_collection = []
+            prepared_collection = {}
 
-            footnotes.map do |f_ops|
+            footnotes.map.with_index do |f_ops, index|
               if f_ops[:footnote_type_id].present? && f_ops[:description].present?
-                prepared_collection << {
+                prepared_collection[index] = {
                   footnote_type_id: f_ops[:footnote_type_id],
                   description: f_ops[:description]
                 }
@@ -100,7 +100,7 @@ module WorkbasketInteractions
 
             @normalized_ops[:footnotes] = prepared_collection
           else
-            @normalized_ops[:footnotes] = []
+            @normalized_ops[:footnotes] = {}
           end
         end
 
