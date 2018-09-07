@@ -119,7 +119,7 @@ module Workbaskets
     end
 
     def editable?
-      status.in?(EDITABLE_STATES)
+      status.to_sym.in?(EDITABLE_STATES)
     end
 
     def move_status_to!(new_status)
