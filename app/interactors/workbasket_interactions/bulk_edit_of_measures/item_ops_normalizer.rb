@@ -74,6 +74,25 @@ module WorkbasketInteractions
           end
         end
 
+        def normalize_footnotes!
+          footnotes = ops[:footnotes]
+
+          if footnotes.present?
+            prepared_collection = []
+
+            footnotes.map do |f_ops|
+              if f_ops[:footnote_type_id].present? && f_ops[:description].present?
+                prepared_collection << {
+                  footnote_type_id: f_ops[:footnote_type_id],
+                  description: f_ops[:description]
+                )
+              end
+            end
+
+            @normalized_ops[:footnotes] = prepared_collection
+          end
+        end
+
         def unit_ops(data)
           {
             monetary_unit_code: parsed_value(data, :monetary_unit, :monetary_unit_code),

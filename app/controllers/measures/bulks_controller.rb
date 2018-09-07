@@ -36,6 +36,10 @@ module Measures
       params[:mode] == "save_group_for_cross_check"
     end
 
+    expose(:final_saving_batch) do
+      params[:final_batch].to_s == "true"
+    end
+
     expose(:workbasket_container) do
       ::Measures::Workbasket::Items.new(
         workbasket, cached_search_ops
@@ -134,16 +138,11 @@ module Measures
 
     def update
       if bulk_saver.valid?
-        if submit_group_for_cross_check
+        if submit_group_for_cross_check && final_saving_batch
           bulk_saver.persist!
-        end
 
-        if submit_group_for_cross_check && params[:final_batch].to_s == "true"
-          render json: {
-            number_of_updated_measures: bulk_saver.collection_ops.count,
-            redirect_url: edit_url,
-            success: :ok
-          }, status: :ok
+          render json: bulk_saver.success_response.merge(redirect_url: edit_url),
+                 status: :ok
 
         else
           render json: bulk_saver.success_response,
