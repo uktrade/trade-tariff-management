@@ -55,7 +55,7 @@ module WorkbasketInteractions
           conditions = measure_ops[:conditions]
 
           if conditions.present?
-            ::WorkbasketServices::MeasureAssociationSavers::MeasureComponents.validate_and_persist!(
+            ::WorkbasketServices::MeasureAssociationSavers::Conditions.validate_and_persist!(
               measure,
               system_ops.merge(type_of: :conditions),
               conditions
@@ -64,48 +64,14 @@ module WorkbasketInteractions
         end
 
         def add_footnotes!
-          footnotes_list = measure_ops[:footnotes]
+          footnotes = measure_ops[:footnotes]
 
-          if footnotes_list.present?
-            footnotes_list.each do |f_ops|
-              if f_ops[:footnote_type_id].present? &&
-                 f_ops[:description].present?
-
-                footnote = Footnote.new(
-                  validity_start_date: measure.validity_start_date,
-                  validity_end_date: measure.validity_end_date
-                )
-                footnote.footnote_type_id = f_ops[:footnote_type_id]
-
-                set_oplog_attrs_and_save!(footnote)
-
-                f_m = FootnoteAssociationMeasure.new
-                f_m.measure_sid = measure.measure_sid
-                f_m.footnote_id = footnote.footnote_id
-                f_m.footnote_type_id = f_ops[:footnote_type_id]
-
-                set_oplog_attrs_and_save!(f_m)
-
-                fd_period = FootnoteDescriptionPeriod.new(
-                  validity_start_date: footnote.validity_start_date,
-                  validity_end_date: footnote.validity_end_date
-                )
-                fd_period.footnote_id = footnote.footnote_id
-                fd_period.footnote_type_id = f_ops[:footnote_type_id]
-
-                set_oplog_attrs_and_save!(fd_period)
-
-                fd = FootnoteDescription.new(
-                  language_id: "EN",
-                  description: f_ops[:description]
-                )
-                fd.footnote_id = footnote.footnote_id
-                fd.footnote_type_id = f_ops[:footnote_type_id]
-                fd.footnote_description_period_sid = fd_period.footnote_description_period_sid
-
-                set_oplog_attrs_and_save!(fd)
-              end
-            end
+          if footnotes.present?
+            ::WorkbasketServices::MeasureAssociationSavers::Footnotes.validate_and_persist!(
+              measure,
+              system_ops.merge(type_of: :footnotes),
+              footnotes
+            )
           end
         end
 

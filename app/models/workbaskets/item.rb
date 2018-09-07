@@ -63,6 +63,10 @@ module Workbaskets
       data
     end
 
+    def persist!
+      ::WorkbasketInteractions::BulkEditOfMeasures::ItemSaver.new(self).persist!
+    end
+
     def validation_errors_parsed
       @validation_errors_parsed ||= JSON.parse(validation_errors)
     end
