@@ -47,6 +47,7 @@ RSpec.configure do |config|
   config.include ChiefDataHelper
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Capybara::DSL
+  config.include CapybaraHelper
 
   redis = Redis.new(:db => 15)
   RedisLockDb.redis = redis
