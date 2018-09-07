@@ -14,7 +14,9 @@ Vue.component("change-validity-period-popup", {
       openEndedMeasures: 0,
       sameStartDate: null,
       sameEndDate: null,
-      errors: []
+      errors: [],
+      errorSummary: [],
+      disableSubmit: false
     };
   },
   props: ["measures", "onClose", "open"],
@@ -58,11 +60,36 @@ Vue.component("change-validity-period-popup", {
     }
   },
   methods: {
+    clearErrors: function() {
+      this.errors = {};
+      this.errorSummary = [];
+    },
     validate: function() {
-      this.errors.splice(0, 100);
+      this.clearErrors();
+
+      var self = this;
       var isValid = true;
+      var endDate = this.endDate;
+      var makeOpenEnded = this.makeOpenEnded;
+      var errors = {};
+      var errorSummary = [];
 
+      if (makeOpenEnded || !endDate) {
+        return true;
+      }
 
+      this.measures.forEach(function(measure) {
+        if (!measure.validity_end_date || measure.validity_end_date == "-") {
+          if (!window.all_settings.regulation_id && !self.regulation_id) {
+            isValid = false;
+            errorSummary.push("You must specify a justification regulation when adding an end-date.");
+            errors["regulation_id"] = "You must specify a justification regulation when adding an end-date.";
+          }
+        }
+      });
+
+      this.errors = errors;
+      this.errorSummary = errorSummary;
 
       return isValid;
     },
@@ -73,12 +100,16 @@ Vue.component("change-validity-period-popup", {
       var newStartDate = moment(startDate, "DD/MM/YYYY", true).format("DD MMM YYYY");
       var newEndDate = moment(endDate, "DD/MM/YYYY", true).format("DD MMM YYYY");
 
+      this.disableSubmit = true;
+
       if (!this.validate()) {
+        $(this.$el).find(".modal__container").scrollTop(0);
+        this.disableSubmit = false;
+
         return;
       }
 
       this.measures.forEach(function(measure) {
-
         if (startDate) {
           if (measure.validity_start_date != newStartDate) {
             if (measure.changes.indexOf("validity_start_date") === -1) {
@@ -130,9 +161,6 @@ Vue.component("change-validity-period-popup", {
     }
   },
   computed: {
-    disableSubmit: function() {
-      return false;
-    },
     showMakeOpenEnded: function() {
       return any(this.measures, function(measure) {
         return measure.validity_end_date && measure.validity_end_date != "-";
@@ -153,6 +181,11 @@ Vue.component("change-validity-period-popup", {
     makeOpenEnded: function(val) {
       if (val) {
         this.endDate = null;
+      }
+    },
+    regulation_id: function(val) {
+      if (val && this.errors['regulation_id']) {
+        this.clearErrors();
       }
     }
   }

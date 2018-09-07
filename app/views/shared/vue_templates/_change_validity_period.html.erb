@@ -10,6 +10,21 @@
       </warning-message>
     </div>
 
+    <div class="error-summary" role="alert" aria-labelledby="validity-period-error-summary-heading" tabindex="-1" v-if="errorSummary.length > 0">
+
+      <h2 class="heading-medium error-summary-heading" id="validity-period-error-summary-heading">
+        Error
+      </h2>
+
+      <p>
+        You cannot confirm the changes yet because you have not entered the minimum required data.
+      </p>
+
+      <p>
+        See individual fields for details.
+      </p>
+    </div>
+
     <fieldset>
       <legend>
         <h4 class='heading-small'>Start date</h4>
@@ -83,14 +98,13 @@
             The earliest stendart date is {{earliestEndDate}}
             <br>
             The latest end date is {{latestEndDate}}
-            <div v-if="openEndedMeasures === 1">
-              <br>
+            <br>
+            <span v-if="openEndedMeasures === 1">
               {{openEndedMeasures}} measure is open-ended
-            </div>
-            <div v-if="openEndedMeasures > 1">
-              <br>
+            </span>
+            <span v-if="openEndedMeasures > 1">
               {{openEndedMeasures}} measures are open-ended
-            </div>
+            </span>
           </p>
         </info-message>
       </div>
@@ -113,8 +127,9 @@
         </div>
       </div>
 
-      <div class="form-group" v-if="showJustificationRegulation">
+      <div :class="['form-group', errors['regulation_id'] ? 'form-group-error' : '']" v-if="showJustificationRegulation">
         <label class="form-label">
+          <span class="error-message" v-if="errors['regulation_id']" v-html="errors['regulation_id']"></span>
           <span class="form-hint">
             If the justification regulation for adding an end date is different from the regulation you specified previously as the reason for these changes, specify the justification regulation here.
           </span>
