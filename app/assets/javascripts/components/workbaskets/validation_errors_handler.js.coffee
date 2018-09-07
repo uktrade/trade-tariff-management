@@ -3,15 +3,13 @@ window.WorkbasketBaseValidationErrorsHandler =
   handleErrorsResponse: (response, workbasket_form) ->
     WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
     WorkbasketBaseSaveActions.hideSuccessMessage()
-    WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner()
 
-    try
-      if response.responseJSON.step == "main"
-        WorkbasketBaseValidationErrorsHandler.setFormErrors(response, workbasket_form)
-      else
-        WorkbasketBaseValidationErrorsHandler.renderErrorsBlock(response, workbasket_form)
-    catch e
-      console.error(e)
+    if response.responseJSON.step == "main"
+      WorkbasketBaseValidationErrorsHandler.setFormErrors(response, workbasket_form)
+    else
+      WorkbasketBaseValidationErrorsHandler.renderErrorsBlock(response, workbasket_form)
+
+    WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner()
 
   setFormErrors: (response, workbasket_form) ->
     errors_list = response.responseJSON.errors

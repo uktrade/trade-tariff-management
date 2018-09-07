@@ -13,7 +13,8 @@ Vue.component("change-validity-period-popup", {
       latestEndDate: null,
       openEndedMeasures: 0,
       sameStartDate: null,
-      sameEndDate: null
+      sameEndDate: null,
+      errors: []
     };
   },
   props: ["measures", "onClose", "open"],
@@ -57,12 +58,24 @@ Vue.component("change-validity-period-popup", {
     }
   },
   methods: {
+    validate: function() {
+      this.errors.splice(0, 100);
+      var isValid = true;
+
+
+
+      return isValid;
+    },
     confirmChanges: function() {
       var startDate = this.startDate;
       var endDate = this.endDate;
       var makeOpenEnded = this.makeOpenEnded;
       var newStartDate = moment(startDate, "DD/MM/YYYY", true).format("DD MMM YYYY");
       var newEndDate = moment(endDate, "DD/MM/YYYY", true).format("DD MMM YYYY");
+
+      if (!this.validate()) {
+        return;
+      }
 
       this.measures.forEach(function(measure) {
 
@@ -83,6 +96,19 @@ Vue.component("change-validity-period-popup", {
 
           measure.validity_end_date = null;
         } else if (endDate && newEndDate != measure.validity_end_date) {
+          if (!measure.validity_end_date || measure.validity_end_date == "-") {
+            if (this.regulation_id) {
+              measure.changes.push("justification_regulation");
+              measure.justification_regulation_id = this.regulation_id;
+              measure.justification_regulation_role = this.regulation_role;
+            } else if (window.all_settings.regulation_id) {
+              measure.changes.push("justification_regulation");
+              measure.justification_regulation_id = window.all_settings.regulation_id;
+              measure.justification_regulation_role = window.all_settings.regulation_role;
+
+            }
+          }
+
           measure.validity_end_date = newEndDate;
 
           if (measure.changes.indexOf("validity_end_date") === -1) {
@@ -90,12 +116,7 @@ Vue.component("change-validity-period-popup", {
           }
         }
 
-        if (this.regulation_id) {
-          measure.changes.push("justification_regulation");
-          measure.justification_regulation_id = this.regulation_id;
-          measure.justification_regulation_role = this.regulation_role;
-        }
-      });
+              });
 
       this.$emit("measures-updated");
       this.onClose();
