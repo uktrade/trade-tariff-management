@@ -21,6 +21,13 @@ module Workbaskets
       JSON.parse(main_step_settings_jsonb)
     end
 
+    def set_workbasket_system_data!
+      workbasket.update(
+        title: main_step_settings['title'],
+        operation_date: main_step_settings['start_date'].try(:to_date)
+      )
+    end
+
     def track_current_page_loaded!(current_page)
       res = JSON.parse(batches_loaded)
       res[current_page] = true

@@ -127,6 +127,7 @@ module Measures
 
     def persist_work_with_selected_measures
       workbasket_settings.set_settings_for!("main", main_step_settings)
+      workbasket_settings.set_workbasket_system_data!
 
       redirect_to edit_url
     end
