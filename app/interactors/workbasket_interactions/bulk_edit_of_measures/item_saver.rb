@@ -23,9 +23,9 @@ module WorkbasketInteractions
           add_duty_expressions!
           add_conditions!
           add_footnotes!
-        end
 
-        measure.set_searchable_data!
+          measure.set_searchable_data!
+        end
       end
 
       private
@@ -42,6 +42,7 @@ module WorkbasketInteractions
           ).assign!
 
           existing_measure.save
+          existing_measure.set_searchable_data!
         end
 
         def add_new_measure!
