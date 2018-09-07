@@ -47,11 +47,13 @@ module WorkbasketInteractions
         def add_new_measure!
           @measure = Measure.new(
             ::Measures::BulkParamsConverter.new(
-              measure_ops
+              existing_measure, measure_ops
             ).converted_ops
           )
           measure.validity_start_date = operation_date
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+
+
 
           set_oplog_attrs_and_save!(measure)
         end

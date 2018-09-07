@@ -92,7 +92,7 @@ module Workbaskets
 
       measure = Measure.new(
         ::Measures::BulkParamsConverter.new(
-          measure_params
+          record, measure_params
         ).converted_ops
       )
 
