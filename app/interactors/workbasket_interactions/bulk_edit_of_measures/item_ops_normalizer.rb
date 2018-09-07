@@ -13,11 +13,13 @@ module WorkbasketInteractions
       private
 
         def normalize!
-          @normalized_ops = {}
+          @normalized_ops = ops
 
           normalize_duty_expressions!
           normalize_conditions!
           normalize_footnotes!
+
+          @normalized_ops = ActiveSupport::HashWithIndifferentAccess.new(normalized_ops)
         end
 
         def normalize_duty_expressions!(source=nil)
@@ -46,7 +48,7 @@ module WorkbasketInteractions
         end
 
         def normalize_conditions!
-          conditions = ops[:conditions]
+          conditions = ops[:measure_conditions]
 
           if conditions.present?
             prepared_collection = []
@@ -70,7 +72,7 @@ module WorkbasketInteractions
               end
             end
 
-            @normalized_ops[:conditions] = prepared_collection
+            @normalized_ops[:measure_conditions] = prepared_collection
           end
         end
 
@@ -85,7 +87,7 @@ module WorkbasketInteractions
                 prepared_collection << {
                   footnote_type_id: f_ops[:footnote_type_id],
                   description: f_ops[:description]
-                )
+                }
               end
             end
 
@@ -99,6 +101,16 @@ module WorkbasketInteractions
             measurement_unit_code: parsed_value(data, :measurement_unit, :measurement_unit_code),
             measurement_unit_qualifier_code: parsed_value(data, :measurement_unit_qualifier, :measurement_unit_qualifier_code)
           }
+        end
+
+        def parsed_value(data, parent_field_name, field_name)
+          parent_value = data[parent_field_name]
+
+          if parent_value.present? && parent_value.to_s != "null"
+            parent_value[field_name]
+          else
+            ''
+          end
         end
     end
   end

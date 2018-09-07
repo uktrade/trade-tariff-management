@@ -69,7 +69,7 @@ module WorkbasketInteractions
         end
 
         def add_conditions!
-          conditions = measure_ops[:conditions]
+          conditions = measure_ops[:measure_conditions]
 
           if conditions.present?
             ::WorkbasketServices::MeasureAssociationSavers::Conditions.validate_and_persist!(
@@ -115,16 +115,6 @@ module WorkbasketInteractions
             workbasket_id: workbasket.id,
             status: "awaiting_cross_check"
           }
-        end
-
-        def parsed_value(data, parent_field_name, field_name)
-          parent_value = data[parent_field_name]
-
-          if parent_value.present? && parent_value.to_s != "null"
-            parent_value[field_name]
-          else
-            ''
-          end
         end
     end
   end
