@@ -148,6 +148,26 @@ class Measure < Sequel::Model
     invalidated_at.present?
   end
 
+  attr_accessor :updating_measure
+
+  def not_update_of_the_same_measure?
+    updating_measure.blank? || (
+      updating_measure.present? &&
+      [
+        :measure_type_id,
+        :geographical_area_sid,
+        :goods_nomenclature_sid,
+        :additional_code_type_id,
+        :additional_code_id,
+        :ordernumber,
+        :reduction_indicator,
+        :validity_start_date
+      ].any? do |field_name|
+        public_send(field_name).to_s != updating_measure.public_send(field_name).to_s
+      end
+    )
+  end
+
   dataset_module do
     def without_status
       where("status IS NULL")

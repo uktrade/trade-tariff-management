@@ -1,0 +1,104 @@
+<div class="work-with-selected-measures">
+  <%= form_tag({}, { method: :post }) do %>
+    <h1 class="heading-xlarge">
+      Work with selected measures
+    </h1>
+
+    <div class="row">
+      <div class="col-md-7 col-lg-5">
+        <info-message>
+          <p>
+            You are about  to work with <%= pagination_metadata[:total_count] %> selected measures. When you have finished editing, these will be submitted into workflow as a single workbasket.
+          </p>
+
+          <p>
+            Before proceeding, you need to provide the following details.
+          </p>
+        </info-message>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="regulation" class="form-label">
+        What regulation (if any) gives force to these changes?
+        <span class="form-hint">
+          Start typing in the field to see available regulations.
+          <br>
+          If the regulation you need is not in the list, you can <%= link_to "add it from here", new_create_regulation_url, target: "_blank" %>.
+          <br>
+          If you're not sure of the regulation name or ID, you can <%= link_to "search here", regulations_url, target: "_blank" %>.
+        </span>
+      </label>
+      <div class="row">
+        <div class="col-md-5 col-lg-3">
+          <custom-select url="/regulations.json" label-field="description" value-field="regulation_id" placeholder="― start typing ―" min-length="2" v-model="regulation_id" date-sensitive="true" :disabled="notFromRegulation" :on-change="regulationSelected"></custom-select>
+          <input type="hidden" name="regulation_id" v-model="regulation_id" />
+          <input type="hidden" name="regulation_role" v-model="regulation_role" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <fieldset>
+        <div class="multiple-choice">
+          <input id="not-from-regulation" name="not_from_regulation" type="checkbox" value="1" v-model="notFromRegulation">
+          <label for="not-from-regulation">These changes do not come from legislation.</label>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="form-group">
+      <label for="reason" class="form-label">
+        What is the reason for these changes?
+        <span class="form-hint">
+          Be as descriptive as you can, and keep in mind what you type here may become publicly visible. Please list the changes you intend to make.
+        </span>
+      </label>
+      <div class="row">
+        <div class="col-md-7 col-lg-5">
+          <textarea name="reason" id="reason" rows="4" class="form-control" v-model="reason"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="date" class="form-label">
+        When should these changes take effect?
+        <span class="form-hint">
+          The existing measures will be end dated on the date you specify here, and replaced with new measures starting on the same day. If you want there to be a gap between the old measures ending and the new ones beginning, you should do this as separate actions &mdash; first end date the existing measures (change validity period), then copy them and make your changes to the copies.
+        </span>
+      </label>
+      <date-select :value.sync="date"></date-select>
+      <input type="hidden" name="start_date" v-model="date" />
+    </div>
+
+    <div class="form-group">
+      <label for="workbasket_name" class="form-label">
+        What is the name of this workbasket?
+        <span class="form-hint">
+          This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
+        </span>
+      </label>
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <input type="text" name="title" class="form-control" v-model="title">
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="form-group">
+      <button type="submit" class="button" :disabled="disableSubmit">
+        Proceeed to selected measures
+      </button>
+      <a href="/" class="secondary-button">
+        Cancel
+      </a>
+      <br>
+      <label for="" class="form-label"><span class="form-hint">
+        When you proceed, the regulation (if any) and start date specified above will be applied to all of the selected measures. You will be able to edit those fields for any or all of the measures if you need to.
+      </span></label>
+    </div>
+  <% end %>
+</div>

@@ -5,6 +5,7 @@ module Measures
       include ::CustomLogger
 
       attr_accessor :workbasket,
+                    :workbasket_settings,
                     :search_ops,
                     :paginator,
                     :target_records,
@@ -12,13 +13,14 @@ module Measures
 
       def initialize(workbasket, search_ops)
         @workbasket = workbasket
+        @workbasket_settings = workbasket.settings
         @search_ops = search_ops
         @paginator = ::Measures::Workbasket::Paginator.new(search_ops)
       end
 
       def prepare
         if current_page.present?
-          if workbasket.initial_items_populated.present?
+          if workbasket_settings.initial_items_populated.present?
             load_workbasket_items
 
           elsif current_batch_is_not_loaded?
@@ -55,9 +57,9 @@ module Measures
             )
           end
 
-          workbasket.track_current_page_loaded!(current_page)
-          workbasket.initial_items_populated = true if final_batch_populated?
-          workbasket.save
+          workbasket_settings.track_current_page_loaded!(current_page)
+          workbasket_settings.initial_items_populated = true if final_batch_populated?
+          workbasket_settings.save
         end
 
         def load_workbasket_items
@@ -72,8 +74,8 @@ module Measures
         end
 
         def current_batch_is_not_loaded?
-          !workbasket.batches_loaded_pages
-                     .include?(current_page)
+          !workbasket_settings.batches_loaded_pages
+                              .include?(current_page)
         end
 
         def current_page

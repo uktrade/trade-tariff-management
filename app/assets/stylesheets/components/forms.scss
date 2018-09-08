@@ -318,6 +318,12 @@ label abbr {
 
 .bulk-edit-measures {
   margin-bottom: 100px;
+
+  &.submitted-for-cross-check-view {
+    .table__column.select-all-column {
+      display: none;
+    }
+  }
 }
 
 fieldset + fieldset {

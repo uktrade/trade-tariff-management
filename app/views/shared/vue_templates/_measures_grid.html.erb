@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <recycle-list class="scroller" :items="sorted" :item-height="45">
+      <recycle-list class="scroller" :items="sorted" :item-height="45" v-if="disableScroller !== true">
         <template slot-scope="{ item, index, active }">
           <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item.measure_sid">
             <div class="table__column select-all-column">
@@ -29,6 +29,15 @@
           </div>
         </template>
       </recycle-list>
+
+      <div v-if="disableScroller === true">
+        <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item.measure_sid" v-for="(item, index) in sorted">
+          <div class="table__column select-all-column">
+            <input type="checkbox" name="measures[]" :value="item.measure_sid" :checked="checked[item.measure_sid]" @change="sendCheckedTrigger" />
+          </div>
+          <grid-column v-for="column in enabledColumns" :item="item" :column="column.field" :changeProp="column.changeProp"></grid-column>
+        </div>
+      </div>
     </div>
   </div>
 </script>

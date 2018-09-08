@@ -1,0 +1,21 @@
+.panel--confirmation {
+  background: rgb(99, 155, 149);
+  color: $white;
+  border: none !important;
+  padding: 25px;
+  max-width: 1180px;
+  margin: 2em 0;
+
+  h1, h3 {
+    max-width: 900px;
+  }
+
+  h1 {
+    margin-bottom: 0 !important;
+  }
+
+  h3 {
+    margin-top: 0.4em;
+    margin-bottom: 2em !important;
+  }
+}

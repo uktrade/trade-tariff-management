@@ -110,7 +110,7 @@ module Workbaskets
         if step_pointer.review_and_submit_step?
           submit_for_cross_check.run!
 
-          render json: { redirect_url: read_only_section_url },
+          render json: { redirect_url: submitted_url },
                  status: :ok
 
           return false
