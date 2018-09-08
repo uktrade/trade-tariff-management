@@ -25,6 +25,10 @@ html {
   background: #fff !important;
 }
 
+[v-cloak] {
+  display: none;
+}
+
 #global-header-bar,
 #global-cookie-message p,
 #footer .footer-wrapper,
