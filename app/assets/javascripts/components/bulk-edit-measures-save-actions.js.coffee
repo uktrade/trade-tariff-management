@@ -54,7 +54,7 @@ window.BulkEditOfMeasuresSaveActions =
     return false
 
   cleanUpErrorBlocks: (response) ->
-    $.each response.collection_sids, (measure_sid) ->
+    $.each response.collection_sids, (index, measure_sid) ->
       measure_parent_div = $("[data-measure-sid='" + measure_sid + "']")
       measure_parent_div.find(".table__column")
                         .removeClass('has-validation-errors')
