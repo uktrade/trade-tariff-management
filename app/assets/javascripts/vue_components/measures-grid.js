@@ -13,7 +13,8 @@ Vue.component("measures-grid", {
     "sortDirChanged",
     "selectionType",
     "selectAllHasChanged",
-    "clientSelection"
+    "clientSelection",
+    "disableScroller"
   ],
   data: function() {
     var self = this;
@@ -27,7 +28,9 @@ Vue.component("measures-grid", {
     });
 
     if (this.clientSelection === true) {
-      selectAll = this.selectedRows.length === this.data.length;
+      selectAll = this.data.filter(function(row) {
+        return self.selectedRows.indexOf(row.measure_sid) === -1;
+      }).length === 0;
     }
 
     return {
@@ -177,7 +180,9 @@ Vue.component("measures-grid", {
       if (!this.onSelectAllChanged) {
         this.indirectSelectAll = true;
 
-        this.selectAll = this.selectedRows.length === this.data.length;
+        this.selectAll = this.data.filter(function(row) {
+          return self.selectedRows.indexOf(row.measure_sid) === -1;
+        }).length === 0;
 
         setTimeout(function() {
           self.indirectSelectAll = false;
@@ -201,6 +206,18 @@ Vue.component("measures-grid", {
           }
         });
       }
+    },
+    data: function(val) {
+      if (this.clientSelection !== true) {
+        return;
+      }
+
+      var self = this;
+
+      this.data.forEach(function(measure) {
+        self.checked[measure.measure_sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(measure.measure_sid) === -1) ||
+                                            (self.selectionType == 'none' && self.selectedRows.indexOf(measure.measure_sid) > -1);
+      });
     }
   }
 })

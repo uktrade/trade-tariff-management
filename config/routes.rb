@@ -59,8 +59,11 @@ Rails.application.routes.draw do
   end
 
   namespace :measures do
-    resources :bulks, only: [:create, :edit, :update, :destroy] do
+    resources :bulks, only: [:show, :create, :edit, :update, :destroy] do
       member do
+        get '/work_with_selected_measures', to: "bulks#work_with_selected_measures"
+        post '/work_with_selected_measures', to: "bulks#persist_work_with_selected_measures"
+
         resources :bulk_items, only: [] do
           collection do
             get :validation_details
@@ -72,11 +75,21 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
-    resources :create_measures, only: [:new, :show, :edit, :update]
-    resources :create_quota, only: [:new, :show, :edit, :update]
     resources :create_regulation, only: [:new, :show, :edit, :update] do
       member do
         put :attach_pdf
+      end
+    end
+
+    resources :create_measures, only: [:new, :show, :edit, :update] do
+      member do
+        get :submitted_for_cross_check
+      end
+    end
+
+    resources :create_quota, only: [:new, :show, :edit, :update] do
+      member do
+        get :submitted_for_cross_check
       end
     end
   end

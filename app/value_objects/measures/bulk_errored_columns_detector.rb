@@ -55,13 +55,15 @@ module Measures
     private
 
       def detect_errored_column(key)
-        MATCH_TABLE.select do |k, v|
+        res = MATCH_TABLE.select do |k, v|
           v.detect do |f_name|
             f_name.to_s == key.to_s
           end
         end.keys
            .first
            .to_s
+
+        res.present? ? res : "measure_sid"
       end
   end
 end

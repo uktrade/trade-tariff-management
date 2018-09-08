@@ -1,30 +1,36 @@
 module Workbaskets
   class Workbasket < Sequel::Model
 
-    STATUS_LIST = [
-      :new_in_progress, # "New - in progress"
-      :editing, # "Editing"
-      :awaiting_cross_check, # "Awaiting cross-check"
-      :cross_check_rejected, # "Cross-check rejected"
-      :ready_for_approval, # "Ready for approval"
-      :awaiting_approval, # "Awaiting approval"
-      :approval_rejected, # "Approval rejected"
-      :ready_for_export, # "Ready for export"
-      :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
-      :awaiting_cds_upload_edit, # "Awaiting CDS upload - edit"
-      :awaiting_cds_upload_overwrite, # "Awaiting CDS upload - overwrite"
-      :awaiting_cds_upload_delete, # "Awaiting CDS upload - delete"
-      :sent_to_cds, # "Sent to CDS"
-      :sent_to_cds_delete, # "Sent to CDS - delete"
-      :published, # "Published"
-      :cds_error # "CDS error"
-    ]
-
     TYPES = [
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
       :create_regulation
+    ]
+
+    STATUS_LIST = [
+      :new_in_progress,                # "New - in progress"
+      :editing,                        # "Editing"
+      :awaiting_cross_check,           # "Awaiting cross-check"
+      :cross_check_rejected,           # "Cross-check rejected"
+      :ready_for_approval,             # "Ready for approval"
+      :awaiting_approval,              # "Awaiting approval"
+      :approval_rejected,              # "Approval rejected"
+      :ready_for_export,               # "Ready for export"
+      :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
+      :awaiting_cds_upload_edit,       # "Awaiting CDS upload - edit"
+      :awaiting_cds_upload_overwrite,  # "Awaiting CDS upload - overwrite"
+      :awaiting_cds_upload_delete,     # "Awaiting CDS upload - delete"
+      :sent_to_cds,                    # "Sent to CDS"
+      :sent_to_cds_delete,             # "Sent to CDS - delete"
+      :published,                      # "Published"
+      :cds_error                       # "CDS error"
+    ]
+
+    EDITABLE_STATES = [
+      :new_in_progress,  # "New - in progress"
+      :editing,          # "Editing"
+      :approval_rejected # "Approval rejected"
     ]
 
     SENT_TO_CDS_STATES = [
@@ -38,6 +44,9 @@ module Workbaskets
 
     one_to_many :items, key: :workbasket_id,
                         class_name: "Workbaskets::Item"
+
+    one_to_one :bulk_edit_of_measures_settings, key: :workbasket_id,
+                                                class_name: "Workbaskets::BulkEditOfMeasuresSettings"
 
     one_to_one :create_measures_settings, key: :workbasket_id,
                                           class_name: "Workbaskets::CreateMeasuresSettings"
@@ -69,8 +78,6 @@ module Workbaskets
       presence_of :status,
                   :user_id,
                   :type
-
-      presence_of :search_code, if: :bulk_edit_of_measures?
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
       inclusion_of :type, in: TYPES.map(&:to_s)
@@ -111,6 +118,10 @@ module Workbaskets
       end
     end
 
+    def editable?
+      status.to_sym.in?(EDITABLE_STATES)
+    end
+
     def move_status_to!(new_status)
       self.status = new_status
       save
@@ -121,10 +132,7 @@ module Workbaskets
       when :create_measures
         create_measures_settings
       when :bulk_edit_of_measures
-        # TODO: need to refactor Bulk Edit stuff
-        #       to store settings, specific for Bulk Edit of measures
-        #       in separated DB table
-        #
+        bulk_edit_of_measures_settings
       when :create_quota
         create_quota_settings
       when :create_regulation
@@ -136,33 +144,17 @@ module Workbaskets
       @sequence_number = (@sequence_number || 0) + 1
     end
 
-    def track_current_page_loaded!(current_page)
-      res = JSON.parse(batches_loaded)
-      res[current_page] = true
-
-      self.batches_loaded = res.to_json
-    end
-
-    def batches_loaded_pages
-      JSON.parse(batches_loaded)
-    end
-
-    def get_item_by_id(target_id)
-      items.detect do |i|
-        i.record_id.to_s == target_id
-      end
-    end
-
     def debug_collection
       #
       # TODO: remove me after finishing of active development phase
       #
       settings.collection
               .map.with_index do |el, index|
-        Rails.logger.debug " [#{index}] Class: #{el.class.name}"
-        Rails.logger.debug "             Workbasket ID: #{el.workbasket_id}"
-        Rails.logger.debug "             Sequence number: #{el.workbasket_sequence_number}"
-        Rails.logger.debug "             Status: #{el.status}"
+
+        puts " [#{index}] Class: #{el.class.name}"
+        puts "             Workbasket ID: #{el.workbasket_id}"
+        puts "             Sequence number: #{el.workbasket_sequence_number}"
+        puts "             Status: #{el.status}"
 
         custom_note = case el.class.name
         when "Measure"
@@ -183,46 +175,26 @@ module Workbaskets
           "footnote_type_id: #{el.footnote_type_id}, footnote_id: #{el.footnote_id}, measure_sid: #{el.measure_sid}"
         end
 
-        Rails.logger.debug "             #{custom_note}"
-      end
-    end
-
-    begin :need_to_refactor
-      def collection_models
-        %w(
-          Measure
-          Footnote
-          FootnoteDescription
-          FootnoteDescriptionPeriod
-          FootnoteAssociationMeasure
-          MeasureComponent
-          MeasureCondition
-          MeasureConditionComponent
-          MeasureExcludedGeographicalArea
-        )
-      end
-
-      def bulk_edit_collection
-        collection_models.map do |db_model|
-          db_model.constantize
-                  .by_workbasket(id)
-                  .all
-        end.flatten
-           .sort do |a, b|
-           a.workbasket_sequence_number <=> b.workbasket_sequence_number
-        end
+        puts "             #{custom_note}"
       end
     end
 
     def clean_up_workbasket!
       if settings.present?
-        settings.collection
-                .map(&:destroy)
+        settings.collection.map do |item|
+          item.manual_add = true
+          item.destroy
+        end
 
         settings.destroy
       end
 
+      clean_up_related_cache!
       destroy
+    end
+
+    def clean_up_related_cache!
+      Rails.cache.write("#{id}_sequence_number", nil)
     end
 
     class << self
@@ -236,29 +208,9 @@ module Workbaskets
         workbasket
       end
 
-      def validate_measure!(measure_params={})
-        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
-
-        errors = {}
-
-        measure = Measure.new(
-          ::Measures::BulkParamsConverter.new(
-            measure_params
-          ).converted_ops
-        )
-
-        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-
-        ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-          measure, MeasureValidator, {}
-        ).errors
-      end
-
       def clean_up!
-        #
-        # TODO: remove me after finishing of active development phase
-        #
         %w(
+          bulk_edit_of_measures
           create_measures
           create_quota
           create_regulation
@@ -279,10 +231,9 @@ module Workbaskets
             workbasket_id: id
           )
         when :bulk_edit_of_measures
-          # TODO: need to refactor Bulk Edit stuff
-          #       to store settings, specific for Bulk Edit of measures
-          #       in separated DB table
-          #
+          ::Workbaskets::BulkEditOfMeasuresSettings.new(
+            workbasket_id: id
+          )
         when :create_quota
           ::Workbaskets::CreateQuotaSettings.new(
             workbasket_id: id

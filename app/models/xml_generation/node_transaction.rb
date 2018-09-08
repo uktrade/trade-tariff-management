@@ -6,15 +6,9 @@ module XmlGeneration
 
     def initialize(workbasket)
       @workbasket = workbasket
-
-      # TODO: refactor me!
-
-      @messages = if workbasket.type == "bulk_edit_of_measures"
-        workbasket.bulk_edit_collection
-      else
-        workbasket.settings
-                  .collection
-      end.map do |record|
+      @messages = workbasket.settings
+                            .collection
+                            .map do |record|
         ::XmlGeneration::NodeMessage.new(record)
       end
     end
