@@ -158,6 +158,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   validation :ME116, 'When a quota order number is used in a measure then the validity period of the quota order number must span the validity period of the measure.  This rule is only applicable for measures with start date after 31/12/2007.',
       on: [:create, :update],
       if: ->(record) {
+       record.validity_start_date.present? &&
        record.validity_start_date > Date.new(2007,12,31) &&
        record.order_number.present? && record.ordernumber =~ /^09[012356789]/
       } do
