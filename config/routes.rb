@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   end
 
   namespace :measures do
-    resources :bulks, only: [:create, :edit, :update, :destroy] do
+    resources :bulks, only: [:show, :create, :edit, :update, :destroy] do
       member do
         get '/work_with_selected_measures', to: "bulks#work_with_selected_measures"
         post '/work_with_selected_measures', to: "bulks#persist_work_with_selected_measures"

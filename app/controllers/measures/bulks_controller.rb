@@ -141,9 +141,9 @@ module Measures
         if submit_group_for_cross_check && final_saving_batch
           bulk_saver.persist!
 
-          render json: bulk_saver.success_response.merge(redirect_url: edit_url),
-                 status: :ok
-
+          render json: bulk_saver.success_response.merge(
+            redirect_url: measures_bulk_url(workbasket.id, search_code: workbasket_settings.search_code)
+          ), status: :ok
         else
           render json: bulk_saver.success_response,
                  status: :ok
