@@ -16,8 +16,10 @@ module WorkbasketServices
           errors
         end
 
+        alias_method :validate_and_persist!, :errors_in_collection
+
         def prepare_collection(collection, type_of)
-          return prepare_conditions(collection) if type_of == "conditions"
+          return prepare_conditions(collection) if type_of.to_s == "conditions"
           return collection if collection.is_a?(Hash)
 
           res = {}

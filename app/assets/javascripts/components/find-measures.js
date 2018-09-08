@@ -15,7 +15,9 @@ $(document).ready(function() {
     contains: { value: "contains", label: "contains" },
     does_not_contain: { value: "does_not_contain", label: "does not contain" },
     is_after: { value: "is_after", label: "is after" },
+    is_after_or_nil: { value: "is_after_or_nil", label: "is after or not specified" },
     is_before: { value: "is_before", label: "is before" },
+    is_before_or_nil: { value: "is_before_or_nil", label: "is before or not specified" },
     are_not_specified: { value: "are_not_specified", label: "are not specified" },
     are_not_unspecified: { value: "are_not_unspecified", label: "are not unspecified" },
     include: { value: "include", label: "include" },
@@ -64,7 +66,7 @@ $(document).ready(function() {
         conditionsForRegulation: [ conditions.contains, conditions.does_not_contain, conditions.is, conditions.is_not ],
         conditionsForType: [ conditions.is, conditions.is_not ],
         conditionsForValidityStartDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
-        conditionsForValidityEndDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
+        conditionsForValidityEndDate: [ conditions.is, conditions.is_after, conditions.is_after_or_nil, conditions.is_before, conditions.is_before_or_nil, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
         conditionsForCommodityCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForAdditionalCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForOrigin: [ conditions.is, conditions.is_not ],
@@ -102,7 +104,7 @@ $(document).ready(function() {
         searchCode: code,
         pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
         selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_measure_sids") || "[]")),
-        selectionType: "all",
+        selectionType: window.localStorage.getItem(code + "_selection_type") || "all",
         pagination: {
           page: 1,
           total_count: 0,
@@ -580,8 +582,9 @@ $(document).ready(function() {
       selectedMeasures: function(newVal, oldVal) {
         window.localStorage.setItem(this.searchCode + "_measure_sids", JSON.stringify(newVal));
       },
-      selectionType: function() {
+      selectionType: function(val) {
         this.selectedMeasures.splice(0, this.selectedMeasures.length);
+        window.localStorage.setItem(this.searchCode + "_selection_type", val);
       }
     }
   });

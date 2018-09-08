@@ -16,8 +16,16 @@ module Measures
           "#{field_name}::date < ?"
         end
 
+        def is_before_or_nil_clause
+          "#{field_name}::date < ? OR #{field_name} IS NULL"
+        end
+
         def is_after_clause
           "#{field_name}::date > ?"
+        end
+
+        def is_after_or_nil_clause
+          "#{field_name}::date > ? OR #{field_name} IS NULL"
         end
     end
   end

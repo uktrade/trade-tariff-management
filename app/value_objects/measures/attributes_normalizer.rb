@@ -23,6 +23,7 @@ module Measures
       geographical_area_id
       additional_code
       reduction_indicator
+      export_refund_nomenclature_sid
     )
 
     attr_accessor :normalized_params, :measure_params

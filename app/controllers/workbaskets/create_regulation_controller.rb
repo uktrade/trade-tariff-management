@@ -22,6 +22,10 @@ module Workbaskets
       create_regulation_url(workbasket.id)
     end
 
+    expose(:submitted_url) do
+      create_regulation_url(workbasket.id)
+    end
+
     def update
       saver.save!
       if saver.valid?

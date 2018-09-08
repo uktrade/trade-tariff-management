@@ -3,7 +3,7 @@
     span.form-hint
       | Enter criteria to help locate a regulation
   .row
-    .col-lg-8.col-md-10.col-sm-12
+    .col-lg-5.col-md-7.col-sm-10.col-xs-12
       = f.input :role, as: :select, collection: regulation_search_form.roles, value_method: :first, label_method: :last, include_blank: true, prompt: "- select regulation type -", label: "Select the regulation type", input_html: { class: "selectize" }
 
       = f.input :regulation_group_id, as: :select, collection: regulation_search_form.regulation_groups, label_method: :description, value_method: :regulation_group_id, include_blank: true, prompt: "- select regulation group -", label: "Select the regulation group", input_html: { class: "selectize" }
