@@ -11,39 +11,26 @@ module WorkbasketValueObjects
       end
 
       def assign!
-        assign_general_ops!
+        operation = ops[:operation] || "C"
+
+        record.operation = operation
+        record.manual_add = true if operation == "C"
+        record.status = ops[:status] || "new_in_progress"
+
+        record.workbasket_id = ops[:workbasket_id]
+        record.operation_date = ops[:operation_date]
+        record.added_by_id = ops[:current_admin_id]
+
+        record.added_at = Time.zone.now
+        record.national = false
+
+        record.try("approved_flag=", true)
+        record.try("stopped_flag=", false)
+
         assign_unique_sequence_number!
       end
 
       private
-
-        def assign_general_ops!
-          record.workbasket_id = ops[:workbasket_id]
-          record.operation_date = ops[:operation_date]
-          record.added_by_id = ops[:current_admin_id]
-          record.operation = ops[:operation] || "C"
-          record.status = "new_in_progress"
-          record.manual_add = true
-          record.added_at = Time.zone.now
-          record.national = false
-          record.try("approved_flag=", true)
-          record.try("stopped_flag=", false)
-        end
-
-        def assign_bulk_edit_options!
-          record.workbasket_id = ops[:workbasket_id]
-          record.operation_date = ops[:operation_date]
-          record.added_by_id = ops[:current_admin_id]
-          record.status = "awaiting_cross_check"
-          record.manual_add = true
-          record.operation = "C"
-          record.added_at = Time.zone.now
-          record.national = false
-          record.try("approved_flag=", true)
-          record.try("stopped_flag=", false)
-
-          assign_unique_sequence_number!
-        end
 
         def assign_unique_sequence_number!
           record.workbasket_sequence_number = generate_next_sequence_number

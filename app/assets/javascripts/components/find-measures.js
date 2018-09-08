@@ -104,7 +104,7 @@ $(document).ready(function() {
         searchCode: code,
         pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
         selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_measure_sids") || "[]")),
-        selectionType: "all",
+        selectionType: window.localStorage.getItem(code + "_selection_type") || "all",
         pagination: {
           page: 1,
           total_count: 0,
@@ -582,8 +582,9 @@ $(document).ready(function() {
       selectedMeasures: function(newVal, oldVal) {
         window.localStorage.setItem(this.searchCode + "_measure_sids", JSON.stringify(newVal));
       },
-      selectionType: function() {
+      selectionType: function(val) {
         this.selectedMeasures.splice(0, this.selectedMeasures.length);
+        window.localStorage.setItem(this.searchCode + "_selection_type", val);
       }
     }
   });

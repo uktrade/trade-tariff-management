@@ -22,6 +22,10 @@ module Workbaskets
       create_quotum_url(workbasket.id)
     end
 
+    expose(:submitted_url) do
+      submitted_for_cross_check_create_quotum_url(workbasket.id)
+    end
+
     expose(:quota_periods) do
       workbasket_settings.quota_periods
     end

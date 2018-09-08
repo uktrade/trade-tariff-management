@@ -63,6 +63,18 @@ module WorkbasketServices
         end
 
         def generate_condition_components!
+          Rails.logger.info ""
+          Rails.logger.info " HERE condition_ops: #{condition_ops.inspect}"
+          Rails.logger.info ""
+
+          Rails.logger.info ""
+          Rails.logger.info " HERE condition_ops[:measure_condition_components]: #{condition_ops[:measure_condition_components].inspect}"
+          Rails.logger.info ""
+
+          Rails.logger.info ""
+          Rails.logger.info " HERE condition_ops['measure_condition_components']: #{condition_ops['measure_condition_components'].inspect}"
+          Rails.logger.info ""
+
           @condition.measure_condition_components << condition_ops[:measure_condition_components].select do |k, v|
             v[:duty_expression_id].present?
           end.map do |k, v|

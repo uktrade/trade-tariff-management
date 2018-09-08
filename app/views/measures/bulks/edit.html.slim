@@ -7,21 +7,22 @@
       = link_to "Find Measures", measures_url
 
     li
-      = link_to "Back to search results", measures_url(search_code: workbasket.initial_search_results_code)
+      = link_to "Back to search results", measures_url(search_code: workbasket_settings.initial_search_results_code)
 
 h2.heading-large
-  - if params[:submitted].present?
+  - if workbasket.awaiting_cross_check?
     | Submitted for Cross-Check
   - else
     = workbasket_author? ? 'Edit measures' : 'Review measures'
 
-/p
-  a
-    | Return to search results / amend selection
+- if workbasket.awaiting_cross_check?
+  = render "measures/bulks/details"
 
 script
   == "window.__workbasket_id = #{workbasket.id};"
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"
+  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+  == "window.current_step_settings = #{workbasket_settings.main_step_settings.to_json};"
 
 - cache [ "measure_form_js_variabless", expires_in: 8.hours ] do
   = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
@@ -29,8 +30,10 @@ script
 form.bulk-edit-measures
   = render "table_top"
 
-  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasures", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-sorting" => true, ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged" } do
+  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
     p Loading measures table...
+
+  = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
 
   = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
     h1.heading-xlarge slot="title"
