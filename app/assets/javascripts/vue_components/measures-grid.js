@@ -150,10 +150,6 @@ Vue.component("measures-grid", {
         return;
       }
 
-      if (this.selectAllHasChanged) {
-        this.selectAllHasChanged(val);
-      }
-
       if (this.onSelectAllChanged) {
         this.onSelectAllChanged(val);
 

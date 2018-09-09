@@ -32,7 +32,7 @@ Vue.component("change-validity-period-popup", {
 
     this.measures.forEach(function(measure) {
       if (measure.validity_end_date && measure.validity_end_date != "-") {
-        endDates.push(moment(measure.validity_end_date, "DD MMM YYYY", true));
+        endDates.push(moment(measure.validity_end_date + " 12:00:00", "DD MMM YYYY HH:mm:ss", true));
       } else {
         self.openEndedMeasures += 1;
       }
@@ -54,7 +54,7 @@ Vue.component("change-validity-period-popup", {
     if (endDates.length > 0) {
       this.earliestEndDate = endDates[0].format("DD MMM YYYY");
       this.latestEndDate = endDates[endDates.length - 1].format("DD MMM YYYY");
-      this.sameEndDate = endDates[0].isSame(endDates[endDates.length - 1], "day");
+      this.sameEndDate = endDates[0].isSame(endDates[endDates.length - 1], "day") && this.openEndedMeasures == 0;
     } else {
       this.sameEndDate = true;
     }
@@ -147,7 +147,7 @@ Vue.component("change-validity-period-popup", {
           }
         }
 
-              });
+      });
 
       this.$emit("measures-updated");
       this.onClose();
