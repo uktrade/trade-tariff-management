@@ -1,8 +1,8 @@
 module CapybaraHelper
 
-  def custom_select(page, name, value)
+  def custom_select(value, options = {})
     script = <<END_SRIPT
-var select = $( "form :contains('#{name}') select" )[0].selectize;
+var select = $( "form :contains('#{options[:from]}') select" )[0].selectize;
 if (select) {
   var id = select.search('#{value}').items[0].id;
   if (id) {

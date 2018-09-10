@@ -30,7 +30,7 @@ describe "Create Regulation", js: true do
     click_link 'Create a regulation'
     expect(page).to have_content 'Specify the regulation type'
 
-    custom_select(page, 'Specify the regulation type', 'Base regulation')
+    custom_select('Base regulation', from: 'Specify the regulation type')
     fill_in 'Publication year', with: '18'
 
     expect(page).to have_content 'Start date'
