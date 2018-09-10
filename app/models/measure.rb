@@ -473,6 +473,12 @@ class Measure < Sequel::Model
     end
   end
 
+  def quota_order_number_origin
+    if quota_order_number.present?
+      quota_order_number.quota_order_number_origin
+    end
+  end
+
   def self.changes_for(depth = 1, conditions = {})
     operation_klass.select(
       Sequel.as(Sequel.cast_string("Measure"), :model),
