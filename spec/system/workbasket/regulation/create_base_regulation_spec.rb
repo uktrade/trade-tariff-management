@@ -1,43 +1,18 @@
 require "rails_helper"
 
-describe "Create Regulation", js: true do
+describe "base regulation", js: true do
 
-  before do
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 1, description: 'Base regulation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 2, description: 'Provisional anti-dumping/countervailing duty')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 3, description: 'Definitive anti-dumping/countervailing duty')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 4, description: 'Modification')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 5, description: 'Prorogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 6, description: 'Complete abrogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 7, description: 'Explicit abrogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 8, description: 'Regulation which temporarily suspends all another regulation (FTS - Full Temporary Stop)')
-  end
+  include_context 'create_regulation_base_context'
 
-  let!(:user)   { create :user }
+  it_behaves_like 'regulation_page'
 
-  it "follow create regulation page" do
-    visit '/'
-    expect(page).to have_content 'Create a regulation'
-
-    click_link 'Create a regulation'
-    expect(page).to have_content 'Specify the regulation type'
+  it 'follow create regulation page' do
+    visit new_create_regulation_path
 
     custom_select('Base regulation', from: 'Specify the regulation type')
     fill_in 'Publication year', with: '18'
 
     expect(page).to have_content 'Start date'
-  end
-
-  after do
-
   end
 
 end

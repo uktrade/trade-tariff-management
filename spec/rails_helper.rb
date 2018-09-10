@@ -48,6 +48,7 @@ RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Capybara::DSL
   config.include CapybaraHelper
+  config.include Rails.application.routes.url_helpers
 
   redis = Redis.new(:db => 15)
   RedisLockDb.redis = redis
