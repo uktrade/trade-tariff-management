@@ -89,5 +89,10 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "production" ];
+              then CF_ORG=dit-staging CF_SPACE=training-tariffs CF_APP=tariffs-training CF_APP_WORKER=tariffs-worker-training ./bin/deploy
+            fi
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "production" ];
               then CF_ORG=dit-services CF_SPACE=tariffs CF_APP=tariffs-production CF_APP_WORKER=tariffs-worker-production ./bin/deploy
             fi
