@@ -19,5 +19,6 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
       (/^09(\d){4}\z/.match?(order_number_id))
     )
   end
+
 end
 
