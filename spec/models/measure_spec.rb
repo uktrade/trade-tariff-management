@@ -924,7 +924,8 @@ describe Measure do
           )
           quota_order_number_origin = create(
             :quota_order_number_origin,
-            quota_order_number_sid: quota_order_number.quota_order_number_sid
+            quota_order_number_sid: quota_order_number.quota_order_number_sid,
+            validity_start_date: validity_start_date
           )
           expect(measure).to be_conformant
         end
@@ -975,7 +976,8 @@ describe Measure do
           )
           quota_order_number_origin = create(
             :quota_order_number_origin,
-            quota_order_number_sid: quota_order_number.quota_order_number_sid
+            quota_order_number_sid: quota_order_number.quota_order_number_sid,
+            validity_start_date: validity_start_date
           )
 
           expect(measure).to be_conformant
@@ -1029,14 +1031,14 @@ describe Measure do
           quota_order_number = create(
             :quota_order_number,
             quota_order_number_id: measure.ordernumber,
-            validity_start_date: validity_start_date
+            validity_start_date: Date.new(2008,1,2)
           )
           quota_order_number_origin = create(
             :quota_order_number_origin,
             quota_order_number_sid: quota_order_number.quota_order_number_sid,
             validity_start_date: Date.new(2008,1,2)
           )
-          expect(measure).to be_conformant
+          expect(measure).to_not be_conformant
           expect(measure.conformance_errors).to have_key(:ME119)
         end
       end
