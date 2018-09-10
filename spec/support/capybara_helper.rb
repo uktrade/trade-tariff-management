@@ -13,4 +13,9 @@ END_SRIPT
     page.driver.execute_script(script)
   end
 
+  def fill_date(name, options = {})
+    element = find(:css, "$( \"label:contains('#{name}') ~ input\" )[0]")
+    element.set(options[:with])
+  end
+
 end
