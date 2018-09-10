@@ -959,6 +959,44 @@ describe Measure do
         expect(measure).to be_conformant
       end
     end
+
+    describe "ME118" do
+      describe "with quota number" do
+        it "valid" do
+          validity_start_date = Date.new(2008,1,1)
+          measure = create :measure,
+            ordernumber: "090",
+            order_number_capture_code: 1,
+            validity_start_date: validity_start_date
+          quota_order_number = create(
+            :quota_order_number,
+            quota_order_number_id: measure.ordernumber,
+            validity_start_date: validity_start_date
+          )
+          quota_order_number_origin = create(
+            :quota_order_number_origin,
+            quota_order_number_sid: quota_order_number.quota_order_number_sid
+          )
+
+          expect(measure).to be_conformant
+        end
+
+        it "invalid" do
+          validity_start_date = Date.new(2008,1,1)
+          measure = create :measure,
+            ordernumber: "090",
+            order_number_capture_code: 1,
+            validity_start_date: validity_start_date
+          quota_order_number = create(
+            :quota_order_number,
+            quota_order_number_id: measure.ordernumber,
+            validity_start_date: Date.new(2008,1,2)
+          )
+          expect(measure).to_not be_conformant
+          expect(measure.conformance_errors).to have_key(:ME118)
+        end
+      end
+    end
   end
 
   describe '#origin' do
