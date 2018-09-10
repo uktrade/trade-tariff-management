@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-shared_context "system_test_base_context" do
+shared_context 'system_test_base_context' do
 
   let!(:user) do
     create(:user)

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-shared_context "create_regulation_base_context" do
+shared_context 'create_regulation_base_context' do
 
-  include_context "system_test_base_context"
+  include_context 'system_test_base_context'
 
   before do
     create(:regulation_role_type_description,
@@ -29,6 +29,11 @@ shared_context "create_regulation_base_context" do
 
   let(:regulation_group) do
     create(:regulation_group)
+  end
+
+  def visit_create_regulation
+    visit root_path
+    click_on 'Create a regulation'
   end
 
 end
