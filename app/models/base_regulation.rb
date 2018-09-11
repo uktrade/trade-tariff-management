@@ -22,7 +22,7 @@ class BaseRegulation < Sequel::Model
              key: [ :explicit_abrogation_regulation_id,
                     :explicit_abrogation_regulation_role ]
 
-  one_to_many :generating_measures,
+  one_to_many :measures,
               class: :Measure,
               key: [ :measure_generating_regulation_id,
                      :measure_generating_regulation_role ] do |ds|
