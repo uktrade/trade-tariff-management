@@ -32,10 +32,8 @@ class MeasureTypeValidator < TradeTariffBackend::Validator
 
   validation :MT10,
              'The validity period of the measure type series must span the validity period of the measure type.' do |record|
-    if record.measure_type_series.present?
-      record.measure_type_series.validity_start_date <= record.validity_start_date &&
-        ((record.measure_type_series.validity_end_date.blank? || record.validity_end_date.blank?) ||
-          (record.measure_type_series.validity_end_date >= record.validity_end_date))
-    end
+    record.measure_type_series.validity_start_date <= record.validity_start_date &&
+      ((record.measure_type_series.validity_end_date.blank? || record.validity_end_date.blank?) ||
+       (record.measure_type_series.validity_end_date >= record.validity_end_date))
   end
 end
