@@ -97,7 +97,7 @@ Vue.component("change-conditions-popup", {
     normalizeCondition: function(condition) {
       return {
         measure_condition_code: condition.measure_condition_code,
-        condition_code: condition.measure_condition_code ? condition.measure_condition_code.condition_code : null,
+        condition_code: this.getConditionComponent(condition),
         action_code: condition.measure_action ? condition.measure_action.action_code : null,
         measure_action: condition.measure_action,
         certificate_type_id: condition.certificate_type ? condition.certificate_type.certificate_type_id : null,
@@ -134,8 +134,8 @@ Vue.component("change-conditions-popup", {
       var ids = ["01","02","04","19","20"];
       var id = component.duty_expression.duty_expression_id;
 
-      if (component.duty_expression.original_duty_expression_id) {
-        return component.duty_expression.original_duty_expression_id;
+      if (component.original_duty_expression_id) {
+        return component.original_duty_expression_id;
       }
 
       if (ids.indexOf(component.duty_expression.duty_expression_id) === -1) {
@@ -147,6 +147,13 @@ Vue.component("change-conditions-popup", {
       }
 
       return id + "A";
+    },
+    getConditionComponent: function(condition) {
+      if (condition.original_measure_condition_code) {
+        return condition.original_measure_condition_code;
+      }
+
+      return condition.measure_condition_code ? condition.measure_condition_code.condition_code : null;
     },
     confirmChanges: function() {
       var conditions = this.conditions;
@@ -164,7 +171,8 @@ Vue.component("change-conditions-popup", {
 
           measure.measure_conditions.splice(0, measure.measure_conditions.length);
 
-          conditions.forEach(function(condition) {
+          conditions.forEach(function(c) {
+            condition = clone(c)
             // this will take care of second radio button instructing
             // users to leave blank to remove all conditions
             if (!condition.condition_code) {
@@ -175,7 +183,8 @@ Vue.component("change-conditions-popup", {
             condition.condition_code = condition.condition_code.substring(0, 1);
 
             condition.measure_condition_components.forEach(function(mcc) {
-              mcc.duty_expression.original_duty_expression_id = mcc.duty_expression.duty_expression_id.slice(0);
+              mcc.original_duty_expression_id = mcc.duty_expression_id.slice(0);
+              mcc.duty_expression_id = mcc.duty_expression_id.substring(0,2);
               mcc.duty_expression.duty_expression_id = mcc.duty_expression.duty_expression_id.substring(0,2);
             });
 
@@ -191,6 +200,19 @@ Vue.component("change-conditions-popup", {
           }
 
           conditions.forEach(function(condition) {
+            if (!condition.condition_code) {
+              return;
+            }
+
+            condition.original_measure_condition_code = condition.condition_code.slice(0);
+            condition.condition_code = condition.condition_code.substring(0, 1);
+
+            condition.measure_condition_components.forEach(function(mcc) {
+              mcc.original_duty_expression_id = mcc.duty_expression_id.slice(0);
+              mcc.duty_expression_id = mcc.duty_expression_id.substring(0,2);
+              mcc.duty_expression.duty_expression_id = mcc.duty_expression.duty_expression_id.substring(0,2);
+            });
+
             var found = false;
 
             measure.measure_conditions.forEach(function(mc) {

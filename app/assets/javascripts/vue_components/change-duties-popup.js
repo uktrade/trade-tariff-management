@@ -81,7 +81,9 @@ Vue.component("change-duties-popup", {
       var amountRegex = new RegExp(/^([\d]+)[\.]?[\d]*$/);
 
       this.measureComponents.forEach(function(mc, index) {
-        if (!mc.duty_expression_id || mc.duty_expression_id == "37") {
+        var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];
+
+        if (!mc.duty_expression_id || ids.indexOf(mc.duty_expression_id) > -1) {
           return;
         }
 
@@ -98,8 +100,8 @@ Vue.component("change-duties-popup", {
       var ids = ["01","02","04","19","20"];
       var id = component.duty_expression.duty_expression_id;
 
-      if (component.duty_expression.original_duty_expression_id) {
-        return component.duty_expression.original_duty_expression_id;
+      if (component.original_duty_expression_id) {
+        return component.original_duty_expression_id;
       }
 
       if (ids.indexOf(component.duty_expression.duty_expression_id) === -1) {
@@ -127,7 +129,6 @@ Vue.component("change-duties-popup", {
         measure.measure_components.splice(0, 999);
 
         components.forEach(function(component) {
-          component.duty_expression.original_duty_expression_id = component.duty_expression.duty_expression_id.slice(0);
           component.duty_expression.duty_expression_id = component.duty_expression.duty_expression_id.substring(0,2);
 
           measure.measure_components.push({
@@ -135,7 +136,9 @@ Vue.component("change-duties-popup", {
             duty_expression: component.duty_expression,
             measurement_unit: component.measurement_unit,
             measurement_unit_qualifier: component.measurement_unit_qualifier,
-            monetary_unit: component.monetary_unit
+            monetary_unit: component.monetary_unit,
+            original_duty_expression_id: component.duty_expression_id.slice(0),
+            duty_expression_id: component.duty_expression_id.substring(0,2)
           });
         });
       });
