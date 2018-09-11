@@ -3,6 +3,8 @@ div v-if="isExplicitAbrogation"
     | Specify the abrogation date
   = f.input :abrogation_date, as: :hidden, input_html: { "v-model" => "regulation.abrogation_date" }
   .form-group v-bind:class="{ 'form-group-error': errors.abrogation_date }"
+    label.form-label
+      | Abrogation date
     span.error-message v-if="errors.abrogation_date" v-html="errors.abrogation_date"
     = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.abrogation_date"  }
 

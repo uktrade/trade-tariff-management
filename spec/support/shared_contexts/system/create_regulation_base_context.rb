@@ -52,6 +52,10 @@ shared_context 'create_regulation_base_context' do
     validity_start_date
   end
 
+  let(:abrogation_date) do
+    validity_start_date
+  end
+
   let(:regulation_type) do
     ''
   end
