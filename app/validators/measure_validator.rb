@@ -152,22 +152,20 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   #validation :ME104,
-    # WIP
-    #%Q{ "The justification regulation must be either:
-          #- the measure’s measure-generating regulation, or
-          #- a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
-        #If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation" } do |record|
+    #%{The justification regulation must be either:
+        #- the measure’s measure-generating regulation, or
+        #- a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
+      #If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation} do |record|
 
     #valid = true
 
-    # # Keeping this code verbose for now (As I am still understanding this code)
     #if record.justification_regulation_id.present? && record.measure_generating_regulation_id.present?
       #valid = record.justification_regulation_id == record.measure_generating_regulation_id
 
-      #if record.generating_regulation.present? && record.generating_regulation.validity_end_date.present?
+      #if record.generating_regulation.present? && record.generating_regulation.validity_end_date.present? && record.validity_end_date.present?
         #valid = record.generating_regulation.validity_end_date > record.validity_end_date
       #else
-        #valid = record.validity_end_date.present?
+        #valid = record.validity_end_date.blank?
       #end
     #end
 
