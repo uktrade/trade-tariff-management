@@ -841,15 +841,13 @@ describe Measure do
       end
     end
 
-    describe 'ME104' do
-      #WIP
-
-      #let(:measure1) { create :measure }
+    #describe 'ME104' do
+      #let(:measure) { create :measure }
 
       #it 'preforms validation' do
-        #expect(measure1).to be_conformant
+        #expect(measure).to be_conformant
       #end
-    end
+    #end
 
     describe "ME112" do
       let!(:additional_code_type_description) {
