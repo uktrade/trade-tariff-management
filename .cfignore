@@ -24,3 +24,6 @@ config/trade_tariff_backend_secrets.yml
 
 # Ignore git
 .git
+
+# Ignore idea files
+.idea/*
