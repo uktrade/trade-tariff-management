@@ -13,6 +13,7 @@ module Measures
 
     expose(:main_step_settings) do
       {
+        regulation: ::BaseOrModificationRegulationSearch.new(params[:regulation_id]).result.first.try(:to_json),
         regulation_id: params[:regulation_id],
         regulation_role: params[:regulation_role],
         start_date: params[:start_date],

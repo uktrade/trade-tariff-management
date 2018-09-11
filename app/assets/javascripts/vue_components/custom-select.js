@@ -21,7 +21,8 @@ Vue.component('custom-select', {
     "optionsFilter",
     "disabled",
     "compact",
-    "showCompactAbbreviation"
+    "showCompactAbbreviation",
+    "scopeDate"
   ],
   data: function() {
     return {
@@ -68,6 +69,10 @@ Vue.component('custom-select', {
         self.destroySelect();
         self.initializeSelect();
       });
+    },
+    scopeDate: function(val) {
+      this.start_date = val;
+      this.handleDateSentitivity({}, this.start_date, this.end_date);
     }
   },
   methods: {

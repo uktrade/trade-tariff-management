@@ -17,7 +17,7 @@ $(document).ready(function() {
         selectedMeasures: [],
         showTooltips: true,
         columns: [
-          {enabled: true, title: "ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
+          {enabled: true, title: "Old ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
           {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string", changeProp: "regulation" },
           {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string", changeProp: "measure_type" },
           {enabled: true, title: "Start date", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },
@@ -174,19 +174,10 @@ $(document).ready(function() {
             }
           }
 
-          var sid = measure.measure_sid;
-
-          var mToday = moment();
-          var mStart = moment(measure.validity_start_date, "DD MMM YYYY", true);
-
-          if (mStart.diff(mToday, "days") <= 0) {
-            sid = "";
-          }
-
           return {
-            measure_sid: sid,
+            measure_sid: measure.measure_sid,
             regulation: measure.regulation.formatted_id,
-            justification_regulation: measure.justification_id,
+            justification_regulation: measure.justification_regulation ? measure.justification_regulation.formatted_id : "-",
             measure_type_id: measure.measure_type.measure_type_id,
             goods_nomenclature: measure.goods_nomenclature ? measure.goods_nomenclature.goods_nomenclature_item_id : "-",
             additional_code: measure.additional_code || "-",
@@ -330,9 +321,23 @@ $(document).ready(function() {
         // based on previous page
         if (noChanges) {
           this.measures.forEach(function(measure) {
+            measure.original_values = {
+              validity_start_date: measure.validity_start_date,
+              validity_end_date: measure.validity_end_date
+            };
+
+            measure.validity_start_date = window.all_settings.start_date;
             measure.validity_end_date = null;
             measure.changes.push("validity_end_date");
-          })
+            measure.changes.push("validity_start_date");
+
+            if (window.all_settings.regulation) {
+              measure.original_values.regulation = measure.regulation;
+
+              measure.regulation = window.all_settings.regulation;
+              measure.changes.push("regulation");
+            }
+          });
         }
       },
       measuresFinishedLoading: function() {

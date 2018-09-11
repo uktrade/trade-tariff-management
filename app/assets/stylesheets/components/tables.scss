@@ -5,7 +5,7 @@ table {
 }
 
 .measures-table {
-  min-width: 1600px !important;
+  min-width: 1700px !important;
 
   .table__row {
     border-bottom: 1px solid $border-colour;
@@ -27,65 +27,85 @@ table {
   }
 
   .select-all-column {
-    width: 20px;
+    min-width: 20px;
+    max-width: 20px;
   }
 
   .measure_sid-column {
-    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
   }
 
   .regulation-column {
-    width: 80px;
+    min-width: 90px;
+    max-width: 90px;
   }
 
   .measure_type_id-column {
-    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
   }
 
   .validity_start_date-column {
-    width: 85px;
+    min-width: 85px;
+    max-width: 85px;
+  }
+
+  .justification_regulation-column {
+    min-width: 100px;
+    max-width: 100px;
   }
 
   .validity_end_date-column {
-    width: 85px;
+    min-width: 85px;
+    max-width: 85px;
   }
 
   .goods_nomenclature_id-column,
   .goods_nomenclature-column {
-    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
   }
 
   .additional_code_id-column,
   .additional_code-column {
-    width: 70px;
+    min-width: 70px;
+    max-width: 70px;
   }
 
   .geographical_area-column {
-    width: 45px;
+    min-width: 45px;
+    max-width: 45px;
   }
 
   .excluded_geographical_areas-column {
-    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
   }
 
   .duties-column {
-    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
   }
 
   .conditions-column {
-    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
   }
 
   .footnotes-column {
-    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
   }
 
   .last_updated-column {
-    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
   }
 
   .status-column {
-    width: 110px;
+    min-width: 110px;
+    max-width: 110px;
   }
 
   .table__column {
