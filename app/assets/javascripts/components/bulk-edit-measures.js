@@ -326,7 +326,7 @@ $(document).ready(function() {
               validity_end_date: measure.validity_end_date
             };
 
-            measure.validity_start_date = window.all_settings.start_date;
+            measure.validity_start_date = moment(window.all_settings.start_date, "DD/MM/YYYY", true).format("DD MMM YYYY");
             measure.validity_end_date = null;
             measure.changes.push("validity_end_date");
             measure.changes.push("validity_start_date");
@@ -501,15 +501,6 @@ $(document).ready(function() {
 
               return parseFloat(a) - parseFloat(b);
             };
-        }
-      }
-    },
-    watch: {
-      visibleMeasures: function(val) {
-        if (this.selectedAllMeasures) {
-          this.selectedMeasures = val.map(function(m) {
-            return m.measure_sid;
-          });
         }
       }
     }
