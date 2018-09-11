@@ -31,6 +31,19 @@ shared_context 'create_regulation_base_context' do
     create(:regulation_group_description, regulation_group_id: regulation_group.regulation_group_id)
   end
 
+  let!(:base_regulation) do
+    create(:base_regulation,
+           base_regulation_id:
+               %w(C D A I J R).sample +
+               Forgery(:basic).number(at_least: 10, at_most: 19).to_s +
+               Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s +
+               Forgery(:basic).number(at_least: 0, at_most: 9).to_s,
+           base_regulation_role: 1,
+           replacement_indicator: 0,
+           information_text: Forgery('lorem_ipsum').sentence
+    )
+  end
+
   let(:effective_end_date) do
     validity_end_date + 1.day
   end
