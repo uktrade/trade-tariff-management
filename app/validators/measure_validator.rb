@@ -100,6 +100,13 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.additional_code_type.non_meursing? && record.additional_code.additional_code_type.non_meursing?
   end
 
+  validation :ME19, "If the additional code type has as application 'ERN' then the goods code must be specified but the order number is blocked for input.", on: [:create, :update] do |record|
+    record.additional_code_type.present &&
+      record.additional_code_type.application_code.present? &&
+      record.additional_code_type.application_code.in?("0") &&
+      record.goods_nomenclature_item_id.present? && records.ordernumber.blank?
+  end
+
   validation :ME24, 'The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date.', on: [:create, :update] do
     validates :presence, of: [:measure_generating_regulation_id, :measure_generating_regulation_role]
   end
@@ -183,6 +190,8 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME112, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the measure does not require a goods code." do |record|
     valid = true
+
+    #FIXME See ME19
 
     if record.additional_code_type.present?
       valid = record.additional_code_type.description == "Export Refunds" &&
