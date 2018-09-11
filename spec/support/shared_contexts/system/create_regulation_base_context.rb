@@ -55,7 +55,7 @@ shared_context 'create_regulation_base_context' do
     base_required_fields
   end
 
-  let(:base_filed_values) do
+  let(:base_required_filed_values) do
     [
         {name: 'Prefix', value: %w(C D A I J R).sample, type: :select},
         {name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text},
@@ -65,6 +65,14 @@ shared_context 'create_regulation_base_context' do
         {name: 'Information text', value: Forgery('lorem_ipsum').sentence, type: :text},
         {name: 'Operation date', value: operation_date.strftime("%d/%m/%Y"), type: :date},
     ]
+  end
+
+  let(:required_filed_values) do
+    base_required_filed_values
+  end
+
+  let(:base_filed_values) do
+    base_required_filed_values
   end
 
   let(:filed_values) do
@@ -88,6 +96,36 @@ shared_context 'create_regulation_base_context' do
     end
 
     context 'filled required fields' do
+
+      context 'click on Create regulation' do
+        context 'click on Submit for cross-check' do
+          it 'should be okay' do
+            visit_create_regulation
+
+            custom_select regulation_type, from: 'Specify the regulation type'
+            required_filed_values.each do |value|
+              case value[:type]
+                when :text
+                  fill_in value[:name], with: value[:value]
+                when :select
+                  custom_select value[:value], from: value[:name]
+                when :date
+                  fill_date value[:name], with: value[:value]
+              end
+            end
+
+            click_on 'Create regulation'
+            expect(page).to have_content('Review and submit')
+
+            click_on 'Submit for cross-check'
+            expect(page).to have_content('Workbasket submitted for review')
+          end
+        end
+      end
+
+    end
+
+    context 'filled all fields' do
 
       context 'click on Create regulation' do
         context 'click on Submit for cross-check' do
