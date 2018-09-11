@@ -857,7 +857,7 @@ describe Measure do
           :additional_code_type_description,
           additional_code_type_id: "4",
           language_id: "EN",
-          description: "Export refund for processed agricultural goods"
+          description: "Export Refunds"
         )
       }
 
@@ -884,7 +884,7 @@ describe Measure do
           :additional_code_type_description,
           additional_code_type_id: "4",
           language_id: "EN",
-          description: "Export refund for processed agricultural goods"
+          description: "Export Refunds"
         )
       }
 
@@ -903,7 +903,6 @@ describe Measure do
         expect(measure.conformance_errors).to have_key(:ME113)
       end
     end
-
 
     describe 'ME116' do
       it { should validate_validity_date_span.of(:order_number) }

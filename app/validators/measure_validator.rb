@@ -178,7 +178,7 @@ class MeasureValidator < TradeTariffBackend::Validator
     valid = true
 
     if record.additional_code_type.present?
-      valid = record.additional_code_type.description == "Export refund for processed agricultural goods" &&
+      valid = record.additional_code_type.description == "Export Refunds" &&
         record.goods_nomenclature_item_id.blank?
     end
 
@@ -189,7 +189,7 @@ class MeasureValidator < TradeTariffBackend::Validator
     valid = true
 
     if record.additional_code_type.present?
-      valid = (record.additional_code_type.description == "Export refund for processed agricultural goods") &&
+      valid = (record.additional_code_type.description == "Export Refunds") &&
         record.additional_code_id.present? &&
         (record.additional_code.additional_code_type_id == additional_code_type.additional_code_type_id)
     end
