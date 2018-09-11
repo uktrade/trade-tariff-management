@@ -48,6 +48,10 @@ shared_context 'create_regulation_base_context' do
     validity_end_date + 1.day
   end
 
+  let(:published_date) do
+    validity_start_date
+  end
+
   let(:regulation_type) do
     ''
   end
