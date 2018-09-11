@@ -16,4 +16,12 @@ describe 'base regulation', js: true do
                ])
   end
 
+  let(:filed_values) do
+    base_filed_values.
+        concat([
+                   {name: 'Start date', value: validity_start_date.strftime("%d/%m/%Y"), type: :date},
+                   {name: 'Specify the regulation group', value: regulation_group.regulation_group_id, type: :select},
+               ])
+  end
+
 end
