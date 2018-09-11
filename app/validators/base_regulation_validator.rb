@@ -94,7 +94,7 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
 
   validation :ROIMB8,
              'Explicit dates of related measures must be within the validity period of the base regulation.' do |record|
-    record.generating_measures.all? do |measure|
+    record.measures.all? do |measure|
       record.validity_start_date <= measure.validity_start_date &&
       ((record.validity_end_date.blank? || measure.validity_end_date.blank?) ||
         (record.validity_end_date >= measure.validity_end_date))
@@ -106,7 +106,7 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
 
   validation :ROIMB11,
              'The start date of the first PTS in time must be within the validity period of the base regulation. Apply the rule when changing the start date further forward in time.' do |record|
-    record.generating_measures.all? do |measure|
+    record.measures.all? do |measure|
       measure.measure_partial_temporary_stop.blank? || (
         measure.measure_partial_temporary_stop.validity_start_date >= record.validity_start_date && (
           record.validity_end_date.blank? || measure.measure_partial_temporary_stop.validity_start_date <= record.validity_end_date
@@ -174,7 +174,7 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
     if record.column_changed?(:validity_end_date) && (
         record.column_changes[:validity_end_date][0].present? && record.column_changes[:validity_end_date][0] > record.column_changes[:validity_end_date][1]
       )
-      record.generating_measures.all? do |measure|
+      record.measures.all? do |measure|
         measure.validity_start_date >= record.validity_start_date && (
           record.validity_end_date.blank? || (
             measure.validity_end_date <= record.validity_end_date
