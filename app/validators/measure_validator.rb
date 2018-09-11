@@ -91,6 +91,15 @@ class MeasureValidator < TradeTariffBackend::Validator
      )
   end
 
+  validation :ME16, "Integrating a measure with an additional code when an equivalent or overlapping measures without additional code already exists and vice-versa, should be forbidden.", on: [:create, :update] do |record|
+    # Didn't get this conformance rule.
+  end
+
+  validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.", on: [:create, :update] do |record|
+    record.additional_code_type.present && record.additional_code.present? &&
+      record.additional_code_type.non_meursing? && record.additional_code.additional_code_type.non_meursing?
+  end
+
   validation :ME24, 'The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date.', on: [:create, :update] do
     validates :presence, of: [:measure_generating_regulation_id, :measure_generating_regulation_role]
   end
