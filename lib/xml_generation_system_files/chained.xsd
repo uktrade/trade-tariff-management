@@ -347,13 +347,7 @@
   <xs:simpleType name="MonetaryUnitCode">
     <xs:restriction base="xs:string">
       <xs:length value="3"/>
-      <xs:pattern value="[A-Z]{3}">
-        <xs:annotation>
-          <xs:appinfo>
-            <format xmlns="taric-format">AAA</format>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:pattern>
+      <xs:pattern value="[A-Z]{3}"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="NomenclatureGroupFacilityCode">
