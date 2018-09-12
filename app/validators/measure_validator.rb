@@ -95,11 +95,11 @@ class MeasureValidator < TradeTariffBackend::Validator
     # Didn't get this conformance rule.
   end
 
-  validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.", on: [:create, :update] do |record|
-    record.additional_code_type.present? && record.additional_code.present? &&
-      record.additional_code_type.non_meursing? &&
-      (record.additional_code.additional_code_type_id == record.additional_code_type_id)
-  end
+  validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
+    on: [:create, :update],
+    if: -> (record) { record.additional_code_type.present? && record.additional_code.present? } do |record|
+      record.additional_code_type.non_meursing? && (record.additional_code.additional_code_type_id == record.additional_code_type_id)
+    end
 
   #validation :ME19, "If the additional code type has as application 'ERN' then the goods code must be specified but the order number is blocked for input.", on: [:create, :update] do |record|
     #record.additional_code_type.present &&
@@ -127,11 +127,9 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME25, "If the measure's end date is specified (implicitly or explicitly) then the start date of the measure must be less than or equal to the end date.",
       on: [:create, :update],
-      if: ->(record) {
-        (record.national? && !record.invalidated?) ||
-         !record.national? } do
-    validates :validity_dates
-  end
+      if: ->(record) { (record.national? && !record.invalidated?) || !record.national? } do
+        validates :validity_dates
+      end
 
   validation :ME26, 'The entered regulation may not be completely abrogated.' do
     validates :exclusion, of: [:measure_generating_regulation_id,
@@ -202,83 +200,76 @@ class MeasureValidator < TradeTariffBackend::Validator
     #valid
   #end
 
-  validation :ME112, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the measure does not require a goods code." do |record|
-    valid = true
-
-    #FIXME See ME19
-
-    if record.additional_code_type.present? && record.additional_code_type.description.present?
-      valid = (record.additional_code_type.description == "Export Refunds") &&
-        record.goods_nomenclature_item_id.blank?
+  validation :ME112, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the measure does not require a goods code.",
+    on: [:create, :update],
+    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.description.present? } do |record|
+      # FIXME: See ME19
+      (record.additional_code_type.description == "Export Refunds") && record.goods_nomenclature_item_id.blank?
     end
 
-    valid
-  end
-
-  validation :ME113, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the additional code must exist as an Export Refund for Processed Agricultural Goods additional code." do |record|
-    valid = true
-
-    #FIXME See ME19
-
-    if record.additional_code_type.present? && record.additional_code_type.description.present?
-      valid = (record.additional_code_type.description == "Export Refunds") &&
-        record.additional_code_id.present? && (record.additional_code.additional_code_type_id == additional_code_type.additional_code_type_id)
+  validation :ME113, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the additional code must exist as an Export Refund for Processed Agricultural Goods additional code.",
+    on: [:create, :update],
+    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.description.present? } do |record|
+      # FIXME: See ME19
+      (record.additional_code_type.description == "Export Refunds") && record.additional_code_id.present? &&
+        (record.additional_code.additional_code_type_id == additional_code_type.additional_code_type_id)
     end
-
-    valid
-  end
 
   validation :ME115, 'The validity period of the referenced additional code must span the validity period of the measure', on: [:create, :update] do
     validates :validity_date_span, of: :additional_code
   end
 
   validation :ME116, 'When a quota order number is used in a measure then the validity period of the quota order number must span the validity period of the measure.  This rule is only applicable for measures with start date after 31/12/2007.',
-      on: [:create, :update],
-      if: ->(record) {
-       record.validity_start_date > Date.new(2007,12,31) &&
-       record.order_number.present? && record.ordernumber =~ /^09[012356789]/
-      } do
-    # Only quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'
-    validates :validity_date_span, of: :order_number
-  end
+    on: [:create, :update],
+    if: ->(record) {
+      record.validity_start_date > Date.new(2007,12,31) &&
+      record.order_number.present? && record.ordernumber =~ /^09[012356789]/
+    } do
+      # Only quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'
+      validates :validity_date_span, of: :order_number
+    end
 
   validation :ME117,
-             %{When a measure has a quota measure type then rhe origin must exist as a quota order number origin. This rule is only applicable for measures with start date after 31/12/2007. Only origins for quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'},
-             if: ->(record) {
-               ( record.validity_start_date > Date.new(2007,12,31) ) && (
-                 record.ordernumber.present? && record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094"
-               )
-             } do |record|
-    record.quota_order_number.present? && record.quota_order_number.quota_order_number_origin.present?
-  end
+    %{When a measure has a quota measure type then rhe origin must exist as a quota order number origin.
+      This rule is only applicable for measures with start date after 31/12/2007. Only origins for quota
+      order numbers managed by the first come first served principle are in scope; these order number are
+      starting with '09'; except order numbers starting with '094'},
+    on: [:create, :update],
+    if: ->(record) {
+      ( record.validity_start_date > Date.new(2007,12,31) ) && (
+        record.ordernumber.present? && record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094"
+      )
+    } do |record|
+      record.quota_order_number.present? && record.quota_order_number.quota_order_number_origin.present?
+    end
 
   validation :ME118,
-             %(When a quota order number is used in a measure then the validity period of the quota order number must
-              span the validity period of the measure. This rule is only applicable for measures with start date after
-              31/12/2007. Only quota order numbers managed by the first come first served principle are in scope;
-              these order number are starting with '09'; except order numbers starting with '094'),
-             if: ->(record) {
-               (record.validity_start_date > Date.new(2007,12,31)) &&
-               (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
-               (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094")
-             } do
+    %(When a quota order number is used in a measure then the validity period of the quota order number must
+     span the validity period of the measure. This rule is only applicable for measures with start date after
+     31/12/2007. Only quota order numbers managed by the first come first served principle are in scope;
+     these order number are starting with '09'; except order numbers starting with '094'),
+    on: [:create, :update],
+    if: ->(record) {
+      (record.validity_start_date > Date.new(2007,12,31)) &&
+      (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
+      (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094")
+    } do
     validates :validity_date_span, of: :order_number
   end
 
   validation :ME119,
-             %(When a quota order number is used in a measure then the validity period of the quota order number origin must
-             span the validity period of the measure. This rule is only applicable for measures with start date after
-             31/12/2007. Only origins for quota order numbers managed by the first come first served principle are in scope;
-             these order number are starting with '09'; except order numbers starting with '094'),
-             if: ->(record) {
-               (record.validity_start_date > Date.new(2007,12,31)) &&
-               (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
-               (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094") &&
-               (record.quota_order_number_origin.present?)
-             } do
+    %(When a quota order number is used in a measure then the validity period of the quota order number origin must
+     span the validity period of the measure. This rule is only applicable for measures with start date after
+     31/12/2007. Only origins for quota order numbers managed by the first come first served principle are in scope;
+     these order number are starting with '09'; except order numbers starting with '094'),
+     if: ->(record) {
+       (record.validity_start_date > Date.new(2007,12,31)) &&
+       (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
+       (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094") &&
+       (record.quota_order_number_origin.present?)
+     } do
     validates :validity_date_span, of: :quota_order_number_origin
   end
-
 end
 
 # TODO: ME16

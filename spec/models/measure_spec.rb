@@ -959,7 +959,7 @@ describe Measure do
       let!(:additional_code_type) {
         create(
           :additional_code_type,
-          additional_code_type_id: "1",
+          additional_code_type_id: "4",
           validity_start_date: Date.yesterday
         )
       }
