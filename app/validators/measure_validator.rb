@@ -110,18 +110,18 @@ class MeasureValidator < TradeTariffBackend::Validator
         record.goods_nomenclature_item_id.present? && record.ordernumber.blank?
     end
 
-  #validation :ME21,
-    #%Q(If the additional code type has as application 'ERN' then the combination of goods code + additional code
-    #must exist as an ERN product code and its validity period must span the validity period of the measure),
-    #on: [:create, :update],
-    #if: ->(record) {
-      #record.additional_code_type.present &&
-      #record.additional_code_type.application_code.present? &&
-      #record.additional_code_type.application_code.in?("0") &&
-      #record.goods_nomenclature_item_id.present? && records.additional_code.present?
-    #} do
-      #validates :validity_date_span, of: :additional_code_type
-    #end
+  validation :ME21,
+    %Q(If the additional code type has as application 'ERN' then the combination of goods code + additional code
+    must exist as an ERN product code and its validity period must span the validity period of the measure),
+    on: [:create, :update],
+    if: ->(record) {
+      record.additional_code_type.present? &&
+      record.additional_code_type.application_code.present? &&
+      record.additional_code_type.application_code.in?("0") &&
+      record.goods_nomenclature_item_id.present? && record.additional_code.present?
+    } do
+      validates :validity_date_span, of: :additional_code_type
+    end
 
   #validation :ME24, 'The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date.', on: [:create, :update] do
     #validates :presence, of: [:measure_generating_regulation_id, :measure_generating_regulation_role]
