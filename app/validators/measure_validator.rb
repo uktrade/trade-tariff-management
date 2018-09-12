@@ -101,12 +101,14 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.additional_code_type.non_meursing? && (record.additional_code.additional_code_type_id == record.additional_code_type_id)
     end
 
-  #validation :ME19, "If the additional code type has as application 'ERN' then the goods code must be specified but the order number is blocked for input.", on: [:create, :update] do |record|
-    #record.additional_code_type.present &&
-      #record.additional_code_type.application_code.present? &&
-      #record.additional_code_type.application_code.in?("0") &&
-      #record.goods_nomenclature_item_id.present? && records.ordernumber.blank?
-  #end
+  validation :ME19,
+    %Q(If the additional code type has as application 'ERN' then the goods code must be specified
+    but the order number is blocked for input.),
+    on: [:create, :update],
+    if: ->(record) { record.additional_code_type.present? } do |record|
+      record.additional_code_type.application_code.in?("0") &&
+        record.goods_nomenclature_item_id.present? && record.ordernumber.blank?
+    end
 
   #validation :ME21,
     #%Q(If the additional code type has as application 'ERN' then the combination of goods code + additional code
