@@ -866,6 +866,68 @@ describe Measure do
       end
     end
 
+    describe 'ME21' do
+      let(:measure_type) { create :measure_type }
+
+      let!(:additional_code_type) {
+        create(
+          :additional_code_type,
+          additional_code_type_id: "4",
+          application_code: "0",
+          validity_start_date: Date.yesterday,
+          validity_end_date: nil
+        )
+      }
+
+      let!(:additional_code_type_measure_type) {
+        create(
+          :additional_code_type_measure_type,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          measure_type_id: measure_type.measure_type_id,
+          validity_start_date: Date.yesterday,
+          validity_end_date: nil
+        )
+      }
+
+      let!(:additional_code) {
+        create(
+          :additional_code,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          validity_start_date: Date.yesterday,
+          validity_end_date: nil
+        )
+      }
+
+      let!(:measure) {
+        create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.yesterday,
+          validity_end_date: nil
+        )
+      }
+
+      context "If the additional code type has as application 'ERN' then the combination of goods code + additional code must exist as an ERN product code and its validity period must span the validity period of the measure" do
+        it 'should be valid' do
+          expect(measure).to be_conformant
+        end
+
+        it 'should be invalid' do
+          additional_code_type = measure.additional_code_type
+          additional_code_type.validity_start_date = measure.validity_start_date + 2.days
+          additional_code_type.save
+
+          measure.reload
+
+          expect(measure).to_not be_conformant
+          expect(measure.conformance_errors).to have_key(:ME21)
+        end
+      end
+    end
+
     describe 'ME26' do
       it { should validate_exclusion.of([:measure_generating_regulation_id, :measure_generating_regulation_role])
                                     .from(->{ CompleteAbrogationRegulation.select(:complete_abrogation_regulation_id, :complete_abrogation_regulation_role) }) }
