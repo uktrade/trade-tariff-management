@@ -556,7 +556,7 @@ class Measure < Sequel::Model
     {
       measure_sid: measure_sid,
       regulation: generating_regulation_code,
-      justification_regulation: generating_regulation_code(justification_regulation_id),
+      justification_regulation: (generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?),
       measure_type_id: measure_type_id,
       validity_start_date: validity_start_date.strftime("%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
@@ -577,7 +577,7 @@ class Measure < Sequel::Model
     {
       measure_sid: measure_sid,
       regulation: generating_regulation.to_json,
-      justification_regulation: justification_regulation.to_json,
+      justification_regulation: (justification_regulation.to_json if justification_regulation.present?),
       measure_type: measure_type.to_json,
       validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
