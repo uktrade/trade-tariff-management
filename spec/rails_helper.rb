@@ -22,6 +22,8 @@ require 'fakefs/spec_helpers'
 require 'sidekiq/testing'
 
 require 'capybara/rspec'
+require 'capybara/rails'
+require 'selenium/webdriver'
 
 require Rails.root.join("spec/support/tariff_validation_matcher.rb")
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
@@ -44,6 +46,9 @@ RSpec.configure do |config|
   config.include RescueHelper
   config.include ChiefDataHelper
   config.include ActiveSupport::Testing::TimeHelpers
+  config.include Capybara::DSL
+  config.include CapybaraHelper
+  config.include Rails.application.routes.url_helpers
 
   redis = Redis.new(:db => 15)
   RedisLockDb.redis = redis

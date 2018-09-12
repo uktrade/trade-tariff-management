@@ -11,6 +11,36 @@ module Measures
       params[:page]
     end
 
+    expose(:main_step_settings) do
+      {
+        regulation: ::BaseOrModificationRegulationSearch.new(params[:regulation_id]).result.first.try(:to_json),
+        regulation_id: params[:regulation_id],
+        regulation_role: params[:regulation_role],
+        start_date: params[:start_date],
+        reason: params[:reason],
+        title: params[:title]
+      }
+    end
+
+    expose(:workbasket_settings) do
+      workbasket.settings
+    end
+
+    expose(:edit_url) do
+      edit_measures_bulk_url(
+        workbasket.id,
+        search_code: workbasket_settings.search_code
+      )
+    end
+
+    expose(:submit_group_for_cross_check) do
+      params[:mode] == "save_group_for_cross_check"
+    end
+
+    expose(:final_saving_batch) do
+      params[:final_batch].to_s == "true"
+    end
+
     expose(:workbasket_container) do
       ::Measures::Workbasket::Items.new(
         workbasket, cached_search_ops
@@ -18,7 +48,7 @@ module Measures
     end
 
     expose(:cached_search_ops) do
-      if workbasket.initial_items_populated.present?
+      if workbasket_settings.initial_items_populated.present?
         {
           measure_sids: workbasket_items.pluck(:record_id),
           page: current_page
@@ -72,36 +102,53 @@ module Measures
         end
 
       else
-        redirect_to edit_measures_bulk_url(
-          workbasket.id,
-          search_code: workbasket.search_code
-        )
+        redirect_to edit_url
       end
     end
 
     def create
       self.workbasket = Workbaskets::Workbasket.new(
-        status: :in_progress,
+        status: :new_in_progress,
         type: :bulk_edit_of_measures,
-        user: current_user,
-        initial_search_results_code: params[:search_code],
-        search_code: search_code
+        user: current_user
       )
 
       if workbasket.save
-        redirect_to edit_measures_bulk_url(
+        workbasket_settings.update(
+          initial_search_results_code: params[:search_code],
+          search_code: search_code
+        )
+
+        redirect_to work_with_selected_measures_measures_bulk_url(
           workbasket.id,
-          search_code: workbasket.search_code
+          search_code: workbasket_settings.search_code
         )
       else
-        redirect_to measures_url(notice: "You have to select at least of 1 measure from list!")
+        redirect_to measures_url(
+          notice: "You have to select at least of 1 measure from list!"
+        )
       end
+    end
+
+    def persist_work_with_selected_measures
+      workbasket_settings.set_settings_for!("main", main_step_settings)
+      workbasket_settings.set_workbasket_system_data!
+
+      redirect_to edit_url
     end
 
     def update
       if bulk_saver.valid?
-        render json: bulk_saver.success_response,
-               status: :ok
+        if submit_group_for_cross_check && final_saving_batch
+          bulk_saver.persist!
+
+          render json: bulk_saver.success_response.merge(
+            redirect_url: measures_bulk_url(workbasket.id, search_code: workbasket_settings.search_code)
+          ), status: :ok
+        else
+          render json: bulk_saver.success_response,
+                 status: :ok
+        end
       else
         render json: bulk_saver.error_response,
                status: :unprocessable_entity

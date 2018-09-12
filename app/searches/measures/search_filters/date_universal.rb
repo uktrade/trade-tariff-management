@@ -70,23 +70,20 @@ module Measures
         def clause
           case operator
           when "is"
-
             [ is_clause, value ]
           when "is_not"
-
             [ is_not_clause, value ]
           when "is_before"
-
             [ is_before_clause, value ]
+          when "is_before_or_nil"
+            [ is_before_or_nil_clause, value ]
           when "is_after"
-
             [ is_after_clause, value ]
-
+          when "is_after_or_nil"
+            [ is_after_or_nil_clause, value ]
           when "is_not_specified"
-
             is_not_specified_clause
           when "is_not_unspecified"
-
             is_not_unspecified_clause
           end
         end
@@ -97,6 +94,21 @@ module Measures
 
         def is_not_unspecified_clause
           "#{field_name} IS NOT NULL"
+        end
+
+        def is_before_clause
+          compare_sql("<")
+        end
+
+        def is_after_clause
+          compare_sql(">")
+        end
+
+        def compare_sql(compare_operator)
+          res = "#{field_name}::date #{compare_operator} ?"
+          res += " OR #{is_not_specified_clause}" if field_name == "validity_end_date"
+
+          res
         end
     end
   end

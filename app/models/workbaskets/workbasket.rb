@@ -1,31 +1,42 @@
 module Workbaskets
   class Workbasket < Sequel::Model
 
-    STATUS_LIST = [
-      :in_progress,
-      :draft_incomplete,
-      :draft_ready_for_cross_check,
-      :submitted_for_cross_check,
-      :cross_check_rejected,
-      :ready_for_approval,
-      :submitted_for_approval,
-      :approval_rejected,
-      :ready_for_export,
-      :export_pending,
-      :sent_to_cds,
-      :cds_import_error,
-      :already_in_cds
-    ]
-
     TYPES = [
       :create_measures,
       :bulk_edit_of_measures,
-      :create_quota
+      :create_quota,
+      :create_regulation
+    ]
+
+    STATUS_LIST = [
+      :new_in_progress,                # "New - in progress"
+      :editing,                        # "Editing"
+      :awaiting_cross_check,           # "Awaiting cross-check"
+      :cross_check_rejected,           # "Cross-check rejected"
+      :ready_for_approval,             # "Ready for approval"
+      :awaiting_approval,              # "Awaiting approval"
+      :approval_rejected,              # "Approval rejected"
+      :ready_for_export,               # "Ready for export"
+      :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
+      :awaiting_cds_upload_edit,       # "Awaiting CDS upload - edit"
+      :awaiting_cds_upload_overwrite,  # "Awaiting CDS upload - overwrite"
+      :awaiting_cds_upload_delete,     # "Awaiting CDS upload - delete"
+      :sent_to_cds,                    # "Sent to CDS"
+      :sent_to_cds_delete,             # "Sent to CDS - delete"
+      :published,                      # "Published"
+      :cds_error                       # "CDS error"
+    ]
+
+    EDITABLE_STATES = [
+      :new_in_progress,  # "New - in progress"
+      :editing,          # "Editing"
+      :approval_rejected # "Approval rejected"
     ]
 
     SENT_TO_CDS_STATES = [
       :sent_to_cds,
-      :already_in_cds
+      :sent_to_cds_delete,
+      :published
     ]
 
     one_to_many :events, key: :workbasket_id,
@@ -34,11 +45,17 @@ module Workbaskets
     one_to_many :items, key: :workbasket_id,
                         class_name: "Workbaskets::Item"
 
+    one_to_one :bulk_edit_of_measures_settings, key: :workbasket_id,
+                                                class_name: "Workbaskets::BulkEditOfMeasuresSettings"
+
     one_to_one :create_measures_settings, key: :workbasket_id,
                                           class_name: "Workbaskets::CreateMeasuresSettings"
 
     one_to_one :create_quota_settings, key: :workbasket_id,
                                        class_name: "Workbaskets::CreateQuotaSettings"
+
+    one_to_one :create_regulation_settings, key: :workbasket_id,
+                                            class_name: "Workbaskets::CreateRegulationSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -54,15 +71,13 @@ module Workbaskets
                      predicates: true
 
     enumerize :status, in: STATUS_LIST,
-                       default: :in_progress,
+                       default: :new_in_progress,
                        predicates: true
 
     validates do
       presence_of :status,
                   :user_id,
                   :type
-
-      presence_of :search_code, if: :bulk_edit_of_measures?
 
       inclusion_of :status, in: STATUS_LIST.map(&:to_s)
       inclusion_of :type, in: TYPES.map(&:to_s)
@@ -72,7 +87,7 @@ module Workbaskets
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status("submitted_for_cross_check")
+        ).in_status("awaiting_cross_check")
          .order(:operation_date)
       end
 
@@ -103,6 +118,10 @@ module Workbaskets
       end
     end
 
+    def editable?
+      status.to_sym.in?(EDITABLE_STATES)
+    end
+
     def move_status_to!(new_status)
       self.status = new_status
       save
@@ -113,34 +132,16 @@ module Workbaskets
       when :create_measures
         create_measures_settings
       when :bulk_edit_of_measures
-        # TODO: need to refactor Bulk Edit stuff
-        #       to store settings, specific for Bulk Edit of measures
-        #       in separated DB table
-        #
+        bulk_edit_of_measures_settings
       when :create_quota
         create_quota_settings
+      when :create_regulation
+        create_regulation_settings
       end
     end
 
     def generate_next_sequence_number
       @sequence_number = (@sequence_number || 0) + 1
-    end
-
-    def track_current_page_loaded!(current_page)
-      res = JSON.parse(batches_loaded)
-      res[current_page] = true
-
-      self.batches_loaded = res.to_json
-    end
-
-    def batches_loaded_pages
-      JSON.parse(batches_loaded)
-    end
-
-    def get_item_by_id(target_id)
-      items.detect do |i|
-        i.record_id.to_s == target_id
-      end
     end
 
     def debug_collection
@@ -149,7 +150,7 @@ module Workbaskets
       #
       settings.collection
               .map.with_index do |el, index|
-        puts ""
+
         puts " [#{index}] Class: #{el.class.name}"
         puts "             Workbasket ID: #{el.workbasket_id}"
         puts "             Sequence number: #{el.workbasket_sequence_number}"
@@ -175,9 +176,25 @@ module Workbaskets
         end
 
         puts "             #{custom_note}"
-        puts ""
-        puts "-"
       end
+    end
+
+    def clean_up_workbasket!
+      if settings.present?
+        settings.collection.map do |item|
+          item.manual_add = true
+          item.destroy
+        end
+
+        settings.destroy
+      end
+
+      clean_up_related_cache!
+      destroy
+    end
+
+    def clean_up_related_cache!
+      Rails.cache.write("#{id}_sequence_number", nil)
     end
 
     class << self
@@ -191,40 +208,17 @@ module Workbaskets
         workbasket
       end
 
-      def validate_measure!(measure_params={})
-        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
-
-        errors = {}
-
-        measure = Measure.new(
-          ::Measures::BulkParamsConverter.new(
-            measure_params
-          ).converted_ops
-        )
-
-        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-
-        ::Measures::ConformanceErrorsParser.new(
-          measure, MeasureValidator, {}
-        ).errors
-      end
-
       def clean_up!
-        #
-        # TODO: remove me after finishing of active development phase
-        #
-        TYPES.map do |type_name|
-          by_type(type_name.to_s).map do |w|
-            settings = w.settings
-
-            if settings.present?
-              settings.collection.map(&:destroy)
-              w.destroy
-            end
+        %w(
+          bulk_edit_of_measures
+          create_measures
+          create_quota
+          create_regulation
+        ).map do |type_name|
+          by_type(type_name).map do |w|
+            w.clean_up_workbasket!
           end
         end
-
-        all.map(&:destroy)
       end
     end
 
@@ -237,12 +231,15 @@ module Workbaskets
             workbasket_id: id
           )
         when :bulk_edit_of_measures
-          # TODO: need to refactor Bulk Edit stuff
-          #       to store settings, specific for Bulk Edit of measures
-          #       in separated DB table
-          #
+          ::Workbaskets::BulkEditOfMeasuresSettings.new(
+            workbasket_id: id
+          )
         when :create_quota
           ::Workbaskets::CreateQuotaSettings.new(
+            workbasket_id: id
+          )
+        when :create_regulation
+          ::Workbaskets::CreateRegulationSettings.new(
             workbasket_id: id
           )
         end

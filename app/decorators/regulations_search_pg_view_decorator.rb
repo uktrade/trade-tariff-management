@@ -3,7 +3,7 @@ class RegulationsSearchPgViewDecorator < ApplicationDecorator
   def regulation_type
     return "Full Temporary Stop" if object.role.to_s == "8"
 
-    RegulationForm.regulation_roles
+    ::WorkbasketForms::CreateRegulationForm.new(nil).regulation_roles
                   .detect do |role_ops|
       role_ops[0] == object.role.to_s
     end[1]

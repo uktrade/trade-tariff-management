@@ -1,0 +1,23 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Measures submitted
+
+  h3.heading-medium
+    | The workbasket &lsquo;
+    = workbasket.title
+    |&rsquo;, containing&nbsp;
+    = pluralize(workbasket_settings.measures.count, "measure", "measures")
+    |, was submitted for cross-checking.
+
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  li
+    a href="#"
+      | Widthdraw submission/edit measures (not implemented)
+  li
+    = link_to "Return to main menu", root_url
+br
+br

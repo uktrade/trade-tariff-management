@@ -12,7 +12,7 @@ fieldset
 
         | If the regulation you need is not in the list, you can&nbsp;
 
-        = link_to "add it from here", new_regulation_url, target: "_blank"
+        = link_to "add it from here", new_create_regulation_url, target: "_blank"
         |.
         br
 
@@ -22,5 +22,5 @@ fieldset
         |.
 
     .row
-      .col-md-5
+      .col-md-4
         = content_tag "custom-select", "", { url: "/regulations.json", "label-field" => "description", "value-field" => "regulation_id", placeholder: "― start typing ―", "min-length" => 2, "v-model" => "measure.regulation_id", "date-sensitive" => true }

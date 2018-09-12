@@ -23,6 +23,13 @@ module WorkbasketInteractions
       quota_periods
     )
 
+    ASSOCIATION_LIST = %w(
+      measure_components
+      conditions
+      footnotes
+      excluded_geographical_areas
+    )
+
     attr_accessor :current_step,
                   :save_mode,
                   :settings,
@@ -34,7 +41,7 @@ module WorkbasketInteractions
                   :candidates_with_errors
 
     def initialize(workbasket, current_step, save_mode, settings_ops={})
-      if self.class::WORKBASKET_TYPE == "CreateQuota"
+      if current_step == 'main' && self.class::WORKBASKET_TYPE == "CreateQuota"
         settings_ops['start_date'] = Date.today.strftime("%Y-%m-%d")
         settings_ops['workbasket_name'] = settings_ops['quota_ordernumber']
       end
@@ -105,6 +112,12 @@ module WorkbasketInteractions
 
     private
 
+      ASSOCIATION_LIST.map do |name|
+        define_method("#{name}_errors") do |measure|
+          get_association_errors(name, measure)
+        end
+      end
+
       def check_required_params!
         general_errors = {}
 
@@ -118,11 +131,19 @@ module WorkbasketInteractions
           general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
         end
 
-        if self.class::WORKBASKET_TYPE == "CreateQuota" && quota_ordernumber.blank?
-          general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
+        if self.class::WORKBASKET_TYPE == "CreateQuota"
+          if quota_ordernumber.present?
+            unless order_number_saver.valid?
+              general_errors[:quota_ordernumber] = order_number_saver.errors
+                                                                     .join('. ')
+            end
+
+          else
+            general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
+          end
         end
 
-        if candidates.blank?
+        if candidates.flatten.compact.blank?
           general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
         end
 
@@ -133,9 +154,16 @@ module WorkbasketInteractions
         if settings_params['start_date'].present? && (
             commodity_codes.present? ||
             additional_codes.present?
-          ) && candidates.blank?
+          ) && candidates.flatten.compact.blank?
 
           @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
+        end
+
+        if self.class::WORKBASKET_TYPE == "CreateQuota" &&
+           step_pointer.configure_quota? &&
+           quota_periods.blank?
+
+          general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
         end
 
         if general_errors.present?
@@ -156,11 +184,11 @@ module WorkbasketInteractions
       end
 
       def validate_candidates!
-        candidates.map do |code|
-          candidate_errors = candidate_validation_errors(code, validation_mode)
+        candidates.map do |gn_and_additional_codes|
+          candidate_errors = candidate_validation_errors(gn_and_additional_codes)
 
           if candidate_errors.present?
-            @candidates_with_errors[code.to_s] = candidate_errors
+            @candidates_with_errors[gn_and_additional_codes.to_s] = candidate_errors
           end
         end
       end
@@ -208,15 +236,15 @@ module WorkbasketInteractions
       end
 
       begin :measures_related_methods
-        def candidate_validation_errors(code, mode)
+        def candidate_validation_errors(gn_and_additional_codes)
           errors_collection = {}
 
-          measure = generate_new_measure!(code, mode)
+          measure = generate_new_measure!(gn_and_additional_codes)
 
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
 
-          self.class::ASSOCIATION_LIST.map do |name|
+          ASSOCIATION_LIST.map do |name|
             if public_send(name).present?
               association_errors = send("#{name}_errors", measure)
               errors_collection[name] = association_errors if association_errors.present?
@@ -229,15 +257,16 @@ module WorkbasketInteractions
         def get_association_errors(name, measure)
           klass_name = name.split("_").map(&:capitalize).join('')
 
-          "::WorkbasketServices::AssociationSavers::#{klass_name}".constantize.errors_in_collection(
+          "::WorkbasketServices::MeasureAssociationSavers::#{klass_name}".constantize.errors_in_collection(
             measure, system_ops.merge(type_of: name), public_send(name)
           )
         end
 
-        def generate_new_measure!(code, mode)
+        def generate_new_measure!(gn_and_additional_codes)
           measure = Measure.new(
-            attrs_parser.measure_params(code, mode)
+            attrs_parser.measure_params(gn_and_additional_codes)
           )
+
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
 
           if @persist.present?
@@ -253,7 +282,7 @@ module WorkbasketInteractions
         end
 
         def measure_errors(measure)
-          ::Measures::ConformanceErrorsParser.new(
+          ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
             measure, MeasureValidator, {}
           ).errors
         end

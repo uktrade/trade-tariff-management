@@ -25,14 +25,14 @@ Vue.component("change-duties-popup", {
     if (equal) {
       for (var i = 0; i < dtCount; i++) {
         var dutyExpressionId = this.measures[0].measure_components[0].duty_expression_id;
-        var dutyExpressionAmount = this.measures[0].measure_components[0].amount;
+        var dutyExpressionAmount = this.measures[0].measure_components[0].duty_amount;
         var dutyExpressionMonetaryUnit = this.measures[0].measure_components[0].monetary_unit_id;
         var dutyExpressionMeasurementUnit = this.measures[0].measure_components[0].measurement_unit_id;
         var dutyExpressionMeasurementUnitQualifier = this.measures[0].measure_components[0].measurement_unit_qualifier_id;
 
         for (var j = 1; j < n; j++) {
           if (dutyExpressionId != this.measures[j].measure_components[i].duty_expression_id ||
-              dutyExpressionAmount != this.measures[j].measure_components[i].amount ||
+              dutyExpressionAmount != this.measures[j].measure_components[i].duty_amount ||
               dutyExpressionMonetaryUnit != this.measures[j].measure_components[i].monetary_unit_id ||
               dutyExpressionMeasurementUnit != this.measures[j].measure_components[i].measurement_unit_id ||
               dutyExpressionMeasurementUnitQualifier != this.measures[j].measure_components[i].measurement_unit_qualifier_id) {
@@ -49,7 +49,7 @@ Vue.component("change-duties-popup", {
       this.measureComponents = this.measures[0].measure_components.map(function(component) {
         return {
           duty_expression_id: self.getDutyExpressionId(component),
-          amount: component.duty_amount,
+          duty_amount: component.duty_amount,
           measurement_unit_code: component.measurement_unit ? component.measurement_unit.measurement_unit_code : null,
           measurement_unit_qualifier_code: component.measurement_unit_qualifier ? component.measurement_unit_qualifier.measurement_unit_qualifier_code : null,
           duty_expression: component.duty_expression,
@@ -78,14 +78,16 @@ Vue.component("change-duties-popup", {
   methods: {
     validate: function() {
       var errors = [];
-      var amountRegex = new RegExp(/^([\d]+)[\.]?[\d]*$/g);
+      var amountRegex = new RegExp(/^([\d]+)[\.]?[\d]*$/);
 
       this.measureComponents.forEach(function(mc, index) {
-        if (!mc.duty_expression_id || mc.duty_expression_id == "37") {
+        var ids = ["12", "14", "21", "25", "27", "29", "37", "99"];
+
+        if (!mc.duty_expression_id || ids.indexOf(mc.duty_expression_id) > -1) {
           return;
         }
 
-        if (!mc.amount || !amountRegex.test(mc.amount)) {
+        if (!amountRegex.test('' + mc.duty_amount)) {
           errors.push("Amount field for " + ordinal(index + 1) + " duty expression is invalid");
         }
       });
@@ -97,6 +99,10 @@ Vue.component("change-duties-popup", {
     getDutyExpressionId: function(component) {
       var ids = ["01","02","04","19","20"];
       var id = component.duty_expression.duty_expression_id;
+
+      if (component.original_duty_expression_id) {
+        return component.original_duty_expression_id;
+      }
 
       if (ids.indexOf(component.duty_expression.duty_expression_id) === -1) {
         return id;
@@ -123,12 +129,16 @@ Vue.component("change-duties-popup", {
         measure.measure_components.splice(0, 999);
 
         components.forEach(function(component) {
+          component.duty_expression.duty_expression_id = component.duty_expression.duty_expression_id.substring(0,2);
+
           measure.measure_components.push({
-            duty_amount: component.amount,
+            duty_amount: component.duty_amount,
             duty_expression: component.duty_expression,
             measurement_unit: component.measurement_unit,
             measurement_unit_qualifier: component.measurement_unit_qualifier,
-            monetary_unit: component.monetary_unit
+            monetary_unit: component.monetary_unit,
+            original_duty_expression_id: component.duty_expression_id.slice(0),
+            duty_expression_id: component.duty_expression_id.substring(0,2)
           });
         });
       });
@@ -142,7 +152,7 @@ Vue.component("change-duties-popup", {
     addDutyExpression: function() {
       this.measureComponents.push({
         duty_expression_id: null,
-        amount: null,
+        duty_amount: null,
         monetary_unit_code: null,
         measurement_unit_code: null,
         measurement_unit_qualifier_code: null,

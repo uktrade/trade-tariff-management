@@ -84,13 +84,15 @@
   strong {
     font-weight: bold;
   }
+
+  [disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
 }
 
 .measure-change-additional-code-input {
-  .remove-additional-code-checkbox {
-
-  }
-
   .multiple-choice-wrapper {
     .multiple-choice {
       width: 38px;

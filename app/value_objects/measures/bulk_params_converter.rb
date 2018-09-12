@@ -1,9 +1,11 @@
 module Measures
   class BulkParamsConverter
 
-    attr_accessor :ops
+    attr_accessor :existing_measure,
+                  :ops
 
-    def initialize(measure_ops)
+    def initialize(existing_measure, measure_ops)
+      @existing_measure = existing_measure
       @ops = measure_ops
     end
 
@@ -29,14 +31,22 @@ module Measures
       if ops["regulation"].present?
         res[:regulation_id] = if ops["regulation"]["base_regulation_id"].present?
           ops["regulation"]["base_regulation_id"]
+
         elsif ops["regulation"]["modification_regulation_id"].present?
           ops["regulation"]["modification_regulation_id"]
+
+        elsif ops["regulation"]["regulation_id"].present?
+          ops["regulation"]["regulation_id"]
         end
       end
 
       if ops["geographical_area"].present?
         res[:geographical_area_id] = ops["geographical_area"]["geographical_area_id"]
       end
+
+      res[:reduction_indicator] = existing_measure.reduction_indicator
+      res[:quota_ordernumber] = existing_measure.ordernumber
+      res[:export_refund_nomenclature_sid] = existing_measure.export_refund_nomenclature_sid
 
       ::Measures::AttributesNormalizer.new(
         ActiveSupport::HashWithIndifferentAccess.new(res)

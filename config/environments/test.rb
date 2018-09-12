@@ -49,4 +49,6 @@ Rails.application.configure do
   if ENV['GOVUK_APP_DOMAIN'].blank?
     ENV['GOVUK_APP_DOMAIN'] = 'test.gov.uk'
   end
+
+  config.log_level = :info
 end

@@ -26,8 +26,8 @@ module Workbaskets
 
     expose(:settings_params) do
       ops = params[:settings]
-      ops.send("permitted=", true)
-      ops = ops.to_h
+      ops.send("permitted=", true) if ops.present?
+      ops = (ops || {}).to_h
 
       ops
     end
@@ -100,7 +100,7 @@ module Workbaskets
       end
 
       def status_check!
-        unless workbasket.in_progress?
+        unless workbasket.new_in_progress?
           redirect_to read_only_section_url
           return false
         end
@@ -110,7 +110,7 @@ module Workbaskets
         if step_pointer.review_and_submit_step?
           submit_for_cross_check.run!
 
-          render json: { redirect_url: read_only_section_url },
+          render json: { redirect_url: submitted_url },
                  status: :ok
 
           return false
@@ -136,10 +136,8 @@ module Workbaskets
       end
 
       def clean_up_persisted_data_on_update!
-        if !step_pointer.review_and_submit_step? &&
-           workbasket.type == "create_measures"
-
-          workbasket_settings.collection.map(&:destroy) # TODO: refactor it Ruslan
+        unless step_pointer.review_and_submit_step?
+          workbasket_settings.clean_up_temporary_data!
         end
       end
   end

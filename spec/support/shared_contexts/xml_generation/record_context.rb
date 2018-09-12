@@ -21,7 +21,7 @@ shared_context "xml_generation_record_context" do
 
     db_record.workbasket_id = workbasket.id
     db_record.workbasket_sequence_number = 1
-    db_record.status = "submitted_for_cross_check"
+    db_record.status = "awaiting_cross_check"
     db_record.save
 
     db_record.reload

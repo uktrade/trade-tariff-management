@@ -140,6 +140,7 @@ class MeasureCondition < Sequel::Model
 
   def to_json(options = {})
     {
+      original_measure_condition_code: original_measure_condition_code,
       measure_action: measure_action.to_json,
       certificate: certificate.try(:to_json),
       certificate_type: certificate_type.try(:to_json),

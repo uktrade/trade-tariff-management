@@ -1,5 +1,25 @@
 .measure-component {
+  border-bottom: 1px solid $border-colour;
+
   .form-group {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
+  }
+
+  & + & {
+    padding-top: 6px;
+  }
+
+  &:last-of-type {
+    margin-bottom: 3px;
+  }
+
+  .measure-form & {
+    [class*="col-"] {
+      justify-content: flex-start !important;
+    }
+  }
+
+  .form-label {
+    font-size: 14px !important;
   }
 }

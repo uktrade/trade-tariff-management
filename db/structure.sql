@@ -582,6 +582,45 @@ ALTER SEQUENCE public.base_regulations_oid_seq OWNED BY public.base_regulations_
 
 
 --
+-- Name: bulk_edit_of_measures_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bulk_edit_of_measures_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    search_code text,
+    initial_search_results_code text,
+    all_batched_loaded boolean DEFAULT false,
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb
+);
+
+
+--
+-- Name: bulk_edit_of_measures_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bulk_edit_of_measures_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bulk_edit_of_measures_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bulk_edit_of_measures_settings_id_seq OWNED BY public.bulk_edit_of_measures_settings.id;
+
+
+--
 -- Name: certificate_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1398,6 +1437,39 @@ CREATE SEQUENCE public.create_quota_workbasket_settings_id_seq
 --
 
 ALTER SEQUENCE public.create_quota_workbasket_settings_id_seq OWNED BY public.create_quota_workbasket_settings.id;
+
+
+--
+-- Name: create_regulation_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_regulation_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_regulation_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_regulation_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_regulation_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_regulation_workbasket_settings_id_seq OWNED BY public.create_regulation_workbasket_settings.id;
 
 
 --
@@ -3707,7 +3779,8 @@ CREATE TABLE public.measure_components_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_duty_expression_id text
 );
 
 
@@ -3730,7 +3803,8 @@ CREATE VIEW public.measure_components AS
     measure_components1."national",
     measure_components1.status,
     measure_components1.workbasket_id,
-    measure_components1.workbasket_sequence_number
+    measure_components1.workbasket_sequence_number,
+    measure_components1.original_duty_expression_id
    FROM public.measure_components_oplog measure_components1
   WHERE ((measure_components1.oid IN ( SELECT max(measure_components2.oid) AS max
            FROM public.measure_components_oplog measure_components2
@@ -3890,7 +3964,8 @@ CREATE TABLE public.measure_condition_components_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_duty_expression_id text
 );
 
 
@@ -3913,7 +3988,8 @@ CREATE VIEW public.measure_condition_components AS
     measure_condition_components1."national",
     measure_condition_components1.status,
     measure_condition_components1.workbasket_id,
-    measure_condition_components1.workbasket_sequence_number
+    measure_condition_components1.workbasket_sequence_number,
+    measure_condition_components1.original_duty_expression_id
    FROM public.measure_condition_components_oplog measure_condition_components1
   WHERE ((measure_condition_components1.oid IN ( SELECT max(measure_condition_components2.oid) AS max
            FROM public.measure_condition_components_oplog measure_condition_components2
@@ -3964,7 +4040,8 @@ CREATE TABLE public.measure_conditions_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_measure_condition_code text
 );
 
 
@@ -3992,7 +4069,8 @@ CREATE VIEW public.measure_conditions AS
     measure_conditions1."national",
     measure_conditions1.status,
     measure_conditions1.workbasket_id,
-    measure_conditions1.workbasket_sequence_number
+    measure_conditions1.workbasket_sequence_number,
+    measure_conditions1.original_measure_condition_code
    FROM public.measure_conditions_oplog measure_conditions1
   WHERE ((measure_conditions1.oid IN ( SELECT max(measure_conditions2.oid) AS max
            FROM public.measure_conditions_oplog measure_conditions2
@@ -4759,7 +4837,8 @@ CREATE TABLE public.measures_oplog (
     workbasket_id integer,
     searchable_data jsonb DEFAULT '{}'::jsonb,
     searchable_data_updated_at timestamp without time zone,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    original_measure_sid text
 );
 
 
@@ -4803,7 +4882,8 @@ CREATE VIEW public.measures AS
     measures1.workbasket_id,
     measures1.searchable_data,
     measures1.searchable_data_updated_at,
-    measures1.workbasket_sequence_number
+    measures1.workbasket_sequence_number,
+    measures1.original_measure_sid
    FROM public.measures_oplog measures1
   WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
            FROM public.measures_oplog measures2
@@ -6058,7 +6138,8 @@ CREATE TABLE public.quota_definitions_oplog (
     "national" boolean,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    workbasket_type_of_quota text
 );
 
 
@@ -6089,7 +6170,8 @@ CREATE VIEW public.quota_definitions AS
     quota_definitions1."national",
     quota_definitions1.status,
     quota_definitions1.workbasket_id,
-    quota_definitions1.workbasket_sequence_number
+    quota_definitions1.workbasket_sequence_number,
+    quota_definitions1.workbasket_type_of_quota
    FROM public.quota_definitions_oplog quota_definitions1
   WHERE ((quota_definitions1.oid IN ( SELECT max(quota_definitions2.oid) AS max
            FROM public.quota_definitions_oplog quota_definitions2
@@ -7376,16 +7458,7 @@ CREATE TABLE public.workbaskets (
     last_status_change_at timestamp without time zone,
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
-    regulation_id text,
-    regulation_role text,
-    changes_do_not_come_from_legislation boolean DEFAULT false,
-    reason_of_changes text,
-    operation_date date,
-    initial_items_populated boolean DEFAULT false,
-    batches_loaded jsonb DEFAULT '{}'::jsonb,
-    search_code text,
-    all_batched_loaded boolean DEFAULT false,
-    initial_search_results_code text
+    operation_date date
 );
 
 
@@ -7536,6 +7609,13 @@ ALTER TABLE ONLY public.base_regulations_oplog ALTER COLUMN oid SET DEFAULT next
 
 
 --
+-- Name: bulk_edit_of_measures_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_measures_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_measures_settings_id_seq'::regclass);
+
+
+--
 -- Name: certificate_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7617,6 +7697,13 @@ ALTER TABLE ONLY public.create_measures_workbasket_settings ALTER COLUMN id SET 
 --
 
 ALTER TABLE ONLY public.create_quota_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_quota_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: create_regulation_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_regulation_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_regulation_workbasket_settings_id_seq'::regclass);
 
 
 --
@@ -8377,6 +8464,14 @@ ALTER TABLE ONLY public.base_regulations_oplog
 
 
 --
+-- Name: bulk_edit_of_measures_settings bulk_edit_of_measures_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_measures_settings
+    ADD CONSTRAINT bulk_edit_of_measures_settings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: certificate_description_periods_oplog certificate_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8470,6 +8565,14 @@ ALTER TABLE ONLY public.create_measures_workbasket_settings
 
 ALTER TABLE ONLY public.create_quota_workbasket_settings
     ADD CONSTRAINT create_quota_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_regulation_workbasket_settings create_regulation_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_regulation_workbasket_settings
+    ADD CONSTRAINT create_regulation_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -11458,3 +11561,11 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180727173036_add_more_fi
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180730134551_add_more_fields_to_create_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180802084730_add_fields_to_full_temporary_stop_regulations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180807180500_add_initial_search_results_code_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180820092723_add_internal_fields_to_duty_expressions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180823124148_add_workbasket_type_of_quota_to_quota_definitions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180830115631_create_create_regulation_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180905171759_create_bulk_edit_of_measures_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172132_add_extra_columns_to_bulk_edit_of_measures_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_longer_used_options_from_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_original_measure_sid_to_measures_oplog.rb');

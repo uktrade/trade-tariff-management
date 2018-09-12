@@ -45,20 +45,28 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :info
-  config.lograge.enabled = true
-  config.lograge.formatter = Lograge::Formatters::Logstash.new
-  config.lograge.custom_options = lambda do |event|
-    {
-      params: event.payload[:params].except('controller', 'action', 'format', 'utf8'),
-    }.merge(JSON.parse(ENV['VCAP_APPLICATION']))
-  end
+  config.assets.quiet = true
 
-  config.lograge.ignore_actions = ['HealthcheckController#index']
+
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  else
+    config.lograge.enabled = true
+    config.lograge.formatter = Lograge::Formatters::Logstash.new
+    config.lograge.custom_options = lambda do |event|
+      {
+        params: event.payload[:params].except('controller', 'action', 'format', 'utf8'),
+      }.merge(JSON.parse(ENV['VCAP_APPLICATION']))
+    end
+    config.lograge.ignore_actions = ['HealthcheckController#index']
+  end
 
   redis_url = JSON.parse(ENV["VCAP_SERVICES"])["redis"].select do |s|
     s["name"] == ENV["REDIS_INSTANCE_NAME"]

@@ -6,8 +6,8 @@ describe "Measure search: status filter" do
 
   let(:search_key) { "status" }
 
-  let(:draft_incomplete_measure) do
-    create(:measure, status: "draft_incomplete")
+  let(:new_in_progress_measure) do
+    create(:measure, status: "new_in_progress")
   end
 
   let(:ready_for_approval_measure) do
@@ -19,7 +19,7 @@ describe "Measure search: status filter" do
   end
 
   before do
-    draft_incomplete_measure
+    new_in_progress_measure
     ready_for_approval_measure
     second_ready_for_approval_measure
   end
@@ -29,11 +29,11 @@ describe "Measure search: status filter" do
       res = search_results(
         enabled: true,
         operator: 'is',
-        value: "draft_incomplete"
+        value: "new_in_progress"
       )
 
       expect(res.count).to be_eql(1)
-      expect(res[0].measure_sid).to be_eql(draft_incomplete_measure.measure_sid)
+      expect(res[0].measure_sid).to be_eql(new_in_progress_measure.measure_sid)
 
       res = search_results(
         enabled: true,
@@ -46,18 +46,18 @@ describe "Measure search: status filter" do
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).to include(ready_for_approval_measure.measure_sid)
       expect(measure_sids).to include(second_ready_for_approval_measure.measure_sid)
-      expect(measure_sids).not_to include(draft_incomplete_measure.measure_sid)
+      expect(measure_sids).not_to include(new_in_progress_measure.measure_sid)
     end
 
     it "should filter by status with 'is_not' operator" do
       res = search_results(
         enabled: true,
         operator: 'is_not',
-        value: "draft_incomplete"
+        value: "new_in_progress"
       )
 
       expect(res.count).to be_eql(2)
-      expect(res.map(&:measure_sid)).not_to include(draft_incomplete_measure.measure_sid)
+      expect(res.map(&:measure_sid)).not_to include(new_in_progress_measure.measure_sid)
     end
   end
 end

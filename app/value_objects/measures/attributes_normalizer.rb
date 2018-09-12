@@ -23,6 +23,7 @@ module Measures
       geographical_area_id
       additional_code
       reduction_indicator
+      export_refund_nomenclature_sid
     )
 
     attr_accessor :normalized_params, :measure_params
@@ -54,67 +55,67 @@ module Measures
 
     private
 
-      def method_additional_code_values(additional_code_id)
-        additional_code = AdditionalCode.actual.where(
-          additional_code: additional_code_id,
-          additional_code_type_id: measure_params[:additional_code_type_id]
-        ).first
-
-        {
-          additional_code_type_id: additional_code.additional_code_type_id,
-          additional_code_sid: additional_code.additional_code_sid,
-          additional_code_id: additional_code_id
-        }
+      def method_additional_code_values(additional_code)
+        TimeMachine.at(measure_params[:start_date]) do
+          @additional_code = AdditionalCode.by_code(additional_code)
+        end
+        if @additional_code.present?
+          {
+            additional_code_type_id: @additional_code.additional_code_type_id,
+            additional_code_sid: @additional_code.additional_code_sid,
+            additional_code_id: @additional_code.additional_code
+          }
+        else
+          {}
+        end
       end
 
       def method_regulation_values(base_regulation_id)
-        regulation = BaseRegulation.actual
-                                   .not_replaced_and_partially_replaced
-                                   .where(base_regulation_id: base_regulation_id).first
+        TimeMachine.at(measure_params[:start_date]) do
+          @regulation = BaseRegulation.not_replaced_and_partially_replaced
+                                     .where(base_regulation_id: base_regulation_id).first
 
-        if regulation.present?
-          role = regulation.base_regulation_role
-        else
-          regulation = ModificationRegulation.actual
-                                             .not_replaced_and_partially_replaced
-                                             .where(modification_regulation_id: base_regulation_id).first
-          role = regulation.modification_regulation_role
+          if @regulation.present?
+            @role = @regulation.base_regulation_role
+            @regulation_id = @regulation.base_regulation_id
+          else
+            @regulation = ModificationRegulation.not_replaced_and_partially_replaced
+                                               .where(modification_regulation_id: base_regulation_id).first
+            @role = @regulation.modification_regulation_role
+            @regulation_id = @regulation.modification_regulation_id
+          end
         end
 
         ops = {
-          measure_generating_regulation_id: base_regulation_id,
-          measure_generating_regulation_role: role
+          measure_generating_regulation_id: @regulation_id,
+          measure_generating_regulation_role: @role
         }
-
+        # FIXME: Not sure if this is correct
         if normalized_params[:validity_end_date].present?
-          ops[:justification_regulation_id] = base_regulation_id
-          ops[:justification_regulation_role] = role
+          ops[:justification_regulation_id] = @regulation_id
+          ops[:justification_regulation_role] = @role
         end
 
         ops
       end
 
       def method_geographical_area_values(geographical_area_id)
-        geographical_area = GeographicalArea.actual
-                                            .where(geographical_area_id: geographical_area_id).first
-
+        TimeMachine.at(measure_params[:start_date]) do
+          @geographical_area = GeographicalArea.where(geographical_area_id: geographical_area_id).first
+        end
         {
-          geographical_area_id: geographical_area_id,
-          geographical_area_sid: geographical_area.geographical_area_sid
+          geographical_area_id: @geographical_area.geographical_area_id,
+          geographical_area_sid: @geographical_area.geographical_area_sid
         }
       end
 
       def method_goods_nomenclature_item_values(goods_nomenclature_item_id)
-        goods_nomenclature = Commodity.actual
-                                      .by_code(goods_nomenclature_item_id)
-                                      .with_validity_end_date_nil_or_after(
-                                        measure_params[:start_date].to_date
-                                      ).declarable
-                                      .first
-
+        TimeMachine.at(measure_params[:start_date]) do
+          @goods_nomenclature = GoodsNomenclature.by_code(goods_nomenclature_item_id).declarable.first
+        end
         {
-          goods_nomenclature_item_id: goods_nomenclature_item_id,
-          goods_nomenclature_sid: goods_nomenclature.goods_nomenclature_sid
+          goods_nomenclature_item_id: @goods_nomenclature.goods_nomenclature_item_id,
+          goods_nomenclature_sid: @goods_nomenclature.goods_nomenclature_sid
         }
       end
   end

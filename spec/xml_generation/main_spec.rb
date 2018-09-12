@@ -52,7 +52,7 @@ describe "Main XML generation" do
     db_records.each_with_index do |db_record, index|
       db_record.workbasket_id = workbasket.id
       db_record.workbasket_sequence_number = index
-      db_record.status = "submitted_for_cross_check"
+      db_record.status = "awaiting_cross_check"
       db_record.save
 
       db_record.reload

@@ -59,6 +59,7 @@ class MeasureComponent < Sequel::Model
 
   def to_json(options = {})
     {
+      original_duty_expression_id: original_duty_expression_id,
       duty_expression: duty_expression.try(:to_json),
       measurement_unit: measurement_unit.try(:to_json),
       monetary_unit: monetary_unit.try(:to_json),

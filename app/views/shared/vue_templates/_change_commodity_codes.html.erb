@@ -1,10 +1,16 @@
 <script type="text/x-template" id="measure-change-commodity-code-input-template">
-  <div class="row">
+  <div class="bootstrap-row">
     <div class="col-xs-5">
-      <p>{{commodityCode}}</p>
+      <p>
+        <label :for="labelUid">
+          {{commodityCode}}
+        </label>
+      </p>
     </div>
     <div class="col-xs-7">
-      <p><input type="text" @change="updateCommodityCode" class="form-control" /></p>
+      <p>
+        <input type="text" @change="updateCommodityCode" class="form-control" :id="labelUid"/>
+      </p>
     </div>
   </div>
 </script>
@@ -38,11 +44,11 @@
       The selection contains measures with the commodity code(s) listed below. You can replace them, but you cannot delete or add new commodity codes from here. To delete a commodity code, you need to delete the whole measure. To add new commodity codes, either create new measures via the Create Measures screen, or copy one or more of these measures and then edit the copies.
     </info-message>
 
-    <div class="row">
+    <div class="bootstrap-row">
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label">
-            <span class="row">
+          <div class="form-label">
+            <span class="bootstrap-row">
               <span class="col-md-5">
                 Current code
               </span>
@@ -56,7 +62,7 @@
             </span>
             <measure-change-commodity-code-input v-for="commodityCode in measuresCommodityCodes" :commodity-code="commodityCode">
             </measure-change-commodity-code-input>
-          </label>
+          </div>
         </div>
       </div>
       <div class="col-md-6">

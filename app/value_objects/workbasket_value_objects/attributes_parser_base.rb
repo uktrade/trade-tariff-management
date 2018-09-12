@@ -2,7 +2,8 @@ module WorkbasketValueObjects
   class AttributesParserBase
 
     attr_accessor :workbasket_settings,
-                  :codes_analyzer,
+                  :commodity_codes_analyzer,
+                  :additional_codes_analyzer,
                   :step,
                   :ops
 
@@ -15,25 +16,24 @@ module WorkbasketValueObjects
         ActiveSupport::HashWithIndifferentAccess.new(workbasket_settings.settings)
       end
 
-      prepare_ops
-      setup_code_analyzer
+      prepare_ops # Implemented in base class
+      setup_commodity_code_analyzer
+      setup_additional_code_analyzer
     end
 
-    def measure_params(code, mode)
+    def measure_params(goods_nomenclature_code_and_additional_code)
+      goods_nomenclature_code, additional_code = goods_nomenclature_code_and_additional_code
       res = {
-        start_date: ops[:start_date],
-        end_date: ops[:end_date],
+        start_date: @start_date || ops[:start_date],
+        end_date: @end_date || ops[:end_date],
         regulation_id: ops[:regulation_id],
         measure_type_id: ops[:measure_type_id],
         reduction_indicator: ops[:reduction_indicator],
-        geographical_area_id: ops[:geographical_area_id]
+        geographical_area_id: ops[:geographical_area_id],
+        quota_ordernumber: ops[:quota_ordernumber],
+        goods_nomenclature_code: goods_nomenclature_code,
+        additional_code: additional_code
       }
-
-      if mode == :commodity_codes
-        res[:goods_nomenclature_code] = code
-      else
-        res[:additional_code] = code
-      end
 
       ::Measures::AttributesNormalizer.new(
         ActiveSupport::HashWithIndifferentAccess.new(res)
@@ -46,6 +46,14 @@ module WorkbasketValueObjects
 
     def footnotes
       prepare_collection(:footnotes, :footnote_type_id)
+    end
+
+    def measure_components
+      if @measure_components.present?
+        @measure_components
+      else
+        prepare_collection(:measure_components, :duty_expression_id)
+      end
     end
 
     def excluded_geographical_areas
@@ -62,7 +70,19 @@ module WorkbasketValueObjects
     end
 
     def candidates
-      codes_analyzer.try(:collection)
+      a_codes = additional_codes_analyzer.collection
+      gn_codes = commodity_codes_analyzer.collection
+
+      if gn_codes.blank?
+        gn_codes = [nil]
+      end
+
+      if a_codes.blank?
+        a_codes = [nil]
+      end
+
+      # Return a list of GN codes and additional codes, allowing for empty arrays
+      gn_codes.product(a_codes)
     end
 
     begin :decoration_methods
@@ -101,15 +121,15 @@ module WorkbasketValueObjects
       end
 
       def commodity_codes_formatted
-        codes_analyzer.commodity_codes_formatted
+        commodity_codes_analyzer.commodity_codes_formatted
       end
 
       def exclusions_formatted
-        codes_analyzer.exclusions_formatted
+        commodity_codes_analyzer.exclusions_formatted
       end
 
       def additional_codes_formatted
-        codes_analyzer.additional_codes_formatted
+        additional_codes_analyzer.additional_codes_formatted
       end
 
       def origin
@@ -126,24 +146,29 @@ module WorkbasketValueObjects
         areas = ops[:excluded_geographical_areas]
         areas.present? ? areas.join(", ") : "-"
       end
-    end
-
-    private
-
-      def setup_code_analyzer
-        if ops[:start_date].present?
-          @codes_analyzer = ::WorkbasketValueObjects::Shared::CodesAnalyzer.new(
-            start_date: ops[:start_date].to_date,
-            commodity_codes: commodity_codes || [],
-            additional_codes: additional_codes || [],
-            commodity_codes_exclusions: commodity_codes_exclusions
-          )
-        end
-      end
 
       def date_to_format(date)
         date.try(:to_date)
             .try(:strftime, "%d %B %Y")
+      end
+
+    end
+
+    private
+
+      def setup_commodity_code_analyzer
+        @commodity_codes_analyzer = ::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.new(
+          start_date: ops[:start_date],
+          commodity_codes: commodity_codes || [],
+          commodity_codes_exclusions: commodity_codes_exclusions
+        )
+      end
+
+      def setup_additional_code_analyzer
+        @additional_codes_analyzer = ::WorkbasketValueObjects::Shared::AdditionalCodesAnalyzer.new(
+          start_date: ops[:start_date],
+          additional_codes: additional_codes || []
+        )
       end
 
       def prepare_collection(namespace, key_option)

@@ -66,6 +66,18 @@ Vue.component("change-footnotes-popup", {
   watch: {
     updateMode: function(){
       this.confirmBtnDisabled = false;
+    },
+    measuresFootnotes: {
+      handler: function(){
+        if (!this.confirmBtnDisabled) { return; }
+        var anyFootnote = this.measuresFootnotes.some(function(footnote){
+          return footnote.footnote_type_id && footnote.description;
+        });
+        if (anyFootnote) {
+          this.confirmBtnDisabled = false;
+        }
+      },
+      deep: true
     }
   },
   mounted: function(){
@@ -82,12 +94,10 @@ Vue.component("change-footnotes-popup", {
 
     if (this.uniqMeasuresFootnotes.length == 1) {
       this.measuresFootnotes = this.uniqMeasuresFootnotes;
-      this.confirmBtnDisabled = false;
       this.onlyOneMeasure = true;
     }
 
     if (allMeasuresFootnotes.length == 0) {
-      this.confirmBtnDisabled = false;
       this.hideUpdateMode = true;
     }
 
