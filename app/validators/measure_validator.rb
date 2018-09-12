@@ -204,17 +204,14 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME112, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the measure does not require a goods code.",
     on: [:create, :update],
-    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.description.present? } do |record|
-      # FIXME: See ME19
-      (record.additional_code_type.description == "Export Refunds") && record.goods_nomenclature_item_id.blank?
+    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code.in?("4") } do |record|
+      record.goods_nomenclature_item_id.blank?
     end
 
   validation :ME113, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the additional code must exist as an Export Refund for Processed Agricultural Goods additional code.",
     on: [:create, :update],
-    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.description.present? } do |record|
-      # FIXME: See ME19
-      (record.additional_code_type.description == "Export Refunds") && record.additional_code_id.present? &&
-        (record.additional_code.additional_code_type_id == additional_code_type.additional_code_type_id)
+    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code.in?("4") } do |record|
+      record.additional_code_id.present? && (record.additional_code.additional_code_type_id == additional_code_type.additional_code_type_id)
     end
 
   validation :ME115, 'The validity period of the referenced additional code must span the validity period of the measure', on: [:create, :update] do

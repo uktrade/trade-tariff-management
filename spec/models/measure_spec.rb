@@ -1052,19 +1052,11 @@ describe Measure do
     #end
 
     describe "ME112" do
-      let!(:additional_code_type_description) {
-        create(
-          :additional_code_type_description,
-          additional_code_type_id: "4",
-          language_id: "EN",
-          description: "Export Refunds"
-        )
-      }
-
       let!(:additional_code_type) {
         create(
           :additional_code_type,
           additional_code_type_id: "4",
+          application_code: "4",
           validity_start_date: Date.yesterday
         )
       }
@@ -1079,19 +1071,11 @@ describe Measure do
     end
 
     describe "ME113" do
-      let!(:additional_code_type_description) {
-        create(
-          :additional_code_type_description,
-          additional_code_type_id: "4",
-          language_id: "EN",
-          description: "Export Refunds"
-        )
-      }
-
       let!(:additional_code_type) {
         create(
           :additional_code_type,
           additional_code_type_id: "4",
+          application_code: "4",
           validity_start_date: Date.yesterday
         )
       }
