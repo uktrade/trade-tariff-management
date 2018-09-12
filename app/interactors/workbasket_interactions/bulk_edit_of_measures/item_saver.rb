@@ -38,6 +38,11 @@ module WorkbasketInteractions
             (operation_date - 1.day).midnight
           end
 
+          existing_measure.justification_regulation_id =
+              measure_ops[:regulation][:base_regulation_id] || existing_measure.measure_generating_regulation_id
+          existing_measure.justification_regulation_role =
+              measure_ops[:regulation][:base_regulation_role] || existing_measure.measure_generating_regulation_role
+
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
             existing_measure, system_ops.merge(operation: "U")
           ).assign!
