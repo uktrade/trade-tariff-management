@@ -726,6 +726,76 @@ describe Measure do
       end
     end
 
+    describe 'ME17' do
+      let(:measure_type) { create :measure_type }
+
+      let!(:additional_code_type) {
+        create(
+          :additional_code_type,
+          additional_code_type_id: "4",
+          application_code: "0",
+          validity_start_date: Date.yesterday
+        )
+      }
+
+      let!(:additional_code_type_measure_type) {
+        create(
+          :additional_code_type_measure_type,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          measure_type_id: measure_type.measure_type_id,
+          validity_start_date: Date.yesterday,
+        )
+      }
+
+      let!(:additional_code) {
+        create(
+          :additional_code,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          validity_start_date: Date.yesterday,
+        )
+      }
+
+      let!(:additional_code2) {
+        create(
+          :additional_code,
+          validity_start_date: Date.yesterday,
+        )
+      }
+
+      let!(:measure) {
+        create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.yesterday,
+        )
+      }
+
+      let!(:measure2) {
+        create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code2.additional_code,
+          additional_code_sid: additional_code2.additional_code_sid,
+          validity_start_date: Date.yesterday,
+        )
+      }
+
+      context "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code." do
+        it 'should be valid' do
+          expect(measure).to be_conformant
+        end
+
+        it 'should be invalid' do
+          expect(measure2).to_not be_conformant
+          expect(measure2.conformance_errors).to have_key(:ME17)
+        end
+      end
+    end
+
     describe 'ME26' do
       it { should validate_exclusion.of([:measure_generating_regulation_id, :measure_generating_regulation_role])
                                     .from(->{ CompleteAbrogationRegulation.select(:complete_abrogation_regulation_id, :complete_abrogation_regulation_role) }) }
