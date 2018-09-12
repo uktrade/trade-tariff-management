@@ -143,6 +143,15 @@ class Measure < Sequel::Model
                                end
   end
 
+  def justification_regulation
+    @justification_regulation ||= case justification_regulation_role
+                                    when nil then nil
+                                    when 4 then ModificationRegulation.find(modification_regulation_id: justification_regulation_id)
+                                    else
+                                      BaseRegulation.find(base_regulation_id: justification_regulation_id)
+                                  end
+  end
+
   # Soft-deleted
   def invalidated?
     invalidated_at.present?
@@ -547,6 +556,7 @@ class Measure < Sequel::Model
     {
       measure_sid: measure_sid,
       regulation: generating_regulation_code,
+      justification_regulation: generating_regulation_code(justification_regulation_id),
       measure_type_id: measure_type_id,
       validity_start_date: validity_start_date.strftime("%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
@@ -567,6 +577,7 @@ class Measure < Sequel::Model
     {
       measure_sid: measure_sid,
       regulation: generating_regulation.to_json,
+      justification_regulation: justification_regulation.to_json,
       measure_type: measure_type.to_json,
       validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
