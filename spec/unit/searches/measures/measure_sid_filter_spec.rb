@@ -33,7 +33,7 @@ describe "Measure search: measure_sid filter" do
   describe "Valid Search" do
     it "should filter by additional_code_id with operator" do
       #
-      # 'is' filter
+      # 'is' filter, single value
       #
 
       res = search_results(
@@ -44,6 +44,20 @@ describe "Measure search: measure_sid filter" do
 
       expect(res.count).to be_eql(1)
       expect(res[0].measure_sid).to be_eql(b_measure_sid)
+
+      #
+      # 'is' filter, SIDs list comma separated
+      #
+
+      res = search_results(
+        enabled: true,
+        operator: 'is',
+        value: "#{a_measure_sid}, #{c_measure_sid}"
+      )
+
+      expect(res.count).to be_eql(2)
+      expect(res[0].measure_sid).to be_eql(c_measure_sid)
+      expect(res[1].measure_sid).to be_eql(a_measure_sid)
 
       #
       # 'starts_with' filter
