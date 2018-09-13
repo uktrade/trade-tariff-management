@@ -173,11 +173,11 @@ class MeasureValidator < TradeTariffBackend::Validator
     on: [:create, :update] do |record|
       valid = true
 
-      if record.measure_type.measure_component_applicable_code == 1
+      if record.measure_type.try(:measure_component_applicable_code) == 1 # mandatory
         valid = !record.measure_components.empty? || record.measure_conditions.any? { |mc| !mc.measure_condition_components.empty? }
       end
 
-      if record.measure_type.measure_component_applicable_code == 2
+      if record.measure_type.try(:measure_component_applicable_code) == 2 # not permitted
         valid = record.measure_components.empty? && record.measure_conditions.all? { |mc| mc.measure_condition_components.empty? }
       end
 
