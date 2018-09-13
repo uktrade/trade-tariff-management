@@ -1027,6 +1027,10 @@ describe Measure do
       end
     end
 
+    describe 'ME39' do
+      it { should validate_validity_date_span.of(:measure_partial_temporary_stops) }
+    end
+
     describe 'ME86' do
       it { should validate_inclusion.of(:measure_generating_regulation_role).in(Measure::VALID_ROLE_TYPE_IDS) }
     end

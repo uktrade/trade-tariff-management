@@ -160,8 +160,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.justification_regulation_role.present?)
   end
 
-  validation :ME39, "The validity period of the measure must span the validity period of all related partial temporary stop (PTS) records.",
-    on: [:create, :update] do
+  validation :ME39, "The validity period of the measure must span the validity period of all related partial temporary stop (PTS) records.", on: [:create, :update] do
     validates :validity_date_span, of: :measure_partial_temporary_stops
   end
 
