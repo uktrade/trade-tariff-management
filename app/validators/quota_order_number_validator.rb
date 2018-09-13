@@ -20,5 +20,7 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
     )
   end
 
+  validation :ON1, 'Quota order number id + start date must be unique' do
+    validates :uniqueness, of: [:quota_order_number_id, :validity_start_date]
+  end
 end
-
