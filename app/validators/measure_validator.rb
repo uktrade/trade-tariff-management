@@ -164,6 +164,26 @@ class MeasureValidator < TradeTariffBackend::Validator
     validates :validity_date_span, of: :measure_partial_temporary_stops
   end
 
+  validation :ME40,
+    %(If the flag "duty expression" on measure type is "mandatory" then at least one measure component
+    or measure condition component record must be specified. If the flag is set "not permitted" then
+    no measure component or measure condition component must exist. Measure components and measure
+    condition components are mutually exclusive. A measure can have either components or condition
+    components (if the ‘duty expression’ flag is ‘mandatory’ or ‘optional’) but not both.),
+    on: [:create, :update] do |record|
+      valid = true
+
+      if record.measure_type.measure_component_applicable_code == 1
+        valid = !record.measure_components.empty? || record.measure_conditions.any? { |mc| !mc.measure_condition_components.empty? }
+      end
+
+      if record.measure_type.measure_component_applicable_code == 2
+        valid = record.measure_components.empty? && record.measure_conditions.all? { |mc| mc.measure_condition_components.empty? }
+      end
+
+      valid
+    end
+
   validation :ME86, 'The role of the entered regulation must be a Base, a Modification, a Provisional Anti-Dumping, a Definitive Anti-Dumping.', on: [:create, :update] do
     validates :inclusion, of: :measure_generating_regulation_role, in: Measure::VALID_ROLE_TYPE_IDS
   end
