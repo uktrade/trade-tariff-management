@@ -125,5 +125,30 @@ describe MeasureComponent do
         expect(measure_component.conformance_errors).to have_key(:ME111)
       end
     end
+
+    describe "ME41" do
+      let!(:duty_expression)   do
+        create(:duty_expression,
+               duty_expression_id: duty_expression_id,
+               duty_amount_applicability_code: 1,
+               monetary_unit_applicability_code: 1,
+               measurement_unit_applicability_code: 1
+              )
+      end
+
+      it "should pass validation" do
+        measure_component = build(:measure_component, duty_expression_id: duty_expression.duty_expression_id)
+
+        expect(measure_component).to be_conformant
+        expect(measure_component.conformance_errors).to be_empty
+      end
+
+      it "should not pass validation" do
+        measure_component = build(:measure_component, duty_expression_id: "987")
+
+        expect(measure_component).to_not be_conformant
+        expect(measure_component.conformance_errors).to have_key(:ME41)
+      end
+    end
   end
 end
