@@ -22,4 +22,10 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
       (record.duty_expression_id.present? && record.duty_expression.measurement_unit_applicability_code == 2  && record.measurement_unit_code.blank?)
   end
 
+  validation :ME41, 'The referenced duty expression must exist.', on: [:create, :update] do |record|
+    if record.duty_expression_id.present?
+      DutyExpression.where(duty_expression_id: record.duty_expression_id).any?
+    end
+  end
+
 end
