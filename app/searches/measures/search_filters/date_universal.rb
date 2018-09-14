@@ -117,7 +117,6 @@ module Measures
 
           res
         end
-
     end
   end
 end

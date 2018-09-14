@@ -12,7 +12,7 @@ module WorkbasketValueObjects
           @commodity = GoodsNomenclature.by_code(code) # also include declarable headings
                                 .all
                                 .sort do |a, b|
-            a.producline_suffix.to_i <=> b.producline_suffix.to_i
+            b.producline_suffix.to_i <=> a.producline_suffix.to_i
           end.first
         end
       end
