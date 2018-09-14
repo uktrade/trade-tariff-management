@@ -98,7 +98,7 @@ $(document).ready(function() {
             }
           } else {
             // country
-            if (window.geographical_areas_json[window.all_settings.geographical_area_id].length === 0) {
+            if (window.all_settings.geographical_area_id instanceof Array || window.geographical_areas_json[window.all_settings.geographical_area_id].length === 0) {
               data.origins.country.selected = true;
               data.origins.country.geographical_area_id = window.all_settings.geographical_area_id;
             } else {

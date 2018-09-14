@@ -7,7 +7,7 @@ Vue.component("measure-origin", {
     "multiple"
   ],
   data: function() {
-    return {
+    var data = {
       origins: [{
         type: "country",
         placeholder: "― select a country or region ―",
@@ -17,6 +17,35 @@ Vue.component("measure-origin", {
       }],
       key: 2
     };
+
+    if (this.origin.geographical_area_id instanceof Array && this.origin.geographical_area_id.length > 0) {
+      var arr = [];
+      var selected_ids = this.origin.geographical_area_id;
+
+      selected_ids.forEach(function(id) {
+        var isCountry = window.geographical_areas_json[id].length === 0;
+        var exclusions = selected_ids.slice(0).filter(function(e) {
+          return e != id;
+        });
+
+        var options = isCountry ? window.all_geographical_countries : window.geographical_groups_except_erga_omnes;
+        var opts = options.filter(function(o) {
+          return exclusions.indexOf(o.geographical_area_id) === -1;
+        });
+
+        arr.push({
+          type: "country",
+          placeholder: isCountry ? "― select a country or region ―" : "― select a group of countries ―",
+          id: id,
+          key: data.key++,
+          options: opts
+        });
+      });
+
+      data.origins = arr;
+    }
+
+    return data;
   },
   mounted: function() {
     var self = this,
