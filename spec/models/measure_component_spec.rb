@@ -54,6 +54,29 @@ describe MeasureComponent do
       expect(measure_component).to be_conformant
     end
 
+    describe "ME41" do
+      let!(:duty_expression)   do
+        create(:duty_expression,
+               duty_expression_id: duty_expression_id,
+               duty_amount_applicability_code: 1,
+               monetary_unit_applicability_code: 1,
+               measurement_unit_applicability_code: 1
+              )
+      end
+
+      it "should pass validation" do
+        expect(measure_component).to be_conformant
+        expect(measure_component.conformance_errors).to be_empty
+      end
+
+      it "should not pass validation" do
+        measure_component = build(:measure_component, duty_expression_id: "987")
+
+        expect(measure_component).to_not be_conformant
+        expect(measure_component.conformance_errors).to have_key(:ME41)
+      end
+    end
+
     it "ME42: The validity period of the duty expression must span the validity period of the measure." do
       measure.validity_start_date = Date.today.ago(5.years)
       measure.validity_end_date = Date.today.ago(4.years)
@@ -133,27 +156,24 @@ describe MeasureComponent do
       end
     end
 
-    describe "ME41" do
-      let!(:duty_expression)   do
-        create(:duty_expression,
-               duty_expression_id: duty_expression_id,
-               duty_amount_applicability_code: 1,
-               monetary_unit_applicability_code: 1,
-               measurement_unit_applicability_code: 1
-              )
-      end
+    describe "ME48: The referenced monetary unit must exist." do
+      let(:monetary_unit) { create :monetary_unit }
 
       it "should pass validation" do
+        measure_component.monetary_unit_code = monetary_unit.monetary_unit_code
+        measure_component.save
+
         expect(measure_component).to be_conformant
         expect(measure_component.conformance_errors).to be_empty
       end
 
       it "should not pass validation" do
-        measure_component = build(:measure_component, duty_expression_id: "987")
+        measure_component = build(:measure_component, monetary_unit_code: "wrong_code")
 
         expect(measure_component).to_not be_conformant
-        expect(measure_component.conformance_errors).to have_key(:ME41)
+        expect(measure_component.conformance_errors).to have_key(:ME48)
       end
     end
+
   end
 end

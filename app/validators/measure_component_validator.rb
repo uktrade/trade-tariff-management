@@ -66,4 +66,10 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
       record.measurement_unit_code.blank?
     )
   end
+
+  validation :ME48, "The referenced monetary unit must exist.", on: [:create, :update] do |record|
+    if record.monetary_unit_code.present?
+      MonetaryUnit.where(monetary_unit_code: record.monetary_unit_code).any?
+    end
+  end
 end
