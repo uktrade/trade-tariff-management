@@ -54,6 +54,24 @@ describe MeasureConditionComponent do
       expect(measure_condition_component).to be_conformant
     end
 
+    describe "ME53: The referenced measure condition must exist." do
+      it "should pass validation" do
+        expect(measure_condition_component).to be_conformant
+        expect(measure_condition_component.conformance_errors).to be_empty
+      end
+
+      it "should not pass validation" do
+        measure_condition_component.measure_condition_sid = 0
+        measure_condition_component.save
+
+        allow_any_instance_of(TradeTariffBackend::Validations::ValidityDateSpanValidation)
+          .to receive(:valid?).and_return(true)
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME53)
+      end
+    end
+
     it "ME105: The reference duty expression must exist" do
       measure_condition_component.duty_expression_id = nil
       measure_condition_component.save
