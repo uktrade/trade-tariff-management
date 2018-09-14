@@ -70,7 +70,7 @@ Vue.component("measure-origin", {
         }
       }
     },
-    origins: function(val) {
+    alreadySelected: function() {
       if (!this.multiple) {
         return;
       }
@@ -78,6 +78,8 @@ Vue.component("measure-origin", {
       this.origin.geographical_area_id = this.origins.map(function(o) {
         return o.id;
       });
+
+      this.origin.selected = true;
     }
   },
   methods: {
@@ -133,6 +135,10 @@ Vue.component("measure-origin", {
       }, []);
     },
     getExclusionOptions: function(geographicalAreaId){
+      if (this.multiple) {
+        return [];
+      }
+
       var currentExclusions = this.getCurrentExclusionsArray(),
           areas = window.geographical_areas_json[geographicalAreaId];
       return areas.slice().filter(function(area){

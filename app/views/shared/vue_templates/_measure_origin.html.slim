@@ -9,9 +9,9 @@ script type="text/x-template" id="measure-origin-template"
           = content_tag "sub-origin", { ":origin" => "o", ":already_selected" => "alreadySelected", ":key" => "o.key"} do
             template slot-scope="slotProps"
               = content_tag "custom-select", "", { ":options" => "slotProps.availableOptions", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", ":placeholder": "o.placeholder", "v-model" => "o.id", class: "origin-select", "code-class-name" => "prefix--region", ":on-change" => "geographicalAreaChanged" }
-              a.secondary-button href="#" v-on:click.prevent="removeSubOrigin(idx)" v-if="origins.length > 1"
+              a.secondary-button href="#" v-on:click.prevent="removeSubOrigin(idx)" v-if="origins.length > 1 && origin.selected"
                 | Remove
-        p
+        p v-if="origin.selected"
           a href="#" v-on:click.prevent="addCountryOrTerritory"
             | Add another country
           | &nbsp;|&nbsp;
