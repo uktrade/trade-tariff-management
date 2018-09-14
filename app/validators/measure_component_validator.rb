@@ -12,6 +12,10 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
     end
   end
 
+  validation :ME42, "The validity period of the duty expression must span the validity period of the measure.", on: [:create, :update] do
+    validates :validity_date_span, of: :duty_expression
+  end
+
   validation :ME45,
     %(If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified.
       If the flag is set 'not permitted' then no amount may be entered."),
