@@ -88,4 +88,9 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
     on: [:create, :update] do
     validates :validity_date_span, of: :measurement_unit
   end
+
+  validation :ME52, "The validity period of the measurement unit qualifier must span the validity period of the measure.",
+    on: [:create, :update] do
+    validates :validity_date_span, of: :measurement_unit_qualifier
+  end
 end
