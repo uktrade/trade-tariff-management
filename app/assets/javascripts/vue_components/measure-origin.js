@@ -3,8 +3,21 @@ Vue.component("measure-origin", {
   props: [
     "placeholder",
     "kind",
-    "origin"
+    "origin",
+    "multiple"
   ],
+  data: function() {
+    return {
+      origins: [{
+        type: "country",
+        placeholder: "― select a country or region ―",
+        id: null,
+        options: window.all_geographical_countries,
+        key: 1
+      }],
+      key: 2
+    };
+  },
   mounted: function() {
     var self = this,
         radio = $(this.$el).find("input[type='radio']"),
@@ -33,13 +46,16 @@ Vue.component("measure-origin", {
       }
     },
     showExclusions: function() {
-      return this.kind !== "country" && !!this.origin.geographical_area_id;
+      return this.kind !== "country" && this.origin.selected;
+    },
+    alreadySelected: function() {
+      return this.origins.map(function(o) {
+        return o.id;
+      });
     }
   },
   watch: {
     "origin.geographical_area_id": function(newVal) {
-      this.origin.exclusions.splice(0, 999);
-
       if (newVal) {
         this.origin.selected = true;
         $(this.$el).find("input[type='radio']").prop("checked", true).trigger("change");
@@ -51,11 +67,17 @@ Vue.component("measure-origin", {
       if (newVal) {
         if (this.kind === "erga_omnes") {
           this.origin.geographical_area_id = '1011';
-          this.addExclusion();
         }
-      } else {
-        this.origin.geographical_area_id = null;
       }
+    },
+    origins: function(val) {
+      if (!this.multiple) {
+        return;
+      }
+
+      this.origin.geographical_area_id = this.origins.map(function(o) {
+        return o.id;
+      });
     }
   },
   methods: {
@@ -116,6 +138,27 @@ Vue.component("measure-origin", {
       return areas.slice().filter(function(area){
         return !currentExclusions.includes(area.geographical_area_id);
       });
+    },
+    addCountryOrTerritory: function() {
+      this.origins.push({
+        type: "country",
+        placeholder: "― select a country or region ―",
+        id: null,
+        options: window.all_geographical_countries,
+        key: this.key++
+      });
+    },
+    addGroup: function() {
+      this.origins.push({
+        type: "group",
+        placeholder: "― select a group of countries ―",
+        id: null,
+        options: window.geographical_groups_except_erga_omnes,
+        key: this.key++
+      });
+    },
+    removeSubOrigin: function(index) {
+      this.origins.splice(index, 1);
     }
   }
 });

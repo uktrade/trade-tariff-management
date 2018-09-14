@@ -2,9 +2,22 @@ script type="text/x-template" id="measure-origin-template"
   .measure-origin
     .multiple-choice
       input type='radio' :id="radioID" class="radio-inline-group" name="geographical_area_type" :checked="origin.selected"
-      label v-if="notErgaOmnes"
+      label v-if="notErgaOmnes && !multiple"
         = content_tag "custom-select", "", { ":options" => "optionsForSelect", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", ":placeholder": "placeholder", "v-model" => "origin.geographical_area_id", class: "origin-select", "code-class-name" => "prefix--region", ":on-change" => "geographicalAreaChanged" }
-      label :for="radioID" v-else=""
+      label v-if="notErgaOmnes && multiple"
+        p v-for="(o, idx) in origins"
+          = content_tag "sub-origin", { ":origin" => "o", ":already_selected" => "alreadySelected", ":key" => "o.key"} do
+            template slot-scope="slotProps"
+              = content_tag "custom-select", "", { ":options" => "slotProps.availableOptions", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", ":placeholder": "o.placeholder", "v-model" => "o.id", class: "origin-select", "code-class-name" => "prefix--region", ":on-change" => "geographicalAreaChanged" }
+              a.secondary-button href="#" v-on:click.prevent="removeSubOrigin(idx)" v-if="origins.length > 1"
+                | Remove
+        p
+          a href="#" v-on:click.prevent="addCountryOrTerritory"
+            | Add another country
+          | &nbsp;|&nbsp;
+          a href="#" v-on:click.prevent="addGroup"
+            | Add another group
+      label :for="radioID" v-if="!notErgaOmnes"
         | Erga Omnes (all origins)
 
     .panel.panel-border-narrow v-if="showExclusions"

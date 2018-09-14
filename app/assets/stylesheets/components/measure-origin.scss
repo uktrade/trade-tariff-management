@@ -15,6 +15,10 @@
     padding-bottom: 0;
   }
 
+  p {
+    margin-top: 0;
+  }
+
   .origin-select {
     position: relative;
     top: 0;
@@ -27,5 +31,15 @@
 
   & + .measure-origin {
     margin-top: 12px;
+  }
+}
+
+.sub-origin {
+  position: relative;
+
+  .secondary-button {
+    position: absolute;
+    left: 100%;
+    top: 0;
   }
 }
