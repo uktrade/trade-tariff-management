@@ -44,7 +44,7 @@ describe MeasureComponent do
       create(:measure_component,
              measure_sid: measure.measure_sid,
              duty_expression_id: duty_expression.duty_expression_id
-      )
+            )
     }
 
     it "valid" do
@@ -75,7 +75,7 @@ describe MeasureComponent do
     end
 
     describe "Flag 'monetary unit' on duty expression is mandatory" do
-      it "ME110: If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set to 'not permitted' then no monetary unit may be entered." do
+      it "ME46: If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set 'not permitted' then no monetary unit may be entered." do
         duty_expression.monetary_unit_applicability_code = 1
         duty_expression.save
 
@@ -83,12 +83,12 @@ describe MeasureComponent do
         measure_component.save
 
         expect(measure_component).to_not be_conformant
-        expect(measure_component.conformance_errors).to have_key(:ME110)
+        expect(measure_component.conformance_errors).to have_key(:ME46)
       end
     end
 
     describe "Flag 'monetary unit' on duty expression is not permitted" do
-      it "ME110: If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set to 'not permitted' then no monetary unit may be entered." do
+      it "ME46: If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set 'not permitted' then no monetary unit may be entered." do
         duty_expression.monetary_unit_applicability_code = 2
         duty_expression.save
 
@@ -96,7 +96,7 @@ describe MeasureComponent do
         measure_component.save
 
         expect(measure_component).to_not be_conformant
-        expect(measure_component.conformance_errors).to have_key(:ME110)
+        expect(measure_component.conformance_errors).to have_key(:ME46)
       end
     end
 
