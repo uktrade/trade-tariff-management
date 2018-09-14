@@ -15,7 +15,7 @@ module XmlGeneration
 
     def initialize(xml_file_content)
       @sxd_schema = Nokogiri::XML::Schema(
-        File.read("#{Rails.root}/lib/xml_generation_system_files/chained.xsd").strip
+        File.read("#{Rails.root}/lib/xml_generation_system_files/taric3.xsd").strip
       )
 
       @xml_content = Nokogiri::XML(xml_file_content)
