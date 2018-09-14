@@ -1,20 +1,14 @@
 module XmlGeneration
   class NodeTransaction
 
-    attr_accessor :workbasket,
-                  :messages
+    attr_accessor :messages
 
-    def initialize(workbasket)
-      @workbasket = workbasket
-      @messages = workbasket.settings
-                            .collection
-                            .map do |record|
-        ::XmlGeneration::NodeMessage.new(record)
-      end
+    def initialize(record)
+      @messages = Array.wrap(::XmlGeneration::NodeMessage.new(record))
     end
 
     def node_id
-      workbasket.id
+      Time.now.to_i
     end
   end
 end
