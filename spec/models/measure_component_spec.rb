@@ -47,6 +47,9 @@ describe MeasureComponent do
             )
     }
 
+    # ME43: The same duty expression can only be used once with the same measure.
+    it { should validate_uniqueness.of [:measure_sid, :duty_expression_id] }
+
     it "valid" do
       expect(measure_component).to be_conformant
     end
@@ -141,10 +144,6 @@ describe MeasureComponent do
       end
 
       it "should pass validation" do
-        measure_component = build(:measure_component,
-                                  measure_sid: measure.measure_sid,
-                                  duty_expression_id: duty_expression.duty_expression_id)
-
         expect(measure_component).to be_conformant
         expect(measure_component.conformance_errors).to be_empty
       end
