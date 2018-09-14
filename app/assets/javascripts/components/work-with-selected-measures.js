@@ -10,6 +10,7 @@ $(document).ready(function() {
     el: form,
     data: function() {
       return {
+        regulation: null,
         regulation_id: null,
         regulation_role: null,
         notFromRegulation: false,
@@ -39,6 +40,7 @@ $(document).ready(function() {
       regulationSelected: function(obj) {
         this.regulation_id = obj.regulation_id;
         this.regulation_role = obj.role;
+        this.regulation = obj.regulation;
       }
     },
     watch: {

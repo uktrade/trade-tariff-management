@@ -37,7 +37,7 @@ module Measures
         case operator
         when "is"
 
-          [ is_clause, measure_sid ]
+          [ is_clause, measure_sids ]
         when "starts_with", "contains"
 
           [ equal_clause, equal_value ]
@@ -48,7 +48,7 @@ module Measures
 
         def is_clause
           <<-eos
-            measure_sid::text = ?
+            measure_sid::text in ?
           eos
         end
 
@@ -56,6 +56,10 @@ module Measures
           <<-eos
             measure_sid::text ilike ?
           eos
+        end
+
+        def measure_sids
+          measure_sid.split(',').map(&:strip)
         end
 
         def equal_value

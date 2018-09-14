@@ -17,11 +17,12 @@ $(document).ready(function() {
         selectedMeasures: [],
         showTooltips: true,
         columns: [
-          {enabled: true, title: "ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
+          {enabled: true, title: "Old ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
           {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string", changeProp: "regulation" },
           {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string", changeProp: "measure_type" },
           {enabled: true, title: "Start date", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },
           {enabled: true, title: "End date", field: "validity_end_date", sortable: true, type: "date", changeProp: "validity_end_date" },
+          {enabled: true, title: "Justification Regulation", field: "justification_regulation", sortable: true, type: "string", changeProp: "justification_regulation" },
           {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "number", changeProp: "goods_nomenclature" },
           {enabled: true, title: "Additional code", field: "additional_code", sortable: true, type: "string", changeProp: "additional_code" },
           {enabled: true, title: "Origin", field: "geographical_area", sortable: true, type: "string", changeProp: "geographical_area" },
@@ -176,6 +177,7 @@ $(document).ready(function() {
           return {
             measure_sid: measure.measure_sid,
             regulation: measure.regulation.formatted_id,
+            justification_regulation: measure.justification_regulation ? measure.justification_regulation.formatted_id : "-",
             measure_type_id: measure.measure_type.measure_type_id,
             goods_nomenclature: measure.goods_nomenclature ? measure.goods_nomenclature.goods_nomenclature_item_id : "-",
             additional_code: measure.additional_code || "-",
@@ -299,14 +301,51 @@ $(document).ready(function() {
         var self = this;
 
         if (this.pagination.page === this.pagination.pages) {
-          this.isLoading = false;
-
-          DB.insertOrReplaceBulk(self.search_code, self.measures);
+          this.measuresFinishedLoading();
 
           return;
         }
 
         this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
+      },
+      prepareMeasuresFirstEdit: function() {
+        var noChanges = true;
+
+        this.measures.forEach(function(measure) {
+          if (measure.changes && measure.changes.length > 0) {
+            noChanges = false;
+          }
+        });
+
+        // measures just loaded up, we need to change some things
+        // based on previous page
+        if (noChanges) {
+          this.measures.forEach(function(measure) {
+            measure.original_values = {
+              validity_start_date: measure.validity_start_date,
+              validity_end_date: measure.validity_end_date
+            };
+
+            measure.validity_start_date = moment(window.all_settings.start_date, "DD/MM/YYYY", true).format("DD MMM YYYY");
+            measure.validity_end_date = null;
+            measure.changes.push("validity_end_date");
+            measure.changes.push("validity_start_date");
+
+            if (window.all_settings.regulation) {
+              measure.original_values.regulation = measure.regulation;
+
+              measure.regulation = window.all_settings.regulation;
+              measure.changes.push("regulation");
+            }
+          });
+        }
+      },
+      measuresFinishedLoading: function() {
+        this.prepareMeasuresFirstEdit();
+
+        this.isLoading = false;
+
+        DB.insertOrReplaceBulk(this.search_code, this.measures);
       },
       onPageChange: function(page) {
         this.currentPage = page;
@@ -462,15 +501,6 @@ $(document).ready(function() {
 
               return parseFloat(a) - parseFloat(b);
             };
-        }
-      }
-    },
-    watch: {
-      visibleMeasures: function(val) {
-        if (this.selectedAllMeasures) {
-          this.selectedMeasures = val.map(function(m) {
-            return m.measure_sid;
-          });
         }
       }
     }

@@ -5,6 +5,7 @@ Vue.component("change-validity-period-popup", {
       startDate: null,
       endDate: null,
       makeOpenEnded: null,
+      regulation: null,
       regulation_id: null,
       regulation_role: null,
       earliestStartDate: null,
@@ -132,10 +133,12 @@ Vue.component("change-validity-period-popup", {
               measure.changes.push("justification_regulation");
               measure.justification_regulation_id = this.regulation_id;
               measure.justification_regulation_role = this.regulation_role;
+              measure.justification_regulation = this.regulation;
             } else if (window.all_settings.regulation_id) {
               measure.changes.push("justification_regulation");
               measure.justification_regulation_id = window.all_settings.regulation_id;
               measure.justification_regulation_role = window.all_settings.regulation_role;
+              measure.justification_regulation = window.all_settings.regulation;
 
             }
           }
@@ -158,6 +161,7 @@ Vue.component("change-validity-period-popup", {
     regulationSelected: function(obj) {
       this.regulation_id = obj.regulation_id;
       this.regulation_role = obj.role;
+      this.regulation = obj;
     }
   },
   computed: {

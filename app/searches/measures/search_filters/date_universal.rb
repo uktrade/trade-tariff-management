@@ -40,7 +40,14 @@ module Measures
         is
         is_not
         is_after
+        is_after_or_nil
         is_before
+        is_before_or_nil
+      )
+
+      OPERATORS_ALLOW_NIL = %w(
+        is_after_or_nil
+        is_before_or_nil
       )
 
       attr_accessor :field_name,
@@ -106,10 +113,11 @@ module Measures
 
         def compare_sql(compare_operator)
           res = "#{field_name}::date #{compare_operator} ?"
-          res += " OR #{is_not_specified_clause}" if field_name == "validity_end_date"
+          res += " OR #{is_not_specified_clause}" if field_name == "validity_end_date" && OPERATORS_ALLOW_NIL.include?(operator)
 
           res
         end
+
     end
   end
 end
