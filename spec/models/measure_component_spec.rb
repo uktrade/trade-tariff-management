@@ -28,23 +28,27 @@ describe MeasureComponent do
   end
 
   describe 'Conformance rules' do
-    let!(:measure)           { create :measure }
+    let!(:monetary_unit) { create :monetary_unit }
+    let!(:measure) { create :measure }
     let(:duty_expression_id) { DutyExpression::MEURSING_DUTY_EXPRESSION_IDS.sample }
 
     let!(:duty_expression)   do
-      create(:duty_expression,
-             duty_expression_id: duty_expression_id,
-             duty_amount_applicability_code: 1,
-             monetary_unit_applicability_code: 1,
-             measurement_unit_applicability_code: 1
-            )
+      create(
+        :duty_expression,
+        duty_expression_id: duty_expression_id,
+        duty_amount_applicability_code: 1,
+        monetary_unit_applicability_code: 1,
+        measurement_unit_applicability_code: 1
+      )
     end
 
     let!(:measure_component) {
-      create(:measure_component,
-             measure_sid: measure.measure_sid,
-             duty_expression_id: duty_expression.duty_expression_id
-            )
+      create(
+        :measure_component,
+        measure_sid: measure.measure_sid,
+        duty_expression_id: duty_expression.duty_expression_id,
+        monetary_unit_code: monetary_unit.monetary_unit_code
+      )
     }
 
     # ME43: The same duty expression can only be used once with the same measure.
@@ -56,12 +60,13 @@ describe MeasureComponent do
 
     describe "ME41" do
       let!(:duty_expression)   do
-        create(:duty_expression,
-               duty_expression_id: duty_expression_id,
-               duty_amount_applicability_code: 1,
-               monetary_unit_applicability_code: 1,
-               measurement_unit_applicability_code: 1
-              )
+        create(
+          :duty_expression,
+          duty_expression_id: duty_expression_id,
+          duty_amount_applicability_code: 1,
+          monetary_unit_applicability_code: 1,
+          measurement_unit_applicability_code: 1
+        )
       end
 
       it "should pass validation" do
@@ -157,12 +162,7 @@ describe MeasureComponent do
     end
 
     describe "ME48: The referenced monetary unit must exist." do
-      let(:monetary_unit) { create :monetary_unit }
-
       it "should pass validation" do
-        measure_component.monetary_unit_code = monetary_unit.monetary_unit_code
-        measure_component.save
-
         expect(measure_component).to be_conformant
         expect(measure_component.conformance_errors).to be_empty
       end
@@ -176,12 +176,7 @@ describe MeasureComponent do
     end
 
     describe "ME49: The validity period of the referenced monetary unit must span the validity period of the measure." do
-      let(:monetary_unit) { create :monetary_unit }
-
       it "should un validation successfully" do
-        measure_component.monetary_unit_code = monetary_unit.monetary_unit_code
-        measure_component.save
-
         expect(measure_component).to be_conformant
       end
 
