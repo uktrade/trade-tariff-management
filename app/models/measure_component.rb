@@ -36,6 +36,7 @@ class MeasureComponent < Sequel::Model
   delegate :description, :abbreviation, to: :duty_expression, prefix: true, allow_nil: true
   delegate :abbreviation, to: :monetary_unit, prefix: true, allow_nil: true
   delegate :description, to: :monetary_unit, prefix: true, allow_nil: true
+  delegate :validity_start_date, :validity_end_date, to: :measure, allow_nil: true
 
   def formatted_duty_expression
     DutyExpressionFormatter.format(duty_expression_formatter_options.merge(formatted: true))
