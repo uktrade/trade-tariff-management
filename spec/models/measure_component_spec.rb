@@ -29,6 +29,9 @@ describe MeasureComponent do
 
   describe 'Conformance rules' do
     let!(:monetary_unit) { create :monetary_unit }
+    let!(:measurement_unit) { create :measurement_unit }
+    let!(:measurement_unit_qualifier) { create :measurement_unit_qualifier }
+
     let!(:measure) { create :measure }
     let(:duty_expression_id) { DutyExpression::MEURSING_DUTY_EXPRESSION_IDS.sample }
 
@@ -47,7 +50,9 @@ describe MeasureComponent do
         :measure_component,
         measure_sid: measure.measure_sid,
         duty_expression_id: duty_expression.duty_expression_id,
-        monetary_unit_code: monetary_unit.monetary_unit_code
+        monetary_unit_code: monetary_unit.monetary_unit_code,
+        measurement_unit_code: measurement_unit.measurement_unit_code,
+        measurement_unit_qualifier_code: measurement_unit_qualifier.measurement_unit_qualifier_code
       )
     }
 
@@ -191,6 +196,20 @@ describe MeasureComponent do
 
         expect(measure_component).to_not be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME49)
+      end
+    end
+
+    describe "ME50: The combination measurement unit + measurement unit qualifier must exist." do
+      it "should run validation successfully" do
+        expect(measure_component).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measure_component.measurement_unit_code = "0"
+        measure_component.measurement_unit_qualifier_code = "0"
+
+        expect(measure_component).to_not be_conformant
+        expect(measure_component.conformance_errors).to have_key(:ME50)
       end
     end
   end
