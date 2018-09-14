@@ -51,18 +51,17 @@ describe MeasureComponent do
       expect(measure_component).to be_conformant
     end
 
-    describe "Flag 'amount' on duty expression is mandatory" do
-      it "ME45: If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified. If the flag is set 'not permitted' then no amount may be entered." do
+    describe "ME45: If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified. If the flag is set 'not permitted' then no amount may be entered." do
+      it "handles validation if the flag 'amount' on duty expression is 'mandatory' then an amount must be specified." do
         measure_component.duty_amount = nil
         measure_component.save
 
+        expect(duty_expression.duty_amount_applicability_code).to eq(1)
         expect(measure_component).to_not be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME45)
       end
-    end
 
-    describe "Flag 'amount' on duty expression is not permitted" do
-      it "ME45: If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified. If the flag is set 'not permitted' then no amount may be entered." do
+      it "handles validation if the flag is set 'not permitted' then no amount may be entered." do
         duty_expression.duty_amount_applicability_code = 2
         duty_expression.save
 
@@ -74,8 +73,8 @@ describe MeasureComponent do
       end
     end
 
-    describe "Flag 'monetary unit' on duty expression is mandatory" do
-      it "ME46: If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set 'not permitted' then no monetary unit may be entered." do
+    describe "ME46: If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set 'not permitted' then no monetary unit may be entered." do
+      it "handles validation if the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified" do
         duty_expression.monetary_unit_applicability_code = 1
         duty_expression.save
 
@@ -85,10 +84,8 @@ describe MeasureComponent do
         expect(measure_component).to_not be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME46)
       end
-    end
 
-    describe "Flag 'monetary unit' on duty expression is not permitted" do
-      it "ME46: If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set 'not permitted' then no monetary unit may be entered." do
+      it "handles validation if the flag is set 'not permitted' then no monetary unit may be entered." do
         duty_expression.monetary_unit_applicability_code = 2
         duty_expression.save
 
@@ -100,8 +97,8 @@ describe MeasureComponent do
       end
     end
 
-    describe "Flag 'measurement unit' on duty expression is mandatory" do
-      it "ME111: If the flag 'measurement unit' on duty expression is 'mandatory' then a measurement unit must be specified. If the flag is set to 'not permitted' then no measurement unit may be entered." do
+    describe "ME47: If the flag 'measurement unit' on duty expression is 'mandatory' then a measurement unit must be specified. If the flag is set 'not permitted' then no measurement unit may be entered." do
+      it "handles validation if the flag 'measurement unit' on duty expression is 'mandatory' then a measurement unit must be specified." do
         duty_expression.measurement_unit_applicability_code = 1
         duty_expression.save
 
@@ -109,12 +106,10 @@ describe MeasureComponent do
         measure_component.save
 
         expect(measure_component).to_not be_conformant
-        expect(measure_component.conformance_errors).to have_key(:ME111)
+        expect(measure_component.conformance_errors).to have_key(:ME47)
       end
-    end
 
-    describe "Flag 'measurement unit' on duty expression is not permitted" do
-      it "ME111: If the flag 'measurement unit' on duty expression is 'mandatory' then a measurement unit must be specified. If the flag is set to 'not permitted' then no measurement unit may be entered." do
+      it "handles validation if the flag is set 'not permitted' then no measurement unit may be entered." do
         duty_expression.measurement_unit_applicability_code = 2
         duty_expression.save
 
@@ -122,7 +117,7 @@ describe MeasureComponent do
         measure_component.save
 
         expect(measure_component).to_not be_conformant
-        expect(measure_component.conformance_errors).to have_key(:ME111)
+        expect(measure_component.conformance_errors).to have_key(:ME47)
       end
     end
 
