@@ -1,5 +1,5 @@
 module XmlGeneration
-  class Search
+  class WorkbasketSearch
 
     attr_accessor :start_date,
                   :end_date
