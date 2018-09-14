@@ -175,5 +175,28 @@ describe MeasureComponent do
       end
     end
 
+    describe "ME49: The validity period of the referenced monetary unit must span the validity period of the measure." do
+      let(:monetary_unit) { create :monetary_unit }
+
+      it "should un validation successfully" do
+        measure_component.monetary_unit_code = monetary_unit.monetary_unit_code
+        measure_component.save
+
+        expect(measure_component).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measure_component.monetary_unit_code = monetary_unit.monetary_unit_code
+        measure_component.save
+
+        monetary_unit = measure_component.monetary_unit
+        monetary_unit.validity_start_date = Date.today.ago(5.years)
+        monetary_unit.validity_end_date = Date.today.ago(4.years)
+        monetary_unit.save
+
+        expect(measure_component).to_not be_conformant
+        expect(measure_component.conformance_errors).to have_key(:ME49)
+      end
+    end
   end
 end

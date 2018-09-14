@@ -72,4 +72,9 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
       MonetaryUnit.where(monetary_unit_code: record.monetary_unit_code).any?
     end
   end
+
+  validation :ME49, "The validity period of the referenced monetary unit must span the validity period of the measure.",
+    on: [:create, :update] do
+    validates :validity_date_span, of: :monetary_unit
+  end
 end
