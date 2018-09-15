@@ -1,14 +1,14 @@
 class MeasureConditionComponentValidator < TradeTariffBackend::Validator
 
-  validation :ME53, 'The referenced measure condition must exist.', on: [:create, :update] do |record|
+  validation :ME53, "The referenced measure condition must exist.", on: [:create, :update] do |record|
     record.measure_condition_sid.present? && record.measure_condition.present?
   end
 
-  validation :ME105, 'The reference duty expression must exist.', on: [:create, :update] do |record|
+  validation :ME105, "The reference duty expression must exist.", on: [:create, :update] do |record|
     record.duty_expression_id.present? && record.duty_expression.present?
   end
 
-  validation :ME106, 'The VP of the duty expression must span the VP of the measure.', on: [:create, :update] do
+  validation :ME106, "The VP of the duty expression must span the VP of the measure.", on: [:create, :update] do
     validates :validity_date_span, of: :duty_expression
   end
 
