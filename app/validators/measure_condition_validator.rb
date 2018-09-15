@@ -1,5 +1,4 @@
 class MeasureConditionValidator < TradeTariffBackend::Validator
-
   #
   # TODO: We need to make sure and confirm code of this comformance rule
   #
@@ -26,7 +25,7 @@ class MeasureConditionValidator < TradeTariffBackend::Validator
   validation :ME59, "The referenced action code must exist.",
     on: [:create, :update],
     if: ->(record) { record.action_code.present? } do |record|
-      record.action.present?
+      record.measure_action.present?
   end
 
 end

@@ -192,13 +192,15 @@ describe MeasureCondition do
   describe 'Conformance rules' do
     let!(:measure) { create :measure, validity_start_date: Date.yesterday }
     let!(:certificate) { create :certificate, validity_start_date: Date.yesterday }
+    let!(:measure_action) { create :measure_action }
 
     let(:measure_condition) {
       create(
         :measure_condition,
         measure_sid: measure.measure_sid,
         certificate_type_code: certificate.certificate_type_code,
-        certificate_code: certificate.certificate_code
+        certificate_code: certificate.certificate_code,
+        action_code: measure_action.action_code
       )
     }
 
@@ -215,7 +217,6 @@ describe MeasureCondition do
         expect(measure_condition.conformance_errors).to have_key(:ME56)
       end
     end
-
 
     describe "ME57: The VP of the duty expression must span the VP of the measure." do
       it "should run validation successfully" do
@@ -234,6 +235,19 @@ describe MeasureCondition do
 
     describe "ME58: The same certificate can only be referenced once by the same measure and the same condition type." do
       it { should validate_uniqueness.of [:measure_sid, :certificate_type_code, :certificate_code] }
+    end
+
+    describe "ME59: The referenced action code must exist." do
+      it "should run validation successfully" do
+        expect(measure_condition).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measure_condition.action_code = "0"
+
+        expect(measure_condition).to_not be_conformant
+        expect(measure_condition.conformance_errors).to have_key(:ME59)
+      end
     end
   end
 end
