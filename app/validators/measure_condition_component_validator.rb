@@ -4,6 +4,12 @@ class MeasureConditionComponentValidator < TradeTariffBackend::Validator
     record.measure_condition_sid.present? && record.measure_condition.present?
   end
 
+  validation :ME60, "The referenced monetary unit must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.monetary_unit_code.present? } do |record|
+      record.monetary_unit.present?
+    end
+
   validation :ME105, "The reference duty expression must exist.", on: [:create, :update] do |record|
     record.duty_expression_id.present? && record.duty_expression.present?
   end
