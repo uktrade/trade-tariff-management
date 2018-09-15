@@ -231,5 +231,9 @@ describe MeasureCondition do
         expect(measure_condition.conformance_errors).to have_key(:ME57)
       end
     end
+
+    describe "ME58: The same certificate can only be referenced once by the same measure and the same condition type." do
+      it { should validate_uniqueness.of [:measure_sid, :certificate_type_code, :certificate_code] }
+    end
   end
 end

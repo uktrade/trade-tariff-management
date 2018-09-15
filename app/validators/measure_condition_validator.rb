@@ -18,4 +18,9 @@ class MeasureConditionValidator < TradeTariffBackend::Validator
     validates :validity_date_span, of: :certificate
   end
 
+  validation :ME58, "The same certificate can only be referenced once by the same measure and the same condition type.",
+    on: [:create, :update] do
+    validates :uniqueness, of: [:measure_sid, :certificate_type_code, :certificate_code]
+  end
+
 end
