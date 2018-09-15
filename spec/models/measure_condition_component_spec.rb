@@ -30,6 +30,7 @@ describe MeasureConditionComponent do
   describe 'Conformance rules' do
     let!(:measure)           { create :measure }
     let!(:measure_condition) { create :measure_condition, measure_sid: measure.measure_sid }
+    let!(:monetary_unit) { create :monetary_unit }
 
     let!(:duty_expression)   do
       create(:duty_expression,
@@ -40,14 +41,15 @@ describe MeasureConditionComponent do
             )
     end
 
-
     let!(:duty_expression_description) { create :duty_expression_description, duty_expression_id: duty_expression.duty_expression_id }
 
     let!(:measure_condition_component) do
-      create(:measure_condition_component,
-             measure_condition_sid: measure_condition.measure_condition_sid,
-             duty_expression_id: duty_expression.duty_expression_id
-            )
+      create(
+        :measure_condition_component,
+        measure_condition_sid: measure_condition.measure_condition_sid,
+        duty_expression_id: duty_expression.duty_expression_id,
+        monetary_unit_code: monetary_unit.monetary_unit_code
+      )
     end
 
     it "valid" do
@@ -69,6 +71,20 @@ describe MeasureConditionComponent do
 
         expect(measure_condition_component).to_not be_conformant
         expect(measure_condition_component.conformance_errors).to have_key(:ME53)
+      end
+    end
+
+    describe "ME60: The referenced monetary unit must exist." do
+      it "should pass validation" do
+        expect(measure_condition_component).to be_conformant
+        expect(measure_condition_component.conformance_errors).to be_empty
+      end
+
+      it "should not pass validation" do
+        measure_condition_component.monetary_unit_code = 0
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME60)
       end
     end
 
@@ -103,38 +119,43 @@ describe MeasureConditionComponent do
       let(:duty_expression_id3) { "04" }
 
       let!(:duty_expression2)   do
-        create(:duty_expression,
-               duty_expression_id: duty_expression_id2,
-               duty_amount_applicability_code: 1,
-               monetary_unit_applicability_code: 1,
-               measurement_unit_applicability_code: 1
-              )
+        create(
+          :duty_expression,
+          duty_expression_id: duty_expression_id2,
+          duty_amount_applicability_code: 1,
+          monetary_unit_applicability_code: 1,
+          measurement_unit_applicability_code: 1
+        )
       end
 
       let!(:duty_expression3)   do
-        create(:duty_expression,
-               duty_expression_id: duty_expression_id3,
-               duty_amount_applicability_code: 1,
-               monetary_unit_applicability_code: 1,
-               measurement_unit_applicability_code: 1
-              )
+        create(
+          :duty_expression,
+          duty_expression_id: duty_expression_id3,
+          duty_amount_applicability_code: 1,
+          monetary_unit_applicability_code: 1,
+          measurement_unit_applicability_code: 1
+        )
       end
 
       let!(:duty_expression_description2) { create :duty_expression_description, duty_expression_id: duty_expression_id2 }
       let!(:duty_expression_description3) { create :duty_expression_description, duty_expression_id: duty_expression_id3 }
 
       let!(:measure_condition_component2) do
-        create(:measure_condition_component,
-               measure_condition_sid: measure_condition.measure_condition_sid,
-               duty_expression_id: duty_expression2.duty_expression_id
-              )
+        create(
+          :measure_condition_component,
+          measure_condition_sid: measure_condition.measure_condition_sid,
+          duty_expression_id: duty_expression2.duty_expression_id
+        )
       end
 
       let!(:measure_condition_component3) do
-        create(:measure_condition_component,
-               measure_condition_sid: measure_condition.measure_condition_sid,
-               duty_expression_id: duty_expression3.duty_expression_id
-              )
+        create(
+          :measure_condition_component,
+          measure_condition_sid: measure_condition.measure_condition_sid,
+          duty_expression_id: duty_expression3.duty_expression_id,
+          monetary_unit_code: monetary_unit.monetary_unit_code
+        )
       end
 
       it "valid" do
