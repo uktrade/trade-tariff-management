@@ -13,4 +13,9 @@ class MeasureConditionValidator < TradeTariffBackend::Validator
       record.certificate.present?
     end
 
+  validation :ME57, "The validity period of the referenced certificate must span the validity period of the measure.",
+    on: [:create, :update] do
+    validates :validity_date_span, of: :certificate
+  end
+
 end
