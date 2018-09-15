@@ -23,4 +23,10 @@ class MeasureConditionValidator < TradeTariffBackend::Validator
     validates :uniqueness, of: [:measure_sid, :certificate_type_code, :certificate_code]
   end
 
+  validation :ME59, "The referenced action code must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.action_code.present? } do |record|
+      record.action.present?
+  end
+
 end
