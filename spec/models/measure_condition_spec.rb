@@ -188,4 +188,29 @@ describe MeasureCondition do
       expect(measure_condition.condition).to include(measure_condition.component_sequence_number.to_s)
     end
   end
+
+  describe 'Conformance rules' do
+    describe "ME55: The referenced certificate must exist." do
+      let!(:certificate) { create :certificate }
+      let(:measure_condition) {
+        create(
+          :measure_condition,
+          certificate_type_code: certificate.certificate_type_code,
+          certificate_code: certificate.certificate_code
+        )
+      }
+
+      it "should run validation successfully" do
+        expect(measure_condition).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measure_condition.certificate_type_code = "z"
+        measure_condition.certificate_type_code = "000"
+
+        expect(measure_condition).to_not be_conformant
+        expect(measure_condition.conformance_errors).to have_key(:ME55)
+      end
+    end
+  end
 end

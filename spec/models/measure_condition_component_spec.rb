@@ -89,7 +89,7 @@ describe MeasureConditionComponent do
       expect(measure_condition_component.conformance_errors).to have_key(:ME106)
     end
 
-    context 'for one measure contidion component' do
+    context "for one measure contidion component" do
       it "ME107: If the short description of a duty expression starts with a '+' then a measure condition component with a preceding duty expression must exist (sequential ascending order) for a condition (at least one, not necessarily the same condition) of the same measure." do
         allow_any_instance_of(DutyExpression).to receive(:abbreviation).and_return("+")
 
@@ -98,7 +98,7 @@ describe MeasureConditionComponent do
       end
     end
 
-    context 'for more than one measure contidion component' do
+    context "for more than one measure contidion component" do
       let(:duty_expression_id2) { "02" }
       let(:duty_expression_id3) { "04" }
 
