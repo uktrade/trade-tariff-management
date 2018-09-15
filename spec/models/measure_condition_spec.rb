@@ -190,7 +190,7 @@ describe MeasureCondition do
   end
 
   describe 'Conformance rules' do
-    describe "ME55: The referenced certificate must exist." do
+    describe "ME56: The referenced certificate must exist." do
       let!(:certificate) { create :certificate }
       let(:measure_condition) {
         create(
@@ -209,7 +209,7 @@ describe MeasureCondition do
         measure_condition.certificate_type_code = "000"
 
         expect(measure_condition).to_not be_conformant
-        expect(measure_condition.conformance_errors).to have_key(:ME55)
+        expect(measure_condition.conformance_errors).to have_key(:ME56)
       end
     end
   end

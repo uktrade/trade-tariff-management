@@ -7,7 +7,7 @@ class MeasureConditionValidator < TradeTariffBackend::Validator
     validates :presence, of: :condition_code
   end
 
-  validation :ME55, "The referenced certificate must exist.",
+  validation :ME56, "The referenced certificate must exist.",
     on: [:create, :update],
     if: ->(record) { record.certificate_type_code.present? || record.certificate_code.present? } do |record|
       record.certificate.present?
