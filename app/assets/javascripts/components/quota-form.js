@@ -193,6 +193,11 @@ $(document).ready(function() {
             return section;
           });
         }
+
+        if (window.all_settings.sub_quotas) {
+          data.sub_quotas.enabled = true;
+          data.sub_quotas.definitions = window.all_settings.sub_quotas;
+        }
       } else {
         data.measure = default_quota;
       }
@@ -628,7 +633,8 @@ $(document).ready(function() {
       },
       createQuotaConditionsFootnotesStepPayload: function() {
         var payload = {
-          footnotes: this.measure.footnotes
+          footnotes: this.measure.footnotes,
+          sub_quotas: this.sub_quotas.enabled ? this.sub_quotas.definitions : []
         };
 
         try {

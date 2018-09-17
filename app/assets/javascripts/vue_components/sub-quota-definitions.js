@@ -1,6 +1,6 @@
 var template = `
 <div className="sub-quota-definitions">
-  <div class="bootstrap-row" v-for="(sub_quota, sqi) in definitions">
+  <div class="sub-quota-definition bootstrap-row" v-for="(sub_quota, sqi) in definitions">
     <div class="col-md-3 col-lg-3">
       <div class="form-group">
         <label class="form-label" v-if="sqi === 0">
