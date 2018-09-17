@@ -380,6 +380,13 @@ $(document).ready(function() {
                 });
               }
             }
+
+            if (data.footnotes.value.length === 0) {
+              data.footnotes.value.push({
+                footnote_type_id: null,
+                footnote_id: null
+              });
+            }
           }
         }
       }

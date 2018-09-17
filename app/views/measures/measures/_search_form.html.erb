@@ -235,7 +235,7 @@
 
         <input class="form-control tiny-input" v-model="footnote.footnote_id" :disabled="footnotesValueDisabled">
 
-        <input type="hidden" :name="'search[footnotes][value][' + index + '][' + footnote.footnote_type_id + ']'" :value="footnote.footnote_id" :disabled="footnotesValueDisabled" />
+        <input type="hidden" :name="'search[footnotes][value][' + index + '][' + footnote.footnote_type_id || 'null' + ']'" :value="footnote.footnote_id" :disabled="footnotesValueDisabled" />
       </div>
       <a href="#" v-on:click.prevent="addFootnote" v-if="!footnotesValueDisabled">
         Add another footnote
