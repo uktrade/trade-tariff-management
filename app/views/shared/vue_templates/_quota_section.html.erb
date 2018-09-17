@@ -141,6 +141,34 @@
         </p>
       </div>
 
+      <div class="form-group">
+        <label class="form-label">
+          Do you want to associate this quota section with a parent quota?
+
+          <span class="form-hint">
+            An associated parent quota will have its own balance, which is deprecated simultaneously with the current period's balance when drawings are made.
+          </span>
+        </label>
+
+        <div class="multiple-choice">
+          <input id="" type="checkbox" v-model="section.parent_quota.associate">
+          <label for="toggle-type">
+            Yes - associate this quota section with a parent quota
+          </label>
+
+          <div class="panel panel-border-narrow" v-if="section.parent_quota.associate">
+            <div class="form-group">
+              <label class="form-label">Parent quota order number</label>
+              <div class="bootstrap-row">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                  <input type="text" maxlength="6" class="form-control" v-model="section.parent_quota.order_number">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <slot></slot>
     </div>
   </div>

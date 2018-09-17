@@ -54,7 +54,12 @@ Vue.component("quota-sections-manager", {
             criticality_threshold: 90, // only to be used IF criticality_each_period is true
             duty_expressions: [] // only will be filled IF duties_each_period is TRUE
           }
-        ]
+        ],
+
+        parent_quota: {
+          associate: false,
+          order_number: ""
+        }
       });
     },
     removeSection: function(index) {
