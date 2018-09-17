@@ -88,6 +88,15 @@ describe MeasureConditionComponent do
       end
     end
 
+    it "ME61: The validity period of the referenced monetary unit must span the validity period of the measure." do
+      measure.validity_start_date = Date.today.ago(5.years)
+      measure.validity_end_date = Date.today.ago(4.years)
+      measure.save
+
+      expect(measure_condition_component).to_not be_conformant
+      expect(measure_condition_component.conformance_errors).to have_key(:ME61)
+    end
+
     it "ME105: The reference duty expression must exist" do
       measure_condition_component.duty_expression_id = nil
       measure_condition_component.save
