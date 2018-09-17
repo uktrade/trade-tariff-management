@@ -115,6 +115,22 @@ describe MeasureConditionComponent do
       end
     end
 
+    describe "ME63: The validity period of the measurement unit must span the validity period of the measure." do
+      it "should un validation successfully" do
+        expect(measure_condition_component).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measurement_unit = measure_condition_component.measurement_unit
+        measurement_unit.validity_start_date = Date.today.ago(5.years)
+        measurement_unit.validity_end_date = Date.today.ago(4.years)
+        measurement_unit.save
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME63)
+      end
+    end
+
     it "ME105: The reference duty expression must exist" do
       measure_condition_component.duty_expression_id = nil
       measure_condition_component.save
