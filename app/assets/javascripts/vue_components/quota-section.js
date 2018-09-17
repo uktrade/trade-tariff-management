@@ -195,10 +195,14 @@ Vue.component("quota-section", {
     "section.type": function(newVal, oldVal) {
       if (newVal && newVal != oldVal) {
         this.resetOpeningBalances();
+        this.section.parent_quota.associate = false;
+        this.section.parent_quota.balances = [];
       }
     },
     "section.period": function() {
       this.resetOpeningBalances();
+      this.section.parent_quota.associate = false;
+      this.section.parent_quota.balances = [];
     }
   }
 });

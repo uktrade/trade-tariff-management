@@ -155,21 +155,37 @@
           <label for="toggle-type">
             Yes - associate this quota section with a parent quota
           </label>
+        </div>
 
-          <div class="panel panel-border-narrow" v-if="section.parent_quota.associate">
-            <div class="form-group">
-              <label class="form-label">Parent quota order number</label>
-              <div class="bootstrap-row">
-                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                  <input type="text" maxlength="6" class="form-control" v-model="section.parent_quota.order_number">
-                </div>
+        <div class="panel panel-border-narrow" v-if="section.parent_quota.associate">
+          <div class="form-group">
+            <label class="form-label">Parent quota order number</label>
+            <div class="bootstrap-row">
+              <div class="col-xs-5 col-sm-3 col-md-2 col-lg-1">
+                <input type="text" maxlength="6" class="form-control" v-model="section.parent_quota.order_number">
               </div>
             </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Parent quota opening balance(s)
+
+              <span class="form-hint">
+                This defaults to the total of the opening balances entered above, for this section. You can optionally change the value here. The balance here will be measured in the same units as the quota specified here.
+              </span>
+            </label>
+
+            <parent-quota-opening-balances :balances="section.parent_quota.balances" :section="section"></parent-quota-opening-balances>
           </div>
         </div>
       </div>
 
-      <slot></slot>
+      <br>
+
+      <p>
+        <slot></slot>
+      </p>
     </div>
   </div>
 </script>

@@ -637,6 +637,8 @@ $(document).ready(function() {
           sub_quotas: this.sub_quotas.enabled ? this.sub_quotas.definitions : []
         };
 
+        console.log(payload)
+
         try {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);

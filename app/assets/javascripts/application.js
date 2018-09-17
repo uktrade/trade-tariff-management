@@ -6,7 +6,6 @@
 //= require ./vendors/numeral.min
 //= require ./vendors/URI.min
 //= require ./vendors/dexie
-//= require parsley
 //= require vue
 //= require vue-resource
 //= require ./vendors/vue-virtual-scroller.min
