@@ -17,7 +17,7 @@ module Db
     private
 
       def fetch_relevant_data
-        @data = ::XmlGeneration::Search.new(
+        @data = ::XmlGeneration::WorkbasketSearch.new(
           record.date_filters
         ).send(:data)
       end

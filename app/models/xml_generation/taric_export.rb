@@ -44,15 +44,25 @@ module XmlGeneration
       end
 
       def fetch_relevant_data_and_generate_xml
-        data = ::XmlGeneration::Search.new(
-          record.date_filters
-        ).result
+        data = xml_generator_search.result
         @extract_database_date_time = Time.now.utc
 
         @xml_data = renderer.render(data, xml: xml_builder)
       end
 
-      def attach_files!
+    def xml_generator_search
+      if record.workbasket
+        ::XmlGeneration::WorkbasketSearch.new(
+            record.date_filters
+        )
+      else
+        ::XmlGeneration::DBSearch.new(
+            record.date_filters
+        )
+      end
+    end
+
+    def attach_files!
         attach_xml_file!
         attach_base_64_version!
         attach_zip_version!
