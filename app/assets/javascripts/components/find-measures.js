@@ -470,6 +470,9 @@ $(document).ready(function() {
       }
     },
     methods: {
+      footnotesIdDisabled: function(index) {
+        return this.footnotesValueDisabled || !this.footnotes.value[index].footnote_type_id;
+      },
       addOriginExclusion: function() {
         this.origin_exclusions.value.push({ value: '' });
       },
