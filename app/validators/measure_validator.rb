@@ -156,11 +156,15 @@ class MeasureValidator < TradeTariffBackend::Validator
              additional code and reduction indicator. This rule is not applicable for Meursing additional
              codes.),
              on: [:create, :update],
-             if: ->(record) { record.additional_code.present? && record.additional_code.meursing_additional_code.nil? } do
-               validates :uniqueness, of: [:goods_nomenclature_sid, :measure_type_id,
-                                           :geographical_area_sid, :ordernumber,
-                                           :additional_code_type_id, :additional_code_id,
-                                           :reduction_indicator]
+             if: ->(record) { record.additional_code.present? && record.additional_code.meursing_additional_code.nil? } do |record|
+               Measure.where(
+                 measure_type_id: record.measure_type_id,
+                 geographical_area_sid: record.geographical_area_sid,
+                 ordernumber: record.ordernumber,
+                 additional_code_type_id: record.additional_code_type_id,
+                 additional_code_id: record.additional_code_id,
+                 reduction_indicator: record.reduction_indicator
+               ).empty?
              end
 
   validation [:ME33, :ME34], %q{A justification regulation may not be entered if the measure end date is not filled in
