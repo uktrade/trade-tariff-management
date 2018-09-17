@@ -10,6 +10,11 @@ class MeasureConditionComponentValidator < TradeTariffBackend::Validator
       record.monetary_unit.present?
     end
 
+  validation :ME61, "The validity period of the referenced monetary unit must span the validity period of the measure.",
+    on: [:create, :update] do
+    validates :validity_date_span, of: :monetary_unit
+  end
+
   validation :ME105, "The reference duty expression must exist.", on: [:create, :update] do |record|
     record.duty_expression_id.present? && record.duty_expression.present?
   end
