@@ -1,5 +1,8 @@
 FactoryGirl.define do
   sequence(:quota_order_number_sid) { |n| n}
+  sequence(:quota_order_number_id) do
+    "09" + Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s
+  end
 
   factory :quota_association do
     main_quota_definition_sid  { Forgery(:basic).number }
@@ -10,7 +13,7 @@ FactoryGirl.define do
 
   factory :quota_order_number do
     quota_order_number_sid { generate(:quota_order_number_sid) }
-    quota_order_number_id  { 6.times.map{ Random.rand(9) }.join }
+    quota_order_number_id  { generate(:quota_order_number_id) }
     validity_start_date { Date.today.ago(4.years) }
     validity_end_date   { nil }
 
@@ -46,7 +49,7 @@ FactoryGirl.define do
   factory :quota_definition do
     quota_definition_sid   { generate(:quota_order_number_sid) }
     quota_order_number_sid { generate(:quota_order_number_sid) }
-    quota_order_number_id  { 6.times.map{ Random.rand(9) }.join }
+    quota_order_number_id  { generate(:quota_order_number_id) }
 
     trait :actual do
       validity_start_date { Date.today.ago(3.years) }
