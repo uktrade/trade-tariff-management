@@ -2,6 +2,8 @@ module TradeTariffBackend
   module Validations
     class ValidityDateSpanValidation < GenericValidation
       def valid?(record = nil)
+      return false if record.validity_start_date.blank?
+
       association = validation_options[:of]
 
       raise ArgumentError.new("validates :validity_date_span excepts of: option to be provided") if association.blank?
