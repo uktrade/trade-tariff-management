@@ -15,6 +15,12 @@ class MeasureConditionComponentValidator < TradeTariffBackend::Validator
     validates :validity_date_span, of: :monetary_unit
   end
 
+  validation :ME62, "The combination measurement unit + measurement unit qualifier must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.measurement_unit_code.present? || record.measurement_unit_qualifier_code.present? } do |record|
+      record.measurement_unit.present? && record.measurement_unit_qualifier.present?
+  end
+
   validation :ME105, "The reference duty expression must exist.", on: [:create, :update] do |record|
     record.duty_expression_id.present? && record.duty_expression.present?
   end
