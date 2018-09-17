@@ -156,7 +156,7 @@ class MeasureValidator < TradeTariffBackend::Validator
              additional code and reduction indicator. This rule is not applicable for Meursing additional
              codes.),
              on: [:create, :update],
-             if: ->(record) { record.additional_code.present? && record.additional_code.meursing_additional_code.nil? } do |record|
+             if: ->(record) { record.new? && record.additional_code.present? && record.additional_code.meursing_additional_code.nil? } do |record|
                Measure.where(
                  measure_type_id: record.measure_type_id,
                  geographical_area_sid: record.geographical_area_sid,
