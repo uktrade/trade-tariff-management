@@ -195,6 +195,36 @@ Vue.component("quota-section", {
     },
     showDuties: function() {
       return window.all_settings.quota_is_licensed != "true";
+    },
+    maxDate: function() {
+      if (this.section.type != "custom") {
+        return null;
+      }
+
+      try {
+        var date = moment(this.section.periods[0].start_date, ["DD MMM YYYY", "DD/MM/YYYY"], true);
+
+        if (!date.isValid()) {
+          return null;
+        }
+
+        return date.add(1, "year").format("DD/MM/YYYY");
+      } catch (e) {
+        return null;
+      }
+    },
+    canAddMorePeriods: function() {
+      if (this.section.periods.length === 0 || !this.maxDate) {
+        return true;
+      }
+
+      var last = moment(this.section.periods[this.section.periods.length - 1].end_date, "DD/MM/YYYY", true);
+
+      if (!last.isValid()) {
+        return false;
+      }
+
+      return moment(this.maxDate, "DD/MM/YYYY", true).diff(last, "days") >= 1;
     }
   },
   watch: {

@@ -103,7 +103,7 @@
               What is the start date of this period?
             </label>
 
-            <date-select :value.sync="period.start_date"></date-select>
+            <date-select :value.sync="period.start_date" :min="idx == 0 ? null : section.periods[idx - 1].end_date" :max="maxDate"></date-select>
           </div>
 
           <div class="form-group">
@@ -111,7 +111,7 @@
               What is the end date of this period?
             </label>
 
-            <date-select :value.sync="period.end_date"></date-select>
+            <date-select :value.sync="period.end_date" :min="period.start_date" :max="maxDate"></date-select>
           </div>
 
           <div class="form-group">
@@ -136,7 +136,7 @@
           </p>
         </div>
 
-        <p>
+        <p v-if="canAddMorePeriods">
           <a href="#" v-on:click.prevent="addPeriod">Add another custom period this year</a>
         </p>
       </fieldset>

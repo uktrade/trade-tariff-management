@@ -145,10 +145,6 @@ $(document).ready(function() {
               section.criticality_each_period = section.criticality_each_period === "true";
               section.duties_each_period = section.duties_each_period === "true";
               section.periods = [];
-              section.parent_quota = {
-                associate: false,
-                order_number: ""
-              };
 
               section.duty_expressions = objectToArray(section.duty_expressions).map(function(e) {
                 delete e.$order;
@@ -189,6 +185,10 @@ $(document).ready(function() {
 
                 return balance;
               });
+            }
+
+            if (section.parent_quota.associate) {
+              section.parent_quota.balances = objectToArray(section.parent_quota.balances);
             }
 
             return section;
