@@ -21,6 +21,7 @@ module XmlGeneration
       mark_export_process_as_started!
 
       fetch_relevant_data_and_generate_xml
+      validate_xml_data!
       attach_files!
       attach_metadata_file!
       clean_up_tmp_files!
@@ -60,6 +61,11 @@ module XmlGeneration
             record.date_filters
         )
       end
+    end
+
+    def validate_xml_data!
+      errors = ::XmlGeneration::XmlXsdValidator.new(xml_data).run
+      record.update(errors: errors.to_json)
     end
 
     def attach_files!
