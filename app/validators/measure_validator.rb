@@ -156,16 +156,29 @@ class MeasureValidator < TradeTariffBackend::Validator
              additional code and reduction indicator. This rule is not applicable for Meursing additional
              codes.),
              on: [:create, :update],
-             if: ->(record) { record.new? && record.additional_code.present? && record.additional_code.meursing_additional_code.nil? } do |record|
-               Measure.where(
-                 measure_type_id: record.measure_type_id,
-                 geographical_area_sid: record.geographical_area_sid,
-                 ordernumber: record.ordernumber,
-                 additional_code_type_id: record.additional_code_type_id,
-                 additional_code_id: record.additional_code_id,
-                 reduction_indicator: record.reduction_indicator
-               ).empty?
+             if: ->(record) { (record.additional_code.present? && record.meursing_additional_code.nil?) } do |record|
+               measures = []
+
+               TimeMachine.at(record.validity_start_date) do
+                 good_nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: record.goods_nomenclature_item_id)
+                 uptree_goods_nomenclature_item_ids = good_nomenclature.sti_instance.uptree.map(&:goods_nomenclature_item_id)
+                 children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
+                 goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
+
+                 measures = Measure.where(
+                   goods_nomenclature_item_id: goods_nomenclature_item_ids,
+                   measure_type_id: record.measure_type_id,
+                   geographical_area_sid: record.geographical_area_sid,
+                   ordernumber: record.ordernumber,
+                   additional_code_type_id: record.additional_code_type_id,
+                   additional_code_id: record.additional_code_id,
+                   reduction_indicator: record.reduction_indicator
+                 )
+               end
+
+               measures.empty? || measures.all? { |m| m.meursing_additional_code.present? }
              end
+
 
   validation [:ME33, :ME34], %q{A justification regulation may not be entered if the measure end date is not filled in
                                 A justification regulation must be entered if the measure end date is filled in.}, on: [:create, :update] do |record|
