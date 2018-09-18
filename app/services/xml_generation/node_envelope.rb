@@ -4,9 +4,9 @@ module XmlGeneration
 
     attr_accessor :transactions
 
-    def initialize(workbaskets)
-      @transactions = workbaskets.map do |workbasket|
-        ::XmlGeneration::NodeTransaction.new(workbasket)
+    def initialize(records)
+      @transactions = records.map do |record|
+        ::XmlGeneration::NodeTransaction.new(record)
       end
     end
 

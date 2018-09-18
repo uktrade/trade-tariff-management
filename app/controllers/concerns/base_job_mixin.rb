@@ -8,13 +8,19 @@ module BaseJobMixin
              .page(params[:page])
       )
     end
+
+    expose(:additional_params) do
+      {}
+    end
   end
 
   def create
     record = klass.new(
-      date_filters: date_filters,
-      issue_date: Time.zone.now,
-      state: "P"
+      {
+        date_filters: date_filters,
+        issue_date: Time.zone.now,
+        state: "P"
+      }.merge(additional_params)
     )
 
     if record.save

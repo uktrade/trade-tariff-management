@@ -7529,7 +7529,8 @@ CREATE TABLE public.xml_export_files (
     date_filters text,
     base_64_data text,
     zip_data text,
-    meta_data text
+    meta_data text,
+    workbasket boolean DEFAULT true
 );
 
 
@@ -11569,3 +11570,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172132_add_extra_c
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_longer_used_options_from_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_original_measure_sid_to_measures_oplog.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbasket_to_xml_export_files.rb');
