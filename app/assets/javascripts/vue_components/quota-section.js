@@ -21,6 +21,19 @@ Vue.component("quota-section", {
   },
   props: ["section", "index"],
   methods: {
+    updateBalances: function(balances) {
+      var self = this;
+
+      if (!this.section.parent_quota.balances) {
+        this.section.parent_quota.balances = [];
+      }
+
+      this.section.parent_quota.balances.splice(0, 999);
+
+      balances.forEach(function(b, i) {
+        Vue.set(self.section.parent_quota.balances, i, b);
+      });
+    },
     emptyDutyExpression: function() {
       return clone({
         duty_expression_id: "01A",
@@ -196,13 +209,23 @@ Vue.component("quota-section", {
       if (newVal && newVal != oldVal) {
         this.resetOpeningBalances();
         this.section.parent_quota.associate = false;
-        this.section.parent_quota.balances = [];
+
+        if (!this.section.parent_quota.balances) {
+          this.section.parent_quota.balances = [];
+        }
+
+        this.section.parent_quota.balances.splice(0, 999);
       }
     },
     "section.period": function() {
       this.resetOpeningBalances();
       this.section.parent_quota.associate = false;
-      this.section.parent_quota.balances = [];
+
+      if (!this.section.parent_quota.balances) {
+        this.section.parent_quota.balances = [];
+      }
+
+      this.section.parent_quota.balances.splice(0, 999);
     }
   }
 });

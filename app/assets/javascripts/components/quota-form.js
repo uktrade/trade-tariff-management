@@ -120,6 +120,7 @@ $(document).ready(function() {
 
         if (window.all_settings.quota_periods) {
           data.quota_sections = objectToArray(window.all_settings.quota_periods).map(function(section) {
+
             if (section.type == "custom") {
               section.repeat = section.repeat === "true";
               section.opening_balances = [];
@@ -636,8 +637,6 @@ $(document).ready(function() {
           footnotes: this.measure.footnotes,
           sub_quotas: this.sub_quotas.enabled ? this.sub_quotas.definitions : []
         };
-
-        console.log(payload)
 
         try {
           payload.conditions = this.measure.conditions.map(function(condition) {

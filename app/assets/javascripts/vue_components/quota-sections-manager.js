@@ -58,7 +58,8 @@ Vue.component("quota-sections-manager", {
 
         parent_quota: {
           associate: false,
-          order_number: ""
+          order_number: "",
+          balances: []
         }
       });
     },
