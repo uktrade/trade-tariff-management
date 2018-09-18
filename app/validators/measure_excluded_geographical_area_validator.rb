@@ -11,5 +11,11 @@ class MeasureExcludedGeographicalAreaValidator < TradeTariffBackend::Validator
     on: [:create, :update] do |record|
     record.measure.geographical_area.geographical_code == "1"
   end
+
+  validation :ME66, "The excluded geographical area must be a member of the geographical area group.",
+    on: [:create, :update],
+    if: ->(record) { record.excluded_geographical_area.present? } do |record|
+      record.excluded_geographical_area == record.geographical_area.try(:geographical_area_id)
+    end
 end
 
