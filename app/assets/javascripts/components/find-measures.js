@@ -116,92 +116,92 @@ $(document).ready(function() {
 
       var default_params = {
         measure_sid: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         group_name: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         status: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         author: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         date_of: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
         last_updated_by: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         regulation: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         type: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         validity_start_date: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
         validity_end_date: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
         commodity_code: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         additional_code: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         origin: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         origin_exclusions: {
-          enabled: true,
+          enabled: false,
           operator: "include",
           value: [{value: ""}]
         },
         duties: {
-          enabled: true,
+          enabled: false,
           operator: "are",
           value: [{duty_expression_id: null, duty_amount: null}]
         },
         conditions: {
-          enabled: true,
+          enabled: false,
           operator: "are",
           value: [{
             measure_condition_code: null
           }]
         },
         footnotes: {
-          enabled: true,
+          enabled: false,
           operator: "are",
           value: [{
             footnote_type_id: null,
