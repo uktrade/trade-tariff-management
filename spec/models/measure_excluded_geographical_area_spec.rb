@@ -58,5 +58,24 @@ describe MeasureExcludedGeographicalArea do
         expect(measure_excluded_geographical_area.conformance_errors).to have_key(:ME66)
       end
     end
+
+    describe "ME68: The same geographical area can only be excluded once by the same measure." do
+      it "should run validation successfully" do
+        measure_excluded_geographical_area = build(:measure_excluded_geographical_area, measure_sid: measure.measure_sid)
+        geographical_area = measure_excluded_geographical_area.measure.geographical_area
+        geographical_area.geographical_code = "1"
+        geographical_area.save
+
+        expect(measure_excluded_geographical_area).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measure_excluded_geographical_area = create(:measure_excluded_geographical_area, measure_sid: measure.measure_sid)
+        measure_excluded_geographical_area2 = measure_excluded_geographical_area.dup
+
+        expect(measure_excluded_geographical_area2).to_not be_conformant
+        expect(measure_excluded_geographical_area2.conformance_errors).to have_key(:ME68)
+      end
+    end
   end
 end

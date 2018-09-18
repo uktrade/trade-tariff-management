@@ -17,5 +17,13 @@ class MeasureExcludedGeographicalAreaValidator < TradeTariffBackend::Validator
     if: ->(record) { record.excluded_geographical_area.present? } do |record|
       record.excluded_geographical_area == record.geographical_area.try(:geographical_area_id)
     end
+
+  validation :ME68, "The same geographical area can only be excluded once by the same measure.",
+    on: [:create, :update] do |record|
+      MeasureExcludedGeographicalArea.where(
+        measure_sid: record.measure_sid,
+        geographical_area_sid: record.geographical_area_sid,
+      ).empty?
+  end
 end
 
