@@ -961,6 +961,85 @@ describe Measure do
       end
     end
 
+    describe "ME32 There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature
+              hierarchy which references the same measure type, geo area, order number, additional code and reduction indicator.
+              This rule is not applicable for Meursing additional codes." do
+
+      let!(:goods_nomenclature) { create(:goods_nomenclature) }
+
+      it "should run validation successfully" do
+        # TEST CASE-1
+        additional_code1 = create(:additional_code, validity_start_date: Date.yesterday)
+        measure1 = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code1.additional_code_sid,
+          validity_start_date: Date.yesterday
+        )
+
+        expect(measure1.additional_code).to_not be(nil)
+        expect(measure1.meursing_additional_code).to be(nil)
+        expect(measure1).to be_conformant
+
+        # TEST CASE-2
+        additional_code2 = create(:additional_code, validity_start_date: Date.yesterday)
+
+        create(
+          :meursing_additional_code,
+          additional_code: additional_code2.additional_code,
+          validity_start_date: Date.yesterday
+        )
+
+        measure2 = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code2.additional_code_sid,
+          validity_start_date: Date.yesterday
+        )
+
+        expect(measure2.additional_code).to_not be(nil)
+        expect(measure2.additional_code.meursing_additional_code).to_not be(nil)
+        expect(measure2).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        # TEST CASE-1
+        additional_code1 = create(:additional_code, validity_start_date: Date.yesterday)
+        measure = create(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code1.additional_code_sid,
+          validity_start_date: Date.yesterday
+        )
+
+        measure1 = measure.dup
+
+        expect(measure1.additional_code).to_not be(nil)
+        expect(measure1.additional_code.meursing_additional_code).to be(nil)
+        expect(measure1).to_not be_conformant
+        expect(measure1.conformance_errors).to have_key(:ME32)
+
+        # TEST CASE-2
+        additional_code2 = create(:additional_code, validity_start_date: Date.yesterday)
+
+        create(
+          :meursing_additional_code,
+          additional_code: additional_code2.additional_code,
+          validity_start_date: Date.yesterday
+        )
+
+        measure2 = measure1.dup
+        measure2.additional_code_sid = additional_code2.additional_code_sid
+        measure2.save
+        measure2.reload
+
+        expect(measure2.additional_code).to_not be(nil)
+        expect(measure2.additional_code.meursing_additional_code).to_not be(nil)
+        expect(measure2).to_not be_conformant
+        expect(measure2.conformance_errors).to have_key(:ME32)
+      end
+    end
+
     describe 'ME33' do
       let(:measure) { create :measure, justification_regulation_id: nil,
                                       justification_regulation_role: nil }

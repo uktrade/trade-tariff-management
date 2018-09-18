@@ -156,7 +156,7 @@ class MeasureValidator < TradeTariffBackend::Validator
              additional code and reduction indicator. This rule is not applicable for Meursing additional
              codes.),
              on: [:create, :update],
-             if: ->(record) { (record.additional_code.present? && record.meursing_additional_code.nil?) } do |record|
+             if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
                measures = []
 
                TimeMachine.at(record.validity_start_date) do
@@ -176,7 +176,7 @@ class MeasureValidator < TradeTariffBackend::Validator
                  )
                end
 
-               measures.empty? || measures.all? { |m| m.meursing_additional_code.present? }
+               measures.empty? || measures.all? { |m| m.additional_code.try(:meursing_additional_code).present? }
              end
 
 
