@@ -166,7 +166,7 @@ class MeasureValidator < TradeTariffBackend::Validator
                  children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
                  goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
 
-                measure_ids_considering_start_date = Measure.where(
+                 measure_ids_considering_start_date = Measure.where(
                    goods_nomenclature_item_id: goods_nomenclature_item_ids,
                    measure_type_id: record.measure_type_id,
                    geographical_area_sid: record.geographical_area_sid,
@@ -196,7 +196,7 @@ class MeasureValidator < TradeTariffBackend::Validator
                  end
                end
 
-               measure_ids = measure_ids_considering_end_date & measure_ids_considering_end_date
+               measure_ids = measure_ids_considering_start_date & measure_ids_considering_end_date
                measures    = Measure.where(measure_sid: measure_ids)
 
                measures.empty? || measures.all? { |m| m.additional_code.try(:meursing_additional_code).present? }
