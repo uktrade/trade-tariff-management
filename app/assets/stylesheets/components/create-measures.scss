@@ -1,121 +1,115 @@
-.create-measures-v2 {
-  .form-actions {
-    margin-top: 85px;
+.js-workbasket-check-code-description {
+  cursor: pointer;
+  margin-top: 25px;
+  display: inline-block;
+}
+
+.js-workbasket-check-code-container {
+  overflow: hidden;
+  border-left: 3px solid gray;
+  padding-left: 20px;
+
+  &.additional_code_check {
+    margin-bottom: 25px;
   }
+}
 
-  .js-workbasket-check-code-description {
-    cursor: pointer;
-    margin-top: 25px;
-    display: inline-block;
-  }
+span.create-measures-sub_header {
+  display: inline-block;
+  margin-bottom: 15px;
+}
 
-  .js-workbasket-check-code-container {
-    overflow: hidden;
-    border-left: 3px solid gray;
-    padding-left: 20px;
+.form-group.with_less_bottom_margin {
+  margin-bottom: 10px;
+}
 
-    &.additional_code_check {
-      margin-bottom: 25px;
+.create-measures-message-block {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.create-measures-details-table {
+  margin-bottom: 60px;
+  overflow: hidden;
+
+  td {
+    font-size: 18px;
+
+    &.heading_column {
+      font-weight: bold;
     }
   }
+}
 
-  span.create-measures-sub_header {
-    display: inline-block;
-    margin-bottom: 15px;
-  }
+.create-measures-actions-bar {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
 
-  .form-group.with_less_bottom_margin {
-    margin-bottom: 10px;
-  }
+.submit_group_for_cross_check_block, .save_progress_block, .exit_block {
+  margin-right: 25px;
+  float: left;
+}
 
-  .create-measures-message-block {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    overflow: hidden;
-  }
+.exit_block {
+  padding-top: 10px;
+  margin-left: 5px;
+}
 
-  .create-measures-details-table {
-    margin-bottom: 60px;
-    overflow: hidden;
+.spinner_block {
+  padding-top: 1px;
+  margin-top: -3px;
 
-    td {
-      font-size: 18px;
-
-      &.heading_column {
-        font-weight: bold;
-      }
-    }
-  }
-
-  .create-measures-actions-bar {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    overflow: hidden;
-  }
-
-  .submit_group_for_cross_check_block, .save_progress_block, .exit_block {
-    margin-right: 25px;
+  img {
     float: left;
   }
 
-  .exit_block {
-    padding-top: 10px;
-    margin-left: 5px;
+  span.saving_message {
+    margin-top: 10px;
+    display: inline-block;
+  }
+}
+
+.js-workbasket-base-submit-button.hidden {
+  display: none;
+}
+
+a.disabled, input[type='submit'].disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+
+.workbasket-error-block {
+  &.with_left_margin {
+    margin-left: 20px;
   }
 
-  .spinner_block {
-    padding-top: 1px;
-    margin-top: -3px;
-
-    img {
-      float: left;
-    }
-
-    span.saving_message {
-      margin-top: 10px;
-      display: inline-block;
-    }
+  a.js-show_hide_affected_codes {
+    margin-left: 10px;
   }
 
-  .js-workbasket-base-submit-button.hidden {
-    display: none;
+  span.js-affected_codes_list {
+    padding-left: 20px;
+    color:#0b0c0c;
   }
+}
 
-  a.disabled, input[type='submit'].disabled {
-    opacity: 0.5;
-    pointer-events: none;
-    cursor: default;
-  }
+.js-workbasket-base-success-message-container {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
 
-  .workbasket-error-block {
-    &.with_left_margin {
-      margin-left: 20px;
-    }
+h3.create-measures-custom-errors-header {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
 
-    a.js-show_hide_affected_codes {
-      margin-left: 10px;
-    }
-
-    span.js-affected_codes_list {
-      padding-left: 20px;
-      color:#0b0c0c;
-    }
-  }
-
-  .js-workbasket-base-success-message-container {
-    color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-  }
-
-  h3.create-measures-custom-errors-header {
-    font-weight: bold;
-    font-size: 20px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
-
-  .js-workbasket-errors-container.hidden {
-    display: none;
-  }
+.js-workbasket-errors-container.hidden {
+  display: none;
 }

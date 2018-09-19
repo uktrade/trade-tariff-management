@@ -215,15 +215,13 @@ label abbr {
   }
 }
 
-.measure-form {
-  .form-actions {
-    margin-top: 3em;
-  }
+.form-actions {
+  margin-top: 3em;
+}
 
-  .js-workbasket-errors-container, .js-workbasket-base-success-message-container {
-    position: relative;
-    top: 2em;
-  }
+.js-workbasket-errors-container, .js-workbasket-base-success-message-container {
+  position: relative;
+  top: 2em;
 }
 
 .add-another-wrapper {
@@ -332,4 +330,12 @@ fieldset + fieldset {
 
 .single-digit-field {
   width: 50px !important;
+}
+
+.form-group > .form-label {
+  font-weight: 700;
+
+  [class*="col-"] & {
+    font-weight: 400;
+  }
 }

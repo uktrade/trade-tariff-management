@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
 
-  var form = document.querySelector(".measure-form");
+  var form = document.querySelector(".quota-form");
 
   if (!form) {
     return;
@@ -20,7 +20,7 @@ $(document).ready(function() {
         goods_nomenclature_code_description: "",
         additional_code_preview_description: "",
         additional_code_description: "",
-        quota_statuses: [
+        statuses: [
           { value: "open", label: "Open" },
           { value: "exhausted", label: "Exhausted" },
           { value: "critical", label: "Critical" },
@@ -30,7 +30,7 @@ $(document).ready(function() {
         ],
         origins: {
           country: {
-            geographical_area_id: null,
+            geographical_area_id: [],
             exclusions: [],
             selected: false
           },
@@ -46,13 +46,16 @@ $(document).ready(function() {
           }
         },
         quota_sections: [],
+        sub_quotas: {
+          enabled: false,
+          definitions: []
+        },
         errors: []
       };
 
-      var default_measure = {
+      var default_quota = {
         operation_date: null,
         regulation_id: null,
-        measure_type_series_id: null,
         measure_type_id: null,
         quota_is_licensed: null,
         quota_licence: null,
@@ -78,10 +81,8 @@ $(document).ready(function() {
         quota_sections: []
       };
 
-      if (window.__measure) {
-        this.parseMeasure(window.__measure);
-      } else if (window.all_settings) {
-        data.measure = jQuery.extend({}, default_measure, this.unwrapPayload(window.all_settings));
+      if (window.all_settings) {
+        data.measure = jQuery.extend({}, default_quota, this.unwrapPayload(window.all_settings));
 
         if (window.all_settings.geographical_area_id) {
           if (window.all_settings.geographical_area_id == '1011') {
@@ -119,6 +120,7 @@ $(document).ready(function() {
 
         if (window.all_settings.quota_periods) {
           data.quota_sections = objectToArray(window.all_settings.quota_periods).map(function(section) {
+
             if (section.type == "custom") {
               section.repeat = section.repeat === "true";
               section.opening_balances = [];
@@ -185,11 +187,20 @@ $(document).ready(function() {
               });
             }
 
+            if (section.parent_quota.associate) {
+              section.parent_quota.balances = objectToArray(section.parent_quota.balances);
+            }
+
             return section;
           });
         }
+
+        if (window.all_settings.sub_quotas) {
+          data.sub_quotas.enabled = true;
+          data.sub_quotas.definitions = window.all_settings.sub_quotas;
+        }
       } else {
-        data.measure = default_measure;
+        data.measure = default_quota;
       }
 
       return data;
@@ -207,26 +218,12 @@ $(document).ready(function() {
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
         var http_method = "PUT";
 
-        if ( window.save_url.indexOf('create_measures') == -1 ) {
-          // Create Quota
-          //
-
-          if (window.current_step == 'main') {
-            var payload = self.createQuotaMainStepPayload();
-          } else if (window.current_step == 'configure_quota') {
-            var payload = self.createQuotaConfigureQuotaStepPayload();
-          } else if (window.current_step == 'conditions_footnotes') {
-            var payload = self.createQuotaConditionsFootnotesStepPayload();
-          }
-        } else {
-          // Create measures V2
-          //
-
-          if (window.current_step == 'main') {
-            var payload = self.prepareV2Step1Payload();
-          } else if (window.current_step == 'duties_conditions_footnotes') {
-            var payload = self.prepareV2Step2Payload();
-          }
+        if (window.current_step == 'main') {
+          var payload = self.createQuotaMainStepPayload();
+        } else if (window.current_step == 'configure_quota') {
+          var payload = self.createQuotaConfigureQuotaStepPayload();
+        } else if (window.current_step == 'conditions_footnotes') {
+          var payload = self.createQuotaConditionsFootnotesStepPayload();
         }
 
         var data_ops = {
@@ -244,40 +241,10 @@ $(document).ready(function() {
           type: http_method,
           data: data_ops,
           success: function(response) {
-            if ( window.save_url == "/measures" ) {
-              // Create measures V1 version
-              //
-              $(".js-workbasket-errors-container").empty().addClass("hidden");
-              window.location = window.save_url + "?code=" + response.goods_nomenclature_item_id;
-            } else {
-              // Create measures V2 version
-              //
-              WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
-            }
+            WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
           },
           error: function(response) {
-
-            if ( window.save_url == "/measures" ) {
-              // Create measures V1 version
-              //
-              button.val(button.attr("data-text"));
-              button.prop("disabled", false);
-
-              $.each( response.responseJSON.errors, function( key, value ) {
-                if (value.constructor === Array) {
-                  value.forEach(function(innerError) {
-                    self.errors.push(innerError);
-                  });
-                } else {
-                  self.errors.push(value);
-                }
-              });
-
-            } else {
-              // Create measures V2 version
-              //
-              WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
-            }
+            WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
           }
         });
       };
@@ -667,164 +634,9 @@ $(document).ready(function() {
       },
       createQuotaConditionsFootnotesStepPayload: function() {
         var payload = {
-          footnotes: this.measure.footnotes
-        };
-
-        try {
-          payload.conditions = this.measure.conditions.map(function(condition) {
-            var c = clone(condition);
-
-            c.original_measure_condition_code = c.condition_code.slice(0);
-            c.condition_code = c.condition_code.substring(0, 1);
-
-            c.measure_condition_components = c.measure_condition_components.map(function(component) {
-              var c = clone(component);
-              if (c.duty_expression_id) {
-                c.original_duty_expression_id = c.duty_expression_id.slice(0);
-                // to ignore A and B
-                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
-              }
-
-              return c;
-            });
-
-            return c;
-          });
-        } catch (e) {
-          console.error(e);
-        }
-
-        return payload;
-      },
-      prepareV2Step1Payload: function() {
-        var payload = {
-          operation_date: this.measure.operation_date,
-          start_date: this.measure.validity_start_date,
-          end_date: this.measure.validity_end_date,
-          regulation_id: this.measure.regulation_id,
-          measure_type_id: this.measure.measure_type_id,
-          workbasket_name: this.measure.workbasket_name,
-          reduction_indicator: this.measure.reduction_indicator,
-          additional_codes: this.measure.additional_codes,
-          commodity_codes: this.measure.commodity_codes,
-          commodity_codes_exclusions: this.measure.commodity_codes_exclusions,
-          footnotes: this.measure.footnotes
-
-        };
-
-        if (this.origins.country.selected) {
-          payload.geographical_area_id = this.origins.country.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        } else if (this.origins.group.selected) {
-          payload.geographical_area_id = this.origins.group.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        } else if (this.origins.erga_omnes.selected) {
-          payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        }
-
-        return payload;
-      },
-      prepareV2Step2Payload: function() {
-        var payload = {
-          footnotes: this.measure.footnotes
-        };
-
-        try {
-          payload.measure_components = this.measure.measure_components.map(function(component) {
-            var c = clone(component);
-
-            if (c.duty_expression_id) {
-              c.original_duty_expression_id = c.duty_expression_id.slice(0);
-
-              // to ignore A and B
-              c.duty_expression_id = c.duty_expression_id.substring(0, 2);
-            }
-
-            return c;
-          });
-        } catch (e) {
-          console.error(e);
-        }
-
-        try {
-          payload.conditions = this.measure.conditions.map(function(condition) {
-            var c = clone(condition);
-
-            c.original_measure_condition_code = c.condition_code.slice(0);
-            c.condition_code = c.condition_code.substring(0, 1);
-
-            c.measure_condition_components = c.measure_condition_components.map(function(component) {
-              var c = clone(component);
-              if (c.duty_expression_id) {
-                c.original_duty_expression_id = c.duty_expression_id.slice(0);
-                // to ignore A and B
-                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
-              }
-
-              return c;
-            });
-
-            return c;
-          });
-        } catch (e) {
-          console.error(e);
-        }
-
-        return payload;
-      },
-      preparePayload: function() {
-        var payload = {
-          operation_date: this.measure.operation_date,
-
-          start_date: this.measure.validity_start_date,
-          end_date: this.measure.validity_end_date,
-          regulation_id: this.measure.regulation_id,
-          measure_type_series_id: this.measure.measure_type_series_id,
-          measure_type_id: this.measure.measure_type_id,
-          goods_nomenclature_code: this.measure.goods_nomenclature_code,
-          additional_code: this.measure.additional_code,
-          additional_code_type_id: this.measure.additional_code_type_id,
-          goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
-          additional_code_description: this.measure.additional_code_description,
           footnotes: this.measure.footnotes,
-
-          workbasket_name: this.measure.workbasket_name,
-          reduction_indicator: this.measure.reduction_indicator,
-          additional_codes: this.measure.additional_codes,
-          commodity_codes: this.measure.commodity_codes,
-          commodity_codes_exclusions: this.measure.commodity_codes_exclusions,
-
-          existing_quota: this.measure.existing_quota === "existing",
-          quota_status: this.measure.quota_status,
-          quota_ordernumber: this.measure.quota_ordernumber,
-          quota_criticality_threshold: this.measure.quota_criticality_threshold,
-          quota_description: this.measure.quota_description
+          sub_quotas: this.sub_quotas.enabled ? this.sub_quotas.definitions : []
         };
-
-        try {
-          if (this.showDuties) {
-            payload.measure_components = this.measure.measure_components.map(function(component) {
-              var c = clone(component);
-
-              if (c.duty_expression_id) {
-                c.original_duty_expression_id = c.duty_expression_id.slice(0);
-                // to ignore A and B
-                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
-              }
-
-              return c;
-            });
-          }
-        } catch (e) {
-          console.error(e);
-        }
 
         try {
           payload.conditions = this.measure.conditions.map(function(condition) {
@@ -848,58 +660,6 @@ $(document).ready(function() {
           });
         } catch (e) {
           console.error(e);
-        }
-
-        if (this.origins.country.selected) {
-          payload.geographical_area_id = this.origins.country.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        } else if (this.origins.group.selected) {
-          payload.geographical_area_id = this.origins.group.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        } else if (this.origins.erga_omnes.selected) {
-          payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        }
-
-        if (this.measure.quota_periods.length > 0 && this.measure.quota_periods[0].type) {
-          var periodPayload = {};
-
-          switch (this.measure.quota_periods[0].type) {
-            case "custom":
-              var t = this.measure.quota_periods[0].type;
-
-              periodPayload[t] = this.measure.quota_periods.map(function(period) {
-                return {
-                  amount1: period.custom.amount1,
-                  start_date: period.start_date,
-                  end_date: period.end_date,
-                  measurement_unit_code: period.measurement_unit_code,
-                  measurement_unit_qualifier_code: period.measurement_unit_qualifier_code
-                };
-              });
-
-              break;
-            default:
-              var t = this.measure.quota_periods[0].type;
-
-              periodPayload[t] = this.measure.quota_periods[0][t];
-              periodPayload[t].start_date = this.measure.quota_periods[0].start_date;
-              periodPayload[t].end_date = this.measure.quota_periods[0].end_date;
-              periodPayload[t].measurement_unit_code = this.measure.quota_periods[0].measurement_unit_code;
-              periodPayload[t].measurement_unit_qualifier_code = this.measure.quota_periods[0].measurement_unit_qualifier_code;
-
-              break;
-          }
-
-          payload.quota_periods = periodPayload;
-        } else {
-          payload.quota_periods = {};
         }
 
         return payload;
@@ -921,24 +681,6 @@ $(document).ready(function() {
         }
 
         this.measure.footnotes.splice(index, 1);
-      },
-      removeMeasureComponent: function(measureComponent) {
-        var index = this.measure.measure_components.indexOf(measureComponent);
-
-        if (index === -1) {
-          return;
-        }
-
-        this.measure.measure_components.splice(index, 1);
-      },
-      removeCondition: function(condition) {
-        var index = this.measure.conditions.indexOf(condition);
-
-        if (index === -1) {
-          return;
-        }
-
-        this.measure.conditions.splice(index, 1);
       },
       getDutyExpressionId: function(component) {
         var ids = [

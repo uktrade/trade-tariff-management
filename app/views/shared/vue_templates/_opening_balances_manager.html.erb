@@ -191,7 +191,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" v-if="showDuties">
         <label for="" class="form-label">
           What duty should be charged in-quota
         </label>
@@ -399,7 +399,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -458,7 +458,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.semester1.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -496,7 +496,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.semester2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -593,7 +593,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.quarter2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -631,7 +631,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.quarter3.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -669,7 +669,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.quarter4.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -729,7 +729,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month1.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -767,7 +767,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -805,7 +805,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month3.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -843,7 +843,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month4.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -881,7 +881,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month5.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -919,7 +919,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month6.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -957,7 +957,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month7.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -995,7 +995,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month8.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1033,7 +1033,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month9.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1071,7 +1071,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month10.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1109,7 +1109,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month11.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1147,7 +1147,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month12.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1180,7 +1180,7 @@
         </div>
       </div>
 
-      <div class="form-group" v-if="!section.duties_each_period">
+      <div class="form-group" v-if="showDuties && !section.duties_each_period">
         <label for="" class="form-label">
           What duty should be charged in-quota?
         </label>
