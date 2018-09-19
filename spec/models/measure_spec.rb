@@ -1005,6 +1005,44 @@ describe Measure do
         expect(measure).to be_conformant
       end
 
+      #it "should run validation successfully if measure respect time machine w.r.t validity start date" do
+        #measure = create(
+          #:measure,
+          #goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          #additional_code_sid: additional_code.additional_code_sid,
+          #validity_start_date: 10.year.ago,
+          #validity_end_date: 2.year.ago
+        #)
+
+        #additional_code = measure.additional_code
+        #additional_code.validity_start_date = 10.year.ago
+        #additional_code.validity_end_date = 2.year.ago
+        #additional_code.save
+
+        #goods_nomenclature = measure.goods_nomenclature
+        #goods_nomenclature.validity_start_date = 10.year.ago
+        #goods_nomenclature.validity_end_date = 2.year.ago
+        #goods_nomenclature.save
+
+        #measure_type = measure.measure_type
+        #measure_type.validity_start_date = 10.year.ago
+        #measure_type.validity_end_date = 2.year.ago
+        #measure_type.save
+
+        #geographical_area = measure.geographical_area
+        #geographical_area.validity_start_date = 10.year.ago
+        #geographical_area.validity_end_date = 2.year.ago
+        #geographical_area.save
+
+        #measure2 = measure.reload.dup
+        #measure2.validity_start_date = Date.yesterday
+        #measure2.validity_end_date = Date.yesterday + 2.years
+
+        #expect(measure2.additional_code).to_not be(nil)
+        #expect(measure2.additional_code.meursing_additional_code).to be(nil)
+        #expect(measure2).to be_conformant
+      #end
+
       it "should not run validation successfully if measure for such criteria is already present" do
         measure = create(
           :measure,
