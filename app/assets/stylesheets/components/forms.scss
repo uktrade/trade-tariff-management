@@ -331,3 +331,11 @@ fieldset + fieldset {
 .single-digit-field {
   width: 50px !important;
 }
+
+.form-group > .form-label {
+  font-weight: 700;
+
+  [class*="col-"] & {
+    font-weight: 400;
+  }
+}
