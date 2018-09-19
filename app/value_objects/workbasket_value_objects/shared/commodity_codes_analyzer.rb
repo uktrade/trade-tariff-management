@@ -37,34 +37,23 @@ module WorkbasketValueObjects
 
               list_of_codes.each do |code|
 
-                if chapter?(code)
-                  # if code is a chapter, then check all headings within
-                  chapter = Chapter.by_code(code).all.first
-                  chapter.headings.each do |heading|
-                    heading_code = heading.goods_nomenclature_item_id
-                    if heading_in?(heading_code, commodity_codes_exclusions)
-                      #if heading has excluded commodity, get declarable commodity within heading
-                      current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
-                          new(start_date, heading_code).
-                          codes
-                      #add all commodities that not excluded
-                      @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
-                    else
-                      #add heading completely if has no excluded commodities
-                      @commodity_codes_detected = commodity_codes_detected + Array::wrap(heading_code)
-                    end
-
+                if has_any_child_in?(code, commodity_codes_exclusions)
+                  #if code has excluded item within, deal with it
+                  if chapter?(code)
+                    #if code is chapter, handle all headings within
+                    handle_chapter_code(code)
+                  else
+                    #if code is not a chapter, get all declarable commodities
+                    current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
+                        new(start_date, code).
+                        codes
+                    #and add all declarable commodities without excluded
+                    @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
                   end
 
                 else
-
-                  #if code is not a chapter, get all declarable commodities
-                  current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
-                      new(start_date, code).
-                      codes
-                  #and add all declarable commodities without excluded
-                  @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
-
+                  #code has no excluded child within, we will add it to result
+                  @commodity_codes_detected = commodity_codes_detected + Array::wrap(code)
                 end
               end
 
@@ -80,7 +69,25 @@ module WorkbasketValueObjects
           end
         end
 
-        def list_of_codes
+      def handle_chapter_code(code)
+        chapter = Chapter.by_code(code).all.first
+        chapter.headings.each do |heading|
+          heading_code = heading.goods_nomenclature_item_id
+          if has_any_child_in?(heading_code, commodity_codes_exclusions)
+            #if heading_code has excluded commodity, get declarable commodity within parent_code
+            current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
+                new(start_date, heading_code).
+                codes
+            #add all commodities that not excluded
+            @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
+          else
+            #add heading_code completely if has no excluded commodities
+            @commodity_codes_detected = commodity_codes_detected + Array::wrap(heading_code)
+          end
+        end
+      end
+
+      def list_of_codes
           if commodity_codes.present?
             commodity_codes.split( /\r?\n/ )
                            .map(&:strip)
@@ -110,13 +117,13 @@ module WorkbasketValueObjects
           code.end_with? '00000000'
         end
 
-        def heading_for?(heading, code)
-          code.gsub(/0(?=0*$)/, '').start_with? heading.gsub(/0(?=0*$)/, '')
+        def parent_for?(parent_code, code)
+          code.gsub(/0(?=0*$)/, '').start_with? parent_code.gsub(/0(?=0*$)/, '')
         end
 
-        def heading_in?(heading, list)
+        def has_any_child_in?(parent_code, list)
           list.any? do |code|
-            heading_for?(heading, code)
+            parent_for?(parent_code, code)
           end
         end
     end
