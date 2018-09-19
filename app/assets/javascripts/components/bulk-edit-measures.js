@@ -322,13 +322,10 @@ $(document).ready(function() {
         if (noChanges) {
           this.measures.forEach(function(measure) {
             measure.original_values = {
-              validity_start_date: measure.validity_start_date,
-              validity_end_date: measure.validity_end_date
+              validity_start_date: measure.validity_start_date
             };
 
             measure.validity_start_date = moment(window.all_settings.start_date, "DD/MM/YYYY", true).format("DD MMM YYYY");
-            measure.validity_end_date = null;
-            measure.changes.push("validity_end_date");
             measure.changes.push("validity_start_date");
 
             if (window.all_settings.regulation) {
