@@ -762,8 +762,8 @@ describe Measure do
         )
       }
 
-      let!(:measure) {
-        create(
+      let(:measure) {
+        build(
           :measure,
           measure_type_id: measure_type.measure_type_id,
           additional_code_type_id: additional_code_type.additional_code_type_id,
@@ -773,8 +773,8 @@ describe Measure do
         )
       }
 
-      let!(:measure2) {
-        create(
+      let(:measure2) {
+        build(
           :measure,
           measure_type_id: measure_type.measure_type_id,
           additional_code_type_id: additional_code_type.additional_code_type_id,
@@ -832,8 +832,8 @@ describe Measure do
         )
       }
 
-      let!(:measure) {
-        create(
+      let(:measure) {
+        build(
           :measure,
           measure_type_id: measure_type.measure_type_id,
           additional_code_type_id: additional_code_type.additional_code_type_id,
@@ -843,8 +843,8 @@ describe Measure do
         )
       }
 
-      let!(:measure2) {
-        create(
+      let(:measure2) {
+        build(
           :measure,
           measure_type_id: measure_type.measure_type_id,
           additional_code_type_id: additional_code_type.additional_code_type_id,
@@ -898,29 +898,35 @@ describe Measure do
         )
       }
 
-      let!(:measure) {
-        create(
-          :measure,
-          measure_type_id: measure_type.measure_type_id,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
-          additional_code_id: additional_code.additional_code,
-          additional_code_sid: additional_code.additional_code_sid,
-          validity_start_date: Date.yesterday,
-          validity_end_date: nil
-        )
-      }
-
       context "If the additional code type has as application 'ERN' then the combination of goods code + additional code must exist as an ERN product code and its validity period must span the validity period of the measure" do
         it 'should be valid' do
+          measure = build(
+            :measure,
+            measure_type_id: measure_type.measure_type_id,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            additional_code_id: additional_code.additional_code,
+            additional_code_sid: additional_code.additional_code_sid,
+            validity_start_date: Date.yesterday,
+            validity_end_date: nil
+          )
+
           expect(measure).to be_conformant
         end
 
         it 'should be invalid' do
+          measure = build(
+            :measure,
+            measure_type_id: measure_type.measure_type_id,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            additional_code_id: additional_code.additional_code,
+            additional_code_sid: additional_code.additional_code_sid,
+            validity_start_date: Date.yesterday,
+            validity_end_date: nil
+          )
+
           additional_code_type = measure.additional_code_type
           additional_code_type.validity_start_date = measure.validity_start_date + 2.days
           additional_code_type.save
-
-          measure.reload
 
           expect(measure).to_not be_conformant
           expect(measure.conformance_errors).to have_key(:ME21)
