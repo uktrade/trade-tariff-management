@@ -20,6 +20,14 @@ Vue.component('date-select', {
     $(this.$el).on("change", function() {
       self.vproxy = $(self.$el).val();
     });
+
+    this.repositionHandler = function() {
+      Vue.nextTick(function() {
+        self.pikaday.adjustPosition();
+      });
+    }
+
+    $(document).on("datepicker:reposition", this.repositionHandler);
   },
   methods: {
     applyMinMax: function() {
@@ -44,5 +52,8 @@ Vue.component('date-select', {
     max: function() {
       this.applyMinMax();
     }
+  },
+  destroyed() {
+    $(document).off("datepicker:reposition", this.repositionHandler);
   }
 });
