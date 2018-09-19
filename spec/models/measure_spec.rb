@@ -970,80 +970,89 @@ describe Measure do
     describe "ME32 There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature
               hierarchy which references the same measure type, geo area, order number, additional code and reduction indicator.
               This rule is not applicable for Meursing additional codes." do
-
       let!(:goods_nomenclature) { create(:goods_nomenclature) }
+      let!(:additional_code) { create(:additional_code, validity_start_date: Date.yesterday) }
 
-      it "should run validation successfully" do
-        # TEST CASE-1
-        additional_code1 = create(:additional_code, validity_start_date: Date.yesterday)
-        measure1 = build(
+      it "should run validation successfully if there is no existing measure with such criteria" do
+        measure = build(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-          additional_code_sid: additional_code1.additional_code_sid,
+          additional_code_sid: additional_code.additional_code_sid,
           validity_start_date: Date.yesterday
         )
 
-        expect(measure1.additional_code).to_not be(nil)
-        expect(measure1.meursing_additional_code).to be(nil)
-        expect(measure1).to be_conformant
-
-        # TEST CASE-2
-        additional_code2 = create(:additional_code, validity_start_date: Date.yesterday)
-
-        create(
-          :meursing_additional_code,
-          additional_code: additional_code2.additional_code,
-          validity_start_date: Date.yesterday
-        )
-
-        measure2 = build(
-          :measure,
-          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-          additional_code_sid: additional_code2.additional_code_sid,
-          validity_start_date: Date.yesterday
-        )
-
-        expect(measure2.additional_code).to_not be(nil)
-        expect(measure2.additional_code.meursing_additional_code).to_not be(nil)
-        expect(measure2).to be_conformant
+        expect(measure.additional_code).to_not be(nil)
+        expect(measure.meursing_additional_code).to be(nil)
+        expect(measure).to be_conformant
       end
 
-      it "should not run validation successfully" do
-        # TEST CASE-1
-        additional_code1 = create(:additional_code, validity_start_date: Date.yesterday)
+      it "should run validation successfully if meursing additional code is present" do
+        create(
+          :meursing_additional_code,
+          additional_code: additional_code.additional_code,
+          validity_start_date: Date.yesterday
+        )
+
+        measure = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.yesterday
+        )
+
+        expect(measure.additional_code).to_not be(nil)
+        expect(measure.additional_code.meursing_additional_code).to_not be(nil)
+        expect(measure).to be_conformant
+      end
+
+      it "should not run validation successfully if measure for such criteria is already present" do
         measure = create(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-          additional_code_sid: additional_code1.additional_code_sid,
+          additional_code_sid: additional_code.additional_code_sid,
           validity_start_date: Date.yesterday
         )
 
-        measure1 = measure.dup
-
-        expect(measure1.additional_code).to_not be(nil)
-        expect(measure1.additional_code.meursing_additional_code).to be(nil)
-        expect(measure1).to_not be_conformant
-        expect(measure1.conformance_errors).to have_key(:ME32)
-
-        # TEST CASE-2
-        additional_code2 = create(:additional_code, validity_start_date: Date.yesterday)
-
-        create(
-          :meursing_additional_code,
-          additional_code: additional_code2.additional_code,
-          validity_start_date: Date.yesterday
-        )
-
-        measure2 = measure1.dup
-        measure2.additional_code_sid = additional_code2.additional_code_sid
-        measure2.save
-        measure2.reload
+        measure2 = measure.dup
 
         expect(measure2.additional_code).to_not be(nil)
-        expect(measure2.additional_code.meursing_additional_code).to_not be(nil)
+        expect(measure2.additional_code.meursing_additional_code).to be(nil)
         expect(measure2).to_not be_conformant
         expect(measure2.conformance_errors).to have_key(:ME32)
       end
+
+      #it "should not run validation successfully for test case 2" do
+        # NOTE: THIS SITUATION IS NOT GOING TO HAPPEN SO WE MIGHT NEED TO REMOVE
+        # THIS SPEC.
+
+        # TEST CASE-2
+        #additional_code2 = create(:additional_code, validity_start_date: Date.yesterday)
+        #additional_code = additional_code2.dup
+        #additional_code.save
+
+        #create(
+          #:meursing_additional_code,
+          #additional_code: additional_code2.additional_code,
+          #validity_start_date: Date.yesterday
+        #)
+
+        #measure = create(
+          #:measure,
+          #goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          #additional_code_sid: additional_code2.additional_code_sid,
+          #validity_start_date: Date.yesterday
+        #)
+
+        #measure2 = measure.dup
+        #measure2.additional_code_sid = additional_code.additional_code_sid
+        #measure2.save
+        #measure2.reload
+
+        #expect(measure2.additional_code).to_not be(nil)
+        #expect(measure2.additional_code.meursing_additional_code).to be(nil)
+        #expect(measure2).to_not be_conformant
+        #expect(measure2.conformance_errors).to have_key(:ME32)
+      #end
     end
 
     describe 'ME33' do
