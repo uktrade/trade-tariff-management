@@ -157,8 +157,8 @@ class MeasureValidator < TradeTariffBackend::Validator
              codes.),
              on: [:create, :update],
              if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
-               measures_considering_start_ate = []
-               measures_considering_end_date = []
+               measure_ids_considering_start_date = []
+               measure_ids_considering_end_date = []
 
                TimeMachine.at(record.validity_start_date) do
                  good_nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: record.goods_nomenclature_item_id)
@@ -166,7 +166,7 @@ class MeasureValidator < TradeTariffBackend::Validator
                  children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
                  goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
 
-                 measures_considering_start_ate = Measure.where(
+                measure_ids_considering_start_date = Measure.where(
                    goods_nomenclature_item_id: goods_nomenclature_item_ids,
                    measure_type_id: record.measure_type_id,
                    geographical_area_sid: record.geographical_area_sid,
@@ -174,27 +174,31 @@ class MeasureValidator < TradeTariffBackend::Validator
                    additional_code_type_id: record.additional_code_type_id,
                    additional_code_id: record.additional_code_id,
                    reduction_indicator: record.reduction_indicator
-                 )
+                 ).select_map(:measure_sid)
                end
 
-               TimeMachine.at(record.validity_end_date) do
-                 good_nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: record.goods_nomenclature_item_id)
-                 uptree_goods_nomenclature_item_ids = good_nomenclature.sti_instance.uptree.map(&:goods_nomenclature_item_id)
-                 children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
-                 goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
+               if record.validity_end_date.present?
+                 TimeMachine.at(record.validity_end_date) do
+                   good_nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: record.goods_nomenclature_item_id)
+                   uptree_goods_nomenclature_item_ids = good_nomenclature.sti_instance.uptree.map(&:goods_nomenclature_item_id)
+                   children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
+                   goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
 
-                 measures_considering_end_date = Measure.where(
-                   goods_nomenclature_item_id: goods_nomenclature_item_ids,
-                   measure_type_id: record.measure_type_id,
-                   geographical_area_sid: record.geographical_area_sid,
-                   ordernumber: record.ordernumber,
-                   additional_code_type_id: record.additional_code_type_id,
-                   additional_code_id: record.additional_code_id,
-                   reduction_indicator: record.reduction_indicator
-                 )
+                   measure_ids_considering_end_date = Measure.where(
+                     goods_nomenclature_item_id: goods_nomenclature_item_ids,
+                     measure_type_id: record.measure_type_id,
+                     geographical_area_sid: record.geographical_area_sid,
+                     ordernumber: record.ordernumber,
+                     additional_code_type_id: record.additional_code_type_id,
+                     additional_code_id: record.additional_code_id,
+                     reduction_indicator: record.reduction_indicator
+                   ).select_map(:measure_sid)
+                 end
                end
 
-               measures =  measures_considering_start_ate & measures_considering_end_date
+               measure_ids = measure_ids_considering_end_date & measure_ids_considering_end_date
+               measures    = Measure.where(measure_sid: measure_ids)
+
                measures.empty? || measures.all? { |m| m.additional_code.try(:meursing_additional_code).present? }
              end
 
