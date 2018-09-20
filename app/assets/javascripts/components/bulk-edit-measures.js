@@ -16,6 +16,7 @@ $(document).ready(function() {
       var data = {
         selectedMeasures: [],
         showTooltips: true,
+        overloaded: false,
         columns: [
           {enabled: true, title: "Old ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
           {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string", changeProp: "regulation" },
@@ -277,8 +278,12 @@ $(document).ready(function() {
         var self = this;
 
         var url = window.location.href + "&page=" + page;
+        var options = {
+          type: "GET",
+          url: url
+        };
 
-        $.get(url, function(data) {
+        retryAjax(options, 10, 5000, function(data) {
           self.measures = self.measures.concat(data.measures.map(function(measure) {
             measure.visible = true;
 
@@ -295,6 +300,14 @@ $(document).ready(function() {
           self.pagination.pages = parseInt(data.total_pages, 10);
 
           callback();
+        }, function() {
+          self.overloaded = true;
+          setTimeout(function() {
+            self.overloaded = false;
+            Vue.nextTick(function() {
+              self.loadMeasures.apply(self, [page, callback]);
+            });
+          }, 30000);
         });
       },
       loadNextPage: function() {

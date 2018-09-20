@@ -15,8 +15,7 @@ h2.heading-large
   - else
     = workbasket_author? ? 'Edit measures' : 'Review measures'
 
-- if workbasket.awaiting_cross_check?
-  = render "measures/bulks/details"
+= render "measures/bulks/details"
 
 script
   == "window.__workbasket_id = #{workbasket.id};"
@@ -28,6 +27,8 @@ script
   = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
 
 form.bulk-edit-measures
+  warning-message v-if="overloaded"
+    | The server is overloaded at the moment or there is an error preventing the request to load the current batch of measures. Retrying in 30 seconds&hellip;
   = render "table_top"
 
   = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
