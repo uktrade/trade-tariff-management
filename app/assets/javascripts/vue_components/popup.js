@@ -30,6 +30,9 @@ Vue.component("pop-up", {
     var self = this;
 
     MicroModal.init({
+      onShow: function() {
+        $(document).trigger("datepicker:reposition");
+      },
       onClose: function() {
         if (self.onClose) {
           self.onClose();
@@ -39,6 +42,9 @@ Vue.component("pop-up", {
 
     if (this.open) {
       MicroModal.show("modal-" + this.id, {
+        onShow: function() {
+          $(document).trigger("datepicker:reposition");
+        },
         onClose: function() {
           if (self.onClose) {
             self.onClose();

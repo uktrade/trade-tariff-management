@@ -21,6 +21,19 @@ Vue.component("quota-section", {
   },
   props: ["section", "index"],
   methods: {
+    updateBalances: function(balances) {
+      var self = this;
+
+      if (!this.section.parent_quota.balances) {
+        this.section.parent_quota.balances = [];
+      }
+
+      this.section.parent_quota.balances.splice(0, 999);
+
+      balances.forEach(function(b, i) {
+        Vue.set(self.section.parent_quota.balances, i, b);
+      });
+    },
     emptyDutyExpression: function() {
       return clone({
         duty_expression_id: "01A",
@@ -179,6 +192,39 @@ Vue.component("quota-section", {
     },
     omitCriticality: function() {
       return window.all_settings.quota_is_licensed == "true";
+    },
+    showDuties: function() {
+      return window.all_settings.quota_is_licensed != "true";
+    },
+    maxDate: function() {
+      if (this.section.type != "custom") {
+        return null;
+      }
+
+      try {
+        var date = moment(this.section.periods[0].start_date, ["DD MMM YYYY", "DD/MM/YYYY"], true);
+
+        if (!date.isValid()) {
+          return null;
+        }
+
+        return date.add(1, "year").format("DD/MM/YYYY");
+      } catch (e) {
+        return null;
+      }
+    },
+    canAddMorePeriods: function() {
+      if (this.section.periods.length === 0 || !this.maxDate) {
+        return true;
+      }
+
+      var last = moment(this.section.periods[this.section.periods.length - 1].end_date, "DD/MM/YYYY", true);
+
+      if (!last.isValid()) {
+        return false;
+      }
+
+      return moment(this.maxDate, "DD/MM/YYYY", true).diff(last, "days") >= 1;
     }
   },
   watch: {
@@ -192,10 +238,24 @@ Vue.component("quota-section", {
     "section.type": function(newVal, oldVal) {
       if (newVal && newVal != oldVal) {
         this.resetOpeningBalances();
+        this.section.parent_quota.associate = false;
+
+        if (!this.section.parent_quota.balances) {
+          this.section.parent_quota.balances = [];
+        }
+
+        this.section.parent_quota.balances.splice(0, 999);
       }
     },
     "section.period": function() {
       this.resetOpeningBalances();
+      this.section.parent_quota.associate = false;
+
+      if (!this.section.parent_quota.balances) {
+        this.section.parent_quota.balances = [];
+      }
+
+      this.section.parent_quota.balances.splice(0, 999);
     }
   }
 });

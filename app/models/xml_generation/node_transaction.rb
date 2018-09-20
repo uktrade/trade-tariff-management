@@ -1,14 +1,16 @@
 module XmlGeneration
   class NodeTransaction
 
-    attr_accessor :messages
+    attr_accessor :messages,
+                  :id
 
-    def initialize(record)
+    def initialize(id, record)
+      @id = id
       @messages = Array.wrap(::XmlGeneration::NodeMessage.new(record))
     end
 
     def node_id
-      Time.now.to_i
+      id
     end
   end
 end

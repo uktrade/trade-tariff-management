@@ -3,7 +3,7 @@
 
 = simple_form_for form, url: create_quotum_url(id: workbasket.id),
                         html: { \
-                          class: "measure-form create-measures-v2",
+                          class: "quota-form",
                           method: :put, data: { \
                             measure: form.measure.to_json,
                             measure_condition_attributes: form.measure.measure_conditions.to_json \
