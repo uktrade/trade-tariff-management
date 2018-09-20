@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe FootnoteAssociationMeasure do
-  describe 'validations' do
-    describe 'conformance rules' do
+  describe "validations" do
+    describe "conformance rules" do
       let!(:measure) { create(:measure) }
       let!(:footnote) { create(:footnote) }
 
-      describe 'ME69: The associated footnote must exist.' do
+      describe "ME69: The associated footnote must exist." do
         it "shoud run validation succesfully" do
           footnote_association_measure = FootnoteAssociationMeasure.new
           footnote_association_measure.measure_sid = measure.measure_sid
