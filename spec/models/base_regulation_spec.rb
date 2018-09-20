@@ -161,61 +161,61 @@ describe BaseRegulation do
       end
     end
 
-    context "ROIMB8" do
-      it "valid" do
-        measure = create :measure,
-                         :national,
-                         validity_start_date: Date.today - 10.days
-        base_regulation = create :base_regulation,
-                                 base_regulation_id: measure.measure_generating_regulation_id,
-                                 base_regulation_role: measure.measure_generating_regulation_role,
-                                 validity_start_date: Date.today - 11.days
-        expect(base_regulation).to be_conformant
-      end
+    #context "ROIMB8" do
+      #it "valid" do
+        #measure = create :measure,
+                         #:national,
+                         #validity_start_date: Date.today - 10.days
+        #base_regulation = create :base_regulation,
+                                 #base_regulation_id: measure.measure_generating_regulation_id,
+                                 #base_regulation_role: measure.measure_generating_regulation_role,
+                                 #validity_start_date: Date.today - 11.days
+        #expect(base_regulation).to be_conformant
+      #end
 
-      it "invalid" do
-        measure = create :measure,
-                         :national,
-                         validity_start_date: Date.today - 10.days,
-                         validity_end_date: Date.today + 10.days
-        base_regulation = create :base_regulation,
-                                 base_regulation_id: measure.measure_generating_regulation_id,
-                                 base_regulation_role: measure.measure_generating_regulation_role,
-                                 validity_start_date: Date.today - 11.days,
-                                 validity_end_date: Date.today + 5.days
-        expect(base_regulation).to_not be_conformant
-        expect(base_regulation.conformance_errors).to have_key(:ROIMB8)
-      end
-    end
+      #it "invalid" do
+        #measure = create :measure,
+                         #:national,
+                         #validity_start_date: Date.today - 10.days,
+                         #validity_end_date: Date.today + 10.days
+        #base_regulation = create :base_regulation,
+                                 #base_regulation_id: measure.measure_generating_regulation_id,
+                                 #base_regulation_role: measure.measure_generating_regulation_role,
+                                 #validity_start_date: Date.today - 11.days,
+                                 #validity_end_date: Date.today + 5.days
+        #expect(base_regulation).to_not be_conformant
+        #expect(base_regulation.conformance_errors).to have_key(:ROIMB8)
+      #end
+    #end
 
-    context "ROIMB11" do
-      it "valid" do
-        mpt_stop = create :measure_partial_temporary_stop,
-                          validity_start_date: Date.today - 5.days
-        measure = create :measure,
-                         measure_generating_regulation_id: mpt_stop.partial_temporary_stop_regulation_id,
-                         validity_start_date: Date.today - 5.days
-        base_regulation = create :base_regulation,
-                                 base_regulation_id: measure.measure_generating_regulation_id,
-                                 base_regulation_role: measure.measure_generating_regulation_role,
-                                 validity_start_date: Date.today - 10.days
-        expect(base_regulation).to be_conformant
-      end
+    #context "ROIMB11" do
+      #it "valid" do
+        #mpt_stop = create :measure_partial_temporary_stop,
+                          #validity_start_date: Date.today - 5.days
+        #measure = create :measure,
+                         #measure_generating_regulation_id: mpt_stop.partial_temporary_stop_regulation_id,
+                         #validity_start_date: Date.today - 5.days
+        #base_regulation = create :base_regulation,
+                                 #base_regulation_id: measure.measure_generating_regulation_id,
+                                 #base_regulation_role: measure.measure_generating_regulation_role,
+                                 #validity_start_date: Date.today - 10.days
+        #expect(base_regulation).to be_conformant
+      #end
 
-      it "invalid" do
-        mpt_stop = create :measure_partial_temporary_stop,
-                          validity_start_date: Date.today - 10.days
-        measure = create :measure,
-                         measure_generating_regulation_id: mpt_stop.partial_temporary_stop_regulation_id,
-                         validity_start_date: Date.today - 5.days
-        base_regulation = create :base_regulation,
-                                 base_regulation_id: measure.measure_generating_regulation_id,
-                                 base_regulation_role: measure.measure_generating_regulation_role,
-                                 validity_start_date: Date.today - 5.days
-        expect(base_regulation).to_not be_conformant
-        expect(base_regulation.conformance_errors).to have_key(:ROIMB11)
-      end
-    end
+      #it "invalid" do
+        #mpt_stop = create :measure_partial_temporary_stop,
+                          #validity_start_date: Date.today - 10.days
+        #measure = create :measure,
+                         #measure_generating_regulation_id: mpt_stop.partial_temporary_stop_regulation_id,
+                         #validity_start_date: Date.today - 5.days
+        #base_regulation = create :base_regulation,
+                                 #base_regulation_id: measure.measure_generating_regulation_id,
+                                 #base_regulation_role: measure.measure_generating_regulation_role,
+                                 #validity_start_date: Date.today - 5.days
+        #expect(base_regulation).to_not be_conformant
+        #expect(base_regulation.conformance_errors).to have_key(:ROIMB11)
+      #end
+    #end
 
     context "ROIMB15" do
       it "valid" do
@@ -363,44 +363,44 @@ describe BaseRegulation do
       end
     end
 
-    context "ROIMB22" do
-      it "valid" do
-        measure = create(
-          :measure,
-          :national,
-          validity_start_date: Date.today - 10.days,
-          validity_end_date: Date.today + 10.days
-        )
-        base_regulation = create(
-          :base_regulation,
-          base_regulation_id: measure.measure_generating_regulation_id,
-          base_regulation_role: measure.measure_generating_regulation_role,
-          validity_start_date: Date.today - 11.days,
-          validity_end_date: Date.today + 11.days
-        )
-        expect(base_regulation).to be_conformant
-      end
+    #context "ROIMB22" do
+      #it "valid" do
+        #measure = create(
+          #:measure,
+          #:national,
+          #validity_start_date: Date.today - 10.days,
+          #validity_end_date: Date.today + 10.days
+        #)
+        #base_regulation = create(
+          #:base_regulation,
+          #base_regulation_id: measure.measure_generating_regulation_id,
+          #base_regulation_role: measure.measure_generating_regulation_role,
+          #validity_start_date: Date.today - 11.days,
+          #validity_end_date: Date.today + 11.days
+        #)
+        #expect(base_regulation).to be_conformant
+      #end
 
-      it "invalid" do
-        measure = create(
-          :measure,
-          :national,
-          validity_start_date: Date.today - 10.days,
-          validity_end_date: Date.today + 10.days
-        )
-        base_regulation = create(
-          :base_regulation,
-          base_regulation_id: measure.measure_generating_regulation_id,
-          base_regulation_role: measure.measure_generating_regulation_role,
-          validity_start_date: Date.today - 11.days,
-          validity_end_date: Date.today + 11.days
-        )
-        base_regulation.validity_end_date = Date.today + 5.days
-        expect(
-          base_regulation.conformant_for?(:update)
-        ).to be_falsey
-        expect(base_regulation.conformance_errors).to have_key(:ROIMB22)
-      end
-    end
+      #it "invalid" do
+        #measure = create(
+          #:measure,
+          #:national,
+          #validity_start_date: Date.today - 10.days,
+          #validity_end_date: Date.today + 10.days
+        #)
+        #base_regulation = create(
+          #:base_regulation,
+          #base_regulation_id: measure.measure_generating_regulation_id,
+          #base_regulation_role: measure.measure_generating_regulation_role,
+          #validity_start_date: Date.today - 11.days,
+          #validity_end_date: Date.today + 11.days
+        #)
+        #base_regulation.validity_end_date = Date.today + 5.days
+        #expect(
+          #base_regulation.conformant_for?(:update)
+        #).to be_falsey
+        #expect(base_regulation.conformance_errors).to have_key(:ROIMB22)
+      #end
+    #end
   end
 end
