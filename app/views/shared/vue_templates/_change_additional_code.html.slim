@@ -33,18 +33,29 @@ script type="text/x-template" id="change-additional-code-popup-template"
 
       info-message The selection contains measures with the additional code(s) listed below. You can replace or remove these.
 
-      .bootstrap-row
-        .col-md-6
-          .form-group
-            .form-label
+      .form-group
+        .form-label
+          .span.bootstrap-row
+            .span.col-md-6
               span.bootstrap-row
                 span.col-md-4 Current code
                 span.col-md-8 Remove or replace with
-              span.form-hint Leave row fields blank / unchecked to keep existing code unchanged.
-              measure-change-additional-code-input v-for="additionalCode in measuresAdditionalCodes" :additional-code="additionalCode"
-        .col-md-6
-          .form-hint If you need to check an additional code, enter it here to see the description. Codes entered here will not affect measures in the selection.
-          measure-additional-code-previewer
+      .form-group
+        label.form-label
+          span.bootstrap-row
+            .col-md-6
+              span.form-hint.form-hint--marginless Leave row fields blank / unchecked to keep existing code unchanged.
+
+            .col-md-6
+              .form-hint.form-hint--marginless If you need to check an additional code, enter it here to see the description. Codes entered here will not affect measures in the selection.
+
+      .form-group
+        .bootstrap-row
+          .col-md-6
+            measure-change-additional-code-input v-for="additionalCode in measuresAdditionalCodes" :additional-code="additionalCode"
+
+          .col-md-6
+            measure-additional-code-previewer
 
       .form-actions
         button.button @click.prevent="confirmChanges" Update selected measures
