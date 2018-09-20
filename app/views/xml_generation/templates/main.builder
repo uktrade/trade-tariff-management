@@ -23,7 +23,7 @@ xml.tag!("env:envelope", xmlns: "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
               end
 
               record.tag!("oub:record.sequence.number") do record
-                xml_data_item(record, message.record_sequence_number)
+                xml_data_item(record, 1)
               end
 
               record.tag!("oub:update.type") do record
