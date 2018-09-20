@@ -339,3 +339,7 @@ fieldset + fieldset {
     font-weight: 400;
   }
 }
+
+.form-hint--marginless {
+  margin-bottom: 0 !important;
+}
