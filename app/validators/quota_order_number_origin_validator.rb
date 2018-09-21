@@ -36,4 +36,24 @@ class QuotaOrderNumberOriginValidator < TradeTariffBackend::Validator
       }.empty?
     end
   end
+
+  validation :ON6, 'The validity period of the geographical area must span the validity period of the quota order number origin.' do
+    validates :validity_date_span, of: :geographical_area
+  end
+
+  validation :ON10, 'When a quota order number is used in a measure then the validity period of the quota order number origin must span the validity period of the measure. This rule is only applicable for measures with start date after 31/12/2007.' do |record|
+    if record.quota_order_number.present? && record.quota_order_number.measure.present? && record.quota_order_number.measure.validity_start_date.to_date > Date.new(2007,12,31)
+      measure = record.quota_order_number.measure
+      (
+        record.validity_start_date <= measure.validity_start_date
+      ) && (
+        ( record.validity_end_date.blank? && measure.validity_end_date.blank? ) ||
+        (record.validity_end_date.present? && measure.validity_end_date.present? && (record.validity_end_date >= measure.validity_end_date) )
+      )
+    end
+  end
+
+  validation :ON12, 'The quota order number origin cannot be deleted if it is used in a measure. This rule is only applicable for measure with start date after 31/12/2007.', on: [:destroy] do |record|
+    record.quota_order_number.blank? || record.quota_order_number.measure.blank? || record.quota_order_number.measure.validity_start_date.to_date <= Date.new(2007,12,31)
+  end
 end

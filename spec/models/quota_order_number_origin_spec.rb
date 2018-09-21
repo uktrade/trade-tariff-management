@@ -36,5 +36,87 @@ describe QuotaOrderNumberOrigin do
         expect(qono2.conformance_errors).to have_key(:ON5)
       end
     end
+
+    describe "ON6" do
+      it "valid" do
+        ga = create :geographical_area,
+                    validity_start_date: 15.days.ago,
+                    validity_end_date: 5.days.ago
+        qono = build :quota_order_number_origin,
+                     geographical_area_sid: ga.geographical_area_sid,
+                     validity_start_date: 12.days.ago,
+                     validity_end_date: 8.days.ago
+        expect(qono).to be_conformant
+      end
+
+      it "invalid" do
+        ga = create :geographical_area,
+                    validity_start_date: 10.days.ago,
+                    validity_end_date: 5.days.ago
+        qono = build :quota_order_number_origin,
+                      geographical_area_sid: ga.geographical_area_sid,
+                      validity_start_date: 12.days.ago,
+                      validity_end_date: 8.days.ago
+        expect(qono).to_not be_conformant
+        expect(qono.conformance_errors).to have_key(:ON6)
+      end
+    end
+
+    describe "ON10" do
+      it "valid" do
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: 12.days.ago,
+                  validity_end_date: 8.days.ago
+        qon = create :quota_order_number,
+                    quota_order_number_id: measure.ordernumber
+        qono = build :quota_order_number_origin,
+                     quota_order_number_sid: qon.quota_order_number_sid,
+                     validity_start_date: 15.days.ago,
+                     validity_end_date: 5.days.ago
+        expect(qono).to be_conformant
+      end
+
+      it "invalid" do
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: 20.days.ago,
+                  validity_end_date: 8.days.ago
+        qon = create :quota_order_number,
+                    quota_order_number_id: measure.ordernumber
+        qono = build :quota_order_number_origin,
+                     quota_order_number_sid: qon.quota_order_number_sid,
+                     validity_start_date: 15.days.ago,
+                     validity_end_date: 5.days.ago
+        expect(qono).to_not be_conformant
+        expect(qono.conformance_errors).to have_key(:ON10)
+      end
+    end
+
+    describe "ON12" do
+      it "valid" do
+        bottom_date = Date.new(2007,12,31)
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: bottom_date - 1.day
+        qon = create :quota_order_number,
+                    quota_order_number_id: measure.ordernumber
+        qono = build :quota_order_number_origin,
+                     quota_order_number_sid: qon.quota_order_number_sid
+        expect(qono.conformant_for?(:destroy)).to be_truthy
+      end
+
+      it "invalid" do
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: 20.days.ago
+        qon = create :quota_order_number,
+                    quota_order_number_id: measure.ordernumber
+        qono = build :quota_order_number_origin,
+                     quota_order_number_sid: qon.quota_order_number_sid
+        expect(qono.conformant_for?(:destroy)).to be_falsey
+        expect(qono.conformance_errors).to have_key(:ON12)
+      end
+    end
   end
 end

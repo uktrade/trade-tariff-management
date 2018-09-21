@@ -33,6 +33,14 @@ FactoryGirl.define do
     trait :xml do
       validity_end_date              { Date.today.ago(1.years) }
     end
+
+    trait :with_geographical_area do
+      after(:build) do |qon|
+        geographical_area = create(:geographical_area)
+        qon.geographical_area_id = geographical_area.geographical_area_id
+        qon.geographical_area_sid = geographical_area.geographical_area_sid
+      end
+    end
   end
 
   factory :quota_order_number_origin_exclusion do

@@ -79,5 +79,112 @@ describe QuotaOrderNumber do
         expect(qon.conformance_errors).to have_key(:ON4)
       end
     end
+
+    describe "ON7" do
+      it "valid" do
+        qon = build :quota_order_number,
+                     validity_start_date: 15.days.ago,
+                     validity_end_date: 5.days.ago
+        qono = create :quota_order_number_origin,
+                      :with_geographical_area,
+                      quota_order_number_sid: qon.quota_order_number_sid,
+                      validity_start_date: 12.days.ago,
+                      validity_end_date: 8.days.ago
+        expect(qon).to be_conformant
+      end
+
+      it "invalid" do
+        qon = create :quota_order_number,
+                     validity_start_date: 10.days.ago,
+                     validity_end_date: 5.days.ago
+        qono = create :quota_order_number_origin,
+                      quota_order_number_sid: qon.quota_order_number_sid,
+                      validity_start_date: 12.days.ago,
+                      validity_end_date: 8.days.ago
+        expect(qon).to_not be_conformant
+        expect(qon.conformance_errors).to have_key(:ON7)
+      end
+    end
+
+    describe "ON8" do
+      it "valid" do
+        qon = build :quota_order_number,
+                     validity_start_date: 15.days.ago,
+                     validity_end_date: 5.days.ago
+        qdefinition = create :quota_definition,
+                      quota_order_number_id: qon.quota_order_number_id,
+                      quota_order_number_sid: qon.quota_order_number_sid,
+                      validity_start_date: 12.days.ago,
+                      validity_end_date: 8.days.ago
+        expect(qon).to be_conformant
+      end
+
+      it "invalid" do
+        qon = build :quota_order_number,
+                     validity_start_date: 10.days.ago,
+                     validity_end_date: 5.days.ago
+        qdefinition = create :quota_definition,
+                      quota_order_number_id: qon.quota_order_number_id,
+                      quota_order_number_sid: qon.quota_order_number_sid,
+                      validity_start_date: 12.days.ago,
+                      validity_end_date: 8.days.ago
+        expect(qon).to_not be_conformant
+        expect(qon.conformance_errors).to have_key(:ON8)
+      end
+    end
+
+    describe "ON9" do
+      it "valid" do
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: 12.days.ago,
+                  validity_end_date: 8.days.ago
+        qon = build :quota_order_number,
+                    validity_start_date: 15.days.ago,
+                    validity_end_date: 5.days.ago,
+                    quota_order_number_id: measure.ordernumber
+        expect(qon).to be_conformant
+      end
+
+      it "invalid" do
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: 20.days.ago,
+                  validity_end_date: 8.days.ago
+        qon = build :quota_order_number,
+                    validity_start_date: 15.days.ago,
+                    validity_end_date: 5.days.ago,
+                    quota_order_number_id: measure.ordernumber
+        expect(qon).to_not be_conformant
+        expect(qon.conformance_errors).to have_key(:ON9)
+      end
+    end
+
+    describe "ON11" do
+      it "valid" do
+        bottom_date = Date.new(2007,12,31)
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: bottom_date - 1.day
+        qon = build :quota_order_number,
+                    validity_start_date: 15.days.ago,
+                    validity_end_date: 5.days.ago,
+                    quota_order_number_id: measure.ordernumber
+        expect(qon.conformant_for?(:destroy)).to be_truthy
+      end
+
+      it "invalid" do
+        measure = create :measure,
+                  ordernumber: generate(:quota_order_number_id),
+                  validity_start_date: 12.days.ago,
+                  validity_end_date: 8.days.ago
+        qon = build :quota_order_number,
+                    validity_start_date: 15.days.ago,
+                    validity_end_date: 5.days.ago,
+                    quota_order_number_id: measure.ordernumber
+        expect(qon.conformant_for?(:destroy)).to be_falsey
+        expect(qon.conformance_errors).to have_key(:ON11)
+      end
+    end
   end
 end
