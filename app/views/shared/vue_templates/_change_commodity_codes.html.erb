@@ -44,11 +44,11 @@
       The selection contains measures with the commodity code(s) listed below. You can replace them, but you cannot delete or add new commodity codes from here. To delete a commodity code, you need to delete the whole measure. To add new commodity codes, either create new measures via the Create Measures screen, or copy one or more of these measures and then edit the copies.
     </info-message>
 
-    <div class="bootstrap-row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <div class="form-label">
-            <span class="bootstrap-row">
+    <div class="form-group">
+      <label class="form-label">
+        <span class="bootstrap-row">
+          <div class="col-md-6">
+            <div class="bootstrap-row">
               <span class="col-md-5">
                 Current code
               </span>
@@ -56,21 +56,38 @@
               <span class="col-md-7">
                 Replace with
               </span>
-            </span>
-            <span class="form-hint">
+            </div>
+          </div>
+        </span>
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">
+        <span class="bootstrap-row">
+          <span class="col-md-6">
+            <span class="form-hint form-hint--marginless">
               Leave row fields blank / unchecked to keep existing code unchanged.
             </span>
-            <measure-change-commodity-code-input v-for="commodityCode in measuresCommodityCodes" :commodity-code="commodityCode">
-            </measure-change-commodity-code-input>
-          </div>
+          </span>
+          <span class="col-md-6">
+            <span class="form-hint form-hint--marginless">
+              If you need to check a commodity code, enter it here to see the description. Codes entered here will not affect measures in the selection.
+            </span>
+          </span>
+        </span>
+      </label>
+    </div>
+    <div class="form-group">
+      <div class="bootstrap-row">
+        <div class="col-md-6">
+          <measure-change-commodity-code-input v-for="commodityCode in measuresCommodityCodes" :commodity-code="commodityCode">
+          </measure-change-commodity-code-input>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="form-hint">
-          If you need to check a commodity code, enter it here to see the description. Codes entered here will not affect measures in the selection.
+
+        <div class="col-md-6">
+          <measure-commodity-code-previewer>
+          </measure-commodity-code-previewer>
         </div>
-        <measure-commodity-code-previewer>
-        </measure-commodity-code-previewer>
       </div>
     </div>
 
