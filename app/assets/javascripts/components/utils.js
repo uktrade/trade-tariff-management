@@ -53,3 +53,13 @@ function any(arr, func) {
     return func(obj);
   }).length > 0;
 }
+
+function getSearchParam(param) {
+  var params = {};
+  window.location.search.replace("?", "").split("&").forEach(function(s) {
+    var parts = s.split("=");
+    params[parts[0]] = parts[1];
+  });
+
+  return params[param];
+}
