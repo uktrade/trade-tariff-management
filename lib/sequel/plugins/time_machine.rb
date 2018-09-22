@@ -94,15 +94,21 @@ module Sequel
           )
 
           scope = if self.validity_end_date.present?
-            # TODO
-            #
-          else
-            scope.where(
-              "validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL)",
-              self.validity_start_date,
-              self.validity_start_date
-            )
-          end
+                    scope.where(
+                      "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL)) OR
+                       (validity_start_date >= ? AND (validity_end_date <= ? OR validity_end_date IS NULL))",
+                       self.validity_start_date,
+                       self.validity_start_date,
+                       self.validity_start_date,
+                       self.validity_end_date,
+                    )
+                  else
+                    scope.where(
+                      "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL))",
+                      self.validity_start_date,
+                      self.validity_start_date,
+                    )
+                  end
 
           p ""
           p " DETECTED: #{scope.count}"
@@ -118,9 +124,9 @@ module Sequel
             p ""
             p "     goods_nomenclature_item_id: #{record.goods_nomenclature_item_id}"
             p ""
-            p "     validity_start_date: #{record.validity_start_date.strftime('%Y-%m-%d')}"
+            p "     validity_start_date: #{record[:validity_start_date]}"
             p ""
-            p "     validity_end_date: #{record.validity_end_date.try(:strftime, '%Y-%m-%d')}"
+            p "     validity_end_date: #{record[validity_end_date]}"
             p ""
             p "     geographical_area_sid: #{record.geographical_area_sid}"
             p ""
