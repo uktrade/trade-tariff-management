@@ -151,68 +151,14 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME32,
-             %(There may be no overlap in time with other measure occurrences with a goods code in the
-             same nomenclature hierarchy which references the same measure type, geo area, order number,
-             additional code and reduction indicator. This rule is not applicable for Meursing additional
-             codes.), on: [:create, :update],
-  if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
-    record.duplicates_by_attributes.count.zero?
-  end
-
-  #
-  # V1
-  #
-  # validation :ME32,
-  #            %(There may be no overlap in time with other measure occurrences with a goods code in the
-  #            same nomenclature hierarchy which references the same measure type, geo area, order number,
-  #            additional code and reduction indicator. This rule is not applicable for Meursing additional
-  #            codes.),
-  #            on: [:create, :update],
-  #            if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
-  #              measure_ids_considering_start_date = []
-  #              measure_ids_considering_end_date = []
-
-  #              TimeMachine.at(record.validity_start_date) do
-  #                good_nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: record.goods_nomenclature_item_id)
-  #                uptree_goods_nomenclature_item_ids = good_nomenclature.sti_instance.uptree.map(&:goods_nomenclature_item_id)
-  #                children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
-  #                goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
-
-  #                measure_ids_considering_start_date = Measure.where(
-  #                  goods_nomenclature_item_id: goods_nomenclature_item_ids,
-  #                  measure_type_id: record.measure_type_id,
-  #                  geographical_area_sid: record.geographical_area_sid,
-  #                  ordernumber: record.ordernumber,
-  #                  additional_code_type_id: record.additional_code_type_id,
-  #                  additional_code_id: record.additional_code_id,
-  #                  reduction_indicator: record.reduction_indicator
-  #                ).select_map(:measure_sid)
-  #              end
-
-  #              if record.validity_end_date.present?
-  #                TimeMachine.at(record.validity_end_date) do
-  #                  good_nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: record.goods_nomenclature_item_id)
-  #                  uptree_goods_nomenclature_item_ids = good_nomenclature.sti_instance.uptree.map(&:goods_nomenclature_item_id)
-  #                  children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
-  #                  goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
-
-  #                  measure_ids_considering_end_date = Measure.where(
-  #                    goods_nomenclature_item_id: goods_nomenclature_item_ids,
-  #                    measure_type_id: record.measure_type_id,
-  #                    geographical_area_sid: record.geographical_area_sid,
-  #                    ordernumber: record.ordernumber,
-  #                    additional_code_type_id: record.additional_code_type_id,
-  #                    additional_code_id: record.additional_code_id,
-  #                    reduction_indicator: record.reduction_indicator
-  #                  ).select_map(:measure_sid)
-  #                end
-  #              end
-
-  #              measure_ids = measure_ids_considering_start_date & measure_ids_considering_end_date
-  #              measures    = Measure.where(measure_sid: measure_ids)
-
-  #              measures.empty? || measures.all? { |m| m.additional_code.try(:meursing_additional_code).present? }
-  #            end
+    %(There may be no overlap in time with other measure occurrences with a goods code in the
+     same nomenclature hierarchy which references the same measure type, geo area, order number,
+     additional code and reduction indicator. This rule is not applicable for Meursing additional
+     codes.),
+     on: [:create, :update],
+     if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
+       record.duplicates_by_attributes.count.zero?
+     end
 
   validation [:ME33, :ME34], %q{A justification regulation may not be entered if the measure end date is not filled in
                                 A justification regulation must be entered if the measure end date is filled in.}, on: [:create, :update] do |record|

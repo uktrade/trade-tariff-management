@@ -64,21 +64,21 @@ module Sequel
           children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
           goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
 
-          p ""
-          p " CURRENT RECORD"
-          p ""
-          p "    measure_sid: #{self.measure_sid}"
-          p ""
-          p "    oid: #{self.oid}"
-          p ""
-          p "    validity_start_date: #{self.validity_start_date.strftime('%Y-%m-%d')}"
-          p ""
-          p "    validity_end_date: #{self.validity_end_date.try(:strftime, '%Y-%m-%d')}"
-          p ""
-          p "    goods_nomenclature_item_id: #{self.goods_nomenclature_item_id}"
-          p ""
-          p "    uptree + children: #{goods_nomenclature_item_ids.inspect}"
-          p ""
+          #p ""
+          #p " CURRENT RECORD"
+          #p ""
+          #p "    measure_sid: #{self.measure_sid}"
+          #p ""
+          #p "    oid: #{self.oid}"
+          #p ""
+          #p "    validity_start_date: #{self.validity_start_date.strftime('%Y-%m-%d')}"
+          #p ""
+          #p "    validity_end_date: #{self.validity_end_date.try(:strftime, '%Y-%m-%d')}"
+          #p ""
+          #p "    goods_nomenclature_item_id: #{self.goods_nomenclature_item_id}"
+          #p ""
+          #p "    uptree + children: #{goods_nomenclature_item_ids.inspect}"
+          #p ""
 
           scope = self.class.where(
             #
@@ -97,10 +97,8 @@ module Sequel
                     scope.where(
                       "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL)) OR
                        (validity_start_date >= ? AND (validity_end_date <= ? OR validity_end_date IS NULL))",
-                       self.validity_start_date,
-                       self.validity_start_date,
-                       self.validity_start_date,
-                       self.validity_end_date,
+                       self.validity_start_date, self.validity_start_date,
+                       self.validity_start_date, self.validity_end_date,
                     )
                   else
                     scope.where(
@@ -110,36 +108,36 @@ module Sequel
                     )
                   end
 
-          p ""
-          p " DETECTED: #{scope.count}"
-          p ""
+          #p ""
+          #p " DETECTED: #{scope.count}"
+          #p ""
 
-          scope.map.with_index do |record, index|
-            p ""
-            p "  [#{index}]"
-            p ""
-            p "     measure_sid: #{record.measure_sid}"
-            p ""
-            p "     oid: #{record.oid}"
-            p ""
-            p "     goods_nomenclature_item_id: #{record.goods_nomenclature_item_id}"
-            p ""
-            p "     validity_start_date: #{record[:validity_start_date]}"
-            p ""
-            p "     validity_end_date: #{record[validity_end_date]}"
-            p ""
-            p "     geographical_area_sid: #{record.geographical_area_sid}"
-            p ""
-            p "     measure_type_id: #{record.measure_type_id}"
-            p ""
-            p "     ordernumber: #{record.ordernumber}"
-            p ""
-            p "     additional_code_type_id: #{record.additional_code_type_id}"
-            p ""
-            p "     additional_code_id: #{record.additional_code_id}"
-            p ""
-            p "     reduction_indicator: #{record.reduction_indicator}"
-          end
+          #scope.map.with_index do |record, index|
+            #p ""
+            #p "  [#{index}]"
+            #p ""
+            #p "     measure_sid: #{record.measure_sid}"
+            #p ""
+            #p "     oid: #{record.oid}"
+            #p ""
+            #p "     goods_nomenclature_item_id: #{record.goods_nomenclature_item_id}"
+            #p ""
+            #p "     validity_start_date: #{record[:validity_start_date]}"
+            #p ""
+            #p "     validity_end_date: #{record[validity_end_date]}"
+            #p ""
+            #p "     geographical_area_sid: #{record.geographical_area_sid}"
+            #p ""
+            #p "     measure_type_id: #{record.measure_type_id}"
+            #p ""
+            #p "     ordernumber: #{record.ordernumber}"
+            #p ""
+            #p "     additional_code_type_id: #{record.additional_code_type_id}"
+            #p ""
+            #p "     additional_code_id: #{record.additional_code_id}"
+            #p ""
+            #p "     reduction_indicator: #{record.reduction_indicator}"
+          #end
 
           scope
         end
