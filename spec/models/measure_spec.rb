@@ -1006,7 +1006,7 @@ describe Measure do
       end
 
       it "should run validation successfully if measure respect time machine w.r.t validity start date" do
-        measure = create(
+        measure1 = create(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
@@ -1014,7 +1014,7 @@ describe Measure do
           validity_end_date: 2.year.ago
         )
 
-        measure2 = measure.reload.dup
+        measure2 = measure1.reload.dup
         measure2.validity_start_date = Date.yesterday
         measure2.validity_end_date = Date.yesterday + 2.years
 
@@ -1042,38 +1042,109 @@ describe Measure do
         expect(measure2.conformance_errors).to have_key(:ME32)
       end
 
-      #it "should not run validation successfully for test case 2" do
-        # NOTE: THIS SITUATION IS NOT GOING TO HAPPEN SO WE MIGHT NEED TO REMOVE
-        # THIS SPEC.
+      it "should not run validation successfully for test case 1" do
+        # Case 1: When validity start date of new measure is before
+        # the existing measure's validity end date.
+        measure = create(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: 1.year.ago,
+          validity_end_date: Date.current + 1.month
+        )
 
-        # TEST CASE-2
-        #additional_code2 = create(:additional_code, validity_start_date: Date.yesterday)
-        #additional_code = additional_code2.dup
-        #additional_code.save
+        new_measure = measure.reload.dup
+        new_measure.validity_start_date = Date.current
+        new_measure.validity_end_date = nil
 
-        #create(
-          #:meursing_additional_code,
-          #additional_code: additional_code2.additional_code,
-          #validity_start_date: Date.yesterday
-        #)
+        new_measure.justification_regulation_id = "abc"
+        new_measure.justification_regulation_role = 1
 
-        #measure = create(
-          #:measure,
-          #goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-          #additional_code_sid: additional_code2.additional_code_sid,
-          #validity_start_date: Date.yesterday
-        #)
+        expect(new_measure.additional_code).to_not be(nil)
+        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
+        expect(new_measure).to_not be_conformant
+        expect(new_measure.conformance_errors).to have_key(:ME32)
+      end
 
-        #measure2 = measure.dup
-        #measure2.additional_code_sid = additional_code.additional_code_sid
-        #measure2.save
-        #measure2.reload
+      it "should not run validation successfully for test Case 2" do
+        # Case 2: When new measure's validity start date is before
+        # existing measure's validity start date and existing measure is having
+        # validity end date as nil and new measure's is also having validity end
+        # date as nil.
 
-        #expect(measure2.additional_code).to_not be(nil)
-        #expect(measure2.additional_code.meursing_additional_code).to be(nil)
-        #expect(measure2).to_not be_conformant
-        #expect(measure2.conformance_errors).to have_key(:ME32)
-      #end
+        measure = create(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: 1.year.ago,
+          validity_end_date: nil
+        )
+
+        new_measure = measure.reload.dup
+        new_measure.validity_start_date = Date.current
+        new_measure.validity_end_date = nil
+
+        new_measure.justification_regulation_id = "abc"
+        new_measure.justification_regulation_role = 1
+
+        expect(new_measure.additional_code).to_not be(nil)
+        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
+        expect(new_measure).to_not be_conformant
+        expect(new_measure.conformance_errors).to have_key(:ME32)
+      end
+
+      it "should not run validation successfully for test case 3" do
+        # Case 3:  When existing measure's validity start date is after new
+        # measure's validity start date and existing measure is having validity
+        # end date as nil.
+
+        measure = create(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.current + 1.month,
+          validity_end_date: nil
+        )
+
+        new_measure = measure.reload.dup
+        new_measure.validity_start_date = Date.current
+        new_measure.validity_end_date = Date.current + 2.months
+
+        new_measure.justification_regulation_id = "abc"
+        new_measure.justification_regulation_role = 1
+
+        expect(new_measure.additional_code).to_not be(nil)
+        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
+        expect(new_measure).to_not be_conformant
+        expect(new_measure.conformance_errors).to have_key(:ME32)
+      end
+
+      it "should not run validation successfully for test case 4" do
+        # Case 4: When one period is inside of another period.
+        # When existing measure validity start date is after new measure's
+        # validity start date and existing measure's validity end date
+        # is before new measure's validity end date
+
+        measure = create(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.current + 1.month,
+          validity_end_date: Date.current + 2.months
+        )
+
+        new_measure = measure.reload.dup
+        new_measure.validity_start_date = Date.current
+        new_measure.validity_end_date = Date.current + 5.months
+
+        new_measure.justification_regulation_id = "abc"
+        new_measure.justification_regulation_role = 1
+
+        expect(new_measure.additional_code).to_not be(nil)
+        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
+        expect(new_measure).to_not be_conformant
+        expect(new_measure.conformance_errors).to have_key(:ME32)
+      end
     end
 
     describe 'ME33' do
