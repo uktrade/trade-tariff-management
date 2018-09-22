@@ -9,6 +9,7 @@ $(document).ready(function() {
     el: form,
     data: function() {
       var data = {
+        savedSuccessfully: false,
         antidumpingRoles: ["2", "3"],
         communityCodes: [
           { value: "1", text: "Economic" },
@@ -41,7 +42,7 @@ $(document).ready(function() {
 
           submit_button = $(this);
 
-          WorkbasketBaseSaveActions.hideSuccessMessage();
+          self.savedSuccessfully = false;
           WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
           var http_method = "PUT";
 
@@ -71,17 +72,20 @@ $(document).ready(function() {
                   contentType: false,
                   processData: false,
                   success: function(resp) {
-                    WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
+                    WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'), function() {
+                      self.savedSuccessfully = true;
+                    });
                   }
                 });
 
               } else {
-                WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
+                WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'), function() {
+                  self.savedSuccessfully = true;
+                });
               }
             },
             error: function(response) {
               WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
-              WorkbasketBaseSaveActions.hideSuccessMessage();
               self.errors = response.responseJSON.errors;
               WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
             }

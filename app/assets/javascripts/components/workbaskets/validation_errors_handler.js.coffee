@@ -2,7 +2,6 @@ window.WorkbasketBaseValidationErrorsHandler =
 
   handleErrorsResponse: (response, workbasket_form) ->
     WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
-    WorkbasketBaseSaveActions.hideSuccessMessage()
 
     if response.responseJSON.step == "main"
       WorkbasketBaseValidationErrorsHandler.setFormErrors(response, workbasket_form)
