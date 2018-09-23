@@ -1,64 +1,99 @@
-.dashboard-page
+.main-menu-page
   header
-    h1.heading-large
-      = "Welcome, #{current_user.name}"
-    p.font-xsmall
+    .bootstrap-row
+      .col-xs-12.col-sm-6.col-md-8
+        h1.heading-large
+          | Main menu
+      .col-xs-12.col-sm-4.col-md-4.align-bottom
+        p.text-right.logout-section
+          = "Logged in as: #{current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe
 
-  h2.heading-small.nl
-    | Regulations
 
-  .clearfix
-    .w30.mt1
-      h3.heading-small style="margin:0px"
-        = link_to "Create a regulation", new_create_regulation_url
-      p.font-xsmall
-        | Create a single regulation
-    .w30.mt1
-      h3.heading-small style="margin:0px"
-        = link_to "Find a regulation", regulations_path
-      p.font-xsmall
-        | Search for an existing regulation on the database
+  = render "main_menu"
 
-  h2.heading-small.nl
-    | Measures
+  info-message
+    | You are not working with any items at the moment.
 
-  .clearfix
-    .w30.mt1
-      h3.heading-small style="margin:0px"
-        = link_to "Create measures", new_create_measure_url
-      p.font-xsmall
-        | Create a single or multiple measures and assign to a regulation
+  info-message
+    | You have 19 workbaskets, listed below.
 
-    .w30.mt1
-      h3.heading-small style="margin:0px"
-        = link_to "Find a measure", measures_path
-      p.font-xsmall
-        | Search for an existing measure on the database to view or make changes
-
-  h2.heading-small.nl
-    | Quotas
-
-  .clearfix
-    .w30.mt1
-      h3.heading-small style="margin:0px"
-        = link_to "Create a quota", new_create_quotum_url
-      p.font-xsmall
-        | Create a Quota and assign to a regulation
-
-    .w30.mt1
-
-  h2.heading-small.nl
-    | Reports
-
-  .clearfix
-    .w30.mt1
-      h3.heading-small style="margin:0px"
-        = link_to "XML generation", xml_generation_exports_path
-      p.font-xsmall
-        | Generate TARIC3 XML files
-
-    .w30.mt1
-      h3.heading-small style="margin:0px"
-        = link_to "Rollbacks", db_rollbacks_path
-      p.font-xsmall
-        | Clear all data from the db from an operational date
+  .workbaskets
+    form.workbaskets__form
+      .bootstrap-row
+        .col-xs-12.col-sm-12.col-md-5.col-lg-4
+          .form-group
+            input.form-control name="q" v-model="q"
+        .col-xs-12.col-sm-12.col-md-6.col-lg-7
+          .form-group
+            button type="submit" :disabled="emptyFilter" class="button"
+              | Filter
+            = link_to "Clear filter", root_url, class: "secondary-button"
+    table.table
+      colgroup
+        col width="80"
+        col width="*"
+        col width="180"
+        col width="200"
+        col width="120"
+        col width="200"
+        col width="1"
+      thead
+        tr
+          th
+            = sortable(:id, "ID", { q: params[:q] })
+          th
+            = sortable(:title, "Workbasket", { q: params[:q] })
+          th
+            = sortable(:type, "Type", { q: params[:q] })
+          th
+            = sortable(:status, "Status", { q: params[:q] })
+          th
+            = sortable(:last_status_change_at, "Last event", { q: params[:q] })
+          th
+            | Next step
+          th width="1"
+            | &nbsp;
+      tbody
+        - for i in 1..10 do
+          tr
+            td
+              | 00541
+            td
+              | This is a dummy workbasket name
+            td
+              | Geographical area
+            td
+              | Awaiting cross-check
+            td
+              | 21 October 2018
+            td
+              a href="#"
+                | View
+              | &nbsp;|&nbsp;
+              a href="#"
+                | Withdraw/edit...
+            td
+              a href="#"
+                icon-download
+        - for i in 1..10 do
+          tr
+            td
+              | 00541
+            td
+              | This is a dummy workbasket name
+            td
+              | Geographical area
+            td
+              icon-error
+              | Awaiting cross-check
+            td
+              | 21 October 2018
+            td
+              a href="#"
+                | View
+              | &nbsp;|&nbsp;
+              a href="#"
+                | Withdraw/edit...
+            td
+              a href="#"
+                icon-download
