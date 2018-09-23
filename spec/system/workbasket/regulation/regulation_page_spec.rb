@@ -6,12 +6,15 @@ describe 'create_regulation_page', js: true do
 
     include_context 'system_test_base_context'
 
-    context 'click on Create a regulation' do
+    context 'click on
+Create a new regulation' do
       it 'should open regulation page' do
         visit root_path
-        expect(page).to have_content 'Create a regulation'
+        expect(page).to have_content '
+Create a new regulation'
 
-        click_on 'Create a regulation'
+        click_on '
+Create a new regulation'
         expect(page).to have_content 'Specify the regulation type'
       end
     end
