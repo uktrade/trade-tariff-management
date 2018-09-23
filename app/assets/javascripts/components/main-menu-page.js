@@ -15,7 +15,11 @@ $(document).ready(function() {
     },
     computed: {
       emptyFilter: function() {
-        return this.q.trim().length === 0;
+        if (this.q !== undefined) {
+          return this.q.trim().length === 0;
+        } else {
+          return true
+        }
       }
     }
   });
