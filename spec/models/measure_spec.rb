@@ -765,9 +765,16 @@ describe Measure do
 
         measure.save
 
-        measure2 = measure.dup
-        measure2.measure_sid = nil
-        measure2.additional_code_sid = additional_code.additional_code_sid
+        measure2 = build(
+          :measure,
+          goods_nomenclature_item_id: measure.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: measure.validity_start_date,
+          measure_type_id: measure.measure_type_id,
+          geographical_area_sid: measure.geographical_area_sid,
+          ordernumber: measure.ordernumber,
+          reduction_indicator: measure.reduction_indicator
+        )
 
         expect(measure2.additional_code_sid).to_not be(nil)
         expect(measure2).to_not be_conformant
@@ -786,9 +793,16 @@ describe Measure do
 
         measure.save
 
-        measure2 = measure.dup
-        measure2.measure_sid = nil
-        measure2.additional_code_sid = nil
+        measure2 = build(
+          :measure,
+          goods_nomenclature_item_id: measure.goods_nomenclature_item_id,
+          additional_code_sid: nil,
+          validity_start_date: measure.validity_start_date,
+          measure_type_id: measure.measure_type_id,
+          geographical_area_sid: measure.geographical_area_sid,
+          ordernumber: measure.ordernumber,
+          reduction_indicator: measure.reduction_indicator
+        )
 
         expect(measure2.additional_code_sid).to be(nil)
         expect(measure2).to_not be_conformant
@@ -1084,7 +1098,14 @@ describe Measure do
           validity_end_date: 2.year.ago
         )
 
-        measure2 = measure1.reload.dup
+        measure2 = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: 10.year.ago,
+          validity_end_date: 2.year.ago
+        )
+
         measure2.validity_start_date = Date.yesterday
         measure2.validity_end_date = Date.yesterday + 2.years
 
@@ -1104,7 +1125,12 @@ describe Measure do
           validity_start_date: Date.yesterday
         )
 
-        measure2 = measure.dup
+        measure2 = create(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.yesterday
+        )
 
         expect(measure2.additional_code).to_not be(nil)
         expect(measure2.additional_code.meursing_additional_code).to be(nil)
