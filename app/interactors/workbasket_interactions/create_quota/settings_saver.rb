@@ -123,7 +123,7 @@ module WorkbasketInteractions
           @start_point, @end_point = period_next_date_generator_class.new(
             section_ops['type'], @end_point
           ).date_range
-          sub_quota_saver.add_period!(period_saver.quota_definition)
+          sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
           period_saver.quota_definition
         end
 
