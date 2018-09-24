@@ -97,14 +97,12 @@ module Workbaskets
       end
 
       def q_search(keyword)
-        underscored_keywords = keyword.squish
-                                      .parameterize
-                                      .underscore
+        underscored_keywords = keyword.squish.parameterize.underscore + "%"
 
         where("
           title ilike ? OR
           status ilike ? OR
-          type ilike ? OR",
+          type ilike ?",
           "#{keyword}%",
           underscored_keywords,
           underscored_keywords

@@ -39,10 +39,10 @@ class WorkbasketsSearch
   private
 
     def initial_scope
-      return Workbasket.default_order if sort_by_field.blank?
+      return Workbaskets::Workbasket.default_order if sort_by_field.blank?
 
       if FIELDS_ALLOWED_FOR_ORDER.include?(sort_by_field)
-        Workbasket.custom_field_order(
+        Workbaskets::Workbasket.custom_field_order(
           sort_by_field, search_ops[:sort_dir]
         )
       end
