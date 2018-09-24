@@ -6,7 +6,8 @@ table.table
     col width="200"
     col width="120"
     col width="200"
-    col width="1"
+    - if false
+      col width="1"
 
   thead
     tr
@@ -22,8 +23,10 @@ table.table
         = sortable(:last_status_change_at, "Last event", { q: params[:q] })
       th
         | Next step
-      th width="1"
-        | &nbsp;
+
+      - if false
+        th width="1"
+          | &nbsp;
 
   tbody
     - workbaskets.map do |workbasket|
@@ -49,8 +52,10 @@ table.table
           | &nbsp;|&nbsp;
           a href="#"
             | Withdraw/edit...
-        td
-          a href="#"
-            icon-download
+
+        - if false
+          td
+            a href="#"
+              icon-download
 
 = paginate workbaskets
