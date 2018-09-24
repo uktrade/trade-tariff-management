@@ -84,6 +84,33 @@ module Workbaskets
     end
 
     dataset_module do
+      def default_order
+        reverse_order(:last_status_change_at)
+      end
+
+      def custom_field_order(sort_by_field, sort_direction)
+        if sort_direction.to_sym == :desc
+          reverse_order(sort_by_field)
+        else
+          order(sort_by_field)
+        end
+      end
+
+      def q_search(keyword)
+        underscored_keywords = keyword.squish
+                                      .parameterize
+                                      .underscore
+
+        where("
+          title ilike ? OR
+          status ilike ? OR
+          type ilike ? OR",
+          "#{keyword}%",
+          underscored_keywords,
+          underscored_keywords
+        )
+      end
+
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
