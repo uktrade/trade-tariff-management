@@ -26,7 +26,9 @@ table.table
         | &nbsp;
 
   tbody
-    - decorated_collection.map do |workbasket|
+    - workbaskets.map do |workbasket|
+      - workbasket = workbasket.decorate
+
       tr
         td
           = workbasket.id
@@ -50,3 +52,5 @@ table.table
         td
           a href="#"
             icon-download
+
+= paginate workbaskets

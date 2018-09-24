@@ -536,12 +536,22 @@ class Measure < Sequel::Model
     "00".freeze
   end
 
+  def limit_per_page
+    if Rails.env.production?
+      300
+    elsif Rails.env.development?
+      30
+    elsif Rails.env.test?
+      10
+    end
+  end
+
   def self.max_per_page
-    25
+    limit_per_page
   end
 
   def self.default_per_page
-    25
+    limit_per_page
   end
 
   def self.max_pages

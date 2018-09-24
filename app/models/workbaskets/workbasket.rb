@@ -102,6 +102,10 @@ module Workbaskets
         end
       end
 
+      def for_author(current_user)
+        where(user_id: current_user.id)
+      end
+
       def q_search(keyword)
         underscored_keywords = keyword.squish.parameterize.underscore + "%"
 
@@ -147,6 +151,10 @@ module Workbaskets
       def after_create
         build_related_settings_table!
       end
+    end
+
+    def decorate
+      Workbaskets::WorkbasketDecorator.decorate(self)
     end
 
     def editable?
@@ -229,6 +237,18 @@ module Workbaskets
     end
 
     class << self
+      def max_per_page
+        10
+      end
+
+      def default_per_page
+        10
+      end
+
+      def max_pages
+        999
+      end
+
       def buld_new_workbasket!(type, current_user)
         workbasket = Workbaskets::Workbasket.new(
           type: type,

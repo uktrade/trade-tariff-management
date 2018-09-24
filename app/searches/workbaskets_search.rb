@@ -24,7 +24,7 @@ class WorkbasketsSearch
   end
 
   def results
-    @relation = initial_scope
+    setup_initial_scope!
 
     search_ops.select do |k, v|
       ALLOWED_FILTERS.include?(k) && v.present?
@@ -38,14 +38,21 @@ class WorkbasketsSearch
 
   private
 
-    def initial_scope
-      return Workbaskets::Workbasket.default_order if sort_by_field.blank?
+    def setup_initial_scope!
+      @relation = if sort_by_field.present?
+        if FIELDS_ALLOWED_FOR_ORDER.include?(sort_by_field)
+          Workbaskets::Workbasket.custom_field_order(
+            sort_by_field, search_ops[:sort_dir]
+          )
+        else
+          Workbaskets::Workbasket.default_order
+        end
 
-      if FIELDS_ALLOWED_FOR_ORDER.include?(sort_by_field)
-        Workbaskets::Workbasket.custom_field_order(
-          sort_by_field, search_ops[:sort_dir]
-        )
+      else
+        Workbaskets::Workbasket.default_order
       end
+
+      @relation = relation.for_author(current_user)
     end
 
     def apply_q_filter
