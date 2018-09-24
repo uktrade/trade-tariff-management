@@ -6,7 +6,7 @@ shared_context 'regulation_page_context' do
 
   def visit_create_regulation
     visit root_path
-    click_on 'Create a regulation'
+    click_on 'Create a new regulation'
   end
 
 end
