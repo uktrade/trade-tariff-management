@@ -78,3 +78,13 @@ function retryAjax(options, retries, time, success, error) {
 function makeRandomString() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);;
 }
+
+function getSearchParam(param) {
+  var params = {};
+  window.location.search.replace("?", "").split("&").forEach(function(s) {
+    var parts = s.split("=");
+    params[parts[0]] = parts[1];
+  });
+
+  return params[param];
+}

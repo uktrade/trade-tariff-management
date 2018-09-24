@@ -3,14 +3,16 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   mount Sidekiq::Web, at: "sidekiq"
 
-  get 'home/index'
-  root to: 'home#index'
+  root to: 'workbaskets#index'
 
   get "healthcheck" => "healthcheck#index"
+
+  resources :workbaskets, only: [:index]
 
   namespace :xml_generation do
     resources :exports, only: [:index, :show, :create]
   end
+
   namespace :db do
     resources :rollbacks, only: [:index, :create]
   end

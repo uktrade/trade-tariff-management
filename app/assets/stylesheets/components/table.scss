@@ -1,3 +1,26 @@
 .table {
   margin: 1em 0 2em;
+
+  font-size: 0.8em;
+  max-width: 100%;
+  border-collapse: collapse;
+
+  td, th {
+    font-size: 14px;
+    position: relative;
+  }
+
+  .icon {
+    position: absolute;
+    right: calc(100% - 5px);
+    top: 0.5em;
+  }
+
+  th {
+    a.current {
+      &.desc {
+
+      }
+    }
+  }
 }
