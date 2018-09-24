@@ -65,7 +65,7 @@ module XmlGeneration
 
     def validate_xml_data!
       errors = ::XmlGeneration::XmlXsdValidator.new(xml_data).run
-      record.update(errors: errors.to_json)
+      record.update(validation_errors: errors.to_json)
     end
 
     def attach_files!
