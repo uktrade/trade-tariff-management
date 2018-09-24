@@ -1,6 +1,12 @@
 module RegulationDocumentContext
   extend ActiveSupport::Concern
 
+  included do
+    def before_destroy
+      pdf_document_record.destroy if pdf_document_record.present?
+    end
+  end
+
   def pdf_document_record
     RegulationDocument.where(
       regulation_id: public_send(primary_key[0]),
