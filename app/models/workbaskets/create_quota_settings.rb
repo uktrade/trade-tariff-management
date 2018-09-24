@@ -5,6 +5,7 @@ module Workbaskets
 
     def collection_models
       %w(
+        QuotaAssociation
         QuotaOrderNumber
         QuotaOrderNumberOrigin
         QuotaOrderNumberOriginExclusion

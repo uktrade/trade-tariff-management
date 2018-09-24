@@ -8,9 +8,9 @@ module WorkbasketServices
                     :excluded_areas_ops,
                     :excluded_areas,
                     :order_number,
-                    :quota_origin,
                     :persist_data,
-                    :origin_area,
+                    :origin_areas_ops,
+                    :origin_areas,
                     :periods,
                     :errors
 
@@ -19,7 +19,7 @@ module WorkbasketServices
         @order_number_ops = order_number_ops
         @persist_data = persist_data
         @excluded_areas_ops = order_number_ops['excluded_geographical_areas']
-        @origin_area = order_number_ops["geographical_area_id"]
+        @origin_areas_ops = Array.wrap(order_number_ops["geographical_area_id"])
         @periods = order_number_ops['quota_periods']
 
         @errors = []
@@ -40,7 +40,7 @@ module WorkbasketServices
         set_first_period_date
 
         build_order_number
-        build_quota_origin if origin_area.present?
+        build_origin_areas_ops if origin_areas_ops.present?
         build_excluded_areas_ops if excluded_areas_ops.present?
       end
 
@@ -73,7 +73,7 @@ module WorkbasketServices
         def records
           [
             order_number,
-            quota_origin,
+            origin_areas,
             excluded_areas
           ].flatten
            .reject do |el|
@@ -119,17 +119,22 @@ module WorkbasketServices
           set_system_data(order_number)
         end
 
-        def build_quota_origin
-          area = geographical_area(origin_area)
+        def build_origin_areas_ops
+          @origin_areas = origin_areas_ops.reject do |el|
+            el.blank?
+          end.map do |area_code|
+            area = geographical_area(area_code)
 
-          @quota_origin = QuotaOrderNumberOrigin.new(
-            validity_start_date: order_number.validity_start_date,
-            quota_order_number_sid: order_number.quota_order_number_sid,
-            geographical_area_id: area.geographical_area_id,
-            geographical_area_sid: area.geographical_area_sid
-          )
+            origin = QuotaOrderNumberOrigin.new(
+                validity_start_date: order_number.validity_start_date,
+                quota_order_number_sid: order_number.quota_order_number_sid,
+                geographical_area_id: area.geographical_area_id,
+                geographical_area_sid: area.geographical_area_sid
+            )
+            set_system_data(origin)
 
-          set_system_data(quota_origin)
+            origin
+          end
         end
 
         def build_excluded_areas_ops
@@ -139,7 +144,7 @@ module WorkbasketServices
             area = geographical_area(area_code)
 
             exclusion = QuotaOrderNumberOriginExclusion.new
-            exclusion.quota_order_number_origin_sid = quota_origin.quota_order_number_origin_sid
+            exclusion.quota_order_number_origin_sid = origin_areas.first.quota_order_number_origin_sid
             exclusion.excluded_geographical_area_sid = area.geographical_area_sid
             set_system_data(exclusion)
 
