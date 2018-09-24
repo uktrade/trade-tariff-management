@@ -18,7 +18,7 @@ module WorkbasketServices
       end
 
       def associate?
-        ops['associate']
+        ops['associate'] == 'true'
       end
 
       def persist!
