@@ -46,8 +46,7 @@ module Measures
         item.persist!
       end
 
-      workbasket.status = "awaiting_cross_check"
-      workbasket.save
+      workbasket.move_status_to!(current_admin, :awaiting_cross_check)
     end
 
     def success_response

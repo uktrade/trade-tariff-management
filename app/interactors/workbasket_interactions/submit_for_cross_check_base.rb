@@ -1,13 +1,16 @@
 module WorkbasketInteractions
   class SubmitForCrossCheckBase
-    attr_accessor :workbasket
 
-    def initialize(workbasket)
+    attr_accessor :current_admin,
+                  :workbasket
+
+    def initialize(current_admin, workbasket)
+      @current_admin = current_admin
       @workbasket = workbasket
     end
 
     def run!
-      workbasket.move_status_to!(:awaiting_cross_check)
+      workbasket.move_status_to!(current_admin, :awaiting_cross_check)
       update_collection!
     end
 

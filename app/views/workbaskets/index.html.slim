@@ -15,7 +15,7 @@
 
     info-message
       | You have
-      =< pluralize(workbaskets.count, "workbasket", "workbaskets")
+      =< pluralize(workbaskets.total_count, "workbasket", "workbaskets")
       | , listed below.
 
     .workbaskets

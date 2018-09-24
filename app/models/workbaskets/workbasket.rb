@@ -148,6 +148,11 @@ module Workbaskets
     end
 
     begin :callbacks
+      def before_create
+        self.last_update_by_id = user_id
+        self.last_status_change_at = Time.zone.now
+      end
+
       def after_create
         build_related_settings_table!
       end
@@ -161,8 +166,19 @@ module Workbaskets
       status.to_sym.in?(EDITABLE_STATES)
     end
 
-    def move_status_to!(new_status)
+    def move_status_to!(current_user, new_status, description=nil)
+      event = Workbaskets::Event.new(
+        workbasket_id: self.id,
+        user_id: current_user.id,
+        event_type: new_status,
+        description: description
+      )
+      event.save
+
       self.status = new_status
+      self.last_update_by_id = current_user.id
+      self.last_status_change_at = Time.zone.now
+
       save
     end
 
