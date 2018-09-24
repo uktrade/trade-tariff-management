@@ -149,7 +149,7 @@ module XmlGeneration
     end
 
     def node_id
-      record.workbasket_sequence_number
+      1
     end
 
     def record_code

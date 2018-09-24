@@ -2,50 +2,45 @@ module WorkbasketValueObjects
   module Shared
     class CommodityCodeParser
 
-      attr_accessor :commodity,
-                    :start_date,
-                    :all_codes
+      attr_accessor :code,
+                    :start_date
 
       def initialize(start_date, code)
         @start_date = start_date
-        TimeMachine.at(start_date) do
-          @commodity = GoodsNomenclature.by_code(code) # also include declarable headings
-                                .all
-                                .sort do |a, b|
-            b.producline_suffix.to_i <=> a.producline_suffix.to_i
-          end.first
-        end
+        @code = code
       end
 
       def codes
-        if commodity.present?
-          get_commodity_children_tree(commodity)
-        else
-          []
-        end
+        GoodsNomenclature.fetch(expand_commodity_tree_sql).all.map do |item|
+          item[:goods_nomenclature_item_id]
+        end || []
       end
 
-      private
+      def expand_commodity_tree_sql
+        # substitute _ instead 0 in the end of code
+        code_mask = code.gsub(/0(?=0*$)/, '_')
 
-        def get_commodity_children_tree(record)
-          @all_codes = []
-          get_commodity_with_children(record)
-
-          all_codes
-        end
-
-        def get_commodity_with_children(record)
-          @all_codes << record.goods_nomenclature_item_id if record.declarable?
-          children = record.children
-
-          if children.present?
-            children.select do |child|
-              child.validity_end_date.blank? || child.validity_end_date > start_date
-            end.map do |child|
-              get_commodity_with_children(child)
-            end
-          end
-        end
+        # select all actual (validity dates check) child (LIKE check) declarable (producline_suffix check) goods nomenclatures
+        # that have no children (subselect check - last LIKE is about parent - child)
+        <<~END_SQL.gsub(/\s+/, ' ').strip
+SELECT g.goods_nomenclature_item_id
+  FROM goods_nomenclatures g 
+ WHERE g.goods_nomenclature_item_id LIKE '#{code_mask}'
+   AND g.producline_suffix = '80'
+   AND g.validity_start_date <= '#{start_date.strftime('%Y-%m-%d')}'
+   AND (g.validity_end_date >= '#{start_date.strftime('%Y-%m-%d')}' OR g.validity_end_date IS NULL)
+   AND NOT EXISTS (
+     SELECT 1
+       FROM goods_nomenclatures c 
+      WHERE c.goods_nomenclature_sid != g.goods_nomenclature_sid
+        AND c.goods_nomenclature_item_id LIKE '#{code_mask}'
+        AND c.producline_suffix = '80'
+        AND c.validity_start_date <= '#{start_date.strftime('%Y-%m-%d')}'
+        AND (c.validity_end_date >= '#{start_date.strftime('%Y-%m-%d')}' OR c.validity_end_date IS NULL)
+        AND c.goods_nomenclature_item_id LIKE regexp_replace(g.goods_nomenclature_item_id, '0(?=0*$)', '_', 'g')
+                  )
+        END_SQL
+      end
     end
   end
 end

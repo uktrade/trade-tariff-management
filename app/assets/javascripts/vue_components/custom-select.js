@@ -46,6 +46,16 @@ Vue.component('custom-select', {
     value: function (value) {
       this.$emit("change-value");
       this.applyValueInSelect(value);
+
+      if (!value) {
+        if (this.url) {
+          this.handleDateSentitivity({}, this.start_date, this.end_date);
+        } else {
+          $(this.$el).find("select")[0].selectize.clearOptions();
+          $(this.$el).find("select")[0].selectize.addOption(this.options);
+          $(this.$el).find("select")[0].selectize.refreshOptions(false);
+        }
+      }
     },
     options: function (options) {
       $(this.$el).find("select")[0].selectize.clearOptions();
