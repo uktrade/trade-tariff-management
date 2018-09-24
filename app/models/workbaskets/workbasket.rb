@@ -80,6 +80,8 @@ module Workbaskets
                        default: :new_in_progress,
                        predicates: true
 
+    delegate :collection, :collection_by_type, to: :settings
+
     validates do
       presence_of :status,
                   :user_id,
