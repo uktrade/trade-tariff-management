@@ -1,3 +1,7 @@
 <li class="<%= 'active' if page.current? %>">
-  <%= link_to page, page.current? ? '#' : url, {:remote => remote, :rel => page.next? ? 'next' : page.prev? ? 'prev' : nil} %>
+  <% if page.current? %>
+    <span><%= page %></span>
+  <% else %>
+    <%= link_to page, url, {:remote => remote, :rel => page.next? ? 'next' : page.prev? ? 'prev' : nil, class: "pagination-link"} %>
+  <% end %>
 </li>
