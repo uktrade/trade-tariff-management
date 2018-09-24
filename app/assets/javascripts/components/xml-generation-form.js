@@ -55,3 +55,10 @@ window.Parsley.addValidator('moment', {
     en: 'Date is not valid'
   }
 });
+
+$(document).ready(function() {
+  var form = $(".export-form");
+
+  form.find(".start-date").attr("autocomplete", makeRandomString());
+  form.find(".end-date").attr("autocomplete", makeRandomString());
+});
