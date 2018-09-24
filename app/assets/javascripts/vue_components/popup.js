@@ -3,7 +3,7 @@ window.___modal_count = 0;
 var template = [
   '<div :id="\'modal-\' + id" aria-hidden="true" :class="[classes, \'modal\']">',
     '<div tabindex="-1" class="modal__overlay">',
-      '<div role="dialog" class="modal__container" aria-modal="true" aria-labelledby="\'modal-\' + id + \'-title\'" >',
+      '<div role="dialog" class="modal__container" aria-modal="true" aria-labelledby="\'modal-\' + id + \'-title\'"  tabindex="0">',
         '<header class="modal__header">',
           '<h2 id="\'modal-\' + id + \'-title\'" class="modal__title">',
             '<slot name="title"></slot>',

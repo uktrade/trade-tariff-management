@@ -14,6 +14,7 @@ $(document).ready(function() {
       var self = this;
 
       var data = {
+        savedSuccessfully: false,
         goods_nomenclature_code: "",
         additional_code_preview: "",
         additional_code: null,
@@ -214,7 +215,7 @@ $(document).ready(function() {
 
         submit_button = $(this);
 
-        WorkbasketBaseSaveActions.hideSuccessMessage();
+        self.savedSuccessfully = false;
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
         var http_method = "PUT";
 
@@ -241,9 +242,12 @@ $(document).ready(function() {
           type: http_method,
           data: data_ops,
           success: function(response) {
-            WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'));
+            WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'), function() {
+              self.savedSuccessfully = true;
+            });
           },
           error: function(response) {
+            self.savedSuccessfully = true;
             WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
           }
         });
