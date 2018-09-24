@@ -95,13 +95,38 @@ class MeasureValidator < TradeTariffBackend::Validator
     %(Integrating a measure with an additional code when an equivalent or overlapping
     measures without additional code already exists and vice-versa, should be forbidden.),
     on: [:create, :update] do |record|
-      Measure.where(
+      valid = true
+
+      attrs = {
         goods_nomenclature_item_id: record.goods_nomenclature_item_id,
         measure_type_id: record.measure_type_id,
         geographical_area_sid: record.geographical_area_sid,
         ordernumber: record.ordernumber,
         reduction_indicator: record.reduction_indicator
-      ).count.zero?
+      }
+
+      if record.modified?
+        scope = Measure.where(attrs)
+        scope = scope.where("measure_sid != ?", record.measure_sid) unless record.new?
+
+        scope = if record.validity_end_date.present?
+                  scope.where(
+                    "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL)) OR
+                    (validity_start_date >= ? AND (validity_end_date <= ? OR validity_end_date IS NULL))",
+                    record.validity_start_date, record.validity_start_date,
+                    record.validity_start_date, record.validity_end_date,
+                  )
+                else
+                  scope.where(
+                    "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL))",
+                    record.validity_start_date, record.validity_start_date,
+                  )
+                end
+
+        valid = scope.count.zero?
+      end
+
+      valid
     end
 
   validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
