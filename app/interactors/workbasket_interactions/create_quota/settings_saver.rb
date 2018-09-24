@@ -7,7 +7,7 @@ module WorkbasketInteractions
       attr_accessor :order_number
 
       def order_number_saver
-        @order_number_saver ||= build_order_number!(settings.settings)
+        @order_number_saver ||= build_order_number!
       end
 
       def sub_quota_saver
@@ -33,14 +33,14 @@ module WorkbasketInteractions
 
       private
 
-        def build_order_number!(order_number_ops, persist_mode=false)
+        def build_order_number!(persist_mode=false)
           ::WorkbasketServices::QuotaSavers::OrderNumber.new(
-              self, order_number_ops, persist_mode
+              self, settings.settings, persist_mode
           )
         end
 
         def persist_order_number!
-          saver = build_order_number!(settings.settings, true)
+          saver = build_order_number!(true)
           saver.valid?
 
           saver.order_number
