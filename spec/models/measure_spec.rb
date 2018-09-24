@@ -726,6 +726,76 @@ describe Measure do
       end
     end
 
+    describe "ME16: Integrating a measure with an additional code when an equivalent or
+              overlapping measures without additional code already exists and vice-versa,
+              should be forbidden." do
+      let!(:goods_nomenclature) { create(:goods_nomenclature) }
+      let!(:additional_code) { create(:additional_code, validity_start_date: Date.yesterday) }
+
+      it "should run validation successfully if there is no existing measure for additional code and vice versa" do
+        measure = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.yesterday
+        )
+
+        expect(measure.additional_code).to_not be(nil)
+        expect(measure).to be_conformant
+
+        measure2 = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: nil,
+          validity_start_date: Date.yesterday
+        )
+
+        expect(measure2).to be_conformant
+      end
+
+      it "should not run validation successfully if there is an existing measure without additional code" do
+        measure = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: nil,
+          validity_start_date: Date.yesterday
+        )
+
+        expect(measure).to be_conformant
+
+        measure.save
+
+        measure2 = measure.dup
+        measure2.measure_sid = nil
+        measure2.additional_code_sid = additional_code.additional_code_sid
+
+        expect(measure2.additional_code_sid).to_not be(nil)
+        expect(measure2).to_not be_conformant
+        expect(measure2.conformance_errors).to have_key(:ME16)
+      end
+
+      it "should not run validation successfully if there is an existing measure with additional code" do
+        measure = build(
+          :measure,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          additional_code_sid: additional_code.additional_code_sid,
+          validity_start_date: Date.yesterday
+        )
+
+        expect(measure).to be_conformant
+
+        measure.save
+
+        measure2 = measure.dup
+        measure2.measure_sid = nil
+        measure2.additional_code_sid = nil
+
+        expect(measure2.additional_code_sid).to be(nil)
+        expect(measure2).to_not be_conformant
+        expect(measure2.conformance_errors).to have_key(:ME16)
+      end
+    end
+
     describe 'ME17' do
       let(:measure_type) { create :measure_type }
 
@@ -967,7 +1037,7 @@ describe Measure do
       end
     end
 
-    describe "ME32 There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature
+    describe "ME32: There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature
               hierarchy which references the same measure type, geo area, order number, additional code and reduction indicator.
               This rule is not applicable for Meursing additional codes." do
       let!(:goods_nomenclature) { create(:goods_nomenclature) }

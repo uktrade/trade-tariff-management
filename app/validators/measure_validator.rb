@@ -91,9 +91,18 @@ class MeasureValidator < TradeTariffBackend::Validator
      )
   end
 
-  validation :ME16, "Integrating a measure with an additional code when an equivalent or overlapping measures without additional code already exists and vice-versa, should be forbidden.", on: [:create, :update] do |record|
-    # Didn't get this conformance rule.
-  end
+  validation :ME16,
+    %(Integrating a measure with an additional code when an equivalent or overlapping
+    measures without additional code already exists and vice-versa, should be forbidden.),
+    on: [:create, :update] do |record|
+      Measure.where(
+        goods_nomenclature_item_id: record.goods_nomenclature_item_id,
+        measure_type_id: record.measure_type_id,
+        geographical_area_sid: record.geographical_area_sid,
+        ordernumber: record.ordernumber,
+        reduction_indicator: record.reduction_indicator
+      ).count.zero?
+    end
 
   validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
     on: [:create, :update],
