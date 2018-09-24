@@ -7531,7 +7531,7 @@ CREATE TABLE public.xml_export_files (
     zip_data text,
     meta_data text,
     workbasket boolean DEFAULT true,
-    errors jsonb DEFAULT '{}'::jsonb
+    validation_errors jsonb DEFAULT '{}'::jsonb
 );
 
 

@@ -1,7 +1,7 @@
 Sequel.migration do
   change do
     alter_table :xml_export_files do
-      add_column :errors, :jsonb, default: '{}'
+      add_column :validation_errors, :jsonb, default: '{}'
     end
   end
 end
