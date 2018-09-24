@@ -19,6 +19,11 @@ table.table
           = export_item.issue_date
         td
           = export_item.status
+          - validation_errors = JSON.parse(export_item.validation_errors)
+          - if validation_errors.any?
+            br
+            = link_to "Errors", "#", class: "open-xml-errors-modal", data: { id: export_item.id }
+            = render "xml_generation/exports/errors_modal", modal_id: export_item.id, errors: validation_errors
         td
           - if export_item.xml.present?
             =<> link_to "Review in XML Browser", export_item.xml.url, target: "_blank"
