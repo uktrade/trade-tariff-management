@@ -12,4 +12,10 @@ class FootnoteAssociationMeasureValidator < TradeTariffBackend::Validator
       footnote_id: record.footnote_id,
     ).empty?
   end
+
+  validation :ME73,
+    %(The validity period of the associated footnote must span the validity period of the measure.),
+    on: [:create, :update] do
+      validates :validity_date_span, of: :measure
+    end
 end
