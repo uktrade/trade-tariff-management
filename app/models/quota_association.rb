@@ -1,6 +1,7 @@
 class QuotaAssociation < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: [:main_quota_definition_sid,
                                :sub_quota_definition_sid]

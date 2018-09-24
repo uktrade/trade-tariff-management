@@ -7,7 +7,7 @@ module WorkbasketInteractions
       attr_accessor :order_number
 
       def order_number_saver
-        @order_number_saver ||= build_order_number!
+        @order_number_saver ||= build_order_number!(settings.settings)
       end
 
       def persist!
@@ -28,20 +28,37 @@ module WorkbasketInteractions
 
       private
 
-        def build_order_number!(persist_mode=false)
+        def build_order_number!(order_number_ops, persist_mode=false)
           ::WorkbasketServices::QuotaSavers::OrderNumber.new(
-            self, settings.settings, persist_mode
+              self, order_number_ops, persist_mode
           )
         end
 
         def persist_order_number!
-          saver = build_order_number!(true)
+          saver = build_order_number!(settings.settings, true)
           saver.valid?
 
           saver.order_number
         end
 
         def save_period_by_type(position, section_ops)
+          if section_ops['parent_quota']['associate']
+            saver = build_order_number!(
+                settings.settings.merge({quota_ordernumber: section_ops['parent_quota']['order_number']}.stringify_keys), true)
+            saver.valid?
+            parent = saver.order_number
+
+            QuotaAssociation.unrestrict_primary_key
+            association = QuotaAssociation.new(
+          main_quota_definition_sid: parent.quota_order_number_sid,
+                sub_quota_definition_sid: order_number.quota_order_number_sid,
+                relation_type: 'NM',
+                coefficient: 1,
+            )
+            assign_system_ops!(association)
+            association.save
+          end
+
           setup_initial_date_range!(section_ops)
 
           case section_ops['type']
