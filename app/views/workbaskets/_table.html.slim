@@ -26,7 +26,7 @@ table.table
         | &nbsp;
 
   tbody
-    - workbaskets.map do |workbasket|
+    - decorated_collection.map do |workbasket|
       tr
         td
           = workbasket.id
@@ -35,10 +35,12 @@ table.table
         td
           = workbasket.type
         td
-          icon-error
+          - if workbasket.status_with_error?
+            icon-error
+
           = workbasket.status
         td
-          = (workbasket.last_status_change_at || workbasket.created_at).strftime("%d %b %Y")
+          = workbasket.last_event_at
         td
           a href="#"
             | View

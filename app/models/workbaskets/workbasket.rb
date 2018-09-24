@@ -39,6 +39,12 @@ module Workbaskets
       :published
     ]
 
+    STATES_WITH_ERROR = [
+      :cross_check_rejected,
+      :approval_rejected,
+      :cds_error
+    ]
+
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
 
@@ -90,9 +96,9 @@ module Workbaskets
 
       def custom_field_order(sort_by_field, sort_direction)
         if sort_direction.to_sym == :desc
-          reverse_order(sort_by_field)
+          reverse_order(sort_by_field.to_sym)
         else
-          order(sort_by_field)
+          order(sort_by_field.to_sym)
         end
       end
 
