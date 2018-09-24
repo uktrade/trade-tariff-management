@@ -107,7 +107,7 @@ class MeasureValidator < TradeTariffBackend::Validator
 
       if record.modified?
         scope = Measure.where(attrs)
-        scope = scope.where("measure_sid != ?", record.measure_sid) unless record.new?
+        scope = scope.where("measure_sid != ?", record.measure_sid) if record.measure_sid.present?
 
         scope = if record.validity_end_date.present?
                   scope.where(
