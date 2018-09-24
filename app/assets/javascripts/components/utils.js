@@ -74,3 +74,7 @@ function retryAjax(options, retries, time, success, error) {
 
   $.ajax(options);
 }
+
+function makeRandomString() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);;
+}
