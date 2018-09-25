@@ -3,6 +3,9 @@
     .table__header
       / .table__column.select-all-column
       /   input.select-all type="checkbox" value="1"
+      .table__column.parent-quota-column
+        a Order number
+
       .table__column.validity_start_date-column
         a
           | Start date
@@ -12,12 +15,6 @@
 
       .table__column.validity_end_date-column
         a End date
-
-      .table__column.parent-quota-column
-        a Parent quota
-
-      .table__column.sub-quota-column
-        a Sub quota
 
       .table__column.duties-column
         a Opening balance
@@ -37,17 +34,14 @@
               / .table__column.select-all-column
               /   input data-v-caa2d078="" name="measures[]" type="checkbox" value="-485562"
 
+              .table__column.parent-quota-column
+                = item.quota_order_number_id
+
               .table__column.validity_start_date-column
                 = item.validity_start_date.strftime("%d %b %Y")
 
               .table__column.validity_end_date-column
                 = item.validity_end_date.try(:strftime, "%d %b %Y")
-
-              .table__column.parent-quota-column
-                = item.parent_quota_number
-
-              .table__column.sub-quota-column
-                = item.sub_quota_number
 
               .table__column.duties-column
                 = item.initial_volume.to_f

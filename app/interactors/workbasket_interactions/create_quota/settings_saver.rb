@@ -62,29 +62,35 @@ module WorkbasketInteractions
           when "annual"
 
             section_ops["opening_balances"].map do |k, balance_ops|
+
               year_start_point = @start_point
-              definition = add_period!(section_ops, balance_ops)
+              sub_definition = add_period!(section_ops, balance_ops)
               if parent_quota_saver.associate?
-                parent_quota_saver.add_period!(
-                    definition,
+                main_definition = parent_quota_saver.add_period!(
+                    sub_definition,
                     k,
                     year_start_point)
+                parent_quota_saver.build_quota_association!(main_definition, sub_definition)
+                @quota_period_sids << main_definition.quota_definition_sid
               end
+
             end
 
           when "bi_annual", "quarterly", "monthly"
 
             section_ops["opening_balances"].map do |k, opening_balance_ops|
               year_start_point = @start_point
-              definition = nil
+              main_definition = nil
               opening_balance_ops.map do |target_key, balance_part_ops|
-                definition = add_period!(section_ops, balance_part_ops, target_key)
-              end
-              if parent_quota_saver.associate?
-                parent_quota_saver.add_period!(
-                    definition,
-                    k,
-                    year_start_point)
+                sub_definition = add_period!(section_ops, balance_part_ops, target_key)
+                if parent_quota_saver.associate?
+                  main_definition ||= parent_quota_saver.add_period!(
+                      sub_definition,
+                      k,
+                      year_start_point)
+                  parent_quota_saver.build_quota_association!(main_definition, sub_definition)
+                  @quota_period_sids << main_definition.quota_definition_sid
+                end
               end
 
             end
@@ -92,13 +98,15 @@ module WorkbasketInteractions
           when "custom"
 
             section_ops["periods"].map do |k, balance_ops|
-              definition = add_custom_period!(section_ops, balance_ops)
+              sub_definition = add_custom_period!(section_ops, balance_ops)
               if parent_quota_saver.associate?
-                parent_quota_saver.add_period!(
-                    definition,
+                main_definition = parent_quota_saver.add_period!(
+                    sub_definition,
                     k,
                     balance_ops['start_date'].to_date,
                     balance_ops['end_date'].try(:to_date))
+                parent_quota_saver.build_quota_association!(main_definition, sub_definition)
+                @quota_period_sids << main_definition.quota_definition_sid
               end
             end
 
