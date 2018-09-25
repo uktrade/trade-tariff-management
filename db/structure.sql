@@ -1416,7 +1416,8 @@ CREATE TABLE public.create_quota_workbasket_settings (
     updated_at time without time zone,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
-    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb
+    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -11580,3 +11581,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_origina
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbasket_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');

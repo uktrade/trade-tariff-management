@@ -30,6 +30,10 @@ module Workbaskets
       workbasket_settings.quota_periods
     end
 
+    expose(:parent_quota_periods) do
+      workbasket_settings.parent_quota_periods
+    end
+
     private
 
       def check_if_action_is_permitted!
