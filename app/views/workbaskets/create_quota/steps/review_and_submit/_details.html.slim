@@ -59,7 +59,10 @@ table.create-measures-details-table
         - areas = workbasket_settings.settings["geographical_area_id"]
 
         - if areas.present?
-          = workbasket_settings.settings["geographical_area_id"].join(", ")
+          - if areas.is_a?(Array)
+            = workbasket_settings.settings["geographical_area_id"].join(", ")
+          - else
+            = attributes_parser.origin
 
     tr
       td.heading_column
