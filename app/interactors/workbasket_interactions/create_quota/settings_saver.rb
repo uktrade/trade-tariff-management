@@ -18,6 +18,7 @@ module WorkbasketInteractions
         @persist = true
         @measure_sids = []
         @quota_period_sids = []
+        @parent_quota_period_sids = []
 
         @order_number = persist_order_number!
         sub_quota_saver.persist!
@@ -28,6 +29,7 @@ module WorkbasketInteractions
 
         settings.measure_sids_jsonb = @measure_sids.to_json
         settings.quota_period_sids_jsonb = @quota_period_sids.to_json
+        settings.parent_quota_period_sids_jsonb = @parent_quota_period_sids.to_json
         settings.set_searchable_data_for_created_measures! if settings.save
       end
 
@@ -71,7 +73,7 @@ module WorkbasketInteractions
                     k,
                     year_start_point)
                 parent_quota_saver.build_quota_association!(main_definition, sub_definition)
-                @quota_period_sids << main_definition.quota_definition_sid
+                @parent_quota_period_sids << main_definition.quota_definition_sid
               end
 
             end
@@ -89,7 +91,7 @@ module WorkbasketInteractions
                       k,
                       year_start_point)
                   parent_quota_saver.build_quota_association!(main_definition, sub_definition)
-                  @quota_period_sids << main_definition.quota_definition_sid
+                  @parent_quota_period_sids << main_definition.quota_definition_sid
                 end
               end
 
@@ -106,7 +108,7 @@ module WorkbasketInteractions
                     balance_ops['start_date'].to_date,
                     balance_ops['end_date'].try(:to_date))
                 parent_quota_saver.build_quota_association!(main_definition, sub_definition)
-                @quota_period_sids << main_definition.quota_definition_sid
+                @parent_quota_period_sids << main_definition.quota_definition_sid
               end
             end
 
@@ -131,8 +133,7 @@ module WorkbasketInteractions
           @start_point, @end_point = period_next_date_generator_class.new(
             section_ops['type'], @end_point
           ).date_range
-          sub_quota_sids = sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
-          @quota_period_sids = @quota_period_sids + sub_quota_sids
+          sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
           period_saver.quota_definition
         end
 
@@ -146,8 +147,7 @@ module WorkbasketInteractions
           period_saver.persist!
 
           @quota_period_sids << period_saver.quota_definition.quota_definition_sid
-          sub_quota_sids = sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
-          @quota_period_sids = @quota_period_sids + sub_quota_sids
+          sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
           period_saver.quota_definition
         end
 

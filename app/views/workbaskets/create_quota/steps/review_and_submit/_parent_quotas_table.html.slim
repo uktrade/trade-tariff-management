@@ -1,8 +1,6 @@
 .measures-table-wrapper
   .measures-table
     .table__header
-      / .table__column.select-all-column
-      /   input.select-all type="checkbox" value="1"
       .table__column.validity_start_date-column
         a
           | Start date
@@ -16,20 +14,11 @@
       .table__column.duties-column
         a Opening balance
 
-      .table__column.conditions-column
-        a Critical
-
-      .table__column.footnotes-column
-        a Critically threshold
-
     .virtual-scroller
       .item-container
         .items style=("margin-top: 0px;")
-          - quota_periods.map do |item|
+          - parent_quota_periods.map do |item|
             .table__row data-measure-sid="-485562" height="45"
-
-              / .table__column.select-all-column
-              /   input data-v-caa2d078="" name="measures[]" type="checkbox" value="-485562"
 
               .table__column.validity_start_date-column
                 = item.validity_start_date.strftime("%d %b %Y")
@@ -39,9 +28,3 @@
 
               .table__column.duties-column
                 = item.initial_volume.to_f
-
-              .table__column.conditions-column
-                = item.critical_state.to_s == 'Y' ? 'Yes' : 'No'
-
-              .table__column.footnotes-column
-                = item.critical_threshold
