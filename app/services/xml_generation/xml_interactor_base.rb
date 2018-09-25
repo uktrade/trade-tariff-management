@@ -9,12 +9,12 @@ module XmlGeneration
 
     private
 
-      def xml_builder
-        Builder::XmlMarkup.new
-      end
+    def xml_builder
+      Builder::XmlMarkup.new
+    end
 
-      def renderer
-        Tilt.new("#{self.class.base_partial_path}/#{template_name}.builder")
-      end
+    def renderer
+      Tilt.new("#{self.class.base_partial_path}/#{template_name}.builder")
+    end
   end
 end
