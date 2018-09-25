@@ -94,10 +94,19 @@ module WorkbasketHelper
       end
 
     when :bulk_edit_of_measures
-      edit_measures_bulk_url(
-        workbasket.id,
-        search_code: workbasket.settings.search_code
-      )
+
+      if workbasket.settings.settings["start_date"].blank?
+        work_with_selected_measures_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.settings.search_code
+        )
+
+      else
+        edit_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.settings.search_code
+        )
+      end
 
     when :create_quota
 
