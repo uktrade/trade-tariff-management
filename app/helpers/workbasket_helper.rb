@@ -73,11 +73,18 @@ module WorkbasketHelper
   def workbasket_continue_link_based_on_type(workbasket)
     case workbasket.object.type.to_sym
     when :create_measures
-      if workbasket.settings.main_step_validation_passed.present?
+      if workbasket.settings.duties_conditions_footnotes_step_validation_passed.present?
+        edit_create_measure_url(
+          workbasket.id,
+          step: :review_and_submit
+        )
+
+      elsif workbasket.settings.main_step_validation_passed.present?
         edit_create_measure_url(
           workbasket.id,
           step: :duties_conditions_footnotes
         )
+
       else
 
         edit_create_measure_url(
@@ -94,16 +101,22 @@ module WorkbasketHelper
 
     when :create_quota
 
-      if workbasket.settings.main_step_validation_passed.present?
+      if workbasket.settings.conditions_footnotes_step_validation_passed.present?
         edit_create_quotum_url(
           workbasket.id,
-          step: :configure_quota
+          step: :review_and_submit
         )
 
       elsif workbasket.settings.configure_quota_step_validation_passed.present?
         edit_create_quotum_url(
           workbasket.id,
           step: :conditions_footnotes
+        )
+
+      elsif workbasket.settings.main_step_validation_passed.present?
+        edit_create_quotum_url(
+          workbasket.id,
+          step: :configure_quota
         )
 
       else
