@@ -47,6 +47,14 @@ class QuotaDefinition < Sequel::Model
     "00".freeze
   end
 
+  def parent_quota_number
+    "TODO"
+  end
+
+  def sub_quota_number
+    "TODO"
+  end
+
   private
 
   def critical_state?
