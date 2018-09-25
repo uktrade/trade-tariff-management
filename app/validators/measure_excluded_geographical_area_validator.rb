@@ -18,6 +18,11 @@ class MeasureExcludedGeographicalAreaValidator < TradeTariffBackend::Validator
       record.excluded_geographical_area == record.geographical_area.try(:geographical_area_id)
     end
 
+  validation :ME67, "The membership period of the excluded geographical area must span the validity period of the measure.",
+    on: [:create, :update] do
+      validates :validity_date_span, of: :geographical_area
+    end
+
   validation :ME68, "The same geographical area can only be excluded once by the same measure.",
     on: [:create, :update] do |record|
       MeasureExcludedGeographicalArea.where(

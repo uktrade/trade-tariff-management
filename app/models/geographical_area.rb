@@ -11,6 +11,9 @@ class GeographicalArea < Sequel::Model
 
   set_primary_key :geographical_area_sid
 
+  one_to_one :geographical_area_description_period, key: :geographical_area_sid,
+                                                    primary_key: :geographical_area_sid
+
   many_to_many :geographical_area_descriptions, join_table: :geographical_area_description_periods,
                                                 left_primary_key: :geographical_area_sid,
                                                 left_key: :geographical_area_sid,
@@ -20,10 +23,6 @@ class GeographicalArea < Sequel::Model
                                                                     :geographical_area_sid] do |ds|
     ds.with_actual(GeographicalAreaDescriptionPeriod)
       .order(Sequel.desc(:geographical_area_description_periods__validity_start_date))
-  end
-
-  def geographical_area_description
-    geographical_area_descriptions.first
   end
 
   many_to_one :parent_geographical_area, class: self
@@ -126,6 +125,11 @@ class GeographicalArea < Sequel::Model
   end
 
   delegate :description, to: :geographical_area_description
+  delegate :validity_start_date, :validity_end_date, to: :geographical_area_description_period, allow_nil: true
+
+  def geographical_area_description
+    geographical_area_descriptions.first
+  end
 
   def to_json
     {
