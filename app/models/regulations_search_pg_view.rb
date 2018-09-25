@@ -37,11 +37,11 @@ class RegulationsSearchPgView  < Sequel::Model(:regulations_search_pg_view)
 
   class << self
     def max_per_page
-      15
+      20
     end
 
     def default_per_page
-      15
+      20
     end
 
     def max_pages

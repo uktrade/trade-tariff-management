@@ -51,7 +51,7 @@
                 = item.validity_end_date.try(:strftime, "%Y-%m-%d")
 
               .table__column.duties-column
-                = item.duty_expression
+                = item.duty_expression.to_s.squish == "%" ? "0.00 %" : item.duty_expression
 
               .table__column.conditions-column
                 = item.conditions_short_list

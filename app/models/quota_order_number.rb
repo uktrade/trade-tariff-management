@@ -17,6 +17,14 @@ class QuotaOrderNumber < Sequel::Model
   one_to_one :quota_order_number_origin, primary_key: :quota_order_number_sid,
                                          key: :quota_order_number_sid
 
+  one_to_many :parent_quota_associations, class: :QuotaAssociation,
+                                         key: :main_quota_definition_sid,
+                                         primary_key: :quota_order_number_sid
+
+  one_to_many :sub_quota_associations, class: :QuotaAssociation,
+                                      key: :sub_quota_definition_sid,
+                                      primary_key: :quota_order_number_sid
+
   delegate :present?, to: :quota_order_number_origin, prefix: true, allow_nil: true
 
   dataset_module do

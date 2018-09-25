@@ -11,12 +11,8 @@ module Measures
 
     class << self
       def run
-        notify_via_sentry!("started")
-
         clear_keys!
         recache_keys!
-
-        notify_via_sentry!("completed")
       end
 
       def clear_keys!
@@ -35,12 +31,6 @@ module Measures
           form.geographical_groups_except_erga_omnes
           form.geographical_area_erga_omnes
         end
-      end
-
-      def notify_via_sentry!(message)
-        ::Raven.capture_exception(
-          "[RefreshCacheWorker] #{message}!"
-        )
       end
     end
   end
