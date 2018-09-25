@@ -20,6 +20,9 @@
       .table__column.additional_code-column
         a Additional code
 
+      .table__column.geographical_area-column
+        a Geographical area
+
       .table__column.duties-column
         a Duties
 
@@ -45,5 +48,8 @@
               .table__column.additional_code-column
                 = item.additional_code.try(:code)
 
+              .table__column.geographical_area-column
+                = item.geographical_area_id
+
               .table__column.duties-column
-                = item.duty_expression
+                = item.duty_expression.to_s.squish == "%" ? "0.00 %" : item.duty_expression

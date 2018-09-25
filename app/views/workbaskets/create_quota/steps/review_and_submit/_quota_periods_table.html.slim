@@ -13,6 +13,12 @@
       .table__column.validity_end_date-column
         a End date
 
+      .table__column.parent-quota-column
+        a Parent quota
+
+      .table__column.sub-quota-column
+        a Sub quota
+
       .table__column.duties-column
         a Opening balance
 
@@ -36,6 +42,12 @@
 
               .table__column.validity_end_date-column
                 = item.validity_end_date.try(:strftime, "%d %b %Y")
+
+              .table__column.parent-quota-column
+                = item.parent_quota_number
+
+              .table__column.sub-quota-column
+                = item.sub_quota_number
 
               .table__column.duties-column
                 = item.initial_volume.to_f
