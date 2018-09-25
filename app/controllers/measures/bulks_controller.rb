@@ -13,7 +13,7 @@ module Measures
 
     expose(:main_step_settings) do
       {
-        regulation: ::BaseOrModificationRegulationSearch.new(params[:regulation_id]).result.first.try(:to_json),
+        regulation: params[:regulation_id].blank? ? nil : ::BaseOrModificationRegulationSearch.new(params[:regulation_id]).result.first.try(:to_json),
         regulation_id: params[:regulation_id],
         regulation_role: params[:regulation_role],
         start_date: params[:start_date],
@@ -143,7 +143,7 @@ module Measures
           bulk_saver.persist!
 
           render json: bulk_saver.success_response.merge(
-            redirect_url: measures_bulk_url(workbasket.id, search_code: workbasket_settings.search_code)
+            redirect_url: submitted_for_cross_check_measures_bulk_url(workbasket.id)
           ), status: :ok
         else
           render json: bulk_saver.success_response,

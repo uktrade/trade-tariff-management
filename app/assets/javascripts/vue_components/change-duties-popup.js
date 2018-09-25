@@ -23,22 +23,24 @@ Vue.component("change-duties-popup", {
 
     // count is equal
     if (equal) {
-      for (var i = 0; i < dtCount; i++) {
-        var dutyExpressionId = this.measures[0].measure_components[0].duty_expression_id;
-        var dutyExpressionAmount = this.measures[0].measure_components[0].duty_amount;
-        var dutyExpressionMonetaryUnit = this.measures[0].measure_components[0].monetary_unit_id;
-        var dutyExpressionMeasurementUnit = this.measures[0].measure_components[0].measurement_unit_id;
-        var dutyExpressionMeasurementUnitQualifier = this.measures[0].measure_components[0].measurement_unit_qualifier_id;
+      var simplifyAndJson = function(components) {
+        return JSON.stringify(components.map(function(component) {
+          return {
+            duty_expression_id: component.duty_expression_id,
+            duty_amount: component.duty_amount,
+            monetary_unit_id: component.monetary_unit_id,
+            measurement_unit_id: component.measurement_unit_id,
+            measurement_unit_qualifier_id: component.measurement_unit_qualifier_id,
+          };
+        }));
+      };
 
-        for (var j = 1; j < n; j++) {
-          if (dutyExpressionId != this.measures[j].measure_components[i].duty_expression_id ||
-              dutyExpressionAmount != this.measures[j].measure_components[i].duty_amount ||
-              dutyExpressionMonetaryUnit != this.measures[j].measure_components[i].monetary_unit_id ||
-              dutyExpressionMeasurementUnit != this.measures[j].measure_components[i].measurement_unit_id ||
-              dutyExpressionMeasurementUnitQualifier != this.measures[j].measure_components[i].measurement_unit_qualifier_id) {
-                equal = false;
-                break;
-              }
+      var fmd = simplifyAndJson(this.measures[0].measure_components);
+
+      for (var i = 1; i < dtCount; i++) {
+        if (fmd != simplifyAndJson(this.measures[i].measure_components)) {
+          equal = false;
+          break;
         }
       }
     }
