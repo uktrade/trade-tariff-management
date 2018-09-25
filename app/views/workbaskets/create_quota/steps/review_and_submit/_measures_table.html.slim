@@ -52,4 +52,4 @@
                 = item.geographical_area_id
 
               .table__column.duties-column
-                = item.duty_expression
+                = item.duty_expression.to_s.squish == "%" ? "0.00 %" : item.duty_expression
