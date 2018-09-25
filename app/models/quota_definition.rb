@@ -19,6 +19,9 @@ class QuotaDefinition < Sequel::Model
   one_to_many :quota_blocking_periods, key: :quota_definition_sid,
                                        primary_key: :quota_definition_sid
 
+  one_to_one :quota_order_number, key: :quota_order_number_id,
+                                  primary_key: :quota_order_number_id
+
   def status
     QuotaEvent.last_for(quota_definition_sid).status.presence || (critical_state? ? 'Critical' : 'Open')
   end
@@ -48,11 +51,13 @@ class QuotaDefinition < Sequel::Model
   end
 
   def parent_quota_number
-    "TODO"
+    association = quota_order_number.sub_quota_associations.first
+    association.parent_quota.quota_order_number_id if association.present?
   end
 
   def sub_quota_number
-    "TODO"
+    association = quota_order_number.parent_quota_associations.first
+    association.sub_quota.quota_order_number_id if association.present?
   end
 
   private
