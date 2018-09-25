@@ -71,7 +71,7 @@ module WorkbasketValueObjects
 
       def stub_some_attributes
         @normalized_params[:officialjournal_number] = '00'
-        @normalized_params[:officialjournal_page] = 0
+        @normalized_params[:officialjournal_page] = 1
 
         @normalized_params[:community_code] = 1 if target_class == BaseRegulation
       end

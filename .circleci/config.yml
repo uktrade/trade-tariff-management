@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.5.0
+      - image: circleci/ruby:2.5-node-browsers
         environment:
           - TARIFF_MEASURES_LOGGER: 0
           - RAILS_ENV: test
@@ -85,4 +85,14 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "staging" ];
               then CF_ORG=dit-staging CF_SPACE=uat-tariffs CF_APP=tariffs-uat CF_APP_WORKER=tariffs-worker-uat ./bin/deploy
+            fi
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "production" ];
+              then CF_ORG=dit-staging CF_SPACE=training-tariffs CF_APP=tariffs-training CF_APP_WORKER=tariffs-worker-training ./bin/deploy
+            fi
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "production" ];
+              then CF_ORG=dit-services CF_SPACE=tariffs CF_APP=tariffs-production CF_APP_WORKER=tariffs-worker-production ./bin/deploy
             fi

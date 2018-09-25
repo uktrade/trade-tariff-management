@@ -35,13 +35,32 @@ describe "Measure search: valid_to filter" do
         value: 3.days.ago.strftime('%d/%m/%Y')
       )
 
+      expect(res.count).to be_eql(2)
+      expect(res[0].measure_sid).to be_eql(c_measure.measure_sid)
+      expect(res[1].measure_sid).to be_eql(b_measure.measure_sid)
+
+      res = search_results(
+        enabled: true,
+        operator: 'is_before',
+        value: 2.days.ago.strftime('%d/%m/%Y')
+      )
+
+      expect(res.count).to be_eql(1)
+      expect(res[0].measure_sid).to be_eql(a_measure.measure_sid)
+
+      res = search_results(
+        enabled: true,
+        operator: 'is_after_or_nil',
+        value: 3.days.ago.strftime('%d/%m/%Y')
+      )
+
       expect(res.count).to be_eql(3)
       measure_sids = res.map(&:measure_sid)
       expect(measure_sids).not_to include(a_measure.measure_sid)
 
       res = search_results(
         enabled: true,
-        operator: 'is_before',
+        operator: 'is_before_or_nil',
         value: 2.days.ago.strftime('%d/%m/%Y')
       )
 

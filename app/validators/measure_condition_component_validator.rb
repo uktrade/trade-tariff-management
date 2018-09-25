@@ -1,29 +1,61 @@
 class MeasureConditionComponentValidator < TradeTariffBackend::Validator
 
-  validation :ME105, 'The reference duty expression must exist.', on: [:create, :update] do |record|
-    record.duty_expression_id.present? &&
-    record.duty_expression.present?
+  validation :ME53, "The referenced measure condition must exist.", on: [:create, :update] do |record|
+    record.measure_condition_sid.present? && record.measure_condition.present?
   end
 
-  validation :ME106, 'The VP of the duty expression must span the VP of the measure.', on: [:create, :update] do
+  validation :ME60, "The referenced monetary unit must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.monetary_unit_code.present? } do |record|
+      record.monetary_unit.present?
+    end
+
+  validation :ME61, "The validity period of the referenced monetary unit must span the validity period of the measure.",
+    on: [:create, :update] do
+    validates :validity_date_span, of: :monetary_unit
+  end
+
+  validation :ME62, "The combination measurement unit + measurement unit qualifier must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.measurement_unit_code.present? || record.measurement_unit_qualifier_code.present? } do |record|
+      record.measurement_unit.present? && record.measurement_unit_qualifier.present?
+  end
+
+  validation :ME63, "The validity period of the measurement unit must span the validity period of the measure.",
+  on: [:create, :update] do
+    validates :validity_date_span, of: :measurement_unit
+  end
+
+  validation :ME64, "The validity period of the measurement unit qualifier must span the validity period of the measure.",
+    on: [:create, :update] do
+    validates :validity_date_span, of: :measurement_unit_qualifier
+  end
+
+  validation :ME105, "The reference duty expression must exist.", on: [:create, :update] do |record|
+    record.duty_expression_id.present? && record.duty_expression.present?
+  end
+
+  validation :ME106, "The VP of the duty expression must span the VP of the measure.", on: [:create, :update] do
     validates :validity_date_span, of: :duty_expression
   end
 
-  validation :ME107, "If the short description of a duty expression starts with a '+' then a measure condition component with a preceding duty expression must exist (sequential ascending order) for a condition (at least one, not necessarily the same condition) of the same measure.", on: [:create, :update] do |record|
-    mccs = record.measure_condition.measure_condition_components
-    last_mcc = mccs.last
+  validation :ME107, "If the short description of a duty expression starts with a '+' then a measure condition component with a preceding duty expression must exist (sequential ascending order) for a condition (at least one, not necessarily the same condition) of the same measure.",
+    on: [:create, :update],
+    if: ->(record) { record.measure_condition.present? } do |record|
+      mccs = record.measure_condition.measure_condition_components
+      last_mcc = mccs.last
 
-    if mccs.size == 1
-      last_mcc.duty_expression.present? && last_mcc.duty_expression.abbreviation.exclude?("+")
-    else
-      preceding_mccs = mccs[0..-2] # Removing last element
+      if mccs.size == 1
+        last_mcc.duty_expression.present? && last_mcc.duty_expression.abbreviation.exclude?("+")
+      else
+        preceding_mccs = mccs[0..-2] # Removing last element
 
-      # TODO: Need to refactor and use SQL query to achieve this.
-      abbreviations = preceding_mccs.select{|mcc| mcc.duty_expression.present?}.map{ |mcc| mcc.duty_expression.abbreviation[0] }
+        # TODO: Need to refactor and use SQL query to achieve this.
+        abbreviations = preceding_mccs.select{|mcc| mcc.duty_expression.present?}.map{ |mcc| mcc.duty_expression.abbreviation[0] }
 
-      abbreviations.exclude?("+") && last_mcc.duty_expression.present? && last_mcc.duty_expression.abbreviation.include?("+")
+        abbreviations.exclude?("+") && last_mcc.duty_expression.present? && last_mcc.duty_expression.abbreviation.include?("+")
+      end
     end
-  end
 
   validation :ME108, "The same duty expression can only be used once within condition components of the same condition of the same measure. (i.e. it can be re-used in other conditions, no matter what condition type, of the same measure)", on: [:create, :update] do
     validates :uniqueness, of: [:measure_condition_sid, :duty_expression_id]

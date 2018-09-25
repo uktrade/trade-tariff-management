@@ -23,10 +23,6 @@ window.MeasureConditionFormatter = {
       res.push(action_code);
     }
 
-    if (certificate_type_code === undefined || certificate_code === undefined) {
-      console.log(mc, res);
-    }
-
     if (res.length === 2) {
       return res.join(" - ")
     } else {

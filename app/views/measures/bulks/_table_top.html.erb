@@ -1,7 +1,7 @@
 <div class="table-top">
   <div class="row">
-    <% if workbasket_author? && params[:submitted].blank? %>
-      <div class="col-md-3">
+    <% if workbasket_is_editable? %>
+      <div class="col-md-3 col-lg-2">
         <button-dropdown :disabled="noSelectedMeasures">
           <template slot="text">&ndash; select bulk action &ndash;</template>
 
@@ -16,7 +16,7 @@
       </div>
     <% end %>
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-lg-2">
       <button-dropdown>
         <template slot="text">&ndash; show/hide columns &ndash;</template>
 

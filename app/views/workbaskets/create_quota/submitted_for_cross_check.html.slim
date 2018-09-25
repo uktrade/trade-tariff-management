@@ -1,0 +1,27 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Quota submitted
+
+  h3.heading-medium
+    | A quota with order number&nbsp;
+    = attributes_parser.quota_ordernumber
+    | &nbsp;and&nbsp;
+    = pluralize(workbasket_settings.measures.count, "measure", "measures")
+    | &nbsp;has been submitted for cross-checking.
+
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  li
+    a href="#"
+      | Widthdraw submission/edit this quota (not implemented)
+  li
+    = link_to "View this quota", read_only_section_url
+  li
+    = link_to "Create another quota", new_create_quotum_url
+  li
+    = link_to "Return to main menu", root_url
+br
+br

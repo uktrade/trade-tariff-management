@@ -148,9 +148,38 @@ class Measure < Sequel::Model
                                end
   end
 
+  def justification_regulation
+    @justification_regulation ||= case justification_regulation_role
+                                    when nil then nil
+                                    when 4 then ModificationRegulation.find(modification_regulation_id: justification_regulation_id)
+                                    else
+                                      BaseRegulation.find(base_regulation_id: justification_regulation_id)
+                                  end
+  end
+
   # Soft-deleted
   def invalidated?
     invalidated_at.present?
+  end
+
+  attr_accessor :updating_measure
+
+  def not_update_of_the_same_measure?
+    updating_measure.blank? || (
+      updating_measure.present? &&
+      [
+        :measure_type_id,
+        :geographical_area_sid,
+        :goods_nomenclature_sid,
+        :additional_code_type_id,
+        :additional_code_id,
+        :ordernumber,
+        :reduction_indicator,
+        :validity_start_date
+      ].any? do |field_name|
+        public_send(field_name).to_s != updating_measure.public_send(field_name).to_s
+      end
+    )
   end
 
   dataset_module do
@@ -538,6 +567,7 @@ class Measure < Sequel::Model
     {
       measure_sid: measure_sid,
       regulation: generating_regulation_code,
+      justification_regulation: (generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?),
       measure_type_id: measure_type_id,
       validity_start_date: validity_start_date.strftime("%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
@@ -558,6 +588,7 @@ class Measure < Sequel::Model
     {
       measure_sid: measure_sid,
       regulation: generating_regulation.to_json,
+      justification_regulation: (justification_regulation.to_json if justification_regulation.present?),
       measure_type: measure_type.to_json,
       validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",

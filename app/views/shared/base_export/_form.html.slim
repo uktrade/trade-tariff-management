@@ -6,6 +6,12 @@
         = f.input :start_date, as: :string, label: 'Start date',  input_html: { name: :start_date, class: 'form-control start-date', "data-parsley-moment" => true, "data-parsley-max-date-to" => "#export_end_date", "data-parsley-required" => true, "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }, hint: "(eg: 16/04/2018)", required: true
       .col-sm-3.col-md-2.col-lg-2
         = f.input :end_date, as: :string, label: 'End date'.html_safe,  input_html: { name: :end_date, class: 'form-control end-date', "data-parsley-moment" => true, "data-parsley-min-date-to" => "#export_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }, hint: "(eg: 17/04/2018)"
+    .row
+      .col-sm-3.col-md-2.col-lg-2
+        .multiple-choice
+          input type="checkbox" id="export_workbasket" name="workbasket" checked="checked"
+          label.form-label.boolean.optional for="export_workbasket"
+            | Workbasket
 
     .form-actions
       = f.button :submit, "Schedule #{record_name}", class: 'button', data: { 'disable-with' => 'Scheduling' }

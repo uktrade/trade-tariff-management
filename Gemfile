@@ -39,7 +39,7 @@ gem "shrine"
 gem "aws-sdk"
 gem "aws-sdk-rails"
 gem "aws-sdk-s3"
-gem "rubyzip"
+gem "rubyzip", "~> 1.2.2"
 
 # Helpers
 gem "hashie", "~> 3.4"
@@ -85,7 +85,7 @@ gem "newrelic_rpm"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "bootscale", "~> 0.5", require: false
-gem "sentry-raven"
+gem "rack-timeout", "~> 0.4"
 
 # We freezed it, as it installs higher version by default,
 # which conflicts with cloud foundary's ruby_buildpack
@@ -94,7 +94,7 @@ gem "sentry-raven"
 gem "ffi", "1.9.18"
 
 group :production do
-  gem "rack-timeout", "~> 0.4"
+  gem "sentry-raven"
   gem "rails_12factor"
 end
 
@@ -124,5 +124,7 @@ group :test do
   gem 'codeclimate-test-reporter', require: nil
   gem "rspec_junit_formatter"
   gem 'capybara'
+  gem 'capybara-selenium'
+  gem 'selenium-webdriver'
   gem 'launchy'
 end

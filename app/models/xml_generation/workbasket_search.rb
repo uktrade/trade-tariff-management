@@ -1,5 +1,5 @@
 module XmlGeneration
-  class Search
+  class WorkbasketSearch
 
     attr_accessor :start_date,
                   :end_date
@@ -18,7 +18,10 @@ module XmlGeneration
       def data
         ::Workbaskets::Workbasket.xml_export_collection(
           start_date, end_date
-        )
+        ).map do |workbasket|
+          workbasket.settings
+              .collection
+        end.flatten
       end
   end
 end

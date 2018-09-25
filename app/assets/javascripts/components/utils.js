@@ -47,3 +47,30 @@ function objectToArray(obj) {
 
   return arr;
 }
+
+function any(arr, func) {
+  return arr.filter(function(obj) {
+    return func(obj);
+  }).length > 0;
+}
+
+function retryAjax(options, retries, time, success, error) {
+  var _retries = 0;
+
+  options.success = success;
+  options.error = function() {
+    if (_retries == retries) {
+      error();
+      return;
+    }
+
+    _retries++;
+    var ajaxThis = this;
+
+    setTimeout(function() {
+      $.ajax(ajaxThis);
+    }, time);
+  };
+
+  $.ajax(options);
+}

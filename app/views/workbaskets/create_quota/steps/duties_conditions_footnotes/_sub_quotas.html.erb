@@ -1,0 +1,20 @@
+<div class="form-group">
+  <label class="form-label">
+    Do you want to associate this quota with any sub quotas?
+
+    <span class="form-hint">
+      Use this to set up weight equivalence associations so that a quota can be shared between different commodity variants at different coefficients.
+    </span>
+  </label>
+
+  <div class="multiple-choice">
+    <input type="checkbox" id="associate-sub-quotas" v-model="sub_quotas.enabled">
+    <label for="associate-sub-quotas">
+      Yes &ndash; associate this quota with one or more sub quotas
+    </label>
+  </div>
+
+  <div class="panel panel-border-narrow" v-if="sub_quotas.enabled">
+    <sub-quota-definitions :definitions="sub_quotas.definitions"></sub-quota-definitions>
+  </div>
+</div>

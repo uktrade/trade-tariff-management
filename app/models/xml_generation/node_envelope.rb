@@ -4,14 +4,14 @@ module XmlGeneration
 
     attr_accessor :transactions
 
-    def initialize(workbaskets)
-      @transactions = workbaskets.map do |workbasket|
-        ::XmlGeneration::NodeTransaction.new(workbasket)
+    def initialize(records)
+      @transactions = records.each_with_index.map do |record, index|
+        ::XmlGeneration::NodeTransaction.new(index + 1, record)
       end
     end
 
     def node_id
-      Time.now.to_i
+      1
     end
   end
 end

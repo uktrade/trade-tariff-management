@@ -29,6 +29,10 @@
       height: 3em;
     }
   }
+
+  [class*="col-"] {
+    justify-content: flex-start !important;
+  }
 }
 
 .multiple-balances {
@@ -47,4 +51,8 @@
   & + .custom-period {
     margin-top: 50px;
   }
+}
+
+.opening-balances {
+  margin-bottom: 20px !important;
 }

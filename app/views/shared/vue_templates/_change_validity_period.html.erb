@@ -10,6 +10,21 @@
       </warning-message>
     </div>
 
+    <div class="error-summary" role="alert" aria-labelledby="validity-period-error-summary-heading" tabindex="-1" v-if="errorSummary.length > 0">
+
+      <h2 class="heading-medium error-summary-heading" id="validity-period-error-summary-heading">
+        Error
+      </h2>
+
+      <p>
+        You cannot confirm the changes yet because you have not entered the minimum required data.
+      </p>
+
+      <p>
+        See individual fields for details.
+      </p>
+    </div>
+
     <fieldset>
       <legend>
         <h4 class='heading-small'>Start date</h4>
@@ -27,7 +42,7 @@
         <info-message>
           <p>
             The selection currently contains more than one start date.
-            These will all be replaced by the start date you select below. Currently:
+            These will all be replaced by the start date you select below. Leave this blank to retain the existing start dates. Currently:
           </p>
 
           <p>
@@ -56,9 +71,17 @@
         <h4 class='heading-small'>End date</h4>
       </legend>
 
-      <div v-if="sameEndDate">
+      <div v-if="sameEndDate && openEndedMeasures != measures.length">
         <info-message>
           The selected measures currently end on {{earliestEndDate}}
+          <br />
+          This will be changed to the end date you select below.
+        </info-message>
+      </div>
+
+      <div v-if="sameEndDate && openEndedMeasures == measures.length">
+        <info-message>
+          The selected measures currently are all open-ended.
           <br />
           This will be changed to the end date you select below.
         </info-message>
@@ -68,21 +91,20 @@
         <info-message>
           <p>
             The selection currently contains more than one end date.
-            These will all be replaced by the end date you select below. Currently:
+            These will all be replaced by the end date you select below. Leave this blank to retain the existing end dates. Currently:
           </p>
 
           <p>
-            The earliest stendart date is {{earliestEndDate}}
+            The earliest end date is {{earliestEndDate}}
             <br>
             The latest end date is {{latestEndDate}}
-            <div v-if="openEndedMeasures === 1">
-              <br>
+            <br>
+            <span v-if="openEndedMeasures === 1">
               {{openEndedMeasures}} measure is open-ended
-            </div>
-            <div v-if="openEndedMeasures > 1">
-              <br>
+            </span>
+            <span v-if="openEndedMeasures > 1">
               {{openEndedMeasures}} measures are open-ended
-            </div>
+            </span>
           </p>
         </info-message>
       </div>
@@ -95,20 +117,35 @@
           </span>
         </label>
 
-        <date-select :value.sync="endDate"></date-select>
+        <date-select :value.sync="endDate" :disabled="makeOpenEnded"></date-select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" v-if="showMakeOpenEnded">
         <div class="multiple-choice">
           <input id="make-open-ended" name="open_ended" type="checkbox" v-model="makeOpenEnded">
-          <label for="make-open-ended">make open-ended (remove end-date</label>
+          <label for="make-open-ended">make open-ended (remove end-date)</label>
+        </div>
+      </div>
+
+      <div :class="['form-group', errors['regulation_id'] ? 'form-group-error' : '']" v-if="showJustificationRegulation">
+        <label class="form-label">
+          <span class="error-message" v-if="errors['regulation_id']" v-html="errors['regulation_id']"></span>
+          <span class="form-hint">
+            If the justification regulation for adding an end date is different from the regulation you specified previously as the reason for these changes, specify the justification regulation here.
+          </span>
+        </label>
+
+        <div class="row">
+          <div class="col-md-5">
+            <custom-select url="/regulations.json" label-field="description" value-field="regulation_id" placeholder="― start typing ―" min-length="2" v-model="regulation_id" date-sensitive="true" :on-change="regulationSelected"></custom-select>
+          </div>
         </div>
       </div>
 
     </fieldset>
 
     <div class="form-actions">
-      <button class="button" v-on:click.prevent="confirmChanges">
+      <button class="button" v-on:click.prevent="confirmChanges" :disabled="disableSubmit">
         Update selected measures
       </button>
       <a href="#" class="secondary-button" v-on:click.prevent="onClose">

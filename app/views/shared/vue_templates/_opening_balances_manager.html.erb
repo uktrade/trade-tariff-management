@@ -191,7 +191,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" v-if="showDuties">
         <label for="" class="form-label">
           What duty should be charged in-quota
         </label>
@@ -376,7 +376,7 @@
                 <input class="form-control" v-model="balance.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Critical
@@ -389,7 +389,7 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Criticality threshold
@@ -399,7 +399,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -435,7 +435,7 @@
                 <input class="form-control" v-model="balance.semester1.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Critical
@@ -448,7 +448,7 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Criticality threshold
@@ -458,7 +458,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.semester1.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -481,7 +481,7 @@
                 <input class="form-control" v-model="balance.semester2.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.semester2.critical" :disabled="disableCriticality">
@@ -490,13 +490,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.semester2.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.semester2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -532,7 +532,7 @@
                 <input class="form-control" v-model="balance.quarter1.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Critical
@@ -545,7 +545,7 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Criticality threshold
@@ -578,7 +578,7 @@
                 <input class="form-control" v-model="balance.quarter2.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.quarter2.critical" :disabled="disableCriticality">
@@ -587,13 +587,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.quarter2.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.quarter2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -616,7 +616,7 @@
                 <input class="form-control" v-model="balance.quarter3.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.quarter3.critical" :disabled="disableCriticality">
@@ -625,13 +625,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.quarter3.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.quarter3.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -654,7 +654,7 @@
                 <input class="form-control" v-model="balance.quarter4.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.quarter4.critical" :disabled="disableCriticality">
@@ -663,13 +663,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.quarter4.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.quarter4.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -706,7 +706,7 @@
                 <input class="form-control" v-model="balance.month1.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Critical
@@ -719,7 +719,7 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <label class="form-label" v-if="index == 0">
                   Criticality threshold
@@ -729,7 +729,7 @@
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month1.duty_expressions" classes="measure-component" type="measure_component" :index="index" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -752,7 +752,7 @@
                 <input class="form-control" v-model="balance.month2.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month2.critical" :disabled="disableCriticality">
@@ -761,13 +761,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month2.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month2.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -790,7 +790,7 @@
                 <input class="form-control" v-model="balance.month3.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month3.critical" :disabled="disableCriticality">
@@ -799,13 +799,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month3.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month3.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -828,7 +828,7 @@
                 <input class="form-control" v-model="balance.month4.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month4.critical" :disabled="disableCriticality">
@@ -837,13 +837,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month4.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month4.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -866,7 +866,7 @@
                 <input class="form-control" v-model="balance.month5.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month5.critical" :disabled="disableCriticality">
@@ -875,13 +875,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month5.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month5.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -904,7 +904,7 @@
                 <input class="form-control" v-model="balance.month6.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month6.critical" :disabled="disableCriticality">
@@ -913,13 +913,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month6.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month6.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -942,7 +942,7 @@
                 <input class="form-control" v-model="balance.month7.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month7.critical" :disabled="disableCriticality">
@@ -951,13 +951,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month7.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month7.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -980,7 +980,7 @@
                 <input class="form-control" v-model="balance.month8.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month8.critical" :disabled="disableCriticality">
@@ -989,13 +989,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month8.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month8.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1018,7 +1018,7 @@
                 <input class="form-control" v-model="balance.month9.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month9.critical" :disabled="disableCriticality">
@@ -1027,13 +1027,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month9.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month9.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1056,7 +1056,7 @@
                 <input class="form-control" v-model="balance.month10.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month10.critical" :disabled="disableCriticality">
@@ -1065,13 +1065,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month10.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month10.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1094,7 +1094,7 @@
                 <input class="form-control" v-model="balance.month11.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month11.critical" :disabled="disableCriticality">
@@ -1103,13 +1103,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month11.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month11.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1132,7 +1132,7 @@
                 <input class="form-control" v-model="balance.month12.balance" :disabled="!section.staged" />
               </div>
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-6" v-if="showCriticality">
               <div class="form-group">
                <div class="multiple-choice">
                   <input :id="'balance-' + index + '-critical'" name="" type="checkbox" value="1" v-model="balance.month12.critical" :disabled="disableCriticality">
@@ -1141,13 +1141,13 @@
               </div>
 
             </div>
-            <div class="col-md-1-2" v-if="showCriticality">
+            <div class="col-md-0-8" v-if="showCriticality">
               <div class="form-group">
                 <input class="form-control" v-model="balance.month12.criticality_threshold" :disabled="disableCriticality" />
               </div>
             </div>
 
-            <div class="col-flow" v-if="section.duties_each_period">
+            <div class="col-flow" v-if="showDuties && section.duties_each_period">
               <components-coordinator :components="balance.month12.duty_expressions" classes="measure-component" type="measure_component" :index="1" :hide-help="true"></components-coordinator>
             </div>
           </div>
@@ -1180,7 +1180,7 @@
         </div>
       </div>
 
-      <div class="form-group" v-if="!section.duties_each_period">
+      <div class="form-group" v-if="showDuties && !section.duties_each_period">
         <label for="" class="form-label">
           What duty should be charged in-quota?
         </label>

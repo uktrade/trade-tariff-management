@@ -26,6 +26,7 @@ window.BulkEditOfMeasuresSaveActions =
       processData: false
       contentType: 'application/json'
       success: (response) ->
+        BulkEditOfMeasuresSaveActions.cleanUpErrorBlocks(response)
         BulkEditOfMeasuresSaveActions.sendNextBatch(mode, response)
       error: (response) ->
         BulkEditOfMeasuresSaveActions.handleErrors(response)
@@ -51,6 +52,12 @@ window.BulkEditOfMeasuresSaveActions =
         ), 1000
 
     return false
+
+  cleanUpErrorBlocks: (response) ->
+    $.each response.collection_sids, (index, measure_sid) ->
+      measure_parent_div = $("[data-measure-sid='" + measure_sid + "']")
+      measure_parent_div.find(".table__column")
+                        .removeClass('has-validation-errors')
 
   handleErrors: (response) ->
     errored_measures = response.responseJSON["measures_with_errors"]

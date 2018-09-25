@@ -64,24 +64,24 @@ window.DutyExpressionsParser = {
       } else if (option.duty_expression_id === "19") {
         option.duty_expression_id = "19A";
         option.description = "Plus %";
-        option.abbreviation = "%";
+        option.abbreviation = "+%";
 
         newOption = {
           duty_expression_code: option.duty_expression_code,
           duty_expression_id: "19B",
           description: "Plus amount €",
-          abbreviation: "€"
+          abbreviation: "+€"
         };
       } else if (option.duty_expression_id === "20") {
         option.duty_expression_id = "20A";
         option.description = "Plus %";
-        option.abbreviation = "%";
+        option.abbreviation = "+%";
 
         newOption = {
           duty_expression_code: option.duty_expression_code,
           duty_expression_id: "20B",
           description: "Plus amount €",
-          abbreviation: "€"
+          abbreviation: "+€"
         };
       } else if (option.duty_expression_id === "35") {
         option.duty_expression_id = "35A";

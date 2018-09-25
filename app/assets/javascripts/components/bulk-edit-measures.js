@@ -16,19 +16,21 @@ $(document).ready(function() {
       var data = {
         selectedMeasures: [],
         showTooltips: true,
+        overloaded: false,
         columns: [
-          {enabled: true, title: "ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
+          {enabled: true, title: "Old ID", field: "measure_sid", sortable: true, type: "number", changeProp: "measure_sid" },
           {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string", changeProp: "regulation" },
           {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string", changeProp: "measure_type" },
           {enabled: true, title: "Start date", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },
           {enabled: true, title: "End date", field: "validity_end_date", sortable: true, type: "date", changeProp: "validity_end_date" },
-          {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "string", changeProp: "goods_nomenclature" },
+          {enabled: true, title: "Justification Regulation", field: "justification_regulation", sortable: true, type: "string", changeProp: "justification_regulation" },
+          {enabled: true, title: "Commodity code", field: "goods_nomenclature", sortable: true, type: "number", changeProp: "goods_nomenclature" },
           {enabled: true, title: "Additional code", field: "additional_code", sortable: true, type: "string", changeProp: "additional_code" },
-          {enabled: true, title: "Origin", field: "geographical_area", sortable: false, changeProp: "geographical_area" },
-          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas", sortable: false, changeProp: "excluded_geographical_areas" },
-          {enabled: true, title: "Duties", field: "duties", sortable: false, changeProp: "duties" },
-          {enabled: true, title: "Conditions", field: "conditions", sortable: false, changeProp: "conditions" },
-          {enabled: true, title: "Footnotes", field: "footnotes", sortable: false, changeProp: "footnotes" },
+          {enabled: true, title: "Origin", field: "geographical_area", sortable: true, type: "string", changeProp: "geographical_area" },
+          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas", sortable: true, type: "comma_string", changeProp: "excluded_geographical_areas" },
+          {enabled: true, title: "Duties", field: "duties", sortable: true, type: "duties", changeProp: "duties" },
+          {enabled: true, title: "Conditions", field: "conditions", sortable: true, type: "comma_string", changeProp: "conditions" },
+          {enabled: true, title: "Footnotes", field: "footnotes", sortable: true, type: "comma_string", changeProp: "footnotes" },
           {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "date", changeProp: "last_updated" },
           {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
@@ -45,6 +47,7 @@ $(document).ready(function() {
           { value: 'remove_from_group', label: 'Remove from group...' },
           { value: 'delete', label: 'Delete measures' },
         ],
+        currentPage: 1,
         measures: [],
         changingDuties: false,
         changingConditions: false,
@@ -63,7 +66,9 @@ $(document).ready(function() {
           page: window.__pagination_metadata.page,
           per_page: window.__pagination_metadata.per_page,
           pages: Math.ceil(window.__pagination_metadata.total_count / window.__pagination_metadata.per_page)
-        }
+        },
+        sortBy: "measure_sid",
+        sortDir: "desc"
       };
 
       var query = parseQueryString(window.location.search.substring(1));
@@ -74,6 +79,11 @@ $(document).ready(function() {
     },
     mounted: function() {
       var self = this;
+
+      history.pushState(null, null, location.href);
+      window.onpopstate = function () {
+        history.go(1);
+      };
 
       DB.getMeasuresBulk(self.search_code, function(row) {
         if (row === undefined) {
@@ -100,9 +110,26 @@ $(document).ready(function() {
         return this.selectedMeasures.length === 0;
       },
       visibleMeasures: function() {
-        return this.measuresForTable.filter(function (measure) {
+        var measures = this.measuresForTable.filter(function(measure) {
           return measure.visible;
         });
+
+        measures.sort(this.getSortingFunc());
+
+        if (this.sortDir == "desc") {
+          measures.reverse();
+        }
+
+        return measures;
+      },
+
+      visibleMeasuresPage: function() {
+        var offset = (this.currentPage - 1) * this.pagination.per_page;
+
+        return this.visibleMeasures.slice(offset, offset + this.pagination.per_page);
+      },
+      visibleCount: function() {
+        return this.visibleMeasures.length;
       },
       selectedMeasureObjects: function() {
         var selectedSids = this.selectedMeasures;
@@ -151,6 +178,7 @@ $(document).ready(function() {
           return {
             measure_sid: measure.measure_sid,
             regulation: measure.regulation.formatted_id,
+            justification_regulation: measure.justification_regulation ? measure.justification_regulation.formatted_id : "-",
             measure_type_id: measure.measure_type.measure_type_id,
             goods_nomenclature: measure.goods_nomenclature ? measure.goods_nomenclature.goods_nomenclature_item_id : "-",
             additional_code: measure.additional_code || "-",
@@ -250,8 +278,12 @@ $(document).ready(function() {
         var self = this;
 
         var url = window.location.href + "&page=" + page;
+        var options = {
+          type: "GET",
+          url: url
+        };
 
-        $.get(url, function(data) {
+        retryAjax(options, 10, 5000, function(data) {
           self.measures = self.measures.concat(data.measures.map(function(measure) {
             measure.visible = true;
 
@@ -268,20 +300,69 @@ $(document).ready(function() {
           self.pagination.pages = parseInt(data.total_pages, 10);
 
           callback();
+        }, function() {
+          self.overloaded = true;
+          setTimeout(function() {
+            self.overloaded = false;
+            Vue.nextTick(function() {
+              self.loadMeasures.apply(self, [page, callback]);
+            });
+          }, 30000);
         });
       },
       loadNextPage: function() {
         var self = this;
 
         if (this.pagination.page === this.pagination.pages) {
-          this.isLoading = false;
-
-          DB.insertOrReplaceBulk(self.search_code, self.measures);
+          this.measuresFinishedLoading();
 
           return;
         }
 
         this.loadMeasures(this.pagination.page + 1, this.loadNextPage.bind(this));
+      },
+      prepareMeasuresFirstEdit: function() {
+        var noChanges = true;
+
+        this.measures.forEach(function(measure) {
+          if (measure.changes && measure.changes.length > 0) {
+            noChanges = false;
+          }
+        });
+
+        // measures just loaded up, we need to change some things
+        // based on previous page
+        if (noChanges) {
+          this.measures.forEach(function(measure) {
+            measure.original_values = {
+              validity_start_date: measure.validity_start_date
+            };
+
+            measure.validity_start_date = moment(window.all_settings.start_date, "DD/MM/YYYY", true).format("DD MMM YYYY");
+            measure.changes.push("validity_start_date");
+
+            if (window.all_settings.regulation) {
+              measure.original_values.regulation = measure.regulation;
+
+              measure.regulation = window.all_settings.regulation;
+              measure.changes.push("regulation");
+            }
+          });
+        }
+      },
+      measuresFinishedLoading: function() {
+        this.prepareMeasuresFirstEdit();
+
+        this.isLoading = false;
+
+        DB.insertOrReplaceBulk(this.search_code, this.measures);
+      },
+      onPageChange: function(page) {
+        this.currentPage = page;
+
+        $("html, body").animate({
+          scrollTop: $(this.$el).offset().top
+        }, 500);
       },
       saveForCrossCheck: function() {
         window.__save_bulk_edit_of_measures_mode = "save_group_for_cross_check";
@@ -320,6 +401,14 @@ $(document).ready(function() {
       },
       selectAllHasChanged: function(value) {
         this.selectedAllMeasures = value;
+
+        if (value) {
+          this.selectedMeasures = this.visibleMeasures.map(function(m) {
+            return m.measure_sid;
+          });
+        } else {
+          this.selectedMeasures.splice(0, this.selectedMeasures.length);
+        }
       },
       measuresRemoved: function(removedMeasures) {
         var self = this;
@@ -336,6 +425,93 @@ $(document).ready(function() {
       },
       allMeasuresRemoved: function() {
         DB.destroyMeasuresBulk(this.search_code);
+      },
+      onSortByChange: function(val) {
+        this.sortBy = val;
+      },
+      onSortDirChanged: function(val) {
+        this.sortDir = val;
+      },
+      findColumn: function(field) {
+        for (var k in this.columns) {
+          var o = this.columns[k];
+
+          if (o.field == field) {
+            return o;
+          }
+        }
+      },
+      getSortingFunc: function() {
+        var column = this.findColumn(this.sortBy);
+        var sortBy = this.sortBy;
+
+        switch (column.type) {
+          case "number":
+            return function(a, b) {
+              return parseInt(a[sortBy], 10) - parseInt(b[sortBy], 10);
+            };
+          case "string":
+            return function(a, b) {
+              a = a[sortBy];
+              b = b[sortBy];
+
+            	if (a == null || a == "-") {
+            		return -1;
+            	}
+
+            	if (b == null || b == "-") {
+            		return 1;
+            	}
+
+              return ('' + a.attr).localeCompare(b.attr);
+            };
+          case "date":
+            return function(a, b) {
+              a = a[sortBy];
+              b = b[sortBy];
+
+            	if (a == null || a == "-") {
+            		return -1;
+            	}
+
+            	if (b == null || b == "-") {
+            		return 1;
+            	}
+
+              return moment(a, "DD MMM YYYY", true).diff(moment(b, "DD MMM YYYY", true), "days");
+            };
+          case "comma_string":
+            return function(a, b) {
+              a = a[sortBy]
+              b = b[sortBy]
+
+            	if (a == null || a == "-") {
+            		return -1;
+            	}
+
+            	if (b == null || b == "-") {
+            		return 1;
+            	}
+
+              var as = a.split(",").length;
+              var bs = b.split(",").length;
+
+              if (as < bs) {
+                return -1;
+              } else if (as > bs) {
+                return 1;
+              }
+
+              return ('' + a.attr).localeCompare(b.attr);
+            };
+          case "duties":
+            return function(a, b) {
+              a = a[sortBy]
+              b = b[sortBy]
+
+              return parseFloat(a) - parseFloat(b);
+            };
+        }
       }
     }
   });

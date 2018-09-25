@@ -30,6 +30,9 @@ describe MeasureConditionComponent do
   describe 'Conformance rules' do
     let!(:measure)           { create :measure }
     let!(:measure_condition) { create :measure_condition, measure_sid: measure.measure_sid }
+    let!(:monetary_unit) { create :monetary_unit }
+    let!(:measurement_unit) { create :measurement_unit }
+    let!(:measurement_unit_qualifier) { create :measurement_unit_qualifier }
 
     let!(:duty_expression)   do
       create(:duty_expression,
@@ -40,18 +43,108 @@ describe MeasureConditionComponent do
             )
     end
 
-
     let!(:duty_expression_description) { create :duty_expression_description, duty_expression_id: duty_expression.duty_expression_id }
 
     let!(:measure_condition_component) do
-      create(:measure_condition_component,
-             measure_condition_sid: measure_condition.measure_condition_sid,
-             duty_expression_id: duty_expression.duty_expression_id
-            )
+      create(
+        :measure_condition_component,
+        measure_condition_sid: measure_condition.measure_condition_sid,
+        duty_expression_id: duty_expression.duty_expression_id,
+        monetary_unit_code: monetary_unit.monetary_unit_code,
+        measurement_unit_code: measurement_unit.measurement_unit_code,
+        measurement_unit_qualifier_code: measurement_unit_qualifier.measurement_unit_qualifier_code
+      )
     end
 
     it "valid" do
       expect(measure_condition_component).to be_conformant
+    end
+
+    describe "ME53: The referenced measure condition must exist." do
+      it "should pass validation" do
+        expect(measure_condition_component).to be_conformant
+        expect(measure_condition_component.conformance_errors).to be_empty
+      end
+
+      it "should not pass validation" do
+        measure_condition_component.measure_condition_sid = 0
+        measure_condition_component.save
+
+        allow_any_instance_of(TradeTariffBackend::Validations::ValidityDateSpanValidation)
+          .to receive(:valid?).and_return(true)
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME53)
+      end
+    end
+
+    describe "ME60: The referenced monetary unit must exist." do
+      it "should pass validation" do
+        expect(measure_condition_component).to be_conformant
+        expect(measure_condition_component.conformance_errors).to be_empty
+      end
+
+      it "should not pass validation" do
+        measure_condition_component.monetary_unit_code = 0
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME60)
+      end
+    end
+
+    it "ME61: The validity period of the referenced monetary unit must span the validity period of the measure." do
+      measure.validity_start_date = Date.today.ago(5.years)
+      measure.validity_end_date = Date.today.ago(4.years)
+      measure.save
+
+      expect(measure_condition_component).to_not be_conformant
+      expect(measure_condition_component.conformance_errors).to have_key(:ME61)
+    end
+
+    describe "ME62: The combination measurement unit + measurement unit qualifier must exist." do
+      it "should run validation successfully" do
+        expect(measure_condition_component).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measure_condition_component.measurement_unit_code = "0"
+        measure_condition_component.measurement_unit_qualifier_code = "0"
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME62)
+      end
+    end
+
+    describe "ME63: The validity period of the measurement unit must span the validity period of the measure." do
+      it "should un validation successfully" do
+        expect(measure_condition_component).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measurement_unit = measure_condition_component.measurement_unit
+        measurement_unit.validity_start_date = Date.today.ago(5.years)
+        measurement_unit.validity_end_date = Date.today.ago(4.years)
+        measurement_unit.save
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME63)
+      end
+    end
+
+    describe "ME64: The validity period of the measurement unit qualifier must span the validity period of the measure." do
+      it "should un validation successfully" do
+        expect(measure_condition_component).to be_conformant
+      end
+
+      it "should not run validation successfully" do
+        measurement_unit_qualifier = measure_condition_component.measurement_unit_qualifier
+        measurement_unit_qualifier.validity_start_date = Date.today.ago(5.years)
+        measurement_unit_qualifier.validity_end_date = Date.today.ago(4.years)
+        measurement_unit_qualifier.save
+
+        expect(measure_condition_component).to_not be_conformant
+        expect(measure_condition_component.conformance_errors).to have_key(:ME64)
+      end
     end
 
     it "ME105: The reference duty expression must exist" do
@@ -71,7 +164,7 @@ describe MeasureConditionComponent do
       expect(measure_condition_component.conformance_errors).to have_key(:ME106)
     end
 
-    context 'for one measure contidion component' do
+    context "for one measure contidion component" do
       it "ME107: If the short description of a duty expression starts with a '+' then a measure condition component with a preceding duty expression must exist (sequential ascending order) for a condition (at least one, not necessarily the same condition) of the same measure." do
         allow_any_instance_of(DutyExpression).to receive(:abbreviation).and_return("+")
 
@@ -80,43 +173,50 @@ describe MeasureConditionComponent do
       end
     end
 
-    context 'for more than one measure contidion component' do
+    context "for more than one measure contidion component" do
       let(:duty_expression_id2) { "02" }
       let(:duty_expression_id3) { "04" }
 
       let!(:duty_expression2)   do
-        create(:duty_expression,
-               duty_expression_id: duty_expression_id2,
-               duty_amount_applicability_code: 1,
-               monetary_unit_applicability_code: 1,
-               measurement_unit_applicability_code: 1
-              )
+        create(
+          :duty_expression,
+          duty_expression_id: duty_expression_id2,
+          duty_amount_applicability_code: 1,
+          monetary_unit_applicability_code: 1,
+          measurement_unit_applicability_code: 1
+        )
       end
 
       let!(:duty_expression3)   do
-        create(:duty_expression,
-               duty_expression_id: duty_expression_id3,
-               duty_amount_applicability_code: 1,
-               monetary_unit_applicability_code: 1,
-               measurement_unit_applicability_code: 1
-              )
+        create(
+          :duty_expression,
+          duty_expression_id: duty_expression_id3,
+          duty_amount_applicability_code: 1,
+          monetary_unit_applicability_code: 1,
+          measurement_unit_applicability_code: 1
+        )
       end
 
       let!(:duty_expression_description2) { create :duty_expression_description, duty_expression_id: duty_expression_id2 }
       let!(:duty_expression_description3) { create :duty_expression_description, duty_expression_id: duty_expression_id3 }
 
       let!(:measure_condition_component2) do
-        create(:measure_condition_component,
-               measure_condition_sid: measure_condition.measure_condition_sid,
-               duty_expression_id: duty_expression2.duty_expression_id
-              )
+        create(
+          :measure_condition_component,
+          measure_condition_sid: measure_condition.measure_condition_sid,
+          duty_expression_id: duty_expression2.duty_expression_id
+        )
       end
 
       let!(:measure_condition_component3) do
-        create(:measure_condition_component,
-               measure_condition_sid: measure_condition.measure_condition_sid,
-               duty_expression_id: duty_expression3.duty_expression_id
-              )
+        create(
+          :measure_condition_component,
+          measure_condition_sid: measure_condition.measure_condition_sid,
+          duty_expression_id: duty_expression3.duty_expression_id,
+          monetary_unit_code: monetary_unit.monetary_unit_code,
+          measurement_unit_code: measurement_unit.measurement_unit_code,
+          measurement_unit_qualifier_code: measurement_unit_qualifier.measurement_unit_qualifier_code
+        )
       end
 
       it "valid" do

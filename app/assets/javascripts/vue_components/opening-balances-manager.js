@@ -6,7 +6,17 @@ Vue.component("opening-balances-manager", {
       return ["1", "1_repeating"].indexOf(this.section.period) > -1;
     },
     noPerPeriod: function() {
-      return this.single && !this.section.staged &&
+
+      if (this.isAnnual) {
+        return this.single ||
+               (
+                !this.section.staged &&
+                !this.section.criticality_each_period &&
+                !this.section.duties_each_period
+               );
+      }
+
+      return !this.section.staged &&
              !this.section.criticality_each_period &&
              !this.section.duties_each_period;
     },
@@ -36,6 +46,9 @@ Vue.component("opening-balances-manager", {
     },
     showCriticality: function() {
       return !this.omitCriticality && (this.section.criticality_each_period || this.section.duties_each_period);
+    },
+    showDuties: function() {
+      return window.all_settings.quota_is_licensed != "true";
     }
   }
 });

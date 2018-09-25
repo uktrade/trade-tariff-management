@@ -1,5 +1,5 @@
 class MeasureValidator < TradeTariffBackend::Validator
-  validation :ME1, 'The combination of measure type + geographical area + goods nomenclature item id + additional code type + additional code + order number + reduction indicator + start date must be unique.', on: [:create, :update] do
+  validation :ME1, 'The combination of measure type + geographical area + goods nomenclature item id + additional code type + additional code + order number + reduction indicator + start date must be unique.', on: [:create, :update], if: -> (record) { record.not_update_of_the_same_measure? } do
     validates :uniqueness, of: [:measure_type_id, :geographical_area_sid, :goods_nomenclature_sid, :additional_code_type_id, :additional_code_id, :ordernumber, :reduction_indicator, :validity_start_date]
   end
 
@@ -91,9 +91,75 @@ class MeasureValidator < TradeTariffBackend::Validator
      )
   end
 
-  validation :ME16, "Integrating a measure with an additional code when an equivalent or overlapping measures without additional code already exists and vice-versa, should be forbidden.", on: [:create, :update] do |record|
-    # Didn't get this conformance rule.
-  end
+  validation :ME16,
+    %(Integrating a measure with an additional code when an equivalent or overlapping
+    measures without additional code already exists and vice-versa, should be forbidden.),
+    on: [:create, :update] do |record|
+      valid = true
+
+      attrs = {
+        goods_nomenclature_item_id: record.goods_nomenclature_item_id,
+        measure_type_id: record.measure_type_id,
+        geographical_area_sid: record.geographical_area_sid,
+        ordernumber: record.ordernumber,
+        reduction_indicator: record.reduction_indicator
+      }
+
+      if record.modified?
+        scope = Measure.where(attrs)
+        scope = scope.where("measure_sid != ?", record.measure_sid) if record.measure_sid.present?
+
+        scope = if record.validity_end_date.present?
+                  scope.where(
+                    "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL)) OR
+                    (validity_start_date >= ? AND (validity_end_date <= ? OR validity_end_date IS NULL))",
+                    record.validity_start_date, record.validity_start_date,
+                    record.validity_start_date, record.validity_end_date,
+                  )
+                else
+                  scope.where(
+                    "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL))",
+                    record.validity_start_date, record.validity_start_date,
+                  )
+                end
+
+        valid = scope.count.zero?
+      end
+
+      valid
+    end
+
+  validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
+    on: [:create, :update],
+    if: -> (record) { record.additional_code_type.present? && record.additional_code.present? } do |record|
+      record.additional_code_type.non_meursing? && (record.additional_code.additional_code_type_id == record.additional_code_type_id)
+    end
+
+  validation :ME19,
+    %Q(If the additional code type has as application 'ERN' then the goods code must be specified
+    but the order number is blocked for input.),
+    on: [:create, :update],
+    if: ->(record) { record.additional_code_type.present? } do |record|
+      record.additional_code_type.application_code.in?("0") &&
+        record.goods_nomenclature_item_id.present? && record.ordernumber.blank?
+    end
+
+  validation :ME21,
+    %Q(If the additional code type has as application 'ERN' then the combination of goods code + additional code
+    must exist as an ERN product code and its validity period must span the validity period of the measure),
+    on: [:create, :update],
+    if: ->(record) {
+      record.additional_code_type.present? &&
+      record.additional_code_type.application_code.present? &&
+      record.additional_code_type.application_code.in?("0") &&
+      record.goods_nomenclature_item_id.present? && record.additional_code.present?
+    } do
+      validates :validity_date_span, of: :additional_code_type
+    end
+
+  #validation :ME24, 'The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date.', on: [:create, :update] do
+    #validates :presence, of: [:measure_generating_regulation_id, :measure_generating_regulation_role]
+  #end
 
   validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
     on: [:create, :update],
@@ -149,6 +215,16 @@ class MeasureValidator < TradeTariffBackend::Validator
     (record.generating_regulation.is_a?(ModificationRegulation) && record.modification_regulation.base_regulation.not_completely_abrogated?) ||
     (!record.generating_regulation.is_a?(ModificationRegulation))
   end
+
+  validation :ME32,
+    %(There may be no overlap in time with other measure occurrences with a goods code in the
+     same nomenclature hierarchy which references the same measure type, geo area, order number,
+     additional code and reduction indicator. This rule is not applicable for Meursing additional
+     codes.),
+     on: [:create, :update],
+     if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
+       record.duplicates_by_attributes.count.zero?
+     end
 
   validation [:ME33, :ME34], %q{A justification regulation may not be entered if the measure end date is not filled in
                                 A justification regulation must be entered if the measure end date is filled in.}, on: [:create, :update] do |record|
@@ -245,6 +321,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   validation :ME116, 'When a quota order number is used in a measure then the validity period of the quota order number must span the validity period of the measure.  This rule is only applicable for measures with start date after 31/12/2007.',
     on: [:create, :update],
     if: ->(record) {
+      record.validity_start_date.present? &&
       record.validity_start_date > Date.new(2007,12,31) &&
       record.order_number.present? && record.ordernumber =~ /^09[012356789]/
     } do

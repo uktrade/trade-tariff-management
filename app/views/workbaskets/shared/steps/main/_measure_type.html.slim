@@ -6,12 +6,12 @@ fieldset
 
   .row
     - if record_type == "measures"
-      .col-md-5
+      .col-md-2
         = content_tag "custom-select", { "url" => "/measure_type_series?quota=false", "allow-clear" => true, "code-field" => "measure_type_series_id", "label-field" => "description", "value-field" => "measure_type_series_id", "v-model" => "measure.measure_type_series_id", "code-class-name" => "prefix--l1", "date-sensitive" => true, placeholder: "― select group ―" } do
 
           = f.input :measure_type_series_id, as: :select, collection: form.measure_type_series_collection, label_method: :description, value_method: :measure_type_series_id, label: false
 
-    .col-md-5
+    .col-md-2
       = content_tag "custom-select", { "url" => "/measure_types#{record_type == 'measures' ? '?quota=false' : '?quota=true'}", "allow-clear" => true, "code-field" => "measure_type_id", "label-field" => "description", "value-field" => "measure_type_id", "v-model" => "measure.measure_type_id", "code-class-name" => "prefix--measure-type", "date-sensitive" => true, "drilldown-name" => "measure_type_series_id", ":drilldown-value" => "measure.measure_type_series_id", placeholder: "― select #{record_type == 'measures' ? 'measure' : record_type} type ―" } do
 
         = f.input :measure_type_id, as: :select, collection: form.measure_types_collection, label_method: :measure_type_description, value_method: :measure_type_id, label: false
