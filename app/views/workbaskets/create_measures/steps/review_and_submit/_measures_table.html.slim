@@ -13,6 +13,9 @@
       .table__column.additional_code-column
         a Additional code
 
+      .table__column.geographical_area-column
+        a Geographical area
+
       .table__column.validity_start_date-column
         a Start date
 
@@ -43,6 +46,9 @@
 
               .table__column.additional_code-column
                 = item.additional_code.try(:code)
+
+              .table__column.geographical_area-column
+                = item.geographical_area_id
 
               .table__column.validity_start_date-column
                 = item.validity_start_date.strftime("%Y-%m-%d")
