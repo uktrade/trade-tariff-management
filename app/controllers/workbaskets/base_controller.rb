@@ -61,7 +61,7 @@ module Workbaskets
 
     expose(:submit_for_cross_check) do
       "::WorkbasketInteractions::#{sub_klass}::SubmitForCrossCheck".constantize.new(
-        workbasket
+        current_user, workbasket
       )
     end
 

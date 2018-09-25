@@ -39,6 +39,12 @@ module Workbaskets
       :published
     ]
 
+    STATES_WITH_ERROR = [
+      :cross_check_rejected,
+      :approval_rejected,
+      :cds_error
+    ]
+
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
 
@@ -74,6 +80,8 @@ module Workbaskets
                        default: :new_in_progress,
                        predicates: true
 
+    delegate :collection, :collection_by_type, to: :settings
+
     validates do
       presence_of :status,
                   :user_id,
@@ -84,6 +92,35 @@ module Workbaskets
     end
 
     dataset_module do
+      def default_order
+        reverse_order(:last_status_change_at)
+      end
+
+      def custom_field_order(sort_by_field, sort_direction)
+        if sort_direction.to_sym == :desc
+          reverse_order(sort_by_field.to_sym)
+        else
+          order(sort_by_field.to_sym)
+        end
+      end
+
+      def for_author(current_user)
+        where(user_id: current_user.id)
+      end
+
+      def q_search(keyword)
+        underscored_keywords = keyword.squish.parameterize.underscore + "%"
+
+        where("
+          title ilike ? OR
+          status ilike ? OR
+          type ilike ?",
+          "#{keyword}%",
+          underscored_keywords,
+          underscored_keywords
+        )
+      end
+
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
@@ -113,17 +150,37 @@ module Workbaskets
     end
 
     begin :callbacks
+      def before_create
+        self.last_update_by_id = user_id
+        self.last_status_change_at = Time.zone.now
+      end
+
       def after_create
         build_related_settings_table!
       end
+    end
+
+    def decorate
+      Workbaskets::WorkbasketDecorator.decorate(self)
     end
 
     def editable?
       status.to_sym.in?(EDITABLE_STATES)
     end
 
-    def move_status_to!(new_status)
+    def move_status_to!(current_user, new_status, description=nil)
+      event = Workbaskets::Event.new(
+        workbasket_id: self.id,
+        user_id: current_user.id,
+        event_type: new_status,
+        description: description
+      )
+      event.save
+
       self.status = new_status
+      self.last_update_by_id = current_user.id
+      self.last_status_change_at = Time.zone.now
+
       save
     end
 
@@ -198,6 +255,18 @@ module Workbaskets
     end
 
     class << self
+      def max_per_page
+        10
+      end
+
+      def default_per_page
+        10
+      end
+
+      def max_pages
+        999
+      end
+
       def buld_new_workbasket!(type, current_user)
         workbasket = Workbaskets::Workbasket.new(
           type: type,
