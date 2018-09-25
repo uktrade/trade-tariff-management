@@ -9,6 +9,14 @@ class QuotaAssociation < Sequel::Model
 
   set_primary_key [:main_quota_definition_sid, :sub_quota_definition_sid]
 
+  one_to_one :parent_quota, class: :QuotaOrderNumber,
+                            key: :quota_order_number_sid,
+                            primary_key: :main_quota_definition_sid
+
+  one_to_one :sub_quota, class: :QuotaOrderNumber,
+                         key: :quota_order_number_sid,
+                         primary_key: :sub_quota_definition_sid
+
   def record_code
     "370".freeze
   end
