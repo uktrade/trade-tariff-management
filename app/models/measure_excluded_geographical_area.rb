@@ -14,8 +14,6 @@ class MeasureExcludedGeographicalArea < Sequel::Model
   one_to_one :geographical_area, key: :geographical_area_sid,
                        primary_key: :geographical_area_sid
 
-  delegate :validity_start_date, :validity_end_date, to: :geographical_area, allow_nil: true
-
   def record_code
     "430".freeze
   end
@@ -29,4 +27,13 @@ class MeasureExcludedGeographicalArea < Sequel::Model
       geographical_area: geographical_area.to_json
     }
   end
+
+  def validity_start_date
+    geographical_area.membership_validity_start_date
+  end
+
+  def validity_end_date
+    geographical_area.membership_validity_end_date
+  end
+
 end

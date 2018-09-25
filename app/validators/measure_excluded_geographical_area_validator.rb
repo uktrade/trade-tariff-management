@@ -20,7 +20,7 @@ class MeasureExcludedGeographicalAreaValidator < TradeTariffBackend::Validator
 
   validation :ME67, "The membership period of the excluded geographical area must span the validity period of the measure.",
     on: [:create, :update] do
-      validates :validity_date_span, of: :geographical_area
+      validates :validity_date_span, of: :measure
     end
 
   validation :ME68, "The same geographical area can only be excluded once by the same measure.",
