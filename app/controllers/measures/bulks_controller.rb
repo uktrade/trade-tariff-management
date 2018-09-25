@@ -143,7 +143,7 @@ module Measures
           bulk_saver.persist!
 
           render json: bulk_saver.success_response.merge(
-            redirect_url: measures_bulk_url(workbasket.id, search_code: workbasket_settings.search_code)
+            redirect_url: submitted_for_cross_check_measures_bulk_url(workbasket.id)
           ), status: :ok
         else
           render json: bulk_saver.success_response,

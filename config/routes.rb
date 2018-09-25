@@ -63,6 +63,7 @@ Rails.application.routes.draw do
       member do
         get '/work_with_selected_measures', to: "bulks#work_with_selected_measures"
         post '/work_with_selected_measures', to: "bulks#persist_work_with_selected_measures"
+        get :submitted_for_cross_check
 
         resources :bulk_items, only: [] do
           collection do
