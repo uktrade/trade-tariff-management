@@ -47,11 +47,12 @@ table.table
         td
           = workbasket.last_event_at
         td
-          a href="#"
-            | View
-          | &nbsp;|&nbsp;
-          a href="#"
-            | Withdraw/edit...
+          = link_to "View", "#"
+
+          - if false
+            | &nbsp;|&nbsp;
+            a href="#"
+              | Withdraw/edit...
 
         - if false
           td
