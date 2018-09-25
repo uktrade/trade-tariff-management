@@ -42,14 +42,14 @@ window.BulkEditOfMeasuresSaveActions =
         BulkEditOfMeasuresSaveActions.sendSaveRequest(mode)
       ), 3000
     else
-      BulkEditOfMeasuresSaveActions.toogleSaveSpinner()
-      BulkEditOfMeasuresSaveActions.unlockButtons()
-      BulkEditOfMeasuresSaveActions.showSummaryPopup()
-
       if mode == "save_group_for_cross_check" && response.redirect_url isnt undefined
         setTimeout (->
           window.location = response.redirect_url
         ), 1000
+      else
+        BulkEditOfMeasuresSaveActions.toogleSaveSpinner()
+        BulkEditOfMeasuresSaveActions.unlockButtons()
+        BulkEditOfMeasuresSaveActions.showSummaryPopup()
 
     return false
 
