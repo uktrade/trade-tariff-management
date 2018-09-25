@@ -69,7 +69,7 @@ module Workbaskets
 
     def period_in_years
       diff = (latest_period_date.year - earliest_period_date.year)
-      diff + 1
+      [1, diff].max
     end
   end
 end
