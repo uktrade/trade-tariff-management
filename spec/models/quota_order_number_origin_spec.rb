@@ -118,5 +118,29 @@ describe QuotaOrderNumberOrigin do
         expect(qono.conformance_errors).to have_key(:ON12)
       end
     end
+
+    describe "ON13" do
+      it "valid" do
+        ga = create :geographical_area,
+                    geographical_code: 1
+        qono = build :quota_order_number_origin,
+                     geographical_area_id: ga.geographical_area_id,
+                     geographical_area_sid: ga.geographical_area_sid
+        exclusion = create :quota_order_number_origin_exclusion,
+                           quota_order_number_origin_sid: qono.quota_order_number_origin_sid
+        expect(qono).to be_conformant
+      end
+
+      it "invalid" do
+        ga = create :geographical_area
+        qono = create :quota_order_number_origin,
+                      geographical_area_id: ga.geographical_area_id,
+                      geographical_area_sid: ga.geographical_area_sid
+        exclusion = create :quota_order_number_origin_exclusion,
+                           quota_order_number_origin_sid: qono.quota_order_number_origin_sid
+        expect(qono).to_not be_conformant
+        expect(qono.conformance_errors).to have_key(:ON13)
+      end
+    end
   end
 end

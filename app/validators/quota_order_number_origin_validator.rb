@@ -56,4 +56,10 @@ class QuotaOrderNumberOriginValidator < TradeTariffBackend::Validator
   validation :ON12, 'The quota order number origin cannot be deleted if it is used in a measure. This rule is only applicable for measure with start date after 31/12/2007.', on: [:destroy] do |record|
     record.quota_order_number.blank? || record.quota_order_number.measure.blank? || record.quota_order_number.measure.validity_start_date.to_date <= Date.new(2007,12,31)
   end
+
+  validation :ON13, 'An exclusion can only be entered if the order number origin is a geographical area group (area code = 1).' do |record|
+    if record.quota_order_number_origin_exclusion.present?
+      record.geographical_area.present? && record.geographical_area.geographical_code == "1"
+    end
+  end
 end
