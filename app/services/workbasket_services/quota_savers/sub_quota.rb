@@ -54,7 +54,7 @@ module WorkbasketServices
                 ops[index.to_s]['coefficient'].to_f
             )
             add_measures_for_definition!(
-                ops[index.to_s]['commodity_codes'],
+                parse_commodity_codes(ops[index.to_s]['commodity_codes']),
                 source_definition.validity_start_date,
                 source_definition.validity_end_date)
             quota_period_sids << definition.quota_definition_sid
@@ -64,6 +64,16 @@ module WorkbasketServices
       end
 
       private
+
+      def parse_commodity_codes(commodity_codes)
+        if commodity_codes.present?
+          commodity_codes.split( /[\s|,]/ )
+              .map(&:strip)
+              .reject { |el| el.blank? }
+              .uniq
+        end
+      end
+
       def build_order_number!(order_number_ops)
         ::WorkbasketServices::QuotaSavers::OrderNumber.new(
             settings_saver, order_number_ops, true
