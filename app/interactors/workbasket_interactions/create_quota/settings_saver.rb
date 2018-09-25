@@ -11,7 +11,7 @@ module WorkbasketInteractions
       end
 
       def sub_quota_saver
-        @sub_quota_saver ||= WorkbasketServices::QuotaSavers::SubQuota.new(self, settings.settings, order_number)
+        @sub_quota_saver ||= WorkbasketServices::QuotaSavers::SubQuota.new(self, settings.settings)
       end
 
       def persist!
@@ -131,7 +131,8 @@ module WorkbasketInteractions
           @start_point, @end_point = period_next_date_generator_class.new(
             section_ops['type'], @end_point
           ).date_range
-          sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
+          sub_quota_sids = sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
+          @quota_period_sids = @quota_period_sids + sub_quota_sids
           period_saver.quota_definition
         end
 
@@ -145,6 +146,8 @@ module WorkbasketInteractions
           period_saver.persist!
 
           @quota_period_sids << period_saver.quota_definition.quota_definition_sid
+          sub_quota_sids = sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
+          @quota_period_sids = @quota_period_sids + sub_quota_sids
           period_saver.quota_definition
         end
 

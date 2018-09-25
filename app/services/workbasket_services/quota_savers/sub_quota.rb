@@ -6,15 +6,13 @@ module WorkbasketServices
                     :attrs_parser,
                     :ops,
                     :base_params,
-                    :parent_quota,
                     :order_numbers
 
-      def initialize(settings_saver, base_params, parent_quota)
+      def initialize(settings_saver, base_params)
         @settings_saver = settings_saver
         @attrs_parser = settings_saver.attrs_parser
         @ops = base_params['sub_quotas'] || []
         @base_params = base_params
-        @parent_quota = parent_quota
         @order_numbers = []
       end
 
@@ -24,7 +22,6 @@ module WorkbasketServices
           base_params['quota_ordernumber'] = item['order_number']
           saver = build_order_number!(params)
           saver.valid?
-          build_quota_association!(saver.order_number, item['coefficient'].to_f)
           saver.order_number
         end
       end
@@ -32,6 +29,7 @@ module WorkbasketServices
       def add_period!(source_definition, section_ops, balance_ops)
         @section_ops = section_ops
         @balance_ops = balance_ops
+        quota_period_sids = []
         order_numbers.each_with_index do |order_number, index|
           definition = QuotaDefinition.new(
               volume: source_definition.volume,
@@ -50,12 +48,19 @@ module WorkbasketServices
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(definition).assign!
           settings_saver.assign_system_ops!(definition)
           if definition.save
+            build_quota_association!(
+                source_definition,
+                definition,
+                ops[index.to_s]['coefficient'].to_f
+            )
             add_measures_for_definition!(
                 ops[index.to_s]['commodity_codes'],
                 source_definition.validity_start_date,
                 source_definition.validity_end_date)
+            quota_period_sids << definition.quota_definition_sid
           end
         end
+        quota_period_sids
       end
 
       private
@@ -65,11 +70,11 @@ module WorkbasketServices
         )
       end
 
-      def build_quota_association!(sub_quota, coefficient)
+      def build_quota_association!(main_definition, sub_definition, coefficient)
         QuotaAssociation.unrestrict_primary_key
         association = QuotaAssociation.new(
-            main_quota_definition_sid: parent_quota.quota_order_number_sid,
-            sub_quota_definition_sid: sub_quota.quota_order_number_sid,
+            main_quota_definition_sid: main_definition.quota_definition_sid,
+            sub_quota_definition_sid: sub_definition.quota_definition_sid,
             relation_type: 'EQ',
             coefficient: coefficient,
         )
