@@ -1,6 +1,7 @@
 class AdditionalCode < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :oplog, primary_key: :additional_code_sid
