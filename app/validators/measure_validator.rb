@@ -260,6 +260,8 @@ class MeasureValidator < TradeTariffBackend::Validator
     valid = (record.justification_regulation_id == record.measure_generating_regulation_id) &&
       (record.justification_regulation_role == record.measure_generating_regulation_role)
 
+    binding.pry
+
     # CASE 2:
     if valid == false
       # or measure-generating regulation, valid on the day after the measure’s (explicit) end date
