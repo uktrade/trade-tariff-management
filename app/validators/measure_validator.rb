@@ -269,9 +269,9 @@ class MeasureValidator < TradeTariffBackend::Validator
               record.justification_regulation_role == record.measure_generating_regulation_role
     end
 
-    puts ""
-    puts " VALID after CASE 1: #{valid}"
-    puts ""
+    # puts ""
+    # puts " VALID after CASE 1: #{valid}"
+    # puts ""
 
     # CASE 2:
     #
@@ -283,20 +283,20 @@ class MeasureValidator < TradeTariffBackend::Validator
         if record.generating_regulation.validity_end_date.present? &&
             record.validity_end_date.present?
 
-          puts ""
-          puts "CASE 2-1"
-          puts ""
+          # puts ""
+          # puts "CASE 2-1"
+          # puts ""
 
           valid = record.generating_regulation.validity_end_date > record.validity_end_date
 
         else
-          puts ""
-          puts "CASE 2-2"
-          puts ""
-          puts " record.validity_end_date: #{record.validity_end_date}"
-          puts ""
-          puts " record.generating_regulation.validity_end_date: #{record.generating_regulation.validity_end_date}"
-          puts ""
+          # puts ""
+          # puts "CASE 2-2"
+          # puts ""
+          # puts " record.validity_end_date: #{record.validity_end_date}"
+          # puts ""
+          # puts " record.generating_regulation.validity_end_date: #{record.generating_regulation.validity_end_date}"
+          # puts ""
 
           # This means measure is valid record as its validity end date is `nil`
           valid = (
@@ -307,9 +307,9 @@ class MeasureValidator < TradeTariffBackend::Validator
       end
     end
 
-    puts ""
-    puts " VALID after CASE 2: #{valid}"
-    puts ""
+    # puts ""
+    # puts " VALID after CASE 2: #{valid}"
+    # puts ""
 
     unless valid
       if justification_regulation_present
@@ -328,9 +328,9 @@ class MeasureValidator < TradeTariffBackend::Validator
       end
     end
 
-    puts ""
-    puts " VALID after CASE 3: #{valid}"
-    puts ""
+    # puts ""
+    # puts " VALID after CASE 3: #{valid}"
+    # puts ""
 
     valid
   end
