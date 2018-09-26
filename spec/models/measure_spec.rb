@@ -1408,55 +1408,50 @@ describe Measure do
         )
       end
 
-      it "should run validation successfull if measure's justfication regulation is generating regulation" do
-        #
-        # CASE 1:
-        #
-        # The justification regulation must be either the measure’s measure-generating regulation
-        #
-        expect(measure).to be_conformant
+      describe "CASE 1" do
+        before do
+          measure.validity_end_date = Date.today
+          measure.save
+        end
+
+        it "should run validation successfull if measure's justfication regulation is generating regulation" do
+          # CASE 1:
+          # The justification regulation must be either the measure’s measure-generating regulation
+
+          expect(measure).to be_conformant
+        end
+      end
+
+      describe "CASE 2-1" do
+        before do
+          measure.justification_regulation_id = nil
+          measure.justification_regulation_role = nil
+          measure.save
+        end
+
+        it "should run validation successfull if measure's generating regulation valid on day after measure's end date" do
+          # CASE 2-1:
+          # OR measure-generating regulation should be valid on the day after the measure’s (explicit) end date.
+
+          expect(measure).to be_conformant
+        end
       end
 
       describe "CASE 2-2" do
         before do
-
-        end
-
-        it "should run validation successfull if measure's generating regulation valid on day after measure's end date" do
-          # binding.pry
-
-          # CASE 2:
-          #
-          # OR measure-generating regulation should be valid on the day after the measure’s (explicit) end date.
-          #
-
-          p ""
-          p " measure 1: #{measure.inspect}"
-          p ""
-
           measure.justification_regulation_id = nil
           measure.justification_regulation_role = nil
+          measure.validity_end_date = nil
           measure.save
 
-          measure.reload
+          base_regulation.validity_end_date = nil
+          base_regulation.save
+        end
 
-          p ""
-          p " measure 2: #{measure.inspect}"
-          p ""
+        it "should run validation successfull if measure's and generating regulation's validity end date is blank" do
+          # CASE 2-2:
 
-          p ""
-          p " measure.conformant?: #{measure.conformant?}"
-          p ""
-
-          p ""
-          p " measure.conformance_errors: #{measure.conformance_errors.inspect}"
-          p ""
-
-          # expect(measure).to be_conformant
-
-          has_errors = measure.conformance_errors.select { |k, v| k.to_s.include?("ME104") }
-
-          expect(has_errors).to be_falsey
+          expect(measure).to be_conformant
         end
       end
 

@@ -277,33 +277,33 @@ class MeasureValidator < TradeTariffBackend::Validator
     #
     # OR measure-generating regulation should be valid on the day after the measure’s (explicit) end date.
     #
-    if record.measure_generating_regulation_id.present?
-      if record.generating_regulation.validity_end_date.present? &&
-         record.validity_end_date.present?
 
-        puts ""
-        puts "CASE 2-1"
-        puts ""
+    unless valid
+      if record.measure_generating_regulation_id.present?
+        if record.generating_regulation.validity_end_date.present? &&
+            record.validity_end_date.present?
 
-        valid = record.generating_regulation.validity_end_date > record.validity_end_date
+          puts ""
+          puts "CASE 2-1"
+          puts ""
 
-      else
-        puts ""
-        puts "CASE 2-2"
-        puts ""
-        puts " record.validity_end_date: #{record.validity_end_date}"
-        puts ""
-        puts " record.generating_regulation.validity_end_date: #{record.generating_regulation.validity_end_date}"
-        puts ""
+          valid = record.generating_regulation.validity_end_date > record.validity_end_date
 
-        # This means measure is valid record as its validity end date is `nil`
-        valid = (
-          record.validity_end_date.blank? &&
-          record.generating_regulation.validity_end_date.blank?
-        ) || (
-          record.validity_end_date.present? &&
-          record.generating_regulation.validity_end_date.blank?
-        )
+        else
+          puts ""
+          puts "CASE 2-2"
+          puts ""
+          puts " record.validity_end_date: #{record.validity_end_date}"
+          puts ""
+          puts " record.generating_regulation.validity_end_date: #{record.generating_regulation.validity_end_date}"
+          puts ""
+
+          # This means measure is valid record as its validity end date is `nil`
+          valid = (
+            record.validity_end_date.blank? &&
+            record.generating_regulation.validity_end_date.blank?
+          )
+        end
       end
     end
 
@@ -311,17 +311,19 @@ class MeasureValidator < TradeTariffBackend::Validator
     puts " VALID after CASE 2: #{valid}"
     puts ""
 
-    if justification_regulation_present
-      # CASE 3:
-      # If the measure’s measure-generating regulation is ‘approved’,
-      # then so must be the justification regulation
-      #
-      # In other words: both should have `approved_flag`
-      #
-      unless valid
-        if record.measure_generating_regulation_id.present?
-          valid = record.generating_regulation.approved_flag.present? &&
-                  record.justification_regulation.approved_flag.present?
+    unless valid
+      if justification_regulation_present
+        # CASE 3:
+        # If the measure’s measure-generating regulation is ‘approved’,
+        # then so must be the justification regulation
+        #
+        # In other words: both should have `approved_flag`
+        #
+        unless valid
+          if record.measure_generating_regulation_id.present?
+            valid = record.generating_regulation.approved_flag.present? &&
+              record.justification_regulation.approved_flag.present?
+          end
         end
       end
     end
