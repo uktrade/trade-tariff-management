@@ -257,13 +257,8 @@ class MeasureValidator < TradeTariffBackend::Validator
     valid = true
 
     # CASE 1:
-    if record.justification_regulation_id.present? && record.measure_generating_regulation_id.present?
-      # The justification regulation must be either the measure’s measure-generating regulation
-      valid = (record.justification_regulation_id == record.measure_generating_regulation_id) &&
-        (record.justification_regulation_role == record.measure_generating_regulation_role)
-    elsif record.justification_regulation_id.nil? && record.measure_generating_regulation_id.present?
-      valid = record.generating_regulation.validity_end_date.blank?
-    end
+    valid = (record.justification_regulation_id == record.measure_generating_regulation_id) &&
+      (record.justification_regulation_role == record.measure_generating_regulation_role)
 
     # CASE 2:
     if valid == false

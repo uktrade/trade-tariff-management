@@ -1388,13 +1388,43 @@ describe Measure do
       end
     end
 
-    #describe 'ME104' do
-      #let(:measure) { create :measure }
+    describe %(ME104 :The justification regulation must be either:
+      - the measure’s measure-generating regulation, or
+      - a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
+      If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation) do
 
-      #it 'preforms validation' do
-        #expect(measure).to be_conformant
-      #end
-    #end
+      let(:base_regulation) { create :base_regulation, validity_end_date: Date.today }
+      let(:measure) { create :measure,
+                      measure_generating_regulation_role: base_regulation.base_regulation_role,
+                      measure_generating_regulation_id: base_regulation.base_regulation_id,
+                      justification_regulation_role: base_regulation.base_regulation_role,
+                      justification_regulation_id: base_regulation.base_regulation_id,
+                      base_regulation: base_regulation,
+                      validity_end_date: Date.yesterday }
+
+      let(:measure) { create :measure }
+
+      it "should run validation successfull if measure's justfication regulation is generating regulation" do
+        measure.validity_end_date = Date.yesterday
+        measure.justification_regulation_role = measure.measure_generating_regulation_role
+        measure.justification_regulation_id =  measure.measure_generating_regulation_id
+        measure.save
+
+        expect(measure).to be_conformant
+      end
+
+      # it "should run validation successfull if measure's generating regulation valid on day after measure's end date" do
+      #   measure.justification_regulation_id = nil
+      #   measure.justification_regulation_role = nil
+      #   measure.save
+
+      #   expect(measure).to be_conformant
+      # end
+
+      # it 'should run not validation successfull' do
+      #   expect(measure).to be_conformant
+      # end
+    end
 
     describe "ME112" do
       let!(:additional_code_type) {
