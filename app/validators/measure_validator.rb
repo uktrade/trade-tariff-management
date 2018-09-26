@@ -254,30 +254,81 @@ class MeasureValidator < TradeTariffBackend::Validator
       - the measure’s measure-generating regulation, or
       - a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
       If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation) do |record|
+
     valid = true
 
-    # CASE 1:
-    valid = (record.justification_regulation_id == record.measure_generating_regulation_id) &&
-      (record.justification_regulation_role == record.measure_generating_regulation_role)
+    justification_regulation_present = record.justification_regulation_id.present? &&
+                                       record.justification_regulation.present?
 
-    binding.pry
+    if justification_regulation_present
+      # CASE 1:
+      #
+      # The justification regulation must be either the measure’s measure-generating regulation
+      #
+      valid = record.justification_regulation_id == record.measure_generating_regulation_id &&
+              record.justification_regulation_role == record.measure_generating_regulation_role
+    end
+
+    puts ""
+    puts " VALID after CASE 1: #{valid}"
+    puts ""
 
     # CASE 2:
-    if valid == false
-      # or measure-generating regulation, valid on the day after the measure’s (explicit) end date
-      if record.generating_regulation.present? && record.generating_regulation.validity_end_date.present? && record.validity_end_date.present?
+    #
+    # OR measure-generating regulation should be valid on the day after the measure’s (explicit) end date.
+    #
+    if record.measure_generating_regulation_id.present?
+      if record.generating_regulation.validity_end_date.present? &&
+         record.validity_end_date.present?
+
+        puts ""
+        puts "CASE 2-1"
+        puts ""
+
         valid = record.generating_regulation.validity_end_date > record.validity_end_date
+
       else
+        puts ""
+        puts "CASE 2-2"
+        puts ""
+        puts " record.validity_end_date: #{record.validity_end_date}"
+        puts ""
+        puts " record.generating_regulation.validity_end_date: #{record.generating_regulation.validity_end_date}"
+        puts ""
+
         # This means measure is valid record as its validity end date is `nil`
-        valid = record.validity_end_date.blank?
+        valid = (
+          record.validity_end_date.blank? &&
+          record.generating_regulation.validity_end_date.blank?
+        ) || (
+          record.validity_end_date.present? &&
+          record.generating_regulation.validity_end_date.blank?
+        )
       end
     end
 
-    # CASE 3:
-    # FOR: If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation
-    if valid == false && record.justification_regulation_id.present? && record.measure_generating_regulation_id.present?
-      valid = record.generating_regulation.approved_flag == true && record.generating_regulation.approved_flag == true
+    puts ""
+    puts " VALID after CASE 2: #{valid}"
+    puts ""
+
+    if justification_regulation_present
+      # CASE 3:
+      # If the measure’s measure-generating regulation is ‘approved’,
+      # then so must be the justification regulation
+      #
+      # In other words: both should have `approved_flag`
+      #
+      unless valid
+        if record.measure_generating_regulation_id.present?
+          valid = record.generating_regulation.approved_flag.present? &&
+                  record.justification_regulation.approved_flag.present?
+        end
+      end
     end
+
+    puts ""
+    puts " VALID after CASE 3: #{valid}"
+    puts ""
 
     valid
   end

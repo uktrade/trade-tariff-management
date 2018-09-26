@@ -1393,47 +1393,71 @@ describe Measure do
       - a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
       If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation) do
 
-      let!(:base_regulation) { create :base_regulation, validity_end_date: Date.today }
+      let!(:base_regulation) { create :base_regulation }
       let!(:base_regulation2) { create :base_regulation }
 
       let!(:measure) do
         create(
           :measure,
-          validity_end_date: Date.yesterday,
           measure_generating_regulation_role: base_regulation.base_regulation_role,
           measure_generating_regulation_id: base_regulation.base_regulation_id,
           justification_regulation_role: base_regulation.base_regulation_role,
           justification_regulation_id: base_regulation.base_regulation_id,
-          base_regulation: base_regulation
+          base_regulation: base_regulation,
+          national: true
         )
       end
 
-      before(:each) do
-        @measure = create(
-          :measure,
-          validity_end_date: Date.yesterday,
-          measure_generating_regulation_role: base_regulation.base_regulation_role,
-          measure_generating_regulation_id: base_regulation.base_regulation_id,
-          justification_regulation_role: base_regulation.base_regulation_role,
-          justification_regulation_id: base_regulation.base_regulation_id,
-          base_regulation: base_regulation
-        )
-      end
-
-     # it "should run validation successfull if measure's justfication regulation is generating regulation" do
-      #   expect(measure).to be_conformant
-      # end
-
-      it "should run validation successfull if measure's generating regulation valid on day after measure's end date" do
-        binding.pry
-
-        measure.validity_end_date = Date.yesterday
-        measure.justification_regulation_id = nil
-        measure.justification_regulation_role = nil
-        measure.save
-        measure = measure.reload
-
+      it "should run validation successfull if measure's justfication regulation is generating regulation" do
+        #
+        # CASE 1:
+        #
+        # The justification regulation must be either the measure’s measure-generating regulation
+        #
         expect(measure).to be_conformant
+      end
+
+      describe "CASE 2-2" do
+        before do
+
+        end
+
+        it "should run validation successfull if measure's generating regulation valid on day after measure's end date" do
+          # binding.pry
+
+          # CASE 2:
+          #
+          # OR measure-generating regulation should be valid on the day after the measure’s (explicit) end date.
+          #
+
+          p ""
+          p " measure 1: #{measure.inspect}"
+          p ""
+
+          measure.justification_regulation_id = nil
+          measure.justification_regulation_role = nil
+          measure.save
+
+          measure.reload
+
+          p ""
+          p " measure 2: #{measure.inspect}"
+          p ""
+
+          p ""
+          p " measure.conformant?: #{measure.conformant?}"
+          p ""
+
+          p ""
+          p " measure.conformance_errors: #{measure.conformance_errors.inspect}"
+          p ""
+
+          # expect(measure).to be_conformant
+
+          has_errors = measure.conformance_errors.select { |k, v| k.to_s.include?("ME104") }
+
+          expect(has_errors).to be_falsey
+        end
       end
 
       # it "should run validation successfull if measure's generating regulation valid on day after measure's end date" do
