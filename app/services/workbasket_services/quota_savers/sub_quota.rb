@@ -6,14 +6,38 @@ module WorkbasketServices
                     :attrs_parser,
                     :ops,
                     :base_params,
-                    :order_numbers
+                    :order_numbers,
+                    :errors
 
       def initialize(settings_saver, base_params)
+        @errors = {}
         @settings_saver = settings_saver
         @attrs_parser = settings_saver.attrs_parser
-        @ops = base_params['sub_quotas'] || []
+        @ops = filtered_ops(base_params['sub_quotas']) || []
         @base_params = base_params
         @order_numbers = []
+      end
+
+      def valid?
+        ops.each do |index, item|
+
+          if item['order_number'].blank?
+            @errors["sub_quota_order_number_#{index}"] = "\##{index.to_i + 1} - Order number can't be blank"
+          else
+            record = QuotaOrderNumber.new(quota_order_number_id: item['order_number'])
+            ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
+                record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
+              @errors.merge!("#{key.join(',')}_#{index}": "\##{index.to_i + 1} - #{error.join('. ')}")
+            end
+          end
+
+          @errors["sub_quota_commodity_codes_#{index}"] = "\##{index.to_i + 1} - Commodity codes can't be blank" if item['commodity_codes'].blank?
+          @errors["sub_quota_coefficient_#{index}"] = "\##{index.to_i + 1} - Coefficient can't be blank" if item['coefficient'].blank?
+
+        end
+        puts "error - #{errors.inspect}"
+
+        errors.blank?
       end
 
       def persist!
@@ -64,6 +88,14 @@ module WorkbasketServices
       end
 
       private
+
+      def filtered_ops(ops)
+        if ops.present?
+          ops.select do |key, item|
+            item['coefficient'].present? || item['order_number'].present? || item['commodity_codes'].present?
+          end
+        end
+      end
 
       def parse_commodity_codes(commodity_codes)
         if commodity_codes.present?

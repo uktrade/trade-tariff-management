@@ -6,9 +6,11 @@ module WorkbasketServices
                     :ops,
                     :base_params,
                     :sub_quota,
-                    :order_number
+                    :order_number,
+                    :errors
 
       def initialize(settings_saver, parent_quota_ops, base_params, sub_quota)
+        @errors = {}
         @settings_saver = settings_saver
         @ops = parent_quota_ops
         @base_params = base_params
@@ -19,6 +21,25 @@ module WorkbasketServices
 
       def associate?
         ops['associate'] == 'true'
+      end
+
+      def valid?
+        if associate?
+
+          record = QuotaOrderNumber.new(quota_order_number_id: ops['order_number'])
+          ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
+              record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
+            @errors.merge!("#{key.join(',')}": error.join('. '))
+          end
+
+
+          ops['balances'].each do |index, balance|
+            value = balance['balance']
+            @errors["quota_balance_#{index}"] = "\##{index.to_i + 1} - Opening balance can't be blank" if value.blank?
+          end
+
+        end
+        errors.blank?
       end
 
       def persist!
