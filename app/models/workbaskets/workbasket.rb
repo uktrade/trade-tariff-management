@@ -5,7 +5,8 @@ module Workbaskets
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
-      :create_regulation
+      :create_regulation,
+      :create_additional_code
     ]
 
     STATUS_LIST = [
@@ -62,6 +63,9 @@ module Workbaskets
 
     one_to_one :create_regulation_settings, key: :workbasket_id,
                                             class_name: "Workbaskets::CreateRegulationSettings"
+
+    one_to_one :create_additional_code_settings, key: :workbasket_id,
+                                                 class_name: "Workbaskets::CreateAdditionalCodeSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -194,6 +198,8 @@ module Workbaskets
         create_quota_settings
       when :create_regulation
         create_regulation_settings
+      when :create_additional_code
+        create_additional_code_settings
       end
     end
 
@@ -309,6 +315,10 @@ module Workbaskets
           )
         when :create_regulation
           ::Workbaskets::CreateRegulationSettings.new(
+            workbasket_id: id
+          )
+        when :create_additional_code
+          ::Workbaskets::CreateAdditionalCodeSettings.new(
             workbasket_id: id
           )
         end

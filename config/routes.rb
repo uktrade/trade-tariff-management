@@ -78,6 +78,8 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
+    resources :create_additional_code, only: [:new, :show, :edit, :update]
+
     resources :create_regulation, only: [:new, :show, :edit, :update] do
       member do
         put :attach_pdf
