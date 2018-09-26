@@ -28,6 +28,8 @@ module WorkbasketInteractions
         end
         @errors[:parent_quota] = parent_errors if parent_errors.present?
 
+        @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
+
         @errors.blank?
       end
 

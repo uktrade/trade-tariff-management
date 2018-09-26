@@ -35,7 +35,7 @@ module WorkbasketServices
 
           ops['balances'].each do |index, balance|
             value = balance['balance']
-            @errors["quota_balance_#{index}"] = "\##{index.to_i + 1} opening balance can't be blank" if value.blank?
+            @errors["quota_balance_#{index}"] = "\##{index.to_i + 1} - Opening balance can't be blank" if value.blank?
           end
 
         end
