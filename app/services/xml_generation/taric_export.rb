@@ -148,8 +148,8 @@ module XmlGeneration
 
     # file name format "DIT_<Start Date-YYYYMMDD>-<End Date-YYYYMMDD>-<Timestamp-YYYYMMDDTHHMMSS>-EUFileSequence.XML"
     def filename_prefix
-      start_date = record.date_filters[:start_date].strftime("%Y-%m-%d")
-      end_date   = (record.date_filters[:end_date] || Date.today).strftime("%Y-%m-%d")
+      start_date = record.date_filters[:start_date].strftime("%Y%m%d")
+      end_date   = (record.date_filters[:end_date] || Date.today).strftime("%Y%m%d")
 
       "DIT_#{start_date}-#{end_date}-#{timestamp}"
     end
