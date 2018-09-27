@@ -7,7 +7,7 @@ module Workbaskets
     expose(:initial_step_url) do
       edit_create_additional_code_url(
           workbasket.id,
-          step: :main
+          step: :review_and_submit
       )
     end
 
