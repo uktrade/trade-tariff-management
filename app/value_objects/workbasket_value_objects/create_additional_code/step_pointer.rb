@@ -4,13 +4,12 @@ module WorkbasketValueObjects
 
       def step_transitions
         {
-            main: :review_and_submit,
         }
       end
 
       def form_steps
         %w(
-          main
+          review_and_submit
         )
       end
 
