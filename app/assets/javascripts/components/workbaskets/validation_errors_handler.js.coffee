@@ -41,7 +41,7 @@ window.WorkbasketBaseValidationErrorsHandler =
     flattened_errors = []
 
     $.each grouped_errors, (group_key, errors_collection) ->
-      group_block = $(".js-workbasket-custom-errors[data-errors-container='general']")
+      group_block = $(".js-workbasket-custom-errors[data-errors-container='" + group_key + "']")
       group_block.removeClass('hidden')
       list_block = group_block.find("ul")
       $.each errors_collection, (key, value) ->

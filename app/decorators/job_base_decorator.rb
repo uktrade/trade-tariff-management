@@ -8,6 +8,8 @@ class JobBaseDecorator < ApplicationDecorator
       "Generation in progress"
     when "C"
       "Completed"
+    when "E"
+      "Empty"
     when "F"
       "Failed"
     end

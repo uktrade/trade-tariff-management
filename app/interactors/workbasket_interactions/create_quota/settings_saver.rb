@@ -14,6 +14,25 @@ module WorkbasketInteractions
         @sub_quota_saver ||= WorkbasketServices::QuotaSavers::SubQuota.new(self, settings.settings)
       end
 
+      def valid?
+        super
+
+        parent_errors = {}
+        quota_periods.map do |position, section_ops|
+          saver = WorkbasketServices::QuotaSavers::ParentQuota.new(
+              self,
+              section_ops['parent_quota'],
+              settings.settings,
+              nil)
+          parent_errors.merge!(saver.errors) unless saver.valid?
+        end
+        @errors[:parent_quota] = parent_errors if parent_errors.present?
+
+        @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
+
+        @errors.blank?
+      end
+
       def persist!
         @persist = true
         @measure_sids = []

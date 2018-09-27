@@ -17,7 +17,7 @@
     .virtual-scroller
       .item-container
         .items style=("margin-top: 0px;")
-          - attributes_parser.sub_quotas.map do |k, item|
+          - (attributes_parser.sub_quotas || []).map do |k, item|
             .table__row data-measure-sid="-485562" height="45"
 
               .table__column.order_number-column
