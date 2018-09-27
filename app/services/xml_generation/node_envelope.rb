@@ -13,5 +13,9 @@ module XmlGeneration
     def node_id
       1
     end
+
+    def present?
+      transactions.any?
+    end
   end
 end
