@@ -49,8 +49,8 @@ function objectToArray(obj) {
 }
 
 function any(arr, func) {
-  return arr.filter(function(obj) {
-    return func(obj);
+  return arr.filter(function(obj, index) {
+    return func(obj, index);
   }).length > 0;
 }
 

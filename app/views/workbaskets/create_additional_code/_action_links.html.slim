@@ -1,0 +1,11 @@
+.form-actions
+  h3.heading-medium
+    | Finish
+
+  .submit_group_for_cross_check_block
+    = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button", "v-on:click.prevent" => "submitCrossCheck"
+
+  .save_progress_block
+    = f.button :submit, "Save progress", name: "save_progress", class: "button js-workbasket-base-save-progress-button js-workbasket-base-submit-button", "v-on:click.prevent" => "saveProgress"
+
+  = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-workbasket-base-exit-button"

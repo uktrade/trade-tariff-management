@@ -1,0 +1,21 @@
+fieldset
+  h3.heading-medium
+    | When are these new codes valid from?
+
+  .form-group
+    .bootstrap-row
+      .col-md-6
+        = content_tag "date-select", "", ":value.sync" => "validity_start_date"
+
+fieldset
+  h3.heading-medium
+    | When are these new codes valid until?
+
+  .form-group
+    label.form-label
+      span.form-hint
+        | Optional – leave blank if the codes will remain valid indefinitely.
+
+    .row
+      .col-md-6
+        = content_tag "date-select", "", ":value.sync" => "validity_end_date"

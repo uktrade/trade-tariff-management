@@ -1,0 +1,9 @@
+.additional-code-row {
+  border-bottom: 2px solid $border-colour;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  &:last-of-type {
+    margin-bottom: 10px;
+  }
+}

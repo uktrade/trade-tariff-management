@@ -8,7 +8,11 @@ module AdditionalCodes
     end
 
     def collection
-      scope = measure_type.additional_code_types
+      if measure_type.present?
+        scope = measure_type.additional_code_types
+      else
+        scope = AdditionalCodeType.actual.order(:additional_code_type_id)
+      end
 
       if params[:q].present?
         q_rule = params[:q].strip.downcase

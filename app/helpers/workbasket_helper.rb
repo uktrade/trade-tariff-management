@@ -10,6 +10,13 @@ module WorkbasketHelper
     end
   end
 
+  def create_additional_code_section_header
+    case current_step
+    when "main"
+      "Create new additional codes"
+    end
+  end
+
   def create_quota_section_header
     case current_step
     when "main"
