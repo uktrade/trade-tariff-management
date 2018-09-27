@@ -13,15 +13,17 @@ module XmlGeneration
       ::XmlGeneration::NodeEnvelope.new(data)
     end
 
-    private
+    def target_workbaskets
+      ::Workbaskets::Workbasket.xml_export_collection(
+        start_date, end_date
+      )
+    end
 
-      def data
-        ::Workbaskets::Workbasket.xml_export_collection(
-          start_date, end_date
-        ).map do |workbasket|
-          workbasket.settings
-              .collection
-        end.flatten
-      end
+    def data
+      target_workbaskets.map do |workbasket|
+        workbasket.settings
+                  .collection
+      end.flatten
+    end
   end
 end

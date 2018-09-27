@@ -19,7 +19,7 @@ module Db
       def fetch_relevant_data
         @data = ::XmlGeneration::WorkbasketSearch.new(
           record.date_filters
-        ).send(:data)
+        ).target_workbaskets
       end
 
       def delete_target_db_records!
