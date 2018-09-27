@@ -18,8 +18,21 @@ module Workbaskets
       )
     end
 
+    expose(:read_only_section_url) do
+      create_regulation_url(workbasket.id)
+    end
+
+    expose(:submitted_url) do
+      create_regulation_url(workbasket.id)
+    end
+
     def update
-      head :ok
+      saver.save!
+      if saver.valid?
+        handle_success_saving!
+      else
+        handle_errors!
+      end
     end
 
     private

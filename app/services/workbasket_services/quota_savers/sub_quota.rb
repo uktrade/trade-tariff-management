@@ -35,7 +35,6 @@ module WorkbasketServices
           @errors["sub_quota_coefficient_#{index}"] = "\##{index.to_i + 1} - Coefficient can't be blank" if item['coefficient'].blank?
 
         end
-        puts "error - #{errors.inspect}"
 
         errors.blank?
       end
