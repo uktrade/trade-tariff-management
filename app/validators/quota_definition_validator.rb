@@ -22,4 +22,16 @@ class QuotaDefinitionValidator < TradeTariffBackend::Validator
       record.monetary_unit.present?
     end
 
+  validation :QD5, "The measurement unit code must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.measurement_unit_code.present? } do |record|
+      record.measurement_unit.present?
+    end
+
+  validation :QD6, "The measurement unit qualifier code must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.measurement_unit_qualifier_code.present? } do |record|
+      record.measurement_unit_qualifier.present?
+    end
+
 end

@@ -22,12 +22,16 @@ describe QuotaDefinition do
     describe "#conformance rules" do
       let!(:quota_order_number) { create(:quota_order_number) }
       let!(:monetary_unit) { create(:monetary_unit) }
+      let!(:measurement_unit) { create(:measurement_unit) }
+      let!(:measurement_unit_qualifier) { create(:measurement_unit_qualifier) }
 
       let(:quota_definition) {
         build(
           :quota_definition,
           quota_order_number: quota_order_number,
           monetary_unit_code: monetary_unit.monetary_unit_code,
+          measurement_unit_code: measurement_unit.measurement_unit_code,
+          measurement_unit_qualifier_code: measurement_unit_qualifier.measurement_unit_qualifier_code,
           critical_state: "N",
           validity_start_date: Date.today,
           validity_end_date: Date.today + 1.day,
@@ -103,6 +107,34 @@ describe QuotaDefinition do
 
           expect(quota_definition).to_not be_conformant
           expect(quota_definition.conformance_errors).to have_key(:QD4)
+        end
+      end
+
+      describe "QD5: The monetary unit code must exist." do
+        it "should pass validation" do
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+        end
+
+        it "should not pass validation" do
+          quota_definition.measurement_unit_code = 0
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD5)
+        end
+      end
+
+      describe "QD6: The measurement unit qualifier code must exist." do
+        it "should pass validation" do
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+        end
+
+        it "should not pass validation" do
+          quota_definition.measurement_unit_qualifier_code = 0
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD6)
         end
       end
     end
