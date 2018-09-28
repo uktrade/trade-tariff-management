@@ -28,9 +28,7 @@ $(document).ready(function() {
     },
     mounted: function() {
       if (this.additional_codes.length === 0) {
-        for( var i = 0; i < 5; i++) {
-          this.addAdditionalCode();
-        }
+        this.addAdditionalCodes();
       }
     },
     computed: {
@@ -39,12 +37,14 @@ $(document).ready(function() {
       }
     },
     methods: {
-      addAdditionalCode: function() {
-        this.additional_codes.push({
-          additional_code_type_id: null,
-          additional_code: "",
-          description: ""
-        });
+      addAdditionalCodes: function() {
+        for( var i = 0; i < 5; i++) {
+          this.additional_codes.push({
+            additional_code_type_id: null,
+            additional_code: "",
+            description: ""
+          });
+        }
       },
       submitCrossCheck: function() {
         if (!this.validate("submit_for_cross_check")) {
