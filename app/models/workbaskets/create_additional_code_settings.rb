@@ -8,6 +8,7 @@ module Workbaskets
         AdditionalCode
         AdditionalCodeDescription
         AdditionalCodeDescriptionPeriod
+        MeursingAdditionalCode
       )
     end
 

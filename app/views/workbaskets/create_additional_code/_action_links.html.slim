@@ -3,7 +3,7 @@
     | Finish
 
   .submit_group_for_cross_check_block
-    = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button", "v-on:click.prevent" => "submitCrossCheck"
+    = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button", "v-on:click.prevent" => "submitCrossCheck", "ref" => "submit_button"
 
   .save_progress_block
     = f.button :submit, "Save progress", name: "save_progress", class: "button js-workbasket-base-save-progress-button js-workbasket-base-submit-button", "v-on:click.prevent" => "saveProgress"
