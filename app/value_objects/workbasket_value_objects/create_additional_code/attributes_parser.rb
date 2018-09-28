@@ -34,7 +34,7 @@ module WorkbasketValueObjects
       def additional_code_attributes(attributes)
         {
             additional_code_type_id: attributes['additional_code_type_id'],
-            additional_code: attributes['additional_code'],
+            additional_code: attributes['additional_code'].upcase,
             validity_start_date: validity_start_date,
             validity_end_date: validity_end_date
         }
@@ -44,7 +44,7 @@ module WorkbasketValueObjects
         {
             additional_code_sid: additional_code_sid,
             additional_code_type_id: attributes['additional_code_type_id'],
-            additional_code: attributes['additional_code'],
+            additional_code: attributes['additional_code'].upcase,
             validity_start_date: validity_start_date,
             validity_end_date: validity_end_date
         }
@@ -56,9 +56,21 @@ module WorkbasketValueObjects
             language_id: 'EN',
             additional_code_sid: additional_code_sid,
             additional_code_type_id: attributes['additional_code_type_id'],
-            additional_code: attributes['additional_code'],
+            additional_code: attributes['additional_code'].upcase,
             description: attributes['description']
         }
+      end
+
+      def meursing_additional_code_attributes(attributes)
+        {
+            additional_code: attributes['additional_code'].upcase,
+            validity_start_date: validity_start_date,
+            validity_end_date: validity_end_date
+        }
+      end
+
+      def meursing?(attributes)
+        AdditionalCodeType.find(additional_code_type_id: attributes['additional_code_type_id']).meursing?
       end
 
       private

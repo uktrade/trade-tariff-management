@@ -60,6 +60,7 @@ module WorkbasketInteractions
         additional_code_sid = create_additional_code(item)
         additional_code_description_period_sid = create_additional_code_description_period(additional_code_sid, item)
         create_additional_code_description(additional_code_description_period_sid, additional_code_sid, item)
+        create_meursing_additional_code(item) if attrs_parser.meursing?(item)
       end
 
       def create_additional_code_description(additional_code_description_period_sid, additional_code_sid, item)
@@ -75,7 +76,7 @@ module WorkbasketInteractions
         ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code_description_period).assign!
         assign_system_ops!(additional_code_description_period)
         additional_code_description_period.save
-        additional_code_description_period_sid = additional_code_description_period.additional_code_description_period_sid
+        additional_code_description_period.additional_code_description_period_sid
       end
 
       def create_additional_code(item)
@@ -83,7 +84,14 @@ module WorkbasketInteractions
         ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code).assign!
         assign_system_ops!(additional_code)
         additional_code.save
-        additional_code_sid = additional_code.additional_code_sid
+        additional_code.additional_code_sid
+      end
+
+      def create_meursing_additional_code(item)
+        meursing_additional_code = MeursingAdditionalCode.new(attrs_parser.meursing_additional_code_attributes(item))
+        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(meursing_additional_code).assign!
+        assign_system_ops!(meursing_additional_code)
+        meursing_additional_code.save
       end
 
     end

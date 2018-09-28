@@ -5,6 +5,7 @@ module WorkbasketValueObjects
       PRIMARY_KEYS = {
         "AdditionalCode" => :additional_code_sid,
         "AdditionalCodeDescriptionPeriod" => :additional_code_description_period_sid,
+        "MeursingAdditionalCode" => :meursing_additional_code_sid,
         "QuotaDefinition" => :quota_definition_sid,
         "Footnote" => :footnote_id,
         "FootnoteDescriptionPeriod" => :footnote_description_period_sid,

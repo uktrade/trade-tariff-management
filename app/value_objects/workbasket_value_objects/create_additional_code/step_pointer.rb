@@ -9,7 +9,7 @@ module WorkbasketValueObjects
 
       def form_steps
         %w(
-          review_and_submit
+          main
         )
       end
 
