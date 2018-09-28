@@ -7,7 +7,7 @@ module Workbaskets
     expose(:initial_step_url) do
       edit_create_additional_code_url(
           workbasket.id,
-          step: :review_and_submit
+          step: :main
       )
     end
 
@@ -19,17 +19,23 @@ module Workbaskets
     end
 
     expose(:read_only_section_url) do
-      create_regulation_url(workbasket.id)
+      create_additional_code_url(workbasket.id)
     end
 
     expose(:submitted_url) do
-      create_regulation_url(workbasket.id)
+      create_additional_code_url(workbasket.id)
     end
 
     def update
       saver.save!
       if saver.valid?
-        handle_success_saving!
+        workbasket_settings.track_step_validations_status!(current_step, true)
+        saver.persist!
+
+        submit_for_cross_check.run!
+
+        render json: { redirect_url: submitted_url },
+               status: :ok
       else
         handle_errors!
       end

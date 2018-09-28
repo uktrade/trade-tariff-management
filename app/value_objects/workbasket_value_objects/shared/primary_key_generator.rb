@@ -19,6 +19,7 @@ module WorkbasketValueObjects
 
       def initialize(record, extra_increment_value=nil)
         @record = record
+        @extra_increment_value = extra_increment_value
       end
 
       def assign!

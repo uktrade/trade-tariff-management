@@ -40,14 +40,14 @@ module WorkbasketInteractions
       def build_additional_codes!
         filtered_additional_codes.each do |position, item|
           additional_code = AdditionalCode.new(attrs_parser.additional_code_attributes(item))
-          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code).assign!
+          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code, position.to_i).assign!
           additional_code_sid = additional_code.additional_code_sid
           @records << additional_code
 
           AdditionalCodeDescriptionPeriod.unrestrict_primary_key
           additional_code_description_period = AdditionalCodeDescriptionPeriod.new(
               attrs_parser.additional_code_description_period_attributes(additional_code_sid, item))
-          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code_description_period).assign!
+          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code_description_period, position.to_i).assign!
           additional_code_description_period_sid = additional_code_description_period.additional_code_description_period_sid
           @records << additional_code_description_period
 
@@ -58,7 +58,7 @@ module WorkbasketInteractions
 
           if attrs_parser.meursing?(item)
             meursing_additional_code = MeursingAdditionalCode.new(attrs_parser.meursing_additional_code_attributes(item))
-            ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(meursing_additional_code).assign!
+            ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(meursing_additional_code, position.to_i).assign!
             @records << meursing_additional_code
           end
         end
