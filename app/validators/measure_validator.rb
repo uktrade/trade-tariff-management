@@ -232,29 +232,29 @@ class MeasureValidator < TradeTariffBackend::Validator
     validates :inclusion, of: :measure_generating_regulation_role, in: Measure::VALID_ROLE_TYPE_IDS
   end
 
-  validation :ME87,
-    %(The validity period of the measure (implicit or explicit) must reside
-    within the effective validity period of its supporting regulation. The
-    effective validity period is the validity period of the regulation taking
-    into account extensions and abrogation.), on: [:create, :update] do |record|
+  # validation :ME87,
+  #   %(The validity period of the measure (implicit or explicit) must reside
+  #   within the effective validity period of its supporting regulation. The
+  #   effective validity period is the validity period of the regulation taking
+  #   into account extensions and abrogation.), on: [:create, :update] do |record|
 
-    valid = record.validity_start_date.present?
+  #   valid = record.validity_start_date.present?
 
-    if valid
-      if record.validity_end_date.present? && record.generating_regulation_id.present
-        generating_regulation = record.generating_regulation
+  #   if valid
+  #     if record.validity_end_date.present? && record.generating_regulation_id.present
+  #       generating_regulation = record.generating_regulation
 
-        regulation_start_date = generating_regulation.validity_start_date
-        regulation_end_date   = generating_regulation.effective_end_date.presence ||
-                                generating_regulation.validity_end_date
+  #       regulation_start_date = generating_regulation.validity_start_date
+  #       regulation_end_date   = generating_regulation.effective_end_date.presence ||
+  #                               generating_regulation.validity_end_date
 
-          valid = (regulation_start_date <= record.validity_start_date) &&
-                  (regulation_end_date >= record.validity_end_date)
-      end
-    end
+  #         valid = (regulation_start_date <= record.validity_start_date) &&
+  #                 (regulation_end_date >= record.validity_end_date)
+  #     end
+  #   end
 
-    valid
-  end
+  #   valid
+  # end
 
   validation :ME88, 'The level of the goods code, if present, cannot exceed the explosion level of the measure type.', on: [:create, :update] do |record|
     # NOTE wont apply to national invalidates Measures
