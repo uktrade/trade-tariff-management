@@ -53,8 +53,10 @@ $(document).ready(function() {
 
         this.submitting = true;
 
-        var success = function handSuccess(response) {
-          console.log(response);
+        var success = function handleSuccess(response) {
+          if (response.redirect_url) {
+            window.location = response.redirect_url;
+          }
         };
 
         var error = function handleError(response) {
@@ -116,9 +118,7 @@ $(document).ready(function() {
 
         this.saving = true;
 
-        var success = function handSuccess(response) {
-          console.log(response);
-        };
+        var success = function handleSuccess() {};
 
         var error = function handleError(response) {
           console.log(response);
