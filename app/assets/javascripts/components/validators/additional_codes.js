@@ -35,7 +35,12 @@ AdditionalCodesValidator.prototype.validateLevelOne = function() {
   this.level = "one";
 
   if (this.data.workbasket_name.trim().length === 0) {
-    this.errors.workbasket_name = "You must specify a workbasket name. The name must contain at least one word."
+    this.errors.workbasket_name = "You must specify a workbasket name. The name must contain at least one word.";
+    valid = false;
+  }
+
+  if (this.data.validity_start_date && moment(this.data.validity_start_date, "DD/MM/YYYY", true).isValid() == false) {
+    this.errors.validity_start_date = "You must specify valid a date here.";
     valid = false;
   }
 
@@ -52,10 +57,6 @@ AdditionalCodesValidator.prototype.validateLevelOne = function() {
   if (invalidCodes) {
     this.errors.additional_codes = "One or more of the codes you have entered is invalid. Each code must be three characters long.";
     valid = false;
-  }
-
-  if (!valid) {
-    this.setSummary();
   }
 
   return valid;
@@ -128,6 +129,8 @@ AdditionalCodesValidator.prototype.validateLevelThree = function() {
 };
 
 AdditionalCodesValidator.prototype.gatherResults = function() {
+  this.setSummary();
+
   return {
     valid: this.valid,
     level: this.level,

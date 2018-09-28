@@ -172,6 +172,10 @@ module Workbaskets
       status.to_sym.in?(EDITABLE_STATES)
     end
 
+    def submitted?
+      !status.to_sym.in? [:new_in_progress, :editing]
+    end
+
     def move_status_to!(current_user, new_status, description=nil)
       event = Workbaskets::Event.new(
         workbasket_id: self.id,

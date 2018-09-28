@@ -33,5 +33,5 @@ fieldset
           input.form-control v-model="additionalCode.additional_code" maxlength="3"
         div :class="{'col-md-7': true, 'col-has-error': !!errors['description_' + index]}"
           textarea.form-control v-model="additionalCode.description" rows="3"
-      a href="#" role="button" v-on:click.prevent="addAdditionalCode"
+      a href="#" role="button" v-on:click.prevent="addAdditionalCodes"
         | Add more codes
