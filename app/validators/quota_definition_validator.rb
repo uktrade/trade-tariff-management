@@ -10,4 +10,10 @@ class QuotaDefinitionValidator < TradeTariffBackend::Validator
     end
   end
 
+  validation :QD3, "The quota order number must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.quota_order_number_id.present? } do |record|
+      record.quota_order_number.present?
+    end
+
 end

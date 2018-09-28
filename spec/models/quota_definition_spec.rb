@@ -20,23 +20,27 @@ describe QuotaDefinition do
 
   describe "#validations" do
     describe "#conformance rules" do
+      let!(:quota_order_number) { build(:quota_order_number) }
+      let(:quota_definition) {
+        build(
+          :quota_definition,
+          quota_order_number: quota_order_number,
+          critical_state: "N",
+          validity_start_date: Date.today,
+          validity_end_date: Date.today + 1.day,
+        )
+      }
 
       describe "QD1: Quota order number id + start date must be unique" do
         it "should run validation sucessfully" do
-          quota_definition = build(
-            :quota_definition,
-            critical_state: 'N',
-            validity_start_date: Date.today,
-            validity_end_date: Date.today + 1.day,
-          )
-
           expect(quota_definition).to be_conformant
         end
 
         it "should not run validation sucessfully" do
           quota_definition = create(
             :quota_definition,
-            critical_state: 'N',
+            quota_order_number_id: quota_order_number.quota_order_number_id,
+            critical_state: "N",
             validity_start_date: Date.today,
             validity_end_date: Date.today + 1.day,
           )
@@ -54,29 +58,36 @@ describe QuotaDefinition do
 
       describe "QD2: The start date must be less than or equal to the end date" do
         it "should run validation sucessfully" do
-          quota_definition = build(
-            :quota_definition,
-            critical_state: 'N',
-            validity_start_date: Date.yesterday,
-            validity_end_date: Date.today,
-          )
-
           expect(quota_definition).to be_conformant
         end
 
         it "should not run validation sucessfully" do
-          quota_definition = build(
-            :quota_definition,
-            critical_state: 'N',
-            validity_start_date: Date.today,
-            validity_end_date: Date.yesterday,
-          )
+          quota_definition.validity_start_date = Date.today
+          quota_definition.validity_end_date = Date.yesterday
 
           expect(quota_definition).to_not be_conformant
           expect(quota_definition.conformance_errors).to have_key(:QD2)
         end
       end
 
+      describe "QD3: The quota order number must exist." do
+        it "should run validation sucessfully" do
+          expect(quota_definition).to be_conformant
+        end
+
+        it "should not run validation sucessfully" do
+          quota_definition = build(
+            :quota_definition,
+            quota_order_number_id: 0,
+            critical_state: "N",
+            validity_start_date: Date.today,
+            validity_end_date: Date.today + 1.day,
+          )
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD3)
+        end
+      end
     end
   end
 end
