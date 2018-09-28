@@ -26,7 +26,9 @@ $(document).ready(function() {
     },
     mounted: function() {
       if (this.additional_codes.length === 0) {
-        this.addAdditionalCode();
+        for( var i = 5; i--; ) {
+          this.addAdditionalCode();
+        }
       }
     },
     computed: {
@@ -44,7 +46,46 @@ $(document).ready(function() {
       },
       submitCrossCheck: function() {
         if (!this.validate("submit_for_cross_check")) {
-          return;
+          submit_button = $(this.$refs.submit_button);
+
+          this.savedSuccessfully = false;
+          WorkbasketBaseSaveActions.toogleSaveSpinner($(submit_button).attr('name'));
+          var http_method = "PUT";
+
+          var payload = this.preparePayload();
+
+          var data_ops = {
+            step: window.current_step,
+            mode: submit_button.attr('name'),
+            settings: payload
+          };
+
+          this.errors = [];
+
+          console.log(window.save_url);
+
+          $.ajax({
+            url: window.save_url,
+            type: http_method,
+            data: data_ops,
+            success: function(response) {
+              WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'), function() {
+                this.savedSuccessfully = true;
+              });
+            },
+            error: function(response) {
+              this.savedSuccessfully = true;
+              WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, this);
+            }
+          });
+        }
+      },
+      preparePayload: function() {
+        return {
+          workbasket_name: this.workbasket_name,
+          validity_start_date: this.validity_start_date,
+          validity_end_date: this.validity_end_date,
+          additional_codes: this.additional_codes
         }
       },
       saveProgress: function() {
