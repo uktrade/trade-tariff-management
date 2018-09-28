@@ -1,0 +1,10 @@
+fieldset
+  h3.heading-medium
+    | What type of geographical area are you creating?
+
+  .controls.origins-region
+    = content_tag "geographical-area-type", "", { kind: "country", placeholder: "― select a country or region ―", ":origin" => "origins.country", ":multiple" => false }
+
+    = content_tag "geographical-area-type", "", { kind: "region", placeholder: "― select a group of countries ―", ":origin" => "origins.region", ":multiple" => false }
+
+    = content_tag "geographical-area-type", "", { kind: "group", placeholder: "― select a country or region ―", ":origin" => "origins.group", ":multiple" => true }

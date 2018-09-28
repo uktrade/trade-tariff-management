@@ -10,6 +10,23 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
+        origins: {
+          country: {
+            geographical_area_id: [],
+            exclusions: [],
+            selected: false
+          },
+          group: {
+            geographical_area_id: null,
+            exclusions: [],
+            selected: false
+          },
+          region: {
+            geographical_area_id: null,
+            exclusions: [],
+            selected: false
+          }
+        },
         errors: []
       };
 

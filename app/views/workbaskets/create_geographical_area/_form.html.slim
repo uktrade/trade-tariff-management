@@ -4,7 +4,7 @@ script
 = simple_form_for form, url: create_geographical_area_url(id: workbasket.id),
                         html: { \
                           class: "geographical-area-form create-measures-v2", \
-                          method: :put
+                          method: :put \
                         } do |f|
 
   = render "workbaskets/create_geographical_area/steps/#{params[:step].to_s}", f: f

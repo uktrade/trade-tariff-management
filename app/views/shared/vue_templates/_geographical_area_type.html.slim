@@ -1,0 +1,23 @@
+script type="text/x-template" id="geographical-area-type-template"
+  .geographical-area-type
+    .multiple-choice
+      input type='radio' :id="radioID" class="radio-inline-group" name="geographical_area_type" :checked="origin.selected"
+
+      label :for="radioID" v-if="countryTypeSelected"
+        | A country
+
+      label :for="radioID" v-if="regionTypeSelected"
+        | A region
+
+      label :for="radioID" v-if="groupTypeSelected"
+        | A group
+
+    .panel.panel-border-narrow v-if="showExclusions"
+      label.form-label
+        | Optionally a parent for this group
+
+      .exclusions-target
+        .exclusion v-for="exclusion in origin.exclusions" :key="exclusion.uid"
+          .exclusion-select
+            = content_tag "custom-select", "", { ":options" => "exclusion.options", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", "placeholder": "― start group ―", "min-length" => 1, "v-model" => "exclusion.geographical_area_id", class: "origin-select", "code-class-name" => "prefix--country", "@change-value" => "changeExclusion" }
+

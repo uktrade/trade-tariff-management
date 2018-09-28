@@ -32,6 +32,15 @@ module WorkbasketHelper
     end
   end
 
+  def create_geographical_area_section_header
+    case current_step
+    when "main"
+      "Add geographical area"
+    when "review_and_submit"
+      "Review and submit"
+    end
+  end
+
   def workbasket_quota_periods_overview
     annual = workbasket_get_quota_periods('annual')
     bi_annual = workbasket_get_quota_periods('bi_annual')
