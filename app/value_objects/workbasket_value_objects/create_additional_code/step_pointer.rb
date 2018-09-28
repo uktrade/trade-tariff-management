@@ -15,6 +15,10 @@ module WorkbasketValueObjects
 
       def main_step_settings
         %w(
+        workbasket_name
+        validity_start_date
+        validity_end_date
+        additional_codes
         )
       end
 

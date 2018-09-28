@@ -156,6 +156,12 @@ module WorkbasketHelper
           step: :main
         )
       end
+
+    when :create_additional_code
+      edit_create_additional_code_url(
+        workbasket.id,
+        step: :main
+      )
     end
   end
 
@@ -169,6 +175,8 @@ module WorkbasketHelper
       create_quotum_url(workbasket.id)
     when :create_regulation
       create_regulation_url(workbasket.id)
+    when :create_additional_code
+      create_additional_code_url(workbasket.id)
     end
   end
 end

@@ -11,6 +11,8 @@ module Workbaskets
         "Create Quota"
       when "create_regulation"
         "Create Regulation"
+      when "create_additional_code"
+        "Create Additional Codes"
       end
     end
 
