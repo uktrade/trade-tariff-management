@@ -64,6 +64,7 @@ AdditionalCodesValidator.prototype.validateLevelOne = function() {
 AdditionalCodesValidator.prototype.validateLevelTwo = function() {
   this.level = "two";
   var valid = true;
+  var self = this;
 
   var start_date = moment(this.data.validity_start_date, "DD/MM/YYYY", true);
   var end_date = moment(this.data.validity_end_date, "DD/MM/YYYY", true);

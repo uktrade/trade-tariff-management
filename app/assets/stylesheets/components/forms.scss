@@ -27,6 +27,12 @@ input.date-picker {
   }
 }
 
+.col-has-error {
+  input, textarea, .selectize-input {
+    border-color: $error-colour !important;
+  }
+}
+
 .modal .form-group {
   margin-bottom: 15px !important;
 }
