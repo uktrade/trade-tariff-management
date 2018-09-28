@@ -45,7 +45,13 @@ FactoryGirl.define do
 
   factory :quota_order_number_origin_exclusion do
     quota_order_number_origin_sid    { generate(:sid) }
-    excluded_geographical_area_sid   { generate(:sid) }
+
+    after(:build) do |exclusion|
+      if exclusion.excluded_geographical_area_sid.blank?
+        geographical_area = create(:geographical_area)
+        exclusion.excluded_geographical_area_sid = geographical_area.geographical_area_sid
+      end
+    end
   end
 
   factory :quota_reopening_event do

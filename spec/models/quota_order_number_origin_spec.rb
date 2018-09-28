@@ -142,5 +142,39 @@ describe QuotaOrderNumberOrigin do
         expect(qono.conformance_errors).to have_key(:ON13)
       end
     end
+
+    describe "ON14" do
+      it "valid" do
+        group_sid = generate(:sid)
+        ga = create :geographical_area,
+                    geographical_code: 1,
+                    parent_geographical_area_group_sid: group_sid
+        qono = build :quota_order_number_origin,
+                     geographical_area_id: ga.geographical_area_id,
+                     geographical_area_sid: ga.geographical_area_sid
+        excluded_ga = create :geographical_area,
+                             parent_geographical_area_group_sid: group_sid
+        exclusion = create :quota_order_number_origin_exclusion,
+                           quota_order_number_origin_sid: qono.quota_order_number_origin_sid,
+                           excluded_geographical_area_sid: excluded_ga.geographical_area_sid
+        expect(qono).to be_conformant
+      end
+
+      it "invalid" do
+        ga = create :geographical_area,
+                    geographical_code: 1,
+                    parent_geographical_area_group_sid: generate(:sid)
+        qono = build :quota_order_number_origin,
+                     geographical_area_id: ga.geographical_area_id,
+                     geographical_area_sid: ga.geographical_area_sid
+        excluded_ga = create :geographical_area,
+                             parent_geographical_area_group_sid: generate(:sid)
+        exclusion = create :quota_order_number_origin_exclusion,
+                           quota_order_number_origin_sid: qono.quota_order_number_origin_sid,
+                           excluded_geographical_area_sid: excluded_ga.geographical_area_sid
+        expect(qono).to_not be_conformant
+        expect(qono.conformance_errors).to have_key(:ON14)
+      end
+    end
   end
 end

@@ -62,4 +62,10 @@ class QuotaOrderNumberOriginValidator < TradeTariffBackend::Validator
       record.geographical_area.present? && record.geographical_area.geographical_code == "1"
     end
   end
+
+  validation :ON14, 'The excluded geographical area must be a member of the geographical area group.' do |record|
+    if record.quota_order_number_origin_exclusion.present?
+      record.geographical_area.present? && record.geographical_area.parent_geographical_area_group_sid == record.quota_order_number_origin_exclusion.geographical_area.parent_geographical_area_group_sid
+    end
+  end
 end
