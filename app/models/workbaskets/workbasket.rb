@@ -5,7 +5,8 @@ module Workbaskets
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
-      :create_regulation
+      :create_regulation,
+      :create_geographical_area
     ]
 
     STATUS_LIST = [
@@ -62,6 +63,9 @@ module Workbaskets
 
     one_to_one :create_regulation_settings, key: :workbasket_id,
                                             class_name: "Workbaskets::CreateRegulationSettings"
+
+    one_to_one :create_geographical_area_settings, key: :workbasket_id,
+                                                   class_name: "Workbaskets::CreateGeographicalAreaSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -194,6 +198,8 @@ module Workbaskets
         create_quota_settings
       when :create_regulation
         create_regulation_settings
+      when :create_geographical_area
+        create_geographical_area_settings
       end
     end
 
@@ -283,6 +289,7 @@ module Workbaskets
           create_measures
           create_quota
           create_regulation
+          create_geographical_area
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -294,25 +301,22 @@ module Workbaskets
     private
 
       def build_related_settings_table!
-        settings = case type.to_sym
+        target_class = case type.to_sym
         when :create_measures
-          ::Workbaskets::CreateMeasuresSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::CreateMeasuresSettings
         when :bulk_edit_of_measures
-          ::Workbaskets::BulkEditOfMeasuresSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::BulkEditOfMeasuresSettings
         when :create_quota
-          ::Workbaskets::CreateQuotaSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::CreateQuotaSettings
         when :create_regulation
-          ::Workbaskets::CreateRegulationSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::CreateRegulationSettings
+        when :create_geographical_area
+          ::Workbaskets::CreateGeographicalAreaSettings
         end
 
+        settings = target_class.new(
+          workbasket_id: id
+        )
         settings.save if settings.present?
       end
   end
