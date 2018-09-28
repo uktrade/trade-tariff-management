@@ -47,6 +47,9 @@ FactoryGirl.define do
     quota_definition_sid   { generate(:quota_order_number_sid) }
     quota_order_number_sid { generate(:quota_order_number_sid) }
     quota_order_number_id  { 6.times.map{ Random.rand(9) }.join }
+    monetary_unit_code              { Forgery(:basic).text(exactly: 3) }
+    measurement_unit_code           { Forgery(:basic).text(exactly: 3) }
+    measurement_unit_qualifier_code { Forgery(:basic).text(exactly: 1) }
 
     trait :actual do
       validity_start_date { Date.today.ago(3.years) }

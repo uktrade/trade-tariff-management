@@ -16,4 +16,10 @@ class QuotaDefinitionValidator < TradeTariffBackend::Validator
       record.quota_order_number.present?
     end
 
+  validation :QD4, "The monetary unit code must exist.",
+    on: [:create, :update],
+    if: ->(record) { record.monetary_unit_code.present? } do |record|
+      record.monetary_unit.present?
+    end
+
 end
