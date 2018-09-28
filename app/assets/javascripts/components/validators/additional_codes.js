@@ -1,7 +1,7 @@
 function AdditionalCodesValidator(data) {
   this.data = data;
   this.errors = {};
-  this.valid = false;
+  this.valid = true;
   this.level = "one";
   this.summary = "";
 }
@@ -10,15 +10,18 @@ AdditionalCodesValidator.prototype.validate = function(action) {
   this.action = action;
 
   if (!this.validateLevelOne()) {
+    this.valid = false;
     return this.gatherResults();
   }
 
   if (action === "submit_for_cross_check") {
     if (!this.validateLevelTwo()) {
+      this.valid = false;
       return this.gatherResults();
     }
 
     if (!this.validateLevelThree()) {
+      this.valid = false;
       return this.gatherResults();
     }
   }
@@ -37,7 +40,7 @@ AdditionalCodesValidator.prototype.validateLevelOne = function() {
   }
 
   var invalidCodes = any(this.data.additional_codes, function(code, index) {
-    var hasError = !code.additional_code.trim().length > 0 && !code.additional_code.match("^[0-9a-zA-Z]{3}$");
+    var hasError = code.additional_code.trim().length > 0 && !code.additional_code.match("^[0-9a-zA-Z]{3}$");
 
     if (hasError) {
       self.errors["additional_code_" + index] = "invalid";
@@ -60,12 +63,67 @@ AdditionalCodesValidator.prototype.validateLevelOne = function() {
 
 AdditionalCodesValidator.prototype.validateLevelTwo = function() {
   this.level = "two";
+  var valid = true;
 
+  var start_date = moment(this.data.validity_start_date, "DD/MM/YYYY", true);
+  var end_date = moment(this.data.validity_end_date, "DD/MM/YYYY", true);
+
+  if (!this.data.validity_start_date) {
+    this.errors.validity_start_date = "You must specify a date here.";
+    valid = false;
+  } else if (!start_date.isValid()) {
+    this.errors.validity_start_date = "You must specify valid a date here.";
+    valid = false;
+  }
+
+  if (this.data.validity_end_date) {
+    if (!end_date.isValid()) {
+      this.errors.validity_end_date = "The end date, if specified, must be a valid date.";
+      valid = false;
+    } else if (end_date.diff(start_date, "days") <= 0) {
+      this.errors.validity_end_date = "The end date, if specified, must be after the start date specified above.";
+      valid = false;
+    }
+  }
+
+  var invalidCodes = any(this.data.additional_codes, function(code, index) {
+    var incompleteCode = code.additional_code.trim().length == 0;
+    var incompleteDescription = code.description.trim().length == 0;
+    var incompleteType = !code.additional_code_type_id;
+
+    // if all blank, ignore
+    if (incompleteCode && incompleteDescription && incompleteType) {
+      return false;
+    }
+
+    if (incompleteCode) {
+      self.errors["additional_code_" + index] = "invalid";
+    }
+
+    if (incompleteDescription) {
+      self.errors["description_" + index] = "invalid";
+    }
+
+    if (incompleteType) {
+      self.errors["additional_code_type_id_" + index] = "invalid";
+    }
+
+    return incompleteCode || incompleteDescription || incompleteType;
+  });
+
+  if (invalidCodes) {
+    this.errors.additional_codes = "One or more of the specified codes is incomplete.";
+    valid = false;
+  }
+
+  return valid;
 };
 
 AdditionalCodesValidator.prototype.validateLevelThree = function() {
   this.level = "three";
+  var valid = true;
 
+  return valid;
 };
 
 AdditionalCodesValidator.prototype.gatherResults = function() {
