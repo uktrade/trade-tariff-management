@@ -62,8 +62,6 @@ $(document).ready(function() {
 
           this.errors = [];
 
-          console.log(window.save_url);
-
           $.ajax({
             url: window.save_url,
             type: http_method,

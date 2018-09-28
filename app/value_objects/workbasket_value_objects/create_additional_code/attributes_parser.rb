@@ -73,6 +73,10 @@ module WorkbasketValueObjects
         AdditionalCodeType.find(additional_code_type_id: attributes['additional_code_type_id']).meursing?
       end
 
+      def operation_date
+        validity_start_date
+      end
+
       private
 
       def filter_additional_codes(ops)
