@@ -24,7 +24,7 @@ fieldset
             | This will be visible to operators and should be as precise as possible, or use 'Other'.
     .bootstrap-row.additional-code-row v-for="(additionalCode, index) in additional_codes"
       .col-md-2
-        custom-select url="/additional_code_types" value-field="additional_code_type_id" code-field="additional_code_type_id" label-field="description" v-model="additionalCode.additional_code_type_id" placeholder="— select type —" :allow-clear="true" :scope-date="validity_start_date" :date-sensitive="true"
+        custom-select url="/additional_code_types" value-field="additional_code_type_id" code-field="additional_code_type_id" label-field="description" v-model="additionalCode.additional_code_type_id" placeholder="— select type —" :scope-date="validity_start_date" :date-sensitive="true"
       .col-md-2
         input.form-control v-model="additionalCode.additional_code" maxlength="3"
       .col-md-7

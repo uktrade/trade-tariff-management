@@ -16,6 +16,8 @@ $(document).ready(function() {
         additional_codes: [],
         additional_code_types: [],
         savedSuccessfully: false,
+        saving: false,
+        submitting: false,
         errors: {},
         errorsSummary: ""
       };
@@ -26,7 +28,7 @@ $(document).ready(function() {
     },
     mounted: function() {
       if (this.additional_codes.length === 0) {
-        for( var i = 5; i--; ) {
+        for( var i = 0; i < 5; i++) {
           this.addAdditionalCode();
         }
       }
@@ -46,37 +48,58 @@ $(document).ready(function() {
       },
       submitCrossCheck: function() {
         if (!this.validate("submit_for_cross_check")) {
-          submit_button = $(this.$refs.submit_button);
-
-          this.savedSuccessfully = false;
-          WorkbasketBaseSaveActions.toogleSaveSpinner($(submit_button).attr('name'));
-          var http_method = "PUT";
-
-          var payload = this.preparePayload();
-
-          var data_ops = {
-            step: window.current_step,
-            mode: submit_button.attr('name'),
-            settings: payload
-          };
-
-          this.errors = [];
-
-          $.ajax({
-            url: window.save_url,
-            type: http_method,
-            data: data_ops,
-            success: function(response) {
-              WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'), function() {
-                this.savedSuccessfully = true;
-              });
-            },
-            error: function(response) {
-              this.savedSuccessfully = true;
-              WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, this);
-            }
-          });
+          return;
         }
+
+        this.submitting = true;
+
+        var success = function handSuccess(response) {
+          console.log(response);
+        };
+
+        var error = function handleError(response) {
+          console.log(response);
+        };
+
+        this.sendPayload("submit_for_cross_check", success.bind(this), error.bind(this));
+      },
+      sendPayload: function(action, success, error) {
+        this.savedSuccessfully = false;
+
+        var self = this;
+        var payload = this.preparePayload();
+
+        var data_ops = {
+          step: window.current_step,
+          mode: action,
+          settings: payload
+        };
+
+        this.errors = [];
+
+        $.ajax({
+          url: window.save_url,
+          type: "PUT",
+          data: data_ops,
+          success: function(response) {
+            self.saving = false;
+            self.submitting = false;
+            self.savedSuccessfully = true;
+            success(response);
+          },
+          error: function(response) {
+            self.saving = false;
+            self.submitting = false;
+
+            if (response.status == 500) {
+              alert("There was a server error which prevented the additional codes to be saved. Please try again in a few moments.");
+              return;
+            }
+
+            self.savedSuccessfully = true;
+            error(response);
+          }
+        });
       },
       preparePayload: function() {
         return {
@@ -90,6 +113,18 @@ $(document).ready(function() {
         if (!this.validate("save_progress")) {
           return;
         }
+
+        this.saving = true;
+
+        var success = function handSuccess(response) {
+          console.log(response);
+        };
+
+        var error = function handleError(response) {
+          console.log(response);
+        };
+
+        this.sendPayload("save_progress", success.bind(this), error.bind(this));
       },
       validate: function(action) {
         var validator = new AdditionalCodesValidator(this);
