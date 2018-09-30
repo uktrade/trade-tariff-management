@@ -120,7 +120,12 @@ class GeographicalArea < Sequel::Model
 
         scope
       else
-        q_search(filter_ops)
+
+        if filter_ops[:groups_only].present?
+          groups.q_search(filter_ops)
+        else
+          q_search(filter_ops)
+        end
       end
     end
   end
