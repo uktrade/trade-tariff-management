@@ -17,8 +17,6 @@ module AdditionalCodes
       if params[:q].present?
         q_rule = params[:q].strip.downcase
 
-        debugger
-
         scope = scope.select do |ac_type|
           ilike?(:additional_code_type_id, q_rule) ||
           ilike?(:description, q_rule)
