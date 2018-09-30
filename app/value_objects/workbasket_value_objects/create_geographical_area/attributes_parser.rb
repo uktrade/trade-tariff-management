@@ -5,7 +5,8 @@ module WorkbasketValueObjects
       SIMPLE_OPS = %w(
         geographical_code
         geographical_area_id
-        parent_geographical_area_group_sid
+        description
+        parent_geographical_area_group_id
         start_date
         end_date
         operation_date
