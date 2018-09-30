@@ -7,6 +7,6 @@ fieldset
 
   .row
     .col-md-12
-      .form-group v-bind:class="{ 'form-group-error': errors.description }"
+      .form-group.without_bottom_margin v-bind:class="{ 'form-group-error': errors.description }"
         span.error-message v-if="errors.description" v-html="errors.description"
         = f.input :description, label: false, input_html: { class: "col-md-3", "v-model" => "geographical_area.description" }
