@@ -76,29 +76,6 @@ $(document).ready(function() {
       });
     },
     computed: {
-      dependentOnBaseRegulation: function() {
-        return $.inArray(this.regulation.role, ['4', '6', '7']) !== -1;
-      },
-      canHaveRelatedAntidumpingLink: function() {
-        var roles = ["2", "3"];
-
-        return roles.indexOf(this.regulation.role) > -1;
-      },
-      showCommunityCode: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
-      },
-      showValidityPeriod: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3", "4", "8"]) !== -1;
-      },
-      showRegulationGroup: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
-      },
-      showPublishedDate: function() {
-        return $.inArray(this.regulation.role, ["5", "6", "7", "8"]) !== -1;
-      },
-      isExplicitAbrogation: function() {
-        return this.regulation.role === "7";
-      },
       hasErrors: function() {
         return this.errors.length > 0;
       }
@@ -133,20 +110,6 @@ $(document).ready(function() {
           validity_end_date: this.geographical_area.validity_end_date,
           operation_date: this.geographical_area.operation_date,
         };
-      },
-      onBaseRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.base_regulation_role = item.role;
-      },
-      onRelatedAntidumpingRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.antidumping_regulation_role = item.role;
       }
     }
   });
