@@ -1,0 +1,30 @@
+.geographical-area-type {
+  .multiple-choice {
+    float: none !important;
+
+    &:after {
+      content: " ";
+      display: table;
+      clear: both;
+      zoom: 1;
+    }
+  }
+
+  label {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  p {
+    margin-top: 0;
+  }
+
+  .origin-select {
+    position: relative;
+    top: 0;
+  }
+
+  & + .geographical-area-type {
+    margin-top: 12px;
+  }
+}
