@@ -1,6 +1,7 @@
 script type="text/x-template" id="geographical-area-type-template"
   .geographical-area-type
     .multiple-choice
+
       input type='radio' :id="radioID" class="radio-inline-group js-geographical-area-type" name="geographical_area[geographical_code]" :checked="origin.selected"
 
       label :for="radioID" v-if="countryTypeSelected"
@@ -27,7 +28,7 @@ script type="text/x-template" id="geographical-area-type-template"
           br
           | A group must have four-character (letters and/or numbers) code.
 
-    .panel.panel-border-narrow v-if="groupTypeSelected"
+    .panel.panel-border-narrow.hidden.js-geographical-area-parent-group-select-block v-if="groupTypeSelected"
       label.form-label
         | Optionally specify a parent for this group
 

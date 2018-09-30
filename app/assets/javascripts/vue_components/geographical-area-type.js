@@ -61,6 +61,13 @@ Vue.component("geographical-area-type", {
     },
     "origin.selected": function(newVal, oldVal) {
       if (newVal) {
+        if (this.kind == 'group') {
+          $(".js-geographical-area-parent-group-select-block").removeClass('hidden');
+        } else {
+          $(".js-geographical-area-parent-group-select-block").addClass('hidden');
+          $("select[name='geographical_area[geographical_area_id]']")[0].selectize.clearOptions();
+        }
+
         $("input.js-geographical-area-type").val(this.kind);
       }
     },
