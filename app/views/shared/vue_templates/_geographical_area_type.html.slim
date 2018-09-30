@@ -6,19 +6,39 @@ script type="text/x-template" id="geographical-area-type-template"
       label :for="radioID" v-if="countryTypeSelected"
         | A country
 
+        span.form-hint
+          | This will have two-letter ISO code. You can add countires to geographical area groups.
+          br
+          | but a country cannot itself be a group.
+
       label :for="radioID" v-if="regionTypeSelected"
         | A region
+
+        span.form-hint
+          | Use this only in exceptional cases, to represent a geographical entity that is not a
+          br
+          | country. Functionally, a region is the same as a country.
 
       label :for="radioID" v-if="groupTypeSelected"
         | A group
 
+        span.form-hint
+          | Create a group when you want to reference multiple countries and/or regions together.
+          br
+          | A group must have four-character (letters and/or numbers) code.
+
     .panel.panel-border-narrow v-if="groupTypeSelected"
       label.form-label
-        | Optionally a parent for this group
+        | Optionally specify a parent for this group
+
+        span.form-hint
+          | You should almost never need to use this, but if you do, specify another group - you can enter
+          br
+          | either the parent's four-character code, or start typing its description, and select from the list.
 
       .exclusions-target
           .exclusion-select
-            = content_tag "custom-select", "", { url: "/geographical_areas.json?groups_only=true", "allow-clear" => true, "code-field" => "", "label-field" => "description", "value-field" => "id", "v-model" => "origin.geographical_area_id", placeholder: "- select base regulation -", ":on-change" => "changeExclusion", "name" => "geographical_area[geographical_area_id]", "code-class-name" => "prefix--country" }
+            = content_tag "custom-select", "", { url: "/geographical_areas.json?groups_only=true", "allow-clear" => true, "code-field" => "", "label-field" => "description", "value-field" => "id", "v-model" => "origin.geographical_area_id", placeholder: "― select group ―", ":on-change" => "changeExclusion", "name" => "geographical_area[geographical_area_id]", "code-class-name" => "prefix--country" }
 
 
             / = content_tag "custom-select", "", { ":options" => "origin.list", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", "placeholder": "― select group ―", "min-length" => 1, "v-model" => "origin.geographical_area_id", class: "origin-select", "code-class-name" => "prefix--country", "@change-value" => "changeExclusion" }

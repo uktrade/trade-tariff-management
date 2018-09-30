@@ -27,4 +27,18 @@
   & + .geographical-area-type {
     margin-top: 12px;
   }
+
+  span.form-hint {
+    font-size: 16px !important;
+    margin-top: 7px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+
+  .panel.panel-border-narrow {
+    .form-label {
+      font-size: 16px !important;
+      font-weight: bold;
+    }
+  }
 }
