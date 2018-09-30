@@ -41,4 +41,14 @@
       font-weight: bold;
     }
   }
+
+  .parent-group-target {
+    margin: 1em 0;
+
+    .parent-group-select {
+      display: inline-block;
+      width: 300px;
+      max-width: 100%;
+    }
+  }
 }
