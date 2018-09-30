@@ -17,9 +17,11 @@ module AdditionalCodes
       if params[:q].present?
         q_rule = params[:q].strip.downcase
 
+        debugger
+
         scope = scope.select do |ac_type|
-          ilike?(ac_type.additional_code_type_id, q_rule) ||
-          ilike?(ac_type.description, q_rule)
+          ilike?(:additional_code_type_id, q_rule) ||
+          ilike?(:description, q_rule)
         end
       end
 

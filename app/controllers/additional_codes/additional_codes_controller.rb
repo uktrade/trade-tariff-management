@@ -5,6 +5,10 @@ module AdditionalCodes
       AdditionalCode.by_code(params[:code])
     end
 
+    expose(:items_search) do
+      []
+    end
+
     #TODO: disclaimer: this is a hack so I can work on the UI :). I think we should have all "APIs" to a separate scope
     def index
       unless request.xhr?

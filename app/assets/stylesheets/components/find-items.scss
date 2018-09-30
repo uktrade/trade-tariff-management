@@ -1,37 +1,43 @@
-$find-measure-gutter: 5px;
+$find-item-gutter: 5px;
 
-.find-measures {
+.find-items {
   margin-bottom: 100px;
 }
 
-.find-measures__row {
+.find-items__row {
   display: flex;
   border-bottom: 2px solid $border-colour;
 }
 
-.find-measures__checkbox-column {
+.find-items__checkbox-column {
   flex: 0 0 200px;
-  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
 }
 
-.find-measures__is,
-.find-measures__type,
-.find-measure__short {
+.find-items__is,
+.find-items__type,
+.find-item__short {
   flex: 0 0 220px;
   max-width: 220px;
-  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
 }
 
-.find-measure__long {
+.find-item__long {
   flex: 0 0 365px;
   max-width: 365px;
-  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
 }
 
-.find-measure__date {
+.find-item__tiny {
+  flex: 0 0 110px;
+  max-width: 110px;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.find-item__date {
   flex: 0 0 500px;
   max-width: 500px;
-  padding: $find-measure-gutter $find-measure-gutter $find-measure-gutter 0;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
 }
 
 .origin-exclusion + .origin-exclusion {
@@ -97,7 +103,7 @@ $find-measure-gutter: 5px;
   }
 }
 
-.measures-table-wrapper {
+.items-table-wrapper {
   width: 100%;
 
   .recycle-list {
@@ -106,7 +112,7 @@ $find-measure-gutter: 5px;
   }
 }
 
-.number_of_measures_badge {
+.number_of_items_badge {
   display: block;
   margin-left: 20px;
   margin-top: 0px;
