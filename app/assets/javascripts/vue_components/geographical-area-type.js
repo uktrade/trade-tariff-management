@@ -1,29 +1,18 @@
 Vue.component("geographical-area-type", {
   template: "#geographical-area-type-template",
   props: [
-    "placeholder",
     "kind",
-    "origin",
-    "multiple"
+    "origin"
   ],
   data: function() {
-    var data = {
-      origins: [{
-        type: "country",
-        placeholder: "― select a country or region ―",
-        id: null,
-        options: window.all_geographical_countries,
-        key: 1
-      }],
-      key: 2
-    };
+    var data = {};
 
     return data;
   },
   mounted: function() {
     var self = this,
         radio = $(this.$el).find("input[type='radio']"),
-        parent = $(".geographical-area-form").length > 0 ? $(".geographical-area-form") : $(this.$el.parentElement);
+        parent = $(".geographical-area-form");
 
     radio.on("change", function() {
       parent.trigger("origin:changed");
@@ -45,11 +34,6 @@ Vue.component("geographical-area-type", {
     },
     radioID: function() {
       return "geographical-area-type-" + this.kind;
-    },
-    alreadySelected: function() {
-      return this.origins.map(function(o) {
-        return o.id;
-      });
     }
   },
   watch: {
@@ -70,23 +54,9 @@ Vue.component("geographical-area-type", {
 
         $("input.js-geographical-area-type").val(this.kind);
       }
-    },
-    alreadySelected: function() {
-      if (!this.multiple) {
-        return;
-      }
-
-      this.origin.geographical_area_id = this.origins.map(function(o) {
-        return o.id;
-      });
-
-      this.origin.selected = true;
     }
   },
   methods: {
-    geographicalAreaChanged: function(newGeographicalArea) {
-      this.origin.geographical_area = newGeographicalArea;
-    },
     changeParentGroup: function(newParentGroup) {
       this.origin.geographical_area_id = newParentGroup;
     }

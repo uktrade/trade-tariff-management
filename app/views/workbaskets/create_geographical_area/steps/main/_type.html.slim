@@ -3,8 +3,8 @@ fieldset
     | What type of geographical area are you creating?
 
   .controls
-    = content_tag "geographical-area-type", "", { kind: "country", ":origin" => "origins.country", ":multiple" => false }
+    = content_tag "geographical-area-type", "", { kind: "country", ":origin" => "origins.country" }
 
-    = content_tag "geographical-area-type", "", { kind: "region", ":origin" => "origins.region", ":multiple" => false }
+    = content_tag "geographical-area-type", "", { kind: "region", ":origin" => "origins.region" }
 
-    = content_tag "geographical-area-type", "", { kind: "group", ":origin" => "origins.group", ":multiple" => true }
+    = content_tag "geographical-area-type", "", { kind: "group", ":origin" => "origins.group" }
