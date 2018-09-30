@@ -84,7 +84,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :create_geographical_area, only: [:new, :show, :edit, :update]
+    resources :create_geographical_area, only: [:new, :show, :edit, :update] do
+      member do
+        get :submitted_for_cross_check
+      end
+    end
 
     resources :create_measures, only: [:new, :show, :edit, :update] do
       member do

@@ -1,6 +1,7 @@
 class GeographicalArea < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   COUNTRIES_CODES = ['0', '2'].freeze
   ERGA_OMNES = '1011'
@@ -161,5 +162,9 @@ class GeographicalArea < Sequel::Model
       id: geographical_area_id,
       description: "#{geographical_area_id} - #{description}"
     }
+  end
+
+  def decorate
+    GeographicalAreaDecorator.decorate(self)
   end
 end
