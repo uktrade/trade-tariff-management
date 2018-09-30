@@ -23,7 +23,6 @@ module WorkbasketValueObjects
           operation_date
         )
       end
-
     end
   end
 end

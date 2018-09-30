@@ -19,13 +19,17 @@ module Workbaskets
       submitted_for_cross_check_create_geographical_area_url(workbasket.id)
     end
 
+    expose(:form) do
+      WorkbasketForms::CreateGeographicalAreaForm.new
+    end
+
     expose(:geographical_area) do
-      # workbasket_settings.collection.first
-      GeographicalArea.last
+      workbasket_settings.collection.first
     end
 
     def update
       saver.save!
+
       if saver.valid?
         handle_success_saving!
       else
