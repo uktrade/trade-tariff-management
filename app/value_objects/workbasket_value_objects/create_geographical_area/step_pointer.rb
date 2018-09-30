@@ -2,10 +2,8 @@ module WorkbasketValueObjects
   module CreateGeographicalArea
     class StepPointer < ::WorkbasketValueObjects::StepPointerBase
 
-      def step_transitions
-        {
-          main: :review_and_submit,
-        }
+      def has_next_step?
+        false
       end
 
       def form_steps
