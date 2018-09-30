@@ -13,18 +13,12 @@ $(document).ready(function() {
         list: window.__geographical_area_groups_json,
         origins: {
           country: {
-            geographical_area_id: [],
-            exclusions: [],
             selected: false
           },
           group: {
-            geographical_area_id: null,
-            exclusions: [],
             selected: false
           },
           region: {
-            geographical_area_id: null,
-            exclusions: [],
             selected: false
           }
         },

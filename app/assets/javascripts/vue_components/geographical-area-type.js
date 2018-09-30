@@ -21,6 +21,10 @@ Vue.component("geographical-area-type", {
     parent.on("origin:changed", function() {
       self.origin.selected = radio.is(":checked");
     });
+
+    if (self.origin.selected && this.groupTypeSelected) {
+      this.showParentGroupSelector();
+    }
   },
   computed: {
     countryTypeSelected: function() {
@@ -46,10 +50,10 @@ Vue.component("geographical-area-type", {
     "origin.selected": function(newVal, oldVal) {
       if (newVal) {
         if (this.kind == 'group') {
-          $(".js-geographical-area-parent-group-select-block").removeClass('hidden');
+          this.showParentGroupSelector();
         } else {
-          $(".js-geographical-area-parent-group-select-block").addClass('hidden');
-          $("select[name='geographical_area[geographical_area_id]']")[0].selectize.clearOptions();
+          this.hideParentGroupSelector();
+          this.cleanUpSelectedParentGroup();
         }
 
         $("input.js-geographical-area-type").val(this.kind);
@@ -57,6 +61,15 @@ Vue.component("geographical-area-type", {
     }
   },
   methods: {
+    showParentGroupSelector: function() {
+      $(".js-geographical-area-parent-group-select-block").removeClass('hidden');
+    },
+    hideParentGroupSelector: function() {
+      $(".js-geographical-area-parent-group-select-block").addClass('hidden');
+    },
+    cleanUpSelectedParentGroup: function() {
+      $("select[name='geographical_area[geographical_area_id]']")[0].selectize.clearOptions();
+    },
     changeParentGroup: function(newParentGroup) {
       this.origin.geographical_area_id = newParentGroup;
     }
