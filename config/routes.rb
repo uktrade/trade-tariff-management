@@ -78,7 +78,11 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
-    resources :create_additional_code, only: [:new, :show, :edit, :update]
+    resources :create_additional_code, only: [:new, :show, :edit, :update] do
+      member do
+        get :submitted_for_cross_check
+      end
+    end
 
     resources :create_regulation, only: [:new, :show, :edit, :update] do
       member do
