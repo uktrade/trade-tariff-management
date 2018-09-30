@@ -47,9 +47,9 @@ $(document).ready(function() {
         }
       },
       submitCrossCheck: function() {
-        if (!this.validate("submit_for_cross_check")) {
-          return;
-        }
+        // if (!this.validate("submit_for_cross_check")) {
+        //   return;
+        // }
 
         this.submitting = true;
 
@@ -112,9 +112,9 @@ $(document).ready(function() {
         }
       },
       saveProgress: function() {
-        if (!this.validate("save_progress")) {
-          return;
-        }
+        // if (!this.validate("save_progress")) {
+        //   return;
+        // }
 
         this.saving = true;
 

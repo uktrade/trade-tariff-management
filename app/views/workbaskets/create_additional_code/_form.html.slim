@@ -1,6 +1,3 @@
-- cache [ "additional_codes_js_variables", expires_in: 8.hours ] do
-  = render "workbaskets/shared/js_variables"
-
 = simple_form_for form, url: create_additional_code_url(id: workbasket.id),
                         html: { class: "create-additional-codes", method: :put } do |f|
   .error-summary role="alert" aria-labelledby="create-additional-codes-error-heading" tabindex="-1" v-cloak="" v-if="hasErrors"

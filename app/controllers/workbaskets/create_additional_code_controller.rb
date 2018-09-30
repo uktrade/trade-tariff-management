@@ -23,7 +23,7 @@ module Workbaskets
     end
 
     expose(:submitted_url) do
-      create_additional_code_url(workbasket.id)
+      submitted_for_cross_check_create_additional_code_url(workbasket.id)
     end
 
     def update
