@@ -11,9 +11,7 @@ module WorkbasketInteractions
                     :settings,
                     :workbasket,
                     :settings_params,
-                    :attrs_parser,
-                    :errors,
-                    :candidates_with_errors
+                    :errors
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
         @workbasket = workbasket
@@ -32,8 +30,8 @@ module WorkbasketInteractions
       end
 
       def save!
-        workbasket.title = workbasket_name
-        workbasket.operation_date = operation_date.try(:to_date)
+        workbasket.title = settings_params[:geographical_area_id]
+        workbasket.operation_date = settings_params[:operation_date].try(:to_date)
         workbasket.save
 
         settings.set_settings_for!(current_step, settings_params)
