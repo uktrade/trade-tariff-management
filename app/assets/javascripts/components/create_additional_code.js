@@ -65,7 +65,7 @@ $(document).ready(function() {
         };
 
         var error = function handleError(response) {
-          console.log(response);
+          self.parseErrors("submit_for_cross_check", response.errors);
         };
 
         this.sendPayload("submit_for_cross_check", success.bind(this), error.bind(this));
@@ -97,14 +97,22 @@ $(document).ready(function() {
           error: function(response) {
             self.saving = false;
             self.submitting = false;
+            console.log(arguments);
 
             if (response.status == 500) {
               alert("There was a server error which prevented the additional codes to be saved. Please try again in a few moments.");
               return;
             }
 
-            self.savedSuccessfully = true;
-            error(response);
+            try {
+              if (!(response.errors.general.workbasket_name || response.errors.general.validity_start_date)) {
+                self.savedSuccessfully = true;
+              }
+            } catch (e) {
+              self.savedSuccessfully = true;
+            }
+
+            error(response.responseJSON);
           }
         });
       },
@@ -121,12 +129,13 @@ $(document).ready(function() {
         //   return;
         // }
 
+        var self = this;
         this.saving = true;
 
         var success = function handleSuccess() {};
 
         var error = function handleError(response) {
-          console.log(response);
+          self.parseErrors("save_progress", response.errors);
         };
 
         this.sendPayload("save_progress", success.bind(this), error.bind(this));
@@ -135,6 +144,16 @@ $(document).ready(function() {
         var validator = new AdditionalCodesValidator(this);
 
         var results = validator.validate(action);
+        this.errors = results.errors;
+        this.errorsSummary = results.summary;
+
+        return results.valid;
+      },
+      parseErrors: function(action, errors) {
+        console.log(errors);
+        var validator = new AdditionalCodesValidator(this);
+
+        var results = validator.parseBackendErrors(action, errors);
         this.errors = results.errors;
         this.errorsSummary = results.summary;
 
