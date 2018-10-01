@@ -34,4 +34,11 @@ class QuotaDefinitionValidator < TradeTariffBackend::Validator
       record.measurement_unit_qualifier.present?
     end
 
+  validation :QD7,
+    %(The validity period of the quota definition must be spanned by one of the validity
+      periods of the referenced quota order number.),
+    on: [:create, :update] do
+      validates :validity_date_span, of: :quota_order_number
+    end
+
 end

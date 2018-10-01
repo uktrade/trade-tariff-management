@@ -137,6 +137,25 @@ describe QuotaDefinition do
           expect(quota_definition.conformance_errors).to have_key(:QD6)
         end
       end
+
+      describe %(QD7: The validity period of the quota definition must be spanned by one
+        of the validity periods of the referenced quota order number.) do
+
+        it "should pass validation" do
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+        end
+
+        it "should not pass validation" do
+          quota_order_number = quota_definition.quota_order_number
+          quota_order_number.validity_start_date = quota_definition.validity_start_date - 5.years
+          quota_order_number.validity_end_date =  quota_definition.validity_start_date - 4.years
+          quota_order_number.save
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD7)
+        end
+      end
     end
   end
 end
