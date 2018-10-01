@@ -27,11 +27,16 @@ module WorkbasketInteractions
       def valid?
         @records = []
         check_required_params!
-        check_additional_codes!
-        if errors.blank?
-          build_additional_codes!
-          validate_additional_codes!
+
+        if @save_mode == "submit_for_cross_check"
+          check_additional_codes!
+
+          if errors.blank?
+            build_additional_codes!
+            validate_additional_codes!
+          end
         end
+
         errors.blank?
       end
 
