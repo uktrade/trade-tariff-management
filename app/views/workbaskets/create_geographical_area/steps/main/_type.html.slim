@@ -6,8 +6,8 @@ fieldset.geographical-area-type-selector-fieldset
     span.error-message v-if="errors.geographical_code" v-html="errors.geographical_code"
 
   .controls
-    = content_tag "geographical-area-type", "", { kind: "country", ":origin" => "origins.country" }
+    = content_tag "geographical-area-type", "", { kind: "country", ":geographical_area" => "types.country" }
 
-    = content_tag "geographical-area-type", "", { kind: "region", ":origin" => "origins.region" }
+    = content_tag "geographical-area-type", "", { kind: "region", ":geographical_area" => "types.region" }
 
-    = content_tag "geographical-area-type", "", { kind: "group", ":origin" => "origins.group" }
+    = content_tag "geographical-area-type", "", { kind: "group", ":geographical_area" => "types.group" }

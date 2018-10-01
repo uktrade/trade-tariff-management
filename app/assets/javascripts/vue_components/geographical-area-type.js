@@ -2,7 +2,7 @@ Vue.component("geographical-area-type", {
   template: "#geographical-area-type-template",
   props: [
     "kind",
-    "origin"
+    "geographical_area",
   ],
   data: function() {
     var data = {};
@@ -15,14 +15,14 @@ Vue.component("geographical-area-type", {
         parent = $(".geographical-area-form");
 
     radio.on("change", function() {
-      parent.trigger("origin:changed");
+      parent.trigger("geographical_area:changed");
     });
 
-    parent.on("origin:changed", function() {
-      self.origin.selected = radio.is(":checked");
+    parent.on("geographical_area:changed", function() {
+      self.geographical_area.selected = radio.is(":checked");
     });
 
-    if (self.origin.selected && this.groupTypeSelected) {
+    if (self.geographical_area.selected && this.groupTypeSelected) {
       this.showParentGroupSelector();
     }
   },
@@ -41,13 +41,13 @@ Vue.component("geographical-area-type", {
     }
   },
   watch: {
-    "origin.geographical_area_id": function(newVal) {
+    "geographical_area.geographical_area_id": function(newVal) {
       if (newVal) {
-        this.origin.selected = true;
+        this.geographical_area.selected = true;
         $(this.$el).find("input[type='radio']").prop("checked", true).trigger("change");
       }
     },
-    "origin.selected": function(newVal, oldVal) {
+    "geographical_area.selected": function(newVal, oldVal) {
       if (newVal) {
         if (this.kind == 'group') {
           this.showParentGroupSelector();
@@ -68,10 +68,10 @@ Vue.component("geographical-area-type", {
       $(".js-geographical-area-parent-group-select-block").addClass('hidden');
     },
     cleanUpSelectedParentGroup: function() {
-      $("select[name='geographical_area[geographical_area_id]']")[0].selectize.clearOptions();
+      $("select[name='geographical_area[parent_geographical_area_group_id]']")[0].selectize.clearOptions();
     },
     changeParentGroup: function(newParentGroup) {
-      this.origin.geographical_area_id = newParentGroup;
+      this.geographical_area.parent_geographical_area_group_id = newParentGroup;
     }
   }
 });

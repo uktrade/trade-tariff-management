@@ -1,7 +1,7 @@
 script type="text/x-template" id="geographical-area-type-template"
   .geographical-area-type
     .multiple-choice
-      input type='radio' :id="radioID" class="radio-inline-group js-geographical-area-type" name="geographical_area[geographical_code]" :checked="origin.selected"
+      input type='radio' :id="radioID" class="radio-inline-group js-geographical-area-type" name="geographical_area[geographical_code]" :checked="geographical_area.selected"
 
       label :for="radioID" v-if="countryTypeSelected"
         | A country
@@ -35,4 +35,4 @@ script type="text/x-template" id="geographical-area-type-template"
 
       .parent-group-target
         .parent-group-select
-          = content_tag "custom-select", "", { url: "/geographical_areas.json?groups_only=true", "allow-clear" => true, "code-field" => "", "label-field" => "description", "value-field" => "id", "v-model" => "origin.geographical_area_id", placeholder: "― select group ―", ":on-change" => "changeParentGroup", "name" => "geographical_area[geographical_area_id]", "code-class-name" => "prefix--country" }
+          = content_tag "custom-select", "", { url: "/geographical_areas.json?groups_only=true", "allow-clear" => true, "code-field" => "", "label-field" => "description", "value-field" => "id", "v-model" => "geographical_area.parent_geographical_area_group_id", placeholder: "― select group ―", ":on-change" => "changeParentGroup", "name" => "geographical_area[parent_geographical_area_group_id]", "code-class-name" => "prefix--country" }

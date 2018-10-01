@@ -10,7 +10,7 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
-        origins: {
+        types: {
           country: {
             selected: false
           },
@@ -44,21 +44,15 @@ $(document).ready(function() {
 
           self.savedSuccessfully = false;
           WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-          var http_method = "PUT";
-
-          if (window.current_step == 'main') {
-            var payload = self.createGeographicalAreaMainStepPayLoad();
-          }
-
           self.errors = [];
 
           $.ajax({
             url: window.save_url,
-            type: http_method,
+            type: "PUT",
             data: {
               step: window.current_step,
               mode: submit_button.attr('name'),
-              settings: payload
+              settings: self.createGeographicalAreaMainStepPayLoad()
             },
             success: function(response) {
               WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'), function() {
@@ -85,6 +79,7 @@ $(document).ready(function() {
           geographical_code: payload.geographical_code,
           geographical_area_id: payload.geographical_area_id,
           parent_geographical_area_group_id: payload.parent_geographical_area_group_id,
+          description: payload.description,
           validity_start_date: payload.validity_start_date,
           validity_end_date: payload.validity_end_date,
           operation_date: payload.operation_date
@@ -95,6 +90,7 @@ $(document).ready(function() {
           geographical_code: null,
           geographical_area_id: null,
           parent_geographical_area_group_id: null,
+          description: null,
           validity_start_date: null,
           validity_end_date: null,
           operation_date: null
@@ -104,7 +100,8 @@ $(document).ready(function() {
         return {
           geographical_code: this.geographical_area.geographical_code,
           geographical_area_id: this.geographical_area.geographical_area_id,
-          parent_geographical_area_group_id: this.geographical_area.parent_geographical_area_group_id,
+          parent_geographical_area_group_id: $("select[name='geographical_area[parent_geographical_area_group_id]']").val(),
+          description: this.geographical_area.description,
           validity_start_date: this.geographical_area.validity_start_date,
           validity_end_date: this.geographical_area.validity_end_date,
           operation_date: this.geographical_area.operation_date,
