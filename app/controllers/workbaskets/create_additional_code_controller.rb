@@ -30,12 +30,15 @@ module Workbaskets
       saver.save!
       if saver.valid?
         workbasket_settings.track_step_validations_status!(current_step, true)
-        saver.persist!
-
-        submit_for_cross_check.run!
-
-        render json: { redirect_url: submitted_url },
-               status: :ok
+        if workbasket_data_can_be_persisted?
+          saver.persist!
+          submit_for_cross_check.run!
+          render json: { redirect_url: submitted_url },
+                 status: :ok
+        else
+          render json: saver.success_ops,
+                 status: :ok
+        end
       else
         handle_errors!
       end
@@ -48,7 +51,7 @@ module Workbaskets
     end
 
     def workbasket_data_can_be_persisted?
-      true
+      saver_mode == 'submit_for_cross_check'
     end
 
   end
