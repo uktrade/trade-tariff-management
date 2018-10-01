@@ -8,6 +8,15 @@ class QuotaOrderNumberOrigin < Sequel::Model
 
   set_primary_key [:quota_order_number_origin_sid]
 
+  one_to_one :geographical_area, primary_key: :geographical_area_sid,
+                                         key: :geographical_area_sid
+  one_to_one :quota_order_number, primary_key: :quota_order_number_sid,
+                                  key: :quota_order_number_sid
+  one_to_one :quota_order_number_origin_exclusion,
+             primary_key: :quota_order_number_origin_sid,
+             key: :quota_order_number_origin_sid
+
+
   def record_code
     "360".freeze
   end

@@ -53,7 +53,6 @@ describe MeasureExcludedGeographicalArea do
       it "should not run validation successfully" do
         measure_excluded_geographical_area = build(:measure_excluded_geographical_area,
                                                    excluded_geographical_area: "ab")
-
         geographical_area = measure_excluded_geographical_area.geographical_area
         geographical_area.geographical_area_id = "xx"
         geographical_area.save

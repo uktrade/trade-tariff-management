@@ -1,5 +1,8 @@
 FactoryGirl.define do
   sequence(:quota_order_number_sid) { |n| n}
+  sequence(:quota_order_number_id) do
+    "09" + Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s
+  end
 
   factory :quota_association do
     main_quota_definition_sid  { Forgery(:basic).number }
@@ -10,7 +13,7 @@ FactoryGirl.define do
 
   factory :quota_order_number do
     quota_order_number_sid { generate(:quota_order_number_sid) }
-    quota_order_number_id  { 6.times.map{ Random.rand(9) }.join }
+    quota_order_number_id  { generate(:quota_order_number_id) }
     validity_start_date { Date.today.ago(4.years) }
     validity_end_date   { nil }
 
@@ -30,11 +33,25 @@ FactoryGirl.define do
     trait :xml do
       validity_end_date              { Date.today.ago(1.years) }
     end
+
+    trait :with_geographical_area do
+      after(:build) do |qon|
+        geographical_area = create(:geographical_area)
+        qon.geographical_area_id = geographical_area.geographical_area_id
+        qon.geographical_area_sid = geographical_area.geographical_area_sid
+      end
+    end
   end
 
   factory :quota_order_number_origin_exclusion do
     quota_order_number_origin_sid    { generate(:sid) }
-    excluded_geographical_area_sid   { generate(:sid) }
+
+    after(:build) do |exclusion|
+      if exclusion.excluded_geographical_area_sid.blank?
+        geographical_area = create(:geographical_area)
+        exclusion.excluded_geographical_area_sid = geographical_area.geographical_area_sid
+      end
+    end
   end
 
   factory :quota_reopening_event do
@@ -46,7 +63,7 @@ FactoryGirl.define do
   factory :quota_definition do
     quota_definition_sid   { generate(:quota_order_number_sid) }
     quota_order_number_sid { generate(:quota_order_number_sid) }
-    quota_order_number_id  { 6.times.map{ Random.rand(9) }.join }
+    quota_order_number_id  { generate(:quota_order_number_id) }
     monetary_unit_code              { Forgery(:basic).text(exactly: 3) }
     measurement_unit_code           { Forgery(:basic).text(exactly: 3) }
     measurement_unit_qualifier_code { Forgery(:basic).text(exactly: 1) }
