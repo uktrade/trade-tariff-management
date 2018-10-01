@@ -122,7 +122,8 @@ describe QuotaOrderNumberOrigin do
     describe "ON13" do
       it "valid" do
         ga = create :geographical_area,
-                    geographical_code: 1
+                    geographical_code: 1,
+                    validity_start_date: Date.today.ago(4.years)
         qono = build :quota_order_number_origin,
                      geographical_area_id: ga.geographical_area_id,
                      geographical_area_sid: ga.geographical_area_sid
@@ -148,6 +149,7 @@ describe QuotaOrderNumberOrigin do
         group_sid = generate(:sid)
         ga = create :geographical_area,
                     geographical_code: 1,
+                    validity_start_date: Date.today.ago(4.years),
                     parent_geographical_area_group_sid: group_sid
         qono = build :quota_order_number_origin,
                      geographical_area_id: ga.geographical_area_id,
