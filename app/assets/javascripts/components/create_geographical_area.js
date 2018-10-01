@@ -104,8 +104,14 @@ $(document).ready(function() {
         }
       },
       createGeographicalAreaMainStepPayLoad: function() {
+        geographical_code = $("input[name='geographical_area[geographical_code]']").val();
+
+        if (geographical_code.length > 0 && geographical_code == 'on') {
+          geographical_code = '';
+        }
+
         return {
-          geographical_code: $("input[name='geographical_area[geographical_code]']").val(),
+          geographical_code: geographical_code,
           geographical_area_id: this.geographical_area.geographical_area_id,
           parent_geographical_area_group_id: $("select[name='geographical_area[parent_geographical_area_group_id]']").val(),
           description: this.geographical_area.description,
