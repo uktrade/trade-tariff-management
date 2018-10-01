@@ -5,7 +5,7 @@ FactoryGirl.define do
   factory :geographical_area do
     geographical_area_sid { generate(:geographical_area_sid) }
     geographical_area_id  { Forgery(:basic).text(exactly: 2) }
-    validity_start_date   { Date.today.ago(4.years) }
+    validity_start_date   { Date.today.ago(3.years) }
     validity_end_date     { nil }
 
     trait :fifteen_years do
