@@ -103,7 +103,7 @@ module WorkbasketInteractions
                 validator,
                 {}
             ).errors.map do |key, error|
-              additional_code_errors.merge(key: error.join('. '))
+              additional_code_errors.merge!(key: error.join('. '))
             end
           end
         end
