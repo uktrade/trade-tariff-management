@@ -10,7 +10,6 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
-        list: window.__geographical_area_groups_json,
         origins: {
           country: {
             selected: false
