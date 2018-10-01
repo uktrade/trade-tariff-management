@@ -21,7 +21,7 @@ describe QuotaDefinition do
   describe "#validations" do
     describe "#conformance rules" do
       let!(:quota_order_number) { create(:quota_order_number) }
-      let!(:monetary_unit) { create(:monetary_unit) }
+      let!(:monetary_unit) { create(:monetary_unit, monetary_unit_code: "EUR") }
       let!(:measurement_unit) { create(:measurement_unit) }
       let!(:measurement_unit_qualifier) { create(:measurement_unit_qualifier) }
 
@@ -172,6 +172,26 @@ describe QuotaDefinition do
 
           expect(quota_definition).to_not be_conformant
           expect(quota_definition.conformance_errors).to have_key(:QD8)
+        end
+      end
+
+      describe %(QD9: The monetary unit code must always be the Euro ISO code (or Euc for quota defined prior to the Euro Definition).) do
+        it "should pass validation" do
+          expect(quota_definition.monetary_unit_code).to eq("EUR")
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+
+          quota_definition.monetary_unit_code = "EUC"
+          expect(quota_definition.monetary_unit_code).to eq("EUC")
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+        end
+
+        it "should not pass validation" do
+          quota_definition.monetary_unit_code = "LTS"
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD9)
         end
       end
 
