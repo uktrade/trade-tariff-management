@@ -59,7 +59,7 @@ module WorkbasketInteractions
           if item['additional_code_type_id'].blank?
             @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can't be blank"
           else
-            @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can contain only numbers and characters" unless item['additional_code_type_id'].upcase =~ /[^A-Z0-9]/
+            @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can contain only numbers and characters" if item['additional_code_type_id'].upcase =~ /[^A-Z0-9]/
           end
           @errors["additional_code_description_#{index}"] = "\##{index.to_i + 1} - Description can't be blank" if item['description'].blank?
         end
