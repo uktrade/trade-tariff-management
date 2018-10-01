@@ -10,25 +10,32 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
-        types: {
-          country: {
-            selected: false
-          },
-          group: {
-            selected: false
-          },
-          region: {
-            selected: false
-          }
-        },
         errors: []
       };
 
+      var types = {
+        country: {
+          selected: false
+        },
+        group: {
+          selected: false
+        },
+        region: {
+          selected: false
+        }
+      }
+
       if (window.__geographical_area_json) {
         data.geographical_area = this.parseGeographicalAreaPayload(window.__geographical_area_json);
+
+        if (data.geographical_area.geographical_code) {
+          types[data.geographical_area.geographical_code]['selected'] = true;
+        }
       } else {
         data.geographical_area = this.emptyGeographicalArea();
       }
+
+      data.types = types;
 
       return data;
     },
@@ -98,7 +105,7 @@ $(document).ready(function() {
       },
       createGeographicalAreaMainStepPayLoad: function() {
         return {
-          geographical_code: this.geographical_area.geographical_code,
+          geographical_code: $("input[name='geographical_area[geographical_code]']").val(),
           geographical_area_id: this.geographical_area.geographical_area_id,
           parent_geographical_area_group_id: $("select[name='geographical_area[parent_geographical_area_group_id]']").val(),
           description: this.geographical_area.description,

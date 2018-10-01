@@ -3,9 +3,12 @@ Vue.component("geographical-area-type", {
   props: [
     "kind",
     "geographical_area",
+    "parent_geographical_area_group_id"
   ],
   data: function() {
-    var data = {};
+    var data = {
+      groups_list: window.__geographical_area_groups_json
+    };
 
     return data;
   },
@@ -24,6 +27,10 @@ Vue.component("geographical-area-type", {
 
     if (self.geographical_area.selected && this.groupTypeSelected) {
       this.showParentGroupSelector();
+
+      if (this.parent_geographical_area_group_id.length > 0) {
+        $("select[name='geographical_area[parent_geographical_area_group_id]']")[0].selectize.setValue(this.parent_geographical_area_group_id);
+      }
     }
   },
   computed: {
