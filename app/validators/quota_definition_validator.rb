@@ -47,6 +47,13 @@ class QuotaDefinitionValidator < TradeTariffBackend::Validator
       validates :validity_date_span, of: :monetary_unit
     end
 
+  validation :QD09,
+    %(The monetary unit code must always be the Euro ISO code (or Euc for quota defined prior to the Euro Definition).),
+    if: -> (record) { record.monetary_unit_code.present? },
+    on: [:create, :update] do |record|
+      ["EUR", "EUC"].include?(recrod.monetary_unit_code)
+    end
+
   validation :QD10,
     %(The validity period of the measurement unit code must span the validity period of the quota definition.),
     on: [:create, :update] do
