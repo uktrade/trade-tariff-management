@@ -1,6 +1,6 @@
 module WorkbasketServices
-  module GeographicalArea
-    class MembershipValidator
+  module GeographicalAreaSavers
+    class Membership
 
       def initialize()
 
