@@ -1388,13 +1388,144 @@ describe Measure do
       end
     end
 
-    #describe 'ME104' do
-      #let(:measure) { create :measure }
+    describe %(ME104 :The justification regulation must be either:
+      - the measure’s measure-generating regulation, or
+      - a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
+      If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation) do
 
-      #it 'preforms validation' do
-        #expect(measure).to be_conformant
-      #end
-    #end
+      let!(:base_regulation) { create :base_regulation }
+      let!(:base_regulation2) { create :base_regulation }
+
+      let!(:measure) do
+        create(
+          :measure,
+          measure_generating_regulation_role: base_regulation.base_regulation_role,
+          measure_generating_regulation_id: base_regulation.base_regulation_id,
+          justification_regulation_role: base_regulation.base_regulation_role,
+          justification_regulation_id: base_regulation.base_regulation_id,
+          base_regulation: base_regulation,
+          national: true
+        )
+      end
+
+      describe "SUCCESS CASES" do
+        describe "CASE 1" do
+          before do
+            measure.validity_end_date = Date.today
+            measure.save
+          end
+
+          it "should run validation successfull if measure's justfication regulation is generating regulation" do
+            # CASE 1:
+            # The justification regulation must be either the measure’s measure-generating regulation
+
+            expect(measure).to be_conformant
+          end
+        end
+
+        describe "CASE 2-1" do
+          before do
+            measure.justification_regulation_id = nil
+            measure.justification_regulation_role = nil
+            measure.save
+          end
+
+          it "should run validation successfull if measure's generating regulation valid on day after measure's end date" do
+            # CASE 2-1:
+            # OR measure-generating regulation should be valid on the day after the measure’s (explicit) end date.
+
+            expect(measure).to be_conformant
+          end
+        end
+
+        describe "CASE 2-2" do
+          before do
+            measure.justification_regulation_id = nil
+            measure.justification_regulation_role = nil
+            measure.validity_end_date = nil
+            measure.save
+
+            base_regulation.validity_end_date = nil
+            base_regulation.save
+          end
+
+          it "should run validation successfull if measure's and generating regulation's validity end date is blank" do
+            # CASE 2-2:
+
+            expect(measure).to be_conformant
+          end
+        end
+
+        describe "CASE 3" do
+          before do
+            measure.justification_regulation_id = base_regulation2.base_regulation_id
+            measure.justification_regulation_role = base_regulation2.base_regulation_role
+            measure.validity_end_date = Date.today
+            measure.save
+
+            base_regulation.validity_end_date = Date.today
+            base_regulation.approved_flag = true
+            base_regulation.save
+
+            base_regulation2.approved_flag = true
+            base_regulation2.approved_flag = true
+            base_regulation2.save
+          end
+
+          it "should run validation successfull If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation" do
+            # CASE 3:
+            # If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation
+
+            expect(measure).to be_conformant
+          end
+        end
+      end
+
+      describe "FAILURE CASES" do
+        it "should return error ME104 if generating regulation vaidity end is before measure validity end date and generating regulation |= justification regulation" do
+          measure.justification_regulation_id = base_regulation2.base_regulation_id
+          measure.justification_regulation_role = base_regulation2.base_regulation_role
+          measure.validity_end_date = Date.today
+          measure.save
+
+          base_regulation.validity_end_date = measure.validity_end_date - 1.day
+          base_regulation.save
+
+          expect(measure).to_not be_conformant
+          expect(measure.conformance_errors).to have_key(:ME104)
+        end
+
+        it "should return error ME104 if generating regulation vaidity end is blank and measure validity end date is set" do
+          measure.justification_regulation_id = base_regulation2.base_regulation_id
+          measure.justification_regulation_role = base_regulation2.base_regulation_role
+          measure.validity_end_date = Date.today
+          measure.save
+
+          base_regulation.validity_end_date = nil
+          base_regulation.save
+
+          expect(measure).to_not be_conformant
+          expect(measure.conformance_errors).to have_key(:ME104)
+        end
+
+        it "should return error ME104 if measure justification regulation is different than generating regulation and one of them is false for approve flag" do
+          measure.justification_regulation_id = base_regulation2.base_regulation_id
+          measure.justification_regulation_role = base_regulation2.base_regulation_role
+          measure.validity_end_date = Date.today
+          measure.save
+
+          base_regulation.validity_end_date = Date.today
+          base_regulation.approved_flag = true
+          base_regulation.save
+
+          base_regulation2.approved_flag = false
+          base_regulation2.save
+
+          expect(measure).to_not be_conformant
+          expect(measure.conformance_errors).to have_key(:ME104)
+        end
+      end
+    end
 
     describe "ME112" do
       let!(:additional_code_type) {

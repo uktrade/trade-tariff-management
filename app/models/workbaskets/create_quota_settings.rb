@@ -5,6 +5,7 @@ module Workbaskets
 
     def collection_models
       %w(
+        QuotaAssociation
         QuotaOrderNumber
         QuotaOrderNumberOrigin
         QuotaOrderNumberOriginExclusion
@@ -38,10 +39,20 @@ module Workbaskets
       JSON.parse(quota_period_sids_jsonb).uniq
     end
 
+    def parent_quota_period_sids
+      JSON.parse(parent_quota_period_sids_jsonb).uniq
+    end
+
     def quota_periods
       @quota_periods ||= QuotaDefinition.where(quota_definition_sid: quota_period_sids)
                                         .order(:quota_definition_sid)
                                         .all
+    end
+
+    def parent_quota_periods
+      @parent_quota_periods ||= QuotaDefinition.where(quota_definition_sid: parent_quota_period_sids)
+                                    .order(:quota_definition_sid)
+                                    .all
     end
 
     def quota_periods_by_type(type_of_quota)
@@ -68,7 +79,7 @@ module Workbaskets
 
     def period_in_years
       diff = (latest_period_date.year - earliest_period_date.year)
-      diff + 1
+      [1, diff].max
     end
   end
 end

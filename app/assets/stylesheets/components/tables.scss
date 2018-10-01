@@ -67,6 +67,21 @@ table {
     max-width: 90px;
   }
 
+  .goods_nomenclatures-column {
+    min-width: 250px;
+    max-width: 250px;
+  }
+
+  .order_number-column {
+    min-width: 90px;
+    max-width: 90px;
+  }
+
+  .coefficient-column {
+    min-width: 90px;
+    max-width: 90px;
+  }
+
   .additional_code_id-column,
   .additional_code-column {
     min-width: 70px;
@@ -94,6 +109,21 @@ table {
   }
 
   .footnotes-column {
+    min-width: 100px;
+    max-width: 100px;
+  }
+
+  .geographical_area-column {
+    min-width: 100px;
+    max-width: 100px;
+  }
+
+  .parent-quota-column {
+    min-width: 100px;
+    max-width: 100px;
+  }
+
+  .sub-quota-column {
     min-width: 100px;
     max-width: 100px;
   }

@@ -1,0 +1,39 @@
+.main-menu-page
+  header
+    .bootstrap-row
+      .col-xs-12.col-sm-6.col-md-8
+        h1.heading-large
+          | Main menu
+      .col-xs-12.col-sm-4.col-md-4.align-bottom
+        p.text-right.logout-section
+          = "Logged in as: #{current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe
+
+
+  = render "workbaskets/main_menu"
+
+  - if workbaskets.present?
+
+    info-message
+      | You have
+      =< pluralize(workbaskets.total_count, "workbasket", "workbaskets")
+      | , listed below.
+
+    .workbaskets
+      form.workbaskets__form
+        .bootstrap-row
+          .col-xs-12.col-sm-12.col-md-5.col-lg-4
+            .form-group
+              input.form-control name="q" v-model="q"
+          .col-xs-12.col-sm-12.col-md-6.col-lg-7
+            .form-group
+              button type="submit" :disabled="emptyFilter" class="button"
+                | Filter
+              = link_to "Clear filter", root_url, class: "secondary-button"
+
+      = render "workbaskets/table"
+
+  - else
+
+    info-message
+      | You are not working with any items at the moment.
+

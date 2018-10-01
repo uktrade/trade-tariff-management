@@ -69,4 +69,99 @@ module WorkbasketHelper
       workbasket_settings.period_in_years, "year", "years"
     )
   end
+
+  def workbasket_continue_link_based_on_type(workbasket)
+    case workbasket.object.type.to_sym
+    when :create_measures
+      if workbasket.settings.duties_conditions_footnotes_step_validation_passed.present?
+        edit_create_measure_url(
+          workbasket.id,
+          step: :review_and_submit
+        )
+
+      elsif workbasket.settings.main_step_validation_passed.present?
+        edit_create_measure_url(
+          workbasket.id,
+          step: :duties_conditions_footnotes
+        )
+
+      else
+
+        edit_create_measure_url(
+          workbasket.id,
+          step: :main
+        )
+      end
+
+    when :bulk_edit_of_measures
+
+      if workbasket.settings.settings["start_date"].blank?
+        work_with_selected_measures_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.settings.search_code
+        )
+
+      else
+        edit_measures_bulk_url(
+          workbasket.id,
+          search_code: workbasket.settings.search_code
+        )
+      end
+
+    when :create_quota
+
+      if workbasket.settings.conditions_footnotes_step_validation_passed.present?
+        edit_create_quotum_url(
+          workbasket.id,
+          step: :review_and_submit
+        )
+
+      elsif workbasket.settings.configure_quota_step_validation_passed.present?
+        edit_create_quotum_url(
+          workbasket.id,
+          step: :conditions_footnotes
+        )
+
+      elsif workbasket.settings.main_step_validation_passed.present?
+        edit_create_quotum_url(
+          workbasket.id,
+          step: :configure_quota
+        )
+
+      else
+        edit_create_quotum_url(
+          workbasket.id,
+          step: :main
+        )
+      end
+
+
+    when :create_regulation
+      if workbasket.settings.main_step_validation_passed.present?
+        edit_create_regulation_url(
+          workbasket.id,
+          step: :review_and_submit
+        )
+
+      else
+        edit_create_regulation_url(
+          workbasket.id,
+          step: :main
+        )
+      end
+    end
+  end
+
+  def workbasket_view_link_based_on_type(workbasket)
+    case workbasket.object.type.to_sym
+    when :create_measures
+      create_measure_url(workbasket.id)
+    when :bulk_edit_of_measures
+      measures_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
+    when :create_quota
+      create_quotum_url(workbasket.id)
+    when :create_regulation
+      create_regulation_url(workbasket.id)
+    end
+  end
 end

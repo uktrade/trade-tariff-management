@@ -21,18 +21,17 @@ module WorkbasketValueObjects
       setup_additional_code_analyzer
     end
 
-    def measure_params(goods_nomenclature_code_and_additional_code)
-      goods_nomenclature_code, additional_code = goods_nomenclature_code_and_additional_code
+    def measure_params(variable_params)
       res = {
         start_date: @start_date || ops[:start_date],
         end_date: @end_date || ops[:end_date],
         regulation_id: ops[:regulation_id],
         measure_type_id: ops[:measure_type_id],
         reduction_indicator: ops[:reduction_indicator],
-        geographical_area_id: ops[:geographical_area_id],
+        geographical_area_id: variable_params[:geographical_area_id],
         quota_ordernumber: ops[:quota_ordernumber],
-        goods_nomenclature_code: goods_nomenclature_code,
-        additional_code: additional_code
+        goods_nomenclature_code: variable_params[:goods_nomenclature_code],
+        additional_code: variable_params[:additional_code]
       }
 
       ::Measures::AttributesNormalizer.new(
@@ -81,8 +80,18 @@ module WorkbasketValueObjects
         a_codes = [nil]
       end
 
-      # Return a list of GN codes and additional codes, allowing for empty arrays
-      gn_codes.product(a_codes)
+      # Return a list of GN codes and additional codes and origin codes, allowing for empty arrays
+      gn_codes.map do |goods_nomenclature_code|
+        a_codes.map do |additional_code|
+          Array.wrap(ops['geographical_area_id']).map do |geographical_area_id|
+            {
+                goods_nomenclature_code: goods_nomenclature_code,
+                additional_code: additional_code,
+                geographical_area_id: geographical_area_id
+            }
+          end
+        end
+      end.flatten
     end
 
     begin :decoration_methods

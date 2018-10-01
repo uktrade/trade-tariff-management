@@ -26,7 +26,7 @@ script
 - cache [ "measure_form_js_variabless", expires_in: 8.hours ] do
   = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
 
-form.bulk-edit-measures
+.bulk-edit-measures
   warning-message v-if="overloaded"
     | The server is overloaded at the moment or there is an error preventing the request to load the current batch of measures. Retrying in 30 seconds&hellip;
   = render "table_top"

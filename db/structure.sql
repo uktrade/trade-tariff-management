@@ -1416,7 +1416,8 @@ CREATE TABLE public.create_quota_workbasket_settings (
     updated_at time without time zone,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
-    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb
+    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -5879,7 +5880,10 @@ CREATE TABLE public.quota_associations_oplog (
     operation_date date,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -5897,7 +5901,10 @@ CREATE VIEW public.quota_associations AS
     quota_associations1.operation_date,
     quota_associations1.status,
     quota_associations1.workbasket_id,
-    quota_associations1.workbasket_sequence_number
+    quota_associations1.workbasket_sequence_number,
+    quota_associations1.added_by_id,
+    quota_associations1.added_at,
+    quota_associations1."national"
    FROM public.quota_associations_oplog quota_associations1
   WHERE ((quota_associations1.oid IN ( SELECT max(quota_associations2.oid) AS max
            FROM public.quota_associations_oplog quota_associations2
@@ -7530,7 +7537,8 @@ CREATE TABLE public.xml_export_files (
     base_64_data text,
     zip_data text,
     meta_data text,
-    workbasket boolean DEFAULT true
+    workbasket boolean DEFAULT true,
+    validation_errors jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -11571,3 +11579,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_l
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_original_measure_sid_to_measures_oplog.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbasket_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');

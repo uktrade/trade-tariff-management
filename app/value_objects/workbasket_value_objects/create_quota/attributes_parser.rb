@@ -11,6 +11,7 @@ module WorkbasketValueObjects
         commodity_codes
         additional_codes
         quota_is_licensed
+        sub_quotas
       )
 
       SIMPLE_OPS.map do |option_name|
@@ -27,6 +28,15 @@ module WorkbasketValueObjects
           end
         else
           []
+        end
+      end
+
+      def formatted_commodity_codes(commodity_codes)
+        if commodity_codes.present?
+          commodity_codes.split( /[\s|,]/ )
+              .map(&:strip)
+              .reject { |el| el.blank? }
+              .uniq.join(', ')
         end
       end
 

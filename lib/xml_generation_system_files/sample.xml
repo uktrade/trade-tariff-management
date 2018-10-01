@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<env:envelope xmlns="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0" id="17248">
+  <env:transaction id="15818689">
+    <env:app.message id="178">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>1</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>CZK</oub:child.monetary.unit.code>
+            <oub:exchange.rate>25.535</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+    <env:app.message id="179">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>2</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>DKK</oub:child.monetary.unit.code>
+            <oub:exchange.rate>7.4449</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+    <env:app.message id="180">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>3</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>GBP</oub:child.monetary.unit.code>
+            <oub:exchange.rate>0.88723</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+    <env:app.message id="181">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>4</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>SEK</oub:child.monetary.unit.code>
+            <oub:exchange.rate>9.8438</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+    <env:app.message id="182">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>5</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>HUF</oub:child.monetary.unit.code>
+            <oub:exchange.rate>310.33</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+    <env:app.message id="183">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>6</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>PLN</oub:child.monetary.unit.code>
+            <oub:exchange.rate>4.177</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+    <env:app.message id="184">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>7</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>RON</oub:child.monetary.unit.code>
+            <oub:exchange.rate>4.6585</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+    <env:app.message id="185">
+      <oub:transmission xmlns:oub="urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0" xmlns:env="urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0">
+        <oub:record>
+          <oub:transaction.id>15818689</oub:transaction.id>
+          <oub:record.code>440</oub:record.code>
+          <oub:subrecord.code>05</oub:subrecord.code>
+          <oub:record.sequence.number>8</oub:record.sequence.number>
+          <oub:update.type>1</oub:update.type>
+          <oub:monetary.exchange.rate>
+            <oub:monetary.exchange.period.sid>2961</oub:monetary.exchange.period.sid>
+            <oub:child.monetary.unit.code>HRK</oub:child.monetary.unit.code>
+            <oub:exchange.rate>7.44</oub:exchange.rate>
+          </oub:monetary.exchange.rate>
+        </oub:record>
+      </oub:transmission>
+    </env:app.message>
+  </env:transaction>
+</env:envelope>

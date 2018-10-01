@@ -22,9 +22,8 @@ class GeographicalArea < Sequel::Model
       .order(Sequel.desc(:geographical_area_description_periods__validity_start_date))
   end
 
-  def geographical_area_description
-    geographical_area_descriptions.first
-  end
+  one_to_one :geographical_area_membership, key: :geographical_area_sid,
+                                            primary_key: :geographical_area_sid
 
   many_to_one :parent_geographical_area, class: self
   one_to_many :children_geographical_areas, key: :parent_geographical_area_group_sid,
@@ -127,6 +126,10 @@ class GeographicalArea < Sequel::Model
 
   delegate :description, to: :geographical_area_description
 
+  def geographical_area_description
+    geographical_area_descriptions.first
+  end
+
   def to_json
     {
       geographical_area_id: geographical_area_id,
@@ -157,4 +160,13 @@ class GeographicalArea < Sequel::Model
       description: "#{geographical_area_id} - #{description}"
     }
   end
+
+  def membership_validity_start_date
+    geographical_area_membership&.validity_start_date
+  end
+
+  def membership_validity_end_date
+    geographical_area_membership&.validity_end_date
+  end
+
 end

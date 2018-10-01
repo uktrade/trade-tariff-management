@@ -135,32 +135,6 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.additional_code_type.non_meursing? && (record.additional_code.additional_code_type_id == record.additional_code_type_id)
     end
 
-  validation :ME19,
-    %Q(If the additional code type has as application 'ERN' then the goods code must be specified
-    but the order number is blocked for input.),
-    on: [:create, :update],
-    if: ->(record) { record.additional_code_type.present? } do |record|
-      record.additional_code_type.application_code.in?("0") &&
-        record.goods_nomenclature_item_id.present? && record.ordernumber.blank?
-    end
-
-  validation :ME21,
-    %Q(If the additional code type has as application 'ERN' then the combination of goods code + additional code
-    must exist as an ERN product code and its validity period must span the validity period of the measure),
-    on: [:create, :update],
-    if: ->(record) {
-      record.additional_code_type.present? &&
-      record.additional_code_type.application_code.present? &&
-      record.additional_code_type.application_code.in?("0") &&
-      record.goods_nomenclature_item_id.present? && record.additional_code.present?
-    } do
-      validates :validity_date_span, of: :additional_code_type
-    end
-
-  #validation :ME24, 'The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date.', on: [:create, :update] do
-    #validates :presence, of: [:measure_generating_regulation_id, :measure_generating_regulation_role]
-  #end
-
   validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
     on: [:create, :update],
     if: -> (record) { record.additional_code_type.present? && record.additional_code.present? } do |record|
@@ -264,6 +238,30 @@ class MeasureValidator < TradeTariffBackend::Validator
     validates :inclusion, of: :measure_generating_regulation_role, in: Measure::VALID_ROLE_TYPE_IDS
   end
 
+  # validation :ME87,
+  #   %(The validity period of the measure (implicit or explicit) must reside
+  #   within the effective validity period of its supporting regulation. The
+  #   effective validity period is the validity period of the regulation taking
+  #   into account extensions and abrogation.), on: [:create, :update] do |record|
+
+  #   valid = record.validity_start_date.present?
+
+  #   if valid
+  #     if record.validity_end_date.present? && record.generating_regulation_id.present
+  #       generating_regulation = record.generating_regulation
+
+  #       regulation_start_date = generating_regulation.validity_start_date
+  #       regulation_end_date   = generating_regulation.effective_end_date.presence ||
+  #                               generating_regulation.validity_end_date
+
+  #         valid = (regulation_start_date <= record.validity_start_date) &&
+  #                 (regulation_end_date >= record.validity_end_date)
+  #     end
+  #   end
+
+  #   valid
+  # end
+
   validation :ME88, 'The level of the goods code, if present, cannot exceed the explosion level of the measure type.', on: [:create, :update] do |record|
     # NOTE wont apply to national invalidates Measures
     # Taric may delete a Goods Code and national measures will be invalid.
@@ -281,26 +279,91 @@ class MeasureValidator < TradeTariffBackend::Validator
        record.export_refund_nomenclature.number_indents <= (record.measure_type.measure_explosion_level))))
   end
 
-  #validation :ME104,
-    #%{The justification regulation must be either:
-        #- the measure’s measure-generating regulation, or
-        #- a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
-      #If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation} do |record|
+  validation :ME104,
+    %(The justification regulation must be either:
+      - the measure’s measure-generating regulation, or
+      - a measure-generating regulation, valid on the day after the measure’s (explicit) end date.
+      If the measure’s measure-generating regulation is ‘approved’, then so must be the justification regulation) do |record|
 
-    #valid = true
+    valid = true
 
-    #if record.justification_regulation_id.present? && record.measure_generating_regulation_id.present?
-      #valid = record.justification_regulation_id == record.measure_generating_regulation_id
+    justification_regulation_present = record.justification_regulation_id.present? &&
+                                       record.justification_regulation.present?
 
-      #if record.generating_regulation.present? && record.generating_regulation.validity_end_date.present? && record.validity_end_date.present?
-        #valid = record.generating_regulation.validity_end_date > record.validity_end_date
-      #else
-        #valid = record.validity_end_date.blank?
-      #end
-    #end
+    if justification_regulation_present
+      # CASE 1:
+      #
+      # The justification regulation must be either the measure’s measure-generating regulation
+      #
+      valid = record.justification_regulation_id == record.measure_generating_regulation_id &&
+              record.justification_regulation_role == record.measure_generating_regulation_role
+    end
 
-    #valid
-  #end
+    # puts ""
+    # puts " VALID after CASE 1: #{valid}"
+    # puts ""
+
+    # CASE 2:
+    #
+    # OR measure-generating regulation should be valid on the day after the measure’s (explicit) end date.
+    #
+
+    unless valid
+      if record.measure_generating_regulation_id.present?
+        if record.generating_regulation.validity_end_date.present? &&
+            record.validity_end_date.present?
+
+          # puts ""
+          # puts "CASE 2-1"
+          # puts ""
+
+          valid = record.generating_regulation.validity_end_date > record.validity_end_date
+
+        else
+          # puts ""
+          # puts "CASE 2-2"
+          # puts ""
+          # puts " record.validity_end_date: #{record.validity_end_date}"
+          # puts ""
+          # puts " record.generating_regulation.validity_end_date: #{record.generating_regulation.validity_end_date}"
+          # puts ""
+
+          # This means measure is valid record as its validity end date is `nil`
+          valid = (
+            record.validity_end_date.blank? &&
+            record.generating_regulation.validity_end_date.blank?
+          )
+        end
+      end
+    end
+
+    # puts ""
+    # puts " VALID after CASE 2: #{valid}"
+    # puts ""
+
+    unless valid
+      if justification_regulation_present
+        # CASE 3:
+        # If the measure’s measure-generating regulation is ‘approved’,
+        # then so must be the justification regulation
+        #
+        # In other words: both should have `approved_flag`
+        #
+        unless valid
+          if record.measure_generating_regulation_id.present?
+            valid = record.generating_regulation.approved_flag.present? &&
+              record.justification_regulation.approved_flag.present?
+          end
+        end
+      end
+    end
+
+    # puts ""
+    # puts " VALID after CASE 3: #{valid}"
+    # puts ""
+
+    valid
+  end
 
   validation :ME112, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the measure does not require a goods code.",
     on: [:create, :update],
@@ -472,5 +535,3 @@ end
 # The abrogation regulation must be different from the PTS regulation if the end date is filled in during a modification.
 # TODO: ME79
 # There may be no overlap between different PTS periods.
-# TODO: ME104
-# The justification regulation must be either: - the measure's measure-generating regulation, or - a measure-generating regulation, valid on the day after the measure’s (explicit) end date. If the measure’s measure-generating regulation is 'approved’, then so must be the justification regulation.

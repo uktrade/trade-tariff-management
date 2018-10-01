@@ -85,7 +85,6 @@ gem "newrelic_rpm"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "bootscale", "~> 0.5", require: false
-gem "rack-timeout", "~> 0.4"
 
 # We freezed it, as it installs higher version by default,
 # which conflicts with cloud foundary's ruby_buildpack

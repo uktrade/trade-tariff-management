@@ -25,9 +25,9 @@ feature "Regulations listing" do
 
   scenario "Find a regulation page" do
     visit root_url
-    expect(page).to have_link("Find a regulation")
+    expect(page).to have_link("Find and edit regulations")
 
-    click_link("Find a regulation")
+    click_link("Find and edit regulations")
     expect(page).to have_content("Find a regulation")
 
     expect(page).to have_content("Enter criteria to help locate a regulation")

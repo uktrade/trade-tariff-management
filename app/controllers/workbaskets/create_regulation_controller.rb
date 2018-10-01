@@ -6,15 +6,15 @@ module Workbaskets
 
     expose(:initial_step_url) do
       edit_create_regulation_url(
-          workbasket.id,
-          step: :main
+        workbasket.id,
+        step: :main
       )
     end
 
     expose(:previous_step_url) do
       edit_create_regulation_url(
-          workbasket.id,
-          step: previous_step
+        workbasket.id,
+        step: previous_step
       )
     end
 

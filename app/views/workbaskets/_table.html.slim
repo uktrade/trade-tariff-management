@@ -1,0 +1,65 @@
+table.table
+  colgroup
+    col width="80"
+    col width="*"
+    col width="180"
+    col width="200"
+    col width="120"
+    col width="200"
+    - if false
+      col width="1"
+
+  thead
+    tr
+      th
+        = sortable(:id, "ID", { q: params[:q] })
+      th
+        = sortable(:title, "Workbasket", { q: params[:q] })
+      th
+        = sortable(:type, "Type", { q: params[:q] })
+      th
+        = sortable(:status, "Status", { q: params[:q] })
+      th
+        = sortable(:last_status_change_at, "Last event", { q: params[:q] })
+      th
+        | Next step
+
+      - if false
+        th width="1"
+          | &nbsp;
+
+  tbody
+    - workbaskets.map do |workbasket|
+      - workbasket = workbasket.decorate
+
+      tr
+        td
+          = workbasket.id
+        td
+          = workbasket.title
+        td
+          = workbasket.type
+        td
+          - if workbasket.status_with_error?
+            icon-error
+
+          = workbasket.status
+        td
+          = workbasket.last_event_at
+        td
+          - if workbasket.new_in_progress?
+            = link_to "Continue", workbasket_continue_link_based_on_type(workbasket)
+          - else
+            = link_to "View", workbasket_view_link_based_on_type(workbasket)
+
+          - if false
+            | &nbsp;|&nbsp;
+            a href="#"
+              | Withdraw/edit...
+
+        - if false
+          td
+            a href="#"
+              icon-download
+
+= paginate workbaskets
