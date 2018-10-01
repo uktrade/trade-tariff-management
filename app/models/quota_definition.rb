@@ -59,16 +59,6 @@ class QuotaDefinition < Sequel::Model
     "00".freeze
   end
 
-  def parent_quota_number
-    association = quota_order_number.sub_quota_associations.first
-    association.parent_quota.quota_order_number_id if association.present? && association.parent_quota.present?
-  end
-
-  def sub_quota_number
-    association = quota_order_number.parent_quota_associations.first
-    association.sub_quota.quota_order_number_id if association.present? && association.sub_quota.present?
-  end
-
   private
 
   def critical_state?

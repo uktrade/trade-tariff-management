@@ -6,9 +6,11 @@ module WorkbasketServices
                     :ops,
                     :base_params,
                     :sub_quota,
-                    :order_number
+                    :order_number,
+                    :errors
 
       def initialize(settings_saver, parent_quota_ops, base_params, sub_quota)
+        @errors = {}
         @settings_saver = settings_saver
         @ops = parent_quota_ops
         @base_params = base_params
@@ -21,12 +23,29 @@ module WorkbasketServices
         ops['associate'] == 'true'
       end
 
+      def valid?
+        if associate?
+
+          record = QuotaOrderNumber.new(quota_order_number_id: ops['order_number'])
+          ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
+              record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
+            @errors.merge!("#{key.join(',')}": error.join('. '))
+          end
+
+
+          ops['balances'].each do |index, balance|
+            value = balance['balance']
+            @errors["quota_balance_#{index}"] = "\##{index.to_i + 1} - Opening balance can't be blank" if value.blank?
+          end
+
+        end
+        errors.blank?
+      end
+
       def persist!
         saver = build_order_number!(base_params)
         saver.valid?
         @order_number = saver.order_number
-
-        build_quota_association!
       end
 
       def add_period!(source_definition, index, start_date, end_date = nil)
@@ -48,6 +67,19 @@ module WorkbasketServices
         ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(definition).assign!
         settings_saver.assign_system_ops!(definition)
         definition.save
+        definition
+      end
+
+      def build_quota_association!(main_definition, sub_definition)
+        QuotaAssociation.unrestrict_primary_key
+        association = QuotaAssociation.new(
+            main_quota_definition_sid: main_definition.quota_definition_sid,
+            sub_quota_definition_sid: sub_definition.quota_definition_sid,
+            relation_type: 'NM',
+            coefficient: 1,
+        )
+        settings_saver.assign_system_ops!(association)
+        association.save
       end
 
       private
@@ -55,18 +87,6 @@ module WorkbasketServices
           ::WorkbasketServices::QuotaSavers::OrderNumber.new(
               settings_saver, order_number_ops, true
           )
-        end
-
-        def build_quota_association!
-          QuotaAssociation.unrestrict_primary_key
-          association = QuotaAssociation.new(
-              main_quota_definition_sid: order_number.quota_order_number_sid,
-              sub_quota_definition_sid: sub_quota.quota_order_number_sid,
-              relation_type: 'NM',
-              coefficient: 1,
-          )
-          settings_saver.assign_system_ops!(association)
-          association.save
         end
     end
   end

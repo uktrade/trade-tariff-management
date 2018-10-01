@@ -49,7 +49,7 @@ window.DutyExpressionFormatter = {
       case "20":
       case "36":
         if (duty_expression_abbreviation !== null) {
-          output.push(duty_expression_abbreviation);
+          output.push(duty_expression_abbreviation.replace("%", "").replace("€", ""));
         } else if (duty_expression_description !== null) {
           output.push(duty_expression_description);
         }
