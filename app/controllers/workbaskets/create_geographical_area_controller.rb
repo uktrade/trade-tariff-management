@@ -37,6 +37,24 @@ module Workbaskets
       end
     end
 
+    def validate_group_memberships
+      handle_validate_request!(
+        ::WorkbasketServices::GeographicalArea::GroupMembershipsValidator
+      )
+    end
+
+    def validate_country_or_region_memberhips
+      handle_validate_request!(
+        ::WorkbasketServices::GeographicalArea::CountryOrRegionMembershipsValidator
+      )
+    end
+
+    def validate_membership
+      handle_validate_request!(
+        ::WorkbasketServices::GeographicalArea::MembershipValidator
+      )
+    end
+
     private
 
       def check_if_action_is_permitted!
@@ -45,6 +63,18 @@ module Workbaskets
 
       def workbasket_data_can_be_persisted?
         true
+      end
+
+      def handle_validate_request!(validator)
+        if validator.valid?
+          render json: {},
+                 status: :ok
+        else
+          render json: {
+            step: current_step,
+            errors: validator.errors
+          }, status: :unprocessable_entity
+        end
       end
   end
 end
