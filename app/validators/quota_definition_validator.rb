@@ -41,4 +41,21 @@ class QuotaDefinitionValidator < TradeTariffBackend::Validator
       validates :validity_date_span, of: :quota_order_number
     end
 
+  validation :QD8,
+    %(The validity period of the monetary unit code must span the validity period of the quota definition.),
+    on: [:create, :update] do
+      validates :validity_date_span, of: :monetary_unit
+    end
+
+  validation :QD10,
+    %(The validity period of the measurement unit code must span the validity period of the quota definition.),
+    on: [:create, :update] do
+      validates :validity_date_span, of: :measurement_unit
+    end
+
+  validation :QD11,
+    %(The validity period of the measurement unit qualifier code must span the validity period of the quota definition.),
+    on: [:create, :update] do
+      validates :validity_date_span, of: :measurement_unit_qualifier
+    end
 end

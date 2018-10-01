@@ -156,6 +156,58 @@ describe QuotaDefinition do
           expect(quota_definition.conformance_errors).to have_key(:QD7)
         end
       end
+
+      describe %(QD8: The validity period of the monetary unit code must span the validity period of the quota definition.) do
+
+        it "should pass validation" do
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+        end
+
+        it "should not pass validation" do
+          monetary_unit = quota_definition.monetary_unit
+          monetary_unit.validity_start_date = quota_definition.validity_start_date - 5.years
+          monetary_unit.validity_end_date =  quota_definition.validity_start_date - 4.years
+          monetary_unit.save
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD8)
+        end
+      end
+
+      describe %(QD10: The validity period of the measurement unit code must span the validity period of the quota definition.) do
+        it "should pass validation" do
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+        end
+
+        it "should not pass validation" do
+          measurement_unit = quota_definition.measurement_unit
+          measurement_unit.validity_start_date = quota_definition.validity_start_date - 5.years
+          measurement_unit.validity_end_date =  quota_definition.validity_start_date - 4.years
+          measurement_unit.save
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD10)
+        end
+      end
+
+      describe %(QD11: The validity period of the measurement unit qualifier code must span the validity period of the quota definition.) do
+        it "should pass validation" do
+          expect(quota_definition).to be_conformant
+          expect(quota_definition.conformance_errors).to be_empty
+        end
+
+        it "should not pass validation" do
+          measurement_unit_qualifier = quota_definition.measurement_unit_qualifier
+          measurement_unit_qualifier.validity_start_date = quota_definition.validity_start_date - 5.years
+          measurement_unit_qualifier.validity_end_date =  quota_definition.validity_start_date - 4.years
+          measurement_unit_qualifier.save
+
+          expect(quota_definition).to_not be_conformant
+          expect(quota_definition.conformance_errors).to have_key(:QD11)
+        end
+      end
     end
   end
 end
