@@ -154,3 +154,60 @@ AdditionalCodesValidator.prototype.setSummary = function() {
     this.summary = "There are conformance errors that mean the additional codes are not ready to be submitted yet.";
   }
 };
+
+AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors) {
+  var self = this;
+  this.valid = true;
+  this.action = action;
+
+  if (errors.general) {
+    if (errors.general.workbasket_name) {
+      this.level = "one";
+      this.errors.workbasket_name = errors.general.workbasket_name;
+      this.valid = false;
+    }
+
+    if (errors.general.validity_start_date) {
+      this.level = "one";
+      this.errors.validity_start_date = errors.general.validity_start_date;
+      this.valid = false;
+    }
+
+    if (!this.valid) {
+      return this.gatherResults();
+    }
+
+    delete errors.general;
+  }
+
+  var invalidCodes = false;
+
+  for (var k in errors) {
+    if (!errors.hasOwnProperty(k)) {
+      continue;
+    }
+
+    var message = errors[k];
+
+    if (k.indexOf("additional_code_description_") > -1) {
+      k = k.replace("additional_code_description_", "description_");
+      this.level = "three";
+      invalidCodes = true;
+    } else if (k.indexOf("additional_code_additional_code_") > -1) {
+      k = k.replace("additional_code_additional_code_", "additional_code_");
+      this.level = "two";
+      invalidCodes = true;
+    } else {
+      this.level = "two";
+    }
+
+    this.errors[k] = message;
+    this.valid = false;
+  }
+
+  if (invalidCodes) {
+    this.errors.additional_codes = "One or more of the specified codes is incomplete.";
+  }
+
+  return this.gatherResults();
+};
