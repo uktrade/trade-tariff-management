@@ -100,7 +100,7 @@ module WorkbasketInteractions
 
       def validate_additional_codes!
         additional_code_errors = {}
-        records.each do |record|
+        records.each_with_index do |record, index|
           validator = validator(record)
           if validator.present?
             ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
@@ -108,7 +108,7 @@ module WorkbasketInteractions
                 validator,
                 {}
             ).errors.map do |key, error|
-              additional_code_errors.merge!(key: error.join('. '))
+              additional_code_errors.merge!("#{index}": error.join('. '))
             end
           end
         end
