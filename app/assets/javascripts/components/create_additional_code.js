@@ -22,11 +22,12 @@ $(document).ready(function() {
         errorsSummary: ""
       };
 
-      // parse saved payload
-
       return data;
     },
     mounted: function() {
+      if (!$.isEmptyObject(window.all_settings)) {
+        this.applyPayload(window.all_settings);
+      }
       if (this.additional_codes.length === 0) {
         this.addAdditionalCodes();
       }
@@ -102,6 +103,12 @@ $(document).ready(function() {
             error(response);
           }
         });
+      },
+      applyPayload: function(payload) {
+        this.workbasket_name = payload.workbasket_name;
+        this.validity_start_date = payload.validity_start_date;
+        this.validity_end_date = payload.validity_end_date;
+        this.additional_codes = payload.additional_codes;
       },
       preparePayload: function() {
         return {

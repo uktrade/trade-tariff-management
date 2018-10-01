@@ -26,8 +26,12 @@ module WorkbasketInteractions
 
       def valid?
         @records = []
-        build_additional_codes!
-        validate_additional_codes!
+        check_required_params!
+        check_additional_codes!
+        if errors.blank?
+          build_additional_codes!
+          validate_additional_codes!
+        end
         errors.blank?
       end
 
@@ -36,6 +40,31 @@ module WorkbasketInteractions
       end
 
       private
+
+      def check_required_params!
+        general_errors = {}
+
+        REQUIRED_PARAMS.map do |k|
+          if public_send(k).blank?
+            general_errors[k.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+          end
+        end
+        @errors[:general] = general_errors if general_errors.present?
+      end
+
+      def check_additional_codes!
+        additional_codes_errors = {}
+        filtered_additional_codes.each do |index, item|
+          @errors["additional_code_additional_code_type_id_#{index}"] = "\##{index.to_i + 1} - Additional code type can't be blank" if item['additional_code_type_id'].blank?
+          if item['additional_code_type_id'].blank?
+            @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can't be blank"
+          else
+            @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can contain only numbers and characters" unless item['additional_code_type_id'].upcase =~ /[^A-Z0-9]/
+          end
+          @errors["additional_code_description_#{index}"] = "\##{index.to_i + 1} - Description can't be blank" if item['description'].blank?
+        end
+        errors[:additional_codes] = additional_codes_errors if additional_codes_errors.present?
+      end
 
       def build_additional_codes!
         filtered_additional_codes.each do |position, item|
