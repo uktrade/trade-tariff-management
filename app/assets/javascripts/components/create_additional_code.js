@@ -19,6 +19,7 @@ $(document).ready(function() {
         saving: false,
         submitting: false,
         errors: {},
+        conformanceErrors: [],
         errorsSummary: ""
       };
 
@@ -26,7 +27,7 @@ $(document).ready(function() {
         data.workbasket_name = window.all_settings.workbasket_name;
         data.validity_start_date = window.all_settings.validity_start_date;
         data.validity_end_date = window.all_settings.validity_end_date;
-        data.additional_codes = window.all_settings.additional_codes;
+        data.additional_codes = objectToArray(window.all_settings.additional_codes);
       }
 
       return data;
@@ -52,10 +53,11 @@ $(document).ready(function() {
         }
       },
       submitCrossCheck: function() {
-        // if (!this.validate("submit_for_cross_check")) {
-        //   return;
-        // }
+        if (!this.validate("submit_for_cross_check")) {
+          return;
+        }
 
+        var self = this;
         this.submitting = true;
 
         var success = function handleSuccess(response) {
@@ -82,7 +84,8 @@ $(document).ready(function() {
           settings: payload
         };
 
-        this.errors = [];
+        this.errors = {};
+        this.conformanceErrors = [];
 
         $.ajax({
           url: window.save_url,
@@ -97,7 +100,6 @@ $(document).ready(function() {
           error: function(response) {
             self.saving = false;
             self.submitting = false;
-            console.log(arguments);
 
             if (response.status == 500) {
               alert("There was a server error which prevented the additional codes to be saved. Please try again in a few moments.");
@@ -125,9 +127,9 @@ $(document).ready(function() {
         }
       },
       saveProgress: function() {
-        // if (!this.validate("save_progress")) {
-        //   return;
-        // }
+        if (!this.validate("save_progress")) {
+          return;
+        }
 
         var self = this;
         this.saving = true;
@@ -150,11 +152,11 @@ $(document).ready(function() {
         return results.valid;
       },
       parseErrors: function(action, errors) {
-        console.log(errors);
         var validator = new AdditionalCodesValidator(this);
 
         var results = validator.parseBackendErrors(action, errors);
         this.errors = results.errors;
+        this.conformanceErrors = validator.conformanceErrors;
         this.errorsSummary = results.summary;
 
         return results.valid;

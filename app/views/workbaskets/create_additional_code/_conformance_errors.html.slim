@@ -1,0 +1,11 @@
+div  v-cloak="" v-if="conformanceErrors.length > 0"
+  br
+  .error-summary role="alert" aria-labelledby="create-additional-codes-error-heading" tabindex="-1"
+    h2.heading-medium.error-summary-heading#create-additional-codes-error-heading
+      | Error
+
+    p
+      | There are some conformance rules that were not met. Please check them below.
+
+    ul.list
+      li v-for="error in conformanceErrors" v-html="error"

@@ -1,6 +1,7 @@
 function AdditionalCodesValidator(data) {
   this.data = data;
   this.errors = {};
+  this.conformanceErrors = [];
   this.valid = true;
   this.level = "one";
   this.summary = "";
@@ -135,7 +136,8 @@ AdditionalCodesValidator.prototype.gatherResults = function() {
     valid: this.valid,
     level: this.level,
     summary: this.summary,
-    errors: this.errors
+    errors: this.errors,
+    conformanceErrors: this.conformanceErrors
   };
 };
 
@@ -197,6 +199,11 @@ AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors)
       k = k.replace("additional_code_additional_code_", "additional_code_");
       this.level = "two";
       invalidCodes = true;
+    } else if (message.hasOwnProperty("key")) {
+      this.level = "four";
+      this.conformanceErrors.push(message.key.split(": {")[0]);
+      this.valid = false;
+      continue;
     } else {
       this.level = "two";
     }
