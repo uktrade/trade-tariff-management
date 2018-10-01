@@ -22,12 +22,16 @@ $(document).ready(function() {
         errorsSummary: ""
       };
 
+      if (!$.isEmptyObject(window.all_settings)) {
+        data.workbasket_name = window.all_settings.workbasket_name;
+        data.validity_start_date = window.all_settings.validity_start_date;
+        data.validity_end_date = window.all_settings.validity_end_date;
+        data.additional_codes = window.all_settings.additional_codes;
+      }
+
       return data;
     },
     mounted: function() {
-      if (!$.isEmptyObject(window.all_settings)) {
-        this.applyPayload(window.all_settings);
-      }
       if (this.additional_codes.length === 0) {
         this.addAdditionalCodes();
       }
@@ -103,12 +107,6 @@ $(document).ready(function() {
             error(response);
           }
         });
-      },
-      applyPayload: function(payload) {
-        this.workbasket_name = payload.workbasket_name;
-        this.validity_start_date = payload.validity_start_date;
-        this.validity_end_date = payload.validity_end_date;
-        this.additional_codes = payload.additional_codes;
       },
       preparePayload: function() {
         return {
