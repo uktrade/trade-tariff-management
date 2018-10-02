@@ -537,22 +537,12 @@ class Measure < Sequel::Model
   end
 
   class << self
-    def limit_per_page
-      if Rails.env.production?
-        300
-      elsif Rails.env.development?
-        30
-      elsif Rails.env.test?
-        10
-      end
-    end
-
     def max_per_page
-      limit_per_page
+      25
     end
 
     def default_per_page
-      limit_per_page
+      25
     end
 
     def max_pages
