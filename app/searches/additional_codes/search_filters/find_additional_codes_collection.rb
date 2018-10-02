@@ -15,8 +15,18 @@ module AdditionalCodes
         is_or_is_not_search_query("additional_code_type_id", operator, additional_code_type_id)
       end
 
-      def operator_search_by_code(value)
-        where(additional_code: value)
+      def operator_search_by_code(operator, additional_code)
+        operator_search_where_clause("AdditionalCode", operator, additional_code)
+      end
+
+      private
+
+      def operator_search_where_clause(klass_name, operator, value=nil)
+        q_rules = "::AdditionalCodes::SearchFilters::#{klass_name}".constantize.new(
+            operator, value
+        ).sql_rules
+
+        q_rules.present? ? where(q_rules) : self
       end
 
     end

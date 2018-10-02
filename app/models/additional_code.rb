@@ -75,7 +75,7 @@ class AdditionalCode < Sequel::Model
   one_to_one :export_refund_nomenclature, key: :export_refund_code,
                                           primary_key: :additional_code
 
-  delegate :description, :formatted_description, to: :additional_code_description
+  delegate :description, :formatted_description, to: :additional_code_description, allow_nil: true
 
   def code
     "#{additional_code_type_id}#{additional_code}"
