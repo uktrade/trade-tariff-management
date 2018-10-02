@@ -1,6 +1,6 @@
 <script type="text/x-template" id="records-grid-template">
   <div class="records-table-wrapper">
-    <div class="records-table">
+    <div :class="classes">
       <div class="table__header">
         <div class="table__column select-all-column" v-if="disableSelection !== true">
           <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" />

@@ -222,9 +222,9 @@ module Workbaskets
         status: status,
         user: user.try(:to_json),
         last_update_by: last_update_by.try(:to_json),
-        last_status_change_at: last_status_change_at,
-        updated_at: updated_at,
-        created_at: created_at
+        last_status_change_at: last_status_change_at.try(:strftime, "%d %b %Y") || "-",
+        updated_at: updated_at.try(:strftime, "%d %b %Y") || "-",
+        created_at: created_at.try(:strftime, "%d %b %Y") || "-"
       }
     end
 

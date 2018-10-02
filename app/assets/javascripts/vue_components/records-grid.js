@@ -2,6 +2,7 @@ Vue.component("records-grid", {
   template: "#records-grid-template",
   props: [
     "primaryKey",
+    "tableClass",
     "onSelectionChange",
     "onItemSelected",
     "onItemDeselected",
@@ -116,6 +117,15 @@ Vue.component("records-grid", {
     }
   },
   computed: {
+    classes: function() {
+      var classes = ['records-table'];
+
+      if (this.tableClass) {
+        classes.push(this.tableClass);
+      }
+
+      return classes;
+    },
     enabledColumns: function() {
       return this.columns.filter(function(c) {
         return c.enabled;

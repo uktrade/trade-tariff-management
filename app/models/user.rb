@@ -83,6 +83,10 @@ class User < Sequel::Model
     }
   end
 
+  def to_json
+    json_mapping
+  end
+
   def author_of_workbasket?(workbasket)
     workbasket.user_id == id
   end
