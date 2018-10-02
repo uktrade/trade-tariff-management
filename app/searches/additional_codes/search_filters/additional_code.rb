@@ -16,7 +16,7 @@
 #
 # Example:
 #
-# ::Measures::SearchFilters::AdditionalCode.new(
+# ::AdditionalCodes::SearchFilters::AdditionalCode.new(
 #   "is", "238"
 # ).sql_rules
 #
@@ -38,7 +38,7 @@ module AdditionalCodes
         @operator = operator
         @additional_code = additional_code.to_s
                                           .delete(" ")
-                                          .downcase
+                                          .upcase
       end
 
       def sql_rules

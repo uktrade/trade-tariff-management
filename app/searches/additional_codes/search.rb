@@ -66,5 +66,11 @@ module AdditionalCodes
       )
     end
 
+    def apply_workbasket_name_filter
+      @relation = relation.operator_search_by_workbasket_name(
+          *query_ops(workbasket_name)
+      )
+    end
+
   end
 end
