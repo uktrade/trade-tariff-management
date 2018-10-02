@@ -3,7 +3,6 @@ module SearchCacheHelpers
 
   included do
     expose(:search_code) do
-      separator = controller_name.to_s == "measures" ? "_SM_" : "_BE_"
       code = "#{current_user.id}#{separator}#{Time.now.to_i}"
 
       Rails.cache.write(code, search_ops)
@@ -23,7 +22,7 @@ module SearchCacheHelpers
 
     expose(:json_response) do
       {
-        measures: json_collection,
+        collection: json_collection,
         total_pages: search_results.total_pages,
         current_page: search_results.current_page,
         has_more: !search_results.last_page?
