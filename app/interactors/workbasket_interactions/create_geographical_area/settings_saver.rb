@@ -119,6 +119,10 @@ module WorkbasketInteractions
 
             @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
           end
+
+          if operation_date.blank?
+            @errors[:operation_date] = errors_translator(:operation_date_blank)
+          end
         end
 
         def parse_date(option_name)

@@ -69,3 +69,4 @@ en:
       validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
       validity_end_date_wrong_format: "Valid until date is optional, but if specified must be a complete date - day, month, and year must be specified."
       validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+      operation_date_blank: "Operation date must be specified."
