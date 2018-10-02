@@ -29,11 +29,11 @@
 # ).sql_rules
 #
 
-module Measures
+module Shared
   module SearchFilters
     class DateOf
 
-      include ::Measures::SharedMethods::Date
+      include ::Shared::Methods::Date
 
       attr_accessor :operator,
                     :mode,

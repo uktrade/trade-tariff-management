@@ -62,19 +62,7 @@ class AdditionalCode < Sequel::Model
       scope.first
     end
 
-    begin :search_related_methods
-      def by_start_date_and_additional_code_sid_reverse
-        order(
-          Sequel.desc(:validity_start_date),
-          Sequel.desc(:additional_code_sid)
-        )
-      end
-
-      def operator_search_by_code(value)
-        where(additional_code: value)
-      end
-
-    end
+    include ::AdditionalCodes::SearchFilters::FindAdditionalCodesCollection
   end
 
   def additional_code_description

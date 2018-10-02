@@ -57,33 +57,33 @@
   <div class="find-items__row">
     <div class="find-items__checkbox-column">
       <div class="multiple-choice">
-        <input name="search[validity_start_date][enabled]" id="toggle-validity-start-date" type="checkbox" value="1" v-model="validity_start_date.enabled" />
+        <input name="search[valid_from][enabled]" id="toggle-validity-start-date" type="checkbox" value="1" v-model="valid_from.enabled" />
         <label for="toggle-validity-start-date">
           Valid from
         </label>
       </div>
     </div>
     <div class="find-items__is">
-      <custom-select :options="conditionsForValidityStartDate" label-field="label" value-field="value"  v-model="validity_start_date.operator" name="search[validity_start_date][operator]"></custom-select>
+      <custom-select :options="conditionsForValidityStartDate" label-field="label" value-field="value"  v-model="valid_from.operator" name="search[valid_from][operator]"></custom-select>
     </div>
     <div class="find-item__date">
-      <date-select :value.sync="validity_start_date.value" name="search[validity_start_date][value]" v-bind:disabled="validityStartDateValueDisabled" />
+      <date-select :value.sync="valid_from.value" name="search[valid_from][value]" v-bind:disabled="validityStartDateValueDisabled" />
     </div>
   </div>
   <div class="find-items__row">
     <div class="find-items__checkbox-column">
       <div class="multiple-choice">
-        <input name="search[validity_end_date][enabled]" id="toggle-validity-end-date" type="checkbox" value="1" v-model="validity_end_date.enabled" />
+        <input name="search[valid_to][enabled]" id="toggle-validity-end-date" type="checkbox" value="1" v-model="valid_to.enabled" />
         <label for="toggle-validity-end-date">
           Valid to
         </label>
       </div>
     </div>
     <div class="find-items__is">
-      <custom-select :options="conditionsForValidityEndDate" label-field="label" value-field="value"  v-model="validity_end_date.operator" name="search[validity_end_date][operator]"></custom-select>
+      <custom-select :options="conditionsForValidityEndDate" label-field="label" value-field="value"  v-model="valid_to.operator" name="search[valid_to][operator]"></custom-select>
     </div>
     <div class="find-item__date">
-      <date-select :value.sync="validity_end_date.value" name="search[validity_end_date][value]" v-bind:disabled="validityEndDateValueDisabled" />
+      <date-select :value.sync="valid_to.value" name="search[valid_to][value]" v-bind:disabled="validityEndDateValueDisabled" />
     </div>
   </div>
   <div class="find-items__row">
