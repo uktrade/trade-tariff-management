@@ -1,0 +1,14 @@
+fieldset
+  h3.heading-medium
+    | What code will identify this area?
+
+  span.form-hint
+    | This must ne unique and either a two-letter ISO code (for a country or region) or a string of four
+    br
+    | letters and/or numbers (for a group).
+
+  .row
+    .col-md-4
+      .form-group v-bind:class="{ 'form-group-error': errors.geographical_area_id }"
+        span.error-message v-if="errors.geographical_area_id" v-html="errors.geographical_area_id"
+        input.form-control.col-xs-2.col-md-2.col-lg-2 maxlength="4" v-model="geographical_area.geographical_area_id"

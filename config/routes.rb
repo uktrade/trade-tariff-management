@@ -94,6 +94,16 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :create_geographical_area, only: [:new, :show, :edit, :update] do
+      member do
+        post :validate_group_memberships
+        post :validate_country_or_region_memberhips
+        post :validate_membership
+
+        get :submitted_for_cross_check
+      end
+    end
+
     resources :create_measures, only: [:new, :show, :edit, :update] do
       member do
         get :submitted_for_cross_check
