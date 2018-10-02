@@ -71,6 +71,10 @@ module Workbaskets
                        foreign_key: :id,
                        class_name: "User"
 
+    many_to_one :last_update_by, key: :last_update_by_id,
+                                 foreign_key: :id,
+                                 class_name: "User"
+
     plugin :timestamps
     plugin :validation_helpers
     plugin :enumerize
@@ -209,6 +213,19 @@ module Workbaskets
 
     def generate_next_sequence_number
       @sequence_number = (@sequence_number || 0) + 1
+    end
+
+    def to_json
+      {
+        title: title,
+        type: type,
+        status: status,
+        user: user.try(:to_json),
+        last_update_by: last_update_by.try(:to_json),
+        last_status_change_at: last_status_change_at,
+        updated_at: updated_at,
+        created_at: created_at
+      }
     end
 
     def debug_collection

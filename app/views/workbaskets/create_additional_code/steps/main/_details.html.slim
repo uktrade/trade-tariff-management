@@ -2,44 +2,42 @@ h3.heading-medium Workbasket details
 
 - details = workbasket_settings.main_step_settings
 
-table.create-measures-details-table
-  tbody
-    tr
-      td.heading_column
-        | Workbasket name
-      td
-        = workbasket.title
+.bootstrap-row
+  .col-xs-12.col-sm-12.col-md-10.col-lg-8
+    table.create-measures-details-table
+      colgroup
+        col width="320"
+        col width="*"
+      tbody
+        tr
+          td.heading_column
+            | Workbasket name
+          td
+            = workbasket.title
 
-    - if details["reason"].present?
-      tr
-        td.heading_column
-          | Reason for changes
-        td
-          = details["reason"]
-
-    tr v-if="dependentOnBaseRegulation"
-      td.heading_column
-        | Changes take effect on
-      td
-        = workbasket.operation_date.try(:strftime, "%d %B %Y")
-
-    tr
-      td.heading_column
-        | Submitted for cross-check in
-      td
-        | &nbsp;
-    tr
-      td.heading_column
-        | Rejected by
-      td
-        | &nbsp;
-    tr
-      td.heading_column
-        | Rejected on
-      td
-        | &nbsp;
-    tr.group-top
-      td.heading_column
-        | Rejected because
-      td
-        | &nbsp;
+        - if details["reason"].present?
+          tr
+            td.heading_column
+              | Reason for changes
+            td
+              = details["reason"]
+        tr
+          td.heading_column
+            | Submitted for cross-check in
+          td
+            | &nbsp;
+        tr
+          td.heading_column
+            | Rejected by
+          td
+            | &nbsp;
+        tr
+          td.heading_column
+            | Rejected on
+          td
+            | &nbsp;
+        tr.group-top
+          td.heading_column
+            | Rejected because
+          td
+            | &nbsp;

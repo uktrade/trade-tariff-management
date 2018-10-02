@@ -113,7 +113,12 @@ class AdditionalCode < Sequel::Model
     {
       additional_code: additional_code,
       type_id: additional_code_type_id,
-      description: description
+      formatted_code: code,
+      description: description,
+      validity_start_date: validity_start_date.try(:strftime, "%d %M %Y"),
+      validity_end_date: validity_end_date.try(:strftime, "%d %M %Y"),
+      operation_date: operation_date,
+      workbasket: workbasket.try(:to_json)
     }
   end
 
