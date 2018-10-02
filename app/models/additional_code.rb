@@ -69,6 +69,11 @@ class AdditionalCode < Sequel::Model
           Sequel.desc(:additional_code_sid)
         )
       end
+
+      def operator_search_by_code(value)
+        where(additional_code: value)
+      end
+
     end
   end
 
@@ -96,6 +101,18 @@ class AdditionalCode < Sequel::Model
     "00".freeze
   end
 
+  def status_title
+    if status.present?
+      I18n.t(:measures)[:states][status.to_sym]
+    else
+      "Imported to TARIFF"
+    end
+  end
+
+  def sent_to_cds?
+    status.blank? || status.to_s.in?(::Workbaskets::Workbasket::SENT_TO_CDS_STATES)
+  end
+
   def json_mapping
     {
       additional_code: additional_code,
@@ -109,6 +126,19 @@ class AdditionalCode < Sequel::Model
       additional_code: additional_code,
       type_id: additional_code_type_id,
       description: description
+    }
+  end
+
+  def to_table_json
+    {
+        type_id: additional_code_type_id,
+        additional_code: additional_code,
+        description: description,
+        validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
+        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+        last_updated: added_at.try(:strftime, "%d %b %Y") || "-",
+        status: status_title,
+        sent_to_cds: sent_to_cds?
     }
   end
 

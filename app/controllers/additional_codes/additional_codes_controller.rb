@@ -12,10 +12,6 @@ module AdditionalCodes
       AdditionalCode.by_code(params[:code])
     end
 
-    expose(:items_search) do
-      []
-    end
-
     expose(:search_ops) do
       ops = params[:search]
 
@@ -38,6 +34,10 @@ module AdditionalCodes
 
     expose(:search_results) do
       additional_codes_search.results
+    end
+
+    expose(:json_collection) do
+      search_results.map(&:to_table_json)
     end
 
     def index
