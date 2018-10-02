@@ -10,7 +10,9 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
-        errors: []
+        errors: {},
+        conformanceErrors: {},
+        errorsSummary: ""
       };
 
       var types = {
@@ -75,8 +77,15 @@ $(document).ready(function() {
             },
             error: function(response) {
               WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
-              self.errors = response.responseJSON.errors;
               WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+
+              if (response.status == 500) {
+                alert("There was a server error which prevented the additional codes to be saved. Please try again in a few moments.");
+                return;
+              }
+
+              self.errorsSummary = "All bad guys!";
+              self.errors = response.responseJSON.errors;
             }
           });
         });
@@ -84,7 +93,10 @@ $(document).ready(function() {
     },
     computed: {
       hasErrors: function() {
-        return this.errors.length > 0;
+        return Object.keys(this.errors).length > 0;
+      },
+      hasConformanceErrors: function() {
+        return Object.keys(this.conformanceErrors).length > 0;
       }
     },
     methods: {
