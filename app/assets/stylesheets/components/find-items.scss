@@ -103,7 +103,9 @@ $find-item-gutter: 5px;
   }
 }
 
-.items-table-wrapper {
+.items-table-wrapper,
+.records-table-wrapper,
+.measures-table-wrapper {
   width: 100%;
 
   .recycle-list {

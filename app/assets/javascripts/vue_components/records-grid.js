@@ -1,6 +1,7 @@
-Vue.component("measures-grid", {
-  template: "#measures-grid-template",
+Vue.component("records-grid", {
+  template: "#records-grid-template",
   props: [
+    "primaryKey",
     "onSelectionChange",
     "onItemSelected",
     "onItemDeselected",
@@ -14,7 +15,7 @@ Vue.component("measures-grid", {
     "selectionType",
     "selectAllHasChanged",
     "clientSelection",
-    "disableScroller"
+    "disableSelection"
   ],
   data: function() {
     var self = this;
@@ -22,19 +23,21 @@ Vue.component("measures-grid", {
     var selectAll = this.selectionType == 'all';
     var checked = {};
 
-    this.data.forEach(function(measure) {
-      checked[measure.measure_sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(measure.measure_sid) === -1) ||
-                                     (self.selectionType == 'none' && self.selectedRows.indexOf(measure.measure_sid) > -1);
+    this.data.forEach(function(record) {
+      var sid = record[self.primaryKey];
+
+      checked[sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(sid) === -1) ||
+                     (self.selectionType == 'none' && self.selectedRows.indexOf(sid) > -1);
     });
 
     if (this.clientSelection === true) {
       selectAll = this.data.filter(function(row) {
-        return self.selectedRows.indexOf(row.measure_sid) === -1;
+        return self.selectedRows.indexOf(row[self.primaryKey]) === -1;
       }).length === 0;
     }
 
     return {
-      sortBy: "measure_sid",
+      sortBy: this.columns[0].field,
       sortDir: "desc",
       selectAll: selectAll,
       firstLoad: true,
@@ -104,9 +107,11 @@ Vue.component("measures-grid", {
     },
     rebuildChecked: function() {
       var self = this;
-      this.data.forEach(function(measure) {
-        self.checked[measure.measure_sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(measure.measure_sid) === -1) ||
-                                       (self.selectionType == 'none' && self.selectedRows.indexOf(measure.measure_sid) > -1);
+      this.data.forEach(function(record) {
+        var sid = record[self.primaryKey];
+
+        self.checked[sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(sid) === -1) ||
+                            (self.selectionType == 'none' && self.selectedRows.indexOf(sid) > -1);
       });
     }
   },
@@ -164,15 +169,15 @@ Vue.component("measures-grid", {
 
       if (val) {
         this.data.map(function(row) {
-          if (self.selectedRows.indexOf(row.measure_sid) === -1) {
-            self.onItemSelected(row.measure_sid);
-            self.checked[row.measure_sid] = true;
+          if (self.selectedRows.indexOf(row[self.primaryKey]) === -1) {
+            self.onItemSelected(row[self.primaryKey]);
+            self.checked[row[self.primaryKey]] = true;
           }
         });
       } else {
         this.data.map(function(row) {
-          self.onItemDeselected(row.measure_sid);
-          self.checked[row.measure_sid] = false;
+          self.onItemDeselected(row[self.primaryKey]);
+          self.checked[row[self.primaryKey]] = false;
         });
       }
     },
@@ -183,7 +188,7 @@ Vue.component("measures-grid", {
         this.indirectSelectAll = true;
 
         this.selectAll = this.data.filter(function(row) {
-          return self.selectedRows.indexOf(row.measure_sid) === -1;
+          return self.selectedRows.indexOf(row[self.primaryKey]) === -1;
         }).length === 0;
 
         setTimeout(function() {
@@ -216,9 +221,9 @@ Vue.component("measures-grid", {
 
       var self = this;
 
-      this.data.forEach(function(measure) {
-        self.checked[measure.measure_sid] = (self.selectionType == 'all' && self.selectedRows.indexOf(measure.measure_sid) === -1) ||
-                                            (self.selectionType == 'none' && self.selectedRows.indexOf(measure.measure_sid) > -1);
+      this.data.forEach(function(record) {
+        self.checked[record[self.primaryKey]] = (self.selectionType == 'all' && self.selectedRows.indexOf(record[self.primaryKey]) === -1) ||
+                                            (self.selectionType == 'none' && self.selectedRows.indexOf(record[self.primaryKey]) > -1);
       });
     }
   }
