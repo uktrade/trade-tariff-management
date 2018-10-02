@@ -8,8 +8,8 @@ class QuotaAssociationValidator < TradeTariffBackend::Validator
   validation :QA2,
     %(The sub-quota’s validity period must be entirely enclosed within the validity
     period of the main quota),
-    if: ->(record) { record.main_quota_definition.present? && record.sub_quota_definition.present? },
-    on: [:create, :update] do |record|
+    on: [:create, :update],
+    if: ->(record) { record.main_quota_definition.present? && record.sub_quota_definition.present? } do |record|
       main_quota_definition = record.main_quota_definition
       sub_quota_definition = record.sub_quota_definition
 
@@ -28,4 +28,19 @@ class QuotaAssociationValidator < TradeTariffBackend::Validator
       valid
     end
 
+  validation :QA3,
+    %(When converted to the measurement unit of the main quota, the volume of a sub-quota must
+    always be lower than or equal to the volume of the main quota.),
+    on: [:create, :update],
+    if: ->(record) { record.main_quota_definition.present? && record.sub_quota_definition.present? } do |record|
+      valid = true
+
+      if record.main_quota_definition.measurement_unit_code.present? &&
+          record.main_quota_definition.measurement_unit.present?
+
+       valid = record.main_quota_definition.volume >= record.sub_quota_definition.volume
+      end
+
+      valid
+    end
 end

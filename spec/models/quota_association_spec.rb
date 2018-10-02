@@ -3,10 +3,14 @@ require 'rails_helper'
 describe QuotaAssociation do
   describe "validations" do
     describe "conformance rules" do
+        let!(:measurement_unit) { create(:measurement_unit) }
+
         let!(:main_quota_definition) {
           create(
             :quota_definition,
             critical_state: "N",
+            measurement_unit_code: measurement_unit.measurement_unit_code,
+            volume: 100000.0,
             validity_start_date: Date.today,
             validity_end_date: Date.today + 1.month,
           )
@@ -16,6 +20,8 @@ describe QuotaAssociation do
           create(
             :quota_definition,
             critical_state: "N",
+            measurement_unit_code: measurement_unit.measurement_unit_code,
+            volume: 80000.0,
             validity_start_date: main_quota_definition.validity_start_date,
             validity_end_date: main_quota_definition.validity_end_date,
           )
@@ -97,7 +103,22 @@ describe QuotaAssociation do
           expect(qa).to_not be_conformant
           expect(qa.conformance_errors).to have_key(:QA2)
         end
+      end
 
+      describe %(QA3: When converted to the measurement unit of the main quota, the volume of a sub-quota must
+               always be lower than or equal to the volume of the main quota.) do
+
+        it "should run validation sucessfully" do
+          expect(quota_association).to be_conformant
+        end
+
+        it "should run not validation sucessfully" do
+          sub_quota_definition.volume = main_quota_definition.volume + 1000
+          sub_quota_definition.save
+
+          expect(quota_association).to_not be_conformant
+          expect(quota_association.conformance_errors).to have_key(:QA3)
+        end
       end
     end
   end
