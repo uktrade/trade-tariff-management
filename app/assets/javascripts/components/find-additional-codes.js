@@ -34,20 +34,13 @@ $(document).ready(function() {
 
       var data = {
         columns: [
-          {enabled: true, title: "ID", field: "measure_sid"},
-          {enabled: true, title: "Regulation", field: "regulation"},
-          {enabled: true, title: "Type", field: "measure_type_id"},
-          {enabled: true, title: "Start date", field: "valid_from"},
-          {enabled: true, title: "End date", field: "valid_to"},
-          {enabled: true, title: "Commodity code", field: "goods_nomenclature_id"},
-          {enabled: true, title: "Additional code", field: "additional_code_id"},
-          {enabled: true, title: "Origin", field: "geographical_area"},
-          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas"},
-          {enabled: true, title: "Duties", field: "duties"},
-          {enabled: true, title: "Conditions", field: "conditions"},
-          {enabled: true, title: "Footnotes", field: "footnotes"},
-          {enabled: true, title: "Last updated", field: "last_updated"},
-          {enabled: true, title: "Status", field: "status"}
+          {enabled: true, title: "Type", field: "type_id", sortable: true, type: "string" },
+          {enabled: true, title: "Code", field: "additional_code", sortable: true, type: "string" },
+          {enabled: true, title: "Description", field: "description", sortable: true, type: "string" },
+          {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date" },
+          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date" },
+          {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "string" },
+          {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
 
         typesForDate: [
@@ -291,7 +284,7 @@ $(document).ready(function() {
 
         $.get(window.location.href).success(function(data) {
           //todo: refactor this root element out
-          self.items = data.additional_codes;
+          self.items = data.collection;
           self.isLoading = false;
 
           if (callback) {

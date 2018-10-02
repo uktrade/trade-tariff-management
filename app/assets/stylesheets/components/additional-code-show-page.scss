@@ -1,40 +1,40 @@
 .additional-codes-show-page {
   padding-bottom: 100px;
+}
 
-  .records-table {
-    .type_id-column {
-      min-width: 60px;
-      max-width: 60px;
-    }
+.records-table.additional-codes-table {
+  .type_id-column {
+    min-width: 60px !important;
+    max-width: 60px !important;
+  }
 
-    .additional_code-column {
-      min-width: 70px;
-      max-width: 70px;
-    }
+  .additional_code-column {
+    min-width: 70px !important;
+    max-width: 70px !important;
+  }
 
-    .description-column {
-      min-width: 320px;
-      max-width: 320px;
-    }
+  .description-column {
+    min-width: 320px !important;
+    max-width: 320px !important;
+  }
 
-    .validity_start_date-column {
-      min-width: 110px;
-      max-width: 110px;
-    }
+  .validity_start_date-column {
+    min-width: 110px !important;
+    max-width: 110px !important;
+  }
 
-    .validity_end_date-column {
-      min-width: 110px;
-      max-width: 110px;
-    }
+  .validity_end_date-column {
+    min-width: 110px !important;
+    max-width: 110px !important;
+  }
 
-    .last_updated-column {
-      min-width: 180px;
-      max-width: 180px;
-    }
+  .last_updated-column {
+    min-width: 180px !important;
+    max-width: 180px !important;
+  }
 
-    .status-column {
-      min-width: 200px;
-      max-width: 200px;
-    }
+  .status-column {
+    min-width: 250px !important;
+    max-width: 250px !important;
   }
 }
