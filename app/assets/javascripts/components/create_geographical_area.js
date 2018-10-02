@@ -62,9 +62,16 @@ $(document).ready(function() {
               settings: self.createGeographicalAreaMainStepPayLoad()
             },
             success: function(response) {
-              WorkbasketBaseSaveActions.handleSuccessResponse(response, submit_button.attr('name'), function() {
+              WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
+
+              if (response.redirect_url !== undefined) {
+                setTimeout(function tick() {
+                  window.location = resp.redirect_url;
+                }, 1000);
+              } else {
+                WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
                 self.savedSuccessfully = true;
-              });
+              }
             },
             error: function(response) {
               WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
