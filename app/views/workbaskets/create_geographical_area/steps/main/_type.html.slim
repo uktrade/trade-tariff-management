@@ -1,0 +1,13 @@
+fieldset.geographical-area-type-selector-fieldset
+  h3.heading-medium
+    | What type of geographical area are you creating?
+
+  .form-group v-bind:class="{ 'form-group-error': errors.geographical_code }"
+    span.error-message v-if="errors.geographical_code" v-html="errors.geographical_code"
+
+  .controls
+    = content_tag "geographical-area-type", "", { kind: "country", ":geographical_area" => "types.country" }
+
+    = content_tag "geographical-area-type", "", { kind: "region", ":geographical_area" => "types.region" }
+
+    = content_tag "geographical-area-type", "", { kind: "group", ":geographical_area" => "types.group" }

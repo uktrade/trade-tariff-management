@@ -1,0 +1,12 @@
+fieldset
+  h3.heading-medium
+    | What is the area description?
+
+  span.form-hint
+    | This will be the name of the country or region, but for groups you should use something descriptive that will allow others to easily identify it.
+
+  .row
+    .col-md-12
+      .form-group.without_bottom_margin v-bind:class="{ 'form-group-error': errors.description }"
+        span.error-message v-if="errors.description" v-html="errors.description"
+        = f.input :description, label: false, input_html: { class: "col-md-3", "v-model" => "geographical_area.description" }

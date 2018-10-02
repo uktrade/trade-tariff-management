@@ -1,0 +1,25 @@
+fieldset
+  h3.heading-medium
+    | When is the area valid from?
+
+  .form-group v-bind:class="{ 'form-group-error': errors.validity_start_date }"
+    .row
+      .col-md-6
+        span.error-message v-if="errors.validity_start_date" v-html="errors.validity_start_date"
+        = content_tag "date-select", "", ":value.sync" => "geographical_area.validity_start_date"
+
+fieldset
+  h3.heading-medium
+    | When is the area valid until?
+
+  .form-group v-bind:class="{ 'form-group-error': errors.validity_end_date }"
+    label.form-label
+      span.form-hint
+        | This is optional and should usually be left unset (open-ended) unless you know the area is only
+        br
+        | needed for a limited time.
+
+    .row
+      .col-md-6
+        span.error-message v-if="errors.validity_end_date" v-html="errors.validity_end_date"
+        = content_tag "date-select", "", ":value.sync" => "geographical_area.validity_end_date"
