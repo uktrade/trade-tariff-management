@@ -33,7 +33,12 @@ module Workbaskets
       if saver.valid?
         handle_success_saving!
       else
-        handle_errors!
+        workbasket_settings.track_step_validations_status!(current_step, false)
+
+        render json: {
+          step: current_step,
+          errors: saver.errors
+        }, status: :unprocessable_entity
       end
     end
 

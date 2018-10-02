@@ -80,16 +80,16 @@ module WorkbasketInteractions
 
             if geographical_code.present?
               if type == "1" && area_id.match(/^[0-9A-Z]{4}$/).blank?
-                general_errors(:geographical_area_id) = errors_translator(:geographical_area_id_invalid_group_code)
+                general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_group_code)
               end
 
               if GeographicalArea::COUNTRIES_CODES.include?(type) && area_id.match(/^[A-Z]{2}$/).blank?
-                general_errors(:geographical_area_id) = errors_translator(:geographical_area_id_invalid_country_code)
+                general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_country_code)
               end
             end
 
             if GeographicalArea.where(geographical_area_id: area_id).present?
-              general_errors(:geographical_area_id) = errors_translator(:geographical_area_id_already_exist)
+              general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_already_exist)
             end
           else
             general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_blank)
