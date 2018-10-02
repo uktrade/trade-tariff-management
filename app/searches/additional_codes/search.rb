@@ -47,8 +47,18 @@ module AdditionalCodes
         p ""
       end
 
-
       relation
+    end
+
+    private
+
+    def apply_code_filter
+      val = just_value(code)
+      @relation = relation.operator_search_by_code(val) if val.present?
+    end
+
+    def just_value(ops)
+      ops[:value]
     end
 
   end
