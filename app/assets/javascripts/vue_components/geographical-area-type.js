@@ -39,7 +39,7 @@ Vue.component("geographical-area-type", {
         parent_group_id = window.__geographical_area_json.parent_geographical_area_group_id;
 
         if (parent_group_id.length > 0) {
-         $("select[name='geographical_area[parent_geographical_area_group_id]']")[0].selectize.setValue(parent_group_id);
+          $("select[name='geographical_area[parent_geographical_area_group_id]']")[0].selectize.setValue(parent_group_id);
         }
       }
     }
@@ -71,7 +71,6 @@ Vue.component("geographical-area-type", {
           this.showParentGroupSelector();
         } else {
           this.hideParentGroupSelector();
-          this.cleanUpSelectedParentGroup();
         }
 
         $("input.js-geographical-area-type").val(this.kind);
@@ -84,9 +83,6 @@ Vue.component("geographical-area-type", {
     },
     hideParentGroupSelector: function() {
       $(".js-geographical-area-parent-group-select-block").addClass('hidden');
-    },
-    cleanUpSelectedParentGroup: function() {
-      $("select[name='geographical_area[parent_geographical_area_group_id]']")[0].selectize.clearOptions();
     },
     changeParentGroup: function(newParentGroup) {
       this.geographical_area.parent_geographical_area_group_id = newParentGroup;
