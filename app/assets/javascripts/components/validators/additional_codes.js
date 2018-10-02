@@ -1,7 +1,7 @@
 function AdditionalCodesValidator(data) {
   this.data = data;
   this.errors = {};
-  this.conformanceErrors = [];
+  this.conformanceErrors = {};
   this.valid = true;
   this.level = "one";
   this.summary = "";
@@ -164,13 +164,13 @@ AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors)
 
   if (errors.general) {
     if (errors.general.workbasket_name) {
-      this.level = "one";
+      self.setLevel("one");
       this.errors.workbasket_name = errors.general.workbasket_name;
       this.valid = false;
     }
 
     if (errors.general.validity_start_date) {
-      this.level = "one";
+      self.setLevel("one");
       this.errors.validity_start_date = errors.general.validity_start_date;
       this.valid = false;
     }
@@ -193,19 +193,26 @@ AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors)
 
     if (k.indexOf("additional_code_description_") > -1) {
       k = k.replace("additional_code_description_", "description_");
-      this.level = "three";
+      self.setLevel("three");
       invalidCodes = true;
     } else if (k.indexOf("additional_code_additional_code_") > -1) {
       k = k.replace("additional_code_additional_code_", "additional_code_");
-      this.level = "two";
+      self.setLevel("two");
       invalidCodes = true;
-    } else if (message.hasOwnProperty("key")) {
-      this.level = "four";
-      this.conformanceErrors.push(message.key.split(": {")[0]);
+    } else if (isObject(message)) {
+      self.setLevel("four");
       this.valid = false;
+
+      for (var kk in message) {
+        if (message.hasOwnProperty(kk)) {
+          var conformanceError = self.parseConformanceMessage(message[kk]);
+          this.conformanceErrors[conformanceError.code] = conformanceError.message;
+        }
+      }
+
       continue;
     } else {
-      this.level = "two";
+      self.setLevel("two");
     }
 
     this.errors[k] = message;
@@ -217,4 +224,29 @@ AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors)
   }
 
   return this.gatherResults();
+};
+
+AdditionalCodesValidator.prototype.setLevel = function(level) {
+  var ordered = ["one", "two", "three", "four"];
+
+  var currentIndex = ordered.indexOf(this.level);
+  var argumentIndex = ordered.indexOf(level);
+
+  if (currentIndex === -1 || currentIndex < argumentIndex) {
+    this.level = level;
+  }
+};
+
+AdditionalCodesValidator.prototype.parseConformanceMessage = function(message) {
+  var regex = new RegExp(/(^[\w]+)\:\s([\w\s]*)/gm);
+  var matches = regex.exec(message);
+
+  if (!matches) {
+    return {};
+  }
+
+  return {
+    code: matches[1],
+    message: matches[2]
+  };
 };

@@ -19,7 +19,7 @@ $(document).ready(function() {
         saving: false,
         submitting: false,
         errors: {},
-        conformanceErrors: [],
+        conformanceErrors: {},
         errorsSummary: ""
       };
 
@@ -40,6 +40,9 @@ $(document).ready(function() {
     computed: {
       hasErrors: function() {
         return Object.keys(this.errors).length > 0;
+      },
+      hasConformanceErrors: function() {
+        return Object.keys(this.conformanceErrors).length > 0;
       }
     },
     methods: {
@@ -85,7 +88,7 @@ $(document).ready(function() {
         };
 
         this.errors = {};
-        this.conformanceErrors = [];
+        this.conformanceErrors = {};
 
         $.ajax({
           url: window.save_url,
