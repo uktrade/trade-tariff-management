@@ -19,6 +19,10 @@ module AdditionalCodes
         operator_search_where_clause("AdditionalCode", operator, additional_code)
       end
 
+      def operator_search_by_workbasket_name(operator, workbaket_name)
+        operator_search_where_clause("WorkbasketName", operator, workbaket_name)
+      end
+
       private
 
       def operator_search_where_clause(klass_name, operator, value=nil)
