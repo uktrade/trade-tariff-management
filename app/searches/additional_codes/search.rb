@@ -1,6 +1,8 @@
 module AdditionalCodes
   class Search
 
+    include ::Shared::Search
+
     ALLOWED_FILTERS = %w(
       workbasket_name
       type
@@ -52,13 +54,15 @@ module AdditionalCodes
 
     private
 
+    def apply_type_filter
+      @relation = relation.operator_search_by_additional_code_type(
+          *query_ops(type)
+      )
+    end
+
     def apply_code_filter
       val = just_value(code)
       @relation = relation.operator_search_by_code(val) if val.present?
-    end
-
-    def just_value(ops)
-      ops[:value]
     end
 
   end

@@ -37,8 +37,8 @@ $(document).ready(function() {
           {enabled: true, title: "ID", field: "measure_sid"},
           {enabled: true, title: "Regulation", field: "regulation"},
           {enabled: true, title: "Type", field: "measure_type_id"},
-          {enabled: true, title: "Start date", field: "validity_start_date"},
-          {enabled: true, title: "End date", field: "validity_end_date"},
+          {enabled: true, title: "Start date", field: "valid_from"},
+          {enabled: true, title: "End date", field: "valid_to"},
           {enabled: true, title: "Commodity code", field: "goods_nomenclature_id"},
           {enabled: true, title: "Additional code", field: "additional_code_id"},
           {enabled: true, title: "Origin", field: "geographical_area"},
@@ -143,13 +143,13 @@ $(document).ready(function() {
           operator: "is",
           value: null
         },
-        validity_start_date: {
+        valid_from: {
           enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
-        validity_end_date: {
+        valid_to: {
           enabled: false,
           operator: "is",
           value: null,
@@ -169,8 +169,8 @@ $(document).ready(function() {
         "date_of",
         "last_updated_by",
         "type",
-        "validity_start_date",
-        "validity_end_date",
+        "valid_from",
+        "valid_to",
         "code",
         "description"
       ];
@@ -197,8 +197,8 @@ $(document).ready(function() {
           last_updated_by: "last_updated_by",
           description: "description",
           type: "type",
-          validity_start_date: "validity_start_date",
-          validity_end_date: "validity_end_date",
+          valid_from: "valid_from",
+          valid_to: "valid_to",
           code: "code"
         };
 
@@ -230,10 +230,10 @@ $(document).ready(function() {
       },
 
       validityStartDateValueDisabled: function() {
-        return this.disableValue.indexOf(this.validity_start_date.operator) > -1;
+        return this.disableValue.indexOf(this.valid_from.operator) > -1;
       },
       validityEndDateValueDisabled: function() {
-        return this.disableValue.indexOf(this.validity_end_date.operator) > -1;
+        return this.disableValue.indexOf(this.valid_to.operator) > -1;
       },
       codeValueDisabled: function() {
         return this.disableValue.indexOf(this.code.operator) > -1;
@@ -390,24 +390,24 @@ $(document).ready(function() {
           this.date_of.enabled = true;
         }
       },
-      "validity_start_date.operator": function(val) {
+      "valid_from.operator": function(val) {
         if (val) {
-          this.validity_start_date.enabled = true;
+          this.valid_from.enabled = true;
         }
       },
-      "validity_start_date.value": function(val) {
+      "valid_from.value": function(val) {
         if (val) {
-          this.validity_start_date.enabled = true;
+          this.valid_from.enabled = true;
         }
       },
-      "validity_end_date.operator": function(val) {
+      "valid_to.operator": function(val) {
         if (val) {
-          this.validity_end_date.enabled = true;
+          this.valid_to.enabled = true;
         }
       },
-      "validity_end_date.value": function(val) {
+      "valid_to.value": function(val) {
         if (val) {
-          this.validity_end_date.enabled = true;
+          this.valid_to.enabled = true;
         }
       },
       "code.operator": function(val) {

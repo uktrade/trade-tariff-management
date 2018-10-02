@@ -30,11 +30,11 @@
 # ).sql_rules
 #
 
-module Measures
+module Shared
   module SearchFilters
     class DateUniversal
 
-      include ::Measures::SharedMethods::Date
+      include ::Shared::Methods::Date
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         is

@@ -1,5 +1,5 @@
-module Measures
-  module SharedMethods
+module Shared
+  module Methods
     module Date
 
       private
