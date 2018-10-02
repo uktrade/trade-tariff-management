@@ -20,5 +20,11 @@ module Workbaskets
       '{}'
     end
 
+    def additional_codes
+      collection.select do |i|
+        i.class.name == 'AdditionalCode'
+      end
+    end
+
   end
 end
