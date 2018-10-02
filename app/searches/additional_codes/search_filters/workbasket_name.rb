@@ -1,5 +1,3 @@
-
-
 module AdditionalCodes
   module SearchFilters
     class WorkbasketName
