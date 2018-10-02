@@ -24,7 +24,7 @@ Vue.component("geographical-area-type", {
       self.geographical_area.selected = radio.is(":checked");
     });
 
-    if (window.__geographical_area_json) {
+    if (!$.isEmptyObject(window.__geographical_area_json)) {
       selected_geographical_code = window.__geographical_area_json.geographical_code;
 
       if (selected_geographical_code.length > 0) {
@@ -35,7 +35,7 @@ Vue.component("geographical-area-type", {
     if (self.geographical_area.selected && this.groupTypeSelected) {
       this.showParentGroupSelector();
 
-      if (window.__geographical_area_json) {
+      if (!$.isEmptyObject(window.__geographical_area_json)) {
         parent_group_id = window.__geographical_area_json.parent_geographical_area_group_id;
 
         if (parent_group_id.length > 0) {

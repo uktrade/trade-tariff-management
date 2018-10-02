@@ -25,7 +25,7 @@ $(document).ready(function() {
         }
       }
 
-      if (window.__geographical_area_json) {
+      if (!$.isEmptyObject(window.__geographical_area_json)) {
         data.geographical_area = this.parseGeographicalAreaPayload(window.__geographical_area_json);
 
         if (data.geographical_area.geographical_code) {
