@@ -61,8 +61,9 @@ module AdditionalCodes
     end
 
     def apply_code_filter
-      val = just_value(code)
-      @relation = relation.operator_search_by_code(val) if val.present?
+      @relation = relation.operator_search_by_code(
+          *query_ops(code)
+      )
     end
 
   end
