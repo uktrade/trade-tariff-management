@@ -1,13 +1,17 @@
-fieldset.geographical-area-type-selector-fieldset
+fieldset
   h3.heading-medium
     | What type of geographical area are you creating?
 
-  .form-group v-bind:class="{ 'form-group-error': errors.geographical_code }"
-    span.error-message v-if="errors.geographical_code" v-html="errors.geographical_code"
+  form-group :errors="errors" error-key="geographical_code"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | This will be the name of the country or region, but for groups you should use something descriptive that will allow others to easily identify it.
 
-  .controls
-    = content_tag "geographical-area-type", "", { kind: "country", ":geographical_area" => "types.country" }
-
-    = content_tag "geographical-area-type", "", { kind: "region", ":geographical_area" => "types.region" }
-
-    = content_tag "geographical-area-type", "", { kind: "group", ":geographical_area" => "types.group" }
+      .bootstrap-row
+        .controls
+          = content_tag "geographical-area-type", "", { kind: "country", ":geographical_area" => "types.country" }
+          = content_tag "geographical-area-type", "", { kind: "region", ":geographical_area" => "types.region" }
+          = content_tag "geographical-area-type", "", { kind: "group", ":geographical_area" => "types.group" }
