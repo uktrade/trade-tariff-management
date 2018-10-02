@@ -1,0 +1,40 @@
+.additional-codes-show-page {
+  padding-bottom: 100px;
+
+  .records-table {
+    .type_id-column {
+      min-width: 60px;
+      max-width: 60px;
+    }
+
+    .additional_code-column {
+      min-width: 70px;
+      max-width: 70px;
+    }
+
+    .description-column {
+      min-width: 320px;
+      max-width: 320px;
+    }
+
+    .validity_start_date-column {
+      min-width: 110px;
+      max-width: 110px;
+    }
+
+    .validity_end_date-column {
+      min-width: 110px;
+      max-width: 110px;
+    }
+
+    .last_updated-column {
+      min-width: 180px;
+      max-width: 180px;
+    }
+
+    .status-column {
+      min-width: 200px;
+      max-width: 200px;
+    }
+  }
+}

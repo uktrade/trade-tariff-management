@@ -28,8 +28,10 @@ $(document).ready(function() {
         return this.raw_codes.map(function(code) {
           code.last_updated = "-";
 
+          console.log(code);
+
           if (code.workbasket) {
-            code.last_updated = code.workbasket.created_at + " " + code.workbasket.user.name;
+            code.last_updated = code.workbasket.created_at + (code.workbasket.user ? " " + code.workbasket.user.name : "");
           }
 
           return code;

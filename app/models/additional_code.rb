@@ -115,8 +115,8 @@ class AdditionalCode < Sequel::Model
       type_id: additional_code_type_id,
       formatted_code: code,
       description: description,
-      validity_start_date: validity_start_date.try(:strftime, "%d %M %Y"),
-      validity_end_date: validity_end_date.try(:strftime, "%d %M %Y"),
+      validity_start_date: validity_start_date.try(:strftime, "%d %b %Y") || "-",
+      validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       operation_date: operation_date,
       workbasket: workbasket.try(:to_json)
     }

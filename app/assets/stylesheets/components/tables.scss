@@ -4,10 +4,15 @@ table {
   }
 }
 
-.measures-table,
-.records-table {
+.measures-table {
   min-width: 1700px !important;
+}
 
+.additional-codes-table {
+  min-width: 1120px !important;
+}
+
+.records-table {
   .table__row {
     border-bottom: 1px solid $border-colour;
     height: 45px;
