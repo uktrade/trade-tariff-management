@@ -19,8 +19,11 @@ module AdditionalCodes
         operator_search_where_clause("AdditionalCode", operator, additional_code)
       end
 
-      def operator_search_by_workbasket_name(operator, workbaket_name)
-        operator_search_where_clause("WorkbasketName", operator, workbaket_name)
+      def operator_search_by_workbasket_name(operator, workbasket_name)
+        q_rules = ::AdditionalCodes::SearchFilters::WorkbasketName.new(
+            operator, workbasket_name
+        ).sql_rules
+        q_rules.present? ? self.join(:workbaskets, id: :workbasket_id).where(q_rules) : self
       end
 
       private

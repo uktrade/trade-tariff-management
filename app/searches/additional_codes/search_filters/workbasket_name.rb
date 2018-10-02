@@ -46,13 +46,13 @@ module AdditionalCodes
 
       def is_clause
         <<-eos
-            workbasket_id in (select id from workbaskets where title = ?)
+            workbaskets.title = ?
         eos
       end
 
       def like_clause
         <<-eos
-            workbasket_id in (select id from workbaskets where title ilike ?)
+            workbaskets.title ilike ?
         eos
       end
 
