@@ -67,10 +67,10 @@ module WorkbasketInteractions
       private
 
         def validate!
-          general_errors = {}
+          @errors = {}
 
           if geographical_code.blank?
-            general_errors[:geographical_code] = errors_translator(:geographical_code)
+            @errors[:geographical_code] = errors_translator(:geographical_code)
           end
 
           area_id = geographical_area_id.to_s.squish.upcase
@@ -79,27 +79,27 @@ module WorkbasketInteractions
             type = geographical_code.to_s.squish
 
             if geographical_code.present?
-              if type == "1" && area_id.match(/^[0-9A-Z]{4}$/).blank?
-                general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_group_code)
+              if type == "group" && area_id.match(/^[0-9A-Z]{4}$/).blank?
+                @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_group_code)
               end
 
-              if GeographicalArea::COUNTRIES_CODES.include?(type) && area_id.match(/^[A-Z]{2}$/).blank?
-                general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_country_code)
+              if ["country", "region"].include?(type) && area_id.match(/^[A-Z]{2}$/).blank?
+                @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_country_code)
               end
             end
 
             if GeographicalArea.where(geographical_area_id: area_id).present?
-              general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_already_exist)
+              @errors[:geographical_area_id] = errors_translator(:geographical_area_id_already_exist)
             end
           else
-            general_errors[:geographical_area_id] = errors_translator(:geographical_area_id_blank)
+            @errors[:geographical_area_id] = errors_translator(:geographical_area_id_blank)
           end
 
           if description.blank? || (
               description.present? &&
               description.squish.split.size.zero?
             )
-            general_errors[:description] = errors_translator(:description)
+            @errors[:description] = errors_translator(:description)
           end
 
           start_date = parse_date(:validity_start_date)
@@ -107,35 +107,29 @@ module WorkbasketInteractions
 
           if start_date.present?
             if end_date.present? && start_date > end_date
-              general_errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
+              @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
             end
-          else
-            general_errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
+          elsif @errors[:validity_start_date].blank?
+            @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
           end
 
-          if end_date.present?
-            if @end_date_has_wrong_format.present?
-              general_errors[:validity_end_date] = errors_translator(:validity_end_date_wrong_format)
-            end
+          if start_date.present? &&
+             end_date.present? &&
+             end_date < start_date
 
-            if start_date.present? && end_date < start_date
-              general_errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
-            end
-          end
-
-          if general_errors.present?
-            general_errors.map do |k, v|
-              @errors[k] = v
-            end
+            @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
           end
         end
 
         def parse_date(option_name)
+          date_in_string = public_send(option_name)
+          date_in_string.blank? rescue nil
+
           begin
-            public_send(option_name).to_date
+            Date.strptime(date_in_string, "%d/%m/%Y")
           rescue Exception => e
-            if option_name == :validity_end_date && public_send(option_name).present?
-              @end_date_has_wrong_format = true
+            if public_send(option_name).present?
+              @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
             end
 
             nil
