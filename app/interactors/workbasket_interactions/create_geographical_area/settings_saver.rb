@@ -73,9 +73,10 @@ module WorkbasketInteractions
             general_errors[:geographical_code] = errors_translator(:geographical_code)
           end
 
-          if geographical_area_id.present?
-            area_id = geographical_area_id.squish.upcase
-            type = geographical_code.squish.to_s
+          area_id = geographical_area_id.to_s.squish.upcase
+
+          if area_id.present?
+            type = geographical_code.to_s.squish
 
             if geographical_code.present?
               if type == "1" && area_id.match(/^[0-9A-Z]{4}$/).blank?
@@ -95,24 +96,14 @@ module WorkbasketInteractions
           end
 
           if description.blank? || (
-            description.present? &&
-            description.squish.split.size.zero?
-          )
+              description.present? &&
+              description.squish.split.size.zero?
+            )
             general_errors[:description] = errors_translator(:description)
           end
 
-          start_date = begin
-            validity_start_date.to_date
-          rescue Exception => e
-            nil
-          end
-
-          end_date = begin
-            validity_end_date.to_date
-          rescue Exception => e
-            @end_date_has_wrong_format = true if validity_end_date.present?
-            nil
-          end
+          start_date = parse_date(:validity_start_date)
+          end_date = parse_date(:validity_end_date)
 
           if start_date.present?
             if end_date.present? && start_date > end_date
@@ -136,6 +127,18 @@ module WorkbasketInteractions
             general_errors.map do |k, v|
               @errors[k] = v
             end
+          end
+        end
+
+        def parse_date(option_name)
+          begin
+            public_send(option_name).to_date
+          rescue Exception => e
+            if option_name == :validity_end_date && public_send(option_name).present?
+              @end_date_has_wrong_format = true
+            end
+
+            nil
           end
         end
     end
