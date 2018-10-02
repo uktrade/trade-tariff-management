@@ -111,6 +111,7 @@ class AdditionalCode < Sequel::Model
 
   def to_json(options = {})
     {
+      additional_code_sid: additional_code_sid,
       additional_code: additional_code,
       type_id: additional_code_type_id,
       formatted_code: code,
@@ -118,21 +119,14 @@ class AdditionalCode < Sequel::Model
       validity_start_date: validity_start_date.try(:strftime, "%d %b %Y") || "-",
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       operation_date: operation_date,
-      workbasket: workbasket.try(:to_json)
+      workbasket: workbasket.try(:to_json),
+      status: status_title,
+      sent_to_cds: sent_to_cds?
     }
   end
 
   def to_table_json
-    {
-        type_id: additional_code_type_id,
-        additional_code: additional_code,
-        description: description,
-        validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
-        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
-        last_updated: added_at.try(:strftime, "%d %b %Y") || "-",
-        status: status_title,
-        sent_to_cds: sent_to_cds?
-    }
+    to_json
   end
 
   class << self
