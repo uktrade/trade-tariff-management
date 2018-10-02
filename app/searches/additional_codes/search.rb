@@ -72,5 +72,11 @@ module AdditionalCodes
       )
     end
 
+    def apply_description_filter
+      @relation = relation.operator_search_by_description(
+          *query_ops(description)
+      )
+    end
+
   end
 end
