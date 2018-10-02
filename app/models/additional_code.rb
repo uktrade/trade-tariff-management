@@ -61,6 +61,15 @@ class AdditionalCode < Sequel::Model
 
       scope.first
     end
+
+    begin :search_related_methods
+      def by_start_date_and_additional_code_sid_reverse
+        order(
+          Sequel.desc(:validity_start_date),
+          Sequel.desc(:additional_code_sid)
+        )
+      end
+    end
   end
 
   def additional_code_description
@@ -101,5 +110,29 @@ class AdditionalCode < Sequel::Model
       type_id: additional_code_type_id,
       description: description
     }
+  end
+
+  class << self
+    def limit_per_page
+      if Rails.env.production?
+        300
+      elsif Rails.env.development?
+        30
+      elsif Rails.env.test?
+        10
+      end
+    end
+
+    def max_per_page
+      limit_per_page
+    end
+
+    def default_per_page
+      limit_per_page
+    end
+
+    def max_pages
+      999
+    end
   end
 end
