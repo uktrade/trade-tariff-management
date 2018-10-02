@@ -1,5 +1,12 @@
 module AdditionalCodes
-  class AdditionalCodesController < ::BaseController
+  class AdditionalCodesController < ApplicationController
+
+    include ::SearchCacheHelpers
+    skip_around_action :configure_time_machine, only: [:index, :search]
+
+    expose(:separator) do
+      "_SAD_"
+    end
 
     expose(:additional_code) do
       AdditionalCode.by_code(params[:code])
@@ -9,13 +16,40 @@ module AdditionalCodes
       []
     end
 
-    #TODO: disclaimer: this is a hack so I can work on the UI :). I think we should have all "APIs" to a separate scope
-    def index
-      unless request.xhr?
-        return render :index
-      end
+    expose(:search_ops) do
+      ops = params[:search]
 
-      super
+      if ops.present?
+        ops.send("permitted=", true)
+        ops = ops.to_h
+      else
+        ops = {}
+      end
+      ops
+    end
+
+    expose(:additional_codes_search) do
+      if search_mode?
+        ::AdditionalCodes::Search.new(cached_search_ops)
+      else
+        []
+      end
+    end
+
+    expose(:search_results) do
+      additional_codes_search.results
+    end
+
+    def index
+      respond_to do |format|
+        format.json { render json: json_response }
+        format.html
+      end
+    end
+
+    def search
+      code = search_code
+      redirect_to additional_codes_url(search_code: code)
     end
 
     def collection

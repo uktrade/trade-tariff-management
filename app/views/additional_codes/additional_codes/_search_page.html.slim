@@ -15,8 +15,8 @@ h2.heading-large
     = link_to "(add new ones instead)", new_create_additional_code_url
 
 script
-  == "window.__search_params = null;"
-  == "window.__pagination_metadata = {};"
+  == "window.__search_params = #{full_search_params.to_json};"
+  == "window.__pagination_metadata = #{pagination_metadata.to_json};"
 
 .find-additional-codes
   = render "search_form"

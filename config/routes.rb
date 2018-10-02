@@ -24,7 +24,11 @@ Rails.application.routes.draw do
 
   scope module: :additional_codes do
     resources :additional_codes, only: [:index] do
-      get :preview, on: :collection
+      collection do
+        post :search
+
+        get :preview
+      end
     end
 
     resources :additional_code_types, only: [:index]
