@@ -372,8 +372,6 @@ class Measure < Sequel::Model
     save
   end
 
-  def_column_accessor :effective_end_date, :effective_start_date
-
   def national?
     national
   end
