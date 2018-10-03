@@ -6,14 +6,6 @@ module WorkbasketHelpers
       workbasket.user
     end
 
-    def errors_translator(key)
-      I18n.t(
-        self.class::WORKBASKET_TYPE.titleize
-                                   .gsub(' ', '_')
-                                   .downcase
-      )[:errors][key]
-    end
-
     def clear_cached_sequence_number!
       Rails.cache.delete("#{workbasket.id}_sequence_number")
     end

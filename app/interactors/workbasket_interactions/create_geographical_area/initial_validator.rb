@@ -1,6 +1,6 @@
 module WorkbasketInteractions
   module CreateGeographicalArea
-    class InlineValidator
+    class InitialValidator
 
       ALLOWED_OPS = %w(
         geographical_code
@@ -15,7 +15,9 @@ module WorkbasketInteractions
       attr_accessor :settings,
                     :errors,
                     :type,
-                    :area_id
+                    :area_id,
+                    :start_date,
+                    :end_date
 
       def initialize(settings)
         @settings = settings
@@ -104,6 +106,10 @@ module WorkbasketInteractions
           if operation_date.blank?
             @errors[:operation_date] = errors_translator(:operation_date_blank)
           end
+        end
+
+        def errors_translator(key)
+          I18n.t(:create_geographical_area)[:errors][key]
         end
 
         def squish_it(val)

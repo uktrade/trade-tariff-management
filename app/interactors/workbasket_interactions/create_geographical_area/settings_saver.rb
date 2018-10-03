@@ -2,8 +2,6 @@ module WorkbasketInteractions
   module CreateGeographicalArea
     class SettingsSaver
 
-      WORKBASKET_TYPE = "CreateGeographicalArea"
-
       include ::WorkbasketHelpers::SettingsSaverHelperMethods
 
       attr_accessor :current_step,
@@ -29,8 +27,8 @@ module WorkbasketInteractions
       end
 
       def save!
-        workbasket.title = geographical_area_id
-        workbasket.operation_date = operation_date.try(:to_date)
+        workbasket.title = settings_params[:geographical_area_id]
+        workbasket.operation_date = settings_params[:operation_date].try(:to_date)
         workbasket.save
 
         settings.set_settings_for!(current_step, settings_params)
@@ -50,7 +48,7 @@ module WorkbasketInteractions
       private
 
         def validate!
-          @errors = ::WorkbasketInteractions::CreateGeographicalArea::InlineValidator.new(
+          @errors = ::WorkbasketInteractions::CreateGeographicalArea::InitialValidator.new(
             settings_params
           ).fetch_errors
         end
