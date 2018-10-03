@@ -21,12 +21,17 @@ module XmlGeneration
       mark_export_process_as_started!
 
       fetch_relevant_data_and_generate_xml
-      validate_xml_data!
-      attach_files!
-      attach_metadata_file!
-      clean_up_tmp_files!
 
-      mark_export_process_as_completed!
+      if xml_data
+        validate_xml_data!
+        attach_files!
+        attach_metadata_file!
+        clean_up_tmp_files!
+
+        mark_export_process_as_completed!
+      else
+        mark_export_process_as_empty!
+      end
     end
 
     def name_of_xml_file
@@ -44,11 +49,16 @@ module XmlGeneration
       record.update(state: "C")
     end
 
+    def mark_export_process_as_empty!
+      record.update(state: "E")
+    end
+
+    # data is a XmlGeneration::NodeEnvelope object
     def fetch_relevant_data_and_generate_xml
       data = xml_generator_search.result
       @extract_database_date_time = Time.now.utc
 
-      @xml_data = renderer.render(data, xml: xml_builder)
+      @xml_data = renderer.render(data, xml: xml_builder) if data.present?
     end
 
     def xml_generator_search
