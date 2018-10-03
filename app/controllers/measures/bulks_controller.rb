@@ -8,7 +8,7 @@ module Measures
     ]
 
     expose(:separator) do
-      "_BE_"
+      "_BEM_"
     end
 
     expose(:current_page) do

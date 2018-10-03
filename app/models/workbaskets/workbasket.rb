@@ -6,7 +6,8 @@ module Workbaskets
       :bulk_edit_of_measures,
       :create_quota,
       :create_regulation,
-      :create_additional_code
+      :create_additional_code,
+      :bulk_edit_of_additional_codes
     ]
 
     STATUS_LIST = [
@@ -66,6 +67,9 @@ module Workbaskets
 
     one_to_one :create_additional_code_settings, key: :workbasket_id,
                                                  class_name: "Workbaskets::CreateAdditionalCodeSettings"
+
+    one_to_one :bulk_edit_of_additional_codes_settings, key: :workbasket_id,
+                                                        class_name: "Workbaskets::BulkEditOfAdditionalCodesSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -208,6 +212,8 @@ module Workbaskets
         create_regulation_settings
       when :create_additional_code
         create_additional_code_settings
+      when :bulk_edit_of_additional_codes
+        bulk_edit_of_additional_codes_settings
       end
     end
 
@@ -310,6 +316,8 @@ module Workbaskets
           create_measures
           create_quota
           create_regulation
+          create_additional_code
+          bulk_edit_of_additional_codes
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -340,6 +348,10 @@ module Workbaskets
           )
         when :create_additional_code
           ::Workbaskets::CreateAdditionalCodeSettings.new(
+            workbasket_id: id
+          )
+        when :bulk_edit_of_additional_codes
+          ::Workbaskets::BulkEditOfAdditionalCodesSettings.new(
             workbasket_id: id
           )
         end

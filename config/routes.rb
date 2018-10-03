@@ -34,6 +34,15 @@ Rails.application.routes.draw do
     resources :additional_code_types, only: [:index]
   end
 
+  namespace :additional_codes do
+    resources :bulks, only: [:show, :create, :edit, :update, :destroy] do
+      member do
+        get '/work_with_selected', to: "bulks#work_with_selected"
+        post '/work_with_selected', to: "bulks#persist_work_with_selected"
+      end
+    end
+  end
+
   scope module: :certificates do
     resources :certificates, only: [:index]
     resources :certificate_types, only: [:index]

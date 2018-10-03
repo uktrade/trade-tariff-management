@@ -49,6 +49,7 @@ module AdditionalCodes
 
     def search
       code = search_code
+      ::AdditionalCodeService::TrackAdditionalCodeSids.new(code).run
       redirect_to additional_codes_url(search_code: code)
     end
 

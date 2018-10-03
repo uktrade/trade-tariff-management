@@ -63,6 +63,7 @@ class AdditionalCode < Sequel::Model
     end
 
     include ::AdditionalCodes::SearchFilters::FindAdditionalCodesCollection
+    include ::BulkEditHelpers::OrderByIdsQuery
   end
 
   def additional_code_description

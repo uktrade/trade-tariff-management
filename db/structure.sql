@@ -596,6 +596,44 @@ ALTER SEQUENCE public.base_regulations_oid_seq OWNED BY public.base_regulations_
 
 
 --
+-- Name: bulk_edit_of_additional_codes_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bulk_edit_of_additional_codes_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    search_code text,
+    initial_search_results_code text,
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb,
+    additional_code_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: bulk_edit_of_additional_codes_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bulk_edit_of_additional_codes_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq OWNED BY public.bulk_edit_of_additional_codes_settings.id;
+
+
+--
 -- Name: bulk_edit_of_measures_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7671,6 +7709,13 @@ ALTER TABLE ONLY public.base_regulations_oplog ALTER COLUMN oid SET DEFAULT next
 
 
 --
+-- Name: bulk_edit_of_additional_codes_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_additional_codes_settings_id_seq'::regclass);
+
+
+--
 -- Name: bulk_edit_of_measures_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8530,6 +8575,14 @@ ALTER TABLE ONLY public.audits
 
 ALTER TABLE ONLY public.base_regulations_oplog
     ADD CONSTRAINT base_regulations_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: bulk_edit_of_additional_codes_settings bulk_edit_of_additional_codes_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings
+    ADD CONSTRAINT bulk_edit_of_additional_codes_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -11652,3 +11705,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');

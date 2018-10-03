@@ -52,6 +52,10 @@ module AdditionalCodes
       relation
     end
 
+    def additional_code_sids
+      results(false).pluck(:additional_code_sid)
+    end
+
     private
 
     def apply_type_filter

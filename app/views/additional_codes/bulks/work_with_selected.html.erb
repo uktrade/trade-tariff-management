@@ -1,0 +1,61 @@
+<div class="work-with-selected-additional-codes">
+  <%= form_tag({}, { method: :post }) do %>
+    <h1 class="heading-xlarge">
+      Work with selected additional codes
+    </h1>
+
+    <div class="row">
+      <div class="col-md-7 col-lg-5">
+        <info-message>
+          <p>
+            You are about  to work with <%= pagination_metadata[:total_count] %> selected additional codes. When you have finished editing, these will be submitted into workflow as a single workbasket.
+          </p>
+
+          <p>
+            Before proceeding, you need to provide the following details.
+          </p>
+        </info-message>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="reason" class="form-label">
+        What is the reason for these changes?
+        <span class="form-hint">
+          Be as descriptive as you can, and keep in mind what you type here may become publicly visible. Please list the changes you intend to make.
+        </span>
+      </label>
+      <div class="row">
+        <div class="col-md-7 col-lg-5">
+          <textarea name="reason" id="reason" rows="4" class="form-control" v-model="reason"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="workbasket_name" class="form-label">
+        What is the name of this workbasket?
+        <span class="form-hint">
+          This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
+        </span>
+      </label>
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <input type="text" name="title" class="form-control" v-model="title">
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="form-group">
+      <button type="submit" class="button" :disabled="disableSubmit">
+        Proceed to selected codes
+      </button>
+      <a href="/" class="secondary-button">
+        Cancel
+      </a>
+      <br>
+    </div>
+  <% end %>
+</div>

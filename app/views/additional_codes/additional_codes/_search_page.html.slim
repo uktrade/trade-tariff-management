@@ -26,7 +26,7 @@ script
 
   - if additional_codes_search.present?
     div v-if="!isLoading"
-      = simple_form_for :search, method: :post do |f|
+      = simple_form_for :search, url: additional_codes_bulks_url(ops), method: :post do |f|
         = content_tag :input, nil, { type: "hidden", "name" => "item_sids[]", "v-for" => "(sid, idx) in selectedItems", ":value" => "sid" }
         = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
         p
