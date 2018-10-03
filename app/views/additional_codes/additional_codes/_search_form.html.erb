@@ -34,7 +34,7 @@
       <custom-select :options="conditionsForType" label-field="label" value-field="value"  v-model="type.operator" name="search[type][operator]"></custom-select>
     </div>
     <div class="find-item__short">
-      <custom-select url="/additional_code_types" code-field="additional_code_type_id" label-field="description" value-field="additional_code_type_id" code-class-name="prefix--additional-code-type"  placeholder="― start typing ―" min-length="1" v-model="type.value" name="search[type][value]"></custom-select>
+      <custom-select url="/additional_code_types" code-field="additional_code_type_id" label-field="description" value-field="additional_code_type_id" code-class-name="prefix--additional-code-type"  placeholder="― select type ―" v-model="type.value" name="search[type][value]"></custom-select>
     </div>
   </div>
   <div class="find-items__row">
