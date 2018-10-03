@@ -199,11 +199,11 @@ describe GeographicalArea do
 
       it "valid description record" do
         geographical_area = create :geographical_area,
-                                    validity_start_date: Date.today.ago(4.years),
-                                    validity_end_date: Date.today + 10.days
+                                    validity_start_date: Date.current.ago(3.years),
+                                    validity_end_date: Date.current + 10.days
 
         ga_description = geographical_area.geographical_area_description
-        ga_description.geographical_area_description_period.validity_end_date = Date.today + 10.days
+        ga_description.geographical_area_description_period.validity_end_date = Date.current + 10.days
         expect(geographical_area).to be_conformant
       end
     end
