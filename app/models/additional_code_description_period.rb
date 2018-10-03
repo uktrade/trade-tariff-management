@@ -1,6 +1,7 @@
 class AdditionalCodeDescriptionPeriod < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: [:additional_code_description_period_sid,
                    :additional_code_sid,

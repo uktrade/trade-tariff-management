@@ -1,0 +1,84 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Find Additional codes", additional_codes_url
+
+    li
+      = link_to "Back to search results", additional_codes_url(search_code: workbasket_settings.initial_search_results_code)
+
+h2.heading-large
+  - if workbasket.awaiting_cross_check?
+    | Submitted for Cross-Check
+  - else
+    = workbasket_author? ? 'Edit additional codes' : 'Review additional codes'
+
+= render "additional_codes/bulks/details"
+
+script
+  == "window.__workbasket_id = #{workbasket.id};"
+  == "window.__pagination_metadata = #{pagination_metadata.to_json};"
+  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+  == "window.current_step_settings = #{workbasket_settings.main_step_settings.to_json};"
+
+/- cache [ "measure_form_js_variabless", expires_in: 8.hours ] do
+/  = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
+
+/.bulk-edit-measures
+/  warning-message v-if="overloaded"
+/    | The server is overloaded at the moment or there is an error preventing the request to load the current batch of measures. Retrying in 30 seconds&hellip;
+/  = render "table_top"
+/
+/  = content_tag "records-grid", nil, { "table-class" => "measures-table", "primary-key" => "measure_sid" ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
+/    p Loading measures table...
+/
+/  = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
+/
+/  = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
+/    h1.heading-xlarge slot="title"
+/      | Loading measures
+/    h4.heading-medium slot-scope="slotProps"
+/      | Please wait while we load and prepare measures for editing
+/      br
+/      | {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
+/      br
+/      = content_tag "loading-spinner", nil
+/
+/  = render "measures/bulks/action_buttons"
+/
+/  = content_tag "change-duties-popup", nil, { "v-if" => "changingDuties", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/  = content_tag "change-conditions-popup", nil, { "v-if" => "changingConditions", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/  = content_tag "change-validity-period-popup", nil, { "v-if" => "changingValidityPeriod", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/  = content_tag "change-regulation-popup", nil, { "v-if" => "changingRegulation", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/  = content_tag "change-commodity-code-popup", nil, { "v-if" => "changingCommodityCodes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/  = content_tag "change-origins-popup", nil, { "v-if" => "changingOrigin", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/  = content_tag "remove-measures-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-removed-cb" => "measuresRemoved", ":all-measures-removed-cb" => "allMeasuresRemoved" }
+/
+/  = content_tag "delete-measures-popup", nil, { "v-if" => "deleting", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-deleted" => "measuresDeleted" }
+/
+/  = content_tag "change-additional-code-popup", nil, { "v-if" => "changingAdditionalCode", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/  = content_tag "change-footnotes-popup", nil, { "v-if" => "changingFootnotes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+/
+/= render "shared/vue_templates/records_grid"
+/= render "shared/vue_templates/measure_origin"
+/= render "shared/vue_templates/change_duties"
+/= render "shared/vue_templates/change_conditions"
+/= render "shared/vue_templates/change_regulation"
+/= render "shared/vue_templates/change_commodity_codes"
+/= render "shared/vue_templates/change_validity_period"
+/= render "shared/vue_templates/change_origins"
+/= render "shared/vue_templates/remove_measures"
+/= render "shared/vue_templates/delete_measures"
+/= render "shared/vue_templates/change_additional_code"
+/= render "shared/vue_templates/change_footnotes"
+/
+/= render "measures/bulks/save_actions_popups/collection"

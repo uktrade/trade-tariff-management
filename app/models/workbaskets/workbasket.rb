@@ -5,7 +5,9 @@ module Workbaskets
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
-      :create_regulation
+      :create_regulation,
+      :create_additional_code,
+      :bulk_edit_of_additional_codes
     ]
 
     STATUS_LIST = [
@@ -63,9 +65,19 @@ module Workbaskets
     one_to_one :create_regulation_settings, key: :workbasket_id,
                                             class_name: "Workbaskets::CreateRegulationSettings"
 
+    one_to_one :create_additional_code_settings, key: :workbasket_id,
+                                                 class_name: "Workbaskets::CreateAdditionalCodeSettings"
+
+    one_to_one :bulk_edit_of_additional_codes_settings, key: :workbasket_id,
+                                                        class_name: "Workbaskets::BulkEditOfAdditionalCodesSettings"
+
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
                        class_name: "User"
+
+    many_to_one :last_update_by, key: :last_update_by_id,
+                                 foreign_key: :id,
+                                 class_name: "User"
 
     plugin :timestamps
     plugin :validation_helpers
@@ -168,6 +180,10 @@ module Workbaskets
       status.to_sym.in?(EDITABLE_STATES)
     end
 
+    def submitted?
+      !status.to_sym.in? [:new_in_progress, :editing]
+    end
+
     def move_status_to!(current_user, new_status, description=nil)
       event = Workbaskets::Event.new(
         workbasket_id: self.id,
@@ -194,11 +210,28 @@ module Workbaskets
         create_quota_settings
       when :create_regulation
         create_regulation_settings
+      when :create_additional_code
+        create_additional_code_settings
+      when :bulk_edit_of_additional_codes
+        bulk_edit_of_additional_codes_settings
       end
     end
 
     def generate_next_sequence_number
       @sequence_number = (@sequence_number || 0) + 1
+    end
+
+    def to_json
+      {
+        title: title,
+        type: type,
+        status: status,
+        user: user.try(:to_json),
+        last_update_by: last_update_by.try(:to_json),
+        last_status_change_at: last_status_change_at.try(:strftime, "%d %b %Y") || "-",
+        updated_at: updated_at.try(:strftime, "%d %b %Y") || "-",
+        created_at: created_at.try(:strftime, "%d %b %Y") || "-"
+      }
     end
 
     def debug_collection
@@ -283,6 +316,8 @@ module Workbaskets
           create_measures
           create_quota
           create_regulation
+          create_additional_code
+          bulk_edit_of_additional_codes
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -295,20 +330,33 @@ module Workbaskets
 
       def build_related_settings_table!
         settings = case type.to_sym
-                   when :create_measures
-                     ::Workbaskets::CreateMeasuresSettings.new
-                   when :bulk_edit_of_measures
-                     ::Workbaskets::BulkEditOfMeasuresSettings.new
-                   when :create_quota
-                     ::Workbaskets::CreateQuotaSettings.new
-                   when :create_regulation
-                     ::Workbaskets::CreateRegulationSettings.new
-                   end
-
-        if settings.present?
-          settings.workbasket_id = id
-          settings.save
+        when :create_measures
+          ::Workbaskets::CreateMeasuresSettings.new(
+            workbasket_id: id
+          )
+        when :bulk_edit_of_measures
+          ::Workbaskets::BulkEditOfMeasuresSettings.new(
+            workbasket_id: id
+          )
+        when :create_quota
+          ::Workbaskets::CreateQuotaSettings.new(
+            workbasket_id: id
+          )
+        when :create_regulation
+          ::Workbaskets::CreateRegulationSettings.new(
+            workbasket_id: id
+          )
+        when :create_additional_code
+          ::Workbaskets::CreateAdditionalCodeSettings.new(
+            workbasket_id: id
+          )
+        when :bulk_edit_of_additional_codes
+          ::Workbaskets::BulkEditOfAdditionalCodesSettings.new(
+            workbasket_id: id
+          )
         end
+
+        settings.save if settings.present?
       end
   end
 end

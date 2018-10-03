@@ -1,6 +1,7 @@
 class AdditionalCode < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :oplog, primary_key: :additional_code_sid
@@ -60,6 +61,9 @@ class AdditionalCode < Sequel::Model
 
       scope.first
     end
+
+    include ::AdditionalCodes::SearchFilters::FindAdditionalCodesCollection
+    include ::BulkEditHelpers::OrderByIdsQuery
   end
 
   def additional_code_description
@@ -72,7 +76,7 @@ class AdditionalCode < Sequel::Model
   one_to_one :export_refund_nomenclature, key: :export_refund_code,
                                           primary_key: :additional_code
 
-  delegate :description, :formatted_description, to: :additional_code_description
+  delegate :description, :formatted_description, to: :additional_code_description, allow_nil: true
 
   def code
     "#{additional_code_type_id}#{additional_code}"
@@ -86,6 +90,18 @@ class AdditionalCode < Sequel::Model
     "00".freeze
   end
 
+  def status_title
+    if status.present?
+      I18n.t(:measures)[:states][status.to_sym]
+    else
+      "Imported to TARIFF"
+    end
+  end
+
+  def sent_to_cds?
+    status.blank? || status.to_s.in?(::Workbaskets::Workbasket::SENT_TO_CDS_STATES)
+  end
+
   def json_mapping
     {
       additional_code: additional_code,
@@ -96,9 +112,45 @@ class AdditionalCode < Sequel::Model
 
   def to_json(options = {})
     {
+      additional_code_sid: additional_code_sid,
       additional_code: additional_code,
       type_id: additional_code_type_id,
-      description: description
+      formatted_code: code,
+      description: description,
+      validity_start_date: validity_start_date.try(:strftime, "%d %b %Y") || "-",
+      validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+      operation_date: operation_date,
+      workbasket: workbasket.try(:to_json),
+      status: status_title,
+      sent_to_cds: sent_to_cds?
     }
+  end
+
+  def to_table_json
+    to_json
+  end
+
+  class << self
+    def limit_per_page
+      if Rails.env.production?
+        300
+      elsif Rails.env.development?
+        30
+      elsif Rails.env.test?
+        10
+      end
+    end
+
+    def max_per_page
+      limit_per_page
+    end
+
+    def default_per_page
+      limit_per_page
+    end
+
+    def max_pages
+      999
+    end
   end
 end

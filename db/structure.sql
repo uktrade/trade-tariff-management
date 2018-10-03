@@ -93,7 +93,10 @@ CREATE TABLE public.additional_code_description_periods_oplog (
     operation_date date,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -113,7 +116,10 @@ CREATE VIEW public.additional_code_description_periods AS
     additional_code_description_periods1.operation_date,
     additional_code_description_periods1.status,
     additional_code_description_periods1.workbasket_id,
-    additional_code_description_periods1.workbasket_sequence_number
+    additional_code_description_periods1.workbasket_sequence_number,
+    additional_code_description_periods1.added_by_id,
+    additional_code_description_periods1.added_at,
+    additional_code_description_periods1."national"
    FROM public.additional_code_description_periods_oplog additional_code_description_periods1
   WHERE ((additional_code_description_periods1.oid IN ( SELECT max(additional_code_description_periods2.oid) AS max
            FROM public.additional_code_description_periods_oplog additional_code_description_periods2
@@ -157,7 +163,9 @@ CREATE TABLE public.additional_code_descriptions_oplog (
     operation_date date,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -178,7 +186,9 @@ CREATE VIEW public.additional_code_descriptions AS
     additional_code_descriptions1.operation_date,
     additional_code_descriptions1.status,
     additional_code_descriptions1.workbasket_id,
-    additional_code_descriptions1.workbasket_sequence_number
+    additional_code_descriptions1.workbasket_sequence_number,
+    additional_code_descriptions1.added_by_id,
+    additional_code_descriptions1.added_at
    FROM public.additional_code_descriptions_oplog additional_code_descriptions1
   WHERE ((additional_code_descriptions1.oid IN ( SELECT max(additional_code_descriptions2.oid) AS max
            FROM public.additional_code_descriptions_oplog additional_code_descriptions2
@@ -404,7 +414,9 @@ CREATE TABLE public.additional_codes_oplog (
     operation_date date,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -424,7 +436,9 @@ CREATE VIEW public.additional_codes AS
     additional_codes1.operation_date,
     additional_codes1.status,
     additional_codes1.workbasket_id,
-    additional_codes1.workbasket_sequence_number
+    additional_codes1.workbasket_sequence_number,
+    additional_codes1.added_by_id,
+    additional_codes1.added_at
    FROM public.additional_codes_oplog additional_codes1
   WHERE ((additional_codes1.oid IN ( SELECT max(additional_codes2.oid) AS max
            FROM public.additional_codes_oplog additional_codes2
@@ -579,6 +593,44 @@ CREATE SEQUENCE public.base_regulations_oid_seq
 --
 
 ALTER SEQUENCE public.base_regulations_oid_seq OWNED BY public.base_regulations_oplog.oid;
+
+
+--
+-- Name: bulk_edit_of_additional_codes_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bulk_edit_of_additional_codes_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    search_code text,
+    initial_search_results_code text,
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb,
+    additional_code_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: bulk_edit_of_additional_codes_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bulk_edit_of_additional_codes_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq OWNED BY public.bulk_edit_of_additional_codes_settings.id;
 
 
 --
@@ -1361,6 +1413,39 @@ CREATE SEQUENCE public.complete_abrogation_regulations_oid_seq
 --
 
 ALTER SEQUENCE public.complete_abrogation_regulations_oid_seq OWNED BY public.complete_abrogation_regulations_oplog.oid;
+
+
+--
+-- Name: create_additional_code_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_additional_code_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_additional_code_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_additional_code_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_additional_code_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_additional_code_workbasket_settings_id_seq OWNED BY public.create_additional_code_workbasket_settings.id;
 
 
 --
@@ -4925,7 +5010,10 @@ CREATE TABLE public.meursing_additional_codes_oplog (
     operation_date date,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -4943,7 +5031,10 @@ CREATE VIEW public.meursing_additional_codes AS
     meursing_additional_codes1.operation_date,
     meursing_additional_codes1.status,
     meursing_additional_codes1.workbasket_id,
-    meursing_additional_codes1.workbasket_sequence_number
+    meursing_additional_codes1.workbasket_sequence_number,
+    meursing_additional_codes1.added_by_id,
+    meursing_additional_codes1.added_at,
+    meursing_additional_codes1."national"
    FROM public.meursing_additional_codes_oplog meursing_additional_codes1
   WHERE ((meursing_additional_codes1.oid IN ( SELECT max(meursing_additional_codes2.oid) AS max
            FROM public.meursing_additional_codes_oplog meursing_additional_codes2
@@ -7618,6 +7709,13 @@ ALTER TABLE ONLY public.base_regulations_oplog ALTER COLUMN oid SET DEFAULT next
 
 
 --
+-- Name: bulk_edit_of_additional_codes_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_additional_codes_settings_id_seq'::regclass);
+
+
+--
 -- Name: bulk_edit_of_measures_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7692,6 +7790,13 @@ ALTER TABLE ONLY public.chief_measurement_unit ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.complete_abrogation_regulations_oid_seq'::regclass);
+
+
+--
+-- Name: create_additional_code_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_additional_code_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_additional_code_workbasket_settings_id_seq'::regclass);
 
 
 --
@@ -8473,6 +8578,14 @@ ALTER TABLE ONLY public.base_regulations_oplog
 
 
 --
+-- Name: bulk_edit_of_additional_codes_settings bulk_edit_of_additional_codes_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings
+    ADD CONSTRAINT bulk_edit_of_additional_codes_settings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: bulk_edit_of_measures_settings bulk_edit_of_measures_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8558,6 +8671,14 @@ ALTER TABLE ONLY public.chief_measurement_unit
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
     ADD CONSTRAINT complete_abrogation_regulations_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: create_additional_code_workbasket_settings create_additional_code_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_additional_code_workbasket_settings
+    ADD CONSTRAINT create_additional_code_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -11579,6 +11700,9 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_l
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_original_measure_sid_to_measures_oplog.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbasket_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');

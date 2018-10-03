@@ -1,0 +1,44 @@
+#main-menu
+  .bootstrap-row
+    .col-xs-12.col-sm-12.col-md-7.col-lg-8
+      .breadcrumbs
+        ol
+          li
+            = link_to "Main menu", root_url
+    .col-xs-12.col-sm-12.col-md-5.col-lg-4
+      p.text-right
+        = "Logged in as: #{current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe
+
+h2.heading-large
+  | Find and edit additional codes
+  small
+    = link_to "(add new ones instead)", new_create_additional_code_url
+
+script
+  == "window.__search_params = #{full_search_params.to_json};"
+  == "window.__pagination_metadata = #{pagination_metadata.to_json};"
+
+.find-additional-codes
+  = render "search_form"
+
+  - ops = {}
+  - ops[:search_code] = params[:search_code] if params[:search_code].present?
+
+  - if additional_codes_search.present?
+    div v-if="!isLoading"
+      = simple_form_for :search, url: additional_codes_bulks_url(ops), method: :post do |f|
+        = content_tag :input, nil, { type: "hidden", "name" => "item_sids[]", "v-for" => "(sid, idx) in selectedItems", ":value" => "sid" }
+        = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
+        /p
+        /  = content_tag "button", "Work with selected codes", { class: "button", ":disabled" => "noSelectedItems", type: :submit }
+      = render "items_table" if additional_codes_search.present?
+
+    = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
+      h1 slot="title"
+        | Loading measures
+      h4.heading-medium
+        | Please wait while we fetch page {{pagination.page}}
+        br
+        = content_tag "loading-spinner", nil
+
+= render "shared/vue_templates/records_grid"

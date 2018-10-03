@@ -1,0 +1,27 @@
+fieldset
+  h3.heading-medium
+    | When are these new codes valid from?
+
+  form-group :errors="errors" error-key="validity_start_date"
+    template slot-scope="slotProps"
+      span.error-message v-if="slotProps.hasError" v-cloak=""
+        | {{slotProps.error}}
+      .bootstrap-row
+        .col-md-6
+          = content_tag "date-select", "", ":value.sync" => "validity_start_date"
+
+fieldset
+  h3.heading-medium
+    | When are these new codes valid until?
+
+  form-group :errors="errors" error-key="validity_end_date"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | Optional – leave blank if the codes will remain valid indefinitely.
+
+      .row
+        .col-md-6
+          = content_tag "date-select", "", ":value.sync" => "validity_end_date"

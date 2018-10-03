@@ -1,6 +1,9 @@
 .form-actions
   h3.heading-medium
-    | Next step
+    - if step_pointer.has_next_step?
+      | Next step
+    - else
+      | Finish
 
   .submit_group_for_cross_check_block
     - if step_pointer.has_next_step?

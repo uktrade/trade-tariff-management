@@ -10,6 +10,13 @@ module WorkbasketHelper
     end
   end
 
+  def create_additional_code_section_header
+    case current_step
+    when "main"
+      "Create new additional codes"
+    end
+  end
+
   def create_quota_section_header
     case current_step
     when "main"
@@ -149,6 +156,12 @@ module WorkbasketHelper
           step: :main
         )
       end
+
+    when :create_additional_code
+      edit_create_additional_code_url(
+        workbasket.id,
+        step: :main
+      )
     end
   end
 
@@ -162,6 +175,8 @@ module WorkbasketHelper
       create_quotum_url(workbasket.id)
     when :create_regulation
       create_regulation_url(workbasket.id)
+    when :create_additional_code
+      create_additional_code_url(workbasket.id)
     end
   end
 end

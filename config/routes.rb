@@ -24,10 +24,23 @@ Rails.application.routes.draw do
 
   scope module: :additional_codes do
     resources :additional_codes, only: [:index] do
-      get :preview, on: :collection
+      collection do
+        post :search
+
+        get :preview
+      end
     end
 
     resources :additional_code_types, only: [:index]
+  end
+
+  namespace :additional_codes do
+    resources :bulks, only: [:show, :create, :edit, :update, :destroy] do
+      member do
+        get '/work_with_selected', to: "bulks#work_with_selected"
+        post '/work_with_selected', to: "bulks#persist_work_with_selected"
+      end
+    end
   end
 
   scope module: :certificates do
@@ -78,6 +91,12 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
+    resources :create_additional_code, only: [:new, :show, :edit, :update] do
+      member do
+        get :submitted_for_cross_check
+      end
+    end
+
     resources :create_regulation, only: [:new, :show, :edit, :update] do
       member do
         put :attach_pdf

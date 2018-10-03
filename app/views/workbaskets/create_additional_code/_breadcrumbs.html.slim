@@ -1,0 +1,24 @@
+- details = workbasket_settings.main_step_settings
+
+#main-menu
+  .bootstrap-row
+    .col-xs-12.col-sm-12.col-md-7.col-lg-8
+      .breadcrumbs
+        ol
+          li
+            = link_to "Main menu", root_url
+          - if details["reason"].present?
+            li
+              = link_to "Manage additional codes", additional_codes_url
+
+            li aria-current="page"
+              = link_to "Work with selected additional codes", current_url
+          - elsif workbasket.submitted?
+            li
+              = link_to "Manage additional codes", additional_codes_url
+
+            li aria-current="page"
+              = link_to "Create new additional codes", "#"
+    .col-xs-12.col-sm-12.col-md-5.col-lg-4
+      p.text-right
+        = "Logged in as: #{current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe

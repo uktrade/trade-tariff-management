@@ -7,6 +7,10 @@ module Measures
       :update, :destroy
     ]
 
+    expose(:separator) do
+      "_BEM_"
+    end
+
     expose(:current_page) do
       params[:page]
     end
