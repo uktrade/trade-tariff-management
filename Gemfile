@@ -86,11 +86,7 @@ gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "bootscale", "~> 0.5", require: false
 
-# We freezed it, as it installs higher version by default,
-# which conflicts with cloud foundary's ruby_buildpack
-# as in new version 'ffi' require 'automake' package
-#
-gem "ffi", "1.9.18"
+gem "ffi", "~> 1.9.24"
 
 group :production do
   gem "sentry-raven"
