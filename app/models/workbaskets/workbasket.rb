@@ -295,25 +295,20 @@ module Workbaskets
 
       def build_related_settings_table!
         settings = case type.to_sym
-        when :create_measures
-          ::Workbaskets::CreateMeasuresSettings.new(
-            workbasket_id: id
-          )
-        when :bulk_edit_of_measures
-          ::Workbaskets::BulkEditOfMeasuresSettings.new(
-            workbasket_id: id
-          )
-        when :create_quota
-          ::Workbaskets::CreateQuotaSettings.new(
-            workbasket_id: id
-          )
-        when :create_regulation
-          ::Workbaskets::CreateRegulationSettings.new(
-            workbasket_id: id
-          )
-        end
+                   when :create_measures
+                     ::Workbaskets::CreateMeasuresSettings.new
+                   when :bulk_edit_of_measures
+                     ::Workbaskets::BulkEditOfMeasuresSettings.new
+                   when :create_quota
+                     ::Workbaskets::CreateQuotaSettings.new
+                   when :create_regulation
+                     ::Workbaskets::CreateRegulationSettings.new
+                   end
 
-        settings.save if settings.present?
+        if settings.present?
+          settings.workbasket_id = id
+          settings.save
+        end
       end
   end
 end

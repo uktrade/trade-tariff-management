@@ -25,7 +25,7 @@ class AdditionalCodeType < Sequel::Model
 
   delegate :present?, to: :meursing_table_plan, prefix: true, allow_nil: true
 
-  delegate :description, :formatted_description, to: :additional_code_type_description
+  delegate :description, :formatted_description, to: :additional_code_type_description, allow_nil: true
 
   APPLICATION_CODES = {
     0 => "Export refund nomencalture",

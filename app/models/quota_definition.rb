@@ -19,6 +19,18 @@ class QuotaDefinition < Sequel::Model
   one_to_many :quota_blocking_periods, key: :quota_definition_sid,
                                        primary_key: :quota_definition_sid
 
+  one_to_one :quota_order_number, key: :quota_order_number_id,
+                                  primary_key: :quota_order_number_id
+
+  one_to_one :measurement_unit, key: :measurement_unit_code,
+                                primary_key: :measurement_unit_code
+
+  one_to_one :monetary_unit, key: :monetary_unit_code,
+                             primary_key: :monetary_unit_code
+
+  one_to_one :measurement_unit_qualifier, key: :measurement_unit_qualifier_code,
+                                          primary_key: :measurement_unit_qualifier_code
+
   def status
     QuotaEvent.last_for(quota_definition_sid).status.presence || (critical_state? ? 'Critical' : 'Open')
   end

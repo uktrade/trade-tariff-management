@@ -2,6 +2,7 @@ class Measure < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
+  include ::ForceValidatorConcern
 
   VALID_ROLE_TYPE_IDS = [
     1, # Base regulation
@@ -95,8 +96,12 @@ class Measure < Sequel::Model
     full_temporary_stop_regulations.first
   end
 
-  one_to_many :measure_partial_temporary_stops, primary_key: :measure_generating_regulation_id,
-                                                key: :partial_temporary_stop_regulation_id
+  one_to_many :measure_partial_temporary_stops,
+              primary_key: :measure_generating_regulation_id,
+              key: :partial_temporary_stop_regulation_id do |ds|
+    ds.with_actual(MeasurePartialTemporaryStop)
+      .order(Sequel.asc(:validity_start_date))
+  end
 
   def measure_partial_temporary_stop
     measure_partial_temporary_stops.first
@@ -494,6 +499,12 @@ class Measure < Sequel::Model
       qon = QuotaOrderNumber.new(quota_order_number_id: ordernumber)
       qon.associations[:quota_definition] = nil
       qon
+    end
+  end
+
+  def quota_order_number_origin
+    if quota_order_number.present?
+      quota_order_number.quota_order_number_origin
     end
   end
 
