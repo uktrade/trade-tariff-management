@@ -12,7 +12,8 @@ class Measure < Sequel::Model
   ]
 
   set_primary_key [:measure_sid]
-  plugin :time_machine
+  plugin :time_machine, period_start_column: :effective_start_date,
+                        period_end_column: :effective_end_date
   plugin :oplog, primary_key: :measure_sid
   plugin :conformance_validator
   plugin :national
@@ -371,6 +372,8 @@ class Measure < Sequel::Model
 
     save
   end
+
+  def_column_accessor :effective_end_date, :effective_start_date
 
   def national?
     national
