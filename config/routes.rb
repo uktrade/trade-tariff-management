@@ -53,6 +53,34 @@ Rails.application.routes.draw do
     resources :footnotes, only: [:index]
   end
 
+  scope module: :quotas do
+    resources :quotas, only: [:index] do
+      collection do
+        post :search
+
+        get :quick_search
+        get :all_measures_data
+      end
+    end
+
+    namespace :quotas do
+      resources :bulks, only: [:show, :create, :edit, :update, :destroy] do
+        member do
+          get '/work_with_selected_measures', to: "bulks#work_with_selected_measures"
+          post '/work_with_selected_measures', to: "bulks#persist_work_with_selected_measures"
+          get :submitted_for_cross_check
+
+          resources :bulk_items, only: [] do
+            collection do
+              get :validation_details
+              post :remove_items
+            end
+          end
+        end
+      end
+    end
+  end
+
   scope module: :measures do
     resources :measures, only: [:index] do
       collection do
