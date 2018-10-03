@@ -29,8 +29,8 @@ script
       = simple_form_for :search, url: additional_codes_bulks_url(ops), method: :post do |f|
         = content_tag :input, nil, { type: "hidden", "name" => "item_sids[]", "v-for" => "(sid, idx) in selectedItems", ":value" => "sid" }
         = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
-        p
-          = content_tag "button", "Work with selected codes", { class: "button", ":disabled" => "noSelectedItems", type: :submit }
+        /p
+        /  = content_tag "button", "Work with selected codes", { class: "button", ":disabled" => "noSelectedItems", type: :submit }
       = render "items_table" if additional_codes_search.present?
 
     = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
