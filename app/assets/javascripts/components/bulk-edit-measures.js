@@ -284,7 +284,7 @@ $(document).ready(function() {
         };
 
         retryAjax(options, 10, 5000, function(data) {
-          self.measures = self.measures.concat(data.measures.map(function(measure) {
+          self.measures = self.measures.concat(data.collection.map(function(measure) {
             measure.visible = true;
 
             if (!measure.changes) {
