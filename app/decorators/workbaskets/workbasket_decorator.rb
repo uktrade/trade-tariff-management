@@ -13,6 +13,8 @@ module Workbaskets
         "Create Regulation"
       when "create_additional_code"
         "Create Additional Codes"
+      when "bulk_edit_of_quotas"
+        "Edit of Quota"
       end
     end
 

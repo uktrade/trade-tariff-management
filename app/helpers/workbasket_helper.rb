@@ -162,6 +162,22 @@ module WorkbasketHelper
         workbasket.id,
         step: :main
       )
+
+      when :bulk_edit_of_quotas
+
+        if workbasket.settings.settings["start_date"].blank?
+          work_with_selected_quotas_bulk_url(
+              workbasket.id,
+              search_code: workbasket.settings.search_code
+          )
+
+        else
+          edit_quotas_bulk_url(
+              workbasket.id,
+              search_code: workbasket.settings.search_code
+          )
+        end
+
     end
   end
 
@@ -177,6 +193,8 @@ module WorkbasketHelper
       create_regulation_url(workbasket.id)
     when :create_additional_code
       create_additional_code_url(workbasket.id)
+    when :bulk_edit_of_quotas
+      quotas_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
     end
   end
 end
