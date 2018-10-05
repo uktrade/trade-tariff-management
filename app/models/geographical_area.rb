@@ -124,7 +124,7 @@ class GeographicalArea < Sequel::Model
     end
   end
 
-  delegate :description, to: :geographical_area_description
+  delegate :description, to: :geographical_area_description, allow_nil: true
 
   def geographical_area_description
     geographical_area_descriptions.first
