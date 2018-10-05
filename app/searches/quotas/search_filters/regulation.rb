@@ -23,13 +23,13 @@ module Quotas
           when "is"
 
             [ is_clause, value ]
-          when "is not"
+          when "is_not"
 
             [ is_not_clause, value ]
           when "contains"
 
             [ like_clause, value ]
-          when "does not contains"
+          when "does_not_contains"
 
             [ like_not_clause, value ]
         end

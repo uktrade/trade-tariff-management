@@ -37,13 +37,13 @@ module Quotas
           when "include"
 
             [include_clause, origin_exclusions]
-          when "do not include"
+          when "do_not_include"
 
             [include_not_clause, origin_exclusions]
-          when "are not specified"
+          when "are_not_specified"
 
             specified_not_clause
-          when "are not unspecified"
+          when "are_not_unspecified"
 
             specified_clause
         end

@@ -9,6 +9,7 @@ module Quotas
       type
       regulation
       license
+      commodity_code
       additional_code
       origin
       origin_exclusions
@@ -84,6 +85,12 @@ module Quotas
 
     def apply_license_filter
       @relation = relation.operator_search_by_license(
+          *query_ops(code)
+      )
+    end
+
+    def apply_commodity_code_filter
+      @relation = relation.operator_search_by_commodity_code(
           *query_ops(code)
       )
     end

@@ -23,7 +23,7 @@ module Quotas
           when "is"
 
             [ is_clause, measure_type_id ]
-          when "is not"
+          when "is_not"
 
             [ is_not, measure_type_id ]
         end

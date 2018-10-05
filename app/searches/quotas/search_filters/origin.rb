@@ -23,7 +23,7 @@ module Quotas
           when "is"
 
             [is_clause, origin]
-          when "is not"
+          when "is_not"
 
             [is_not_clause, origin]
         end
