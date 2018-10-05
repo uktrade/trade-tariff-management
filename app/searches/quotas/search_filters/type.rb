@@ -33,8 +33,8 @@ module Quotas
         <<-eos
             EXISTS (SELECT 1 
                       FROM measures 
-                     WHERE measures.measure_type_id = ? 
-                       AND measures.ordernumber = quota_definitions.quota_order_number_id)
+                     WHERE measures.ordernumber = quota_definitions.quota_order_number_id 
+                       AND measures.measure_type_id = ?)
         eos
       end
 
@@ -42,8 +42,8 @@ module Quotas
         <<-eos
             NOT EXISTS (SELECT 1 
                           FROM measures 
-                         WHERE measures.measure_type_id = ? 
-                           AND measures.ordernumber = quota_definitions.quota_order_number_id)
+                         WHERE measures.ordernumber = quota_definitions.quota_order_number_id 
+                           AND measures.measure_type_id = ?)
         eos
       end
 

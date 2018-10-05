@@ -7,6 +7,7 @@ module Quotas
       order_number
       description
       type
+      regulation
       valid_from
       valid_to
       status
@@ -69,6 +70,12 @@ module Quotas
 
     def apply_type_filter
       @relation = relation.operator_search_by_type(
+          *query_ops(code)
+      )
+    end
+
+    def apply_regulation_filter
+      @relation = relation.operator_search_by_regulation(
           *query_ops(code)
       )
     end

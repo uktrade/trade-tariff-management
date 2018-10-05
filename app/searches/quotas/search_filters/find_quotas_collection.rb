@@ -23,6 +23,10 @@ module Quotas
         operator_search_where_clause("Type", operator, type)
       end
 
+      def operator_search_by_regulation(operator, regulation=nil)
+        operator_search_where_clause("Regulation", operator, regulation)
+      end
+
       private
 
       def operator_search_where_clause(klass_name, operator, value=nil)
