@@ -10,6 +10,7 @@ module Quotas
       regulation
       license
       additional_code
+      origin
       origin_exclusions
       valid_from
       valid_to
@@ -29,8 +30,6 @@ module Quotas
     def results(paginated_query=true)
       @relation = QuotaDefinition.by_start_date_and_quota_definition_sid_reverse
       @relation = relation.page(page) if paginated_query
-      # @relation = relation.operation_search_jsonb_default if jsonb_search_required?
-      #
       search_ops.select do |k, v|
         ALLOWED_FILTERS.include?(k.to_s) &&
             v.present? &&
@@ -95,13 +94,17 @@ module Quotas
       )
     end
 
+    def apply_origin_filter
+      @relation = relation.operator_search_by_origin(
+          *query_ops(code)
+      )
+    end
+
     def apply_origin_exclusions_filter
       @relation = relation.operator_search_by_origin_exclusions(
           *query_ops(code)
       )
     end
-
-    private
 
   end
 end

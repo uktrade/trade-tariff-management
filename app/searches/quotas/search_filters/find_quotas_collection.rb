@@ -35,6 +35,10 @@ module Quotas
         operator_search_where_clause("AdditionalCode", operator, additional_code)
       end
 
+      def operator_search_by_origin(operator, origin=nil)
+        operator_search_where_clause("Origin", operator, origin)
+      end
+
       def operator_search_by_origin_exclusions(operator, origin_exclusions=nil)
         operator_search_where_clause("OriginExclusions", operator, origin_exclusions)
       end
