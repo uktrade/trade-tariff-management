@@ -1,17 +1,17 @@
 tr
   td.heading_column
-    | Rejected by
+    | Edited by
   td
     = event.user_name
 
 tr
   td.heading_column
-    | Rejected on
+    | Edited on
   td
     = event_date(event)
 
 tr
   td.heading_column
-    | Rejected because
+    | Reasons for changes
   td
     = event.description

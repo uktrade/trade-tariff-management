@@ -188,4 +188,9 @@ module WorkbasketHelper
       create_additional_code_url(workbasket.id)
     end
   end
+
+  def event_date(date)
+    date.created_at
+        .strftime("%d %B %Y")
+  end
 end

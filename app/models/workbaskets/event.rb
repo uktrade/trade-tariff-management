@@ -17,5 +17,9 @@ module Workbaskets
 
       inclusion_of :event_type, in: ::Workbaskets::Workbasket::STATUS_LIST.map(&:to_s)
     end
+
+    def user_name
+      user.full_name
+    end
   end
 end

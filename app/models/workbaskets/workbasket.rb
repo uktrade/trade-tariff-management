@@ -219,6 +219,10 @@ module Workbaskets
       !status.to_sym.in? [:new_in_progress, :editing]
     end
 
+    def author_name
+      user.full_name
+    end
+
     def ordered_events
       events.all.sort do |a, b|
         a.created_at <=> b.created_at

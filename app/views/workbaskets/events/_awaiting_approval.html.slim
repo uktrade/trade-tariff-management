@@ -1,0 +1,11 @@
+tr
+  td.heading_column
+    | Submitted for approval by
+  td
+    = event.user_name
+
+tr
+  td.heading_column
+    | Submitted for approval on
+  td
+    = event_date(event)
