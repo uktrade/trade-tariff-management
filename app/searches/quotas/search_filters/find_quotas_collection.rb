@@ -27,6 +27,10 @@ module Quotas
         operator_search_where_clause("Regulation", operator, regulation)
       end
 
+      def operator_search_by_license(operator, license=nil)
+        operator_search_where_clause("License", operator, license)
+      end
+
       private
 
       def operator_search_where_clause(klass_name, operator, value=nil)
