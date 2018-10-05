@@ -219,6 +219,12 @@ module Workbaskets
       !status.to_sym.in? [:new_in_progress, :editing]
     end
 
+    def ordered_events
+      events.all.sort do |a, b|
+        a.created_at <=> b.created_at
+      end
+    end
+
     def move_status_to!(current_user, new_status, description=nil)
       event = Workbaskets::Event.new(
         workbasket_id: self.id,
