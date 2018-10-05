@@ -19,7 +19,9 @@
 # - is
 # - is_not
 # - is_after
+# - is_after_or_nil
 # - is_before
+# - is_before_or_nil
 # - is_not_specified
 # - is_not_unspecified
 #
