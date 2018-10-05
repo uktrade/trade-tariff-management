@@ -14,6 +14,10 @@ window.DutyExpressionFormatter = {
     var measurement_unit_qualifier = opts.measurement_unit_qualifier;
     var measurement_unit_abbreviation = measurement_unit ? measurement_unit.abbreviation : null;
 
+    if (monetary_unit && monetary_unit.monetary_unit_code) {
+      monetary_unit = monetary_unit.monetary_unit_code;
+    }
+
     var output = [];
     switch(duty_expression_id) {
       case "99":
