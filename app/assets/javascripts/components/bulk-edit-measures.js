@@ -144,7 +144,9 @@ $(document).ready(function() {
             return ega.geographical_area_id;
           }).join(", ") || "-";
 
-          var formatted_components = measure.measure_components.map(function (mc) {
+          var formatted_components = measure.measure_components.filter(function(mc) {
+            return mc.duty_expression && mc.duty_expression.duty_expression_id;
+          }).map(function (mc) {
             return DutyExpressionFormatter.format({
               duty_expression_id: mc.duty_expression.duty_expression_id,
               duty_expression_description: mc.duty_expression.description,
