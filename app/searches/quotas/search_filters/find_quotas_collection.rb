@@ -11,6 +11,18 @@ module Quotas
         )
       end
 
+      def operator_search_by_order_number(operator, order_number=nil)
+        operator_search_where_clause("OrderNumber", operator, order_number)
+      end
+
+      def operator_search_by_description(operator, description=nil)
+        operator_search_where_clause("Description", operator, description)
+      end
+
+      def operator_search_by_type(operator, type=nil)
+        operator_search_where_clause("Type", operator, type)
+      end
+
       private
 
       def operator_search_where_clause(klass_name, operator, value=nil)

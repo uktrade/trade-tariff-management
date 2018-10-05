@@ -4,6 +4,15 @@ module Quotas
     include ::Shared::Search
 
     ALLOWED_FILTERS = %w(
+      order_number
+      description
+      type
+      valid_from
+      valid_to
+      status
+      author
+      date_of
+      last_updated_by
     )
 
     attr_reader *([:relation, :search_ops, :page] + ALLOWED_FILTERS)
@@ -44,6 +53,24 @@ module Quotas
 
     def quota_sids
       results(false).pluck(:quota_definition_sid)
+    end
+
+    def apply_order_number_filter
+      @relation = relation.operator_search_by_order_number(
+          *query_ops(code)
+      )
+    end
+
+    def apply_description_filter
+      @relation = relation.operator_search_by_description(
+          *query_ops(code)
+      )
+    end
+
+    def apply_type_filter
+      @relation = relation.operator_search_by_type(
+          *query_ops(code)
+      )
     end
 
     private
