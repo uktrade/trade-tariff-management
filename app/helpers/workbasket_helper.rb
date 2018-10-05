@@ -193,4 +193,9 @@ module WorkbasketHelper
     date.created_at
         .strftime("%d %B %Y")
   end
+
+  def workbasket_rejected?
+    workbasket.cross_check_rejected? ||
+    workbasket.approval_rejected?
+  end
 end
