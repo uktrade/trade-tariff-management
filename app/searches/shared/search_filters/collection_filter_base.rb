@@ -1,4 +1,4 @@
-module Measures
+module Shared
   module SearchFilters
     class CollectionFilterBase
 

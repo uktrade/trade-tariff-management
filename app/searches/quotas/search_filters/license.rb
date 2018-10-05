@@ -25,7 +25,7 @@ module Quotas
             [ yes_clause, license ]
           when "no"
 
-            [ no_clause ]
+            no_clause
         end
       end
 

@@ -10,6 +10,7 @@ module Quotas
       regulation
       license
       additional_code
+      origin_exclusions
       valid_from
       valid_to
       status
@@ -90,6 +91,12 @@ module Quotas
 
     def apply_additional_code_filter
       @relation = relation.operator_search_by_additional_code(
+          *query_ops(code)
+      )
+    end
+
+    def apply_origin_exclusions_filter
+      @relation = relation.operator_search_by_origin_exclusions(
           *query_ops(code)
       )
     end
