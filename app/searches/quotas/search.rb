@@ -9,6 +9,7 @@ module Quotas
       type
       regulation
       license
+      additional_code
       valid_from
       valid_to
       status
@@ -83,6 +84,12 @@ module Quotas
 
     def apply_license_filter
       @relation = relation.operator_search_by_license(
+          *query_ops(code)
+      )
+    end
+
+    def apply_additional_code_filter
+      @relation = relation.operator_search_by_additional_code(
           *query_ops(code)
       )
     end
