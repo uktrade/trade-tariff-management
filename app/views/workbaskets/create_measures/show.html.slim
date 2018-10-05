@@ -13,7 +13,7 @@ header
   h1.heading-large
     | View measures workbasket
 
-  = render "workbaskets/workflow_screens_parts/notifications"
+  = render "workbaskets/notifications/#{workbasket.status}"
   = render "workbaskets/workflow_screens_parts/actions_allowed"
   = render "workbaskets/workflow_screens_parts/workbasket_details"
 

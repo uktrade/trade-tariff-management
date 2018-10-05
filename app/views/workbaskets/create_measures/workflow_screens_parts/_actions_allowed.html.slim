@@ -1,0 +1,8 @@
+- if workbasket.awaiting_cross_check?
+  = link_to "Withdraw workbasket from workflow", "#"
+
+- if workbasket.ready_for_approval?
+  = link_to "Submit for approval", "#"
+
+- if workbasket.ready_for_export?
+  = link_to "Schedule export to CDS", "#"

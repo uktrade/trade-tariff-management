@@ -1,0 +1,23 @@
+- commodity_codes = attributes_parser.commodity_codes
+- additional_codes = attributes_parser.additional_codes
+
+p
+  | The measure(s) detailed below have not yet been cross-checked. Once cross-checked,
+  =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
+  | will be created, covering
+
+  - if commodity_codes.count > 0 && additional_codes.count > 0
+    =<> pluralize(commodity_codes.count, "commodity code", "commodity codes")
+    | and
+    =<> pluralize(additional_codes.count, "additional code", "additional codes")
+
+  - elsif commodity_codes.count > 0
+    =<> pluralize(commodity_codes.count, "commodity code", "commodity codes")
+
+  - elsif additional_codes.count > 0
+    =<> pluralize(additional_codes.count, "additional code", "additional codes")
+
+  | .
+
+p
+  | If you need to re-edit the measure(s), first withdraw the workbasket from cross-checking workflow.
