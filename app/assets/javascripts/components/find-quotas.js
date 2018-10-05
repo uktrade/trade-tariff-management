@@ -10,12 +10,15 @@ $(document).ready(function() {
 
   var conditions = {
     is: { value: "is", label: "is" },
+    on: { value: "on", label: "on" },
     is_not: { value: "is_not", label: "is not" },
     starts_with: { value: "starts_with", label: "starts with" },
     contains: { value: "contains", label: "contains" },
     does_not_contain: { value: "does_not_contain", label: "does not contain" },
+    after: { value: "after", label: "after" },
     is_after: { value: "is_after", label: "is after" },
     is_after_or_nil: { value: "is_after_or_nil", label: "is after or not specified" },
+    before: { value: "before", label: "before" },
     is_before: { value: "is_before", label: "is before" },
     is_before_or_nil: { value: "is_before_or_nil", label: "is before or not specified" },
     are_not_specified: { value: "are_not_specified", label: "are not specified" },
@@ -24,7 +27,9 @@ $(document).ready(function() {
     do_not_include: { value: "do_not_include", label: "do not include" },
     are: { value: "are", label: "are" },
     is_not_specified: { value: "is_not_specified", label: "is not specified" },
-    is_not_unspecified: { value: "is_not_unspecified", label: "is not unspecified" }
+    is_not_unspecified: { value: "is_not_unspecified", label: "is not unspecified" },
+    no: { value: "no", label: "no" },
+    yes: { value: "yes", label: "yes" }
   };
 
   var app = new Vue({
@@ -35,18 +40,15 @@ $(document).ready(function() {
 
       var data = {
         columns: [
-          {enabled: true, title: "ID", field: "measure_sid"},
-          {enabled: true, title: "Regulation", field: "regulation"},
+          {enabled: true, title: "Order number", field: "order_number"},
+          {enabled: true, title: "Description", field: "description"},
           {enabled: true, title: "Type", field: "measure_type_id"},
-          {enabled: true, title: "Start date", field: "validity_start_date"},
-          {enabled: true, title: "End date", field: "validity_end_date"},
+          {enabled: true, title: "Starts", field: "validity_start_date"},
+          {enabled: true, title: "Ends", field: "validity_end_date"},
           {enabled: true, title: "Commodity code", field: "goods_nomenclature_id"},
           {enabled: true, title: "Additional code", field: "additional_code_id"},
           {enabled: true, title: "Origin", field: "geographical_area"},
           {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas"},
-          {enabled: true, title: "Duties", field: "duties"},
-          {enabled: true, title: "Conditions", field: "conditions"},
-          {enabled: true, title: "Footnotes", field: "footnotes"},
           {enabled: true, title: "Last updated", field: "last_updated"},
           {enabled: true, title: "Status", field: "status"}
         ],
@@ -57,23 +59,22 @@ $(document).ready(function() {
           { value: "last_status_change", label: "last status change" }
         ],
 
-        conditionsForMeasureSid: [ conditions.is, conditions.starts_with, conditions.contains ],
-        conditionsForGroupName: [ conditions.is, conditions.starts_with, conditions.contains ],
-        conditionsForStatus: [ conditions.is, conditions.is_not ],
-        conditionsForAuthor: [ conditions.is, conditions.is_not ],
-        conditionsForDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not ],
-        conditionsForLastUpdatedBy: [ conditions.is, conditions.is_not ],
-        conditionsForRegulation: [ conditions.contains, conditions.does_not_contain, conditions.is, conditions.is_not ],
+        conditionsForOrderNumber: [ conditions.is, conditions.starts_with, conditions.contains ],
+        conditionsForDescription: [ conditions.is, conditions.starts_with, conditions.contains ],
         conditionsForType: [ conditions.is, conditions.is_not ],
-        conditionsForValidityStartDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
-        conditionsForValidityEndDate: [ conditions.is, conditions.is_after, conditions.is_after_or_nil, conditions.is_before, conditions.is_before_or_nil, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
+        conditionsForRegulation: [ conditions.contains, conditions.does_not_contain, conditions.is, conditions.is_not ],
+        conditionsForLicense: [ conditions.no, conditions.yes ],
+        conditionsForValidityStartDate: [ conditions.after, conditions.before, conditions.on ],
+        conditionsForValidityEndDate: [ conditions.after, conditions.before, conditions.on ],
+        conditionsForStaged: [ conditions.no, conditions.yes ],
         conditionsForCommodityCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForAdditionalCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForOrigin: [ conditions.is, conditions.is_not ],
         conditionsForOriginExclusions: [ conditions.are_not_specified, conditions.are_not_unspecified, conditions.include, conditions.do_not_include ],
-        conditionsForDuties: [ conditions.are, conditions.include ],
-        conditionsForConditions: [ conditions.are, conditions.are_not_specified, conditions.are_not_unspecified, conditions.include ],
-        conditionsForFootnotes: [ conditions.are, conditions.are_not_specified, conditions.are_not_unspecified, conditions.include ],
+        conditionsForStatus: [ conditions.is, conditions.is_not ],
+        conditionsForAuthor: [ conditions.is, conditions.is_not ],
+        conditionsForDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not ],
+        conditionsForLastUpdatedBy: [ conditions.is, conditions.is_not ],
 
         disableValue: [
           conditions.is_not_specified.value,
@@ -103,7 +104,7 @@ $(document).ready(function() {
 
         searchCode: code,
         pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
-        selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_measure_sids") || "[]")),
+        selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_item_ids") || "[]")),
         selectionType: window.localStorage.getItem(code + "_selection_type") || "all",
         pagination: {
           page: 1,
@@ -115,15 +116,24 @@ $(document).ready(function() {
       };
 
       var default_params = {
-        measure_sid: {
+        order_number: {
           enabled: false,
           operator: "is",
           value: null
         },
-        group_name: {
+        description: {
           enabled: false,
-          operator: "is",
+          operator: "contains",
           value: null
+        },
+        license: {
+          enabled: false,
+          operator: "no",
+          value: null
+        },
+        staged: {
+          enabled: false,
+          operator: "no"
         },
         status: {
           enabled: false,
@@ -158,19 +168,19 @@ $(document).ready(function() {
         },
         validity_start_date: {
           enabled: false,
-          operator: "is",
+          operator: "on",
           value: null,
           mode: "creation"
         },
         validity_end_date: {
           enabled: false,
-          operator: "is",
+          operator: "on",
           value: null,
           mode: "creation"
         },
         commodity_code: {
           enabled: false,
-          operator: "is",
+          operator: "includes",
           value: null
         },
         additional_code: {
@@ -185,34 +195,16 @@ $(document).ready(function() {
         },
         origin_exclusions: {
           enabled: false,
-          operator: "include",
+          operator: "are_not_specified",
           value: [{value: ""}]
-        },
-        duties: {
-          enabled: false,
-          operator: "are",
-          value: [{duty_expression_id: null, duty_amount: null}]
-        },
-        conditions: {
-          enabled: false,
-          operator: "are",
-          value: [{
-            measure_condition_code: null
-          }]
-        },
-        footnotes: {
-          enabled: false,
-          operator: "are",
-          value: [{
-            footnote_type_id: null,
-            footnote_id: null
-          }]
         }
       };
 
       var fields = [
-        "measure_sid",
-        "group_name",
+        "order_number",
+        "description",
+        "license",
+        "staged",
         "status",
         "author",
         "date_of",
@@ -224,10 +216,7 @@ $(document).ready(function() {
         "commodity_code",
         "additional_code",
         "origin",
-        "origin_exclusions",
-        "duties",
-        "conditions",
-        "footnotes"
+        "origin_exclusions"
       ];
 
       if (window.__pagination_metadata) {
