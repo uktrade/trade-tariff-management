@@ -4,7 +4,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME2, 'The measure type must exist.', on: [:create, :update] do
-    validates :presence, of: :measure_type_id
+    validates :presence, of: :measure_type
   end
 
   validation :ME3, 'The validity period of the measure type must span the validity period of the measure.', on: [:create, :update] do
