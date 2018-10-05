@@ -10,23 +10,58 @@ module Workbaskets
       :create_geographical_area
     ]
 
+
     STATUS_LIST = [
-      :new_in_progress,                # "New - in progress"
-      :editing,                        # "Editing"
-      :awaiting_cross_check,           # "Awaiting cross-check"
-      :cross_check_rejected,           # "Cross-check rejected"
-      :ready_for_approval,             # "Ready for approval"
-      :awaiting_approval,              # "Awaiting approval"
-      :approval_rejected,              # "Approval rejected"
-      :ready_for_export,               # "Ready for export"
-      :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
-      :awaiting_cds_upload_edit,       # "Awaiting CDS upload - edit"
-      :awaiting_cds_upload_overwrite,  # "Awaiting CDS upload - overwrite"
-      :awaiting_cds_upload_delete,     # "Awaiting CDS upload - delete"
-      :sent_to_cds,                    # "Sent to CDS"
-      :sent_to_cds_delete,             # "Sent to CDS - delete"
-      :published,                      # "Published"
-      :cds_error                       # "CDS error"
+      :new_in_progress,                # New - in progress
+                                       # Newly started, but not yet submitted into workflow
+                                       #
+      :editing,                        # Editing
+                                       # Existing item, already on CDS, being edited but not yet submitted into workflow
+                                       #
+      :awaiting_cross_check,           # Awaiting cross-check
+                                       # Check Submitted into workflow, not yet cross-checked
+                                       #
+      :cross_check_rejected,           # Cross-check rejected
+                                       # Did not pass cross-check, returned to submitter
+                                       #
+      :ready_for_approval,             # Ready for approval
+                                       # Has passed cross-check but not yet submitted for approval
+                                       #
+      :awaiting_approval,              # Awaiting approval
+                                       # Submitted for approval, pending response from Approver
+                                       #
+      :approval_rejected,              # Approval rejected
+                                       # Was not approved, returned to submitter
+                                       #
+      :ready_for_export,               # Ready for export
+                                       # Approved but not yet scheduled for sending to CDS
+                                       #
+      :awaiting_cds_upload_create_new, # Awaiting CDS upload - create new
+                                       # New item approved and scheduled for sending to CDS
+                                       #
+      :awaiting_cds_upload_edit,       # Awaiting CDS upload - edit
+                                       # Edited item approved and scheduled for sending to CDS,
+                                       # existing version will be end-dated and replaced
+                                       #
+      :awaiting_cds_upload_overwrite,  # Awaiting CDS upload - overwrite
+                                       # Edited item approved and scheduled for sending to CDS,
+                                       # existing version will be updated
+                                       #
+      :awaiting_cds_upload_delete,     # Awaiting CDS upload - delete
+                                       # Delete instruction approved and scheduled for sending to CDS
+                                       #
+      :sent_to_cds,                    # Sent to CDS
+                                       # Sent to CDS, waiting for response
+                                       #
+      :sent_to_cds_delete,             # Sent to CDS - delete
+                                       # Delete instruction sent to CDS, waiting for response
+                                       #
+      :published,                      # Published
+                                       # On CDS, may or may not have taken effect
+                                       #
+      :cds_error                       # CDS error
+                                       # Sent to CDS, but CDS returned an error
+                                       #
     ]
 
     EDITABLE_STATES = [
@@ -136,7 +171,7 @@ module Workbaskets
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status(["awaiting_cross_check", "ready_for_export"])
+        ).in_status(["ready_for_export"])
          .order(:operation_date)
       end
 
