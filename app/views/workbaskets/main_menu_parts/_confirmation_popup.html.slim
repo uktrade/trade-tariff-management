@@ -11,8 +11,8 @@
           div
             p Are you sure?
 
-          .form-actions
-            button.button
-              | Confirm
-            a.secondary-button href="#" onClick="MicroModal.close('main-menu-#{modal_id}'); return false;"
+          .form-actions.hidden
+            = link_to "Confirm", "#", class: "button js-main-menu-confirm-action"
+
+            a.secondary-button href="#" onClick="MainMenuInteractions.closePopup('#{modal_id}');"
               | Cancel

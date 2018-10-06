@@ -92,19 +92,19 @@ module Workbaskets
     end
 
     def destroy
-      workbasket.clean_up_workbasket!
+      #workbasket.clean_up_workbasket!
 
       redirect_to root_url
     end
 
     def move_to_editing_mode
       workbasket.status = "editing"
-      workbasket.save
+      #workbasket.save
 
       redirect_to initial_step_url
     end
 
-    def widthdraw_workbasket_from_workflow
+    def withdraw_workbasket_from_workflow
       move_to_editing_mode
     end
 
