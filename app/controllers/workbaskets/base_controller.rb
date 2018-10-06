@@ -92,12 +92,14 @@ module Workbaskets
     end
 
     def destroy
+      sleep 5
       #workbasket.clean_up_workbasket!
 
       redirect_to root_url
     end
 
     def move_to_editing_mode
+      sleep 5
       workbasket.status = "editing"
       #workbasket.save
 

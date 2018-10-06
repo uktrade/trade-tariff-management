@@ -25,4 +25,18 @@
   .modal__content {
     margin-bottom: 5px;
   }
+
+  .js-main-menu-confirm-action {
+    &.hidden {
+      display: none;
+    }
+  }
+
+  .save_progress_block {
+    margin-right: 2px;
+
+    .spinner_block {
+      margin-top: -5px;
+    }
+  }
 }

@@ -12,6 +12,10 @@
             p Are you sure?
 
           .form-actions
-            = link_to "Confirm", "#", class: "button js-main-menu-confirm-action"
+            .save_progress_block
+              = link_to "Confirm", "#", class: "button js-main-menu-confirm-action"
+              .js-workbasket-base-save-progress-spinner.spinner_block.hidden
+                = render "measures/bulks/loading_spinner", message: "Saving..."
+
             = link_to "Cancel", "#", class: "secondary-button js-main-menu-close-confirmation-popup",
                                      data: { popup_id: modal_id }

@@ -3,6 +3,7 @@ window.MainMenuInteractions =
   init: () ->
     MainMenuInteractions.deleteWorkbasketConfirmationPopupInit();
     MainMenuInteractions.withdrawWorkbasketConfirmationPopupInit();
+    MainMenuInteractions.handleConfirmationLink();
     MainMenuInteractions.closeConfirmationPopup();
 
   deleteWorkbasketConfirmationPopupInit: () ->
@@ -12,6 +13,7 @@ window.MainMenuInteractions =
       confirm_link.attr('href', target_url)
       confirm_link.attr('data-method', 'delete')
 
+      MainMenuInteractions.setSpinnerText("main-menu-delete_confirmation_popup", "Deletion")
       MainMenuInteractions.openModal('main-menu-delete_confirmation_popup')
 
       return false
@@ -22,7 +24,16 @@ window.MainMenuInteractions =
       confirm_link = $("#main-menu-withdraw_confirmation_popup .js-main-menu-confirm-action")
       confirm_link.attr('href', target_url)
 
+      MainMenuInteractions.setSpinnerText("main-menu-delete_confirmation_popup", "Processing")
       MainMenuInteractions.openModal('main-menu-withdraw_confirmation_popup')
+
+      return false
+
+  handleConfirmationLink: () ->
+    $(document).on 'click', '.js-main-menu-confirm-action', ->
+      $(this).addClass('hidden')
+      spinner = $(".js-workbasket-base-save-progress-spinner")
+      spinner.removeClass('hidden')
 
       return false
 
@@ -45,6 +56,9 @@ window.MainMenuInteractions =
 
     MicroModal.close(popup_id)
     return false
+
+  setSpinnerText: (popup_id, message) ->
+    $("#" + popup_id + " .saving_message").text(message)
 
 $ ->
   MainMenuInteractions.init();
