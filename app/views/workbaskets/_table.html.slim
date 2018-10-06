@@ -47,7 +47,7 @@ table.table
         td
           = workbasket.last_event_at
         td
-          - if workbasket.editable?
+          - if current_user.author_of_workbasket?(workbasket) && workbasket.editable?
             = link_to "Continue", workbasket_continue_link_based_on_type(workbasket)
           - else
             = link_to "View", workbasket_view_link_based_on_type(workbasket)

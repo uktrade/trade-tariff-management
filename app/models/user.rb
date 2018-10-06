@@ -59,6 +59,10 @@ class User < Sequel::Model
     has_permission?(Permissions::HMRC_EDITOR)
   end
 
+  def approver?
+    approver_user.present?
+  end
+
   def remotely_signed_out?
     remotely_signed_out
   end

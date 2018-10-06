@@ -7475,7 +7475,8 @@ CREATE TABLE public.users (
     created_at timestamp without time zone,
     organisation_slug text,
     disabled boolean DEFAULT false,
-    organisation_content_id text
+    organisation_content_id text,
+    approver_user boolean DEFAULT false
 );
 
 
@@ -11701,3 +11702,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approver_user_to_users.rb');
