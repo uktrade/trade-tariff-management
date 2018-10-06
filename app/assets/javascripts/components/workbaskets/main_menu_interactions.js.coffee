@@ -34,12 +34,12 @@ window.MainMenuInteractions =
     $(document).on 'click', '.js-main-menu-confirm-action', ->
       $(this).addClass('hidden')
       $(".js-workbasket-base-save-progress-spinner").removeClass('hidden')
-      $(".js-main-menu-close-confirmation-popup").addClass('disabled')
+      $(".js-main-menu-close-popup").addClass('disabled')
 
       return false
 
   closeConfirmationPopup: () ->
-    $(document).on 'click', '.js-main-menu-close-confirmation-popup', ->
+    $(document).on 'click', '.js-main-menu-close-popup', ->
       popup_id = $(this).data('popup-id')
       MainMenuInteractions.closePopup(popup_id)
 
@@ -55,7 +55,7 @@ window.MainMenuInteractions =
       confirm_link.attr('href', '')
       confirm_link.removeAttr('data-method')
 
-    $(".js-main-menu-close-confirmation-popup").removeClass('disabled')
+    $(".js-main-menu-close-popup").removeClass('disabled')
 
     MicroModal.close(popup_id)
     return false

@@ -19,8 +19,11 @@
   padding-bottom: 3em;
 }
 
-.modal__container.workbasket-confirmation-modal {
-  width: 660px;
+.modal__container.workbasket-main-menu-modal {
+
+  &.workbasket-confirmation-modal {
+    width: 660px;
+  }
 
   .modal__content {
     margin-bottom: 5px;

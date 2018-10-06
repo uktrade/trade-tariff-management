@@ -82,6 +82,12 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
+    resources :workbaskets, only: [] do
+      member do
+        resource :schedule_export_to_cds, only: [:new, :create]
+      end
+    end
+
     resources :create_additional_code, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check

@@ -17,4 +17,4 @@
 
   - if current_user.approver? && workbasket.approve_process_can_be_started?
       | &nbsp;|&nbsp;
-      = link_to "Schedule export to CDS", "#", data: { target_url: withdraw_workbasket_from_workflow_create_measure_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
+      = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id)
