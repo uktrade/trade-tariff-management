@@ -4,10 +4,10 @@
       = link_to "Withdraw workbasket from workflow", "#", class: "button"
       br
 
-    - if true #workbasket.ready_for_approval?
+    - if workbasket.ready_for_approval?
       = link_to "Submit for approval", "#", class: "button"
       br
 
-    - if true #workbasket.ready_for_export?
+    - if workbasket.ready_for_export?
       = link_to "Schedule export to CDS", "#", class: "button"
       br

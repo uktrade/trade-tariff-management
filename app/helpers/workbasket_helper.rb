@@ -199,6 +199,11 @@ module WorkbasketHelper
     workbasket.approval_rejected?
   end
 
+  def workbasket_awaiting_cross_check_or_rejected?
+    workbasket.awaiting_cross_check? ||
+    workbasket.cross_check_rejected?
+  end
+
   def workbasket_view_show_actions_allowed?
     workbasket.awaiting_cross_check? ||
     workbasket.ready_for_approval? ||
