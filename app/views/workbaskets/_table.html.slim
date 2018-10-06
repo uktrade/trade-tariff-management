@@ -52,10 +52,9 @@ table.table
           - else
             = link_to "View", workbasket_view_link_based_on_type(workbasket)
 
-          - if false
+          - if current_user.author_of_workbasket?(workbasket) && workbasket.can_withdraw?
             | &nbsp;|&nbsp;
-            a href="#"
-              | Withdraw/edit...
+            = link_to "Withdraw/edit", widthdraw_workbasket_from_workflow_create_measure_url(workbasket.id)
 
         - if false
           td

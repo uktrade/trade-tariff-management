@@ -218,6 +218,10 @@ module Workbaskets
       !status.to_sym.in? [:new_in_progress, :editing]
     end
 
+    def can_withdraw?
+      awaiting_cross_check? || awaiting_approval?
+    end
+
     def author_name
       user.name
     end
