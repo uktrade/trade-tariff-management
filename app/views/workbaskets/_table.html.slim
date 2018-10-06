@@ -30,28 +30,6 @@ table.table
 
   tbody
     - workbaskets.map do |workbasket|
-      - workbasket = workbasket.decorate
-
-      tr
-        td
-          = workbasket.id
-        td
-          = workbasket.title
-        td
-          = workbasket.type
-        td
-          - if workbasket.status_with_error?
-            icon-error
-
-          = workbasket.status
-        td
-          = workbasket.last_event_at
-        td
-          = render "workbaskets/main_menu_parts/actions", workbasket: workbasket
-
-        - if false
-          td
-            a href="#"
-              icon-download
+      = render "workbaskets/main_menu_parts/item", workbasket: workbasket.decorate
 
 = paginate workbaskets

@@ -63,5 +63,20 @@ window.MainMenuInteractions =
   setSpinnerText: (popup_id, message) ->
     $("#" + popup_id + " .saving_message").text(message)
 
+  scheduleExportToCdsFormInit: () ->
+    $('.date-picker').each ->
+      field = $(this)
+
+      new Pikaday(
+        field: $(this)[0]
+        format: 'DD/MM/YYYY'
+        blurFieldOnSelect: true
+        onSelect: ->
+          $(this).trigger 'change'
+          return false
+      )
+
+    return false
+
 $ ->
   MainMenuInteractions.init();
