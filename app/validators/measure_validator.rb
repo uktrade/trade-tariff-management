@@ -208,25 +208,30 @@ class MeasureValidator < TradeTariffBackend::Validator
     validates :validity_date_span, of: :measure_partial_temporary_stops
   end
 
-  validation :ME40,
-    %(If the flag "duty expression" on measure type is "mandatory" then at least one measure component
-    or measure condition component record must be specified. If the flag is set "not permitted" then
-    no measure component or measure condition component must exist. Measure components and measure
-    condition components are mutually exclusive. A measure can have either components or condition
-    components (if the ‘duty expression’ flag is ‘mandatory’ or ‘optional’) but not both.),
-    on: [:create, :update] do |record|
-      valid = true
+  # NOTE: Currently commneted this ME40 rule as this rule needs to be handled
+  # with steps(Frontend steps wise) i.e. We define mandarory measure type in
+  # first step but accept measure component and measure condition component in
+  # next step
+  #
+  # validation :ME40,
+  #   %(If the flag "duty expression" on measure type is "mandatory" then at least one measure component
+  #   or measure condition component record must be specified. If the flag is set "not permitted" then
+  #   no measure component or measure condition component must exist. Measure components and measure
+  #   condition components are mutually exclusive. A measure can have either components or condition
+  #   components (if the ‘duty expression’ flag is ‘mandatory’ or ‘optional’) but not both.),
+  #   on: [:create, :update] do |record|
+  #     valid = true
 
-      if record.measure_type.try(:measure_component_applicable_code) == 1 # mandatory
-        valid = !record.measure_components.empty? || record.measure_conditions.any? { |mc| !mc.measure_condition_components.empty? }
-      end
+  #     if record.measure_type.try(:measure_component_applicable_code) == 1 # mandatory
+  #       valid = !record.measure_components.empty? || record.measure_conditions.any? { |mc| !mc.measure_condition_components.empty? }
+  #     end
 
-      if record.measure_type.try(:measure_component_applicable_code) == 2 # not permitted
-        valid = record.measure_components.empty? && record.measure_conditions.all? { |mc| mc.measure_condition_components.empty? }
-      end
+  #     if record.measure_type.try(:measure_component_applicable_code) == 2 # not permitted
+  #       valid = record.measure_components.empty? && record.measure_conditions.all? { |mc| mc.measure_condition_components.empty? }
+  #     end
 
-      valid
-    end
+  #     valid
+  #   end
 
   validation :ME86, 'The role of the entered regulation must be a Base, a Modification, a Provisional Anti-Dumping, a Definitive Anti-Dumping.', on: [:create, :update] do
     validates :inclusion, of: :measure_generating_regulation_role, in: Measure::VALID_ROLE_TYPE_IDS
@@ -435,8 +440,6 @@ end
 # There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature hierarchy which references the same measure type, geo area, order number, additional code and reduction indicator. This rule is not applicable for Meursing additional codes.
 # TODO: ME87
 # The VP of the measure (implicit or explicit) must reside within the effective VP of its supporting regulation. The effective VP is the VP of the regulation taking into account extensions and abrogation.
-# TODO: ME40
-# If the flag "duty expression" on measure type is "mandatory" then at least one measure component or measure condition component record must be specified. If the flag is set ""not permitted"" then no measure component or measure condition component must exist. Measure components and measure condition components are mutually exclusive. A measure can have either components or condition components (if the 'duty expression’ flag is 'mandatory’ or 'optional’) but not both.
 # TODO: ME41
 # The referenced duty expression must exist.
 # TODO: ME42
