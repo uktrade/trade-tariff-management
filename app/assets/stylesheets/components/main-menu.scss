@@ -18,3 +18,11 @@
 .main-menu-page {
   padding-bottom: 3em;
 }
+
+.modal__container.workbasket-confirmation-modal {
+  width: 660px;
+
+  .modal__content {
+    margin-bottom: 5px;
+  }
+}

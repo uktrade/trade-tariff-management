@@ -59,7 +59,7 @@ table.table
 
             - elsif workbasket.new_in_progress?
               | &nbsp;|&nbsp;
-              = link_to "Delete", workbasket_view_link_based_on_type(workbasket), method: :delete
+              = link_to "Delete", "#", data: { url: workbasket_view_link_based_on_type(workbasket) }, "onClick" => "MicroModal.show('main-menu-delete_confirmation_popup'); return false;"
 
         - if false
           td

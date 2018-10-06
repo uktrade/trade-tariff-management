@@ -1,0 +1,18 @@
+.modal aria-hidden="true" id="main-menu-#{modal_id}"
+  .modal__overlay tabindex="-1"
+    .modal__container.workbasket-confirmation-modal aria-modal="true" role="dialog"
+      header.modal__header
+        h2.modal__title
+          slot name="title"
+            = title
+
+      .modal__content
+        slot
+          div
+            p Are you sure?
+
+          .form-actions
+            button.button
+              | Confirm
+            a.secondary-button href="#" onClick="MicroModal.close('main-menu-#{modal_id}'); return false;"
+              | Cancel
