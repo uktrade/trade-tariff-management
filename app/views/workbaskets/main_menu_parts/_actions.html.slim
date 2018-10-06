@@ -15,6 +15,6 @@
 
 - else
 
-  - if current_user.approver? && workbasket.approve_process_can_be_started?
-      | &nbsp;|&nbsp;
-      = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id)
+- if true #current_user.approver? && workbasket.approve_process_can_be_started?
+    | &nbsp;|&nbsp;
+    = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
