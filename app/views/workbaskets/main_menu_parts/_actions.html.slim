@@ -15,6 +15,19 @@
 
 - else
 
-- if true #current_user.approver? && workbasket.approve_process_can_be_started?
+  - if workbasket.cross_check_process_can_be_started?
     | &nbsp;|&nbsp;
-    = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
+    = link_to "Review for cross-check", "#"
+
+  - if current_user.approver?
+    - if workbasket.approve_process_can_be_started?
+      | &nbsp;|&nbsp;
+      = link_to "Review for approval", "#"
+
+    - elsif workbasket.ready_for_export?
+      | &nbsp;|&nbsp;
+      = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
+
+    - elsif workbasket.operation_date_can_be_rescheduled?
+      | &nbsp;|&nbsp;
+      = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true

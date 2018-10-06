@@ -8,7 +8,7 @@
         p.text-right.logout-section
           = "Logged in as: #{current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe
 
-  = render "workbaskets/main_menu"
+  = render "workbaskets/main_menu_parts/main_menu"
 
   info-message
     - if workbaskets.present?
@@ -29,7 +29,7 @@
     = render "workbaskets/main_menu_parts/search_form"
 
     - if workbaskets.present?
-      = render "workbaskets/table"
+      = render "workbaskets/main_menu_parts/table"
 
       = render "workbaskets/main_menu_parts/schedule_export_to_cds_popup"
       = render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "delete_confirmation_popup", title: "You are going to delete workbasket"

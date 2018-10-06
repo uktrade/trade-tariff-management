@@ -255,6 +255,17 @@ module Workbaskets
         awaiting_approval? &&
         approver_id.blank?
       end
+
+      def awaiting_cds_upload_new_or_edit_item?
+        awaiting_cds_upload_create_new? ||
+        awaiting_cds_upload_edit?
+      end
+
+      def operation_date_can_be_rescheduled?
+        awaiting_cds_upload_new_or_edit_item? &&
+        operation_date.present? &&
+        operation_date > Date.today + 1.day
+      end
     end
 
     def author_name
