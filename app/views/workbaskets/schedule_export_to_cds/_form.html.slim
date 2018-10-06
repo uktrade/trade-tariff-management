@@ -1,4 +1,4 @@
-= simple_form_for(:workbasket, url: schedule_export_to_cds_url(workbasket.id), method: :post) do
+= simple_form_for(:workbasket, url: schedule_export_to_cds_url(workbasket.id), method: :post, remote: true) do |f|
 
   fieldset
     legend
@@ -10,7 +10,7 @@
 
   .form-actions
     .save_progress_block
-      = link_to "Schedule export", "#", class: "button js-main-menu-confirm-action"
+      = f.submit "Schedule export", class: "button js-main-menu-submit-action"
       .js-workbasket-base-save-progress-spinner.spinner_block.hidden
         = render "measures/bulks/loading_spinner", message: "Saving..."
 
