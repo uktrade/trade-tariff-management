@@ -66,11 +66,19 @@ window.MainMenuInteractions =
   scheduleExportToCdsFormInit: () ->
     $('.date-picker').each ->
       field = $(this)
+      currentValue = field.val()
 
-      new Pikaday(
+      if currentValue == '' || currentValue == undefined
+        currentValue = moment(new Date()).add(1,'days')
+      else
+        currentValue = moment(currentValue, 'DD/MM/YYYY');
+
+      picker = new Pikaday(
         field: $(this)[0]
         format: 'DD/MM/YYYY'
         blurFieldOnSelect: true
+        defaultDate: currentValue.toDate()
+        setDefaultDate: true
         onSelect: ->
           $(this).trigger 'change'
           return false

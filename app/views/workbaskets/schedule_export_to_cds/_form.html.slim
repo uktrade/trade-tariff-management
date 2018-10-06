@@ -6,7 +6,7 @@
 
     label.form-label
       span.form-hint
-    input.date-picker.form-control autocomplete="off" name="export_date" data-behaviour="datepicker"
+    input.date-picker.form-control autocomplete="off" name="export_date" data-behaviour="datepicker" value="#{workbasket.operation_date.try(:strftime, '%d/%m/%Y')}"
 
   .form-actions
     .save_progress_block
