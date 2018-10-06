@@ -19,7 +19,7 @@ module Workbaskets
     end
 
     def user_name
-      user.full_name
+      user.name
     end
   end
 end

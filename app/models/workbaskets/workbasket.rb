@@ -220,11 +220,11 @@ module Workbaskets
     end
 
     def author_name
-      user.full_name
+      user.name
     end
 
     def ordered_events
-      events.all.sort do |a, b|
+      events.sort do |a, b|
         a.created_at <=> b.created_at
       end
     end
