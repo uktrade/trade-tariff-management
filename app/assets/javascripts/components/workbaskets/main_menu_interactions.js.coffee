@@ -79,6 +79,7 @@ window.MainMenuInteractions =
         blurFieldOnSelect: true
         defaultDate: currentValue.toDate()
         setDefaultDate: true
+        minDate: moment().toDate()
         onSelect: ->
           $(this).trigger 'change'
           return false
