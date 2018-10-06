@@ -19,7 +19,7 @@ header
     = render "workbaskets/create_measures/workflow_screens_parts/workbasket_details"
 
     - if workbasket_rejected?
-      = link_to "Edit measures", "#", class: "secondary-button"
+      = link_to "Edit measures", "#", class: "secondary-button view-workbasket-edit-measures-link"
 
     - if workbasket_awaiting_cross_check_or_rejected?
       = render "workbaskets/create_measures/workflow_screens_parts/summary_of_configuration"
