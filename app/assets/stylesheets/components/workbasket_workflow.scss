@@ -1,0 +1,14 @@
+.view-workbasket-container {
+  overflow: hidden;
+  margin-bottom: 50px;
+
+  .view-workbasket-actions-allowed {
+    overflow: hidden;
+    margin-top: 40px;
+    margin-bottom: -13px;
+
+    .button {
+      margin-bottom: 13px;
+    }
+  }
+}

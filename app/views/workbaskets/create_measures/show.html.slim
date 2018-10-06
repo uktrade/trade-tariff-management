@@ -13,15 +13,16 @@ header
   h1.heading-large
     | View measures workbasket
 
-  = render "workbaskets/create_measures/workflow_screens_parts/notifications/#{workbasket.status}"
-  = render "workbaskets/create_measures/workflow_screens_parts/actions_allowed"
-  = render "workbaskets/create_measures/workflow_screens_parts/workbasket_details"
+  .view-workbasket-container
+    = render "workbaskets/create_measures/workflow_screens_parts/notifications/#{workbasket.status}"
+    = render "workbaskets/create_measures/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/create_measures/workflow_screens_parts/workbasket_details"
 
-  - if workbasket_rejected?
-    = link_to "Edit measures", "#"
-    = render "workbaskets/create_measures/workflow_screens_parts/summary_of_configuration"
+    - if workbasket_rejected?
+      = link_to "Edit measures", "#"
+      = render "workbaskets/create_measures/workflow_screens_parts/summary_of_configuration"
 
-  = render "workbaskets/shared/steps/review_and_submit/measures", read_only: true, record_type: 'create_measures'
+    = render "workbaskets/shared/steps/review_and_submit/measures", read_only: true, record_type: 'create_measures'
 
 
 
