@@ -23,8 +23,9 @@ window.MainMenuInteractions =
       target_url = $(this).data("target-url")
       confirm_link = $("#main-menu-withdraw_confirmation_popup .js-main-menu-confirm-action")
       confirm_link.attr('href', target_url)
+      confirm_link.attr('data-method', 'get')
 
-      MainMenuInteractions.setSpinnerText("main-menu-delete_confirmation_popup", "Processing")
+      MainMenuInteractions.setSpinnerText("main-menu-withdraw_confirmation_popup", "Processing")
       MainMenuInteractions.openModal('main-menu-withdraw_confirmation_popup')
 
       return false
@@ -32,8 +33,8 @@ window.MainMenuInteractions =
   handleConfirmationLink: () ->
     $(document).on 'click', '.js-main-menu-confirm-action', ->
       $(this).addClass('hidden')
-      spinner = $(".js-workbasket-base-save-progress-spinner")
-      spinner.removeClass('hidden')
+      $(".js-workbasket-base-save-progress-spinner").removeClass('hidden')
+      $(".js-main-menu-close-confirmation-popup").addClass('disabled')
 
       return false
 
@@ -53,6 +54,8 @@ window.MainMenuInteractions =
       confirm_link = $(element)
       confirm_link.attr('href', '')
       confirm_link.removeAttr('data-method')
+
+    $(".js-main-menu-close-confirmation-popup").removeClass('disabled')
 
     MicroModal.close(popup_id)
     return false
