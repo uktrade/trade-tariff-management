@@ -90,6 +90,13 @@ module Workbaskets
       end
     end
 
+    def move_to_editing_mode
+      workbasket.status = "editing"
+      workbasket.save
+
+      redirect_to initial_step_url
+    end
+
     private
 
       def require_step_declaration_in_params!
@@ -100,7 +107,7 @@ module Workbaskets
       end
 
       def status_check!
-        unless workbasket.new_in_progress?
+        if !(workbasket.new_in_progress? || workbasket.editing?)
           redirect_to read_only_section_url
           return false
         end

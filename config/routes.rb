@@ -107,6 +107,7 @@ Rails.application.routes.draw do
     resources :create_measures, only: [:new, :show, :edit, :update] do
       member do
         get :submitted_for_cross_check
+        get :move_to_editing_mode
       end
     end
 
