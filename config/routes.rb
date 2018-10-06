@@ -82,29 +82,7 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
-    resources :create_additional_code, only: [:new, :show, :edit, :update] do
-      member do
-        get :submitted_for_cross_check
-      end
-    end
-
-    resources :create_regulation, only: [:new, :show, :edit, :update] do
-      member do
-        put :attach_pdf
-      end
-    end
-
-    resources :create_geographical_area, only: [:new, :show, :edit, :update] do
-      member do
-        post :validate_group_memberships
-        post :validate_country_or_region_memberhips
-        post :validate_membership
-
-        get :submitted_for_cross_check
-      end
-    end
-
-    resources :create_measures, only: [:new, :show, :edit, :update] do
+    resources :create_additional_code, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
         get :move_to_editing_mode
@@ -112,9 +90,41 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :create_quota, only: [:new, :show, :edit, :update] do
+    resources :create_regulation, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        put :attach_pdf
+
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :widthdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :create_geographical_area, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        post :validate_group_memberships
+        post :validate_country_or_region_memberhips
+        post :validate_membership
+
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :widthdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :create_measures, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :widthdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :create_quota, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :widthdraw_workbasket_from_workflow
       end
     end
   end

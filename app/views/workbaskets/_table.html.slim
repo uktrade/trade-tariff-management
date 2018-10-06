@@ -52,9 +52,14 @@ table.table
           - else
             = link_to "View", workbasket_view_link_based_on_type(workbasket)
 
-          - if current_user.author_of_workbasket?(workbasket) && workbasket.can_withdraw?
-            | &nbsp;|&nbsp;
-            = link_to "Withdraw/edit", widthdraw_workbasket_from_workflow_create_measure_url(workbasket.id)
+          - if current_user.author_of_workbasket?(workbasket)
+            - if workbasket.can_withdraw?
+              | &nbsp;|&nbsp;
+              = link_to "Withdraw/edit", widthdraw_workbasket_from_workflow_create_measure_url(workbasket.id)
+
+            - elsif workbasket.new_in_progress?
+              | &nbsp;|&nbsp;
+              = link_to "Delete", workbasket_view_link_based_on_type(workbasket), method: :delete
 
         - if false
           td

@@ -89,6 +89,12 @@ module Workbaskets
       end
     end
 
+    def destroy
+      workbasket.clean_up_workbasket!
+
+      redirect_to root_url
+    end
+
     def move_to_editing_mode
       workbasket.status = "editing"
       workbasket.save

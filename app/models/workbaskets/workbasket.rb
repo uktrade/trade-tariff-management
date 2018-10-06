@@ -230,7 +230,7 @@ module Workbaskets
     end
 
     def submitted?
-      !status.to_sym.in? [:new_in_progress, :editing]
+      !editable?
     end
 
     def can_withdraw?

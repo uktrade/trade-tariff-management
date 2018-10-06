@@ -12,6 +12,14 @@ class User < Sequel::Model
                                   class_name: "Workbaskets::Event"
 
   dataset_module do
+    def approvers
+      where(approver_user: true)
+    end
+
+    def managers
+      where(approver_user: false)
+    end
+
     def q_search(filter_ops)
       q_rule = "#{filter_ops[:q]}%"
 
