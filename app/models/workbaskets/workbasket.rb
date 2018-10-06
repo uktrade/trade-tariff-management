@@ -81,6 +81,11 @@ module Workbaskets
       :cds_error
     ]
 
+    APPROVER_SCOPE = [
+      :awaiting_cross_check,
+      :awaiting_approval
+    ]
+
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
 
@@ -150,8 +155,18 @@ module Workbaskets
         end
       end
 
-      def for_author(current_user)
-        where(user_id: current_user.id)
+      def relevant_for_manager(current_user)
+        if current_user.approver?
+          where(
+            "user_id = ? OR status = ?",
+            current_user.id, "awaiting_cross_check"
+          )
+        else
+          where(
+            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval')",
+            current_user.id
+          )
+        end
       end
 
       def q_search(keyword)
