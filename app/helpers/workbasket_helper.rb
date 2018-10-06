@@ -188,25 +188,4 @@ module WorkbasketHelper
       create_additional_code_url(workbasket.id)
     end
   end
-
-  def event_date(date)
-    date.created_at
-        .strftime("%d %B %Y")
-  end
-
-  def workbasket_rejected?
-    workbasket.cross_check_rejected? ||
-    workbasket.approval_rejected?
-  end
-
-  def workbasket_awaiting_cross_check_or_rejected?
-    workbasket.awaiting_cross_check? ||
-    workbasket.cross_check_rejected?
-  end
-
-  def workbasket_view_show_actions_allowed?
-    workbasket.awaiting_cross_check? ||
-    workbasket.ready_for_approval? ||
-    workbasket.ready_for_export?
-  end
 end
