@@ -11,7 +11,6 @@ module Workbaskets
     before_action :clean_up_persisted_data_on_update!,
                   :handle_submit_for_cross_check!, only: [:update]
 
-
     expose(:workbasket_settings) do
       workbasket.settings
     end
@@ -111,7 +110,7 @@ module Workbaskets
       end
 
       def status_check!
-        if !(workbasket.new_in_progress? || workbasket.editing?)
+        unless workbasket.editable?
           redirect_to read_only_section_url
           return false
         end

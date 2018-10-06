@@ -47,7 +47,7 @@ table.table
         td
           = workbasket.last_event_at
         td
-          - if workbasket.new_in_progress?
+          - if workbasket.editable?
             = link_to "Continue", workbasket_continue_link_based_on_type(workbasket)
           - else
             = link_to "View", workbasket_view_link_based_on_type(workbasket)

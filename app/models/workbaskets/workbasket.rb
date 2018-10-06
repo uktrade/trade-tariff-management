@@ -66,8 +66,7 @@ module Workbaskets
 
     EDITABLE_STATES = [
       :new_in_progress,  # "New - in progress"
-      :editing,          # "Editing"
-      :approval_rejected # "Approval rejected"
+      :editing          # "Editing"
     ]
 
     SENT_TO_CDS_STATES = [
