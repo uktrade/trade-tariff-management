@@ -47,19 +47,7 @@ table.table
         td
           = workbasket.last_event_at
         td
-          - if current_user.author_of_workbasket?(workbasket) && workbasket.editable?
-            = link_to "Continue", workbasket_continue_link_based_on_type(workbasket)
-          - else
-            = link_to "View", workbasket_view_link_based_on_type(workbasket)
-
-          - if current_user.author_of_workbasket?(workbasket)
-            - if workbasket.can_withdraw?
-              | &nbsp;|&nbsp;
-              = link_to "Withdraw/edit", "#", data: { target_url: withdraw_workbasket_from_workflow_create_measure_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
-
-            - elsif workbasket.new_in_progress?
-              | &nbsp;|&nbsp;
-              = link_to "Delete", "#", data: { target_url: workbasket_view_link_based_on_type(workbasket) }, class: "js-main-menu-show-delete-confirmation-link"
+          = render "workbaskets/main_menu_parts/actions", workbasket: workbasket
 
         - if false
           td

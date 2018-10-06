@@ -114,6 +114,14 @@ module Workbaskets
                        foreign_key: :id,
                        class_name: "User"
 
+    many_to_one :cross_checker, key: :cross_checker_id,
+                                foreign_key: :id,
+                                class_name: "User"
+
+    many_to_one :approver, key: :approver_id,
+                           foreign_key: :id,
+                           class_name: "User"
+
     many_to_one :last_update_by, key: :last_update_by_id,
                                  foreign_key: :id,
                                  class_name: "User"
@@ -225,16 +233,28 @@ module Workbaskets
       Workbaskets::WorkbasketDecorator.decorate(self)
     end
 
-    def editable?
-      status.to_sym.in?(EDITABLE_STATES)
-    end
+    begin :workflow_related_helpers
+      def editable?
+        status.to_sym.in?(EDITABLE_STATES)
+      end
 
-    def submitted?
-      !editable?
-    end
+      def submitted?
+        !editable?
+      end
 
-    def can_withdraw?
-      awaiting_cross_check? || awaiting_approval?
+      def can_withdraw?
+        awaiting_cross_check? || awaiting_approval?
+      end
+
+      def cross_check_process_can_be_started?
+        awaiting_cross_check? &&
+        cross_checker_id.blank?
+      end
+
+      def approve_process_can_be_started?
+        awaiting_approval? &&
+        approver_id.blank?
+      end
     end
 
     def author_name
