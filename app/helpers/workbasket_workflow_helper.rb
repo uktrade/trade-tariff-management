@@ -25,4 +25,8 @@ module WorkbasketWorkflowHelper
       workbasket.status.to_sym
     )
   end
+
+  def iam_workbasket_author?
+    workbasket.user_id == current_user.id
+  end
 end

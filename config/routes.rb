@@ -108,6 +108,7 @@ Rails.application.routes.draw do
       member do
         get :submitted_for_cross_check
         get :move_to_editing_mode
+        get :widthdraw_workbasket_from_workflow
       end
     end
 

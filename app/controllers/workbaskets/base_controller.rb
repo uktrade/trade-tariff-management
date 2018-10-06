@@ -97,6 +97,10 @@ module Workbaskets
       redirect_to initial_step_url
     end
 
+    def widthdraw_workbasket_from_workflow
+      move_to_editing_mode
+    end
+
     private
 
       def require_step_declaration_in_params!

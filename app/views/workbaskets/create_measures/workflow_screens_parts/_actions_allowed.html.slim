@@ -1,7 +1,8 @@
 - if workbasket_view_show_actions_allowed?
   .view-workbasket-actions-allowed
-    - if workbasket.awaiting_cross_check?
-      = link_to "Withdraw workbasket from workflow", "#", class: "button"
+    - if iam_workbasket_author? && workbasket.awaiting_cross_check?
+      = link_to "Withdraw workbasket from workflow", widthdraw_workbasket_from_workflow_create_measure_url(workbasket.id),
+                                                     class: "button"
       br
 
     - if workbasket.ready_for_approval?
