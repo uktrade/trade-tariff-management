@@ -3,6 +3,7 @@ window.MainMenuInteractions =
   init: () ->
     MainMenuInteractions.deleteWorkbasketConfirmationPopupInit();
     MainMenuInteractions.withdrawWorkbasketConfirmationPopupInit();
+    MainMenuInteractions.closeConfirmationPopup();
 
   deleteWorkbasketConfirmationPopupInit: () ->
     $(document).on 'click', '.js-main-menu-show-delete-confirmation-link', ->
@@ -25,14 +26,22 @@ window.MainMenuInteractions =
 
       return false
 
+  closeConfirmationPopup: () ->
+    $(document).on 'click', '.js-main-menu-close-confirmation-popup', ->
+      popup_id = $(this).data('popup-id')
+      MainMenuInteractions.closePopup(popup_id)
+
+      return false
+
   openModal: (popup_id) ->
     MicroModal.show(popup_id)
     return false
 
   closePopup: (popup_id) ->
-    confirm_link = $("#" + popup_id + " .js-main-menu-confirm-action")
-    confirm_link.attr('href', '')
-    confirm_link.removeAttr('data-method')
+    $.each $(".js-main-menu-confirm-action"), (index, element) ->
+      confirm_link = $(element)
+      confirm_link.attr('href', '')
+      confirm_link.removeAttr('data-method')
 
     MicroModal.close(popup_id)
     return false

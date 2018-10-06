@@ -11,8 +11,7 @@
           div
             p Are you sure?
 
-          .form-actions.hidden
+          .form-actions
             = link_to "Confirm", "#", class: "button js-main-menu-confirm-action"
-
-            a.secondary-button href="#" onClick="MainMenuInteractions.closePopup('#{modal_id}');"
-              | Cancel
+            = link_to "Cancel", "#", class: "secondary-button js-main-menu-close-confirmation-popup",
+                                     data: { popup_id: modal_id }
