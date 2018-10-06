@@ -11,6 +11,8 @@ module Workbaskets
     before_action :clean_up_persisted_data_on_update!,
                   :handle_submit_for_cross_check!, only: [:update]
 
+    before_action :require_workbasket_to_be_new_in_progress!, only: [:destroy]
+
     expose(:workbasket_settings) do
       workbasket.settings
     end
@@ -111,6 +113,13 @@ module Workbaskets
       def require_step_declaration_in_params!
         if current_step.blank?
           redirect_to initial_step_url
+          return false
+        end
+      end
+
+      def require_workbasket_to_be_new_in_progress!
+        unless workbasket.new_in_progress?
+          redirect_to root_url
           return false
         end
       end
