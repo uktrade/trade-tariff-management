@@ -2,9 +2,18 @@ module WorkbasketInteractions
   module Workflow
     class CrossCheck
 
+      ALLOWED_OPS = %w(
+        mode
+        submit_for_approval
+        reject_reasons
+      )
+
       attr_accessor :params,
                     :current_user,
                     :workbasket,
+                    :mode,
+                    :submit_for_approval,
+                    :reject_reasons,
                     :errors
 
       def initialize(current_user, workbasket, params={})
@@ -15,19 +24,22 @@ module WorkbasketInteractions
         @errors = {}
       end
 
-      def valid?
-        if approve_mode?
-          approve
-        else
-          reject
+      ALLOWED_OPS.map do |option_name|
+        define_method(option_name) do
+          settings[option_name]
         end
+      end
+
+      def valid?
+        check_mode!
+        check_reject_ops! if reject_mode?
       end
 
       def persist!
         if approve_mode?
-          approve
+          approve!
         else
-          reject
+          reject!
         end
       end
 
@@ -37,7 +49,11 @@ module WorkbasketInteractions
           params[:mode] == "approve"
         end
 
-        def approve
+        def reject_mode?
+          params[:mode] == "reject"
+        end
+
+        def approve!
           if workbasket.move_status_to!(
               current_user,
               :ready_for_approval
@@ -45,12 +61,28 @@ module WorkbasketInteractions
           end
         end
 
-        def reject
+        def reject!
           workbasket.move_status_to!(
             current_user,
             :cross_check_rejected,
             params[:reject_reasons]
           )
+        end
+
+        def check_mode!
+          if mode.blank? || (mode.present? && mode == "on")
+            @errors[:mode] = errors_translator(:mode_blank)
+          end
+        end
+
+        def check_reject_ops!
+          if reject_reasons.blank?
+            @errors[:mode] = errors_translator(:reject_reasons_blank)
+          end
+        end
+
+        def errors_translator(key)
+          I18n.t(:cross_check)[:errors][key]
         end
     end
   end
