@@ -85,6 +85,10 @@ Rails.application.routes.draw do
     resources :workbaskets, only: [] do
       member do
         resource :schedule_export_to_cds, only: [:new, :create]
+        resource :cross_check, only: [:new] do
+          post :approve
+          post :reject
+        end
       end
     end
 
