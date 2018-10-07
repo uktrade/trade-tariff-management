@@ -5,8 +5,7 @@ Vue.component("cross-check-decision", {
     "cross_check"
   ],
   data: function() {
-    var data = {
-    };
+    var data = {};
 
     return data;
   },
@@ -23,7 +22,7 @@ Vue.component("cross-check-decision", {
       self.cross_check.selected = radio.is(":checked");
     });
 
-    if (!$.isEmptyObject(window.__cross_check_json) {
+    if (!$.isEmptyObject(window.__cross_check_json)) {
       selected_mode = window.__cross_check_json.mode;
 
       if (selected_mode.length > 0) {

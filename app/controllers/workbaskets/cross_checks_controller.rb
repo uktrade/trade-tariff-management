@@ -1,6 +1,10 @@
 module Workbaskets
   class CrossChecksController < Workbaskets::WorkflowBaseController
 
+    expose(:form) do
+      WorkbasketForms::CrossCheckForm.new
+    end
+
     def create
       if params[:mode] == "approve"
         approve
