@@ -11,8 +11,8 @@ module Workbaskets
       workbasket.settings
     end
 
-    def attributes_parser
-      "::WorkbasketValueObjects::#{workbasket.class}::AttributesParser".constantize.new(
+    expose(:attributes_parser) do
+      "::WorkbasketValueObjects::#{workbasket.class_name}::AttributesParser".constantize.new(
         workbasket_settings,
         :review_and_submit
       )

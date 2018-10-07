@@ -241,6 +241,12 @@ module Workbaskets
       end
     end
 
+    def class_name
+      type.split('_')
+          .map(&:capitalize)
+          .join('')
+    end
+
     def decorate
       Workbaskets::WorkbasketDecorator.decorate(self)
     end
