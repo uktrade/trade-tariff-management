@@ -86,6 +86,18 @@ module Workbaskets
       :awaiting_approval
     ]
 
+    CREATE_WORKBASKETS = %w(
+      create_measures
+      create_quota
+      create_regulation
+      create_geographical_area
+      create_additional_code
+    )
+
+    EDIT_WORKABSKETS = %w(
+      bulk_edit_of_measures
+    )
+
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
 
@@ -234,6 +246,14 @@ module Workbaskets
     end
 
     begin :workflow_related_helpers
+      def edit_type?
+        EDIT_WORKABSKETS.include?(type)
+      end
+
+      def possible_approved_status
+        edit_type? ? "awaiting_cds_upload_edit" : "awaiting_cds_upload_create_new"
+      end
+
       def editable?
         status.to_sym.in?(EDITABLE_STATES)
       end

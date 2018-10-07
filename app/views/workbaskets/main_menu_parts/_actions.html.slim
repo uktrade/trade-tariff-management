@@ -18,12 +18,12 @@
 
   - if workbasket.cross_check_process_can_be_started?
     | &nbsp;|&nbsp;
-    = link_to "Review for cross-check", "#"
+    = link_to "Review for cross-check", new_cross_check_url(workbasket.id)
 
   - if current_user.approver?
     - if workbasket.approve_process_can_be_started?
       | &nbsp;|&nbsp;
-      = link_to "Review for approval", "#"
+      = link_to "Review for approval", new_approve_url(workbasket.id)
 
     - elsif workbasket.ready_for_export?
       | &nbsp;|&nbsp;

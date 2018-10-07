@@ -89,6 +89,10 @@ Rails.application.routes.draw do
           post :approve
           post :reject
         end
+        resource :approve, only: [:new] do
+          post :approve
+          post :reject
+        end
       end
     end
 
