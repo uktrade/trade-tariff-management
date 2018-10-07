@@ -86,10 +86,7 @@ Rails.application.routes.draw do
       member do
         resource :schedule_export_to_cds, only: [:new, :create]
         resource :cross_check, only: [:new, :create, :show]
-        resource :approve, only: [:new] do
-          post :approve
-          post :reject
-        end
+        resource :approve, only: [:new, :create, :show]
       end
     end
 

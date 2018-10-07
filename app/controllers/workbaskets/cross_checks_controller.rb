@@ -15,6 +15,10 @@ module Workbaskets
       current_user.next_workbasket_to_cross_check
     end
 
+    expose(:next_approve) do
+      current_user.next_workbasket_to_approve
+    end
+
     def create
       if cross_checker.valid?
         cross_checker.persist!
