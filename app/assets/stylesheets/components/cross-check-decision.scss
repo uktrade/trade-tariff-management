@@ -1,4 +1,6 @@
-.geographical-area-type {
+.cross-check-decision {
+  padding-left: 10px;
+
   .multiple-choice {
     float: none !important;
 
@@ -25,7 +27,7 @@
     top: 0;
   }
 
-  & + .geographical-area-type {
+  & + .cross-check-decision {
     margin-top: 12px;
   }
 
