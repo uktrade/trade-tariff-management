@@ -1,0 +1,27 @@
+module WorkbasketInteractions
+  module Workflow
+    class Approve < ::WorkbasketInteractions::Workflow::ApproveBase
+
+      private
+
+        def post_approve_action!
+          if export_date.present?
+            workbasket.operation_date = export_date.to_date
+            workbasket.save
+          end
+        end
+
+        def approve_status
+          workbasket.possible_approved_status
+        end
+
+        def reject_status
+          :approval_rejected
+        end
+
+        def blank_mode_validation_message
+          :approve_mode_blank
+        end
+    end
+  end
+end

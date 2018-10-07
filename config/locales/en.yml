@@ -71,7 +71,8 @@ en:
       validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
       operation_date_blank: "Operation date must be specified."
 
-  cross_check:
+  workflow:
     errors:
-      mode_blank: "It is required to specify if you are going to confirm or reject changes in this workbasket."
+      cross_check_mode_blank: "It is required to specify if you are going to confirm or reject changes in this workbasket."
+      approve_mode_blank: "It is required to specify if you are going to approve or reject changes in this workbasket."
       reject_reasons_blank: "Please, provide your reasons and/or state the changes required."

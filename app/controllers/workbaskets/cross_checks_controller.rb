@@ -2,6 +2,7 @@ module Workbaskets
   class CrossChecksController < Workbaskets::WorkflowBaseController
 
     before_action :require_cross_check_not_to_be_aready_started!, only: [:new]
+    before_action :check_cross_check_permissions!, only: [:create, :show]
 
     expose(:form) do
       WorkbasketForms::CrossCheckForm.new
@@ -42,6 +43,13 @@ module Workbaskets
 
       def require_cross_check_not_to_be_aready_started!
         unless workbasket.cross_check_process_can_be_started?
+          redirect_url read_only_url
+          return false
+        end
+      end
+
+      def check_cross_check_permissions!
+        unless workbasket.cross_checker_id == current_user.id
           redirect_url read_only_url
           return false
         end

@@ -1,29 +1,62 @@
 module Workbaskets
   class ApprovesController < Workbaskets::WorkflowBaseController
 
-    expose(:export_date) do
-      params[:export_date].try(:to_date)
+    before_action :require_to_be_approver!
+    before_action :require_cross_check_not_to_be_aready_started!, only: [:new]
+    before_action :check_cross_check_permissions!, only: [:create, :show]
+
+    expose(:form) do
+      WorkbasketForms::ApproveForm.new
     end
 
-    def approve
-      if workbasket.move_status_to!(
-          current_user,
-          workbasket.possible_approved_status
-        )
+    expose(:approver) do
+      ::WorkbasketInteractions::Workflow::Approve.new(
+        current_user, workbasket, params[:approve]
+      )
+    end
 
-        if export_date.present?
-          workbasket.operation_date = export_date
-          workbasket.save
-        end
+    expose(:next_approve) do
+      current_user.next_workbasket_to_approve
+    end
+
+    def new
+      workbasket.assign_approver!(current_user)
+    end
+
+    def create
+      if approver.valid?
+        approver.persist!
+
+        render json: { redirect_url: approve_url(workbasket.id) },
+                       status: :ok
+      else
+        render json: {
+          errors: approver.errors,
+        }, status: :unprocessable_entity
       end
     end
 
-    def reject
-      workbasket.move_status_to!(
-        current_user,
-        :approval_rejected,
-        params[:reasons]
-      )
-    end
+    private
+
+      def require_to_be_approver!
+        unless current_user.approver?
+          redirect_url read_only_url
+          return false
+        end
+      end
+
+      def require_cross_check_not_to_be_aready_started!
+        unless workbasket.approve_process_can_be_started?
+          redirect_url read_only_url
+          return false
+        end
+      end
+
+      def check_cross_check_permissions!
+        unless workbasket.approver_id == current_user.id
+          redirect_url read_only_url
+          return false
+        end
+      end
   end
 end
