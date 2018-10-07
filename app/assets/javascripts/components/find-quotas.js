@@ -24,6 +24,7 @@ $(document).ready(function() {
     are_not_specified: { value: "are_not_specified", label: "are not specified" },
     are_not_unspecified: { value: "are_not_unspecified", label: "are not unspecified" },
     include: { value: "include", label: "include" },
+    includes: { value: "includes", label: "includes" },
     do_not_include: { value: "do_not_include", label: "do not include" },
     are: { value: "are", label: "are" },
     is_not_specified: { value: "is_not_specified", label: "is not specified" },
@@ -42,7 +43,7 @@ $(document).ready(function() {
         columns: [
           {enabled: true, title: "Order number", field: "order_number"},
           {enabled: true, title: "Description", field: "description"},
-          {enabled: true, title: "Type", field: "measure_type_id"},
+          {enabled: true, title: "Type", field: "quota_type_id"},
           {enabled: true, title: "Starts", field: "validity_start_date"},
           {enabled: true, title: "Ends", field: "validity_end_date"},
           {enabled: true, title: "Commodity code", field: "goods_nomenclature_id"},
@@ -67,7 +68,7 @@ $(document).ready(function() {
         conditionsForValidityStartDate: [ conditions.after, conditions.before, conditions.on ],
         conditionsForValidityEndDate: [ conditions.after, conditions.before, conditions.on ],
         conditionsForStaged: [ conditions.no, conditions.yes ],
-        conditionsForCommodityCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
+        conditionsForCommodityCode: [ conditions.includes, conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForAdditionalCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
         conditionsForOrigin: [ conditions.is, conditions.is_not ],
         conditionsForOriginExclusions: [ conditions.are_not_specified, conditions.are_not_unspecified, conditions.include, conditions.do_not_include ],
@@ -80,7 +81,8 @@ $(document).ready(function() {
           conditions.is_not_specified.value,
           conditions.is_not_unspecified.value,
           conditions.are_not_specified.value,
-          conditions.are_not_unspecified.value
+          conditions.are_not_unspecified.value,
+          conditions.no.value
         ],
 
         statuses: [
@@ -104,14 +106,14 @@ $(document).ready(function() {
 
         searchCode: code,
         pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
-        selectedMeasures: JSON.parse((window.localStorage.getItem(code + "_item_ids") || "[]")),
+        selectedQuotas: JSON.parse((window.localStorage.getItem(code + "_item_ids") || "[]")),
         selectionType: window.localStorage.getItem(code + "_selection_type") || "all",
         pagination: {
           page: 1,
           total_count: 0,
           per_page: 25
         },
-        measures: [],
+        quotas: [],
         isLoading: true,
       };
 
@@ -234,19 +236,22 @@ $(document).ready(function() {
         var params = window.__search_params;
 
         var mapping = {
-          measure_sid: "measure_sid",
-          group_name: "group_name",
+          order_number: "order_number",
+          description: "description",
+          license: "license",
+          staged: "staged",
           status: "status",
           author: "author",
           date_of: "date_of",
           last_updated_by: "last_updated_by",
           regulation: "regulation",
           type: "type",
-          valid_from: "validity_start_date",
-          valid_to: "validity_end_date",
+          validity_start_date: "valid_from",
+          validity_end_date: "valid_to",
           commodity_code: "commodity_code",
           additional_code: "additional_code",
-          origin: "origin"
+          origin: "origin",
+          origin_exclusions: "origin_exclusions"
         };
 
         for (var k in mapping) {
@@ -268,9 +273,6 @@ $(document).ready(function() {
         }
 
         data.origin_exclusions.enabled = false;
-        data.conditions.enabled = false;
-        data.duties.enabled = false;
-        data.footnotes.enabled = false;
 
         if (params.origin_exclusions !== undefined) {
           data.origin_exclusions.enabled = params.origin_exclusions.enabled;
@@ -292,100 +294,14 @@ $(document).ready(function() {
             }
           }
         }
-
-        if (params.duties !== undefined) {
-          data.duties.enabled = params.duties.enabled;
-
-          if (params.duties.enabled) {
-            var d = params.duties.value;
-
-            data.duties = params.duties;
-            data.duties.value = [];
-
-            for (var k in d) {
-              if (!d.hasOwnProperty(k)) {
-                continue;
-              }
-
-              var duty = {};
-
-              for (var kk in d[k]) {
-                if (!d[k].hasOwnProperty(kk)) {
-                  continue;
-                }
-
-                duty.duty_expression_id = kk;
-                duty.duty_amount = d[k][kk];
-              }
-
-              data.duties.value.push(duty);
-            }
-          }
-        }
-
-        if (params.conditions !== undefined) {
-          data.conditions.enabled = params.conditions.enabled;
-
-          if (params.conditions.enabled) {
-            var c = params.conditions.value;
-
-            data.conditions = params.conditions;
-            data.conditions.value = [];
-
-            for (var k in c) {
-              if (!c.hasOwnProperty(k)) {
-                continue;
-              }
-
-              data.conditions.value.push({
-                measure_condition_code: c[k]
-              });
-            }
-          }
-        }
-
-        if (params.footnotes !== undefined) {
-          data.footnotes.enabled = params.footnotes.enabled;
-
-          if (params.footnotes.enabled) {
-            var f = params.footnotes.value;
-
-            data.footnotes = params.footnotes;
-            data.footnotes.value = [];
-
-            for (var k in f) {
-              if (!f.hasOwnProperty(k)) {
-                continue;
-              }
-
-              for (var kk in f[k]) {
-                if (!f[k].hasOwnProperty(kk)) {
-                  continue;
-                }
-
-                data.footnotes.value.push({
-                  footnote_type_id: kk,
-                  footnote_id: f[k][kk]
-                });
-              }
-            }
-
-            if (data.footnotes.value.length === 0) {
-              data.footnotes.value.push({
-                footnote_type_id: null,
-                footnote_id: null
-              });
-            }
-          }
-        }
       }
 
       return data;
     },
     computed: {
-      noSelectedMeasures: function() {
-        return (this.selectionType == "all" && this.selectedMeasures.length === this.pagination.total_count) ||
-               (this.selectionType == "none" && this.selectedMeasures.length === 0);
+      noSelectedQuotas: function() {
+        return (this.selectionType == "all" && this.selectedQuotas.length === this.pagination.total_count) ||
+               (this.selectionType == "none" && this.selectedQuotas.length === 0);
       },
 
       validityStartDateValueDisabled: function() {
@@ -397,70 +313,42 @@ $(document).ready(function() {
       commodityCodeValueDisabled: function() {
         return this.disableValue.indexOf(this.commodity_code.operator) > -1;
       },
-      conditionsValueDisabled: function() {
-        return this.disableValue.indexOf(this.conditions.operator) > -1;
-      },
-      footnotesValueDisabled: function() {
-        return this.disableValue.indexOf(this.footnotes.operator) > -1;
-      },
       exclusionsValueDisabled: function () {
         return this.disableValue.indexOf(this.origin_exclusions.operator) > -1;
+      },
+      licenseValueDisabled: function () {
+        return this.disableValue.indexOf(this.license.operator) > -1;
       }
     },
     methods: {
-      footnotesIdDisabled: function(index) {
-        return this.footnotesValueDisabled || !this.footnotes.value[index].footnote_type_id;
-      },
-      dutyExpressionAmountDisabled: function(index) {
-        return !this.duties.value[index].duty_expression_id;
-      },
       addOriginExclusion: function() {
         this.origin_exclusions.value.push({ value: '' });
       },
-      addDuty: function() {
-        this.duties.value.push({
-          duty_expression_id: null
-        });
-      },
-      addFootnote: function() {
-        this.footnotes.value.push({
-          footnote_type_id: null,
-          footnote_id: null
-        });
-      },
-      addCondition: function() {
-        this.conditions.value.push({
-          measure_condition_code: null
-        });
-      },
-      onMeasuresSelected: function(sid) {
+      onQuotasSelected: function(sid) {
         if (this.selectionType !== "none") {
-          var index = this.selectedMeasures.indexOf(sid);
+          var index = this.selectedQuotas.indexOf(sid);
 
           if (index === -1) {
             return;
           }
 
-          this.selectedMeasures.splice(index, 1);
+          this.selectedQuotas.splice(index, 1);
         } else {
-          this.selectedMeasures.push(sid);
+          this.selectedQuotas.push(sid);
         }
       },
-      onMeasuresDeselected: function(sid) {
+      onQuotasDeselected: function(sid) {
         if (this.selectionType != "none") {
-          this.selectedMeasures.push(sid);
+          this.selectedQuotas.push(sid);
         } else {
-          var index = this.selectedMeasures.indexOf(sid);
+          var index = this.selectedQuotas.indexOf(sid);
 
           if (index === -1) {
             return;
           }
 
-          this.selectedMeasures.splice(index, 1);
+          this.selectedQuotas.splice(index, 1);
         }
-      },
-      expressionsFriendlyDuplicate: function(options) {
-        return DutyExpressionsParser.parse(options);
       },
       onPageChange: function(page) {
         var self = this;
@@ -471,19 +359,19 @@ $(document).ready(function() {
 
         var newQueryString = "?search_code=" + params.search_code + "&page=" + params.page;
 
-        window.history.pushState(params, "Find a measure - Page " + page, newQueryString);
+        window.history.pushState(params, "Find a quota - Page " + page, newQueryString);
 
-        this.loadMeasures(function() {
+        this.loadQuotas(function() {
           self.scrollUp();
         });
       },
-      loadMeasures: function(callback) {
+      loadQuotas: function(callback) {
         var self = this;
 
         this.isLoading = true;
 
         $.get(window.location.href).success(function(data) {
-          self.measures = data.collection;
+          self.quotas = data.collection;
           self.isLoading = false;
 
           if (callback) {
@@ -506,7 +394,7 @@ $(document).ready(function() {
 
         setTimeout(function() {
           $("html,body").animate({
-            scrollTop: $(".measures-table-wrapper").offset().top - 200
+            scrollTop: $(".quotas-table-wrapper").offset().top - 200
           });
         }, 200);
       },
@@ -522,75 +410,48 @@ $(document).ready(function() {
           this.origin_exclusions.enabled = true;
         }
       },
-      dutyChanged: function() {
-        var selected = any(this.duties.value, function(oe) {
-          return oe.duty_expression_id || oe.duty_amount;
-        });
-
-        if (selected) {
-          this.duties.enabled = true;
-        }
-      },
-      conditionChanged: function() {
-        var selected = any(this.conditions.value, function(oe) {
-          return oe.measure_condition_code;
-        });
-
-        if (selected) {
-          this.conditions.enabled = true;
-        }
-      },
-      footnoteChanged: function() {
-        var selected = any(this.footnotes.value, function(oe) {
-          return oe.footnote_type_id || oe.footnote_id;
-        });
-
-        if (selected) {
-          this.footnotes.enabled = true;
-        }
-      },
     },
     mounted: function() {
       var self = this;
 
       if (window.__search_params) {
-        this.loadMeasures();
+        this.loadQuotas();
       }
 
       window.onpopstate = function(event) {
         self.scrollUp();
-        self.loadMeasures();
+        self.loadQuotas();
       };
     },
     watch: {
       pagesLoaded: function(newVal) {
         window.localStorage.setItem(this.searchCode + "_pages", JSON.stringify(newVal));
       },
-      selectedMeasures: function(newVal, oldVal) {
-        window.localStorage.setItem(this.searchCode + "_measure_sids", JSON.stringify(newVal));
+      selectedQuotas: function(newVal, oldVal) {
+        window.localStorage.setItem(this.searchCode + "_quota_sids", JSON.stringify(newVal));
       },
       selectionType: function(val) {
-        this.selectedMeasures.splice(0, this.selectedMeasures.length);
+        this.selectedQuotas.splice(0, this.selectedQuotas.length);
         window.localStorage.setItem(this.searchCode + "_selection_type", val);
       },
-      "measure_sid.operator": function(val) {
+      "order_number.operator": function(val) {
         if (val) {
-          this.measure_sid.enabled = true;
+          this.order_number.enabled = true;
         }
       },
-      "measure_sid.value": function(val) {
+      "order_number.value": function(val) {
         if (val) {
-          this.measure_sid.enabled = true;
+          this.order_number.enabled = true;
         }
       },
-      "group_name.operator": function(val) {
+      "description.operator": function(val) {
         if (val) {
-          this.group_name.enabled = true;
+          this.description.enabled = true;
         }
       },
-      "group_name.value": function(val) {
+      "description.value": function(val) {
         if (val) {
-          this.group_name.enabled = true;
+          this.description.enabled = true;
         }
       },
       "type.operator": function(val) {
@@ -611,21 +472,6 @@ $(document).ready(function() {
       "regulation.value": function(val) {
         if (val) {
           this.regulation.enabled = true;
-        }
-      },
-      "date_of.mode": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
-      "date_of.operator": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
-      "date_of.value": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
         }
       },
       "validity_start_date.operator": function(val) {
@@ -688,34 +534,24 @@ $(document).ready(function() {
           this.origin_exclusions.enabled = true;
         }
       },
-      "duties.operator": function(val) {
+      "license.operator": function(val) {
         if (val) {
-          this.duties.enabled = true;
+          this.license.enabled = true;
         }
       },
-      "duties.value": function(val) {
+      "license.value": function(val) {
         if (val) {
-          this.duties.enabled = true;
+          this.license.enabled = true;
         }
       },
-      "conditions.operator": function(val) {
+      "staged.operator": function(val) {
         if (val) {
-          this.conditions.enabled = true;
+          this.staged.enabled = true;
         }
       },
-      "condition.value": function(val) {
+      "staged.value": function(val) {
         if (val) {
-          this.condition.enabled = true;
-        }
-      },
-      "footnotes.operator": function(val) {
-        if (val) {
-          this.footnotes.enabled = true;
-        }
-      },
-      "footnotes.value": function(val) {
-        if (val) {
-          this.footnotes.enabled = true;
+          this.staged.enabled = true;
         }
       },
       "status.operator": function(val) {
@@ -752,7 +588,7 @@ $(document).ready(function() {
         if (val) {
           this.last_updated_by.enabled = true;
         }
-      },
+      }
     }
   });
 });

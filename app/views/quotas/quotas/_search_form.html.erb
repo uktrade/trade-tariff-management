@@ -53,7 +53,7 @@
       <custom-select :options="conditionsForType" label-field="label" value-field="value"  v-model="type.operator" name="search[type][operator]"></custom-select>
     </div>
     <div class="find-item__short">
-      <custom-select url="/measure_types?quota=false" code-field="measure_type_id" label-field="description" value-field="measure_type_id" code-class-name="prefix--measure-type"  placeholder="― start typing ―" min-length="1" v-model="type.value" name="search[type][value]"></custom-select>
+      <custom-select url="/measure_types?quota=true" code-field="measure_type_id" label-field="description" value-field="measure_type_id" code-class-name="prefix--measure-type"  placeholder="― start typing ―" min-length="1" v-model="type.value" name="search[type][value]"></custom-select>
     </div>
   </div>
   <div class="find-items__row">
@@ -90,7 +90,7 @@
       </span>
     </div>
     <div class="find-item__short">
-      <custom-select url="/certificates" code-field="certificate_code" label-field="description" value-field="certificate_code" code-class-name="prefix--certificate-code"  placeholder="― start typing ―" min-length="1" v-model="license.value" name="search[type][value]"></custom-select>
+      <custom-select url="/certificates" code-field="certificate_code" label-field="description" value-field="certificate_code" code-class-name="prefix--certificate-code"  placeholder="― start typing ―" min-length="1" v-model="license.value" name="search[type][value]" v-bind:disabled="licenseValueDisabled"></custom-select>
     </div>
   </div>
   <div class="find-items__row">
