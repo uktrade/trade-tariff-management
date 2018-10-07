@@ -21,5 +21,30 @@ module Workbaskets
     expose(:read_only_url) do
       public_send("#{workbasket.type}_url", workbasket.id)
     end
+
+    expose(:form) do
+      WorkbasketForms::WorkflowForm.new
+    end
+
+    expose(:next_cross_check) do
+      current_user.next_workbasket_to_cross_check
+    end
+
+    expose(:next_approve) do
+      current_user.next_workbasket_to_approve
+    end
+
+    def create
+      if checker.valid?
+        checker.persist!
+
+        render json: { redirect_url: check_completed_url },
+                       status: :ok
+      else
+        render json: {
+          errors: checker.errors,
+        }, status: :unprocessable_entity
+      end
+    end
   end
 end

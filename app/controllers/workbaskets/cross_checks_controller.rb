@@ -4,39 +4,18 @@ module Workbaskets
     before_action :require_cross_check_not_to_be_aready_started!, only: [:new]
     before_action :check_cross_check_permissions!, only: [:create, :show]
 
-    expose(:form) do
-      WorkbasketForms::CrossCheckForm.new
-    end
-
-    expose(:cross_checker) do
+    expose(:checker) do
       ::WorkbasketInteractions::Workflow::CrossCheck.new(
         current_user, workbasket, params[:cross_check]
       )
     end
 
-    expose(:next_cross_check) do
-      current_user.next_workbasket_to_cross_check
-    end
-
-    expose(:next_approve) do
-      current_user.next_workbasket_to_approve
+    expose(:check_completed_url) do
+      cross_check_url(workbasket.id)
     end
 
     def new
-      workbasket.assign_cross_checker!(current_user)
-    end
-
-    def create
-      if cross_checker.valid?
-        cross_checker.persist!
-
-        render json: { redirect_url: cross_check_url(workbasket.id) },
-                       status: :ok
-      else
-        render json: {
-          errors: cross_checker.errors,
-        }, status: :unprocessable_entity
-      end
+      workbasket.assign_checker!(current_user)
     end
 
     private
@@ -49,7 +28,7 @@ module Workbaskets
       end
 
       def check_cross_check_permissions!
-        unless workbasket.cross_checker_id == current_user.id
+        unless workbasket.checker_id == current_user.id
           redirect_url read_only_url
           return false
         end

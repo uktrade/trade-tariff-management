@@ -1,11 +1,12 @@
 module WorkbasketForms
-  class CrossCheckForm
+  class WorkflowForm
 
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
     attr_accessor :mode,
                   :submit_for_approval,
-                  :reject_reasons
+                  :reject_reasons,
+                  :export_date
   end
 end
