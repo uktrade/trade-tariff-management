@@ -1,0 +1,27 @@
+script
+  == "window.__cross_check_json = #{params[:cross_check].to_json};"
+
+= simple_form_for form, url: cross_check_url(workbasket.id),
+                        html: { \
+                          class: "cross_check-form create-measures-v2", \
+                          method: :post \
+                        } do |f|
+
+  fieldset
+    h3.heading-medium
+      | Confirm cross-check
+
+    form-group :errors="errors" error-key="cross_check_decision_general"
+      template slot-scope="slotProps"
+        label.form-label
+          span.error-message v-if="slotProps.hasError" v-cloak=""
+            | {{slotProps.error}}
+
+        .bootstrap-row
+          .controls
+            = content_tag "cross-check-decision", "", { kind: "approve", ":cross_check" => "types.approve" }
+            = content_tag "cross-check-decision", "", { kind: "reject", ":cross_check" => "types.reject" }
+
+  = render "workbaskets/shared/success_message", f: f
+
+  = render "workbaskets/create_geographical_area/action_links", f: f
