@@ -40,15 +40,16 @@ $(document).ready(function() {
 
       var data = {
         columns: [
-          {enabled: true, title: "Order number", field: "order_number"},
-          {enabled: true, title: "Description", field: "description"},
+          {enabled: true, title: "Order number", field: "quota_order_number_id"},
           {enabled: true, title: "Type", field: "quota_type_id"},
+          {enabled: true, title: "Regulation", field: "regulation_id"},
+          {enabled: true, title: "License", field: "license"},
           {enabled: true, title: "Starts", field: "validity_start_date"},
           {enabled: true, title: "Ends", field: "validity_end_date"},
-          {enabled: true, title: "Commodity code", field: "goods_nomenclature_id"},
-          {enabled: true, title: "Additional code", field: "additional_code_id"},
-          {enabled: true, title: "Origin", field: "geographical_area"},
-          {enabled: true, title: "Origin exclusions", field: "excluded_geographical_areas"},
+          {enabled: true, title: "Commodity code(s)", field: "goods_nomenclature_item_ids"},
+          {enabled: true, title: "Additional code(s)", field: "additional_code_ids"},
+          {enabled: true, title: "Origin", field: "origin"},
+          {enabled: true, title: "Origin exclusions", field: "origin_exclusions"},
           {enabled: true, title: "Last updated", field: "last_updated"},
           {enabled: true, title: "Status", field: "status"}
         ],
@@ -105,7 +106,7 @@ $(document).ready(function() {
 
         searchCode: code,
         pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
-        selectedQuotas: JSON.parse((window.localStorage.getItem(code + "_item_ids") || "[]")),
+        selectedQuotas: JSON.parse((window.localStorage.getItem(code + "_quota_sids") || "[]")),
         selectionType: window.localStorage.getItem(code + "_selection_type") || "all",
         pagination: {
           page: 1,

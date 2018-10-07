@@ -13,6 +13,8 @@ class QuotaOrderNumberOriginExclusion < Sequel::Model
              key: :geographical_area_sid,
              primary_key: :excluded_geographical_area_sid
 
+  delegate :geographical_area_id, to: :geographical_area, allow_nil: true
+
   def record_code
     "360".freeze
   end
