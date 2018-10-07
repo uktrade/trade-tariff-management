@@ -8,7 +8,7 @@ module WorkbasketInteractions
         reject_reasons
       )
 
-      attr_accessor :params,
+      attr_accessor :settings,
                     :current_user,
                     :workbasket,
                     :mode,
@@ -16,10 +16,10 @@ module WorkbasketInteractions
                     :reject_reasons,
                     :errors
 
-      def initialize(current_user, workbasket, params={})
+      def initialize(current_user, workbasket, settings={})
         @current_user = current_user
         @workbasket = workbasket
-        @params = params
+        @settings = settings
 
         @errors = {}
       end
@@ -46,11 +46,11 @@ module WorkbasketInteractions
       private
 
         def approve_mode?
-          params[:mode] == "approve"
+          settings[:mode] == "approve"
         end
 
         def reject_mode?
-          params[:mode] == "reject"
+          settings[:mode] == "reject"
         end
 
         def approve!
@@ -65,19 +65,19 @@ module WorkbasketInteractions
           workbasket.move_status_to!(
             current_user,
             :cross_check_rejected,
-            params[:reject_reasons]
+            reject_reasons
           )
         end
 
         def check_mode!
           if mode.blank? || (mode.present? && mode == "on")
-            @errors[:mode] = errors_translator(:mode_blank)
+            @errors[:general] = errors_translator(:mode_blank)
           end
         end
 
         def check_reject_ops!
           if reject_reasons.blank?
-            @errors[:mode] = errors_translator(:reject_reasons_blank)
+            @errors[:general] = errors_translator(:reject_reasons_blank)
           end
         end
 

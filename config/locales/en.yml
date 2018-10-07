@@ -70,3 +70,8 @@ en:
       validity_end_date_wrong_format: "Valid until date is optional, but if specified must be a complete date - day, month, and year must be specified."
       validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
       operation_date_blank: "Operation date must be specified."
+
+  cross_check:
+    errors:
+      mode_blank: "You have to select if you are going to confirm or reject this workbasket."
+      reject_reasons_blank: "Can not be blank."

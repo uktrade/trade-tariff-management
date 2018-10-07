@@ -13,7 +13,7 @@ script
       h3.heading-medium
         | Confirm cross-check
 
-      form-group :errors="errors" error-key="cross_check_decision_general"
+      form-group :errors="errors" error-key="general"
         template slot-scope="slotProps"
           label.form-label
             span.error-message v-if="slotProps.hasError" v-cloak=""
