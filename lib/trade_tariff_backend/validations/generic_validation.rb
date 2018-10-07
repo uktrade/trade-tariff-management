@@ -44,6 +44,13 @@ module TradeTariffBackend
       def to_s
         description
       end
+
+      def extend_error_message(record)
+        # WIP
+        association = validation_options[:of]
+
+        "#{description} (#{association}: #{record.send(association)&.validity_start_date&.strftime('%d/%m/%Y')} - #{record.send(association)&.validity_end_date&.strftime('%d/%m/%Y').inspect})"
+      end
     end
   end
 end

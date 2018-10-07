@@ -13,7 +13,7 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
   end
 
   validation :ME42, "The validity period of the duty expression must span the validity period of the measure.", on: [:create, :update] do
-    validates :validity_date_span, of: :duty_expression
+    validates :validity_date_span, of: :duty_expression, extend_message: true
   end
 
   validation :ME43, "The same duty expression can only be used once with the same measure.", on: [:create, :update] do
