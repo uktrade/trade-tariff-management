@@ -1,4 +1,3 @@
-//= require ./duty-expressions-parser
 //= require ./url-parser
 
 $(document).ready(function() {
@@ -246,8 +245,8 @@ $(document).ready(function() {
           last_updated_by: "last_updated_by",
           regulation: "regulation",
           type: "type",
-          validity_start_date: "valid_from",
-          validity_end_date: "valid_to",
+          valid_from: "validity_start_date",
+          valid_to: "validity_end_date",
           commodity_code: "commodity_code",
           additional_code: "additional_code",
           origin: "origin",
