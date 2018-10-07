@@ -274,6 +274,14 @@ module Workbaskets
         save
       end
 
+      def cross_checker_is?(current_user)
+        cross_checker_id.to_i == current_user.id
+      end
+
+      def approver_is?(current_user)
+        approver_id.to_i == current_user.id
+      end
+
       def edit_type?
         EDIT_WORKABSKETS.include?(type)
       end
@@ -299,9 +307,25 @@ module Workbaskets
         cross_checker_id.blank?
       end
 
+      def cross_check_process_can_not_be_started?
+        !cross_check_process_can_be_started?
+      end
+
+      def can_continue_cross_check?(current_user)
+        awaiting_cross_check? && cross_checker_is?(current_user)
+      end
+
       def approve_process_can_be_started?
         awaiting_approval? &&
         approver_id.blank?
+      end
+
+      def approve_process_can_not_be_started?
+        !approve_process_can_be_started?
+      end
+
+      def can_continue_approve?(current_user)
+        awaiting_approval? && approver_is?(current_user)
       end
 
       def awaiting_cds_upload_new_or_edit_item?

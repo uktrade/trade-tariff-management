@@ -15,20 +15,22 @@ module Workbaskets
     end
 
     def new
-      workbasket.assign_checker!(current_user)
+      workbasket.assign_cross_checker!(current_user)
     end
 
     private
 
       def require_cross_check_not_to_be_aready_started!
-        unless workbasket.cross_check_process_can_be_started?
+        if workbasket.cross_check_process_can_not_be_started? &&
+           !workbasket.can_continue_cross_check?(current_user)
+
           redirect_url read_only_url
           return false
         end
       end
 
       def check_cross_check_permissions!
-        unless workbasket.checker_id == current_user.id
+        unless workbasket.cross_checker_is?(current_user)
           redirect_url read_only_url
           return false
         end
