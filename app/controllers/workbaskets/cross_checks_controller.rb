@@ -1,6 +1,8 @@
 module Workbaskets
   class CrossChecksController < Workbaskets::WorkflowBaseController
 
+    before_action :require_cross_check_not_to_be_aready_started!, only: [:new]
+
     expose(:form) do
       WorkbasketForms::CrossCheckForm.new
     end
@@ -19,6 +21,10 @@ module Workbaskets
       current_user.next_workbasket_to_approve
     end
 
+    def new
+      workbasket.assign_cross_checker!(current_user)
+    end
+
     def create
       if cross_checker.valid?
         cross_checker.persist!
@@ -31,5 +37,14 @@ module Workbaskets
         }, status: :unprocessable_entity
       end
     end
+
+    private
+
+      def require_cross_check_not_to_be_aready_started!
+        unless workbasket.cross_check_process_can_be_started?
+          redirect_url read_only_url
+          return false
+        end
+      end
   end
 end

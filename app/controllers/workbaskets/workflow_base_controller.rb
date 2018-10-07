@@ -17,5 +17,9 @@ module Workbaskets
         :review_and_submit
       )
     end
+
+    expose(:read_only_url) do
+      public_send("#{workbasket.type}_url", workbasket.id)
+    end
   end
 end

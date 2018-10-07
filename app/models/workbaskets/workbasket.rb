@@ -230,11 +230,11 @@ module Workbaskets
       end
 
       def cross_check_can_be_started
-        where("cross_checker_id IS NULL")
+        where("cross_checker_id IS NULL and status = 'awaiting_cross_check'")
       end
 
       def approve_can_be_started
-        where("approver_id IS NULL")
+        where("approver_id IS NULL and status = 'awaiting_approval'")
       end
     end
 
@@ -260,6 +260,20 @@ module Workbaskets
     end
 
     begin :workflow_related_helpers
+      def assign_cross_checker!(current_user)
+        add_event!(current_user, :cross_check_process_started)
+
+        self.cross_checker_id = current_user.id
+        save
+      end
+
+      def assign_approver!(current_user)
+        add_event!(current_user, :approve_process_started)
+
+        self.approver_id = current_user.id
+        save
+      end
+
       def edit_type?
         EDIT_WORKABSKETS.include?(type)
       end
@@ -313,19 +327,24 @@ module Workbaskets
     end
 
     def move_status_to!(current_user, new_status, description=nil)
-      event = Workbaskets::Event.new(
-        workbasket_id: self.id,
-        user_id: current_user.id,
-        event_type: new_status,
-        description: description
-      )
-      event.save
+      add_event!(current_user, new_status, description)
 
       self.status = new_status
       self.last_update_by_id = current_user.id
       self.last_status_change_at = Time.zone.now
 
       save
+    end
+
+    def add_event!(current_user, new_status, description=nil)
+      event = Workbaskets::Event.new(
+        workbasket_id: self.id,
+        user_id: current_user.id,
+        event_type: new_status,
+        description: description
+      )
+
+      event.save
     end
 
     def settings
