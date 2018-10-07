@@ -2,5 +2,11 @@
   .cross-check-form-fields {
     margin-top: 30px;
     overflow: hidden;
+
+    .js-cross-check-reject-details-block {
+      .parent-group-target {
+        margin-bottom: 0px;
+      }
+    }
   }
 }
