@@ -1,0 +1,35 @@
+script type="text/x-template" id="cross-check-decision-template"
+  .cross-check-decision
+    .multiple-choice
+      input type='radio' :id="radioID" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" :checked="cross_check.selected"
+
+      label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected"
+        | I confirm that I have checked the above details and am satisfied that the measure(s) have been configured correctly and reflect the requirements.
+        span.form-hint.with_bigger_font-size
+          | Selecting this option will have the system generate the measure(s). There will be a further approval step before they are sent to CDS.
+
+      label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected"
+        | I am not happy with the measure(s).
+
+    .panel.panel-border-narrow.hidden.js-cross-check-approve-details-block v-if="approveTypeSelected"
+      label.form-label
+        | Do you want to submit the measure(s) for approval now?
+
+        span.form-hint
+          | Leave this option unselected if the measures are not yet ready to be sent to CDS.
+
+      .parent-group-target
+        .parent-group-select
+
+    .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block v-if="rejectTypeSelected"
+      label.form-label
+        | Provide your reasons and/or state the changes required:
+
+        span.form-hint
+          | You should almost never need to use this, but if you do, specify another group - you can enter
+          br
+          | either the parent's four-character code, or start typing its description, and select from the list.
+
+      .parent-group-target
+        .parent-group-select
+
