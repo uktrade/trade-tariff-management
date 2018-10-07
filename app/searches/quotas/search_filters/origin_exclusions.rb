@@ -29,7 +29,7 @@ module Quotas
 
       def required_options_are_blank?
         OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
-            exclusions_list.size.zero?
+            origin_exclusions.size.zero?
       end
 
       def clause

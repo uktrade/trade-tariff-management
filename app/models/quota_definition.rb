@@ -69,6 +69,7 @@ class QuotaDefinition < Sequel::Model
       measure.measure_conditions.each do |condition|
         return condition.certificate_code if condition.certificate_code.present?
       end
+      return nil
     end
   end
 

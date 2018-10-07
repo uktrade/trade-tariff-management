@@ -7,7 +7,7 @@ module Quotas
 
       def initialize(operator, license=nil)
         @operator = operator
-        @description = license.to_s.strip
+        @license = license.to_s.strip
       end
 
       def sql_rules

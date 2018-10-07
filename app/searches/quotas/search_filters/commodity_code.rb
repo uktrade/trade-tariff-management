@@ -36,7 +36,7 @@ module Quotas
         case operator
         when "includes"
 
-          [ includes_clause, value ]
+          [ includes_clause, '0(\?=0*$)', value ]
         when "is"
 
           [ is_clause, value ]
@@ -68,7 +68,7 @@ module Quotas
 EXISTS (SELECT 1 
           FROM measures 
          WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-           AND regexp_replace(measures.goods_nomenclature_item_id, '0(?=0*$)', '_', 'g') LIKE ?)
+           AND regexp_replace(measures.goods_nomenclature_item_id, ?, '_', 'g') LIKE ?)
         eos
       end
 
