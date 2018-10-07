@@ -19,11 +19,18 @@ script type="text/x-template" id="cross-check-decision-template"
           | Leave this option unselected if the measures are not yet ready to be sent to CDS.
 
       .parent-group-target
+        .form-group
+          .find-measures__checkbox-column
+            .multiple-choice
+              input name="cross_check[submit_for_approval]" type="hidden" v-model="cross_check.submit_for_approval" value="1"
+              input#toggle-type name="cross_check[submit_for_approval]" type="checkbox" v-model="cross_check.submit_for_approval" value="1"
+              label for="toggle-type"
+                | Immediately submit for approval
 
     .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block v-if="rejectTypeSelected"
       label.form-label
         | Provide your reasons and/or state the changes required:
 
       .parent-group-target.col-xs-8.col-md-10.col-lg-12
-        textarea.form-control*{ "v-model" => "cross_check.reject_reasons", rows: 4 }
+        textarea.form-control*{ "v-model" => "cross_check.reject_reasons", rows: 4, name: "cross_check[reject_reasons]" }
 
