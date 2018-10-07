@@ -110,8 +110,8 @@ $(document).ready(function() {
 
         return {
           mode: mode,
-          submit_for_approval: this.cross_check.submit_for_approval,
-          reject_reasons: this.cross_check.reject_reasons
+          submit_for_approval: $("input[name='cross_check[submit_for_approval]']").val(),
+          reject_reasons: $("textarea[name='cross_check[reject_reasons]']").val()
         };
       }
     }

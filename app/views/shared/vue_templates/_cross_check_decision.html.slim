@@ -24,7 +24,7 @@ script type="text/x-template" id="cross-check-decision-template"
             .multiple-choice
               input name="cross_check[submit_for_approval]" type="hidden" v-model="cross_check.submit_for_approval" value="1"
               input#toggle-type name="cross_check[submit_for_approval]" type="checkbox" v-model="cross_check.submit_for_approval" value="1"
-              label for="toggle-type"
+              label.with_bigger_font-size for="toggle-type"
                 | Immediately submit for approval
 
     .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block v-if="rejectTypeSelected"

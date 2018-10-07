@@ -45,19 +45,21 @@ Vue.component("cross-check-decision", {
     "cross_check.selected": function(newVal, oldVal) {
       if (newVal) {
         if (this.kind == 'approve') {
-          console.log('cross_check.selected - approve');
           this.showApproveDetailsBlock();
 
         } else if (this.kind == 'reject') {
-          console.log('cross_check.selected - reject');
           this.showRejectDetailsBlock();
 
         } else {
-          console.log('cross_check.selected - nothing');
           this.hideApproveAndRejectDetailsBlocks();
         }
 
         $("input.js-cross-check-decision").val(this.kind);
+      }
+    },
+    "cross_check.submit_for_approval": function(newVal)  {
+      if (!newVal) {
+        this.cross_check.submit_for_approval = null;
       }
     }
   },

@@ -1,4 +1,5 @@
 script
+  == "window.save_url = '#{cross_check_url(workbasket.id)}';"
   == "window.__cross_check_json = #{(params[:cross_check] || {}).to_json};"
 
 = simple_form_for form, url: cross_check_url(workbasket.id),
