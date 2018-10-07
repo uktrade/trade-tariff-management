@@ -68,7 +68,7 @@ $(document).ready(function() {
 
               if (response.redirect_url !== undefined) {
                 setTimeout(function tick() {
-                  window.location = resp.redirect_url;
+                  window.location = response.redirect_url;
                 }, 1000);
               } else {
                 WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();

@@ -73,5 +73,5 @@ en:
 
   cross_check:
     errors:
-      mode_blank: "You have to select if you are going to confirm or reject this workbasket."
-      reject_reasons_blank: "Can not be blank."
+      mode_blank: "It is required to specify if you are going to confirm or reject changes in this workbasket."
+      reject_reasons_blank: "Please, provide your reasons and/or state the changes required."

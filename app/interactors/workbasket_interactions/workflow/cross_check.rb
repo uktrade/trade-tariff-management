@@ -31,8 +31,15 @@ module WorkbasketInteractions
       end
 
       def valid?
+        p ""
+        p "mode: #{mode}"
+        p "reject_reasons: #{reject_reasons}"
+        p ""
+
         check_mode!
         check_reject_ops! if reject_mode?
+
+        errors.blank?
       end
 
       def persist!
@@ -46,11 +53,11 @@ module WorkbasketInteractions
       private
 
         def approve_mode?
-          settings[:mode] == "approve"
+          mode.to_s == "approve"
         end
 
         def reject_mode?
-          settings[:mode] == "reject"
+          mode.to_s == "reject"
         end
 
         def approve!
@@ -76,6 +83,11 @@ module WorkbasketInteractions
         end
 
         def check_reject_ops!
+          p ""
+          p "Checking reject reasons"
+          p "reject_reasons: #{reject_reasons.blank?}"
+          p ""
+
           if reject_reasons.blank?
             @errors[:general] = errors_translator(:reject_reasons_blank)
           end

@@ -7,7 +7,7 @@ module Workbaskets
 
     expose(:cross_checker) do
       ::WorkbasketInteractions::Workflow::CrossCheck.new(
-        current_user, workbasket, params
+        current_user, workbasket, params[:cross_check]
       )
     end
 
