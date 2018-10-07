@@ -67,11 +67,14 @@ module WorkbasketInteractions
         end
 
         def reject!
-          workbasket.move_status_to!(
-            current_user,
-            reject_status,
-            reject_reasons
-          )
+          if workbasket.move_status_to!(
+              current_user,
+              reject_status,
+              reject_reasons
+            )
+
+            post_reject_action!
+          end
         end
 
         def check_mode!

@@ -13,6 +13,11 @@ module WorkbasketInteractions
           end
         end
 
+        def post_reject_action!
+          workbasket.cross_checker_id = nil
+          workbasket.save
+        end
+
         def approve_status
           :ready_for_approval
         end

@@ -11,6 +11,11 @@ module WorkbasketInteractions
           end
         end
 
+        def post_reject_action!
+          workbasket.approver_id = nil
+          workbasket.save
+        end
+
         def approve_status
           workbasket.possible_approved_status
         end
