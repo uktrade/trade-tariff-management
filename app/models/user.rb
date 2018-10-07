@@ -102,4 +102,20 @@ class User < Sequel::Model
   def author_of_workbasket?(workbasket)
     workbasket.user_id == id
   end
+
+  def workbaskets_queue
+    WorkbasketsSearch.new(
+      self
+    ).results
+  end
+
+  def next_workbasket_to_cross_check
+    workbaskets_queue.cross_check_can_be_started
+                     .first
+  end
+
+  def next_workbasket_to_approve
+    workbaskets_queue.approve_can_be_started
+                     .first
+  end
 end

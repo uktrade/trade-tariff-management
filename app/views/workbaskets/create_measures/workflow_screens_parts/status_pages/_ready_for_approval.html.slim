@@ -1,0 +1,26 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Measures cross-checked and created
+
+  h3.heading-medium
+    => pluralize(workbasket_settings.measures.count, "measure", "measures")
+    | in the workbasket
+    =<> "'#{workbasket.title}'"
+    | have been created.
+    br
+    | They have not yet been submitted for approval.
+
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  li
+    = link_to "View measures workbasket", create_measure_url(workbasket.id)
+  - if next_cross_check.present?
+    li
+      = link_to "Cross-check next workbasket", new_cross_check_url(next_cross_check.id)
+  li
+    = link_to "Return to main menu", root_url
+br
+br

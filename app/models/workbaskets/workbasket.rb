@@ -228,6 +228,14 @@ module Workbaskets
       def by_type(type_name)
         where(type: type_name)
       end
+
+      def cross_check_can_be_started
+        where("cross_checker_id IS NULL")
+      end
+
+      def approve_can_be_started
+        where("approver_id IS NULL")
+      end
     end
 
     begin :callbacks

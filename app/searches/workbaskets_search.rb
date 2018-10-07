@@ -23,7 +23,7 @@ class WorkbasketsSearch
     @sort_by_field = search_ops[:sort_by]
   end
 
-  def results
+  def results(with_pagination=true)
     setup_initial_scope!
 
     search_ops.select do |k, v|
@@ -33,7 +33,11 @@ class WorkbasketsSearch
       send("apply_#{k}_filter")
     end
 
-    relation.page(page)
+    if with_pagination.present?
+      relation.page(page)
+    else
+      relation
+    end
   end
 
   private

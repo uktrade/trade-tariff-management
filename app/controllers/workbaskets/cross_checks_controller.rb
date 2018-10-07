@@ -11,11 +11,15 @@ module Workbaskets
       )
     end
 
+    expose(:next_cross_check) do
+      current_user.next_workbasket_to_cross_check
+    end
+
     def create
       if cross_checker.valid?
         cross_checker.persist!
 
-        render json: { redirect_url: redirect_url },
+        render json: { redirect_url: cross_check_url(workbasket.id) },
                        status: :ok
       else
         render json: {
@@ -23,11 +27,5 @@ module Workbaskets
         }, status: :unprocessable_entity
       end
     end
-
-    private
-
-      def redirect_url
-
-      end
   end
 end
