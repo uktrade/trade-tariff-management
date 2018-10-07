@@ -5,30 +5,29 @@ module Workbaskets
       WorkbasketForms::CrossCheckForm.new
     end
 
+    expose(:cross_checker) do
+      ::WorkbasketInteractions::Workflow::CrossCheck.new(
+        current_user, workbasket, params
+      )
+    end
+
     def create
-      if params[:mode] == "approve"
-        #approve
+      if cross_checker.valid?
+        cross_checker.persist!
+
+        render json: { redirect_url: redirect_url },
+                       status: :ok
       else
-        #reject
+        render json: {
+          errors: cross_checker.errors,
+        }, status: :unprocessable_entity
       end
     end
 
     private
 
-      def approve
-        if workbasket.move_status_to!(
-            current_user,
-            :ready_for_approval
-          )
-        end
-      end
+      def redirect_url
 
-      def reject
-        workbasket.move_status_to!(
-          current_user,
-          :cross_check_rejected,
-          params[:reasons]
-        )
       end
   end
 end
