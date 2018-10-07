@@ -120,7 +120,7 @@ $(document).ready(function() {
           validity_start_date: null,
           validity_end_date: null,
           operation_date: null
-        }
+        };
       },
       createGeographicalAreaMainStepPayLoad: function() {
         geographical_code = $("input[name='geographical_area[geographical_code]']").val();
