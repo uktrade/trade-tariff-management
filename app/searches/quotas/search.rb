@@ -61,55 +61,55 @@ module Quotas
 
     def apply_order_number_filter
       @relation = relation.operator_search_by_order_number(
-          *query_ops(code)
+          *query_ops(order_number)
       )
     end
 
     def apply_description_filter
       @relation = relation.operator_search_by_description(
-          *query_ops(code)
+          *query_ops(description)
       )
     end
 
     def apply_type_filter
       @relation = relation.operator_search_by_type(
-          *query_ops(code)
+          *query_ops(type)
       )
     end
 
     def apply_regulation_filter
       @relation = relation.operator_search_by_regulation(
-          *query_ops(code)
+          *query_ops(regulation)
       )
     end
 
     def apply_license_filter
       @relation = relation.operator_search_by_license(
-          *query_ops(code)
+          *query_ops(license)
       )
     end
 
     def apply_commodity_code_filter
       @relation = relation.operator_search_by_commodity_code(
-          *query_ops(code)
+          *query_ops(commodity_code)
       )
     end
 
     def apply_additional_code_filter
       @relation = relation.operator_search_by_additional_code(
-          *query_ops(code)
+          *query_ops(additional_code)
       )
     end
 
     def apply_origin_filter
       @relation = relation.operator_search_by_origin(
-          *query_ops(code)
+          *query_ops(origin)
       )
     end
 
     def apply_origin_exclusions_filter
       @relation = relation.operator_search_by_origin_exclusions(
-          *query_ops(code)
+          *query_ops(origin_exclusions)
       )
     end
 
