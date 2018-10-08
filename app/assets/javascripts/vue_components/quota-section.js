@@ -169,6 +169,17 @@ Vue.component("quota-section", {
     }
   },
   computed: {
+    showOpeningBalanceFields: function() {
+      if (this.section.type == "custom") {
+        return true;
+      }
+
+      if (!this.section.type || !this.section.start_date || !this.section.period || !this.section.measurement_unit_code) {
+        return false;
+      }
+
+      return true;
+    },
     disableStaged: function() {
       return ["1", "1_repeating"].indexOf(this.section.period) > -1;
     },

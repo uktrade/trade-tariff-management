@@ -51,6 +51,11 @@ $(document).ready(function() {
           enabled: false,
           definitions: []
         },
+        precisions: [
+          { text: "1", value: 1 },
+          { text: "2", value: 2 },
+          { text: "3", value: 3 }
+        ],
         errors: []
       };
 
@@ -61,6 +66,7 @@ $(document).ready(function() {
         quota_is_licensed: null,
         quota_licence: null,
         quota_ordernumber: null,
+        quota_precision: null,
         quota_status: "open",
         quota_criticality_threshold: null,
         quota_description: null,
@@ -464,6 +470,7 @@ $(document).ready(function() {
           commodity_codes: payload.commodity_codes,
           commodity_codes_exclusions: payload.commodity_codes_exclusions,
           quota_ordernumber: payload.quota_ordernumber,
+          quota_precision: payload.quota_precision,
           quota_is_licensed: payload.quota_is_licensed === "true",
           quota_licence: payload.quota_licence,
           quota_description: payload.quota_description,
@@ -781,6 +788,19 @@ $(document).ready(function() {
       },
       usingExistingQuota: function() {
         return this.measure.existing_quota === "existing";
+      },
+      disableButtons: function() {
+        if (!this.measure.measure_type_id) {
+          return true;
+        }
+
+        if (window.current_step == "configure_quota") {
+          if (this.quota_sections.length === 1 && !this.quota_sections[0].type) {
+            return true;
+          }
+        }
+
+        return false;
       }
     },
     watch: {

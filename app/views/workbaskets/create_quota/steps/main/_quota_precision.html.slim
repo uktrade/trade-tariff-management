@@ -1,0 +1,12 @@
+fieldset
+  h3.heading-medium
+    | What is the maximum precision for this quota
+
+  .form-group
+    label.form-label
+      span.form-hint
+        | This is the maximum number of decimal places that a trader can enter on the SAD form in respect of the quantity being imported under this quota.
+
+    .bootstrap-row
+      .col-xs-2.col-md-2.col-lg-1
+        custom-select v-model="measure.quota_precision" :options="precisions" placeholder="—"
