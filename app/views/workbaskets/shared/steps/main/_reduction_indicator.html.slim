@@ -1,6 +1,9 @@
 fieldset
   h3.heading-medium
-    | What reduction indicator (if any) applies to these measures?
+    - if record_type == 'quota'
+      | What reduction indicator (if any) applies to this quota?
+    - else
+      | What reduction indicator (if any) applies to these measures?
 
   .form-group
     label.form-label

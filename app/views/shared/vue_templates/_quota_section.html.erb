@@ -82,7 +82,7 @@
           </div>
         </div>
 
-        <opening-balances-manager :section="section" v-if="section.measurement_unit_code"></opening-balances-manager>
+        <opening-balances-manager :section="section" v-if="showOpeningBalanceFields"></opening-balances-manager>
       </fieldset>
 
       <fieldset v-else>
@@ -141,8 +141,7 @@
         </p>
       </fieldset>
       <br>
-      <br>
-      <fieldset>
+      <fieldset v-if="showOpeningBalanceFields">
         <div class="form-group">
           <label class="form-label">
             Do you want to associate this quota section with a parent quota?
@@ -184,7 +183,9 @@
         </div>
       </fieldset>
 
-      <br>
+      <info-message v-if="!showOpeningBalanceFields">
+        Answer the questions above to see inputs for defining each quota period.
+      </info-message>
 
       <p>
         <slot></slot>
