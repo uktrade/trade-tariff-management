@@ -46,10 +46,10 @@ module WorkbasketServices
 
         def generate_condition!
           @condition = MeasureCondition.new(condition_attrs)
-          condition.measure = measure
           condition.measure_sid = measure.measure_sid
-
           set_primary_key(condition)
+
+          condition.measure = measure
         end
 
         def condition_attrs
