@@ -1,0 +1,23 @@
+.view-workbasket-container {
+  overflow: hidden;
+  margin-bottom: 50px;
+
+  .view-workbasket-actions-allowed {
+    overflow: hidden;
+    margin-top: 50px;
+    margin-bottom: 35px;
+
+    .button {
+      margin-bottom: 13px;
+    }
+  }
+
+  table.create-measures-details-table.view-workbasket-details-block {
+    margin-bottom: 10px;
+  }
+
+  a.secondary-button.view-workbasket-edit-measures-link {
+    padding-left: 0px;
+    margin-bottom: 15px;
+  }
+}

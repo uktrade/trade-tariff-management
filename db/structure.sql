@@ -673,6 +673,44 @@ ALTER SEQUENCE public.bulk_edit_of_measures_settings_id_seq OWNED BY public.bulk
 
 
 --
+-- Name: bulk_edit_of_quotas_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bulk_edit_of_quotas_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    search_code text,
+    initial_search_results_code text,
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb,
+    quota_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: bulk_edit_of_quotas_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bulk_edit_of_quotas_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bulk_edit_of_quotas_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bulk_edit_of_quotas_settings_id_seq OWNED BY public.bulk_edit_of_quotas_settings.id;
+
+
+--
 -- Name: certificate_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1446,6 +1484,39 @@ CREATE SEQUENCE public.create_additional_code_workbasket_settings_id_seq
 --
 
 ALTER SEQUENCE public.create_additional_code_workbasket_settings_id_seq OWNED BY public.create_additional_code_workbasket_settings.id;
+
+
+--
+-- Name: create_geographical_area_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_geographical_area_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_geographical_area_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_geographical_area_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_geographical_area_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_geographical_area_workbasket_settings_id_seq OWNED BY public.create_geographical_area_workbasket_settings.id;
 
 
 --
@@ -7480,7 +7551,8 @@ CREATE TABLE public.users (
     created_at timestamp without time zone,
     organisation_slug text,
     disabled boolean DEFAULT false,
-    organisation_content_id text
+    organisation_content_id text,
+    approver_user boolean DEFAULT false
 );
 
 
@@ -7556,7 +7628,9 @@ CREATE TABLE public.workbaskets (
     last_status_change_at timestamp without time zone,
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
-    operation_date date
+    operation_date date,
+    cross_checker_id integer,
+    approver_id integer
 );
 
 
@@ -7723,6 +7797,13 @@ ALTER TABLE ONLY public.bulk_edit_of_measures_settings ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: bulk_edit_of_quotas_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_quotas_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_quotas_settings_id_seq'::regclass);
+
+
+--
 -- Name: certificate_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7797,6 +7878,13 @@ ALTER TABLE ONLY public.complete_abrogation_regulations_oplog ALTER COLUMN oid S
 --
 
 ALTER TABLE ONLY public.create_additional_code_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_additional_code_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: create_geographical_area_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_geographical_area_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_geographical_area_workbasket_settings_id_seq'::regclass);
 
 
 --
@@ -8594,6 +8682,14 @@ ALTER TABLE ONLY public.bulk_edit_of_measures_settings
 
 
 --
+-- Name: bulk_edit_of_quotas_settings bulk_edit_of_quotas_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bulk_edit_of_quotas_settings
+    ADD CONSTRAINT bulk_edit_of_quotas_settings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: certificate_description_periods_oplog certificate_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8679,6 +8775,14 @@ ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
 
 ALTER TABLE ONLY public.create_additional_code_workbasket_settings
     ADD CONSTRAINT create_additional_code_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_geographical_area_workbasket_settings create_geographical_area_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_geographical_area_workbasket_settings
+    ADD CONSTRAINT create_geographical_area_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -11700,9 +11804,13 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_l
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_original_measure_sid_to_measures_oplog.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbasket_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approver_user_to_users.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflow_fields_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');

@@ -24,5 +24,17 @@ module Workbaskets
     def duties_conditions_footnotes_step_settings
       JSON.parse(duties_conditions_footnotes_step_settings_jsonb)
     end
+
+    def commodity_codes_covered
+      @commodity_codes_covered ||= measures.pluck(:goods_nomenclature_item_id)
+                                           .uniq
+    end
+
+    def additional_codes_covered
+      @additional_codes_covered ||= measures.where("additional_code_id IS NOT NULL AND additional_code_type_id IS NOT NULL")
+                                            .pluck(:additional_code_type_id, :additional_code_id).map do |m|
+        m.join
+      end.uniq
+    end
   end
 end
