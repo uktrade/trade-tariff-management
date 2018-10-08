@@ -31,6 +31,10 @@ module Quotas
         operator_search_where_clause("License", operator, license)
       end
 
+      def operator_search_by_staged(operator, dummy=nil)
+        operator_search_where_clause("Staged", operator, nil)
+      end
+
       def operator_search_by_commodity_code(operator, commodity_code=nil)
         operator_search_where_clause("CommodityCode", operator, commodity_code)
       end

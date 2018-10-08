@@ -9,6 +9,7 @@ module Quotas
       type
       regulation
       license
+      staged
       commodity_code
       additional_code
       origin
@@ -86,6 +87,12 @@ module Quotas
     def apply_license_filter
       @relation = relation.operator_search_by_license(
           *query_ops(license)
+      )
+    end
+
+    def apply_staged_filter
+      @relation = relation.operator_search_by_staged(
+          *query_ops(staged)
       )
     end
 
