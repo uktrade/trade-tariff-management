@@ -64,7 +64,7 @@ module WorkbasketServices
         end
 
         def generate_condition_components!
-          @condition.measure_condition_components << condition_ops[:measure_condition_components].select do |k, v|
+          list = condition_ops[:measure_condition_components].select do |k, v|
             v[:duty_expression_id].present?
           end.map do |k, v|
             mc_component = MeasureConditionComponent.new(
@@ -72,8 +72,13 @@ module WorkbasketServices
             )
             mc_component.measure_condition_sid = condition.measure_condition_sid
             mc_component.duty_expression_id = v[:duty_expression_id]
+            mc_component.measure_condition = @condition
 
             mc_component
+          end
+
+          list.map do |item|
+            @condition.measure_condition_components << item
           end
         end
 
