@@ -1,7 +1,7 @@
 script type="text/x-template" id="approve-decision-template"
   .approve-decision
     .multiple-choice
-      input type='radio' :id="radioID" class="radio-inline-group js-approve-decision" name="cross_check[mode]" :checked="cross_check.selected"
+      input type='radio' :id="radioID" class="radio-inline-group js-approve-decision" name="approve[mode]" :checked="approve.selected"
 
       label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected"
         | Approve the measures(s).
@@ -24,5 +24,5 @@ script type="text/x-template" id="approve-decision-template"
         | Provide your reasons and/or state the changes required:
 
       .parent-group-target.col-xs-8.col-md-10.col-lg-12
-        textarea.form-control*{ "v-model" => "cross_check.reject_reasons", rows: 4, name: "cross_check[reject_reasons]" }
+        textarea.form-control*{ "v-model" => "approve.reject_reasons", rows: 4, name: "approve[reject_reasons]" }
 

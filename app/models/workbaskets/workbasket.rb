@@ -10,7 +10,6 @@ module Workbaskets
       :create_geographical_area
     ]
 
-
     STATUS_LIST = [
       :new_in_progress,                # New - in progress
                                        # Newly started, but not yet submitted into workflow
@@ -316,7 +315,7 @@ module Workbaskets
       end
 
       def approve_process_can_be_started?
-        ready_for_approval? &&
+        awaiting_approval? &&
         approver_id.blank?
       end
 
