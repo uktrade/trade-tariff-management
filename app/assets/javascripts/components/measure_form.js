@@ -589,8 +589,10 @@ $(document).ready(function() {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);
 
-            c.original_measure_condition_code = c.condition_code.slice(0);
-            c.condition_code = c.condition_code.substring(0, 1);
+            if (c.condition_code) {
+              c.original_measure_condition_code = c.condition_code.slice(0);
+              c.condition_code = c.condition_code.substring(0, 1);
+            }
 
             c.measure_condition_components = c.measure_condition_components.map(function(component) {
               var c = clone(component);
