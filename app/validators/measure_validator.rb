@@ -4,7 +4,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME2, 'The measure type must exist.', on: [:create, :update] do
-    validates :presence, of: :measure_type_id
+    validates :presence, of: :measure_type
   end
 
   validation :ME3, 'The validity period of the measure type must span the validity period of the measure.', on: [:create, :update] do
@@ -428,104 +428,3 @@ class MeasureValidator < TradeTariffBackend::Validator
     validates :validity_date_span, of: :quota_order_number_origin
   end
 end
-
-# TODO: ME16
-# Integrating a measure with an additional code when an equivalent or overlapping measures without additional code already exists and vice-versa, should be forbidden.
-# TODO: ME32
-# There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature hierarchy which references the same measure type, geo area, order number, additional code and reduction indicator. This rule is not applicable for Meursing additional codes.
-# TODO: ME87
-# The VP of the measure (implicit or explicit) must reside within the effective VP of its supporting regulation. The effective VP is the VP of the regulation taking into account extensions and abrogation.
-# TODO: ME40
-# If the flag "duty expression" on measure type is "mandatory" then at least one measure component or measure condition component record must be specified. If the flag is set ""not permitted"" then no measure component or measure condition component must exist. Measure components and measure condition components are mutually exclusive. A measure can have either components or condition components (if the 'duty expression’ flag is 'mandatory’ or 'optional’) but not both.
-# TODO: ME41
-# The referenced duty expression must exist.
-# TODO: ME42
-# The validity period of the duty expression must span the validity period of the measure.
-# TODO: ME43
-# The same duty expression can only be used once with the same measure.
-# TODO: ME45
-# If the flag "amount" on duty expression is "mandatory" then an amount must be specified. If the flag is set "not permitted" then no amount may be entered.
-# TODO: ME46
-# If the flag "monetary unit" on duty expression is "mandatory" then a monetary unit must be specified. If the flag is set "not permitted" then no monetary unit may be entered.
-# TODO: ME47
-# If the flag "measurement unit" on duty expression is "mandatory" then a measurement unit must be specified. If the flag is set "not permitted" then no measurement unit may be entered.
-# TODO: ME48
-# The referenced monetary unit must exist.
-# TODO: ME49
-# The validity period of the referenced monetary unit must span the validity period of the measure.
-# TODO: ME50
-# The combination measurement unit + measurement unit qualifier must exist.
-# TODO: ME51
-# The validity period of the measurement unit must span the validity period of the measure.
-# TODO: ME52
-# The validity period of the measurement unit qualifier must span the validity period of the measure.
-# TODO: ME53
-# The referenced measure condition must exist.
-# TODO: ME54
-# The validity period of the referenced measure condition must span the validity period of the measure.
-# TODO: ME55
-# A measure condition refers to a measure condition or to a condition + certificate or to a condition + amount specifications.
-# TODO: ME56
-# The referenced certificate must exist.
-# TODO: ME57
-# The validity period of the referenced certificate must span the validity period of the measure.
-# TODO: ME58
-# The same certificate can only be referenced once by the same measure and the same condition type.
-# TODO: ME59
-# The referenced action code must exist.
-# TODO: ME60
-# The referenced monetary unit must exist.
-# TODO: ME61
-# The validity period of the referenced monetary unit must span the validity period of the measure.
-# TODO: ME62
-# The combination measurement unit + measurement unit qualifier must exist.
-# TODO: ME63
-# The validity period of the measurement unit must span the validity period of the measure.
-# TODO: ME64
-# The validity period of the measurement unit qualifier must span the validity period of the measure.
-# TODO: ME105
-# The referenced duty expression must exist.
-# TODO: ME106
-# The VP of the duty expression must span the VP of the measure.
-# TODO: ME107
-# If the short description of a duty expression starts with a '+' then a measure condition component with a preceding duty expression must exist (sequential ascending order) for a condition (at least one, not necessarily the same condition) of the same measure.
-# TODO: ME108
-# The same duty expression can only be used once within condition components of the same condition of the same measure. (i.e. it can be re-used in other conditions, no matter what condition type, of the same measure)
-# TODO: ME109
-# If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified. If the flag is set to 'not permitted' then no amount may be entered.
-# TODO: ME110
-# If the flag 'monetary unit' on duty expression is 'mandatory' then a monetary unit must be specified. If the flag is set to 'not permitted' then no monetary unit may be entered.
-# TODO: ME111
-# If the flag 'measurement unit' on duty expression is 'mandatory' then a measurement unit must be specified. If the flag is set to 'not permitted' then no measurement unit may be entered.
-# TODO: ME65
-# An exclusion can only be entered if the measure is applicable to a geographical area group (area code = 1).
-# TODO: ME66
-# The excluded geographical area must be a member of the geographical area group.
-# TODO: ME67
-# The membership period of the excluded geographical area must span the validity period of the measure.
-# TODO: ME68
-# The same geographical area can only be excluded once by the same measure.
-# TODO: ME69
-# The associated footnote must exist.
-# TODO: ME70
-# The same footnote can only be associated once with the same measure.
-# TODO: ME71
-# Footnotes with a footnote type for which the application type = "CN footnotes" cannot be associated with TARIC codes (codes with pos. 9-10 different from 00)
-# TODO: ME72
-# Footnotes with a footnote type for which the application type = "measure footnotes" can be associated at any level.
-# TODO: ME73
-# The validity period of the associated footnote must span the validity period of the measure.
-# TODO: ME39
-# The validity period of the measure must span the validity period of all related partial temporary stop (PTS) records.
-# TODO: ME74
-# The start date of the PTS must be less than or equal to the end date.
-# TODO: ME75
-# The PTS regulation and abrogation regulation must be the same if the start date and the end date are entered when creating the record.
-# TODO: ME76
-# The abrogation regulation may not be entered if the PTS end date is not filled in.
-# TODO: ME77
-# The abrogation regulation must be entered if the PTS end date is filled in.
-# TODO: ME78
-# The abrogation regulation must be different from the PTS regulation if the end date is filled in during a modification.
-# TODO: ME79
-# There may be no overlap between different PTS periods.

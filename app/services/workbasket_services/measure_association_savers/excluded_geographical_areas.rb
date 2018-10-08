@@ -10,6 +10,7 @@ module WorkbasketServices
           @record = MeasureExcludedGeographicalArea.new(
             excluded_geographical_area: area.geographical_area_id
           )
+          record.measure = measure
           record.measure_sid = measure.measure_sid
           record.geographical_area_sid = area.geographical_area_sid
 

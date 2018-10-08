@@ -178,16 +178,19 @@ module WorkbasketInteractions
         check_required_params!
         return false if @errors.present?
 
-        @regulation = target_class.new(filtered_ops)
-        regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
-        regulation.public_send("#{target_class.primary_key[1]}=", regulation_params[target_class.primary_key[1]])
-        regulation.national = true
+        Sequel::Model.db.transaction(rollback: :always) do
+          @regulation = target_class.new(filtered_ops)
+          regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
+          regulation.public_send("#{target_class.primary_key[1]}=", regulation_params[target_class.primary_key[1]])
+          regulation.national = true
 
-        set_base_regulation
-        set_validity_end_date if modification_regulation_and_end_period_not_set?
-        set_published_date if need_to_bump_published_date?
+          set_base_regulation
+          set_validity_end_date if modification_regulation_and_end_period_not_set?
+          set_published_date if need_to_bump_published_date?
 
-        validate!
+          validate!
+        end
+
         errors.blank?
       end
 

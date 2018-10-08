@@ -188,7 +188,10 @@ module WorkbasketInteractions
       end
 
       def validate!
-        validate_candidates!
+        Sequel::Model.db.transaction(rollback: :always) do
+          validate_candidates!
+        end
+
         get_unique_errors_from_candidates!
       end
 

@@ -12,60 +12,73 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
     end
   end
 
-  validation :ME42, "The validity period of the duty expression must span the validity period of the measure.", on: [:create, :update] do
-    validates :validity_date_span, of: :duty_expression
-  end
+  validation :ME42,
+    "The validity period of the duty expression must span the validity period of the measure.",
+    on: [:create, :update], if: -> (record) { record.duty_expression.present? } do
+      validates :validity_date_span, of: :duty_expression, extend_message: true
+    end
 
-  validation :ME43, "The same duty expression can only be used once with the same measure.", on: [:create, :update] do
-    validates :uniqueness, of: [:measure_sid, :duty_expression_id]
-  end
+  validation :ME43,
+    "The same duty expression can only be used once with the same measure.",
+    on: [:create, :update] do
+      validates :uniqueness, of: [:measure_sid, :duty_expression_id]
+    end
 
   validation :ME45,
     %(If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified.
       If the flag is set 'not permitted' then no amount may be entered."),
     on: [:create, :update] do |record|
-      (
-        record.duty_expression.present? &&
-        record.duty_expression.duty_amount_applicability_code == 1 &&
-        record.duty_amount.present?
-      ) || (
-        record.duty_expression.present? &&
-        record.duty_expression.duty_amount_applicability_code == 2 &&
-        record.duty_amount.blank?
-      )
-  end
+      valid = true
+      duty_expression = record.duty_expression
+
+      if duty_expression&.duty_amount_applicability_code == 1
+        valid = record.duty_amount.present?
+      end
+
+      if duty_expression&.duty_amount_applicability_code == 2
+        valid = record.duty_amount.blank?
+      end
+
+      valid
+    end
 
   validation :ME46,
     %(If the flag 'monetary unit' on duty expression is 'mandatory' then a
       monetary unit must be specified. If the flag is set 'not permitted' then no monetary
       unit may be entered.),
     on: [:create, :update] do |record|
-    (
-      record.duty_expression.present? &&
-      record.duty_expression.monetary_unit_applicability_code == 1 &&
-      record.monetary_unit_code.present?
-    ) || (
-      record.duty_expression.present? &&
-      record.duty_expression.monetary_unit_applicability_code == 2 &&
-      record.monetary_unit_code.blank?
-    )
-  end
+      valid = true
+      duty_expression = record.duty_expression
+
+      if duty_expression&.monetary_unit_applicability_code == 1
+        valid = record.monetary_unit_code.present?
+      end
+
+      if duty_expression&.monetary_unit_applicability_code == 2
+        valid = record.monetary_unit_code.blank?
+      end
+
+      valid
+    end
 
   validation :ME47,
     %(If the flag 'measurement unit' on duty expression is 'mandatory' then a measurement
       unit must be specified. If the flag is set 'not permitted' then no measurement unit
       may be entered."),
     on: [:create, :update] do |record|
-    (
-      record.duty_expression.present? &&
-      record.duty_expression.measurement_unit_applicability_code == 1 &&
-      record.measurement_unit_code.present?
-    ) || (
-      record.duty_expression.present? &&
-      record.duty_expression.measurement_unit_applicability_code == 2 &&
-      record.measurement_unit_code.blank?
-    )
-  end
+      valid = true
+      duty_expression = record.duty_expression
+
+      if duty_expression&.measurement_unit_applicability_code == 1
+        valid = record.measurement_unit_code.present?
+      end
+
+      if duty_expression&.measurement_unit_applicability_code == 2
+        valid = record.measurement_unit_code.blank?
+      end
+
+      valid
+    end
 
   validation :ME48, "The referenced monetary unit must exist.", on: [:create, :update] do |record|
     if record.monetary_unit_code.present?
@@ -74,8 +87,8 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
   end
 
   validation :ME49, "The validity period of the referenced monetary unit must span the validity period of the measure.",
-    on: [:create, :update] do
-    validates :validity_date_span, of: :monetary_unit
+    on: [:create, :update], if: -> (record) { record.monetary_unit.present? } do
+    validates :validity_date_span, of: :monetary_unit, extend_message: true
   end
 
   validation :ME50, "The combination measurement unit + measurement unit qualifier must exist.",
@@ -85,12 +98,12 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
     end
 
   validation :ME51, "The validity period of the measurement unit must span the validity period of the measure.",
-    on: [:create, :update] do
-    validates :validity_date_span, of: :measurement_unit
+    on: [:create, :update], if: -> (record) { record.measurement_unit.present? } do
+    validates :validity_date_span, of: :measurement_unit, extend_message: true
   end
 
   validation :ME52, "The validity period of the measurement unit qualifier must span the validity period of the measure.",
-    on: [:create, :update] do
-    validates :validity_date_span, of: :measurement_unit_qualifier
+    on: [:create, :update], if: -> (record) { record.measurement_unit_qualifier.present? } do
+    validates :validity_date_span, of: :measurement_unit_qualifier, extend_message: true
   end
 end
