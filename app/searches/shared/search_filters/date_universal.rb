@@ -39,6 +39,7 @@ module Shared
       include ::Shared::Methods::Date
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
+        on
         is
         is_not
         is_after
@@ -78,14 +79,20 @@ module Shared
 
         def clause
           case operator
+          when "on"
+            [ is_clause, value ]
           when "is"
             [ is_clause, value ]
           when "is_not"
             [ is_not_clause, value ]
+          when "before"
+            [ is_before_clause, value ]
           when "is_before"
             [ is_before_clause, value ]
           when "is_before_or_nil"
             [ is_before_or_nil_clause, value ]
+          when "after"
+            [ is_after_clause, value ]
           when "is_after"
             [ is_after_clause, value ]
           when "is_after_or_nil"

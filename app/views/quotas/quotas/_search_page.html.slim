@@ -1,0 +1,38 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Main menu", root_url
+
+h2.heading-large
+  | Find a quota
+  small
+    = link_to "(search for measures instead)", measures_url
+
+script
+  == "window.__search_params = #{full_search_params.to_json};"
+  == "window.__pagination_metadata = #{pagination_metadata.to_json};"
+
+.find-quotas
+  = render "search_form"
+
+  - ops = {}
+  - ops[:search_code] = params[:search_code] if params[:search_code].present?
+
+  - if quotas_search.present?
+    div v-if="!isLoading"
+      = simple_form_for :search, url: quotas_bulks_url(ops), method: :post do |f|
+        = content_tag :input, nil, { type: "hidden", "name" => "quota_sids[]", "v-for" => "(sid, idx) in selectedQuotas", ":value" => "sid" }
+        = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
+        /p
+        /  = content_tag "button", "Work with selected quota", { class: "button", ":disabled" => "noSelectedQuota", type: :submit }
+      = render "quotas_table" if quotas_search.present?
+
+    = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
+      h1 slot="title"
+        | Loading quotas
+      h4.heading-medium
+        | Please wait while we fetch page {{pagination.page}}
+        br
+        = content_tag "loading-spinner", nil
+
+= render "shared/vue_templates/records_grid"

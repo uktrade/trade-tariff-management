@@ -22,6 +22,12 @@ $find-item-gutter: 5px;
   padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
 }
 
+.find-item__full{
+  flex: 1 0 auto;
+  max-width: none;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
 .find-item__long {
   flex: 0 0 365px;
   max-width: 365px;
@@ -32,6 +38,15 @@ $find-item-gutter: 5px;
   flex: 0 0 110px;
   max-width: 110px;
   padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.find-item__text {
+  flex: 0 0 150px;
+  max-width: 150px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
 }
 
 .find-item__date {

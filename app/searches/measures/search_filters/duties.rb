@@ -23,7 +23,7 @@
 
 module Measures
   module SearchFilters
-    class Duties < ::Measures::SearchFilters::CollectionFilterBase
+    class Duties < ::Shared::SearchFilters::CollectionFilterBase
 
       attr_accessor :operator,
                     :duties_list

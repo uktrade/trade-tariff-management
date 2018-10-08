@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       member do
         get '/work_with_selected', to: "bulks#work_with_selected"
         post '/work_with_selected', to: "bulks#persist_work_with_selected"
+        get :submitted_for_cross_check
       end
     end
   end
@@ -51,6 +52,23 @@ Rails.application.routes.draw do
   scope module: :footnotes do
     resources :footnote_types, only: [:index]
     resources :footnotes, only: [:index]
+  end
+
+  scope module: :quotas do
+    resources :quotas, only: [:index] do
+      collection do
+        post :search
+      end
+    end
+  end
+
+  namespace :quotas do
+    resources :bulks, only: [:show, :create, :edit, :update, :destroy] do
+      member do
+        get '/work_with_selected', to: "bulks#work_with_selected"
+        post '/work_with_selected', to: "bulks#persist_work_with_selected"
+      end
+    end
   end
 
   scope module: :measures do

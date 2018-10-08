@@ -25,7 +25,7 @@
 
 module Measures
   module SearchFilters
-    class OriginExclusions < ::Measures::SearchFilters::CollectionFilterBase
+    class OriginExclusions < ::Shared::SearchFilters::CollectionFilterBase
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         include

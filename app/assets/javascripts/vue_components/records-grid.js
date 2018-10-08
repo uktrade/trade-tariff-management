@@ -16,7 +16,10 @@ Vue.component("records-grid", {
     "selectionType",
     "selectAllHasChanged",
     "clientSelection",
-    "disableSelection"
+    "disableSelection",
+    "disableSelectAll",
+    "singleSelection",
+    "selectedItem"
   ],
   data: function() {
     var self = this;
