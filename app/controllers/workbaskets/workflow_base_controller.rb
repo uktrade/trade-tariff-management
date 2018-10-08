@@ -19,7 +19,10 @@ module Workbaskets
     end
 
     expose(:read_only_url) do
-      public_send("#{workbasket.type}_url", workbasket.id)
+      case workbasket.type
+      when "create_measures"
+        create_measure_url(workbasket.id)
+      end
     end
 
     expose(:form) do

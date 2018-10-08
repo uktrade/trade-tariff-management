@@ -1,11 +1,15 @@
-.cross-check-form {
-  .cross-check-form-fields {
+.cross-check-form, .approve-form {
+  .cross-check-form-fields, .approve-form-fields {
     margin-top: 30px;
     overflow: hidden;
 
     .panel.panel-border-narrow {
 
       &.js-cross-check-approve-details-block {
+        margin-bottom: 30px;
+      }
+
+      &.js-approve-details-block {
         margin-bottom: 30px;
       }
 

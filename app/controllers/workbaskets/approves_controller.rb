@@ -23,7 +23,7 @@ module Workbaskets
 
       def require_to_be_approver!
         unless current_user.approver?
-          redirect_url read_only_url
+          redirect_to read_only_url
           return false
         end
       end
@@ -31,14 +31,14 @@ module Workbaskets
       def require_approve_not_to_be_aready_started!
         if workbasket.approve_process_can_not_be_started? &&
            !workbasket.can_continue_approve?(current_user)
-          redirect_url read_only_url
+          redirect_to read_only_url
           return false
         end
       end
 
       def check_approve_permissions!
         unless workbasket.approver_is?(current_user)
-          redirect_url read_only_url
+          redirect_to read_only_url
           return false
         end
       end

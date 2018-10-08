@@ -24,14 +24,14 @@ module Workbaskets
         if workbasket.cross_check_process_can_not_be_started? &&
            !workbasket.can_continue_cross_check?(current_user)
 
-          redirect_url read_only_url
+          redirect_to read_only_url
           return false
         end
       end
 
       def check_cross_check_permissions!
         unless workbasket.cross_checker_is?(current_user)
-          redirect_url read_only_url
+          redirect_to read_only_url
           return false
         end
       end

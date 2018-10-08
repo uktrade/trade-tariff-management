@@ -1,11 +1,7 @@
-tr
-  td.heading_column
-    | Cross-checked by
-  td
-    = event.user_name
+p
+  | The measure(s) shown below have been cross-checked but not yet sent through to CDS. They are currently ready for approval. Once approved,
+  =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
+  | will be made live.
 
-tr
-  td.heading_column
-    | Cross-checked on
-  td
-    = event_date(event)
+p
+  | If you need to re-edit these measure(s), first withdraw the workbasket from the workflow.

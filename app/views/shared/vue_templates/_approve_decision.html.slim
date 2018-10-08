@@ -1,0 +1,28 @@
+script type="text/x-template" id="approve-decision-template"
+  .approve-decision
+    .multiple-choice
+      input type='radio' :id="radioID" class="radio-inline-group js-approve-decision" name="cross_check[mode]" :checked="cross_check.selected"
+
+      label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected"
+        | Approve the measures(s).
+
+      label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected"
+        | I am not happy with the measure(s).
+
+    .panel.panel-border-narrow.hidden.js-approve-details-block v-if="approveTypeSelected"
+      label.form-label
+        | Sent to CDS with next export on or after.
+
+      .parent-group-target
+        .form-group
+          .find-measures__checkbox-column
+            .multiple-choice
+              input.date-picker.form-control autocomplete="off" name="export_date" data-behaviour="datepicker"
+
+    .panel.panel-border-narrow.hidden.js-approve-reject-details-block v-if="rejectTypeSelected"
+      label.form-label
+        | Provide your reasons and/or state the changes required:
+
+      .parent-group-target.col-xs-8.col-md-10.col-lg-12
+        textarea.form-control*{ "v-model" => "cross_check.reject_reasons", rows: 4, name: "cross_check[reject_reasons]" }
+

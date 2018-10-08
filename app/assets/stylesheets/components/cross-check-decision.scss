@@ -1,4 +1,4 @@
-.cross-check-decision {
+.cross-check-decision, .approve-decision {
   padding-left: 10px;
 
   .multiple-choice {
@@ -28,6 +28,10 @@
   }
 
   & + .cross-check-decision {
+    margin-top: 12px;
+  }
+
+  & + .approve-decision {
     margin-top: 12px;
   }
 
