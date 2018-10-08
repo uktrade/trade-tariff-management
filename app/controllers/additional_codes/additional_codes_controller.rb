@@ -37,7 +37,7 @@ module AdditionalCodes
     end
 
     expose(:json_collection) do
-      search_results.map(&:to_table_json)
+      search_results.map(&:to_json)
     end
 
     def index
