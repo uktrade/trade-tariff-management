@@ -32,8 +32,10 @@ module WorkbasketInteractions
           check_additional_codes!
 
           if errors.blank?
-            build_additional_codes!
-            validate_additional_codes!
+            Sequel::Model.db.transaction(rollback: :always) do
+              build_additional_codes!
+              validate_additional_codes!
+            end
           end
         end
 

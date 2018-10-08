@@ -15,20 +15,23 @@ module WorkbasketInteractions
       end
 
       def valid?
-        super
+        Sequel::Model.db.transaction(rollback: :always) do
+          super
 
-        parent_errors = {}
-        quota_periods.map do |position, section_ops|
-          saver = WorkbasketServices::QuotaSavers::ParentQuota.new(
-              self,
-              section_ops['parent_quota'],
-              settings.settings,
-              nil)
-          parent_errors.merge!(saver.errors) unless saver.valid?
+          parent_errors = {}
+
+          quota_periods.map do |position, section_ops|
+            saver = WorkbasketServices::QuotaSavers::ParentQuota.new(
+                self,
+                section_ops['parent_quota'],
+                settings.settings,
+                nil)
+            parent_errors.merge!(saver.errors) unless saver.valid?
+          end
+
+          @errors[:parent_quota] = parent_errors if parent_errors.present?
+          @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
         end
-        @errors[:parent_quota] = parent_errors if parent_errors.present?
-
-        @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
 
         @errors.blank?
       end

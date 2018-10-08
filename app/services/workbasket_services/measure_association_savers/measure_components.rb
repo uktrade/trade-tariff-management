@@ -8,6 +8,7 @@ module WorkbasketServices
           @record = MeasureComponent.new(
             unit_ops(record_ops)
           )
+          record.measure = measure
           record.measure_sid = measure.measure_sid
           record.duty_expression_id = record_ops[:duty_expression_id]
 
