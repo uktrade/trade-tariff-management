@@ -106,8 +106,7 @@ $(document).ready(function() {
 
         searchCode: code,
         pagesLoaded: JSON.parse((window.localStorage.getItem(code + "_pages") || "[]")).map(function(n) { return parseInt(n, 10) }),
-        selectedQuotas: JSON.parse((window.localStorage.getItem(code + "_quota_sids") || "[]")),
-        selectionType: window.localStorage.getItem(code + "_selection_type") || "all",
+        selectedItem: null,
         pagination: {
           page: 1,
           total_count: 0,
@@ -250,8 +249,7 @@ $(document).ready(function() {
           valid_to: "validity_end_date",
           commodity_code: "commodity_code",
           additional_code: "additional_code",
-          origin: "origin",
-          origin_exclusions: "origin_exclusions"
+          origin: "origin"
         };
 
         for (var k in mapping) {
@@ -299,9 +297,8 @@ $(document).ready(function() {
       return data;
     },
     computed: {
-      noSelectedQuotas: function() {
-        return (this.selectionType == "all" && this.selectedQuotas.length === this.pagination.total_count) ||
-               (this.selectionType == "none" && this.selectedQuotas.length === 0);
+      noSelectedQuota: function() {
+        return !this.selectedItem;
       },
 
       validityStartDateValueDisabled: function() {
