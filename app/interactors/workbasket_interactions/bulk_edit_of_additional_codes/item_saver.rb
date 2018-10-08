@@ -1,22 +1,22 @@
 module WorkbasketInteractions
-  module BulkEditOfMeasures
+  module BulkEditOfAdditionalCodes
     class ItemSaver
 
       attr_accessor :workbasket_item,
                     :workbasket,
                     :operation_date,
-                    :existing_measure,
-                    :measure
+                    :existing,
+                    :additional_code
 
       def initialize(workbasket_item)
         @workbasket_item = workbasket_item
         @workbasket = workbasket_item.workbasket
         @operation_date = workbasket.operation_date.midnight
-        @existing_measure = workbasket_item.record
+        @existing = workbasket_item.record
       end
 
       def persist!
-        end_date_existing_measure!
+        end_date_existing!
 
         unless workbasket_item.deleted?
           add_new_measure!
@@ -24,60 +24,40 @@ module WorkbasketInteractions
           add_conditions!
           add_footnotes!
           add_excluded_geographical_areas!
-
-          measure.set_searchable_data!
         end
       end
 
-      def validate!(measure_params={})
-        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
+      def validate!(params)
+        return { validity_start_date: "Start date can't be blank!" } if params[:validity_start_date].blank?
+              
 
-        errors = {}
-
-        measure = Measure.new(
-            ::Measures::BulkParamsConverter.new(
-                existing_measure, measure_params
-            ).converted_ops
-        )
-
-        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-        measure.updating_measure = existing_measure
-
-        ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-            measure, MeasureValidator, {}
-        ).errors
       end
 
       private
 
-        def end_date_existing_measure!
-          existing_measure.validity_end_date = if workbasket_item.deleted?
+        def end_date_existing!
+          existing.validity_end_date = if workbasket_item.deleted?
             operation_date
           else
             (operation_date - 1.day).midnight
           end
 
-          existing_measure.justification_regulation_id =
-              measure_ops[:regulation][:base_regulation_id] || existing_measure.measure_generating_regulation_id
-          existing_measure.justification_regulation_role =
-              measure_ops[:regulation][:base_regulation_role] || existing_measure.measure_generating_regulation_role
-
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            existing_measure, system_ops.merge(operation: "U")
+            existing, system_ops.merge(operation: "U")
           ).assign!
 
-          existing_measure.save
+          existing.save
         end
 
         def add_new_measure!
           @measure = Measure.new(
-            ::Measures::BulkParamsConverter.new(
-              existing_measure, measure_ops
+            ::AdditionalCodes::BulkParamsConverter.new(
+              existing, measure_ops
             ).converted_ops
           )
           measure.validity_start_date = operation_date
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-          measure.original_measure_sid = existing_measure.measure_sid
+          measure.original_measure_sid = existing.measure_sid
 
           set_oplog_attrs_and_save!(measure)
         end

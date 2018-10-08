@@ -1,21 +1,5 @@
-module Measures
+module AdditionalCodes
   class BulkSaver
-
-    include ::CustomLogger
-
-    VALIDATING_OPS = [
-      "validity_start_date",
-      "validity_end_date",
-      "goods_nomenclature",
-      "regulation",
-      "measure_type",
-      "additional_code",
-      "geographical_area",
-      "footnotes",
-      "measure_components",
-      "measure_conditions",
-      "excluded_geographical_areas"
-    ]
 
     attr_accessor :current_admin,
                   :collection_ops,
@@ -57,7 +41,7 @@ module Measures
 
     def success_response
       {
-        number_of_updated_measures: collection_ops.count,
+        number_of_updated_additional_codes: collection_ops.count,
         collection_sids: collection_sids,
         success: :ok
       }
@@ -65,32 +49,31 @@ module Measures
 
     def error_response
       {
-        measures_with_errors: errors_collection,
+        additional_codes_with_errors: errors_collection,
       }
     end
 
     private
 
       def validate_collection!
-        collection_ops.each_with_index do |measure_params, index|
+        collection_ops.each_with_index do |additional_code_params, index|
           item = workbasket_settings.get_item_by_id(
-            measure_params[:measure_sid].to_s
+            additional_code_params[:additional_code_sid].to_s
           )
-          item.new_data = measure_params.to_json
+          item.new_data = additional_code_params.to_json
 
           if item.deleted?
             item.validation_errors = [].to_json
 
           else
-            errors = item.validate!(measure_params)
+            errors = item.validate!(additional_code_params)
 
             if errors.present?
-              errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
-              @errors_collection[
-                measure_params[:measure_sid].to_s
-              ] = errored_columns
-
-              item.validation_errors = errored_columns.to_json
+              # errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
+              # @errors_collection[
+              #   additional_code_params[:additional_code_sid].to_s
+              # ] = errored_columns
+              # item.validation_errors = errored_columns.to_json
             end
           end
 
@@ -100,7 +83,7 @@ module Measures
 
       def collection_sids
         collection_ops.map do |i|
-          i['measure_sid'].to_s
+          i['additional_code_sid'].to_s
         end
       end
 
