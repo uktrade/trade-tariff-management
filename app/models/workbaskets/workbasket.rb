@@ -316,7 +316,7 @@ module Workbaskets
       end
 
       def approve_process_can_be_started?
-        awaiting_approval? &&
+        ready_for_approval? &&
         approver_id.blank?
       end
 

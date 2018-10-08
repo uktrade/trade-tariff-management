@@ -1,7 +1,7 @@
 module Workbaskets
   class ApprovesController < Workbaskets::WorkflowBaseController
 
-    before_action :require_to_be_approver!
+    before_action :require_to_be_approver!, only: [:create, :show]
     before_action :require_approve_not_to_be_aready_started!, only: [:new]
     before_action :check_approve_permissions!, only: [:create, :show]
 
