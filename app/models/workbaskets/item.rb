@@ -64,7 +64,11 @@ module Workbaskets
     end
 
     def persist!
-      ::WorkbasketInteractions::BulkEditOfMeasures::ItemSaver.new(self).persist!
+      "::WorkbasketInteractions::BulkEditOf#{record_type.capitalize}s::ItemSaver".constantize.new(self).persist!
+    end
+
+    def validate!(params)
+      "::WorkbasketInteractions::BulkEditOf#{record_type.capitalize}s::ItemSaver".constantize.new(self).validate!(params)
     end
 
     def deleted?
@@ -85,27 +89,8 @@ module Workbaskets
                  .first
     end
 
-    def validate_measure!(measure_params={})
-      return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
-
-      errors = {}
-
-      measure = Measure.new(
-        ::Measures::BulkParamsConverter.new(
-          record, measure_params
-        ).converted_ops
-      )
-
-      measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-      measure.updating_measure = record
-
-      ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-        measure, MeasureValidator, {}
-      ).errors
-    end
-
     def error_details(errored_column)
-      errors_detected = validate_measure!(
+      errors_detected = validate!(
         ActiveSupport::HashWithIndifferentAccess.new(
           hash_data
         )
