@@ -72,6 +72,7 @@ module WorkbasketServices
             )
             mc_component.measure_condition_sid = condition.measure_condition_sid
             mc_component.duty_expression_id = v[:duty_expression_id]
+            mc_component.measure_condition = @condition
 
             mc_component
           end
