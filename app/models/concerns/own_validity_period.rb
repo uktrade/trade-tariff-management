@@ -9,7 +9,7 @@ module OwnValidityPeriod
                                [self.validity_start_date, self.validity_end_date]
                              end
 
-      "#{start_date&.strftime("%d-%m-%Y")} - #{end_date&.stftime("%d-%m-%Y").inspect}"
+      "#{start_date&.strftime("%d-%m-%Y")} - #{end_date&.strftime("%d-%m-%Y").inspect}"
     else
       "Model doesn't support validity period"
     end
