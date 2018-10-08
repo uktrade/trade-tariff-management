@@ -2,15 +2,14 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.9
--- Dumped by pg_dump version 9.6.9
+-- Dumped from database version 9.6.1
+-- Dumped by pg_dump version 10.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -29,25 +28,13 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
---
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
-
-
---
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
-
+SET search_path = public, pg_catalog;
 
 --
 -- Name: reassign_owned(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
+CREATE FUNCTION reassign_owned() RETURNS event_trigger
     LANGUAGE plpgsql
     AS $$
 	begin
@@ -58,7 +45,7 @@ CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
 		END IF;
 
 		-- do not execute if not member of manager role
-		IF NOT pg_has_role(current_user, 'rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager', 'member') THEN
+		IF NOT pg_has_role(current_user, 'rdsbroker_266a9334_2e5d_4234_b2bf_5f5ebf7d973d_manager', 'member') THEN
 			RETURN;
 		END IF;
 
@@ -67,7 +54,7 @@ CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
 			RETURN;
 		END IF;
 
-		EXECUTE 'reassign owned by "' || current_user || '" to "rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager"';
+		EXECUTE 'reassign owned by "' || current_user || '" to "rdsbroker_266a9334_2e5d_4234_b2bf_5f5ebf7d973d_manager"';
 	end
 	$$;
 
@@ -80,7 +67,7 @@ SET default_with_oids = false;
 -- Name: additional_code_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.additional_code_description_periods_oplog (
+CREATE TABLE additional_code_description_periods_oplog (
     additional_code_description_period_sid integer,
     additional_code_sid integer,
     additional_code_type_id character varying(1),
@@ -104,7 +91,7 @@ CREATE TABLE public.additional_code_description_periods_oplog (
 -- Name: additional_code_description_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.additional_code_description_periods AS
+CREATE VIEW additional_code_description_periods AS
  SELECT additional_code_description_periods1.additional_code_description_period_sid,
     additional_code_description_periods1.additional_code_sid,
     additional_code_description_periods1.additional_code_type_id,
@@ -120,9 +107,9 @@ CREATE VIEW public.additional_code_description_periods AS
     additional_code_description_periods1.added_by_id,
     additional_code_description_periods1.added_at,
     additional_code_description_periods1."national"
-   FROM public.additional_code_description_periods_oplog additional_code_description_periods1
+   FROM additional_code_description_periods_oplog additional_code_description_periods1
   WHERE ((additional_code_description_periods1.oid IN ( SELECT max(additional_code_description_periods2.oid) AS max
-           FROM public.additional_code_description_periods_oplog additional_code_description_periods2
+           FROM additional_code_description_periods_oplog additional_code_description_periods2
           WHERE ((additional_code_description_periods1.additional_code_description_period_sid = additional_code_description_periods2.additional_code_description_period_sid) AND (additional_code_description_periods1.additional_code_sid = additional_code_description_periods2.additional_code_sid) AND ((additional_code_description_periods1.additional_code_type_id)::text = (additional_code_description_periods2.additional_code_type_id)::text)))) AND ((additional_code_description_periods1.operation)::text <> 'D'::text));
 
 
@@ -130,7 +117,7 @@ CREATE VIEW public.additional_code_description_periods AS
 -- Name: additional_code_description_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.additional_code_description_periods_oid_seq
+CREATE SEQUENCE additional_code_description_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -142,14 +129,14 @@ CREATE SEQUENCE public.additional_code_description_periods_oid_seq
 -- Name: additional_code_description_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.additional_code_description_periods_oid_seq OWNED BY public.additional_code_description_periods_oplog.oid;
+ALTER SEQUENCE additional_code_description_periods_oid_seq OWNED BY additional_code_description_periods_oplog.oid;
 
 
 --
 -- Name: additional_code_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.additional_code_descriptions_oplog (
+CREATE TABLE additional_code_descriptions_oplog (
     additional_code_description_period_sid integer,
     language_id character varying(5),
     additional_code_sid integer,
@@ -173,7 +160,7 @@ CREATE TABLE public.additional_code_descriptions_oplog (
 -- Name: additional_code_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.additional_code_descriptions AS
+CREATE VIEW additional_code_descriptions AS
  SELECT additional_code_descriptions1.additional_code_description_period_sid,
     additional_code_descriptions1.language_id,
     additional_code_descriptions1.additional_code_sid,
@@ -189,9 +176,9 @@ CREATE VIEW public.additional_code_descriptions AS
     additional_code_descriptions1.workbasket_sequence_number,
     additional_code_descriptions1.added_by_id,
     additional_code_descriptions1.added_at
-   FROM public.additional_code_descriptions_oplog additional_code_descriptions1
+   FROM additional_code_descriptions_oplog additional_code_descriptions1
   WHERE ((additional_code_descriptions1.oid IN ( SELECT max(additional_code_descriptions2.oid) AS max
-           FROM public.additional_code_descriptions_oplog additional_code_descriptions2
+           FROM additional_code_descriptions_oplog additional_code_descriptions2
           WHERE ((additional_code_descriptions1.additional_code_description_period_sid = additional_code_descriptions2.additional_code_description_period_sid) AND (additional_code_descriptions1.additional_code_sid = additional_code_descriptions2.additional_code_sid)))) AND ((additional_code_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -199,7 +186,7 @@ CREATE VIEW public.additional_code_descriptions AS
 -- Name: additional_code_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.additional_code_descriptions_oid_seq
+CREATE SEQUENCE additional_code_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -211,14 +198,14 @@ CREATE SEQUENCE public.additional_code_descriptions_oid_seq
 -- Name: additional_code_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.additional_code_descriptions_oid_seq OWNED BY public.additional_code_descriptions_oplog.oid;
+ALTER SEQUENCE additional_code_descriptions_oid_seq OWNED BY additional_code_descriptions_oplog.oid;
 
 
 --
 -- Name: additional_code_type_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.additional_code_type_descriptions_oplog (
+CREATE TABLE additional_code_type_descriptions_oplog (
     additional_code_type_id character varying(1),
     language_id character varying(5),
     description text,
@@ -237,7 +224,7 @@ CREATE TABLE public.additional_code_type_descriptions_oplog (
 -- Name: additional_code_type_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.additional_code_type_descriptions AS
+CREATE VIEW additional_code_type_descriptions AS
  SELECT additional_code_type_descriptions1.additional_code_type_id,
     additional_code_type_descriptions1.language_id,
     additional_code_type_descriptions1.description,
@@ -248,9 +235,9 @@ CREATE VIEW public.additional_code_type_descriptions AS
     additional_code_type_descriptions1.status,
     additional_code_type_descriptions1.workbasket_id,
     additional_code_type_descriptions1.workbasket_sequence_number
-   FROM public.additional_code_type_descriptions_oplog additional_code_type_descriptions1
+   FROM additional_code_type_descriptions_oplog additional_code_type_descriptions1
   WHERE ((additional_code_type_descriptions1.oid IN ( SELECT max(additional_code_type_descriptions2.oid) AS max
-           FROM public.additional_code_type_descriptions_oplog additional_code_type_descriptions2
+           FROM additional_code_type_descriptions_oplog additional_code_type_descriptions2
           WHERE ((additional_code_type_descriptions1.additional_code_type_id)::text = (additional_code_type_descriptions2.additional_code_type_id)::text))) AND ((additional_code_type_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -258,7 +245,7 @@ CREATE VIEW public.additional_code_type_descriptions AS
 -- Name: additional_code_type_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.additional_code_type_descriptions_oid_seq
+CREATE SEQUENCE additional_code_type_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -270,14 +257,14 @@ CREATE SEQUENCE public.additional_code_type_descriptions_oid_seq
 -- Name: additional_code_type_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.additional_code_type_descriptions_oid_seq OWNED BY public.additional_code_type_descriptions_oplog.oid;
+ALTER SEQUENCE additional_code_type_descriptions_oid_seq OWNED BY additional_code_type_descriptions_oplog.oid;
 
 
 --
 -- Name: additional_code_type_measure_types_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.additional_code_type_measure_types_oplog (
+CREATE TABLE additional_code_type_measure_types_oplog (
     measure_type_id character varying(3),
     additional_code_type_id character varying(1),
     validity_start_date timestamp without time zone,
@@ -297,7 +284,7 @@ CREATE TABLE public.additional_code_type_measure_types_oplog (
 -- Name: additional_code_type_measure_types; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.additional_code_type_measure_types AS
+CREATE VIEW additional_code_type_measure_types AS
  SELECT additional_code_type_measure_types1.measure_type_id,
     additional_code_type_measure_types1.additional_code_type_id,
     additional_code_type_measure_types1.validity_start_date,
@@ -309,9 +296,9 @@ CREATE VIEW public.additional_code_type_measure_types AS
     additional_code_type_measure_types1.status,
     additional_code_type_measure_types1.workbasket_id,
     additional_code_type_measure_types1.workbasket_sequence_number
-   FROM public.additional_code_type_measure_types_oplog additional_code_type_measure_types1
+   FROM additional_code_type_measure_types_oplog additional_code_type_measure_types1
   WHERE ((additional_code_type_measure_types1.oid IN ( SELECT max(additional_code_type_measure_types2.oid) AS max
-           FROM public.additional_code_type_measure_types_oplog additional_code_type_measure_types2
+           FROM additional_code_type_measure_types_oplog additional_code_type_measure_types2
           WHERE (((additional_code_type_measure_types1.measure_type_id)::text = (additional_code_type_measure_types2.measure_type_id)::text) AND ((additional_code_type_measure_types1.additional_code_type_id)::text = (additional_code_type_measure_types2.additional_code_type_id)::text)))) AND ((additional_code_type_measure_types1.operation)::text <> 'D'::text));
 
 
@@ -319,7 +306,7 @@ CREATE VIEW public.additional_code_type_measure_types AS
 -- Name: additional_code_type_measure_types_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.additional_code_type_measure_types_oid_seq
+CREATE SEQUENCE additional_code_type_measure_types_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -331,14 +318,14 @@ CREATE SEQUENCE public.additional_code_type_measure_types_oid_seq
 -- Name: additional_code_type_measure_types_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.additional_code_type_measure_types_oid_seq OWNED BY public.additional_code_type_measure_types_oplog.oid;
+ALTER SEQUENCE additional_code_type_measure_types_oid_seq OWNED BY additional_code_type_measure_types_oplog.oid;
 
 
 --
 -- Name: additional_code_types_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.additional_code_types_oplog (
+CREATE TABLE additional_code_types_oplog (
     additional_code_type_id character varying(1),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -359,7 +346,7 @@ CREATE TABLE public.additional_code_types_oplog (
 -- Name: additional_code_types; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.additional_code_types AS
+CREATE VIEW additional_code_types AS
  SELECT additional_code_types1.additional_code_type_id,
     additional_code_types1.validity_start_date,
     additional_code_types1.validity_end_date,
@@ -372,9 +359,9 @@ CREATE VIEW public.additional_code_types AS
     additional_code_types1.status,
     additional_code_types1.workbasket_id,
     additional_code_types1.workbasket_sequence_number
-   FROM public.additional_code_types_oplog additional_code_types1
+   FROM additional_code_types_oplog additional_code_types1
   WHERE ((additional_code_types1.oid IN ( SELECT max(additional_code_types2.oid) AS max
-           FROM public.additional_code_types_oplog additional_code_types2
+           FROM additional_code_types_oplog additional_code_types2
           WHERE ((additional_code_types1.additional_code_type_id)::text = (additional_code_types2.additional_code_type_id)::text))) AND ((additional_code_types1.operation)::text <> 'D'::text));
 
 
@@ -382,7 +369,7 @@ CREATE VIEW public.additional_code_types AS
 -- Name: additional_code_types_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.additional_code_types_oid_seq
+CREATE SEQUENCE additional_code_types_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -394,14 +381,14 @@ CREATE SEQUENCE public.additional_code_types_oid_seq
 -- Name: additional_code_types_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.additional_code_types_oid_seq OWNED BY public.additional_code_types_oplog.oid;
+ALTER SEQUENCE additional_code_types_oid_seq OWNED BY additional_code_types_oplog.oid;
 
 
 --
 -- Name: additional_codes_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.additional_codes_oplog (
+CREATE TABLE additional_codes_oplog (
     additional_code_sid integer,
     additional_code_type_id character varying(1),
     additional_code character varying(3),
@@ -424,7 +411,7 @@ CREATE TABLE public.additional_codes_oplog (
 -- Name: additional_codes; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.additional_codes AS
+CREATE VIEW additional_codes AS
  SELECT additional_codes1.additional_code_sid,
     additional_codes1.additional_code_type_id,
     additional_codes1.additional_code,
@@ -439,9 +426,9 @@ CREATE VIEW public.additional_codes AS
     additional_codes1.workbasket_sequence_number,
     additional_codes1.added_by_id,
     additional_codes1.added_at
-   FROM public.additional_codes_oplog additional_codes1
+   FROM additional_codes_oplog additional_codes1
   WHERE ((additional_codes1.oid IN ( SELECT max(additional_codes2.oid) AS max
-           FROM public.additional_codes_oplog additional_codes2
+           FROM additional_codes_oplog additional_codes2
           WHERE (additional_codes1.additional_code_sid = additional_codes2.additional_code_sid))) AND ((additional_codes1.operation)::text <> 'D'::text));
 
 
@@ -449,7 +436,7 @@ CREATE VIEW public.additional_codes AS
 -- Name: additional_codes_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.additional_codes_oid_seq
+CREATE SEQUENCE additional_codes_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -461,14 +448,14 @@ CREATE SEQUENCE public.additional_codes_oid_seq
 -- Name: additional_codes_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.additional_codes_oid_seq OWNED BY public.additional_codes_oplog.oid;
+ALTER SEQUENCE additional_codes_oid_seq OWNED BY additional_codes_oplog.oid;
 
 
 --
 -- Name: audits; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.audits (
+CREATE TABLE audits (
     id integer NOT NULL,
     auditable_id integer NOT NULL,
     auditable_type text NOT NULL,
@@ -483,7 +470,7 @@ CREATE TABLE public.audits (
 -- Name: audits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.audits_id_seq
+CREATE SEQUENCE audits_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -495,14 +482,14 @@ CREATE SEQUENCE public.audits_id_seq
 -- Name: audits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.audits_id_seq OWNED BY public.audits.id;
+ALTER SEQUENCE audits_id_seq OWNED BY audits.id;
 
 
 --
 -- Name: base_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.base_regulations_oplog (
+CREATE TABLE base_regulations_oplog (
     base_regulation_role integer,
     base_regulation_id character varying(255),
     validity_start_date timestamp without time zone,
@@ -540,7 +527,7 @@ CREATE TABLE public.base_regulations_oplog (
 -- Name: base_regulations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.base_regulations AS
+CREATE VIEW base_regulations AS
  SELECT base_regulations1.base_regulation_role,
     base_regulations1.base_regulation_id,
     base_regulations1.validity_start_date,
@@ -570,9 +557,9 @@ CREATE VIEW public.base_regulations AS
     base_regulations1.status,
     base_regulations1.workbasket_id,
     base_regulations1.workbasket_sequence_number
-   FROM public.base_regulations_oplog base_regulations1
+   FROM base_regulations_oplog base_regulations1
   WHERE ((base_regulations1.oid IN ( SELECT max(base_regulations2.oid) AS max
-           FROM public.base_regulations_oplog base_regulations2
+           FROM base_regulations_oplog base_regulations2
           WHERE (((base_regulations1.base_regulation_id)::text = (base_regulations2.base_regulation_id)::text) AND (base_regulations1.base_regulation_role = base_regulations2.base_regulation_role)))) AND ((base_regulations1.operation)::text <> 'D'::text));
 
 
@@ -580,7 +567,7 @@ CREATE VIEW public.base_regulations AS
 -- Name: base_regulations_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.base_regulations_oid_seq
+CREATE SEQUENCE base_regulations_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -592,14 +579,14 @@ CREATE SEQUENCE public.base_regulations_oid_seq
 -- Name: base_regulations_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.base_regulations_oid_seq OWNED BY public.base_regulations_oplog.oid;
+ALTER SEQUENCE base_regulations_oid_seq OWNED BY base_regulations_oplog.oid;
 
 
 --
 -- Name: bulk_edit_of_additional_codes_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.bulk_edit_of_additional_codes_settings (
+CREATE TABLE bulk_edit_of_additional_codes_settings (
     id integer NOT NULL,
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
@@ -618,7 +605,7 @@ CREATE TABLE public.bulk_edit_of_additional_codes_settings (
 -- Name: bulk_edit_of_additional_codes_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq
+CREATE SEQUENCE bulk_edit_of_additional_codes_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -630,14 +617,14 @@ CREATE SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq
 -- Name: bulk_edit_of_additional_codes_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq OWNED BY public.bulk_edit_of_additional_codes_settings.id;
+ALTER SEQUENCE bulk_edit_of_additional_codes_settings_id_seq OWNED BY bulk_edit_of_additional_codes_settings.id;
 
 
 --
 -- Name: bulk_edit_of_measures_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.bulk_edit_of_measures_settings (
+CREATE TABLE bulk_edit_of_measures_settings (
     id integer NOT NULL,
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
@@ -647,7 +634,6 @@ CREATE TABLE public.bulk_edit_of_measures_settings (
     measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
     search_code text,
     initial_search_results_code text,
-    all_batched_loaded boolean DEFAULT false,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb
 );
@@ -657,7 +643,7 @@ CREATE TABLE public.bulk_edit_of_measures_settings (
 -- Name: bulk_edit_of_measures_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.bulk_edit_of_measures_settings_id_seq
+CREATE SEQUENCE bulk_edit_of_measures_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -669,14 +655,14 @@ CREATE SEQUENCE public.bulk_edit_of_measures_settings_id_seq
 -- Name: bulk_edit_of_measures_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.bulk_edit_of_measures_settings_id_seq OWNED BY public.bulk_edit_of_measures_settings.id;
+ALTER SEQUENCE bulk_edit_of_measures_settings_id_seq OWNED BY bulk_edit_of_measures_settings.id;
 
 
 --
 -- Name: certificate_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.certificate_description_periods_oplog (
+CREATE TABLE certificate_description_periods_oplog (
     certificate_description_period_sid integer,
     certificate_type_code character varying(1),
     certificate_code character varying(3),
@@ -697,7 +683,7 @@ CREATE TABLE public.certificate_description_periods_oplog (
 -- Name: certificate_description_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.certificate_description_periods AS
+CREATE VIEW certificate_description_periods AS
  SELECT certificate_description_periods1.certificate_description_period_sid,
     certificate_description_periods1.certificate_type_code,
     certificate_description_periods1.certificate_code,
@@ -710,9 +696,9 @@ CREATE VIEW public.certificate_description_periods AS
     certificate_description_periods1.status,
     certificate_description_periods1.workbasket_id,
     certificate_description_periods1.workbasket_sequence_number
-   FROM public.certificate_description_periods_oplog certificate_description_periods1
+   FROM certificate_description_periods_oplog certificate_description_periods1
   WHERE ((certificate_description_periods1.oid IN ( SELECT max(certificate_description_periods2.oid) AS max
-           FROM public.certificate_description_periods_oplog certificate_description_periods2
+           FROM certificate_description_periods_oplog certificate_description_periods2
           WHERE (certificate_description_periods1.certificate_description_period_sid = certificate_description_periods2.certificate_description_period_sid))) AND ((certificate_description_periods1.operation)::text <> 'D'::text));
 
 
@@ -720,7 +706,7 @@ CREATE VIEW public.certificate_description_periods AS
 -- Name: certificate_description_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.certificate_description_periods_oid_seq
+CREATE SEQUENCE certificate_description_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -732,14 +718,14 @@ CREATE SEQUENCE public.certificate_description_periods_oid_seq
 -- Name: certificate_description_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.certificate_description_periods_oid_seq OWNED BY public.certificate_description_periods_oplog.oid;
+ALTER SEQUENCE certificate_description_periods_oid_seq OWNED BY certificate_description_periods_oplog.oid;
 
 
 --
 -- Name: certificate_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.certificate_descriptions_oplog (
+CREATE TABLE certificate_descriptions_oplog (
     certificate_description_period_sid integer,
     language_id character varying(5),
     certificate_type_code character varying(1),
@@ -760,7 +746,7 @@ CREATE TABLE public.certificate_descriptions_oplog (
 -- Name: certificate_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.certificate_descriptions AS
+CREATE VIEW certificate_descriptions AS
  SELECT certificate_descriptions1.certificate_description_period_sid,
     certificate_descriptions1.language_id,
     certificate_descriptions1.certificate_type_code,
@@ -773,9 +759,9 @@ CREATE VIEW public.certificate_descriptions AS
     certificate_descriptions1.status,
     certificate_descriptions1.workbasket_id,
     certificate_descriptions1.workbasket_sequence_number
-   FROM public.certificate_descriptions_oplog certificate_descriptions1
+   FROM certificate_descriptions_oplog certificate_descriptions1
   WHERE ((certificate_descriptions1.oid IN ( SELECT max(certificate_descriptions2.oid) AS max
-           FROM public.certificate_descriptions_oplog certificate_descriptions2
+           FROM certificate_descriptions_oplog certificate_descriptions2
           WHERE (certificate_descriptions1.certificate_description_period_sid = certificate_descriptions2.certificate_description_period_sid))) AND ((certificate_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -783,7 +769,7 @@ CREATE VIEW public.certificate_descriptions AS
 -- Name: certificate_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.certificate_descriptions_oid_seq
+CREATE SEQUENCE certificate_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -795,14 +781,14 @@ CREATE SEQUENCE public.certificate_descriptions_oid_seq
 -- Name: certificate_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.certificate_descriptions_oid_seq OWNED BY public.certificate_descriptions_oplog.oid;
+ALTER SEQUENCE certificate_descriptions_oid_seq OWNED BY certificate_descriptions_oplog.oid;
 
 
 --
 -- Name: certificate_type_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.certificate_type_descriptions_oplog (
+CREATE TABLE certificate_type_descriptions_oplog (
     certificate_type_code character varying(1),
     language_id character varying(5),
     description text,
@@ -821,7 +807,7 @@ CREATE TABLE public.certificate_type_descriptions_oplog (
 -- Name: certificate_type_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.certificate_type_descriptions AS
+CREATE VIEW certificate_type_descriptions AS
  SELECT certificate_type_descriptions1.certificate_type_code,
     certificate_type_descriptions1.language_id,
     certificate_type_descriptions1.description,
@@ -832,9 +818,9 @@ CREATE VIEW public.certificate_type_descriptions AS
     certificate_type_descriptions1.status,
     certificate_type_descriptions1.workbasket_id,
     certificate_type_descriptions1.workbasket_sequence_number
-   FROM public.certificate_type_descriptions_oplog certificate_type_descriptions1
+   FROM certificate_type_descriptions_oplog certificate_type_descriptions1
   WHERE ((certificate_type_descriptions1.oid IN ( SELECT max(certificate_type_descriptions2.oid) AS max
-           FROM public.certificate_type_descriptions_oplog certificate_type_descriptions2
+           FROM certificate_type_descriptions_oplog certificate_type_descriptions2
           WHERE ((certificate_type_descriptions1.certificate_type_code)::text = (certificate_type_descriptions2.certificate_type_code)::text))) AND ((certificate_type_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -842,7 +828,7 @@ CREATE VIEW public.certificate_type_descriptions AS
 -- Name: certificate_type_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.certificate_type_descriptions_oid_seq
+CREATE SEQUENCE certificate_type_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -854,14 +840,14 @@ CREATE SEQUENCE public.certificate_type_descriptions_oid_seq
 -- Name: certificate_type_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.certificate_type_descriptions_oid_seq OWNED BY public.certificate_type_descriptions_oplog.oid;
+ALTER SEQUENCE certificate_type_descriptions_oid_seq OWNED BY certificate_type_descriptions_oplog.oid;
 
 
 --
 -- Name: certificate_types_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.certificate_types_oplog (
+CREATE TABLE certificate_types_oplog (
     certificate_type_code character varying(1),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -880,7 +866,7 @@ CREATE TABLE public.certificate_types_oplog (
 -- Name: certificate_types; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.certificate_types AS
+CREATE VIEW certificate_types AS
  SELECT certificate_types1.certificate_type_code,
     certificate_types1.validity_start_date,
     certificate_types1.validity_end_date,
@@ -891,9 +877,9 @@ CREATE VIEW public.certificate_types AS
     certificate_types1.status,
     certificate_types1.workbasket_id,
     certificate_types1.workbasket_sequence_number
-   FROM public.certificate_types_oplog certificate_types1
+   FROM certificate_types_oplog certificate_types1
   WHERE ((certificate_types1.oid IN ( SELECT max(certificate_types2.oid) AS max
-           FROM public.certificate_types_oplog certificate_types2
+           FROM certificate_types_oplog certificate_types2
           WHERE ((certificate_types1.certificate_type_code)::text = (certificate_types2.certificate_type_code)::text))) AND ((certificate_types1.operation)::text <> 'D'::text));
 
 
@@ -901,7 +887,7 @@ CREATE VIEW public.certificate_types AS
 -- Name: certificate_types_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.certificate_types_oid_seq
+CREATE SEQUENCE certificate_types_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -913,14 +899,14 @@ CREATE SEQUENCE public.certificate_types_oid_seq
 -- Name: certificate_types_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.certificate_types_oid_seq OWNED BY public.certificate_types_oplog.oid;
+ALTER SEQUENCE certificate_types_oid_seq OWNED BY certificate_types_oplog.oid;
 
 
 --
 -- Name: certificates_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.certificates_oplog (
+CREATE TABLE certificates_oplog (
     certificate_type_code character varying(1),
     certificate_code character varying(3),
     validity_start_date timestamp without time zone,
@@ -941,7 +927,7 @@ CREATE TABLE public.certificates_oplog (
 -- Name: certificates; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.certificates AS
+CREATE VIEW certificates AS
  SELECT certificates1.certificate_type_code,
     certificates1.certificate_code,
     certificates1.validity_start_date,
@@ -954,9 +940,9 @@ CREATE VIEW public.certificates AS
     certificates1.status,
     certificates1.workbasket_id,
     certificates1.workbasket_sequence_number
-   FROM public.certificates_oplog certificates1
+   FROM certificates_oplog certificates1
   WHERE ((certificates1.oid IN ( SELECT max(certificates2.oid) AS max
-           FROM public.certificates_oplog certificates2
+           FROM certificates_oplog certificates2
           WHERE (((certificates1.certificate_code)::text = (certificates2.certificate_code)::text) AND ((certificates1.certificate_type_code)::text = (certificates2.certificate_type_code)::text)))) AND ((certificates1.operation)::text <> 'D'::text));
 
 
@@ -964,7 +950,7 @@ CREATE VIEW public.certificates AS
 -- Name: certificates_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.certificates_oid_seq
+CREATE SEQUENCE certificates_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -976,14 +962,14 @@ CREATE SEQUENCE public.certificates_oid_seq
 -- Name: certificates_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.certificates_oid_seq OWNED BY public.certificates_oplog.oid;
+ALTER SEQUENCE certificates_oid_seq OWNED BY certificates_oplog.oid;
 
 
 --
 -- Name: chapter_notes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chapter_notes (
+CREATE TABLE chapter_notes (
     id integer NOT NULL,
     section_id integer,
     chapter_id character varying(2),
@@ -995,7 +981,7 @@ CREATE TABLE public.chapter_notes (
 -- Name: chapter_notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.chapter_notes_id_seq
+CREATE SEQUENCE chapter_notes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1007,14 +993,14 @@ CREATE SEQUENCE public.chapter_notes_id_seq
 -- Name: chapter_notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.chapter_notes_id_seq OWNED BY public.chapter_notes.id;
+ALTER SEQUENCE chapter_notes_id_seq OWNED BY chapter_notes.id;
 
 
 --
 -- Name: chapters_sections; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chapters_sections (
+CREATE TABLE chapters_sections (
     goods_nomenclature_sid integer,
     section_id integer
 );
@@ -1024,7 +1010,7 @@ CREATE TABLE public.chapters_sections (
 -- Name: chief_comm; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_comm (
+CREATE TABLE chief_comm (
     fe_tsmp timestamp without time zone,
     amend_indicator character varying(1),
     cmdty_code character varying(12),
@@ -1072,7 +1058,7 @@ CREATE TABLE public.chief_comm (
 -- Name: chief_country_code; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_country_code (
+CREATE TABLE chief_country_code (
     chief_country_cd character varying(2),
     country_cd character varying(2)
 );
@@ -1082,7 +1068,7 @@ CREATE TABLE public.chief_country_code (
 -- Name: chief_country_group; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_country_group (
+CREATE TABLE chief_country_group (
     chief_country_grp character varying(4),
     country_grp_region character varying(4),
     country_exclusions character varying(100)
@@ -1093,7 +1079,7 @@ CREATE TABLE public.chief_country_group (
 -- Name: chief_duty_expression; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_duty_expression (
+CREATE TABLE chief_duty_expression (
     id integer NOT NULL,
     adval1_rate boolean,
     adval2_rate boolean,
@@ -1114,7 +1100,7 @@ CREATE TABLE public.chief_duty_expression (
 -- Name: chief_duty_expression_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.chief_duty_expression_id_seq
+CREATE SEQUENCE chief_duty_expression_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1126,14 +1112,14 @@ CREATE SEQUENCE public.chief_duty_expression_id_seq
 -- Name: chief_duty_expression_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.chief_duty_expression_id_seq OWNED BY public.chief_duty_expression.id;
+ALTER SEQUENCE chief_duty_expression_id_seq OWNED BY chief_duty_expression.id;
 
 
 --
 -- Name: chief_measure_type_adco; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_measure_type_adco (
+CREATE TABLE chief_measure_type_adco (
     measure_group_code character varying(2),
     measure_type character varying(3),
     tax_type_code character varying(11),
@@ -1148,7 +1134,7 @@ CREATE TABLE public.chief_measure_type_adco (
 -- Name: chief_measure_type_cond; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_measure_type_cond (
+CREATE TABLE chief_measure_type_cond (
     measure_group_code character varying(2),
     measure_type character varying(3),
     cond_cd character varying(1),
@@ -1163,7 +1149,7 @@ CREATE TABLE public.chief_measure_type_cond (
 -- Name: chief_measure_type_footnote; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_measure_type_footnote (
+CREATE TABLE chief_measure_type_footnote (
     id integer NOT NULL,
     measure_type_id character varying(3),
     footn_type_id character varying(2),
@@ -1175,7 +1161,7 @@ CREATE TABLE public.chief_measure_type_footnote (
 -- Name: chief_measure_type_footnote_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.chief_measure_type_footnote_id_seq
+CREATE SEQUENCE chief_measure_type_footnote_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1187,14 +1173,14 @@ CREATE SEQUENCE public.chief_measure_type_footnote_id_seq
 -- Name: chief_measure_type_footnote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.chief_measure_type_footnote_id_seq OWNED BY public.chief_measure_type_footnote.id;
+ALTER SEQUENCE chief_measure_type_footnote_id_seq OWNED BY chief_measure_type_footnote.id;
 
 
 --
 -- Name: chief_measurement_unit; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_measurement_unit (
+CREATE TABLE chief_measurement_unit (
     id integer NOT NULL,
     spfc_cmpd_uoq character varying(3),
     spfc_uoq character varying(3),
@@ -1207,7 +1193,7 @@ CREATE TABLE public.chief_measurement_unit (
 -- Name: chief_measurement_unit_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.chief_measurement_unit_id_seq
+CREATE SEQUENCE chief_measurement_unit_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1219,14 +1205,14 @@ CREATE SEQUENCE public.chief_measurement_unit_id_seq
 -- Name: chief_measurement_unit_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.chief_measurement_unit_id_seq OWNED BY public.chief_measurement_unit.id;
+ALTER SEQUENCE chief_measurement_unit_id_seq OWNED BY chief_measurement_unit.id;
 
 
 --
 -- Name: chief_mfcm; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_mfcm (
+CREATE TABLE chief_mfcm (
     fe_tsmp timestamp without time zone,
     msrgp_code character varying(5),
     msr_type character varying(5),
@@ -1248,7 +1234,7 @@ CREATE TABLE public.chief_mfcm (
 -- Name: chief_tame; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_tame (
+CREATE TABLE chief_tame (
     fe_tsmp timestamp without time zone,
     msrgp_code character varying(5),
     msr_type character varying(5),
@@ -1293,7 +1279,7 @@ CREATE TABLE public.chief_tame (
 -- Name: chief_tamf; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_tamf (
+CREATE TABLE chief_tamf (
     fe_tsmp timestamp without time zone,
     msrgp_code character varying(5),
     msr_type character varying(5),
@@ -1331,7 +1317,7 @@ CREATE TABLE public.chief_tamf (
 -- Name: chief_tbl9; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.chief_tbl9 (
+CREATE TABLE chief_tbl9 (
     fe_tsmp timestamp without time zone,
     amend_indicator character varying(1),
     tbl_type character varying(4),
@@ -1346,7 +1332,7 @@ CREATE TABLE public.chief_tbl9 (
 -- Name: complete_abrogation_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.complete_abrogation_regulations_oplog (
+CREATE TABLE complete_abrogation_regulations_oplog (
     complete_abrogation_regulation_role integer,
     complete_abrogation_regulation_id character varying(255),
     published_date date,
@@ -1372,7 +1358,7 @@ CREATE TABLE public.complete_abrogation_regulations_oplog (
 -- Name: complete_abrogation_regulations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.complete_abrogation_regulations AS
+CREATE VIEW complete_abrogation_regulations AS
  SELECT complete_abrogation_regulations1.complete_abrogation_regulation_role,
     complete_abrogation_regulations1.complete_abrogation_regulation_id,
     complete_abrogation_regulations1.published_date,
@@ -1390,9 +1376,9 @@ CREATE VIEW public.complete_abrogation_regulations AS
     complete_abrogation_regulations1.status,
     complete_abrogation_regulations1.workbasket_id,
     complete_abrogation_regulations1.workbasket_sequence_number
-   FROM public.complete_abrogation_regulations_oplog complete_abrogation_regulations1
+   FROM complete_abrogation_regulations_oplog complete_abrogation_regulations1
   WHERE ((complete_abrogation_regulations1.oid IN ( SELECT max(complete_abrogation_regulations2.oid) AS max
-           FROM public.complete_abrogation_regulations_oplog complete_abrogation_regulations2
+           FROM complete_abrogation_regulations_oplog complete_abrogation_regulations2
           WHERE (((complete_abrogation_regulations1.complete_abrogation_regulation_id)::text = (complete_abrogation_regulations2.complete_abrogation_regulation_id)::text) AND (complete_abrogation_regulations1.complete_abrogation_regulation_role = complete_abrogation_regulations2.complete_abrogation_regulation_role)))) AND ((complete_abrogation_regulations1.operation)::text <> 'D'::text));
 
 
@@ -1400,7 +1386,7 @@ CREATE VIEW public.complete_abrogation_regulations AS
 -- Name: complete_abrogation_regulations_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.complete_abrogation_regulations_oid_seq
+CREATE SEQUENCE complete_abrogation_regulations_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1412,14 +1398,14 @@ CREATE SEQUENCE public.complete_abrogation_regulations_oid_seq
 -- Name: complete_abrogation_regulations_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.complete_abrogation_regulations_oid_seq OWNED BY public.complete_abrogation_regulations_oplog.oid;
+ALTER SEQUENCE complete_abrogation_regulations_oid_seq OWNED BY complete_abrogation_regulations_oplog.oid;
 
 
 --
 -- Name: create_additional_code_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.create_additional_code_workbasket_settings (
+CREATE TABLE create_additional_code_workbasket_settings (
     id integer NOT NULL,
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
@@ -1433,7 +1419,7 @@ CREATE TABLE public.create_additional_code_workbasket_settings (
 -- Name: create_additional_code_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.create_additional_code_workbasket_settings_id_seq
+CREATE SEQUENCE create_additional_code_workbasket_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1445,14 +1431,14 @@ CREATE SEQUENCE public.create_additional_code_workbasket_settings_id_seq
 -- Name: create_additional_code_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.create_additional_code_workbasket_settings_id_seq OWNED BY public.create_additional_code_workbasket_settings.id;
+ALTER SEQUENCE create_additional_code_workbasket_settings_id_seq OWNED BY create_additional_code_workbasket_settings.id;
 
 
 --
 -- Name: create_measures_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.create_measures_workbasket_settings (
+CREATE TABLE create_measures_workbasket_settings (
     id integer NOT NULL,
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
@@ -1469,7 +1455,7 @@ CREATE TABLE public.create_measures_workbasket_settings (
 -- Name: create_measures_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.create_measures_workbasket_settings_id_seq
+CREATE SEQUENCE create_measures_workbasket_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1481,14 +1467,14 @@ CREATE SEQUENCE public.create_measures_workbasket_settings_id_seq
 -- Name: create_measures_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.create_measures_workbasket_settings_id_seq OWNED BY public.create_measures_workbasket_settings.id;
+ALTER SEQUENCE create_measures_workbasket_settings_id_seq OWNED BY create_measures_workbasket_settings.id;
 
 
 --
 -- Name: create_quota_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.create_quota_workbasket_settings (
+CREATE TABLE create_quota_workbasket_settings (
     id integer NOT NULL,
     workbasket_id integer,
     settings_jsonb jsonb DEFAULT '{}'::jsonb,
@@ -1510,7 +1496,7 @@ CREATE TABLE public.create_quota_workbasket_settings (
 -- Name: create_quota_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.create_quota_workbasket_settings_id_seq
+CREATE SEQUENCE create_quota_workbasket_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1522,14 +1508,14 @@ CREATE SEQUENCE public.create_quota_workbasket_settings_id_seq
 -- Name: create_quota_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.create_quota_workbasket_settings_id_seq OWNED BY public.create_quota_workbasket_settings.id;
+ALTER SEQUENCE create_quota_workbasket_settings_id_seq OWNED BY create_quota_workbasket_settings.id;
 
 
 --
 -- Name: create_regulation_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.create_regulation_workbasket_settings (
+CREATE TABLE create_regulation_workbasket_settings (
     id integer NOT NULL,
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
@@ -1543,7 +1529,7 @@ CREATE TABLE public.create_regulation_workbasket_settings (
 -- Name: create_regulation_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.create_regulation_workbasket_settings_id_seq
+CREATE SEQUENCE create_regulation_workbasket_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1555,14 +1541,14 @@ CREATE SEQUENCE public.create_regulation_workbasket_settings_id_seq
 -- Name: create_regulation_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.create_regulation_workbasket_settings_id_seq OWNED BY public.create_regulation_workbasket_settings.id;
+ALTER SEQUENCE create_regulation_workbasket_settings_id_seq OWNED BY create_regulation_workbasket_settings.id;
 
 
 --
 -- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.data_migrations (
+CREATE TABLE data_migrations (
     filename text NOT NULL
 );
 
@@ -1571,7 +1557,7 @@ CREATE TABLE public.data_migrations (
 -- Name: db_rollbacks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.db_rollbacks (
+CREATE TABLE db_rollbacks (
     id integer NOT NULL,
     state character varying(1),
     issue_date timestamp without time zone,
@@ -1585,7 +1571,7 @@ CREATE TABLE public.db_rollbacks (
 -- Name: db_rollbacks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.db_rollbacks_id_seq
+CREATE SEQUENCE db_rollbacks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1597,14 +1583,14 @@ CREATE SEQUENCE public.db_rollbacks_id_seq
 -- Name: db_rollbacks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.db_rollbacks_id_seq OWNED BY public.db_rollbacks.id;
+ALTER SEQUENCE db_rollbacks_id_seq OWNED BY db_rollbacks.id;
 
 
 --
 -- Name: duty_expression_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.duty_expression_descriptions_oplog (
+CREATE TABLE duty_expression_descriptions_oplog (
     duty_expression_id character varying(255),
     language_id character varying(5),
     description text,
@@ -1622,7 +1608,7 @@ CREATE TABLE public.duty_expression_descriptions_oplog (
 -- Name: duty_expression_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.duty_expression_descriptions AS
+CREATE VIEW duty_expression_descriptions AS
  SELECT duty_expression_descriptions1.duty_expression_id,
     duty_expression_descriptions1.language_id,
     duty_expression_descriptions1.description,
@@ -1632,9 +1618,9 @@ CREATE VIEW public.duty_expression_descriptions AS
     duty_expression_descriptions1.status,
     duty_expression_descriptions1.workbasket_id,
     duty_expression_descriptions1.workbasket_sequence_number
-   FROM public.duty_expression_descriptions_oplog duty_expression_descriptions1
+   FROM duty_expression_descriptions_oplog duty_expression_descriptions1
   WHERE ((duty_expression_descriptions1.oid IN ( SELECT max(duty_expression_descriptions2.oid) AS max
-           FROM public.duty_expression_descriptions_oplog duty_expression_descriptions2
+           FROM duty_expression_descriptions_oplog duty_expression_descriptions2
           WHERE ((duty_expression_descriptions1.duty_expression_id)::text = (duty_expression_descriptions2.duty_expression_id)::text))) AND ((duty_expression_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -1642,7 +1628,7 @@ CREATE VIEW public.duty_expression_descriptions AS
 -- Name: duty_expression_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.duty_expression_descriptions_oid_seq
+CREATE SEQUENCE duty_expression_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1654,14 +1640,14 @@ CREATE SEQUENCE public.duty_expression_descriptions_oid_seq
 -- Name: duty_expression_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.duty_expression_descriptions_oid_seq OWNED BY public.duty_expression_descriptions_oplog.oid;
+ALTER SEQUENCE duty_expression_descriptions_oid_seq OWNED BY duty_expression_descriptions_oplog.oid;
 
 
 --
 -- Name: duty_expressions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.duty_expressions_oplog (
+CREATE TABLE duty_expressions_oplog (
     duty_expression_id character varying(255),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -1682,7 +1668,7 @@ CREATE TABLE public.duty_expressions_oplog (
 -- Name: duty_expressions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.duty_expressions AS
+CREATE VIEW duty_expressions AS
  SELECT duty_expressions1.duty_expression_id,
     duty_expressions1.validity_start_date,
     duty_expressions1.validity_end_date,
@@ -1695,9 +1681,9 @@ CREATE VIEW public.duty_expressions AS
     duty_expressions1.status,
     duty_expressions1.workbasket_id,
     duty_expressions1.workbasket_sequence_number
-   FROM public.duty_expressions_oplog duty_expressions1
+   FROM duty_expressions_oplog duty_expressions1
   WHERE ((duty_expressions1.oid IN ( SELECT max(duty_expressions2.oid) AS max
-           FROM public.duty_expressions_oplog duty_expressions2
+           FROM duty_expressions_oplog duty_expressions2
           WHERE ((duty_expressions1.duty_expression_id)::text = (duty_expressions2.duty_expression_id)::text))) AND ((duty_expressions1.operation)::text <> 'D'::text));
 
 
@@ -1705,7 +1691,7 @@ CREATE VIEW public.duty_expressions AS
 -- Name: duty_expressions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.duty_expressions_oid_seq
+CREATE SEQUENCE duty_expressions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1717,14 +1703,14 @@ CREATE SEQUENCE public.duty_expressions_oid_seq
 -- Name: duty_expressions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.duty_expressions_oid_seq OWNED BY public.duty_expressions_oplog.oid;
+ALTER SEQUENCE duty_expressions_oid_seq OWNED BY duty_expressions_oplog.oid;
 
 
 --
 -- Name: explicit_abrogation_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.explicit_abrogation_regulations_oplog (
+CREATE TABLE explicit_abrogation_regulations_oplog (
     explicit_abrogation_regulation_role integer,
     explicit_abrogation_regulation_id character varying(8),
     published_date date,
@@ -1751,7 +1737,7 @@ CREATE TABLE public.explicit_abrogation_regulations_oplog (
 -- Name: explicit_abrogation_regulations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.explicit_abrogation_regulations AS
+CREATE VIEW explicit_abrogation_regulations AS
  SELECT explicit_abrogation_regulations1.explicit_abrogation_regulation_role,
     explicit_abrogation_regulations1.explicit_abrogation_regulation_id,
     explicit_abrogation_regulations1.published_date,
@@ -1770,9 +1756,9 @@ CREATE VIEW public.explicit_abrogation_regulations AS
     explicit_abrogation_regulations1.status,
     explicit_abrogation_regulations1.workbasket_id,
     explicit_abrogation_regulations1.workbasket_sequence_number
-   FROM public.explicit_abrogation_regulations_oplog explicit_abrogation_regulations1
+   FROM explicit_abrogation_regulations_oplog explicit_abrogation_regulations1
   WHERE ((explicit_abrogation_regulations1.oid IN ( SELECT max(explicit_abrogation_regulations2.oid) AS max
-           FROM public.explicit_abrogation_regulations_oplog explicit_abrogation_regulations2
+           FROM explicit_abrogation_regulations_oplog explicit_abrogation_regulations2
           WHERE (((explicit_abrogation_regulations1.explicit_abrogation_regulation_id)::text = (explicit_abrogation_regulations2.explicit_abrogation_regulation_id)::text) AND (explicit_abrogation_regulations1.explicit_abrogation_regulation_role = explicit_abrogation_regulations2.explicit_abrogation_regulation_role)))) AND ((explicit_abrogation_regulations1.operation)::text <> 'D'::text));
 
 
@@ -1780,7 +1766,7 @@ CREATE VIEW public.explicit_abrogation_regulations AS
 -- Name: explicit_abrogation_regulations_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.explicit_abrogation_regulations_oid_seq
+CREATE SEQUENCE explicit_abrogation_regulations_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1792,14 +1778,14 @@ CREATE SEQUENCE public.explicit_abrogation_regulations_oid_seq
 -- Name: explicit_abrogation_regulations_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.explicit_abrogation_regulations_oid_seq OWNED BY public.explicit_abrogation_regulations_oplog.oid;
+ALTER SEQUENCE explicit_abrogation_regulations_oid_seq OWNED BY explicit_abrogation_regulations_oplog.oid;
 
 
 --
 -- Name: export_refund_nomenclature_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.export_refund_nomenclature_description_periods_oplog (
+CREATE TABLE export_refund_nomenclature_description_periods_oplog (
     export_refund_nomenclature_description_period_sid integer,
     export_refund_nomenclature_sid integer,
     validity_start_date timestamp without time zone,
@@ -1822,7 +1808,7 @@ CREATE TABLE public.export_refund_nomenclature_description_periods_oplog (
 -- Name: export_refund_nomenclature_description_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.export_refund_nomenclature_description_periods AS
+CREATE VIEW export_refund_nomenclature_description_periods AS
  SELECT export_refund_nomenclature_description_periods1.export_refund_nomenclature_description_period_sid,
     export_refund_nomenclature_description_periods1.export_refund_nomenclature_sid,
     export_refund_nomenclature_description_periods1.validity_start_date,
@@ -1837,9 +1823,9 @@ CREATE VIEW public.export_refund_nomenclature_description_periods AS
     export_refund_nomenclature_description_periods1.status,
     export_refund_nomenclature_description_periods1.workbasket_id,
     export_refund_nomenclature_description_periods1.workbasket_sequence_number
-   FROM public.export_refund_nomenclature_description_periods_oplog export_refund_nomenclature_description_periods1
+   FROM export_refund_nomenclature_description_periods_oplog export_refund_nomenclature_description_periods1
   WHERE ((export_refund_nomenclature_description_periods1.oid IN ( SELECT max(export_refund_nomenclature_description_periods2.oid) AS max
-           FROM public.export_refund_nomenclature_description_periods_oplog export_refund_nomenclature_description_periods2
+           FROM export_refund_nomenclature_description_periods_oplog export_refund_nomenclature_description_periods2
           WHERE ((export_refund_nomenclature_description_periods1.export_refund_nomenclature_sid = export_refund_nomenclature_description_periods2.export_refund_nomenclature_sid) AND (export_refund_nomenclature_description_periods1.export_refund_nomenclature_description_period_sid = export_refund_nomenclature_description_periods2.export_refund_nomenclature_description_period_sid)))) AND ((export_refund_nomenclature_description_periods1.operation)::text <> 'D'::text));
 
 
@@ -1847,7 +1833,7 @@ CREATE VIEW public.export_refund_nomenclature_description_periods AS
 -- Name: export_refund_nomenclature_description_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.export_refund_nomenclature_description_periods_oid_seq
+CREATE SEQUENCE export_refund_nomenclature_description_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1859,14 +1845,14 @@ CREATE SEQUENCE public.export_refund_nomenclature_description_periods_oid_seq
 -- Name: export_refund_nomenclature_description_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.export_refund_nomenclature_description_periods_oid_seq OWNED BY public.export_refund_nomenclature_description_periods_oplog.oid;
+ALTER SEQUENCE export_refund_nomenclature_description_periods_oid_seq OWNED BY export_refund_nomenclature_description_periods_oplog.oid;
 
 
 --
 -- Name: export_refund_nomenclature_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.export_refund_nomenclature_descriptions_oplog (
+CREATE TABLE export_refund_nomenclature_descriptions_oplog (
     export_refund_nomenclature_description_period_sid integer,
     language_id character varying(5),
     export_refund_nomenclature_sid integer,
@@ -1889,7 +1875,7 @@ CREATE TABLE public.export_refund_nomenclature_descriptions_oplog (
 -- Name: export_refund_nomenclature_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.export_refund_nomenclature_descriptions AS
+CREATE VIEW export_refund_nomenclature_descriptions AS
  SELECT export_refund_nomenclature_descriptions1.export_refund_nomenclature_description_period_sid,
     export_refund_nomenclature_descriptions1.language_id,
     export_refund_nomenclature_descriptions1.export_refund_nomenclature_sid,
@@ -1904,9 +1890,9 @@ CREATE VIEW public.export_refund_nomenclature_descriptions AS
     export_refund_nomenclature_descriptions1.status,
     export_refund_nomenclature_descriptions1.workbasket_id,
     export_refund_nomenclature_descriptions1.workbasket_sequence_number
-   FROM public.export_refund_nomenclature_descriptions_oplog export_refund_nomenclature_descriptions1
+   FROM export_refund_nomenclature_descriptions_oplog export_refund_nomenclature_descriptions1
   WHERE ((export_refund_nomenclature_descriptions1.oid IN ( SELECT max(export_refund_nomenclature_descriptions2.oid) AS max
-           FROM public.export_refund_nomenclature_descriptions_oplog export_refund_nomenclature_descriptions2
+           FROM export_refund_nomenclature_descriptions_oplog export_refund_nomenclature_descriptions2
           WHERE (export_refund_nomenclature_descriptions1.export_refund_nomenclature_description_period_sid = export_refund_nomenclature_descriptions2.export_refund_nomenclature_description_period_sid))) AND ((export_refund_nomenclature_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -1914,7 +1900,7 @@ CREATE VIEW public.export_refund_nomenclature_descriptions AS
 -- Name: export_refund_nomenclature_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.export_refund_nomenclature_descriptions_oid_seq
+CREATE SEQUENCE export_refund_nomenclature_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1926,14 +1912,14 @@ CREATE SEQUENCE public.export_refund_nomenclature_descriptions_oid_seq
 -- Name: export_refund_nomenclature_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.export_refund_nomenclature_descriptions_oid_seq OWNED BY public.export_refund_nomenclature_descriptions_oplog.oid;
+ALTER SEQUENCE export_refund_nomenclature_descriptions_oid_seq OWNED BY export_refund_nomenclature_descriptions_oplog.oid;
 
 
 --
 -- Name: export_refund_nomenclature_indents_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.export_refund_nomenclature_indents_oplog (
+CREATE TABLE export_refund_nomenclature_indents_oplog (
     export_refund_nomenclature_indents_sid integer,
     export_refund_nomenclature_sid integer,
     validity_start_date timestamp without time zone,
@@ -1957,7 +1943,7 @@ CREATE TABLE public.export_refund_nomenclature_indents_oplog (
 -- Name: export_refund_nomenclature_indents; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.export_refund_nomenclature_indents AS
+CREATE VIEW export_refund_nomenclature_indents AS
  SELECT export_refund_nomenclature_indents1.export_refund_nomenclature_indents_sid,
     export_refund_nomenclature_indents1.export_refund_nomenclature_sid,
     export_refund_nomenclature_indents1.validity_start_date,
@@ -1973,9 +1959,9 @@ CREATE VIEW public.export_refund_nomenclature_indents AS
     export_refund_nomenclature_indents1.status,
     export_refund_nomenclature_indents1.workbasket_id,
     export_refund_nomenclature_indents1.workbasket_sequence_number
-   FROM public.export_refund_nomenclature_indents_oplog export_refund_nomenclature_indents1
+   FROM export_refund_nomenclature_indents_oplog export_refund_nomenclature_indents1
   WHERE ((export_refund_nomenclature_indents1.oid IN ( SELECT max(export_refund_nomenclature_indents2.oid) AS max
-           FROM public.export_refund_nomenclature_indents_oplog export_refund_nomenclature_indents2
+           FROM export_refund_nomenclature_indents_oplog export_refund_nomenclature_indents2
           WHERE (export_refund_nomenclature_indents1.export_refund_nomenclature_indents_sid = export_refund_nomenclature_indents2.export_refund_nomenclature_indents_sid))) AND ((export_refund_nomenclature_indents1.operation)::text <> 'D'::text));
 
 
@@ -1983,7 +1969,7 @@ CREATE VIEW public.export_refund_nomenclature_indents AS
 -- Name: export_refund_nomenclature_indents_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.export_refund_nomenclature_indents_oid_seq
+CREATE SEQUENCE export_refund_nomenclature_indents_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1995,14 +1981,14 @@ CREATE SEQUENCE public.export_refund_nomenclature_indents_oid_seq
 -- Name: export_refund_nomenclature_indents_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.export_refund_nomenclature_indents_oid_seq OWNED BY public.export_refund_nomenclature_indents_oplog.oid;
+ALTER SEQUENCE export_refund_nomenclature_indents_oid_seq OWNED BY export_refund_nomenclature_indents_oplog.oid;
 
 
 --
 -- Name: export_refund_nomenclatures_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.export_refund_nomenclatures_oplog (
+CREATE TABLE export_refund_nomenclatures_oplog (
     export_refund_nomenclature_sid integer,
     goods_nomenclature_item_id character varying(10),
     additional_code_type character varying(1),
@@ -2025,7 +2011,7 @@ CREATE TABLE public.export_refund_nomenclatures_oplog (
 -- Name: export_refund_nomenclatures; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.export_refund_nomenclatures AS
+CREATE VIEW export_refund_nomenclatures AS
  SELECT export_refund_nomenclatures1.export_refund_nomenclature_sid,
     export_refund_nomenclatures1.goods_nomenclature_item_id,
     export_refund_nomenclatures1.additional_code_type,
@@ -2040,9 +2026,9 @@ CREATE VIEW public.export_refund_nomenclatures AS
     export_refund_nomenclatures1.status,
     export_refund_nomenclatures1.workbasket_id,
     export_refund_nomenclatures1.workbasket_sequence_number
-   FROM public.export_refund_nomenclatures_oplog export_refund_nomenclatures1
+   FROM export_refund_nomenclatures_oplog export_refund_nomenclatures1
   WHERE ((export_refund_nomenclatures1.oid IN ( SELECT max(export_refund_nomenclatures2.oid) AS max
-           FROM public.export_refund_nomenclatures_oplog export_refund_nomenclatures2
+           FROM export_refund_nomenclatures_oplog export_refund_nomenclatures2
           WHERE (export_refund_nomenclatures1.export_refund_nomenclature_sid = export_refund_nomenclatures2.export_refund_nomenclature_sid))) AND ((export_refund_nomenclatures1.operation)::text <> 'D'::text));
 
 
@@ -2050,7 +2036,7 @@ CREATE VIEW public.export_refund_nomenclatures AS
 -- Name: export_refund_nomenclatures_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.export_refund_nomenclatures_oid_seq
+CREATE SEQUENCE export_refund_nomenclatures_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2062,14 +2048,14 @@ CREATE SEQUENCE public.export_refund_nomenclatures_oid_seq
 -- Name: export_refund_nomenclatures_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.export_refund_nomenclatures_oid_seq OWNED BY public.export_refund_nomenclatures_oplog.oid;
+ALTER SEQUENCE export_refund_nomenclatures_oid_seq OWNED BY export_refund_nomenclatures_oplog.oid;
 
 
 --
 -- Name: footnote_association_additional_codes_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_association_additional_codes_oplog (
+CREATE TABLE footnote_association_additional_codes_oplog (
     additional_code_sid integer,
     footnote_type_id character varying(2),
     footnote_id character varying(5),
@@ -2091,7 +2077,7 @@ CREATE TABLE public.footnote_association_additional_codes_oplog (
 -- Name: footnote_association_additional_codes; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_association_additional_codes AS
+CREATE VIEW footnote_association_additional_codes AS
  SELECT footnote_association_additional_codes1.additional_code_sid,
     footnote_association_additional_codes1.footnote_type_id,
     footnote_association_additional_codes1.footnote_id,
@@ -2105,9 +2091,9 @@ CREATE VIEW public.footnote_association_additional_codes AS
     footnote_association_additional_codes1.status,
     footnote_association_additional_codes1.workbasket_id,
     footnote_association_additional_codes1.workbasket_sequence_number
-   FROM public.footnote_association_additional_codes_oplog footnote_association_additional_codes1
+   FROM footnote_association_additional_codes_oplog footnote_association_additional_codes1
   WHERE ((footnote_association_additional_codes1.oid IN ( SELECT max(footnote_association_additional_codes2.oid) AS max
-           FROM public.footnote_association_additional_codes_oplog footnote_association_additional_codes2
+           FROM footnote_association_additional_codes_oplog footnote_association_additional_codes2
           WHERE (((footnote_association_additional_codes1.footnote_id)::text = (footnote_association_additional_codes2.footnote_id)::text) AND ((footnote_association_additional_codes1.footnote_type_id)::text = (footnote_association_additional_codes2.footnote_type_id)::text) AND (footnote_association_additional_codes1.additional_code_sid = footnote_association_additional_codes2.additional_code_sid)))) AND ((footnote_association_additional_codes1.operation)::text <> 'D'::text));
 
 
@@ -2115,7 +2101,7 @@ CREATE VIEW public.footnote_association_additional_codes AS
 -- Name: footnote_association_additional_codes_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_association_additional_codes_oid_seq
+CREATE SEQUENCE footnote_association_additional_codes_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2127,14 +2113,14 @@ CREATE SEQUENCE public.footnote_association_additional_codes_oid_seq
 -- Name: footnote_association_additional_codes_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_association_additional_codes_oid_seq OWNED BY public.footnote_association_additional_codes_oplog.oid;
+ALTER SEQUENCE footnote_association_additional_codes_oid_seq OWNED BY footnote_association_additional_codes_oplog.oid;
 
 
 --
 -- Name: footnote_association_erns_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_association_erns_oplog (
+CREATE TABLE footnote_association_erns_oplog (
     export_refund_nomenclature_sid integer,
     footnote_type character varying(2),
     footnote_id character varying(5),
@@ -2158,7 +2144,7 @@ CREATE TABLE public.footnote_association_erns_oplog (
 -- Name: footnote_association_erns; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_association_erns AS
+CREATE VIEW footnote_association_erns AS
  SELECT footnote_association_erns1.export_refund_nomenclature_sid,
     footnote_association_erns1.footnote_type,
     footnote_association_erns1.footnote_id,
@@ -2174,9 +2160,9 @@ CREATE VIEW public.footnote_association_erns AS
     footnote_association_erns1.status,
     footnote_association_erns1.workbasket_id,
     footnote_association_erns1.workbasket_sequence_number
-   FROM public.footnote_association_erns_oplog footnote_association_erns1
+   FROM footnote_association_erns_oplog footnote_association_erns1
   WHERE ((footnote_association_erns1.oid IN ( SELECT max(footnote_association_erns2.oid) AS max
-           FROM public.footnote_association_erns_oplog footnote_association_erns2
+           FROM footnote_association_erns_oplog footnote_association_erns2
           WHERE ((footnote_association_erns1.export_refund_nomenclature_sid = footnote_association_erns2.export_refund_nomenclature_sid) AND ((footnote_association_erns1.footnote_id)::text = (footnote_association_erns2.footnote_id)::text) AND ((footnote_association_erns1.footnote_type)::text = (footnote_association_erns2.footnote_type)::text) AND (footnote_association_erns1.validity_start_date = footnote_association_erns2.validity_start_date)))) AND ((footnote_association_erns1.operation)::text <> 'D'::text));
 
 
@@ -2184,7 +2170,7 @@ CREATE VIEW public.footnote_association_erns AS
 -- Name: footnote_association_erns_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_association_erns_oid_seq
+CREATE SEQUENCE footnote_association_erns_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2196,14 +2182,14 @@ CREATE SEQUENCE public.footnote_association_erns_oid_seq
 -- Name: footnote_association_erns_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_association_erns_oid_seq OWNED BY public.footnote_association_erns_oplog.oid;
+ALTER SEQUENCE footnote_association_erns_oid_seq OWNED BY footnote_association_erns_oplog.oid;
 
 
 --
 -- Name: footnote_association_goods_nomenclatures_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
+CREATE TABLE footnote_association_goods_nomenclatures_oplog (
     goods_nomenclature_sid integer,
     footnote_type character varying(2),
     footnote_id character varying(5),
@@ -2226,7 +2212,7 @@ CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
 -- Name: footnote_association_goods_nomenclatures; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_association_goods_nomenclatures AS
+CREATE VIEW footnote_association_goods_nomenclatures AS
  SELECT footnote_association_goods_nomenclatures1.goods_nomenclature_sid,
     footnote_association_goods_nomenclatures1.footnote_type,
     footnote_association_goods_nomenclatures1.footnote_id,
@@ -2241,9 +2227,9 @@ CREATE VIEW public.footnote_association_goods_nomenclatures AS
     footnote_association_goods_nomenclatures1.status,
     footnote_association_goods_nomenclatures1.workbasket_id,
     footnote_association_goods_nomenclatures1.workbasket_sequence_number
-   FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures1
+   FROM footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures1
   WHERE ((footnote_association_goods_nomenclatures1.oid IN ( SELECT max(footnote_association_goods_nomenclatures2.oid) AS max
-           FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures2
+           FROM footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures2
           WHERE (((footnote_association_goods_nomenclatures1.footnote_id)::text = (footnote_association_goods_nomenclatures2.footnote_id)::text) AND ((footnote_association_goods_nomenclatures1.footnote_type)::text = (footnote_association_goods_nomenclatures2.footnote_type)::text) AND (footnote_association_goods_nomenclatures1.goods_nomenclature_sid = footnote_association_goods_nomenclatures2.goods_nomenclature_sid)))) AND ((footnote_association_goods_nomenclatures1.operation)::text <> 'D'::text));
 
 
@@ -2251,7 +2237,7 @@ CREATE VIEW public.footnote_association_goods_nomenclatures AS
 -- Name: footnote_association_goods_nomenclatures_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_association_goods_nomenclatures_oid_seq
+CREATE SEQUENCE footnote_association_goods_nomenclatures_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2263,14 +2249,14 @@ CREATE SEQUENCE public.footnote_association_goods_nomenclatures_oid_seq
 -- Name: footnote_association_goods_nomenclatures_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_association_goods_nomenclatures_oid_seq OWNED BY public.footnote_association_goods_nomenclatures_oplog.oid;
+ALTER SEQUENCE footnote_association_goods_nomenclatures_oid_seq OWNED BY footnote_association_goods_nomenclatures_oplog.oid;
 
 
 --
 -- Name: footnote_association_measures_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_association_measures_oplog (
+CREATE TABLE footnote_association_measures_oplog (
     measure_sid integer,
     footnote_type_id character varying(2),
     footnote_id character varying(5),
@@ -2291,7 +2277,7 @@ CREATE TABLE public.footnote_association_measures_oplog (
 -- Name: footnote_association_measures; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_association_measures AS
+CREATE VIEW footnote_association_measures AS
  SELECT footnote_association_measures1.measure_sid,
     footnote_association_measures1.footnote_type_id,
     footnote_association_measures1.footnote_id,
@@ -2304,9 +2290,9 @@ CREATE VIEW public.footnote_association_measures AS
     footnote_association_measures1.status,
     footnote_association_measures1.workbasket_id,
     footnote_association_measures1.workbasket_sequence_number
-   FROM public.footnote_association_measures_oplog footnote_association_measures1
+   FROM footnote_association_measures_oplog footnote_association_measures1
   WHERE ((footnote_association_measures1.oid IN ( SELECT max(footnote_association_measures2.oid) AS max
-           FROM public.footnote_association_measures_oplog footnote_association_measures2
+           FROM footnote_association_measures_oplog footnote_association_measures2
           WHERE ((footnote_association_measures1.measure_sid = footnote_association_measures2.measure_sid) AND ((footnote_association_measures1.footnote_id)::text = (footnote_association_measures2.footnote_id)::text) AND ((footnote_association_measures1.footnote_type_id)::text = (footnote_association_measures2.footnote_type_id)::text)))) AND ((footnote_association_measures1.operation)::text <> 'D'::text));
 
 
@@ -2314,7 +2300,7 @@ CREATE VIEW public.footnote_association_measures AS
 -- Name: footnote_association_measures_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_association_measures_oid_seq
+CREATE SEQUENCE footnote_association_measures_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2326,14 +2312,14 @@ CREATE SEQUENCE public.footnote_association_measures_oid_seq
 -- Name: footnote_association_measures_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_association_measures_oid_seq OWNED BY public.footnote_association_measures_oplog.oid;
+ALTER SEQUENCE footnote_association_measures_oid_seq OWNED BY footnote_association_measures_oplog.oid;
 
 
 --
 -- Name: footnote_association_meursing_headings_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_association_meursing_headings_oplog (
+CREATE TABLE footnote_association_meursing_headings_oplog (
     meursing_table_plan_id character varying(2),
     meursing_heading_number character varying(255),
     row_column_code integer,
@@ -2355,7 +2341,7 @@ CREATE TABLE public.footnote_association_meursing_headings_oplog (
 -- Name: footnote_association_meursing_headings; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_association_meursing_headings AS
+CREATE VIEW footnote_association_meursing_headings AS
  SELECT footnote_association_meursing_headings1.meursing_table_plan_id,
     footnote_association_meursing_headings1.meursing_heading_number,
     footnote_association_meursing_headings1.row_column_code,
@@ -2369,9 +2355,9 @@ CREATE VIEW public.footnote_association_meursing_headings AS
     footnote_association_meursing_headings1.status,
     footnote_association_meursing_headings1.workbasket_id,
     footnote_association_meursing_headings1.workbasket_sequence_number
-   FROM public.footnote_association_meursing_headings_oplog footnote_association_meursing_headings1
+   FROM footnote_association_meursing_headings_oplog footnote_association_meursing_headings1
   WHERE ((footnote_association_meursing_headings1.oid IN ( SELECT max(footnote_association_meursing_headings2.oid) AS max
-           FROM public.footnote_association_meursing_headings_oplog footnote_association_meursing_headings2
+           FROM footnote_association_meursing_headings_oplog footnote_association_meursing_headings2
           WHERE (((footnote_association_meursing_headings1.footnote_id)::text = (footnote_association_meursing_headings2.footnote_id)::text) AND ((footnote_association_meursing_headings1.meursing_table_plan_id)::text = (footnote_association_meursing_headings2.meursing_table_plan_id)::text)))) AND ((footnote_association_meursing_headings1.operation)::text <> 'D'::text));
 
 
@@ -2379,7 +2365,7 @@ CREATE VIEW public.footnote_association_meursing_headings AS
 -- Name: footnote_association_meursing_headings_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_association_meursing_headings_oid_seq
+CREATE SEQUENCE footnote_association_meursing_headings_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2391,14 +2377,14 @@ CREATE SEQUENCE public.footnote_association_meursing_headings_oid_seq
 -- Name: footnote_association_meursing_headings_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_association_meursing_headings_oid_seq OWNED BY public.footnote_association_meursing_headings_oplog.oid;
+ALTER SEQUENCE footnote_association_meursing_headings_oid_seq OWNED BY footnote_association_meursing_headings_oplog.oid;
 
 
 --
 -- Name: footnote_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_description_periods_oplog (
+CREATE TABLE footnote_description_periods_oplog (
     footnote_description_period_sid integer,
     footnote_type_id character varying(2),
     footnote_id character varying(5),
@@ -2421,7 +2407,7 @@ CREATE TABLE public.footnote_description_periods_oplog (
 -- Name: footnote_description_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_description_periods AS
+CREATE VIEW footnote_description_periods AS
  SELECT footnote_description_periods1.footnote_description_period_sid,
     footnote_description_periods1.footnote_type_id,
     footnote_description_periods1.footnote_id,
@@ -2436,9 +2422,9 @@ CREATE VIEW public.footnote_description_periods AS
     footnote_description_periods1.status,
     footnote_description_periods1.workbasket_id,
     footnote_description_periods1.workbasket_sequence_number
-   FROM public.footnote_description_periods_oplog footnote_description_periods1
+   FROM footnote_description_periods_oplog footnote_description_periods1
   WHERE ((footnote_description_periods1.oid IN ( SELECT max(footnote_description_periods2.oid) AS max
-           FROM public.footnote_description_periods_oplog footnote_description_periods2
+           FROM footnote_description_periods_oplog footnote_description_periods2
           WHERE (((footnote_description_periods1.footnote_id)::text = (footnote_description_periods2.footnote_id)::text) AND ((footnote_description_periods1.footnote_type_id)::text = (footnote_description_periods2.footnote_type_id)::text) AND (footnote_description_periods1.footnote_description_period_sid = footnote_description_periods2.footnote_description_period_sid)))) AND ((footnote_description_periods1.operation)::text <> 'D'::text));
 
 
@@ -2446,7 +2432,7 @@ CREATE VIEW public.footnote_description_periods AS
 -- Name: footnote_description_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_description_periods_oid_seq
+CREATE SEQUENCE footnote_description_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2458,14 +2444,14 @@ CREATE SEQUENCE public.footnote_description_periods_oid_seq
 -- Name: footnote_description_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_description_periods_oid_seq OWNED BY public.footnote_description_periods_oplog.oid;
+ALTER SEQUENCE footnote_description_periods_oid_seq OWNED BY footnote_description_periods_oplog.oid;
 
 
 --
 -- Name: footnote_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_descriptions_oplog (
+CREATE TABLE footnote_descriptions_oplog (
     footnote_description_period_sid integer,
     footnote_type_id character varying(2),
     footnote_id character varying(5),
@@ -2488,7 +2474,7 @@ CREATE TABLE public.footnote_descriptions_oplog (
 -- Name: footnote_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_descriptions AS
+CREATE VIEW footnote_descriptions AS
  SELECT footnote_descriptions1.footnote_description_period_sid,
     footnote_descriptions1.footnote_type_id,
     footnote_descriptions1.footnote_id,
@@ -2503,9 +2489,9 @@ CREATE VIEW public.footnote_descriptions AS
     footnote_descriptions1.status,
     footnote_descriptions1.workbasket_id,
     footnote_descriptions1.workbasket_sequence_number
-   FROM public.footnote_descriptions_oplog footnote_descriptions1
+   FROM footnote_descriptions_oplog footnote_descriptions1
   WHERE ((footnote_descriptions1.oid IN ( SELECT max(footnote_descriptions2.oid) AS max
-           FROM public.footnote_descriptions_oplog footnote_descriptions2
+           FROM footnote_descriptions_oplog footnote_descriptions2
           WHERE ((footnote_descriptions1.footnote_description_period_sid = footnote_descriptions2.footnote_description_period_sid) AND ((footnote_descriptions1.footnote_id)::text = (footnote_descriptions2.footnote_id)::text) AND ((footnote_descriptions1.footnote_type_id)::text = (footnote_descriptions2.footnote_type_id)::text)))) AND ((footnote_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -2513,7 +2499,7 @@ CREATE VIEW public.footnote_descriptions AS
 -- Name: footnote_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_descriptions_oid_seq
+CREATE SEQUENCE footnote_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2525,14 +2511,14 @@ CREATE SEQUENCE public.footnote_descriptions_oid_seq
 -- Name: footnote_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_descriptions_oid_seq OWNED BY public.footnote_descriptions_oplog.oid;
+ALTER SEQUENCE footnote_descriptions_oid_seq OWNED BY footnote_descriptions_oplog.oid;
 
 
 --
 -- Name: footnote_type_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_type_descriptions_oplog (
+CREATE TABLE footnote_type_descriptions_oplog (
     footnote_type_id character varying(2),
     language_id character varying(5),
     description text,
@@ -2551,7 +2537,7 @@ CREATE TABLE public.footnote_type_descriptions_oplog (
 -- Name: footnote_type_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_type_descriptions AS
+CREATE VIEW footnote_type_descriptions AS
  SELECT footnote_type_descriptions1.footnote_type_id,
     footnote_type_descriptions1.language_id,
     footnote_type_descriptions1.description,
@@ -2562,9 +2548,9 @@ CREATE VIEW public.footnote_type_descriptions AS
     footnote_type_descriptions1.status,
     footnote_type_descriptions1.workbasket_id,
     footnote_type_descriptions1.workbasket_sequence_number
-   FROM public.footnote_type_descriptions_oplog footnote_type_descriptions1
+   FROM footnote_type_descriptions_oplog footnote_type_descriptions1
   WHERE ((footnote_type_descriptions1.oid IN ( SELECT max(footnote_type_descriptions2.oid) AS max
-           FROM public.footnote_type_descriptions_oplog footnote_type_descriptions2
+           FROM footnote_type_descriptions_oplog footnote_type_descriptions2
           WHERE ((footnote_type_descriptions1.footnote_type_id)::text = (footnote_type_descriptions2.footnote_type_id)::text))) AND ((footnote_type_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -2572,7 +2558,7 @@ CREATE VIEW public.footnote_type_descriptions AS
 -- Name: footnote_type_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_type_descriptions_oid_seq
+CREATE SEQUENCE footnote_type_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2584,14 +2570,14 @@ CREATE SEQUENCE public.footnote_type_descriptions_oid_seq
 -- Name: footnote_type_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_type_descriptions_oid_seq OWNED BY public.footnote_type_descriptions_oplog.oid;
+ALTER SEQUENCE footnote_type_descriptions_oid_seq OWNED BY footnote_type_descriptions_oplog.oid;
 
 
 --
 -- Name: footnote_types_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnote_types_oplog (
+CREATE TABLE footnote_types_oplog (
     footnote_type_id character varying(2),
     application_code integer,
     validity_start_date timestamp without time zone,
@@ -2611,7 +2597,7 @@ CREATE TABLE public.footnote_types_oplog (
 -- Name: footnote_types; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnote_types AS
+CREATE VIEW footnote_types AS
  SELECT footnote_types1.footnote_type_id,
     footnote_types1.application_code,
     footnote_types1.validity_start_date,
@@ -2623,9 +2609,9 @@ CREATE VIEW public.footnote_types AS
     footnote_types1.status,
     footnote_types1.workbasket_id,
     footnote_types1.workbasket_sequence_number
-   FROM public.footnote_types_oplog footnote_types1
+   FROM footnote_types_oplog footnote_types1
   WHERE ((footnote_types1.oid IN ( SELECT max(footnote_types2.oid) AS max
-           FROM public.footnote_types_oplog footnote_types2
+           FROM footnote_types_oplog footnote_types2
           WHERE ((footnote_types1.footnote_type_id)::text = (footnote_types2.footnote_type_id)::text))) AND ((footnote_types1.operation)::text <> 'D'::text));
 
 
@@ -2633,7 +2619,7 @@ CREATE VIEW public.footnote_types AS
 -- Name: footnote_types_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnote_types_oid_seq
+CREATE SEQUENCE footnote_types_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2645,14 +2631,14 @@ CREATE SEQUENCE public.footnote_types_oid_seq
 -- Name: footnote_types_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnote_types_oid_seq OWNED BY public.footnote_types_oplog.oid;
+ALTER SEQUENCE footnote_types_oid_seq OWNED BY footnote_types_oplog.oid;
 
 
 --
 -- Name: footnotes_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.footnotes_oplog (
+CREATE TABLE footnotes_oplog (
     footnote_id character varying(5),
     footnote_type_id character varying(2),
     validity_start_date timestamp without time zone,
@@ -2674,7 +2660,7 @@ CREATE TABLE public.footnotes_oplog (
 -- Name: footnotes; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.footnotes AS
+CREATE VIEW footnotes AS
  SELECT footnotes1.footnote_id,
     footnotes1.footnote_type_id,
     footnotes1.validity_start_date,
@@ -2688,9 +2674,9 @@ CREATE VIEW public.footnotes AS
     footnotes1.status,
     footnotes1.workbasket_id,
     footnotes1.workbasket_sequence_number
-   FROM public.footnotes_oplog footnotes1
+   FROM footnotes_oplog footnotes1
   WHERE ((footnotes1.oid IN ( SELECT max(footnotes2.oid) AS max
-           FROM public.footnotes_oplog footnotes2
+           FROM footnotes_oplog footnotes2
           WHERE (((footnotes1.footnote_type_id)::text = (footnotes2.footnote_type_id)::text) AND ((footnotes1.footnote_id)::text = (footnotes2.footnote_id)::text)))) AND ((footnotes1.operation)::text <> 'D'::text));
 
 
@@ -2698,7 +2684,7 @@ CREATE VIEW public.footnotes AS
 -- Name: footnotes_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.footnotes_oid_seq
+CREATE SEQUENCE footnotes_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2710,14 +2696,14 @@ CREATE SEQUENCE public.footnotes_oid_seq
 -- Name: footnotes_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.footnotes_oid_seq OWNED BY public.footnotes_oplog.oid;
+ALTER SEQUENCE footnotes_oid_seq OWNED BY footnotes_oplog.oid;
 
 
 --
 -- Name: fts_regulation_actions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.fts_regulation_actions_oplog (
+CREATE TABLE fts_regulation_actions_oplog (
     fts_regulation_role integer,
     fts_regulation_id character varying(8),
     stopped_regulation_role integer,
@@ -2736,7 +2722,7 @@ CREATE TABLE public.fts_regulation_actions_oplog (
 -- Name: fts_regulation_actions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.fts_regulation_actions AS
+CREATE VIEW fts_regulation_actions AS
  SELECT fts_regulation_actions1.fts_regulation_role,
     fts_regulation_actions1.fts_regulation_id,
     fts_regulation_actions1.stopped_regulation_role,
@@ -2747,9 +2733,9 @@ CREATE VIEW public.fts_regulation_actions AS
     fts_regulation_actions1.status,
     fts_regulation_actions1.workbasket_id,
     fts_regulation_actions1.workbasket_sequence_number
-   FROM public.fts_regulation_actions_oplog fts_regulation_actions1
+   FROM fts_regulation_actions_oplog fts_regulation_actions1
   WHERE ((fts_regulation_actions1.oid IN ( SELECT max(fts_regulation_actions2.oid) AS max
-           FROM public.fts_regulation_actions_oplog fts_regulation_actions2
+           FROM fts_regulation_actions_oplog fts_regulation_actions2
           WHERE (((fts_regulation_actions1.fts_regulation_id)::text = (fts_regulation_actions2.fts_regulation_id)::text) AND (fts_regulation_actions1.fts_regulation_role = fts_regulation_actions2.fts_regulation_role) AND ((fts_regulation_actions1.stopped_regulation_id)::text = (fts_regulation_actions2.stopped_regulation_id)::text) AND (fts_regulation_actions1.stopped_regulation_role = fts_regulation_actions2.stopped_regulation_role)))) AND ((fts_regulation_actions1.operation)::text <> 'D'::text));
 
 
@@ -2757,7 +2743,7 @@ CREATE VIEW public.fts_regulation_actions AS
 -- Name: fts_regulation_actions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.fts_regulation_actions_oid_seq
+CREATE SEQUENCE fts_regulation_actions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2769,14 +2755,14 @@ CREATE SEQUENCE public.fts_regulation_actions_oid_seq
 -- Name: fts_regulation_actions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.fts_regulation_actions_oid_seq OWNED BY public.fts_regulation_actions_oplog.oid;
+ALTER SEQUENCE fts_regulation_actions_oid_seq OWNED BY fts_regulation_actions_oplog.oid;
 
 
 --
 -- Name: full_temporary_stop_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.full_temporary_stop_regulations_oplog (
+CREATE TABLE full_temporary_stop_regulations_oplog (
     full_temporary_stop_regulation_role integer,
     full_temporary_stop_regulation_id character varying(8),
     published_date date,
@@ -2809,7 +2795,7 @@ CREATE TABLE public.full_temporary_stop_regulations_oplog (
 -- Name: full_temporary_stop_regulations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.full_temporary_stop_regulations AS
+CREATE VIEW full_temporary_stop_regulations AS
  SELECT full_temporary_stop_regulations1.full_temporary_stop_regulation_role,
     full_temporary_stop_regulations1.full_temporary_stop_regulation_id,
     full_temporary_stop_regulations1.published_date,
@@ -2834,9 +2820,9 @@ CREATE VIEW public.full_temporary_stop_regulations AS
     full_temporary_stop_regulations1.workbasket_sequence_number,
     full_temporary_stop_regulations1.complete_abrogation_regulation_role,
     full_temporary_stop_regulations1.complete_abrogation_regulation_id
-   FROM public.full_temporary_stop_regulations_oplog full_temporary_stop_regulations1
+   FROM full_temporary_stop_regulations_oplog full_temporary_stop_regulations1
   WHERE ((full_temporary_stop_regulations1.oid IN ( SELECT max(full_temporary_stop_regulations2.oid) AS max
-           FROM public.full_temporary_stop_regulations_oplog full_temporary_stop_regulations2
+           FROM full_temporary_stop_regulations_oplog full_temporary_stop_regulations2
           WHERE (((full_temporary_stop_regulations1.full_temporary_stop_regulation_id)::text = (full_temporary_stop_regulations2.full_temporary_stop_regulation_id)::text) AND (full_temporary_stop_regulations1.full_temporary_stop_regulation_role = full_temporary_stop_regulations2.full_temporary_stop_regulation_role)))) AND ((full_temporary_stop_regulations1.operation)::text <> 'D'::text));
 
 
@@ -2844,7 +2830,7 @@ CREATE VIEW public.full_temporary_stop_regulations AS
 -- Name: full_temporary_stop_regulations_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.full_temporary_stop_regulations_oid_seq
+CREATE SEQUENCE full_temporary_stop_regulations_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2856,14 +2842,14 @@ CREATE SEQUENCE public.full_temporary_stop_regulations_oid_seq
 -- Name: full_temporary_stop_regulations_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.full_temporary_stop_regulations_oid_seq OWNED BY public.full_temporary_stop_regulations_oplog.oid;
+ALTER SEQUENCE full_temporary_stop_regulations_oid_seq OWNED BY full_temporary_stop_regulations_oplog.oid;
 
 
 --
 -- Name: geographical_area_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.geographical_area_description_periods_oplog (
+CREATE TABLE geographical_area_description_periods_oplog (
     geographical_area_description_period_sid integer,
     geographical_area_sid integer,
     validity_start_date timestamp without time zone,
@@ -2884,7 +2870,7 @@ CREATE TABLE public.geographical_area_description_periods_oplog (
 -- Name: geographical_area_description_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.geographical_area_description_periods AS
+CREATE VIEW geographical_area_description_periods AS
  SELECT geographical_area_description_periods1.geographical_area_description_period_sid,
     geographical_area_description_periods1.geographical_area_sid,
     geographical_area_description_periods1.validity_start_date,
@@ -2897,9 +2883,9 @@ CREATE VIEW public.geographical_area_description_periods AS
     geographical_area_description_periods1.status,
     geographical_area_description_periods1.workbasket_id,
     geographical_area_description_periods1.workbasket_sequence_number
-   FROM public.geographical_area_description_periods_oplog geographical_area_description_periods1
+   FROM geographical_area_description_periods_oplog geographical_area_description_periods1
   WHERE ((geographical_area_description_periods1.oid IN ( SELECT max(geographical_area_description_periods2.oid) AS max
-           FROM public.geographical_area_description_periods_oplog geographical_area_description_periods2
+           FROM geographical_area_description_periods_oplog geographical_area_description_periods2
           WHERE ((geographical_area_description_periods1.geographical_area_description_period_sid = geographical_area_description_periods2.geographical_area_description_period_sid) AND (geographical_area_description_periods1.geographical_area_sid = geographical_area_description_periods2.geographical_area_sid)))) AND ((geographical_area_description_periods1.operation)::text <> 'D'::text));
 
 
@@ -2907,7 +2893,7 @@ CREATE VIEW public.geographical_area_description_periods AS
 -- Name: geographical_area_description_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.geographical_area_description_periods_oid_seq
+CREATE SEQUENCE geographical_area_description_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2919,14 +2905,14 @@ CREATE SEQUENCE public.geographical_area_description_periods_oid_seq
 -- Name: geographical_area_description_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.geographical_area_description_periods_oid_seq OWNED BY public.geographical_area_description_periods_oplog.oid;
+ALTER SEQUENCE geographical_area_description_periods_oid_seq OWNED BY geographical_area_description_periods_oplog.oid;
 
 
 --
 -- Name: geographical_area_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.geographical_area_descriptions_oplog (
+CREATE TABLE geographical_area_descriptions_oplog (
     geographical_area_description_period_sid integer,
     language_id character varying(5),
     geographical_area_sid integer,
@@ -2947,7 +2933,7 @@ CREATE TABLE public.geographical_area_descriptions_oplog (
 -- Name: geographical_area_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.geographical_area_descriptions AS
+CREATE VIEW geographical_area_descriptions AS
  SELECT geographical_area_descriptions1.geographical_area_description_period_sid,
     geographical_area_descriptions1.language_id,
     geographical_area_descriptions1.geographical_area_sid,
@@ -2960,9 +2946,9 @@ CREATE VIEW public.geographical_area_descriptions AS
     geographical_area_descriptions1.status,
     geographical_area_descriptions1.workbasket_id,
     geographical_area_descriptions1.workbasket_sequence_number
-   FROM public.geographical_area_descriptions_oplog geographical_area_descriptions1
+   FROM geographical_area_descriptions_oplog geographical_area_descriptions1
   WHERE ((geographical_area_descriptions1.oid IN ( SELECT max(geographical_area_descriptions2.oid) AS max
-           FROM public.geographical_area_descriptions_oplog geographical_area_descriptions2
+           FROM geographical_area_descriptions_oplog geographical_area_descriptions2
           WHERE ((geographical_area_descriptions1.geographical_area_description_period_sid = geographical_area_descriptions2.geographical_area_description_period_sid) AND (geographical_area_descriptions1.geographical_area_sid = geographical_area_descriptions2.geographical_area_sid)))) AND ((geographical_area_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -2970,7 +2956,7 @@ CREATE VIEW public.geographical_area_descriptions AS
 -- Name: geographical_area_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.geographical_area_descriptions_oid_seq
+CREATE SEQUENCE geographical_area_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2982,14 +2968,14 @@ CREATE SEQUENCE public.geographical_area_descriptions_oid_seq
 -- Name: geographical_area_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.geographical_area_descriptions_oid_seq OWNED BY public.geographical_area_descriptions_oplog.oid;
+ALTER SEQUENCE geographical_area_descriptions_oid_seq OWNED BY geographical_area_descriptions_oplog.oid;
 
 
 --
 -- Name: geographical_area_memberships_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.geographical_area_memberships_oplog (
+CREATE TABLE geographical_area_memberships_oplog (
     geographical_area_sid integer,
     geographical_area_group_sid integer,
     validity_start_date timestamp without time zone,
@@ -3009,7 +2995,7 @@ CREATE TABLE public.geographical_area_memberships_oplog (
 -- Name: geographical_area_memberships; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.geographical_area_memberships AS
+CREATE VIEW geographical_area_memberships AS
  SELECT geographical_area_memberships1.geographical_area_sid,
     geographical_area_memberships1.geographical_area_group_sid,
     geographical_area_memberships1.validity_start_date,
@@ -3021,9 +3007,9 @@ CREATE VIEW public.geographical_area_memberships AS
     geographical_area_memberships1.status,
     geographical_area_memberships1.workbasket_id,
     geographical_area_memberships1.workbasket_sequence_number
-   FROM public.geographical_area_memberships_oplog geographical_area_memberships1
+   FROM geographical_area_memberships_oplog geographical_area_memberships1
   WHERE ((geographical_area_memberships1.oid IN ( SELECT max(geographical_area_memberships2.oid) AS max
-           FROM public.geographical_area_memberships_oplog geographical_area_memberships2
+           FROM geographical_area_memberships_oplog geographical_area_memberships2
           WHERE ((geographical_area_memberships1.geographical_area_sid = geographical_area_memberships2.geographical_area_sid) AND (geographical_area_memberships1.geographical_area_group_sid = geographical_area_memberships2.geographical_area_group_sid) AND (geographical_area_memberships1.validity_start_date = geographical_area_memberships2.validity_start_date)))) AND ((geographical_area_memberships1.operation)::text <> 'D'::text));
 
 
@@ -3031,7 +3017,7 @@ CREATE VIEW public.geographical_area_memberships AS
 -- Name: geographical_area_memberships_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.geographical_area_memberships_oid_seq
+CREATE SEQUENCE geographical_area_memberships_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3043,14 +3029,14 @@ CREATE SEQUENCE public.geographical_area_memberships_oid_seq
 -- Name: geographical_area_memberships_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.geographical_area_memberships_oid_seq OWNED BY public.geographical_area_memberships_oplog.oid;
+ALTER SEQUENCE geographical_area_memberships_oid_seq OWNED BY geographical_area_memberships_oplog.oid;
 
 
 --
 -- Name: geographical_areas_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.geographical_areas_oplog (
+CREATE TABLE geographical_areas_oplog (
     geographical_area_sid integer,
     parent_geographical_area_group_sid integer,
     validity_start_date timestamp without time zone,
@@ -3072,7 +3058,7 @@ CREATE TABLE public.geographical_areas_oplog (
 -- Name: geographical_areas; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.geographical_areas AS
+CREATE VIEW geographical_areas AS
  SELECT geographical_areas1.geographical_area_sid,
     geographical_areas1.parent_geographical_area_group_sid,
     geographical_areas1.validity_start_date,
@@ -3086,9 +3072,9 @@ CREATE VIEW public.geographical_areas AS
     geographical_areas1.status,
     geographical_areas1.workbasket_id,
     geographical_areas1.workbasket_sequence_number
-   FROM public.geographical_areas_oplog geographical_areas1
+   FROM geographical_areas_oplog geographical_areas1
   WHERE ((geographical_areas1.oid IN ( SELECT max(geographical_areas2.oid) AS max
-           FROM public.geographical_areas_oplog geographical_areas2
+           FROM geographical_areas_oplog geographical_areas2
           WHERE (geographical_areas1.geographical_area_sid = geographical_areas2.geographical_area_sid))) AND ((geographical_areas1.operation)::text <> 'D'::text));
 
 
@@ -3096,7 +3082,7 @@ CREATE VIEW public.geographical_areas AS
 -- Name: geographical_areas_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.geographical_areas_oid_seq
+CREATE SEQUENCE geographical_areas_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3108,14 +3094,14 @@ CREATE SEQUENCE public.geographical_areas_oid_seq
 -- Name: geographical_areas_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.geographical_areas_oid_seq OWNED BY public.geographical_areas_oplog.oid;
+ALTER SEQUENCE geographical_areas_oid_seq OWNED BY geographical_areas_oplog.oid;
 
 
 --
 -- Name: goods_nomenclature_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclature_description_periods_oplog (
+CREATE TABLE goods_nomenclature_description_periods_oplog (
     goods_nomenclature_description_period_sid integer,
     goods_nomenclature_sid integer,
     validity_start_date timestamp without time zone,
@@ -3136,7 +3122,7 @@ CREATE TABLE public.goods_nomenclature_description_periods_oplog (
 -- Name: goods_nomenclature_description_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclature_description_periods AS
+CREATE VIEW goods_nomenclature_description_periods AS
  SELECT goods_nomenclature_description_periods1.goods_nomenclature_description_period_sid,
     goods_nomenclature_description_periods1.goods_nomenclature_sid,
     goods_nomenclature_description_periods1.validity_start_date,
@@ -3149,9 +3135,9 @@ CREATE VIEW public.goods_nomenclature_description_periods AS
     goods_nomenclature_description_periods1.status,
     goods_nomenclature_description_periods1.workbasket_id,
     goods_nomenclature_description_periods1.workbasket_sequence_number
-   FROM public.goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods1
+   FROM goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods1
   WHERE ((goods_nomenclature_description_periods1.oid IN ( SELECT max(goods_nomenclature_description_periods2.oid) AS max
-           FROM public.goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods2
+           FROM goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods2
           WHERE (goods_nomenclature_description_periods1.goods_nomenclature_description_period_sid = goods_nomenclature_description_periods2.goods_nomenclature_description_period_sid))) AND ((goods_nomenclature_description_periods1.operation)::text <> 'D'::text));
 
 
@@ -3159,7 +3145,7 @@ CREATE VIEW public.goods_nomenclature_description_periods AS
 -- Name: goods_nomenclature_description_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclature_description_periods_oid_seq
+CREATE SEQUENCE goods_nomenclature_description_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3171,14 +3157,14 @@ CREATE SEQUENCE public.goods_nomenclature_description_periods_oid_seq
 -- Name: goods_nomenclature_description_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclature_description_periods_oid_seq OWNED BY public.goods_nomenclature_description_periods_oplog.oid;
+ALTER SEQUENCE goods_nomenclature_description_periods_oid_seq OWNED BY goods_nomenclature_description_periods_oplog.oid;
 
 
 --
 -- Name: goods_nomenclature_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclature_descriptions_oplog (
+CREATE TABLE goods_nomenclature_descriptions_oplog (
     goods_nomenclature_description_period_sid integer,
     language_id character varying(5),
     goods_nomenclature_sid integer,
@@ -3199,7 +3185,7 @@ CREATE TABLE public.goods_nomenclature_descriptions_oplog (
 -- Name: goods_nomenclature_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclature_descriptions AS
+CREATE VIEW goods_nomenclature_descriptions AS
  SELECT goods_nomenclature_descriptions1.goods_nomenclature_description_period_sid,
     goods_nomenclature_descriptions1.language_id,
     goods_nomenclature_descriptions1.goods_nomenclature_sid,
@@ -3212,9 +3198,9 @@ CREATE VIEW public.goods_nomenclature_descriptions AS
     goods_nomenclature_descriptions1.status,
     goods_nomenclature_descriptions1.workbasket_id,
     goods_nomenclature_descriptions1.workbasket_sequence_number
-   FROM public.goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions1
+   FROM goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions1
   WHERE ((goods_nomenclature_descriptions1.oid IN ( SELECT max(goods_nomenclature_descriptions2.oid) AS max
-           FROM public.goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions2
+           FROM goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions2
           WHERE ((goods_nomenclature_descriptions1.goods_nomenclature_sid = goods_nomenclature_descriptions2.goods_nomenclature_sid) AND (goods_nomenclature_descriptions1.goods_nomenclature_description_period_sid = goods_nomenclature_descriptions2.goods_nomenclature_description_period_sid)))) AND ((goods_nomenclature_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -3222,7 +3208,7 @@ CREATE VIEW public.goods_nomenclature_descriptions AS
 -- Name: goods_nomenclature_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclature_descriptions_oid_seq
+CREATE SEQUENCE goods_nomenclature_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3234,14 +3220,14 @@ CREATE SEQUENCE public.goods_nomenclature_descriptions_oid_seq
 -- Name: goods_nomenclature_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclature_descriptions_oid_seq OWNED BY public.goods_nomenclature_descriptions_oplog.oid;
+ALTER SEQUENCE goods_nomenclature_descriptions_oid_seq OWNED BY goods_nomenclature_descriptions_oplog.oid;
 
 
 --
 -- Name: goods_nomenclature_group_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclature_group_descriptions_oplog (
+CREATE TABLE goods_nomenclature_group_descriptions_oplog (
     goods_nomenclature_group_type character varying(1),
     goods_nomenclature_group_id character varying(6),
     language_id character varying(5),
@@ -3260,7 +3246,7 @@ CREATE TABLE public.goods_nomenclature_group_descriptions_oplog (
 -- Name: goods_nomenclature_group_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclature_group_descriptions AS
+CREATE VIEW goods_nomenclature_group_descriptions AS
  SELECT goods_nomenclature_group_descriptions1.goods_nomenclature_group_type,
     goods_nomenclature_group_descriptions1.goods_nomenclature_group_id,
     goods_nomenclature_group_descriptions1.language_id,
@@ -3271,9 +3257,9 @@ CREATE VIEW public.goods_nomenclature_group_descriptions AS
     goods_nomenclature_group_descriptions1.status,
     goods_nomenclature_group_descriptions1.workbasket_id,
     goods_nomenclature_group_descriptions1.workbasket_sequence_number
-   FROM public.goods_nomenclature_group_descriptions_oplog goods_nomenclature_group_descriptions1
+   FROM goods_nomenclature_group_descriptions_oplog goods_nomenclature_group_descriptions1
   WHERE ((goods_nomenclature_group_descriptions1.oid IN ( SELECT max(goods_nomenclature_group_descriptions2.oid) AS max
-           FROM public.goods_nomenclature_group_descriptions_oplog goods_nomenclature_group_descriptions2
+           FROM goods_nomenclature_group_descriptions_oplog goods_nomenclature_group_descriptions2
           WHERE (((goods_nomenclature_group_descriptions1.goods_nomenclature_group_id)::text = (goods_nomenclature_group_descriptions2.goods_nomenclature_group_id)::text) AND ((goods_nomenclature_group_descriptions1.goods_nomenclature_group_type)::text = (goods_nomenclature_group_descriptions2.goods_nomenclature_group_type)::text)))) AND ((goods_nomenclature_group_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -3281,7 +3267,7 @@ CREATE VIEW public.goods_nomenclature_group_descriptions AS
 -- Name: goods_nomenclature_group_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclature_group_descriptions_oid_seq
+CREATE SEQUENCE goods_nomenclature_group_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3293,14 +3279,14 @@ CREATE SEQUENCE public.goods_nomenclature_group_descriptions_oid_seq
 -- Name: goods_nomenclature_group_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclature_group_descriptions_oid_seq OWNED BY public.goods_nomenclature_group_descriptions_oplog.oid;
+ALTER SEQUENCE goods_nomenclature_group_descriptions_oid_seq OWNED BY goods_nomenclature_group_descriptions_oplog.oid;
 
 
 --
 -- Name: goods_nomenclature_groups_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclature_groups_oplog (
+CREATE TABLE goods_nomenclature_groups_oplog (
     goods_nomenclature_group_type character varying(1),
     goods_nomenclature_group_id character varying(6),
     validity_start_date timestamp without time zone,
@@ -3320,7 +3306,7 @@ CREATE TABLE public.goods_nomenclature_groups_oplog (
 -- Name: goods_nomenclature_groups; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclature_groups AS
+CREATE VIEW goods_nomenclature_groups AS
  SELECT goods_nomenclature_groups1.goods_nomenclature_group_type,
     goods_nomenclature_groups1.goods_nomenclature_group_id,
     goods_nomenclature_groups1.validity_start_date,
@@ -3332,9 +3318,9 @@ CREATE VIEW public.goods_nomenclature_groups AS
     goods_nomenclature_groups1.status,
     goods_nomenclature_groups1.workbasket_id,
     goods_nomenclature_groups1.workbasket_sequence_number
-   FROM public.goods_nomenclature_groups_oplog goods_nomenclature_groups1
+   FROM goods_nomenclature_groups_oplog goods_nomenclature_groups1
   WHERE ((goods_nomenclature_groups1.oid IN ( SELECT max(goods_nomenclature_groups2.oid) AS max
-           FROM public.goods_nomenclature_groups_oplog goods_nomenclature_groups2
+           FROM goods_nomenclature_groups_oplog goods_nomenclature_groups2
           WHERE (((goods_nomenclature_groups1.goods_nomenclature_group_id)::text = (goods_nomenclature_groups2.goods_nomenclature_group_id)::text) AND ((goods_nomenclature_groups1.goods_nomenclature_group_type)::text = (goods_nomenclature_groups2.goods_nomenclature_group_type)::text)))) AND ((goods_nomenclature_groups1.operation)::text <> 'D'::text));
 
 
@@ -3342,7 +3328,7 @@ CREATE VIEW public.goods_nomenclature_groups AS
 -- Name: goods_nomenclature_groups_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclature_groups_oid_seq
+CREATE SEQUENCE goods_nomenclature_groups_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3354,14 +3340,14 @@ CREATE SEQUENCE public.goods_nomenclature_groups_oid_seq
 -- Name: goods_nomenclature_groups_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclature_groups_oid_seq OWNED BY public.goods_nomenclature_groups_oplog.oid;
+ALTER SEQUENCE goods_nomenclature_groups_oid_seq OWNED BY goods_nomenclature_groups_oplog.oid;
 
 
 --
 -- Name: goods_nomenclature_indents_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclature_indents_oplog (
+CREATE TABLE goods_nomenclature_indents_oplog (
     goods_nomenclature_indent_sid integer,
     goods_nomenclature_sid integer,
     validity_start_date timestamp without time zone,
@@ -3383,7 +3369,7 @@ CREATE TABLE public.goods_nomenclature_indents_oplog (
 -- Name: goods_nomenclature_indents; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclature_indents AS
+CREATE VIEW goods_nomenclature_indents AS
  SELECT goods_nomenclature_indents1.goods_nomenclature_indent_sid,
     goods_nomenclature_indents1.goods_nomenclature_sid,
     goods_nomenclature_indents1.validity_start_date,
@@ -3397,9 +3383,9 @@ CREATE VIEW public.goods_nomenclature_indents AS
     goods_nomenclature_indents1.status,
     goods_nomenclature_indents1.workbasket_id,
     goods_nomenclature_indents1.workbasket_sequence_number
-   FROM public.goods_nomenclature_indents_oplog goods_nomenclature_indents1
+   FROM goods_nomenclature_indents_oplog goods_nomenclature_indents1
   WHERE ((goods_nomenclature_indents1.oid IN ( SELECT max(goods_nomenclature_indents2.oid) AS max
-           FROM public.goods_nomenclature_indents_oplog goods_nomenclature_indents2
+           FROM goods_nomenclature_indents_oplog goods_nomenclature_indents2
           WHERE (goods_nomenclature_indents1.goods_nomenclature_indent_sid = goods_nomenclature_indents2.goods_nomenclature_indent_sid))) AND ((goods_nomenclature_indents1.operation)::text <> 'D'::text));
 
 
@@ -3407,7 +3393,7 @@ CREATE VIEW public.goods_nomenclature_indents AS
 -- Name: goods_nomenclature_indents_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclature_indents_oid_seq
+CREATE SEQUENCE goods_nomenclature_indents_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3419,14 +3405,14 @@ CREATE SEQUENCE public.goods_nomenclature_indents_oid_seq
 -- Name: goods_nomenclature_indents_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclature_indents_oid_seq OWNED BY public.goods_nomenclature_indents_oplog.oid;
+ALTER SEQUENCE goods_nomenclature_indents_oid_seq OWNED BY goods_nomenclature_indents_oplog.oid;
 
 
 --
 -- Name: goods_nomenclature_origins_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclature_origins_oplog (
+CREATE TABLE goods_nomenclature_origins_oplog (
     goods_nomenclature_sid integer,
     derived_goods_nomenclature_item_id character varying(10),
     derived_productline_suffix character varying(2),
@@ -3446,7 +3432,7 @@ CREATE TABLE public.goods_nomenclature_origins_oplog (
 -- Name: goods_nomenclature_origins; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclature_origins AS
+CREATE VIEW goods_nomenclature_origins AS
  SELECT goods_nomenclature_origins1.goods_nomenclature_sid,
     goods_nomenclature_origins1.derived_goods_nomenclature_item_id,
     goods_nomenclature_origins1.derived_productline_suffix,
@@ -3458,9 +3444,9 @@ CREATE VIEW public.goods_nomenclature_origins AS
     goods_nomenclature_origins1.status,
     goods_nomenclature_origins1.workbasket_id,
     goods_nomenclature_origins1.workbasket_sequence_number
-   FROM public.goods_nomenclature_origins_oplog goods_nomenclature_origins1
+   FROM goods_nomenclature_origins_oplog goods_nomenclature_origins1
   WHERE ((goods_nomenclature_origins1.oid IN ( SELECT max(goods_nomenclature_origins2.oid) AS max
-           FROM public.goods_nomenclature_origins_oplog goods_nomenclature_origins2
+           FROM goods_nomenclature_origins_oplog goods_nomenclature_origins2
           WHERE ((goods_nomenclature_origins1.goods_nomenclature_sid = goods_nomenclature_origins2.goods_nomenclature_sid) AND ((goods_nomenclature_origins1.derived_goods_nomenclature_item_id)::text = (goods_nomenclature_origins2.derived_goods_nomenclature_item_id)::text) AND ((goods_nomenclature_origins1.derived_productline_suffix)::text = (goods_nomenclature_origins2.derived_productline_suffix)::text) AND ((goods_nomenclature_origins1.goods_nomenclature_item_id)::text = (goods_nomenclature_origins2.goods_nomenclature_item_id)::text) AND ((goods_nomenclature_origins1.productline_suffix)::text = (goods_nomenclature_origins2.productline_suffix)::text)))) AND ((goods_nomenclature_origins1.operation)::text <> 'D'::text));
 
 
@@ -3468,7 +3454,7 @@ CREATE VIEW public.goods_nomenclature_origins AS
 -- Name: goods_nomenclature_origins_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclature_origins_oid_seq
+CREATE SEQUENCE goods_nomenclature_origins_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3480,14 +3466,14 @@ CREATE SEQUENCE public.goods_nomenclature_origins_oid_seq
 -- Name: goods_nomenclature_origins_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclature_origins_oid_seq OWNED BY public.goods_nomenclature_origins_oplog.oid;
+ALTER SEQUENCE goods_nomenclature_origins_oid_seq OWNED BY goods_nomenclature_origins_oplog.oid;
 
 
 --
 -- Name: goods_nomenclature_successors_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclature_successors_oplog (
+CREATE TABLE goods_nomenclature_successors_oplog (
     goods_nomenclature_sid integer,
     absorbed_goods_nomenclature_item_id character varying(10),
     absorbed_productline_suffix character varying(2),
@@ -3507,7 +3493,7 @@ CREATE TABLE public.goods_nomenclature_successors_oplog (
 -- Name: goods_nomenclature_successors; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclature_successors AS
+CREATE VIEW goods_nomenclature_successors AS
  SELECT goods_nomenclature_successors1.goods_nomenclature_sid,
     goods_nomenclature_successors1.absorbed_goods_nomenclature_item_id,
     goods_nomenclature_successors1.absorbed_productline_suffix,
@@ -3519,9 +3505,9 @@ CREATE VIEW public.goods_nomenclature_successors AS
     goods_nomenclature_successors1.status,
     goods_nomenclature_successors1.workbasket_id,
     goods_nomenclature_successors1.workbasket_sequence_number
-   FROM public.goods_nomenclature_successors_oplog goods_nomenclature_successors1
+   FROM goods_nomenclature_successors_oplog goods_nomenclature_successors1
   WHERE ((goods_nomenclature_successors1.oid IN ( SELECT max(goods_nomenclature_successors2.oid) AS max
-           FROM public.goods_nomenclature_successors_oplog goods_nomenclature_successors2
+           FROM goods_nomenclature_successors_oplog goods_nomenclature_successors2
           WHERE ((goods_nomenclature_successors1.goods_nomenclature_sid = goods_nomenclature_successors2.goods_nomenclature_sid) AND ((goods_nomenclature_successors1.absorbed_goods_nomenclature_item_id)::text = (goods_nomenclature_successors2.absorbed_goods_nomenclature_item_id)::text) AND ((goods_nomenclature_successors1.absorbed_productline_suffix)::text = (goods_nomenclature_successors2.absorbed_productline_suffix)::text) AND ((goods_nomenclature_successors1.goods_nomenclature_item_id)::text = (goods_nomenclature_successors2.goods_nomenclature_item_id)::text) AND ((goods_nomenclature_successors1.productline_suffix)::text = (goods_nomenclature_successors2.productline_suffix)::text)))) AND ((goods_nomenclature_successors1.operation)::text <> 'D'::text));
 
 
@@ -3529,7 +3515,7 @@ CREATE VIEW public.goods_nomenclature_successors AS
 -- Name: goods_nomenclature_successors_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclature_successors_oid_seq
+CREATE SEQUENCE goods_nomenclature_successors_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3541,14 +3527,14 @@ CREATE SEQUENCE public.goods_nomenclature_successors_oid_seq
 -- Name: goods_nomenclature_successors_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclature_successors_oid_seq OWNED BY public.goods_nomenclature_successors_oplog.oid;
+ALTER SEQUENCE goods_nomenclature_successors_oid_seq OWNED BY goods_nomenclature_successors_oplog.oid;
 
 
 --
 -- Name: goods_nomenclatures_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.goods_nomenclatures_oplog (
+CREATE TABLE goods_nomenclatures_oplog (
     goods_nomenclature_sid integer,
     goods_nomenclature_item_id character varying(10),
     producline_suffix character varying(255),
@@ -3569,7 +3555,7 @@ CREATE TABLE public.goods_nomenclatures_oplog (
 -- Name: goods_nomenclatures; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.goods_nomenclatures AS
+CREATE VIEW goods_nomenclatures AS
  SELECT goods_nomenclatures1.goods_nomenclature_sid,
     goods_nomenclatures1.goods_nomenclature_item_id,
     goods_nomenclatures1.producline_suffix,
@@ -3582,9 +3568,9 @@ CREATE VIEW public.goods_nomenclatures AS
     goods_nomenclatures1.status,
     goods_nomenclatures1.workbasket_id,
     goods_nomenclatures1.workbasket_sequence_number
-   FROM public.goods_nomenclatures_oplog goods_nomenclatures1
+   FROM goods_nomenclatures_oplog goods_nomenclatures1
   WHERE ((goods_nomenclatures1.oid IN ( SELECT max(goods_nomenclatures2.oid) AS max
-           FROM public.goods_nomenclatures_oplog goods_nomenclatures2
+           FROM goods_nomenclatures_oplog goods_nomenclatures2
           WHERE (goods_nomenclatures1.goods_nomenclature_sid = goods_nomenclatures2.goods_nomenclature_sid))) AND ((goods_nomenclatures1.operation)::text <> 'D'::text));
 
 
@@ -3592,7 +3578,7 @@ CREATE VIEW public.goods_nomenclatures AS
 -- Name: goods_nomenclatures_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.goods_nomenclatures_oid_seq
+CREATE SEQUENCE goods_nomenclatures_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3604,14 +3590,14 @@ CREATE SEQUENCE public.goods_nomenclatures_oid_seq
 -- Name: goods_nomenclatures_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.goods_nomenclatures_oid_seq OWNED BY public.goods_nomenclatures_oplog.oid;
+ALTER SEQUENCE goods_nomenclatures_oid_seq OWNED BY goods_nomenclatures_oplog.oid;
 
 
 --
 -- Name: hidden_goods_nomenclatures; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.hidden_goods_nomenclatures (
+CREATE TABLE hidden_goods_nomenclatures (
     goods_nomenclature_item_id text,
     created_at timestamp without time zone
 );
@@ -3621,7 +3607,7 @@ CREATE TABLE public.hidden_goods_nomenclatures (
 -- Name: language_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.language_descriptions_oplog (
+CREATE TABLE language_descriptions_oplog (
     language_code_id character varying(255),
     language_id character varying(5),
     description text,
@@ -3639,7 +3625,7 @@ CREATE TABLE public.language_descriptions_oplog (
 -- Name: language_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.language_descriptions AS
+CREATE VIEW language_descriptions AS
  SELECT language_descriptions1.language_code_id,
     language_descriptions1.language_id,
     language_descriptions1.description,
@@ -3649,9 +3635,9 @@ CREATE VIEW public.language_descriptions AS
     language_descriptions1.status,
     language_descriptions1.workbasket_id,
     language_descriptions1.workbasket_sequence_number
-   FROM public.language_descriptions_oplog language_descriptions1
+   FROM language_descriptions_oplog language_descriptions1
   WHERE ((language_descriptions1.oid IN ( SELECT max(language_descriptions2.oid) AS max
-           FROM public.language_descriptions_oplog language_descriptions2
+           FROM language_descriptions_oplog language_descriptions2
           WHERE (((language_descriptions1.language_id)::text = (language_descriptions2.language_id)::text) AND ((language_descriptions1.language_code_id)::text = (language_descriptions2.language_code_id)::text)))) AND ((language_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -3659,7 +3645,7 @@ CREATE VIEW public.language_descriptions AS
 -- Name: language_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.language_descriptions_oid_seq
+CREATE SEQUENCE language_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3671,14 +3657,14 @@ CREATE SEQUENCE public.language_descriptions_oid_seq
 -- Name: language_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.language_descriptions_oid_seq OWNED BY public.language_descriptions_oplog.oid;
+ALTER SEQUENCE language_descriptions_oid_seq OWNED BY language_descriptions_oplog.oid;
 
 
 --
 -- Name: languages_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.languages_oplog (
+CREATE TABLE languages_oplog (
     language_id character varying(5),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -3696,7 +3682,7 @@ CREATE TABLE public.languages_oplog (
 -- Name: languages; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.languages AS
+CREATE VIEW languages AS
  SELECT languages1.language_id,
     languages1.validity_start_date,
     languages1.validity_end_date,
@@ -3706,9 +3692,9 @@ CREATE VIEW public.languages AS
     languages1.status,
     languages1.workbasket_id,
     languages1.workbasket_sequence_number
-   FROM public.languages_oplog languages1
+   FROM languages_oplog languages1
   WHERE ((languages1.oid IN ( SELECT max(languages2.oid) AS max
-           FROM public.languages_oplog languages2
+           FROM languages_oplog languages2
           WHERE ((languages1.language_id)::text = (languages2.language_id)::text))) AND ((languages1.operation)::text <> 'D'::text));
 
 
@@ -3716,7 +3702,7 @@ CREATE VIEW public.languages AS
 -- Name: languages_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.languages_oid_seq
+CREATE SEQUENCE languages_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3728,14 +3714,14 @@ CREATE SEQUENCE public.languages_oid_seq
 -- Name: languages_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.languages_oid_seq OWNED BY public.languages_oplog.oid;
+ALTER SEQUENCE languages_oid_seq OWNED BY languages_oplog.oid;
 
 
 --
 -- Name: measure_action_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_action_descriptions_oplog (
+CREATE TABLE measure_action_descriptions_oplog (
     action_code character varying(255),
     language_id character varying(5),
     description text,
@@ -3753,7 +3739,7 @@ CREATE TABLE public.measure_action_descriptions_oplog (
 -- Name: measure_action_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_action_descriptions AS
+CREATE VIEW measure_action_descriptions AS
  SELECT measure_action_descriptions1.action_code,
     measure_action_descriptions1.language_id,
     measure_action_descriptions1.description,
@@ -3763,9 +3749,9 @@ CREATE VIEW public.measure_action_descriptions AS
     measure_action_descriptions1.status,
     measure_action_descriptions1.workbasket_id,
     measure_action_descriptions1.workbasket_sequence_number
-   FROM public.measure_action_descriptions_oplog measure_action_descriptions1
+   FROM measure_action_descriptions_oplog measure_action_descriptions1
   WHERE ((measure_action_descriptions1.oid IN ( SELECT max(measure_action_descriptions2.oid) AS max
-           FROM public.measure_action_descriptions_oplog measure_action_descriptions2
+           FROM measure_action_descriptions_oplog measure_action_descriptions2
           WHERE ((measure_action_descriptions1.action_code)::text = (measure_action_descriptions2.action_code)::text))) AND ((measure_action_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -3773,7 +3759,7 @@ CREATE VIEW public.measure_action_descriptions AS
 -- Name: measure_action_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_action_descriptions_oid_seq
+CREATE SEQUENCE measure_action_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3785,14 +3771,14 @@ CREATE SEQUENCE public.measure_action_descriptions_oid_seq
 -- Name: measure_action_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_action_descriptions_oid_seq OWNED BY public.measure_action_descriptions_oplog.oid;
+ALTER SEQUENCE measure_action_descriptions_oid_seq OWNED BY measure_action_descriptions_oplog.oid;
 
 
 --
 -- Name: measure_actions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_actions_oplog (
+CREATE TABLE measure_actions_oplog (
     action_code character varying(255),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -3810,7 +3796,7 @@ CREATE TABLE public.measure_actions_oplog (
 -- Name: measure_actions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_actions AS
+CREATE VIEW measure_actions AS
  SELECT measure_actions1.action_code,
     measure_actions1.validity_start_date,
     measure_actions1.validity_end_date,
@@ -3820,9 +3806,9 @@ CREATE VIEW public.measure_actions AS
     measure_actions1.status,
     measure_actions1.workbasket_id,
     measure_actions1.workbasket_sequence_number
-   FROM public.measure_actions_oplog measure_actions1
+   FROM measure_actions_oplog measure_actions1
   WHERE ((measure_actions1.oid IN ( SELECT max(measure_actions2.oid) AS max
-           FROM public.measure_actions_oplog measure_actions2
+           FROM measure_actions_oplog measure_actions2
           WHERE ((measure_actions1.action_code)::text = (measure_actions2.action_code)::text))) AND ((measure_actions1.operation)::text <> 'D'::text));
 
 
@@ -3830,7 +3816,7 @@ CREATE VIEW public.measure_actions AS
 -- Name: measure_actions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_actions_oid_seq
+CREATE SEQUENCE measure_actions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3842,14 +3828,14 @@ CREATE SEQUENCE public.measure_actions_oid_seq
 -- Name: measure_actions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_actions_oid_seq OWNED BY public.measure_actions_oplog.oid;
+ALTER SEQUENCE measure_actions_oid_seq OWNED BY measure_actions_oplog.oid;
 
 
 --
 -- Name: measure_components_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_components_oplog (
+CREATE TABLE measure_components_oplog (
     measure_sid integer,
     duty_expression_id character varying(255),
     duty_amount double precision,
@@ -3874,7 +3860,7 @@ CREATE TABLE public.measure_components_oplog (
 -- Name: measure_components; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_components AS
+CREATE VIEW measure_components AS
  SELECT measure_components1.measure_sid,
     measure_components1.duty_expression_id,
     measure_components1.duty_amount,
@@ -3891,9 +3877,9 @@ CREATE VIEW public.measure_components AS
     measure_components1.workbasket_id,
     measure_components1.workbasket_sequence_number,
     measure_components1.original_duty_expression_id
-   FROM public.measure_components_oplog measure_components1
+   FROM measure_components_oplog measure_components1
   WHERE ((measure_components1.oid IN ( SELECT max(measure_components2.oid) AS max
-           FROM public.measure_components_oplog measure_components2
+           FROM measure_components_oplog measure_components2
           WHERE ((measure_components1.measure_sid = measure_components2.measure_sid) AND ((measure_components1.duty_expression_id)::text = (measure_components2.duty_expression_id)::text)))) AND ((measure_components1.operation)::text <> 'D'::text));
 
 
@@ -3901,7 +3887,7 @@ CREATE VIEW public.measure_components AS
 -- Name: measure_components_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_components_oid_seq
+CREATE SEQUENCE measure_components_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3913,14 +3899,14 @@ CREATE SEQUENCE public.measure_components_oid_seq
 -- Name: measure_components_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_components_oid_seq OWNED BY public.measure_components_oplog.oid;
+ALTER SEQUENCE measure_components_oid_seq OWNED BY measure_components_oplog.oid;
 
 
 --
 -- Name: measure_condition_code_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_condition_code_descriptions_oplog (
+CREATE TABLE measure_condition_code_descriptions_oplog (
     condition_code character varying(255),
     language_id character varying(5),
     description text,
@@ -3938,7 +3924,7 @@ CREATE TABLE public.measure_condition_code_descriptions_oplog (
 -- Name: measure_condition_code_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_condition_code_descriptions AS
+CREATE VIEW measure_condition_code_descriptions AS
  SELECT measure_condition_code_descriptions1.condition_code,
     measure_condition_code_descriptions1.language_id,
     measure_condition_code_descriptions1.description,
@@ -3948,9 +3934,9 @@ CREATE VIEW public.measure_condition_code_descriptions AS
     measure_condition_code_descriptions1.status,
     measure_condition_code_descriptions1.workbasket_id,
     measure_condition_code_descriptions1.workbasket_sequence_number
-   FROM public.measure_condition_code_descriptions_oplog measure_condition_code_descriptions1
+   FROM measure_condition_code_descriptions_oplog measure_condition_code_descriptions1
   WHERE ((measure_condition_code_descriptions1.oid IN ( SELECT max(measure_condition_code_descriptions2.oid) AS max
-           FROM public.measure_condition_code_descriptions_oplog measure_condition_code_descriptions2
+           FROM measure_condition_code_descriptions_oplog measure_condition_code_descriptions2
           WHERE ((measure_condition_code_descriptions1.condition_code)::text = (measure_condition_code_descriptions2.condition_code)::text))) AND ((measure_condition_code_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -3958,7 +3944,7 @@ CREATE VIEW public.measure_condition_code_descriptions AS
 -- Name: measure_condition_code_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_condition_code_descriptions_oid_seq
+CREATE SEQUENCE measure_condition_code_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3970,14 +3956,14 @@ CREATE SEQUENCE public.measure_condition_code_descriptions_oid_seq
 -- Name: measure_condition_code_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_condition_code_descriptions_oid_seq OWNED BY public.measure_condition_code_descriptions_oplog.oid;
+ALTER SEQUENCE measure_condition_code_descriptions_oid_seq OWNED BY measure_condition_code_descriptions_oplog.oid;
 
 
 --
 -- Name: measure_condition_codes_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_condition_codes_oplog (
+CREATE TABLE measure_condition_codes_oplog (
     condition_code character varying(255),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -3995,7 +3981,7 @@ CREATE TABLE public.measure_condition_codes_oplog (
 -- Name: measure_condition_codes; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_condition_codes AS
+CREATE VIEW measure_condition_codes AS
  SELECT measure_condition_codes1.condition_code,
     measure_condition_codes1.validity_start_date,
     measure_condition_codes1.validity_end_date,
@@ -4005,9 +3991,9 @@ CREATE VIEW public.measure_condition_codes AS
     measure_condition_codes1.status,
     measure_condition_codes1.workbasket_id,
     measure_condition_codes1.workbasket_sequence_number
-   FROM public.measure_condition_codes_oplog measure_condition_codes1
+   FROM measure_condition_codes_oplog measure_condition_codes1
   WHERE ((measure_condition_codes1.oid IN ( SELECT max(measure_condition_codes2.oid) AS max
-           FROM public.measure_condition_codes_oplog measure_condition_codes2
+           FROM measure_condition_codes_oplog measure_condition_codes2
           WHERE ((measure_condition_codes1.condition_code)::text = (measure_condition_codes2.condition_code)::text))) AND ((measure_condition_codes1.operation)::text <> 'D'::text));
 
 
@@ -4015,7 +4001,7 @@ CREATE VIEW public.measure_condition_codes AS
 -- Name: measure_condition_codes_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_condition_codes_oid_seq
+CREATE SEQUENCE measure_condition_codes_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4027,14 +4013,14 @@ CREATE SEQUENCE public.measure_condition_codes_oid_seq
 -- Name: measure_condition_codes_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_condition_codes_oid_seq OWNED BY public.measure_condition_codes_oplog.oid;
+ALTER SEQUENCE measure_condition_codes_oid_seq OWNED BY measure_condition_codes_oplog.oid;
 
 
 --
 -- Name: measure_condition_components_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_condition_components_oplog (
+CREATE TABLE measure_condition_components_oplog (
     measure_condition_sid integer,
     duty_expression_id character varying(255),
     duty_amount double precision,
@@ -4059,7 +4045,7 @@ CREATE TABLE public.measure_condition_components_oplog (
 -- Name: measure_condition_components; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_condition_components AS
+CREATE VIEW measure_condition_components AS
  SELECT measure_condition_components1.measure_condition_sid,
     measure_condition_components1.duty_expression_id,
     measure_condition_components1.duty_amount,
@@ -4076,9 +4062,9 @@ CREATE VIEW public.measure_condition_components AS
     measure_condition_components1.workbasket_id,
     measure_condition_components1.workbasket_sequence_number,
     measure_condition_components1.original_duty_expression_id
-   FROM public.measure_condition_components_oplog measure_condition_components1
+   FROM measure_condition_components_oplog measure_condition_components1
   WHERE ((measure_condition_components1.oid IN ( SELECT max(measure_condition_components2.oid) AS max
-           FROM public.measure_condition_components_oplog measure_condition_components2
+           FROM measure_condition_components_oplog measure_condition_components2
           WHERE ((measure_condition_components1.measure_condition_sid = measure_condition_components2.measure_condition_sid) AND ((measure_condition_components1.duty_expression_id)::text = (measure_condition_components2.duty_expression_id)::text)))) AND ((measure_condition_components1.operation)::text <> 'D'::text));
 
 
@@ -4086,7 +4072,7 @@ CREATE VIEW public.measure_condition_components AS
 -- Name: measure_condition_components_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_condition_components_oid_seq
+CREATE SEQUENCE measure_condition_components_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4098,14 +4084,14 @@ CREATE SEQUENCE public.measure_condition_components_oid_seq
 -- Name: measure_condition_components_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_condition_components_oid_seq OWNED BY public.measure_condition_components_oplog.oid;
+ALTER SEQUENCE measure_condition_components_oid_seq OWNED BY measure_condition_components_oplog.oid;
 
 
 --
 -- Name: measure_conditions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_conditions_oplog (
+CREATE TABLE measure_conditions_oplog (
     measure_condition_sid integer,
     measure_sid integer,
     condition_code character varying(255),
@@ -4135,7 +4121,7 @@ CREATE TABLE public.measure_conditions_oplog (
 -- Name: measure_conditions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_conditions AS
+CREATE VIEW measure_conditions AS
  SELECT measure_conditions1.measure_condition_sid,
     measure_conditions1.measure_sid,
     measure_conditions1.condition_code,
@@ -4157,9 +4143,9 @@ CREATE VIEW public.measure_conditions AS
     measure_conditions1.workbasket_id,
     measure_conditions1.workbasket_sequence_number,
     measure_conditions1.original_measure_condition_code
-   FROM public.measure_conditions_oplog measure_conditions1
+   FROM measure_conditions_oplog measure_conditions1
   WHERE ((measure_conditions1.oid IN ( SELECT max(measure_conditions2.oid) AS max
-           FROM public.measure_conditions_oplog measure_conditions2
+           FROM measure_conditions_oplog measure_conditions2
           WHERE (measure_conditions1.measure_condition_sid = measure_conditions2.measure_condition_sid))) AND ((measure_conditions1.operation)::text <> 'D'::text));
 
 
@@ -4167,7 +4153,7 @@ CREATE VIEW public.measure_conditions AS
 -- Name: measure_conditions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_conditions_oid_seq
+CREATE SEQUENCE measure_conditions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4179,14 +4165,14 @@ CREATE SEQUENCE public.measure_conditions_oid_seq
 -- Name: measure_conditions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_conditions_oid_seq OWNED BY public.measure_conditions_oplog.oid;
+ALTER SEQUENCE measure_conditions_oid_seq OWNED BY measure_conditions_oplog.oid;
 
 
 --
 -- Name: measure_excluded_geographical_areas_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_excluded_geographical_areas_oplog (
+CREATE TABLE measure_excluded_geographical_areas_oplog (
     measure_sid integer,
     excluded_geographical_area character varying(255),
     geographical_area_sid integer,
@@ -4207,7 +4193,7 @@ CREATE TABLE public.measure_excluded_geographical_areas_oplog (
 -- Name: measure_excluded_geographical_areas; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_excluded_geographical_areas AS
+CREATE VIEW measure_excluded_geographical_areas AS
  SELECT measure_excluded_geographical_areas1.measure_sid,
     measure_excluded_geographical_areas1.excluded_geographical_area,
     measure_excluded_geographical_areas1.geographical_area_sid,
@@ -4220,9 +4206,9 @@ CREATE VIEW public.measure_excluded_geographical_areas AS
     measure_excluded_geographical_areas1.status,
     measure_excluded_geographical_areas1.workbasket_id,
     measure_excluded_geographical_areas1.workbasket_sequence_number
-   FROM public.measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas1
+   FROM measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas1
   WHERE ((measure_excluded_geographical_areas1.oid IN ( SELECT max(measure_excluded_geographical_areas2.oid) AS max
-           FROM public.measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas2
+           FROM measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas2
           WHERE ((measure_excluded_geographical_areas1.measure_sid = measure_excluded_geographical_areas2.measure_sid) AND (measure_excluded_geographical_areas1.geographical_area_sid = measure_excluded_geographical_areas2.geographical_area_sid)))) AND ((measure_excluded_geographical_areas1.operation)::text <> 'D'::text));
 
 
@@ -4230,7 +4216,7 @@ CREATE VIEW public.measure_excluded_geographical_areas AS
 -- Name: measure_excluded_geographical_areas_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_excluded_geographical_areas_oid_seq
+CREATE SEQUENCE measure_excluded_geographical_areas_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4242,14 +4228,14 @@ CREATE SEQUENCE public.measure_excluded_geographical_areas_oid_seq
 -- Name: measure_excluded_geographical_areas_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_excluded_geographical_areas_oid_seq OWNED BY public.measure_excluded_geographical_areas_oplog.oid;
+ALTER SEQUENCE measure_excluded_geographical_areas_oid_seq OWNED BY measure_excluded_geographical_areas_oplog.oid;
 
 
 --
 -- Name: measure_partial_temporary_stops_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_partial_temporary_stops_oplog (
+CREATE TABLE measure_partial_temporary_stops_oplog (
     measure_sid integer,
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -4273,7 +4259,7 @@ CREATE TABLE public.measure_partial_temporary_stops_oplog (
 -- Name: measure_partial_temporary_stops; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_partial_temporary_stops AS
+CREATE VIEW measure_partial_temporary_stops AS
  SELECT measure_partial_temporary_stops1.measure_sid,
     measure_partial_temporary_stops1.validity_start_date,
     measure_partial_temporary_stops1.validity_end_date,
@@ -4289,9 +4275,9 @@ CREATE VIEW public.measure_partial_temporary_stops AS
     measure_partial_temporary_stops1.status,
     measure_partial_temporary_stops1.workbasket_id,
     measure_partial_temporary_stops1.workbasket_sequence_number
-   FROM public.measure_partial_temporary_stops_oplog measure_partial_temporary_stops1
+   FROM measure_partial_temporary_stops_oplog measure_partial_temporary_stops1
   WHERE ((measure_partial_temporary_stops1.oid IN ( SELECT max(measure_partial_temporary_stops2.oid) AS max
-           FROM public.measure_partial_temporary_stops_oplog measure_partial_temporary_stops2
+           FROM measure_partial_temporary_stops_oplog measure_partial_temporary_stops2
           WHERE ((measure_partial_temporary_stops1.measure_sid = measure_partial_temporary_stops2.measure_sid) AND ((measure_partial_temporary_stops1.partial_temporary_stop_regulation_id)::text = (measure_partial_temporary_stops2.partial_temporary_stop_regulation_id)::text)))) AND ((measure_partial_temporary_stops1.operation)::text <> 'D'::text));
 
 
@@ -4299,7 +4285,7 @@ CREATE VIEW public.measure_partial_temporary_stops AS
 -- Name: measure_partial_temporary_stops_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_partial_temporary_stops_oid_seq
+CREATE SEQUENCE measure_partial_temporary_stops_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4311,14 +4297,14 @@ CREATE SEQUENCE public.measure_partial_temporary_stops_oid_seq
 -- Name: measure_partial_temporary_stops_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_partial_temporary_stops_oid_seq OWNED BY public.measure_partial_temporary_stops_oplog.oid;
+ALTER SEQUENCE measure_partial_temporary_stops_oid_seq OWNED BY measure_partial_temporary_stops_oplog.oid;
 
 
 --
 -- Name: measure_type_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_type_descriptions_oplog (
+CREATE TABLE measure_type_descriptions_oplog (
     measure_type_id character varying(3),
     language_id character varying(5),
     description text,
@@ -4337,7 +4323,7 @@ CREATE TABLE public.measure_type_descriptions_oplog (
 -- Name: measure_type_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_type_descriptions AS
+CREATE VIEW measure_type_descriptions AS
  SELECT measure_type_descriptions1.measure_type_id,
     measure_type_descriptions1.language_id,
     measure_type_descriptions1.description,
@@ -4348,9 +4334,9 @@ CREATE VIEW public.measure_type_descriptions AS
     measure_type_descriptions1.status,
     measure_type_descriptions1.workbasket_id,
     measure_type_descriptions1.workbasket_sequence_number
-   FROM public.measure_type_descriptions_oplog measure_type_descriptions1
+   FROM measure_type_descriptions_oplog measure_type_descriptions1
   WHERE ((measure_type_descriptions1.oid IN ( SELECT max(measure_type_descriptions2.oid) AS max
-           FROM public.measure_type_descriptions_oplog measure_type_descriptions2
+           FROM measure_type_descriptions_oplog measure_type_descriptions2
           WHERE ((measure_type_descriptions1.measure_type_id)::text = (measure_type_descriptions2.measure_type_id)::text))) AND ((measure_type_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -4358,7 +4344,7 @@ CREATE VIEW public.measure_type_descriptions AS
 -- Name: measure_type_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_type_descriptions_oid_seq
+CREATE SEQUENCE measure_type_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4370,14 +4356,14 @@ CREATE SEQUENCE public.measure_type_descriptions_oid_seq
 -- Name: measure_type_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_type_descriptions_oid_seq OWNED BY public.measure_type_descriptions_oplog.oid;
+ALTER SEQUENCE measure_type_descriptions_oid_seq OWNED BY measure_type_descriptions_oplog.oid;
 
 
 --
 -- Name: measure_type_series_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_type_series_oplog (
+CREATE TABLE measure_type_series_oplog (
     measure_type_series_id character varying(255),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -4396,7 +4382,7 @@ CREATE TABLE public.measure_type_series_oplog (
 -- Name: measure_type_series; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_type_series AS
+CREATE VIEW measure_type_series AS
  SELECT measure_type_series1.measure_type_series_id,
     measure_type_series1.validity_start_date,
     measure_type_series1.validity_end_date,
@@ -4407,9 +4393,9 @@ CREATE VIEW public.measure_type_series AS
     measure_type_series1.status,
     measure_type_series1.workbasket_id,
     measure_type_series1.workbasket_sequence_number
-   FROM public.measure_type_series_oplog measure_type_series1
+   FROM measure_type_series_oplog measure_type_series1
   WHERE ((measure_type_series1.oid IN ( SELECT max(measure_type_series2.oid) AS max
-           FROM public.measure_type_series_oplog measure_type_series2
+           FROM measure_type_series_oplog measure_type_series2
           WHERE ((measure_type_series1.measure_type_series_id)::text = (measure_type_series2.measure_type_series_id)::text))) AND ((measure_type_series1.operation)::text <> 'D'::text));
 
 
@@ -4417,7 +4403,7 @@ CREATE VIEW public.measure_type_series AS
 -- Name: measure_type_series_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_type_series_descriptions_oplog (
+CREATE TABLE measure_type_series_descriptions_oplog (
     measure_type_series_id character varying(255),
     language_id character varying(5),
     description text,
@@ -4435,7 +4421,7 @@ CREATE TABLE public.measure_type_series_descriptions_oplog (
 -- Name: measure_type_series_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_type_series_descriptions AS
+CREATE VIEW measure_type_series_descriptions AS
  SELECT measure_type_series_descriptions1.measure_type_series_id,
     measure_type_series_descriptions1.language_id,
     measure_type_series_descriptions1.description,
@@ -4445,9 +4431,9 @@ CREATE VIEW public.measure_type_series_descriptions AS
     measure_type_series_descriptions1.status,
     measure_type_series_descriptions1.workbasket_id,
     measure_type_series_descriptions1.workbasket_sequence_number
-   FROM public.measure_type_series_descriptions_oplog measure_type_series_descriptions1
+   FROM measure_type_series_descriptions_oplog measure_type_series_descriptions1
   WHERE ((measure_type_series_descriptions1.oid IN ( SELECT max(measure_type_series_descriptions2.oid) AS max
-           FROM public.measure_type_series_descriptions_oplog measure_type_series_descriptions2
+           FROM measure_type_series_descriptions_oplog measure_type_series_descriptions2
           WHERE ((measure_type_series_descriptions1.measure_type_series_id)::text = (measure_type_series_descriptions2.measure_type_series_id)::text))) AND ((measure_type_series_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -4455,7 +4441,7 @@ CREATE VIEW public.measure_type_series_descriptions AS
 -- Name: measure_type_series_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_type_series_descriptions_oid_seq
+CREATE SEQUENCE measure_type_series_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4467,14 +4453,14 @@ CREATE SEQUENCE public.measure_type_series_descriptions_oid_seq
 -- Name: measure_type_series_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_type_series_descriptions_oid_seq OWNED BY public.measure_type_series_descriptions_oplog.oid;
+ALTER SEQUENCE measure_type_series_descriptions_oid_seq OWNED BY measure_type_series_descriptions_oplog.oid;
 
 
 --
 -- Name: measure_type_series_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_type_series_oid_seq
+CREATE SEQUENCE measure_type_series_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4486,14 +4472,14 @@ CREATE SEQUENCE public.measure_type_series_oid_seq
 -- Name: measure_type_series_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_type_series_oid_seq OWNED BY public.measure_type_series_oplog.oid;
+ALTER SEQUENCE measure_type_series_oid_seq OWNED BY measure_type_series_oplog.oid;
 
 
 --
 -- Name: measure_types_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measure_types_oplog (
+CREATE TABLE measure_types_oplog (
     measure_type_id character varying(3),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -4520,7 +4506,7 @@ CREATE TABLE public.measure_types_oplog (
 -- Name: measure_types; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measure_types AS
+CREATE VIEW measure_types AS
  SELECT measure_types1.measure_type_id,
     measure_types1.validity_start_date,
     measure_types1.validity_end_date,
@@ -4539,9 +4525,9 @@ CREATE VIEW public.measure_types AS
     measure_types1.status,
     measure_types1.workbasket_id,
     measure_types1.workbasket_sequence_number
-   FROM public.measure_types_oplog measure_types1
+   FROM measure_types_oplog measure_types1
   WHERE ((measure_types1.oid IN ( SELECT max(measure_types2.oid) AS max
-           FROM public.measure_types_oplog measure_types2
+           FROM measure_types_oplog measure_types2
           WHERE ((measure_types1.measure_type_id)::text = (measure_types2.measure_type_id)::text))) AND ((measure_types1.operation)::text <> 'D'::text));
 
 
@@ -4549,7 +4535,7 @@ CREATE VIEW public.measure_types AS
 -- Name: measure_types_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measure_types_oid_seq
+CREATE SEQUENCE measure_types_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4561,14 +4547,14 @@ CREATE SEQUENCE public.measure_types_oid_seq
 -- Name: measure_types_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measure_types_oid_seq OWNED BY public.measure_types_oplog.oid;
+ALTER SEQUENCE measure_types_oid_seq OWNED BY measure_types_oplog.oid;
 
 
 --
 -- Name: measurement_unit_abbreviations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measurement_unit_abbreviations (
+CREATE TABLE measurement_unit_abbreviations (
     id integer NOT NULL,
     abbreviation text,
     measurement_unit_code text,
@@ -4580,7 +4566,7 @@ CREATE TABLE public.measurement_unit_abbreviations (
 -- Name: measurement_unit_abbreviations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measurement_unit_abbreviations_id_seq
+CREATE SEQUENCE measurement_unit_abbreviations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4592,14 +4578,14 @@ CREATE SEQUENCE public.measurement_unit_abbreviations_id_seq
 -- Name: measurement_unit_abbreviations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measurement_unit_abbreviations_id_seq OWNED BY public.measurement_unit_abbreviations.id;
+ALTER SEQUENCE measurement_unit_abbreviations_id_seq OWNED BY measurement_unit_abbreviations.id;
 
 
 --
 -- Name: measurement_unit_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measurement_unit_descriptions_oplog (
+CREATE TABLE measurement_unit_descriptions_oplog (
     measurement_unit_code character varying(3),
     language_id character varying(5),
     description text,
@@ -4617,7 +4603,7 @@ CREATE TABLE public.measurement_unit_descriptions_oplog (
 -- Name: measurement_unit_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measurement_unit_descriptions AS
+CREATE VIEW measurement_unit_descriptions AS
  SELECT measurement_unit_descriptions1.measurement_unit_code,
     measurement_unit_descriptions1.language_id,
     measurement_unit_descriptions1.description,
@@ -4627,9 +4613,9 @@ CREATE VIEW public.measurement_unit_descriptions AS
     measurement_unit_descriptions1.status,
     measurement_unit_descriptions1.workbasket_id,
     measurement_unit_descriptions1.workbasket_sequence_number
-   FROM public.measurement_unit_descriptions_oplog measurement_unit_descriptions1
+   FROM measurement_unit_descriptions_oplog measurement_unit_descriptions1
   WHERE ((measurement_unit_descriptions1.oid IN ( SELECT max(measurement_unit_descriptions2.oid) AS max
-           FROM public.measurement_unit_descriptions_oplog measurement_unit_descriptions2
+           FROM measurement_unit_descriptions_oplog measurement_unit_descriptions2
           WHERE ((measurement_unit_descriptions1.measurement_unit_code)::text = (measurement_unit_descriptions2.measurement_unit_code)::text))) AND ((measurement_unit_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -4637,7 +4623,7 @@ CREATE VIEW public.measurement_unit_descriptions AS
 -- Name: measurement_unit_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measurement_unit_descriptions_oid_seq
+CREATE SEQUENCE measurement_unit_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4649,14 +4635,14 @@ CREATE SEQUENCE public.measurement_unit_descriptions_oid_seq
 -- Name: measurement_unit_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measurement_unit_descriptions_oid_seq OWNED BY public.measurement_unit_descriptions_oplog.oid;
+ALTER SEQUENCE measurement_unit_descriptions_oid_seq OWNED BY measurement_unit_descriptions_oplog.oid;
 
 
 --
 -- Name: measurement_unit_qualifier_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measurement_unit_qualifier_descriptions_oplog (
+CREATE TABLE measurement_unit_qualifier_descriptions_oplog (
     measurement_unit_qualifier_code character varying(1),
     language_id character varying(5),
     description text,
@@ -4674,7 +4660,7 @@ CREATE TABLE public.measurement_unit_qualifier_descriptions_oplog (
 -- Name: measurement_unit_qualifier_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measurement_unit_qualifier_descriptions AS
+CREATE VIEW measurement_unit_qualifier_descriptions AS
  SELECT measurement_unit_qualifier_descriptions1.measurement_unit_qualifier_code,
     measurement_unit_qualifier_descriptions1.language_id,
     measurement_unit_qualifier_descriptions1.description,
@@ -4684,9 +4670,9 @@ CREATE VIEW public.measurement_unit_qualifier_descriptions AS
     measurement_unit_qualifier_descriptions1.status,
     measurement_unit_qualifier_descriptions1.workbasket_id,
     measurement_unit_qualifier_descriptions1.workbasket_sequence_number
-   FROM public.measurement_unit_qualifier_descriptions_oplog measurement_unit_qualifier_descriptions1
+   FROM measurement_unit_qualifier_descriptions_oplog measurement_unit_qualifier_descriptions1
   WHERE ((measurement_unit_qualifier_descriptions1.oid IN ( SELECT max(measurement_unit_qualifier_descriptions2.oid) AS max
-           FROM public.measurement_unit_qualifier_descriptions_oplog measurement_unit_qualifier_descriptions2
+           FROM measurement_unit_qualifier_descriptions_oplog measurement_unit_qualifier_descriptions2
           WHERE ((measurement_unit_qualifier_descriptions1.measurement_unit_qualifier_code)::text = (measurement_unit_qualifier_descriptions2.measurement_unit_qualifier_code)::text))) AND ((measurement_unit_qualifier_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -4694,7 +4680,7 @@ CREATE VIEW public.measurement_unit_qualifier_descriptions AS
 -- Name: measurement_unit_qualifier_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measurement_unit_qualifier_descriptions_oid_seq
+CREATE SEQUENCE measurement_unit_qualifier_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4706,14 +4692,14 @@ CREATE SEQUENCE public.measurement_unit_qualifier_descriptions_oid_seq
 -- Name: measurement_unit_qualifier_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measurement_unit_qualifier_descriptions_oid_seq OWNED BY public.measurement_unit_qualifier_descriptions_oplog.oid;
+ALTER SEQUENCE measurement_unit_qualifier_descriptions_oid_seq OWNED BY measurement_unit_qualifier_descriptions_oplog.oid;
 
 
 --
 -- Name: measurement_unit_qualifiers_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measurement_unit_qualifiers_oplog (
+CREATE TABLE measurement_unit_qualifiers_oplog (
     measurement_unit_qualifier_code character varying(1),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -4731,7 +4717,7 @@ CREATE TABLE public.measurement_unit_qualifiers_oplog (
 -- Name: measurement_unit_qualifiers; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measurement_unit_qualifiers AS
+CREATE VIEW measurement_unit_qualifiers AS
  SELECT measurement_unit_qualifiers1.measurement_unit_qualifier_code,
     measurement_unit_qualifiers1.validity_start_date,
     measurement_unit_qualifiers1.validity_end_date,
@@ -4741,9 +4727,9 @@ CREATE VIEW public.measurement_unit_qualifiers AS
     measurement_unit_qualifiers1.status,
     measurement_unit_qualifiers1.workbasket_id,
     measurement_unit_qualifiers1.workbasket_sequence_number
-   FROM public.measurement_unit_qualifiers_oplog measurement_unit_qualifiers1
+   FROM measurement_unit_qualifiers_oplog measurement_unit_qualifiers1
   WHERE ((measurement_unit_qualifiers1.oid IN ( SELECT max(measurement_unit_qualifiers2.oid) AS max
-           FROM public.measurement_unit_qualifiers_oplog measurement_unit_qualifiers2
+           FROM measurement_unit_qualifiers_oplog measurement_unit_qualifiers2
           WHERE ((measurement_unit_qualifiers1.measurement_unit_qualifier_code)::text = (measurement_unit_qualifiers2.measurement_unit_qualifier_code)::text))) AND ((measurement_unit_qualifiers1.operation)::text <> 'D'::text));
 
 
@@ -4751,7 +4737,7 @@ CREATE VIEW public.measurement_unit_qualifiers AS
 -- Name: measurement_unit_qualifiers_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measurement_unit_qualifiers_oid_seq
+CREATE SEQUENCE measurement_unit_qualifiers_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4763,14 +4749,14 @@ CREATE SEQUENCE public.measurement_unit_qualifiers_oid_seq
 -- Name: measurement_unit_qualifiers_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measurement_unit_qualifiers_oid_seq OWNED BY public.measurement_unit_qualifiers_oplog.oid;
+ALTER SEQUENCE measurement_unit_qualifiers_oid_seq OWNED BY measurement_unit_qualifiers_oplog.oid;
 
 
 --
 -- Name: measurement_units_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measurement_units_oplog (
+CREATE TABLE measurement_units_oplog (
     measurement_unit_code character varying(3),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -4788,7 +4774,7 @@ CREATE TABLE public.measurement_units_oplog (
 -- Name: measurement_units; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measurement_units AS
+CREATE VIEW measurement_units AS
  SELECT measurement_units1.measurement_unit_code,
     measurement_units1.validity_start_date,
     measurement_units1.validity_end_date,
@@ -4798,9 +4784,9 @@ CREATE VIEW public.measurement_units AS
     measurement_units1.status,
     measurement_units1.workbasket_id,
     measurement_units1.workbasket_sequence_number
-   FROM public.measurement_units_oplog measurement_units1
+   FROM measurement_units_oplog measurement_units1
   WHERE ((measurement_units1.oid IN ( SELECT max(measurement_units2.oid) AS max
-           FROM public.measurement_units_oplog measurement_units2
+           FROM measurement_units_oplog measurement_units2
           WHERE ((measurement_units1.measurement_unit_code)::text = (measurement_units2.measurement_unit_code)::text))) AND ((measurement_units1.operation)::text <> 'D'::text));
 
 
@@ -4808,7 +4794,7 @@ CREATE VIEW public.measurement_units AS
 -- Name: measurement_units_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measurement_units_oid_seq
+CREATE SEQUENCE measurement_units_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4820,14 +4806,14 @@ CREATE SEQUENCE public.measurement_units_oid_seq
 -- Name: measurement_units_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measurement_units_oid_seq OWNED BY public.measurement_units_oplog.oid;
+ALTER SEQUENCE measurement_units_oid_seq OWNED BY measurement_units_oplog.oid;
 
 
 --
 -- Name: measurements_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measurements_oplog (
+CREATE TABLE measurements_oplog (
     measurement_unit_code character varying(3),
     measurement_unit_qualifier_code character varying(1),
     validity_start_date timestamp without time zone,
@@ -4846,7 +4832,7 @@ CREATE TABLE public.measurements_oplog (
 -- Name: measurements; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measurements AS
+CREATE VIEW measurements AS
  SELECT measurements1.measurement_unit_code,
     measurements1.measurement_unit_qualifier_code,
     measurements1.validity_start_date,
@@ -4857,9 +4843,9 @@ CREATE VIEW public.measurements AS
     measurements1.status,
     measurements1.workbasket_id,
     measurements1.workbasket_sequence_number
-   FROM public.measurements_oplog measurements1
+   FROM measurements_oplog measurements1
   WHERE ((measurements1.oid IN ( SELECT max(measurements2.oid) AS max
-           FROM public.measurements_oplog measurements2
+           FROM measurements_oplog measurements2
           WHERE (((measurements1.measurement_unit_code)::text = (measurements2.measurement_unit_code)::text) AND ((measurements1.measurement_unit_qualifier_code)::text = (measurements2.measurement_unit_qualifier_code)::text)))) AND ((measurements1.operation)::text <> 'D'::text));
 
 
@@ -4867,7 +4853,7 @@ CREATE VIEW public.measurements AS
 -- Name: measurements_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measurements_oid_seq
+CREATE SEQUENCE measurements_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4879,14 +4865,14 @@ CREATE SEQUENCE public.measurements_oid_seq
 -- Name: measurements_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measurements_oid_seq OWNED BY public.measurements_oplog.oid;
+ALTER SEQUENCE measurements_oid_seq OWNED BY measurements_oplog.oid;
 
 
 --
 -- Name: measures_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.measures_oplog (
+CREATE TABLE measures_oplog (
     measure_sid integer,
     measure_type_id character varying(3),
     geographical_area_id character varying(255),
@@ -4932,7 +4918,7 @@ CREATE TABLE public.measures_oplog (
 -- Name: measures; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.measures AS
+CREATE VIEW measures AS
  SELECT measures1.measure_sid,
     measures1.measure_type_id,
     measures1.geographical_area_id,
@@ -4970,9 +4956,9 @@ CREATE VIEW public.measures AS
     measures1.searchable_data_updated_at,
     measures1.workbasket_sequence_number,
     measures1.original_measure_sid
-   FROM public.measures_oplog measures1
+   FROM measures_oplog measures1
   WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
-           FROM public.measures_oplog measures2
+           FROM measures_oplog measures2
           WHERE (measures1.measure_sid = measures2.measure_sid))) AND ((measures1.operation)::text <> 'D'::text));
 
 
@@ -4980,7 +4966,7 @@ CREATE VIEW public.measures AS
 -- Name: measures_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.measures_oid_seq
+CREATE SEQUENCE measures_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4992,14 +4978,14 @@ CREATE SEQUENCE public.measures_oid_seq
 -- Name: measures_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.measures_oid_seq OWNED BY public.measures_oplog.oid;
+ALTER SEQUENCE measures_oid_seq OWNED BY measures_oplog.oid;
 
 
 --
 -- Name: meursing_additional_codes_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.meursing_additional_codes_oplog (
+CREATE TABLE meursing_additional_codes_oplog (
     meursing_additional_code_sid integer,
     additional_code character varying(3),
     validity_start_date timestamp without time zone,
@@ -5021,7 +5007,7 @@ CREATE TABLE public.meursing_additional_codes_oplog (
 -- Name: meursing_additional_codes; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.meursing_additional_codes AS
+CREATE VIEW meursing_additional_codes AS
  SELECT meursing_additional_codes1.meursing_additional_code_sid,
     meursing_additional_codes1.additional_code,
     meursing_additional_codes1.validity_start_date,
@@ -5035,9 +5021,9 @@ CREATE VIEW public.meursing_additional_codes AS
     meursing_additional_codes1.added_by_id,
     meursing_additional_codes1.added_at,
     meursing_additional_codes1."national"
-   FROM public.meursing_additional_codes_oplog meursing_additional_codes1
+   FROM meursing_additional_codes_oplog meursing_additional_codes1
   WHERE ((meursing_additional_codes1.oid IN ( SELECT max(meursing_additional_codes2.oid) AS max
-           FROM public.meursing_additional_codes_oplog meursing_additional_codes2
+           FROM meursing_additional_codes_oplog meursing_additional_codes2
           WHERE (meursing_additional_codes1.meursing_additional_code_sid = meursing_additional_codes2.meursing_additional_code_sid))) AND ((meursing_additional_codes1.operation)::text <> 'D'::text));
 
 
@@ -5045,7 +5031,7 @@ CREATE VIEW public.meursing_additional_codes AS
 -- Name: meursing_additional_codes_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.meursing_additional_codes_oid_seq
+CREATE SEQUENCE meursing_additional_codes_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5057,14 +5043,14 @@ CREATE SEQUENCE public.meursing_additional_codes_oid_seq
 -- Name: meursing_additional_codes_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.meursing_additional_codes_oid_seq OWNED BY public.meursing_additional_codes_oplog.oid;
+ALTER SEQUENCE meursing_additional_codes_oid_seq OWNED BY meursing_additional_codes_oplog.oid;
 
 
 --
 -- Name: meursing_heading_texts_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.meursing_heading_texts_oplog (
+CREATE TABLE meursing_heading_texts_oplog (
     meursing_table_plan_id character varying(2),
     meursing_heading_number integer,
     row_column_code integer,
@@ -5084,7 +5070,7 @@ CREATE TABLE public.meursing_heading_texts_oplog (
 -- Name: meursing_heading_texts; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.meursing_heading_texts AS
+CREATE VIEW meursing_heading_texts AS
  SELECT meursing_heading_texts1.meursing_table_plan_id,
     meursing_heading_texts1.meursing_heading_number,
     meursing_heading_texts1.row_column_code,
@@ -5096,9 +5082,9 @@ CREATE VIEW public.meursing_heading_texts AS
     meursing_heading_texts1.status,
     meursing_heading_texts1.workbasket_id,
     meursing_heading_texts1.workbasket_sequence_number
-   FROM public.meursing_heading_texts_oplog meursing_heading_texts1
+   FROM meursing_heading_texts_oplog meursing_heading_texts1
   WHERE ((meursing_heading_texts1.oid IN ( SELECT max(meursing_heading_texts2.oid) AS max
-           FROM public.meursing_heading_texts_oplog meursing_heading_texts2
+           FROM meursing_heading_texts_oplog meursing_heading_texts2
           WHERE (((meursing_heading_texts1.meursing_table_plan_id)::text = (meursing_heading_texts2.meursing_table_plan_id)::text) AND (meursing_heading_texts1.meursing_heading_number = meursing_heading_texts2.meursing_heading_number) AND (meursing_heading_texts1.row_column_code = meursing_heading_texts2.row_column_code)))) AND ((meursing_heading_texts1.operation)::text <> 'D'::text));
 
 
@@ -5106,7 +5092,7 @@ CREATE VIEW public.meursing_heading_texts AS
 -- Name: meursing_heading_texts_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.meursing_heading_texts_oid_seq
+CREATE SEQUENCE meursing_heading_texts_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5118,14 +5104,14 @@ CREATE SEQUENCE public.meursing_heading_texts_oid_seq
 -- Name: meursing_heading_texts_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.meursing_heading_texts_oid_seq OWNED BY public.meursing_heading_texts_oplog.oid;
+ALTER SEQUENCE meursing_heading_texts_oid_seq OWNED BY meursing_heading_texts_oplog.oid;
 
 
 --
 -- Name: meursing_headings_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.meursing_headings_oplog (
+CREATE TABLE meursing_headings_oplog (
     meursing_table_plan_id character varying(2),
     meursing_heading_number text,
     row_column_code integer,
@@ -5145,7 +5131,7 @@ CREATE TABLE public.meursing_headings_oplog (
 -- Name: meursing_headings; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.meursing_headings AS
+CREATE VIEW meursing_headings AS
  SELECT meursing_headings1.meursing_table_plan_id,
     meursing_headings1.meursing_heading_number,
     meursing_headings1.row_column_code,
@@ -5157,9 +5143,9 @@ CREATE VIEW public.meursing_headings AS
     meursing_headings1.status,
     meursing_headings1.workbasket_id,
     meursing_headings1.workbasket_sequence_number
-   FROM public.meursing_headings_oplog meursing_headings1
+   FROM meursing_headings_oplog meursing_headings1
   WHERE ((meursing_headings1.oid IN ( SELECT max(meursing_headings2.oid) AS max
-           FROM public.meursing_headings_oplog meursing_headings2
+           FROM meursing_headings_oplog meursing_headings2
           WHERE (((meursing_headings1.meursing_table_plan_id)::text = (meursing_headings2.meursing_table_plan_id)::text) AND (meursing_headings1.meursing_heading_number = meursing_headings2.meursing_heading_number) AND (meursing_headings1.row_column_code = meursing_headings2.row_column_code)))) AND ((meursing_headings1.operation)::text <> 'D'::text));
 
 
@@ -5167,7 +5153,7 @@ CREATE VIEW public.meursing_headings AS
 -- Name: meursing_headings_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.meursing_headings_oid_seq
+CREATE SEQUENCE meursing_headings_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5179,14 +5165,14 @@ CREATE SEQUENCE public.meursing_headings_oid_seq
 -- Name: meursing_headings_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.meursing_headings_oid_seq OWNED BY public.meursing_headings_oplog.oid;
+ALTER SEQUENCE meursing_headings_oid_seq OWNED BY meursing_headings_oplog.oid;
 
 
 --
 -- Name: meursing_subheadings_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.meursing_subheadings_oplog (
+CREATE TABLE meursing_subheadings_oplog (
     meursing_table_plan_id character varying(2),
     meursing_heading_number integer,
     row_column_code integer,
@@ -5208,7 +5194,7 @@ CREATE TABLE public.meursing_subheadings_oplog (
 -- Name: meursing_subheadings; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.meursing_subheadings AS
+CREATE VIEW meursing_subheadings AS
  SELECT meursing_subheadings1.meursing_table_plan_id,
     meursing_subheadings1.meursing_heading_number,
     meursing_subheadings1.row_column_code,
@@ -5222,9 +5208,9 @@ CREATE VIEW public.meursing_subheadings AS
     meursing_subheadings1.status,
     meursing_subheadings1.workbasket_id,
     meursing_subheadings1.workbasket_sequence_number
-   FROM public.meursing_subheadings_oplog meursing_subheadings1
+   FROM meursing_subheadings_oplog meursing_subheadings1
   WHERE ((meursing_subheadings1.oid IN ( SELECT max(meursing_subheadings2.oid) AS max
-           FROM public.meursing_subheadings_oplog meursing_subheadings2
+           FROM meursing_subheadings_oplog meursing_subheadings2
           WHERE (((meursing_subheadings1.meursing_table_plan_id)::text = (meursing_subheadings2.meursing_table_plan_id)::text) AND (meursing_subheadings1.meursing_heading_number = meursing_subheadings2.meursing_heading_number) AND (meursing_subheadings1.row_column_code = meursing_subheadings2.row_column_code) AND (meursing_subheadings1.subheading_sequence_number = meursing_subheadings2.subheading_sequence_number)))) AND ((meursing_subheadings1.operation)::text <> 'D'::text));
 
 
@@ -5232,7 +5218,7 @@ CREATE VIEW public.meursing_subheadings AS
 -- Name: meursing_subheadings_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.meursing_subheadings_oid_seq
+CREATE SEQUENCE meursing_subheadings_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5244,14 +5230,14 @@ CREATE SEQUENCE public.meursing_subheadings_oid_seq
 -- Name: meursing_subheadings_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.meursing_subheadings_oid_seq OWNED BY public.meursing_subheadings_oplog.oid;
+ALTER SEQUENCE meursing_subheadings_oid_seq OWNED BY meursing_subheadings_oplog.oid;
 
 
 --
 -- Name: meursing_table_cell_components_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.meursing_table_cell_components_oplog (
+CREATE TABLE meursing_table_cell_components_oplog (
     meursing_additional_code_sid integer,
     meursing_table_plan_id character varying(2),
     heading_number integer,
@@ -5274,7 +5260,7 @@ CREATE TABLE public.meursing_table_cell_components_oplog (
 -- Name: meursing_table_cell_components; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.meursing_table_cell_components AS
+CREATE VIEW meursing_table_cell_components AS
  SELECT meursing_table_cell_components1.meursing_additional_code_sid,
     meursing_table_cell_components1.meursing_table_plan_id,
     meursing_table_cell_components1.heading_number,
@@ -5289,9 +5275,9 @@ CREATE VIEW public.meursing_table_cell_components AS
     meursing_table_cell_components1.status,
     meursing_table_cell_components1.workbasket_id,
     meursing_table_cell_components1.workbasket_sequence_number
-   FROM public.meursing_table_cell_components_oplog meursing_table_cell_components1
+   FROM meursing_table_cell_components_oplog meursing_table_cell_components1
   WHERE ((meursing_table_cell_components1.oid IN ( SELECT max(meursing_table_cell_components2.oid) AS max
-           FROM public.meursing_table_cell_components_oplog meursing_table_cell_components2
+           FROM meursing_table_cell_components_oplog meursing_table_cell_components2
           WHERE (((meursing_table_cell_components1.meursing_table_plan_id)::text = (meursing_table_cell_components2.meursing_table_plan_id)::text) AND (meursing_table_cell_components1.heading_number = meursing_table_cell_components2.heading_number) AND (meursing_table_cell_components1.row_column_code = meursing_table_cell_components2.row_column_code) AND (meursing_table_cell_components1.meursing_additional_code_sid = meursing_table_cell_components2.meursing_additional_code_sid)))) AND ((meursing_table_cell_components1.operation)::text <> 'D'::text));
 
 
@@ -5299,7 +5285,7 @@ CREATE VIEW public.meursing_table_cell_components AS
 -- Name: meursing_table_cell_components_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.meursing_table_cell_components_oid_seq
+CREATE SEQUENCE meursing_table_cell_components_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5311,14 +5297,14 @@ CREATE SEQUENCE public.meursing_table_cell_components_oid_seq
 -- Name: meursing_table_cell_components_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.meursing_table_cell_components_oid_seq OWNED BY public.meursing_table_cell_components_oplog.oid;
+ALTER SEQUENCE meursing_table_cell_components_oid_seq OWNED BY meursing_table_cell_components_oplog.oid;
 
 
 --
 -- Name: meursing_table_plans_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.meursing_table_plans_oplog (
+CREATE TABLE meursing_table_plans_oplog (
     meursing_table_plan_id character varying(2),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -5336,7 +5322,7 @@ CREATE TABLE public.meursing_table_plans_oplog (
 -- Name: meursing_table_plans; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.meursing_table_plans AS
+CREATE VIEW meursing_table_plans AS
  SELECT meursing_table_plans1.meursing_table_plan_id,
     meursing_table_plans1.validity_start_date,
     meursing_table_plans1.validity_end_date,
@@ -5346,9 +5332,9 @@ CREATE VIEW public.meursing_table_plans AS
     meursing_table_plans1.status,
     meursing_table_plans1.workbasket_id,
     meursing_table_plans1.workbasket_sequence_number
-   FROM public.meursing_table_plans_oplog meursing_table_plans1
+   FROM meursing_table_plans_oplog meursing_table_plans1
   WHERE ((meursing_table_plans1.oid IN ( SELECT max(meursing_table_plans2.oid) AS max
-           FROM public.meursing_table_plans_oplog meursing_table_plans2
+           FROM meursing_table_plans_oplog meursing_table_plans2
           WHERE ((meursing_table_plans1.meursing_table_plan_id)::text = (meursing_table_plans2.meursing_table_plan_id)::text))) AND ((meursing_table_plans1.operation)::text <> 'D'::text));
 
 
@@ -5356,7 +5342,7 @@ CREATE VIEW public.meursing_table_plans AS
 -- Name: meursing_table_plans_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.meursing_table_plans_oid_seq
+CREATE SEQUENCE meursing_table_plans_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5368,14 +5354,14 @@ CREATE SEQUENCE public.meursing_table_plans_oid_seq
 -- Name: meursing_table_plans_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.meursing_table_plans_oid_seq OWNED BY public.meursing_table_plans_oplog.oid;
+ALTER SEQUENCE meursing_table_plans_oid_seq OWNED BY meursing_table_plans_oplog.oid;
 
 
 --
 -- Name: modification_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.modification_regulations_oplog (
+CREATE TABLE modification_regulations_oplog (
     modification_regulation_role integer,
     modification_regulation_id character varying(255),
     validity_start_date timestamp without time zone,
@@ -5411,7 +5397,7 @@ CREATE TABLE public.modification_regulations_oplog (
 -- Name: modification_regulations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.modification_regulations AS
+CREATE VIEW modification_regulations AS
  SELECT modification_regulations1.modification_regulation_role,
     modification_regulations1.modification_regulation_id,
     modification_regulations1.validity_start_date,
@@ -5439,9 +5425,9 @@ CREATE VIEW public.modification_regulations AS
     modification_regulations1.status,
     modification_regulations1.workbasket_id,
     modification_regulations1.workbasket_sequence_number
-   FROM public.modification_regulations_oplog modification_regulations1
+   FROM modification_regulations_oplog modification_regulations1
   WHERE ((modification_regulations1.oid IN ( SELECT max(modification_regulations2.oid) AS max
-           FROM public.modification_regulations_oplog modification_regulations2
+           FROM modification_regulations_oplog modification_regulations2
           WHERE (((modification_regulations1.modification_regulation_id)::text = (modification_regulations2.modification_regulation_id)::text) AND (modification_regulations1.modification_regulation_role = modification_regulations2.modification_regulation_role)))) AND ((modification_regulations1.operation)::text <> 'D'::text));
 
 
@@ -5449,7 +5435,7 @@ CREATE VIEW public.modification_regulations AS
 -- Name: modification_regulations_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.modification_regulations_oid_seq
+CREATE SEQUENCE modification_regulations_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5461,14 +5447,14 @@ CREATE SEQUENCE public.modification_regulations_oid_seq
 -- Name: modification_regulations_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.modification_regulations_oid_seq OWNED BY public.modification_regulations_oplog.oid;
+ALTER SEQUENCE modification_regulations_oid_seq OWNED BY modification_regulations_oplog.oid;
 
 
 --
 -- Name: monetary_exchange_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.monetary_exchange_periods_oplog (
+CREATE TABLE monetary_exchange_periods_oplog (
     monetary_exchange_period_sid integer,
     parent_monetary_unit_code character varying(255),
     validity_start_date timestamp without time zone,
@@ -5487,7 +5473,7 @@ CREATE TABLE public.monetary_exchange_periods_oplog (
 -- Name: monetary_exchange_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.monetary_exchange_periods AS
+CREATE VIEW monetary_exchange_periods AS
  SELECT monetary_exchange_periods1.monetary_exchange_period_sid,
     monetary_exchange_periods1.parent_monetary_unit_code,
     monetary_exchange_periods1.validity_start_date,
@@ -5498,9 +5484,9 @@ CREATE VIEW public.monetary_exchange_periods AS
     monetary_exchange_periods1.status,
     monetary_exchange_periods1.workbasket_id,
     monetary_exchange_periods1.workbasket_sequence_number
-   FROM public.monetary_exchange_periods_oplog monetary_exchange_periods1
+   FROM monetary_exchange_periods_oplog monetary_exchange_periods1
   WHERE ((monetary_exchange_periods1.oid IN ( SELECT max(monetary_exchange_periods2.oid) AS max
-           FROM public.monetary_exchange_periods_oplog monetary_exchange_periods2
+           FROM monetary_exchange_periods_oplog monetary_exchange_periods2
           WHERE ((monetary_exchange_periods1.monetary_exchange_period_sid = monetary_exchange_periods2.monetary_exchange_period_sid) AND ((monetary_exchange_periods1.parent_monetary_unit_code)::text = (monetary_exchange_periods2.parent_monetary_unit_code)::text)))) AND ((monetary_exchange_periods1.operation)::text <> 'D'::text));
 
 
@@ -5508,7 +5494,7 @@ CREATE VIEW public.monetary_exchange_periods AS
 -- Name: monetary_exchange_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.monetary_exchange_periods_oid_seq
+CREATE SEQUENCE monetary_exchange_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5520,14 +5506,14 @@ CREATE SEQUENCE public.monetary_exchange_periods_oid_seq
 -- Name: monetary_exchange_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.monetary_exchange_periods_oid_seq OWNED BY public.monetary_exchange_periods_oplog.oid;
+ALTER SEQUENCE monetary_exchange_periods_oid_seq OWNED BY monetary_exchange_periods_oplog.oid;
 
 
 --
 -- Name: monetary_exchange_rates_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.monetary_exchange_rates_oplog (
+CREATE TABLE monetary_exchange_rates_oplog (
     monetary_exchange_period_sid integer,
     child_monetary_unit_code character varying(255),
     exchange_rate numeric(16,8),
@@ -5545,7 +5531,7 @@ CREATE TABLE public.monetary_exchange_rates_oplog (
 -- Name: monetary_exchange_rates; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.monetary_exchange_rates AS
+CREATE VIEW monetary_exchange_rates AS
  SELECT monetary_exchange_rates1.monetary_exchange_period_sid,
     monetary_exchange_rates1.child_monetary_unit_code,
     monetary_exchange_rates1.exchange_rate,
@@ -5555,9 +5541,9 @@ CREATE VIEW public.monetary_exchange_rates AS
     monetary_exchange_rates1.status,
     monetary_exchange_rates1.workbasket_id,
     monetary_exchange_rates1.workbasket_sequence_number
-   FROM public.monetary_exchange_rates_oplog monetary_exchange_rates1
+   FROM monetary_exchange_rates_oplog monetary_exchange_rates1
   WHERE ((monetary_exchange_rates1.oid IN ( SELECT max(monetary_exchange_rates2.oid) AS max
-           FROM public.monetary_exchange_rates_oplog monetary_exchange_rates2
+           FROM monetary_exchange_rates_oplog monetary_exchange_rates2
           WHERE ((monetary_exchange_rates1.monetary_exchange_period_sid = monetary_exchange_rates2.monetary_exchange_period_sid) AND ((monetary_exchange_rates1.child_monetary_unit_code)::text = (monetary_exchange_rates2.child_monetary_unit_code)::text)))) AND ((monetary_exchange_rates1.operation)::text <> 'D'::text));
 
 
@@ -5565,7 +5551,7 @@ CREATE VIEW public.monetary_exchange_rates AS
 -- Name: monetary_exchange_rates_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.monetary_exchange_rates_oid_seq
+CREATE SEQUENCE monetary_exchange_rates_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5577,14 +5563,14 @@ CREATE SEQUENCE public.monetary_exchange_rates_oid_seq
 -- Name: monetary_exchange_rates_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.monetary_exchange_rates_oid_seq OWNED BY public.monetary_exchange_rates_oplog.oid;
+ALTER SEQUENCE monetary_exchange_rates_oid_seq OWNED BY monetary_exchange_rates_oplog.oid;
 
 
 --
 -- Name: monetary_unit_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.monetary_unit_descriptions_oplog (
+CREATE TABLE monetary_unit_descriptions_oplog (
     monetary_unit_code character varying(255),
     language_id character varying(5),
     description text,
@@ -5602,7 +5588,7 @@ CREATE TABLE public.monetary_unit_descriptions_oplog (
 -- Name: monetary_unit_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.monetary_unit_descriptions AS
+CREATE VIEW monetary_unit_descriptions AS
  SELECT monetary_unit_descriptions1.monetary_unit_code,
     monetary_unit_descriptions1.language_id,
     monetary_unit_descriptions1.description,
@@ -5612,9 +5598,9 @@ CREATE VIEW public.monetary_unit_descriptions AS
     monetary_unit_descriptions1.status,
     monetary_unit_descriptions1.workbasket_id,
     monetary_unit_descriptions1.workbasket_sequence_number
-   FROM public.monetary_unit_descriptions_oplog monetary_unit_descriptions1
+   FROM monetary_unit_descriptions_oplog monetary_unit_descriptions1
   WHERE ((monetary_unit_descriptions1.oid IN ( SELECT max(monetary_unit_descriptions2.oid) AS max
-           FROM public.monetary_unit_descriptions_oplog monetary_unit_descriptions2
+           FROM monetary_unit_descriptions_oplog monetary_unit_descriptions2
           WHERE ((monetary_unit_descriptions1.monetary_unit_code)::text = (monetary_unit_descriptions2.monetary_unit_code)::text))) AND ((monetary_unit_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -5622,7 +5608,7 @@ CREATE VIEW public.monetary_unit_descriptions AS
 -- Name: monetary_unit_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.monetary_unit_descriptions_oid_seq
+CREATE SEQUENCE monetary_unit_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5634,14 +5620,14 @@ CREATE SEQUENCE public.monetary_unit_descriptions_oid_seq
 -- Name: monetary_unit_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.monetary_unit_descriptions_oid_seq OWNED BY public.monetary_unit_descriptions_oplog.oid;
+ALTER SEQUENCE monetary_unit_descriptions_oid_seq OWNED BY monetary_unit_descriptions_oplog.oid;
 
 
 --
 -- Name: monetary_units_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.monetary_units_oplog (
+CREATE TABLE monetary_units_oplog (
     monetary_unit_code character varying(255),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -5659,7 +5645,7 @@ CREATE TABLE public.monetary_units_oplog (
 -- Name: monetary_units; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.monetary_units AS
+CREATE VIEW monetary_units AS
  SELECT monetary_units1.monetary_unit_code,
     monetary_units1.validity_start_date,
     monetary_units1.validity_end_date,
@@ -5669,9 +5655,9 @@ CREATE VIEW public.monetary_units AS
     monetary_units1.status,
     monetary_units1.workbasket_id,
     monetary_units1.workbasket_sequence_number
-   FROM public.monetary_units_oplog monetary_units1
+   FROM monetary_units_oplog monetary_units1
   WHERE ((monetary_units1.oid IN ( SELECT max(monetary_units2.oid) AS max
-           FROM public.monetary_units_oplog monetary_units2
+           FROM monetary_units_oplog monetary_units2
           WHERE ((monetary_units1.monetary_unit_code)::text = (monetary_units2.monetary_unit_code)::text))) AND ((monetary_units1.operation)::text <> 'D'::text));
 
 
@@ -5679,7 +5665,7 @@ CREATE VIEW public.monetary_units AS
 -- Name: monetary_units_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.monetary_units_oid_seq
+CREATE SEQUENCE monetary_units_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5691,14 +5677,14 @@ CREATE SEQUENCE public.monetary_units_oid_seq
 -- Name: monetary_units_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.monetary_units_oid_seq OWNED BY public.monetary_units_oplog.oid;
+ALTER SEQUENCE monetary_units_oid_seq OWNED BY monetary_units_oplog.oid;
 
 
 --
 -- Name: nomenclature_group_memberships_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.nomenclature_group_memberships_oplog (
+CREATE TABLE nomenclature_group_memberships_oplog (
     goods_nomenclature_sid integer,
     goods_nomenclature_group_type character varying(1),
     goods_nomenclature_group_id character varying(6),
@@ -5720,7 +5706,7 @@ CREATE TABLE public.nomenclature_group_memberships_oplog (
 -- Name: nomenclature_group_memberships; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.nomenclature_group_memberships AS
+CREATE VIEW nomenclature_group_memberships AS
  SELECT nomenclature_group_memberships1.goods_nomenclature_sid,
     nomenclature_group_memberships1.goods_nomenclature_group_type,
     nomenclature_group_memberships1.goods_nomenclature_group_id,
@@ -5734,9 +5720,9 @@ CREATE VIEW public.nomenclature_group_memberships AS
     nomenclature_group_memberships1.status,
     nomenclature_group_memberships1.workbasket_id,
     nomenclature_group_memberships1.workbasket_sequence_number
-   FROM public.nomenclature_group_memberships_oplog nomenclature_group_memberships1
+   FROM nomenclature_group_memberships_oplog nomenclature_group_memberships1
   WHERE ((nomenclature_group_memberships1.oid IN ( SELECT max(nomenclature_group_memberships2.oid) AS max
-           FROM public.nomenclature_group_memberships_oplog nomenclature_group_memberships2
+           FROM nomenclature_group_memberships_oplog nomenclature_group_memberships2
           WHERE ((nomenclature_group_memberships1.goods_nomenclature_sid = nomenclature_group_memberships2.goods_nomenclature_sid) AND ((nomenclature_group_memberships1.goods_nomenclature_group_id)::text = (nomenclature_group_memberships2.goods_nomenclature_group_id)::text) AND ((nomenclature_group_memberships1.goods_nomenclature_group_type)::text = (nomenclature_group_memberships2.goods_nomenclature_group_type)::text) AND ((nomenclature_group_memberships1.goods_nomenclature_item_id)::text = (nomenclature_group_memberships2.goods_nomenclature_item_id)::text) AND (nomenclature_group_memberships1.validity_start_date = nomenclature_group_memberships2.validity_start_date)))) AND ((nomenclature_group_memberships1.operation)::text <> 'D'::text));
 
 
@@ -5744,7 +5730,7 @@ CREATE VIEW public.nomenclature_group_memberships AS
 -- Name: nomenclature_group_memberships_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.nomenclature_group_memberships_oid_seq
+CREATE SEQUENCE nomenclature_group_memberships_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5756,14 +5742,14 @@ CREATE SEQUENCE public.nomenclature_group_memberships_oid_seq
 -- Name: nomenclature_group_memberships_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.nomenclature_group_memberships_oid_seq OWNED BY public.nomenclature_group_memberships_oplog.oid;
+ALTER SEQUENCE nomenclature_group_memberships_oid_seq OWNED BY nomenclature_group_memberships_oplog.oid;
 
 
 --
 -- Name: prorogation_regulation_actions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.prorogation_regulation_actions_oplog (
+CREATE TABLE prorogation_regulation_actions_oplog (
     prorogation_regulation_role integer,
     prorogation_regulation_id character varying(8),
     prorogated_regulation_role integer,
@@ -5783,7 +5769,7 @@ CREATE TABLE public.prorogation_regulation_actions_oplog (
 -- Name: prorogation_regulation_actions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.prorogation_regulation_actions AS
+CREATE VIEW prorogation_regulation_actions AS
  SELECT prorogation_regulation_actions1.prorogation_regulation_role,
     prorogation_regulation_actions1.prorogation_regulation_id,
     prorogation_regulation_actions1.prorogated_regulation_role,
@@ -5795,9 +5781,9 @@ CREATE VIEW public.prorogation_regulation_actions AS
     prorogation_regulation_actions1.status,
     prorogation_regulation_actions1.workbasket_id,
     prorogation_regulation_actions1.workbasket_sequence_number
-   FROM public.prorogation_regulation_actions_oplog prorogation_regulation_actions1
+   FROM prorogation_regulation_actions_oplog prorogation_regulation_actions1
   WHERE ((prorogation_regulation_actions1.oid IN ( SELECT max(prorogation_regulation_actions2.oid) AS max
-           FROM public.prorogation_regulation_actions_oplog prorogation_regulation_actions2
+           FROM prorogation_regulation_actions_oplog prorogation_regulation_actions2
           WHERE (((prorogation_regulation_actions1.prorogation_regulation_id)::text = (prorogation_regulation_actions2.prorogation_regulation_id)::text) AND (prorogation_regulation_actions1.prorogation_regulation_role = prorogation_regulation_actions2.prorogation_regulation_role) AND ((prorogation_regulation_actions1.prorogated_regulation_id)::text = (prorogation_regulation_actions2.prorogated_regulation_id)::text) AND (prorogation_regulation_actions1.prorogated_regulation_role = prorogation_regulation_actions2.prorogated_regulation_role)))) AND ((prorogation_regulation_actions1.operation)::text <> 'D'::text));
 
 
@@ -5805,7 +5791,7 @@ CREATE VIEW public.prorogation_regulation_actions AS
 -- Name: prorogation_regulation_actions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.prorogation_regulation_actions_oid_seq
+CREATE SEQUENCE prorogation_regulation_actions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5817,14 +5803,14 @@ CREATE SEQUENCE public.prorogation_regulation_actions_oid_seq
 -- Name: prorogation_regulation_actions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.prorogation_regulation_actions_oid_seq OWNED BY public.prorogation_regulation_actions_oplog.oid;
+ALTER SEQUENCE prorogation_regulation_actions_oid_seq OWNED BY prorogation_regulation_actions_oplog.oid;
 
 
 --
 -- Name: prorogation_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.prorogation_regulations_oplog (
+CREATE TABLE prorogation_regulations_oplog (
     prorogation_regulation_role integer,
     prorogation_regulation_id character varying(255),
     published_date date,
@@ -5850,7 +5836,7 @@ CREATE TABLE public.prorogation_regulations_oplog (
 -- Name: prorogation_regulations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.prorogation_regulations AS
+CREATE VIEW prorogation_regulations AS
  SELECT prorogation_regulations1.prorogation_regulation_role,
     prorogation_regulations1.prorogation_regulation_id,
     prorogation_regulations1.published_date,
@@ -5868,9 +5854,9 @@ CREATE VIEW public.prorogation_regulations AS
     prorogation_regulations1.status,
     prorogation_regulations1.workbasket_id,
     prorogation_regulations1.workbasket_sequence_number
-   FROM public.prorogation_regulations_oplog prorogation_regulations1
+   FROM prorogation_regulations_oplog prorogation_regulations1
   WHERE ((prorogation_regulations1.oid IN ( SELECT max(prorogation_regulations2.oid) AS max
-           FROM public.prorogation_regulations_oplog prorogation_regulations2
+           FROM prorogation_regulations_oplog prorogation_regulations2
           WHERE (((prorogation_regulations1.prorogation_regulation_id)::text = (prorogation_regulations2.prorogation_regulation_id)::text) AND (prorogation_regulations1.prorogation_regulation_role = prorogation_regulations2.prorogation_regulation_role)))) AND ((prorogation_regulations1.operation)::text <> 'D'::text));
 
 
@@ -5878,7 +5864,7 @@ CREATE VIEW public.prorogation_regulations AS
 -- Name: prorogation_regulations_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.prorogation_regulations_oid_seq
+CREATE SEQUENCE prorogation_regulations_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5890,14 +5876,14 @@ CREATE SEQUENCE public.prorogation_regulations_oid_seq
 -- Name: prorogation_regulations_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.prorogation_regulations_oid_seq OWNED BY public.prorogation_regulations_oplog.oid;
+ALTER SEQUENCE prorogation_regulations_oid_seq OWNED BY prorogation_regulations_oplog.oid;
 
 
 --
 -- Name: publication_sigles_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.publication_sigles_oplog (
+CREATE TABLE publication_sigles_oplog (
     oid integer NOT NULL,
     code_type_id character varying(4),
     code character varying(10),
@@ -5918,7 +5904,7 @@ CREATE TABLE public.publication_sigles_oplog (
 -- Name: publication_sigles; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.publication_sigles AS
+CREATE VIEW publication_sigles AS
  SELECT publication_sigles1.oid,
     publication_sigles1.code_type_id,
     publication_sigles1.code,
@@ -5931,9 +5917,9 @@ CREATE VIEW public.publication_sigles AS
     publication_sigles1.status,
     publication_sigles1.workbasket_id,
     publication_sigles1.workbasket_sequence_number
-   FROM public.publication_sigles_oplog publication_sigles1
+   FROM publication_sigles_oplog publication_sigles1
   WHERE ((publication_sigles1.oid IN ( SELECT max(publication_sigles2.oid) AS max
-           FROM public.publication_sigles_oplog publication_sigles2
+           FROM publication_sigles_oplog publication_sigles2
           WHERE (((publication_sigles1.code)::text = (publication_sigles2.code)::text) AND ((publication_sigles1.code_type_id)::text = (publication_sigles2.code_type_id)::text)))) AND ((publication_sigles1.operation)::text <> 'D'::text));
 
 
@@ -5941,7 +5927,7 @@ CREATE VIEW public.publication_sigles AS
 -- Name: publication_sigles_oplog_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.publication_sigles_oplog_oid_seq
+CREATE SEQUENCE publication_sigles_oplog_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5953,14 +5939,14 @@ CREATE SEQUENCE public.publication_sigles_oplog_oid_seq
 -- Name: publication_sigles_oplog_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.publication_sigles_oplog_oid_seq OWNED BY public.publication_sigles_oplog.oid;
+ALTER SEQUENCE publication_sigles_oplog_oid_seq OWNED BY publication_sigles_oplog.oid;
 
 
 --
 -- Name: quota_associations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_associations_oplog (
+CREATE TABLE quota_associations_oplog (
     main_quota_definition_sid integer,
     sub_quota_definition_sid integer,
     relation_type character varying(255),
@@ -5982,7 +5968,7 @@ CREATE TABLE public.quota_associations_oplog (
 -- Name: quota_associations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_associations AS
+CREATE VIEW quota_associations AS
  SELECT quota_associations1.main_quota_definition_sid,
     quota_associations1.sub_quota_definition_sid,
     quota_associations1.relation_type,
@@ -5996,9 +5982,9 @@ CREATE VIEW public.quota_associations AS
     quota_associations1.added_by_id,
     quota_associations1.added_at,
     quota_associations1."national"
-   FROM public.quota_associations_oplog quota_associations1
+   FROM quota_associations_oplog quota_associations1
   WHERE ((quota_associations1.oid IN ( SELECT max(quota_associations2.oid) AS max
-           FROM public.quota_associations_oplog quota_associations2
+           FROM quota_associations_oplog quota_associations2
           WHERE ((quota_associations1.main_quota_definition_sid = quota_associations2.main_quota_definition_sid) AND (quota_associations1.sub_quota_definition_sid = quota_associations2.sub_quota_definition_sid)))) AND ((quota_associations1.operation)::text <> 'D'::text));
 
 
@@ -6006,7 +5992,7 @@ CREATE VIEW public.quota_associations AS
 -- Name: quota_associations_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_associations_oid_seq
+CREATE SEQUENCE quota_associations_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6018,14 +6004,14 @@ CREATE SEQUENCE public.quota_associations_oid_seq
 -- Name: quota_associations_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_associations_oid_seq OWNED BY public.quota_associations_oplog.oid;
+ALTER SEQUENCE quota_associations_oid_seq OWNED BY quota_associations_oplog.oid;
 
 
 --
 -- Name: quota_balance_events_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_balance_events_oplog (
+CREATE TABLE quota_balance_events_oplog (
     quota_definition_sid integer,
     occurrence_timestamp timestamp without time zone,
     last_import_date_in_allocation date,
@@ -6046,7 +6032,7 @@ CREATE TABLE public.quota_balance_events_oplog (
 -- Name: quota_balance_events; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_balance_events AS
+CREATE VIEW quota_balance_events AS
  SELECT quota_balance_events1.quota_definition_sid,
     quota_balance_events1.occurrence_timestamp,
     quota_balance_events1.last_import_date_in_allocation,
@@ -6059,9 +6045,9 @@ CREATE VIEW public.quota_balance_events AS
     quota_balance_events1.status,
     quota_balance_events1.workbasket_id,
     quota_balance_events1.workbasket_sequence_number
-   FROM public.quota_balance_events_oplog quota_balance_events1
+   FROM quota_balance_events_oplog quota_balance_events1
   WHERE ((quota_balance_events1.oid IN ( SELECT max(quota_balance_events2.oid) AS max
-           FROM public.quota_balance_events_oplog quota_balance_events2
+           FROM quota_balance_events_oplog quota_balance_events2
           WHERE ((quota_balance_events1.quota_definition_sid = quota_balance_events2.quota_definition_sid) AND (quota_balance_events1.occurrence_timestamp = quota_balance_events2.occurrence_timestamp)))) AND ((quota_balance_events1.operation)::text <> 'D'::text));
 
 
@@ -6069,7 +6055,7 @@ CREATE VIEW public.quota_balance_events AS
 -- Name: quota_balance_events_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_balance_events_oid_seq
+CREATE SEQUENCE quota_balance_events_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6081,14 +6067,14 @@ CREATE SEQUENCE public.quota_balance_events_oid_seq
 -- Name: quota_balance_events_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_balance_events_oid_seq OWNED BY public.quota_balance_events_oplog.oid;
+ALTER SEQUENCE quota_balance_events_oid_seq OWNED BY quota_balance_events_oplog.oid;
 
 
 --
 -- Name: quota_blocking_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_blocking_periods_oplog (
+CREATE TABLE quota_blocking_periods_oplog (
     quota_blocking_period_sid integer,
     quota_definition_sid integer,
     blocking_start_date date,
@@ -6109,7 +6095,7 @@ CREATE TABLE public.quota_blocking_periods_oplog (
 -- Name: quota_blocking_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_blocking_periods AS
+CREATE VIEW quota_blocking_periods AS
  SELECT quota_blocking_periods1.quota_blocking_period_sid,
     quota_blocking_periods1.quota_definition_sid,
     quota_blocking_periods1.blocking_start_date,
@@ -6122,9 +6108,9 @@ CREATE VIEW public.quota_blocking_periods AS
     quota_blocking_periods1.status,
     quota_blocking_periods1.workbasket_id,
     quota_blocking_periods1.workbasket_sequence_number
-   FROM public.quota_blocking_periods_oplog quota_blocking_periods1
+   FROM quota_blocking_periods_oplog quota_blocking_periods1
   WHERE ((quota_blocking_periods1.oid IN ( SELECT max(quota_blocking_periods2.oid) AS max
-           FROM public.quota_blocking_periods_oplog quota_blocking_periods2
+           FROM quota_blocking_periods_oplog quota_blocking_periods2
           WHERE (quota_blocking_periods1.quota_blocking_period_sid = quota_blocking_periods2.quota_blocking_period_sid))) AND ((quota_blocking_periods1.operation)::text <> 'D'::text));
 
 
@@ -6132,7 +6118,7 @@ CREATE VIEW public.quota_blocking_periods AS
 -- Name: quota_blocking_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_blocking_periods_oid_seq
+CREATE SEQUENCE quota_blocking_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6144,14 +6130,14 @@ CREATE SEQUENCE public.quota_blocking_periods_oid_seq
 -- Name: quota_blocking_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_blocking_periods_oid_seq OWNED BY public.quota_blocking_periods_oplog.oid;
+ALTER SEQUENCE quota_blocking_periods_oid_seq OWNED BY quota_blocking_periods_oplog.oid;
 
 
 --
 -- Name: quota_critical_events_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_critical_events_oplog (
+CREATE TABLE quota_critical_events_oplog (
     quota_definition_sid integer,
     occurrence_timestamp timestamp without time zone,
     critical_state character varying(255),
@@ -6170,7 +6156,7 @@ CREATE TABLE public.quota_critical_events_oplog (
 -- Name: quota_critical_events; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_critical_events AS
+CREATE VIEW quota_critical_events AS
  SELECT quota_critical_events1.quota_definition_sid,
     quota_critical_events1.occurrence_timestamp,
     quota_critical_events1.critical_state,
@@ -6181,9 +6167,9 @@ CREATE VIEW public.quota_critical_events AS
     quota_critical_events1.status,
     quota_critical_events1.workbasket_id,
     quota_critical_events1.workbasket_sequence_number
-   FROM public.quota_critical_events_oplog quota_critical_events1
+   FROM quota_critical_events_oplog quota_critical_events1
   WHERE ((quota_critical_events1.oid IN ( SELECT max(quota_critical_events2.oid) AS max
-           FROM public.quota_critical_events_oplog quota_critical_events2
+           FROM quota_critical_events_oplog quota_critical_events2
           WHERE ((quota_critical_events1.quota_definition_sid = quota_critical_events2.quota_definition_sid) AND (quota_critical_events1.occurrence_timestamp = quota_critical_events2.occurrence_timestamp))
           GROUP BY quota_critical_events2.oid
           ORDER BY quota_critical_events2.oid DESC)) AND ((quota_critical_events1.operation)::text <> 'D'::text));
@@ -6193,7 +6179,7 @@ CREATE VIEW public.quota_critical_events AS
 -- Name: quota_critical_events_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_critical_events_oid_seq
+CREATE SEQUENCE quota_critical_events_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6205,14 +6191,14 @@ CREATE SEQUENCE public.quota_critical_events_oid_seq
 -- Name: quota_critical_events_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_critical_events_oid_seq OWNED BY public.quota_critical_events_oplog.oid;
+ALTER SEQUENCE quota_critical_events_oid_seq OWNED BY quota_critical_events_oplog.oid;
 
 
 --
 -- Name: quota_definitions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_definitions_oplog (
+CREATE TABLE quota_definitions_oplog (
     quota_definition_sid integer,
     quota_order_number_id character varying(255),
     validity_start_date timestamp without time zone,
@@ -6245,7 +6231,7 @@ CREATE TABLE public.quota_definitions_oplog (
 -- Name: quota_definitions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_definitions AS
+CREATE VIEW quota_definitions AS
  SELECT quota_definitions1.quota_definition_sid,
     quota_definitions1.quota_order_number_id,
     quota_definitions1.validity_start_date,
@@ -6270,9 +6256,9 @@ CREATE VIEW public.quota_definitions AS
     quota_definitions1.workbasket_id,
     quota_definitions1.workbasket_sequence_number,
     quota_definitions1.workbasket_type_of_quota
-   FROM public.quota_definitions_oplog quota_definitions1
+   FROM quota_definitions_oplog quota_definitions1
   WHERE ((quota_definitions1.oid IN ( SELECT max(quota_definitions2.oid) AS max
-           FROM public.quota_definitions_oplog quota_definitions2
+           FROM quota_definitions_oplog quota_definitions2
           WHERE (quota_definitions1.quota_definition_sid = quota_definitions2.quota_definition_sid))) AND ((quota_definitions1.operation)::text <> 'D'::text));
 
 
@@ -6280,7 +6266,7 @@ CREATE VIEW public.quota_definitions AS
 -- Name: quota_definitions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_definitions_oid_seq
+CREATE SEQUENCE quota_definitions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6292,14 +6278,14 @@ CREATE SEQUENCE public.quota_definitions_oid_seq
 -- Name: quota_definitions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_definitions_oid_seq OWNED BY public.quota_definitions_oplog.oid;
+ALTER SEQUENCE quota_definitions_oid_seq OWNED BY quota_definitions_oplog.oid;
 
 
 --
 -- Name: quota_exhaustion_events_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_exhaustion_events_oplog (
+CREATE TABLE quota_exhaustion_events_oplog (
     quota_definition_sid integer,
     occurrence_timestamp timestamp without time zone,
     exhaustion_date date,
@@ -6317,7 +6303,7 @@ CREATE TABLE public.quota_exhaustion_events_oplog (
 -- Name: quota_exhaustion_events; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_exhaustion_events AS
+CREATE VIEW quota_exhaustion_events AS
  SELECT quota_exhaustion_events1.quota_definition_sid,
     quota_exhaustion_events1.occurrence_timestamp,
     quota_exhaustion_events1.exhaustion_date,
@@ -6327,9 +6313,9 @@ CREATE VIEW public.quota_exhaustion_events AS
     quota_exhaustion_events1.status,
     quota_exhaustion_events1.workbasket_id,
     quota_exhaustion_events1.workbasket_sequence_number
-   FROM public.quota_exhaustion_events_oplog quota_exhaustion_events1
+   FROM quota_exhaustion_events_oplog quota_exhaustion_events1
   WHERE ((quota_exhaustion_events1.oid IN ( SELECT max(quota_exhaustion_events2.oid) AS max
-           FROM public.quota_exhaustion_events_oplog quota_exhaustion_events2
+           FROM quota_exhaustion_events_oplog quota_exhaustion_events2
           WHERE (quota_exhaustion_events1.quota_definition_sid = quota_exhaustion_events2.quota_definition_sid))) AND ((quota_exhaustion_events1.operation)::text <> 'D'::text));
 
 
@@ -6337,7 +6323,7 @@ CREATE VIEW public.quota_exhaustion_events AS
 -- Name: quota_exhaustion_events_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_exhaustion_events_oid_seq
+CREATE SEQUENCE quota_exhaustion_events_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6349,14 +6335,14 @@ CREATE SEQUENCE public.quota_exhaustion_events_oid_seq
 -- Name: quota_exhaustion_events_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_exhaustion_events_oid_seq OWNED BY public.quota_exhaustion_events_oplog.oid;
+ALTER SEQUENCE quota_exhaustion_events_oid_seq OWNED BY quota_exhaustion_events_oplog.oid;
 
 
 --
 -- Name: quota_order_number_origin_exclusions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_order_number_origin_exclusions_oplog (
+CREATE TABLE quota_order_number_origin_exclusions_oplog (
     quota_order_number_origin_sid integer,
     excluded_geographical_area_sid integer,
     created_at timestamp without time zone,
@@ -6376,7 +6362,7 @@ CREATE TABLE public.quota_order_number_origin_exclusions_oplog (
 -- Name: quota_order_number_origin_exclusions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_order_number_origin_exclusions AS
+CREATE VIEW quota_order_number_origin_exclusions AS
  SELECT quota_order_number_origin_exclusions1.quota_order_number_origin_sid,
     quota_order_number_origin_exclusions1.excluded_geographical_area_sid,
     quota_order_number_origin_exclusions1.oid,
@@ -6388,9 +6374,9 @@ CREATE VIEW public.quota_order_number_origin_exclusions AS
     quota_order_number_origin_exclusions1.status,
     quota_order_number_origin_exclusions1.workbasket_id,
     quota_order_number_origin_exclusions1.workbasket_sequence_number
-   FROM public.quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions1
+   FROM quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions1
   WHERE ((quota_order_number_origin_exclusions1.oid IN ( SELECT max(quota_order_number_origin_exclusions2.oid) AS max
-           FROM public.quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions2
+           FROM quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions2
           WHERE ((quota_order_number_origin_exclusions1.quota_order_number_origin_sid = quota_order_number_origin_exclusions2.quota_order_number_origin_sid) AND (quota_order_number_origin_exclusions1.excluded_geographical_area_sid = quota_order_number_origin_exclusions2.excluded_geographical_area_sid)))) AND ((quota_order_number_origin_exclusions1.operation)::text <> 'D'::text));
 
 
@@ -6398,7 +6384,7 @@ CREATE VIEW public.quota_order_number_origin_exclusions AS
 -- Name: quota_order_number_origin_exclusions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_order_number_origin_exclusions_oid_seq
+CREATE SEQUENCE quota_order_number_origin_exclusions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6410,14 +6396,14 @@ CREATE SEQUENCE public.quota_order_number_origin_exclusions_oid_seq
 -- Name: quota_order_number_origin_exclusions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_order_number_origin_exclusions_oid_seq OWNED BY public.quota_order_number_origin_exclusions_oplog.oid;
+ALTER SEQUENCE quota_order_number_origin_exclusions_oid_seq OWNED BY quota_order_number_origin_exclusions_oplog.oid;
 
 
 --
 -- Name: quota_order_number_origins_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_order_number_origins_oplog (
+CREATE TABLE quota_order_number_origins_oplog (
     quota_order_number_origin_sid integer,
     quota_order_number_sid integer,
     geographical_area_id character varying(255),
@@ -6441,7 +6427,7 @@ CREATE TABLE public.quota_order_number_origins_oplog (
 -- Name: quota_order_number_origins; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_order_number_origins AS
+CREATE VIEW quota_order_number_origins AS
  SELECT quota_order_number_origins1.quota_order_number_origin_sid,
     quota_order_number_origins1.quota_order_number_sid,
     quota_order_number_origins1.geographical_area_id,
@@ -6457,9 +6443,9 @@ CREATE VIEW public.quota_order_number_origins AS
     quota_order_number_origins1.status,
     quota_order_number_origins1.workbasket_id,
     quota_order_number_origins1.workbasket_sequence_number
-   FROM public.quota_order_number_origins_oplog quota_order_number_origins1
+   FROM quota_order_number_origins_oplog quota_order_number_origins1
   WHERE ((quota_order_number_origins1.oid IN ( SELECT max(quota_order_number_origins2.oid) AS max
-           FROM public.quota_order_number_origins_oplog quota_order_number_origins2
+           FROM quota_order_number_origins_oplog quota_order_number_origins2
           WHERE (quota_order_number_origins1.quota_order_number_origin_sid = quota_order_number_origins2.quota_order_number_origin_sid))) AND ((quota_order_number_origins1.operation)::text <> 'D'::text));
 
 
@@ -6467,7 +6453,7 @@ CREATE VIEW public.quota_order_number_origins AS
 -- Name: quota_order_number_origins_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_order_number_origins_oid_seq
+CREATE SEQUENCE quota_order_number_origins_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6479,14 +6465,14 @@ CREATE SEQUENCE public.quota_order_number_origins_oid_seq
 -- Name: quota_order_number_origins_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_order_number_origins_oid_seq OWNED BY public.quota_order_number_origins_oplog.oid;
+ALTER SEQUENCE quota_order_number_origins_oid_seq OWNED BY quota_order_number_origins_oplog.oid;
 
 
 --
 -- Name: quota_order_numbers_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_order_numbers_oplog (
+CREATE TABLE quota_order_numbers_oplog (
     quota_order_number_sid integer,
     quota_order_number_id character varying(255),
     validity_start_date timestamp without time zone,
@@ -6508,7 +6494,7 @@ CREATE TABLE public.quota_order_numbers_oplog (
 -- Name: quota_order_numbers; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_order_numbers AS
+CREATE VIEW quota_order_numbers AS
  SELECT quota_order_numbers1.quota_order_number_sid,
     quota_order_numbers1.quota_order_number_id,
     quota_order_numbers1.validity_start_date,
@@ -6522,9 +6508,9 @@ CREATE VIEW public.quota_order_numbers AS
     quota_order_numbers1.status,
     quota_order_numbers1.workbasket_id,
     quota_order_numbers1.workbasket_sequence_number
-   FROM public.quota_order_numbers_oplog quota_order_numbers1
+   FROM quota_order_numbers_oplog quota_order_numbers1
   WHERE ((quota_order_numbers1.oid IN ( SELECT max(quota_order_numbers2.oid) AS max
-           FROM public.quota_order_numbers_oplog quota_order_numbers2
+           FROM quota_order_numbers_oplog quota_order_numbers2
           WHERE (quota_order_numbers1.quota_order_number_sid = quota_order_numbers2.quota_order_number_sid))) AND ((quota_order_numbers1.operation)::text <> 'D'::text));
 
 
@@ -6532,7 +6518,7 @@ CREATE VIEW public.quota_order_numbers AS
 -- Name: quota_order_numbers_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_order_numbers_oid_seq
+CREATE SEQUENCE quota_order_numbers_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6544,14 +6530,14 @@ CREATE SEQUENCE public.quota_order_numbers_oid_seq
 -- Name: quota_order_numbers_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_order_numbers_oid_seq OWNED BY public.quota_order_numbers_oplog.oid;
+ALTER SEQUENCE quota_order_numbers_oid_seq OWNED BY quota_order_numbers_oplog.oid;
 
 
 --
 -- Name: quota_reopening_events_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_reopening_events_oplog (
+CREATE TABLE quota_reopening_events_oplog (
     quota_definition_sid integer,
     occurrence_timestamp timestamp without time zone,
     reopening_date date,
@@ -6569,7 +6555,7 @@ CREATE TABLE public.quota_reopening_events_oplog (
 -- Name: quota_reopening_events; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_reopening_events AS
+CREATE VIEW quota_reopening_events AS
  SELECT quota_reopening_events1.quota_definition_sid,
     quota_reopening_events1.occurrence_timestamp,
     quota_reopening_events1.reopening_date,
@@ -6579,9 +6565,9 @@ CREATE VIEW public.quota_reopening_events AS
     quota_reopening_events1.status,
     quota_reopening_events1.workbasket_id,
     quota_reopening_events1.workbasket_sequence_number
-   FROM public.quota_reopening_events_oplog quota_reopening_events1
+   FROM quota_reopening_events_oplog quota_reopening_events1
   WHERE ((quota_reopening_events1.oid IN ( SELECT max(quota_reopening_events2.oid) AS max
-           FROM public.quota_reopening_events_oplog quota_reopening_events2
+           FROM quota_reopening_events_oplog quota_reopening_events2
           WHERE (quota_reopening_events1.quota_definition_sid = quota_reopening_events2.quota_definition_sid))) AND ((quota_reopening_events1.operation)::text <> 'D'::text));
 
 
@@ -6589,7 +6575,7 @@ CREATE VIEW public.quota_reopening_events AS
 -- Name: quota_reopening_events_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_reopening_events_oid_seq
+CREATE SEQUENCE quota_reopening_events_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6601,14 +6587,14 @@ CREATE SEQUENCE public.quota_reopening_events_oid_seq
 -- Name: quota_reopening_events_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_reopening_events_oid_seq OWNED BY public.quota_reopening_events_oplog.oid;
+ALTER SEQUENCE quota_reopening_events_oid_seq OWNED BY quota_reopening_events_oplog.oid;
 
 
 --
 -- Name: quota_suspension_periods_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_suspension_periods_oplog (
+CREATE TABLE quota_suspension_periods_oplog (
     quota_suspension_period_sid integer,
     quota_definition_sid integer,
     suspension_start_date date,
@@ -6628,7 +6614,7 @@ CREATE TABLE public.quota_suspension_periods_oplog (
 -- Name: quota_suspension_periods; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_suspension_periods AS
+CREATE VIEW quota_suspension_periods AS
  SELECT quota_suspension_periods1.quota_suspension_period_sid,
     quota_suspension_periods1.quota_definition_sid,
     quota_suspension_periods1.suspension_start_date,
@@ -6640,9 +6626,9 @@ CREATE VIEW public.quota_suspension_periods AS
     quota_suspension_periods1.status,
     quota_suspension_periods1.workbasket_id,
     quota_suspension_periods1.workbasket_sequence_number
-   FROM public.quota_suspension_periods_oplog quota_suspension_periods1
+   FROM quota_suspension_periods_oplog quota_suspension_periods1
   WHERE ((quota_suspension_periods1.oid IN ( SELECT max(quota_suspension_periods2.oid) AS max
-           FROM public.quota_suspension_periods_oplog quota_suspension_periods2
+           FROM quota_suspension_periods_oplog quota_suspension_periods2
           WHERE (quota_suspension_periods1.quota_suspension_period_sid = quota_suspension_periods2.quota_suspension_period_sid))) AND ((quota_suspension_periods1.operation)::text <> 'D'::text));
 
 
@@ -6650,7 +6636,7 @@ CREATE VIEW public.quota_suspension_periods AS
 -- Name: quota_suspension_periods_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_suspension_periods_oid_seq
+CREATE SEQUENCE quota_suspension_periods_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6662,14 +6648,14 @@ CREATE SEQUENCE public.quota_suspension_periods_oid_seq
 -- Name: quota_suspension_periods_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_suspension_periods_oid_seq OWNED BY public.quota_suspension_periods_oplog.oid;
+ALTER SEQUENCE quota_suspension_periods_oid_seq OWNED BY quota_suspension_periods_oplog.oid;
 
 
 --
 -- Name: quota_unblocking_events_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_unblocking_events_oplog (
+CREATE TABLE quota_unblocking_events_oplog (
     quota_definition_sid integer,
     occurrence_timestamp timestamp without time zone,
     unblocking_date date,
@@ -6687,7 +6673,7 @@ CREATE TABLE public.quota_unblocking_events_oplog (
 -- Name: quota_unblocking_events; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_unblocking_events AS
+CREATE VIEW quota_unblocking_events AS
  SELECT quota_unblocking_events1.quota_definition_sid,
     quota_unblocking_events1.occurrence_timestamp,
     quota_unblocking_events1.unblocking_date,
@@ -6697,9 +6683,9 @@ CREATE VIEW public.quota_unblocking_events AS
     quota_unblocking_events1.status,
     quota_unblocking_events1.workbasket_id,
     quota_unblocking_events1.workbasket_sequence_number
-   FROM public.quota_unblocking_events_oplog quota_unblocking_events1
+   FROM quota_unblocking_events_oplog quota_unblocking_events1
   WHERE ((quota_unblocking_events1.oid IN ( SELECT max(quota_unblocking_events2.oid) AS max
-           FROM public.quota_unblocking_events_oplog quota_unblocking_events2
+           FROM quota_unblocking_events_oplog quota_unblocking_events2
           WHERE (quota_unblocking_events1.quota_definition_sid = quota_unblocking_events2.quota_definition_sid))) AND ((quota_unblocking_events1.operation)::text <> 'D'::text));
 
 
@@ -6707,7 +6693,7 @@ CREATE VIEW public.quota_unblocking_events AS
 -- Name: quota_unblocking_events_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_unblocking_events_oid_seq
+CREATE SEQUENCE quota_unblocking_events_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6719,14 +6705,14 @@ CREATE SEQUENCE public.quota_unblocking_events_oid_seq
 -- Name: quota_unblocking_events_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_unblocking_events_oid_seq OWNED BY public.quota_unblocking_events_oplog.oid;
+ALTER SEQUENCE quota_unblocking_events_oid_seq OWNED BY quota_unblocking_events_oplog.oid;
 
 
 --
 -- Name: quota_unsuspension_events_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.quota_unsuspension_events_oplog (
+CREATE TABLE quota_unsuspension_events_oplog (
     quota_definition_sid integer,
     occurrence_timestamp timestamp without time zone,
     unsuspension_date date,
@@ -6744,7 +6730,7 @@ CREATE TABLE public.quota_unsuspension_events_oplog (
 -- Name: quota_unsuspension_events; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.quota_unsuspension_events AS
+CREATE VIEW quota_unsuspension_events AS
  SELECT quota_unsuspension_events1.quota_definition_sid,
     quota_unsuspension_events1.occurrence_timestamp,
     quota_unsuspension_events1.unsuspension_date,
@@ -6754,9 +6740,9 @@ CREATE VIEW public.quota_unsuspension_events AS
     quota_unsuspension_events1.status,
     quota_unsuspension_events1.workbasket_id,
     quota_unsuspension_events1.workbasket_sequence_number
-   FROM public.quota_unsuspension_events_oplog quota_unsuspension_events1
+   FROM quota_unsuspension_events_oplog quota_unsuspension_events1
   WHERE ((quota_unsuspension_events1.oid IN ( SELECT max(quota_unsuspension_events2.oid) AS max
-           FROM public.quota_unsuspension_events_oplog quota_unsuspension_events2
+           FROM quota_unsuspension_events_oplog quota_unsuspension_events2
           WHERE (quota_unsuspension_events1.quota_definition_sid = quota_unsuspension_events2.quota_definition_sid))) AND ((quota_unsuspension_events1.operation)::text <> 'D'::text));
 
 
@@ -6764,7 +6750,7 @@ CREATE VIEW public.quota_unsuspension_events AS
 -- Name: quota_unsuspension_events_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.quota_unsuspension_events_oid_seq
+CREATE SEQUENCE quota_unsuspension_events_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6776,14 +6762,14 @@ CREATE SEQUENCE public.quota_unsuspension_events_oid_seq
 -- Name: quota_unsuspension_events_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.quota_unsuspension_events_oid_seq OWNED BY public.quota_unsuspension_events_oplog.oid;
+ALTER SEQUENCE quota_unsuspension_events_oid_seq OWNED BY quota_unsuspension_events_oplog.oid;
 
 
 --
 -- Name: regulation_documents; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.regulation_documents (
+CREATE TABLE regulation_documents (
     id integer NOT NULL,
     regulation_id text,
     regulation_role text,
@@ -6800,7 +6786,7 @@ CREATE TABLE public.regulation_documents (
 -- Name: regulation_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.regulation_documents_id_seq
+CREATE SEQUENCE regulation_documents_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6812,14 +6798,14 @@ CREATE SEQUENCE public.regulation_documents_id_seq
 -- Name: regulation_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.regulation_documents_id_seq OWNED BY public.regulation_documents.id;
+ALTER SEQUENCE regulation_documents_id_seq OWNED BY regulation_documents.id;
 
 
 --
 -- Name: regulation_group_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.regulation_group_descriptions_oplog (
+CREATE TABLE regulation_group_descriptions_oplog (
     regulation_group_id character varying(255),
     language_id character varying(5),
     description text,
@@ -6838,7 +6824,7 @@ CREATE TABLE public.regulation_group_descriptions_oplog (
 -- Name: regulation_group_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.regulation_group_descriptions AS
+CREATE VIEW regulation_group_descriptions AS
  SELECT regulation_group_descriptions1.regulation_group_id,
     regulation_group_descriptions1.language_id,
     regulation_group_descriptions1.description,
@@ -6849,9 +6835,9 @@ CREATE VIEW public.regulation_group_descriptions AS
     regulation_group_descriptions1.status,
     regulation_group_descriptions1.workbasket_id,
     regulation_group_descriptions1.workbasket_sequence_number
-   FROM public.regulation_group_descriptions_oplog regulation_group_descriptions1
+   FROM regulation_group_descriptions_oplog regulation_group_descriptions1
   WHERE ((regulation_group_descriptions1.oid IN ( SELECT max(regulation_group_descriptions2.oid) AS max
-           FROM public.regulation_group_descriptions_oplog regulation_group_descriptions2
+           FROM regulation_group_descriptions_oplog regulation_group_descriptions2
           WHERE ((regulation_group_descriptions1.regulation_group_id)::text = (regulation_group_descriptions2.regulation_group_id)::text))) AND ((regulation_group_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -6859,7 +6845,7 @@ CREATE VIEW public.regulation_group_descriptions AS
 -- Name: regulation_group_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.regulation_group_descriptions_oid_seq
+CREATE SEQUENCE regulation_group_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6871,14 +6857,14 @@ CREATE SEQUENCE public.regulation_group_descriptions_oid_seq
 -- Name: regulation_group_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.regulation_group_descriptions_oid_seq OWNED BY public.regulation_group_descriptions_oplog.oid;
+ALTER SEQUENCE regulation_group_descriptions_oid_seq OWNED BY regulation_group_descriptions_oplog.oid;
 
 
 --
 -- Name: regulation_groups_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.regulation_groups_oplog (
+CREATE TABLE regulation_groups_oplog (
     regulation_group_id character varying(255),
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -6897,7 +6883,7 @@ CREATE TABLE public.regulation_groups_oplog (
 -- Name: regulation_groups; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.regulation_groups AS
+CREATE VIEW regulation_groups AS
  SELECT regulation_groups1.regulation_group_id,
     regulation_groups1.validity_start_date,
     regulation_groups1.validity_end_date,
@@ -6908,9 +6894,9 @@ CREATE VIEW public.regulation_groups AS
     regulation_groups1.status,
     regulation_groups1.workbasket_id,
     regulation_groups1.workbasket_sequence_number
-   FROM public.regulation_groups_oplog regulation_groups1
+   FROM regulation_groups_oplog regulation_groups1
   WHERE ((regulation_groups1.oid IN ( SELECT max(regulation_groups2.oid) AS max
-           FROM public.regulation_groups_oplog regulation_groups2
+           FROM regulation_groups_oplog regulation_groups2
           WHERE ((regulation_groups1.regulation_group_id)::text = (regulation_groups2.regulation_group_id)::text))) AND ((regulation_groups1.operation)::text <> 'D'::text));
 
 
@@ -6918,7 +6904,7 @@ CREATE VIEW public.regulation_groups AS
 -- Name: regulation_groups_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.regulation_groups_oid_seq
+CREATE SEQUENCE regulation_groups_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6930,14 +6916,14 @@ CREATE SEQUENCE public.regulation_groups_oid_seq
 -- Name: regulation_groups_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.regulation_groups_oid_seq OWNED BY public.regulation_groups_oplog.oid;
+ALTER SEQUENCE regulation_groups_oid_seq OWNED BY regulation_groups_oplog.oid;
 
 
 --
 -- Name: regulation_replacements_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.regulation_replacements_oplog (
+CREATE TABLE regulation_replacements_oplog (
     geographical_area_id character varying(255),
     chapter_heading character varying(255),
     replacing_regulation_role integer,
@@ -6959,7 +6945,7 @@ CREATE TABLE public.regulation_replacements_oplog (
 -- Name: regulation_replacements; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.regulation_replacements AS
+CREATE VIEW regulation_replacements AS
  SELECT regulation_replacements1.geographical_area_id,
     regulation_replacements1.chapter_heading,
     regulation_replacements1.replacing_regulation_role,
@@ -6973,9 +6959,9 @@ CREATE VIEW public.regulation_replacements AS
     regulation_replacements1.status,
     regulation_replacements1.workbasket_id,
     regulation_replacements1.workbasket_sequence_number
-   FROM public.regulation_replacements_oplog regulation_replacements1
+   FROM regulation_replacements_oplog regulation_replacements1
   WHERE ((regulation_replacements1.oid IN ( SELECT max(regulation_replacements2.oid) AS max
-           FROM public.regulation_replacements_oplog regulation_replacements2
+           FROM regulation_replacements_oplog regulation_replacements2
           WHERE (((regulation_replacements1.replacing_regulation_id)::text = (regulation_replacements2.replacing_regulation_id)::text) AND (regulation_replacements1.replacing_regulation_role = regulation_replacements2.replacing_regulation_role) AND ((regulation_replacements1.replaced_regulation_id)::text = (regulation_replacements2.replaced_regulation_id)::text) AND (regulation_replacements1.replaced_regulation_role = regulation_replacements2.replaced_regulation_role)))) AND ((regulation_replacements1.operation)::text <> 'D'::text));
 
 
@@ -6983,7 +6969,7 @@ CREATE VIEW public.regulation_replacements AS
 -- Name: regulation_replacements_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.regulation_replacements_oid_seq
+CREATE SEQUENCE regulation_replacements_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6995,14 +6981,14 @@ CREATE SEQUENCE public.regulation_replacements_oid_seq
 -- Name: regulation_replacements_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.regulation_replacements_oid_seq OWNED BY public.regulation_replacements_oplog.oid;
+ALTER SEQUENCE regulation_replacements_oid_seq OWNED BY regulation_replacements_oplog.oid;
 
 
 --
 -- Name: regulation_role_type_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.regulation_role_type_descriptions_oplog (
+CREATE TABLE regulation_role_type_descriptions_oplog (
     regulation_role_type_id character varying(255),
     language_id character varying(5),
     description text,
@@ -7021,7 +7007,7 @@ CREATE TABLE public.regulation_role_type_descriptions_oplog (
 -- Name: regulation_role_type_descriptions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.regulation_role_type_descriptions AS
+CREATE VIEW regulation_role_type_descriptions AS
  SELECT regulation_role_type_descriptions1.regulation_role_type_id,
     regulation_role_type_descriptions1.language_id,
     regulation_role_type_descriptions1.description,
@@ -7032,9 +7018,9 @@ CREATE VIEW public.regulation_role_type_descriptions AS
     regulation_role_type_descriptions1.status,
     regulation_role_type_descriptions1.workbasket_id,
     regulation_role_type_descriptions1.workbasket_sequence_number
-   FROM public.regulation_role_type_descriptions_oplog regulation_role_type_descriptions1
+   FROM regulation_role_type_descriptions_oplog regulation_role_type_descriptions1
   WHERE ((regulation_role_type_descriptions1.oid IN ( SELECT max(regulation_role_type_descriptions2.oid) AS max
-           FROM public.regulation_role_type_descriptions_oplog regulation_role_type_descriptions2
+           FROM regulation_role_type_descriptions_oplog regulation_role_type_descriptions2
           WHERE ((regulation_role_type_descriptions1.regulation_role_type_id)::text = (regulation_role_type_descriptions2.regulation_role_type_id)::text))) AND ((regulation_role_type_descriptions1.operation)::text <> 'D'::text));
 
 
@@ -7042,7 +7028,7 @@ CREATE VIEW public.regulation_role_type_descriptions AS
 -- Name: regulation_role_type_descriptions_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.regulation_role_type_descriptions_oid_seq
+CREATE SEQUENCE regulation_role_type_descriptions_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7054,14 +7040,14 @@ CREATE SEQUENCE public.regulation_role_type_descriptions_oid_seq
 -- Name: regulation_role_type_descriptions_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.regulation_role_type_descriptions_oid_seq OWNED BY public.regulation_role_type_descriptions_oplog.oid;
+ALTER SEQUENCE regulation_role_type_descriptions_oid_seq OWNED BY regulation_role_type_descriptions_oplog.oid;
 
 
 --
 -- Name: regulation_role_types_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.regulation_role_types_oplog (
+CREATE TABLE regulation_role_types_oplog (
     regulation_role_type_id integer,
     validity_start_date timestamp without time zone,
     validity_end_date timestamp without time zone,
@@ -7080,7 +7066,7 @@ CREATE TABLE public.regulation_role_types_oplog (
 -- Name: regulation_role_types; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.regulation_role_types AS
+CREATE VIEW regulation_role_types AS
  SELECT regulation_role_types1.regulation_role_type_id,
     regulation_role_types1.validity_start_date,
     regulation_role_types1.validity_end_date,
@@ -7091,9 +7077,9 @@ CREATE VIEW public.regulation_role_types AS
     regulation_role_types1.status,
     regulation_role_types1.workbasket_id,
     regulation_role_types1.workbasket_sequence_number
-   FROM public.regulation_role_types_oplog regulation_role_types1
+   FROM regulation_role_types_oplog regulation_role_types1
   WHERE ((regulation_role_types1.oid IN ( SELECT max(regulation_role_types2.oid) AS max
-           FROM public.regulation_role_types_oplog regulation_role_types2
+           FROM regulation_role_types_oplog regulation_role_types2
           WHERE (regulation_role_types1.regulation_role_type_id = regulation_role_types2.regulation_role_type_id))) AND ((regulation_role_types1.operation)::text <> 'D'::text));
 
 
@@ -7101,7 +7087,7 @@ CREATE VIEW public.regulation_role_types AS
 -- Name: regulation_role_types_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.regulation_role_types_oid_seq
+CREATE SEQUENCE regulation_role_types_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7113,14 +7099,60 @@ CREATE SEQUENCE public.regulation_role_types_oid_seq
 -- Name: regulation_role_types_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.regulation_role_types_oid_seq OWNED BY public.regulation_role_types_oplog.oid;
+ALTER SEQUENCE regulation_role_types_oid_seq OWNED BY regulation_role_types_oplog.oid;
+
+
+--
+-- Name: regulations_lookup; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW regulations_lookup AS
+ SELECT base_regulations_oplog.base_regulation_id AS id,
+    base_regulations_oplog.base_regulation_role AS role,
+    base_regulations_oplog.information_text,
+    base_regulations_oplog.validity_start_date,
+    base_regulations_oplog.validity_end_date,
+    base_regulations_oplog.replacement_indicator
+   FROM base_regulations_oplog
+UNION
+ SELECT modification_regulations_oplog.modification_regulation_id AS id,
+    modification_regulations_oplog.modification_regulation_role AS role,
+    modification_regulations_oplog.information_text,
+    modification_regulations_oplog.validity_start_date,
+    modification_regulations_oplog.validity_end_date,
+    modification_regulations_oplog.replacement_indicator
+   FROM modification_regulations_oplog
+UNION
+ SELECT complete_abrogation_regulations_oplog.complete_abrogation_regulation_id AS id,
+    complete_abrogation_regulations_oplog.complete_abrogation_regulation_role AS role,
+    complete_abrogation_regulations_oplog.information_text,
+    complete_abrogation_regulations_oplog.published_date AS validity_start_date,
+    (COALESCE(NULL::text, NULL::text))::timestamp with time zone AS validity_end_date,
+    complete_abrogation_regulations_oplog.replacement_indicator
+   FROM complete_abrogation_regulations_oplog
+UNION
+ SELECT explicit_abrogation_regulations_oplog.explicit_abrogation_regulation_id AS id,
+    explicit_abrogation_regulations_oplog.explicit_abrogation_regulation_role AS role,
+    explicit_abrogation_regulations_oplog.information_text,
+    explicit_abrogation_regulations_oplog.published_date AS validity_start_date,
+    (COALESCE(NULL::text, NULL::text))::timestamp with time zone AS validity_end_date,
+    explicit_abrogation_regulations_oplog.replacement_indicator
+   FROM explicit_abrogation_regulations_oplog
+UNION
+ SELECT prorogation_regulations_oplog.prorogation_regulation_id AS id,
+    prorogation_regulations_oplog.prorogation_regulation_role AS role,
+    prorogation_regulations_oplog.information_text,
+    prorogation_regulations_oplog.published_date AS validity_start_date,
+    (COALESCE(NULL::text, NULL::text))::timestamp with time zone AS validity_end_date,
+    prorogation_regulations_oplog.replacement_indicator
+   FROM prorogation_regulations_oplog;
 
 
 --
 -- Name: regulations_search_pg_view; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.regulations_search_pg_view AS
+CREATE VIEW regulations_search_pg_view AS
  SELECT concat_ws('_'::text, base_regulations_oplog.oid, 'base_regulation') AS id,
     base_regulations_oplog.base_regulation_id AS regulation_id,
     base_regulations_oplog.base_regulation_role AS role,
@@ -7135,7 +7167,7 @@ CREATE VIEW public.regulations_search_pg_view AS
     base_regulations_oplog.regulation_group_id,
     base_regulations_oplog.replacement_indicator,
     base_regulations_oplog.information_text AS keywords
-   FROM public.base_regulations_oplog
+   FROM base_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, modification_regulations_oplog.oid, 'modification_regulation') AS id,
     modification_regulations_oplog.modification_regulation_id AS regulation_id,
@@ -7151,7 +7183,7 @@ UNION
     NULL::character varying AS regulation_group_id,
     modification_regulations_oplog.replacement_indicator,
     modification_regulations_oplog.information_text AS keywords
-   FROM public.modification_regulations_oplog
+   FROM modification_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, complete_abrogation_regulations_oplog.oid, 'complete_abrogation_regulation') AS id,
     complete_abrogation_regulations_oplog.complete_abrogation_regulation_id AS regulation_id,
@@ -7167,7 +7199,7 @@ UNION
     NULL::character varying AS regulation_group_id,
     complete_abrogation_regulations_oplog.replacement_indicator,
     complete_abrogation_regulations_oplog.information_text AS keywords
-   FROM public.complete_abrogation_regulations_oplog
+   FROM complete_abrogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, explicit_abrogation_regulations_oplog.oid, 'explicit_abrogation_regulation') AS id,
     explicit_abrogation_regulations_oplog.explicit_abrogation_regulation_id AS regulation_id,
@@ -7183,7 +7215,7 @@ UNION
     NULL::character varying AS regulation_group_id,
     explicit_abrogation_regulations_oplog.replacement_indicator,
     explicit_abrogation_regulations_oplog.information_text AS keywords
-   FROM public.explicit_abrogation_regulations_oplog
+   FROM explicit_abrogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, prorogation_regulations_oplog.oid, 'prorogation_regulation') AS id,
     prorogation_regulations_oplog.prorogation_regulation_id AS regulation_id,
@@ -7199,7 +7231,7 @@ UNION
     NULL::character varying AS regulation_group_id,
     prorogation_regulations_oplog.replacement_indicator,
     prorogation_regulations_oplog.information_text AS keywords
-   FROM public.prorogation_regulations_oplog
+   FROM prorogation_regulations_oplog
 UNION
  SELECT concat_ws('_'::text, full_temporary_stop_regulations_oplog.oid, 'full_temporary_stop_regulation') AS id,
     full_temporary_stop_regulations_oplog.full_temporary_stop_regulation_id AS regulation_id,
@@ -7215,14 +7247,14 @@ UNION
     NULL::character varying AS regulation_group_id,
     full_temporary_stop_regulations_oplog.replacement_indicator,
     full_temporary_stop_regulations_oplog.information_text AS keywords
-   FROM public.full_temporary_stop_regulations_oplog;
+   FROM full_temporary_stop_regulations_oplog;
 
 
 --
 -- Name: rollbacks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.rollbacks (
+CREATE TABLE rollbacks (
     id integer NOT NULL,
     user_id integer,
     date date,
@@ -7236,7 +7268,7 @@ CREATE TABLE public.rollbacks (
 -- Name: rollbacks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.rollbacks_id_seq
+CREATE SEQUENCE rollbacks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7248,14 +7280,14 @@ CREATE SEQUENCE public.rollbacks_id_seq
 -- Name: rollbacks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.rollbacks_id_seq OWNED BY public.rollbacks.id;
+ALTER SEQUENCE rollbacks_id_seq OWNED BY rollbacks.id;
 
 
 --
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.schema_migrations (
+CREATE TABLE schema_migrations (
     filename text NOT NULL
 );
 
@@ -7264,7 +7296,7 @@ CREATE TABLE public.schema_migrations (
 -- Name: search_references; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.search_references (
+CREATE TABLE search_references (
     id integer NOT NULL,
     title text,
     referenced_id character varying(10),
@@ -7276,7 +7308,7 @@ CREATE TABLE public.search_references (
 -- Name: search_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.search_references_id_seq
+CREATE SEQUENCE search_references_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7288,14 +7320,14 @@ CREATE SEQUENCE public.search_references_id_seq
 -- Name: search_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.search_references_id_seq OWNED BY public.search_references.id;
+ALTER SEQUENCE search_references_id_seq OWNED BY search_references.id;
 
 
 --
 -- Name: section_notes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.section_notes (
+CREATE TABLE section_notes (
     id integer NOT NULL,
     section_id integer,
     content text
@@ -7306,7 +7338,7 @@ CREATE TABLE public.section_notes (
 -- Name: section_notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.section_notes_id_seq
+CREATE SEQUENCE section_notes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7318,14 +7350,14 @@ CREATE SEQUENCE public.section_notes_id_seq
 -- Name: section_notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.section_notes_id_seq OWNED BY public.section_notes.id;
+ALTER SEQUENCE section_notes_id_seq OWNED BY section_notes.id;
 
 
 --
 -- Name: sections; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.sections (
+CREATE TABLE sections (
     id integer NOT NULL,
     "position" integer,
     numeral character varying(255),
@@ -7338,7 +7370,7 @@ CREATE TABLE public.sections (
 -- Name: sections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.sections_id_seq
+CREATE SEQUENCE sections_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7350,14 +7382,14 @@ CREATE SEQUENCE public.sections_id_seq
 -- Name: sections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.sections_id_seq OWNED BY public.sections.id;
+ALTER SEQUENCE sections_id_seq OWNED BY sections.id;
 
 
 --
 -- Name: tariff_update_conformance_errors; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.tariff_update_conformance_errors (
+CREATE TABLE tariff_update_conformance_errors (
     id integer NOT NULL,
     tariff_update_filename text NOT NULL,
     model_name text NOT NULL,
@@ -7371,7 +7403,7 @@ CREATE TABLE public.tariff_update_conformance_errors (
 -- Name: tariff_update_conformance_errors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.tariff_update_conformance_errors_id_seq
+CREATE SEQUENCE tariff_update_conformance_errors_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7383,14 +7415,14 @@ CREATE SEQUENCE public.tariff_update_conformance_errors_id_seq
 -- Name: tariff_update_conformance_errors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.tariff_update_conformance_errors_id_seq OWNED BY public.tariff_update_conformance_errors.id;
+ALTER SEQUENCE tariff_update_conformance_errors_id_seq OWNED BY tariff_update_conformance_errors.id;
 
 
 --
 -- Name: tariff_updates; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.tariff_updates (
+CREATE TABLE tariff_updates (
     filename character varying(30) NOT NULL,
     update_type character varying(50),
     state character varying(1),
@@ -7411,7 +7443,7 @@ CREATE TABLE public.tariff_updates (
 -- Name: transmission_comments_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.transmission_comments_oplog (
+CREATE TABLE transmission_comments_oplog (
     comment_sid integer,
     language_id character varying(5),
     comment_text text,
@@ -7429,7 +7461,7 @@ CREATE TABLE public.transmission_comments_oplog (
 -- Name: transmission_comments; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW public.transmission_comments AS
+CREATE VIEW transmission_comments AS
  SELECT transmission_comments1.comment_sid,
     transmission_comments1.language_id,
     transmission_comments1.comment_text,
@@ -7439,9 +7471,9 @@ CREATE VIEW public.transmission_comments AS
     transmission_comments1.status,
     transmission_comments1.workbasket_id,
     transmission_comments1.workbasket_sequence_number
-   FROM public.transmission_comments_oplog transmission_comments1
+   FROM transmission_comments_oplog transmission_comments1
   WHERE ((transmission_comments1.oid IN ( SELECT max(transmission_comments2.oid) AS max
-           FROM public.transmission_comments_oplog transmission_comments2
+           FROM transmission_comments_oplog transmission_comments2
           WHERE ((transmission_comments1.comment_sid = transmission_comments2.comment_sid) AND ((transmission_comments1.language_id)::text = (transmission_comments2.language_id)::text)))) AND ((transmission_comments1.operation)::text <> 'D'::text));
 
 
@@ -7449,7 +7481,7 @@ CREATE VIEW public.transmission_comments AS
 -- Name: transmission_comments_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.transmission_comments_oid_seq
+CREATE SEQUENCE transmission_comments_oid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7461,14 +7493,14 @@ CREATE SEQUENCE public.transmission_comments_oid_seq
 -- Name: transmission_comments_oid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.transmission_comments_oid_seq OWNED BY public.transmission_comments_oplog.oid;
+ALTER SEQUENCE transmission_comments_oid_seq OWNED BY transmission_comments_oplog.oid;
 
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.users (
+CREATE TABLE users (
     id integer NOT NULL,
     uid text,
     name text,
@@ -7488,7 +7520,7 @@ CREATE TABLE public.users (
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.users_id_seq
+CREATE SEQUENCE users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7500,14 +7532,14 @@ CREATE SEQUENCE public.users_id_seq
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
 -- Name: workbasket_items; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.workbasket_items (
+CREATE TABLE workbasket_items (
     id integer NOT NULL,
     workbasket_id integer,
     record_id integer,
@@ -7527,7 +7559,7 @@ CREATE TABLE public.workbasket_items (
 -- Name: workbasket_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.workbasket_items_id_seq
+CREATE SEQUENCE workbasket_items_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7539,14 +7571,14 @@ CREATE SEQUENCE public.workbasket_items_id_seq
 -- Name: workbasket_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.workbasket_items_id_seq OWNED BY public.workbasket_items.id;
+ALTER SEQUENCE workbasket_items_id_seq OWNED BY workbasket_items.id;
 
 
 --
 -- Name: workbaskets; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.workbaskets (
+CREATE TABLE workbaskets (
     id integer NOT NULL,
     title text,
     type text,
@@ -7564,7 +7596,7 @@ CREATE TABLE public.workbaskets (
 -- Name: workbaskets_events; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.workbaskets_events (
+CREATE TABLE workbaskets_events (
     id integer NOT NULL,
     workbasket_id integer,
     user_id integer,
@@ -7579,7 +7611,7 @@ CREATE TABLE public.workbaskets_events (
 -- Name: workbaskets_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.workbaskets_events_id_seq
+CREATE SEQUENCE workbaskets_events_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7591,14 +7623,14 @@ CREATE SEQUENCE public.workbaskets_events_id_seq
 -- Name: workbaskets_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.workbaskets_events_id_seq OWNED BY public.workbaskets_events.id;
+ALTER SEQUENCE workbaskets_events_id_seq OWNED BY workbaskets_events.id;
 
 
 --
 -- Name: workbaskets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.workbaskets_id_seq
+CREATE SEQUENCE workbaskets_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7610,14 +7642,14 @@ CREATE SEQUENCE public.workbaskets_id_seq
 -- Name: workbaskets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.workbaskets_id_seq OWNED BY public.workbaskets.id;
+ALTER SEQUENCE workbaskets_id_seq OWNED BY workbaskets.id;
 
 
 --
 -- Name: xml_export_files; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.xml_export_files (
+CREATE TABLE xml_export_files (
     id integer NOT NULL,
     state character varying(1),
     updated_at timestamp without time zone,
@@ -7637,7 +7669,7 @@ CREATE TABLE public.xml_export_files (
 -- Name: xml_export_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.xml_export_files_id_seq
+CREATE SEQUENCE xml_export_files_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7649,875 +7681,875 @@ CREATE SEQUENCE public.xml_export_files_id_seq
 -- Name: xml_export_files_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.xml_export_files_id_seq OWNED BY public.xml_export_files.id;
+ALTER SEQUENCE xml_export_files_id_seq OWNED BY xml_export_files.id;
 
 
 --
 -- Name: additional_code_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_description_periods_oid_seq'::regclass);
+ALTER TABLE ONLY additional_code_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('additional_code_description_periods_oid_seq'::regclass);
 
 
 --
 -- Name: additional_code_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY additional_code_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('additional_code_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: additional_code_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_type_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY additional_code_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('additional_code_type_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: additional_code_type_measure_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_type_measure_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_type_measure_types_oid_seq'::regclass);
+ALTER TABLE ONLY additional_code_type_measure_types_oplog ALTER COLUMN oid SET DEFAULT nextval('additional_code_type_measure_types_oid_seq'::regclass);
 
 
 --
 -- Name: additional_code_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_types_oid_seq'::regclass);
+ALTER TABLE ONLY additional_code_types_oplog ALTER COLUMN oid SET DEFAULT nextval('additional_code_types_oid_seq'::regclass);
 
 
 --
 -- Name: additional_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_codes_oid_seq'::regclass);
+ALTER TABLE ONLY additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('additional_codes_oid_seq'::regclass);
 
 
 --
 -- Name: audits id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.audits ALTER COLUMN id SET DEFAULT nextval('public.audits_id_seq'::regclass);
+ALTER TABLE ONLY audits ALTER COLUMN id SET DEFAULT nextval('audits_id_seq'::regclass);
 
 
 --
 -- Name: base_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.base_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.base_regulations_oid_seq'::regclass);
+ALTER TABLE ONLY base_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('base_regulations_oid_seq'::regclass);
 
 
 --
 -- Name: bulk_edit_of_additional_codes_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_additional_codes_settings_id_seq'::regclass);
+ALTER TABLE ONLY bulk_edit_of_additional_codes_settings ALTER COLUMN id SET DEFAULT nextval('bulk_edit_of_additional_codes_settings_id_seq'::regclass);
 
 
 --
 -- Name: bulk_edit_of_measures_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.bulk_edit_of_measures_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_measures_settings_id_seq'::regclass);
+ALTER TABLE ONLY bulk_edit_of_measures_settings ALTER COLUMN id SET DEFAULT nextval('bulk_edit_of_measures_settings_id_seq'::regclass);
 
 
 --
 -- Name: certificate_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_description_periods_oid_seq'::regclass);
+ALTER TABLE ONLY certificate_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('certificate_description_periods_oid_seq'::regclass);
 
 
 --
 -- Name: certificate_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY certificate_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('certificate_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: certificate_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_type_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY certificate_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('certificate_type_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: certificate_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_types_oid_seq'::regclass);
+ALTER TABLE ONLY certificate_types_oplog ALTER COLUMN oid SET DEFAULT nextval('certificate_types_oid_seq'::regclass);
 
 
 --
 -- Name: certificates_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificates_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificates_oid_seq'::regclass);
+ALTER TABLE ONLY certificates_oplog ALTER COLUMN oid SET DEFAULT nextval('certificates_oid_seq'::regclass);
 
 
 --
 -- Name: chapter_notes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chapter_notes ALTER COLUMN id SET DEFAULT nextval('public.chapter_notes_id_seq'::regclass);
+ALTER TABLE ONLY chapter_notes ALTER COLUMN id SET DEFAULT nextval('chapter_notes_id_seq'::regclass);
 
 
 --
 -- Name: chief_duty_expression id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chief_duty_expression ALTER COLUMN id SET DEFAULT nextval('public.chief_duty_expression_id_seq'::regclass);
+ALTER TABLE ONLY chief_duty_expression ALTER COLUMN id SET DEFAULT nextval('chief_duty_expression_id_seq'::regclass);
 
 
 --
 -- Name: chief_measure_type_footnote id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chief_measure_type_footnote ALTER COLUMN id SET DEFAULT nextval('public.chief_measure_type_footnote_id_seq'::regclass);
+ALTER TABLE ONLY chief_measure_type_footnote ALTER COLUMN id SET DEFAULT nextval('chief_measure_type_footnote_id_seq'::regclass);
 
 
 --
 -- Name: chief_measurement_unit id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chief_measurement_unit ALTER COLUMN id SET DEFAULT nextval('public.chief_measurement_unit_id_seq'::regclass);
+ALTER TABLE ONLY chief_measurement_unit ALTER COLUMN id SET DEFAULT nextval('chief_measurement_unit_id_seq'::regclass);
 
 
 --
 -- Name: complete_abrogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.complete_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.complete_abrogation_regulations_oid_seq'::regclass);
+ALTER TABLE ONLY complete_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('complete_abrogation_regulations_oid_seq'::regclass);
 
 
 --
 -- Name: create_additional_code_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_additional_code_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_additional_code_workbasket_settings_id_seq'::regclass);
+ALTER TABLE ONLY create_additional_code_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('create_additional_code_workbasket_settings_id_seq'::regclass);
 
 
 --
 -- Name: create_measures_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_measures_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_measures_workbasket_settings_id_seq'::regclass);
+ALTER TABLE ONLY create_measures_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('create_measures_workbasket_settings_id_seq'::regclass);
 
 
 --
 -- Name: create_quota_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_quota_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_quota_workbasket_settings_id_seq'::regclass);
+ALTER TABLE ONLY create_quota_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('create_quota_workbasket_settings_id_seq'::regclass);
 
 
 --
 -- Name: create_regulation_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_regulation_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_regulation_workbasket_settings_id_seq'::regclass);
+ALTER TABLE ONLY create_regulation_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('create_regulation_workbasket_settings_id_seq'::regclass);
 
 
 --
 -- Name: db_rollbacks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.db_rollbacks ALTER COLUMN id SET DEFAULT nextval('public.db_rollbacks_id_seq'::regclass);
+ALTER TABLE ONLY db_rollbacks ALTER COLUMN id SET DEFAULT nextval('db_rollbacks_id_seq'::regclass);
 
 
 --
 -- Name: duty_expression_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.duty_expression_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.duty_expression_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY duty_expression_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('duty_expression_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: duty_expressions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.duty_expressions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.duty_expressions_oid_seq'::regclass);
+ALTER TABLE ONLY duty_expressions_oplog ALTER COLUMN oid SET DEFAULT nextval('duty_expressions_oid_seq'::regclass);
 
 
 --
 -- Name: explicit_abrogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.explicit_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.explicit_abrogation_regulations_oid_seq'::regclass);
+ALTER TABLE ONLY explicit_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('explicit_abrogation_regulations_oid_seq'::regclass);
 
 
 --
 -- Name: export_refund_nomenclature_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclature_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclature_description_periods_oid_seq'::regclass);
+ALTER TABLE ONLY export_refund_nomenclature_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('export_refund_nomenclature_description_periods_oid_seq'::regclass);
 
 
 --
 -- Name: export_refund_nomenclature_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclature_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclature_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY export_refund_nomenclature_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('export_refund_nomenclature_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: export_refund_nomenclature_indents_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclature_indents_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclature_indents_oid_seq'::regclass);
+ALTER TABLE ONLY export_refund_nomenclature_indents_oplog ALTER COLUMN oid SET DEFAULT nextval('export_refund_nomenclature_indents_oid_seq'::regclass);
 
 
 --
 -- Name: export_refund_nomenclatures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclatures_oid_seq'::regclass);
+ALTER TABLE ONLY export_refund_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('export_refund_nomenclatures_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_association_additional_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_additional_codes_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_association_additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_association_additional_codes_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_association_erns_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_erns_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_erns_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_association_erns_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_association_erns_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_association_goods_nomenclatures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_goods_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_goods_nomenclatures_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_association_goods_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_association_goods_nomenclatures_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_association_measures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_measures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_measures_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_association_measures_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_association_measures_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_association_meursing_headings_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_meursing_headings_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_meursing_headings_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_association_meursing_headings_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_association_meursing_headings_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_description_periods_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_description_periods_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_type_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_type_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: footnote_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_types_oid_seq'::regclass);
+ALTER TABLE ONLY footnote_types_oplog ALTER COLUMN oid SET DEFAULT nextval('footnote_types_oid_seq'::regclass);
 
 
 --
 -- Name: footnotes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnotes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnotes_oid_seq'::regclass);
+ALTER TABLE ONLY footnotes_oplog ALTER COLUMN oid SET DEFAULT nextval('footnotes_oid_seq'::regclass);
 
 
 --
 -- Name: fts_regulation_actions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fts_regulation_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.fts_regulation_actions_oid_seq'::regclass);
+ALTER TABLE ONLY fts_regulation_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('fts_regulation_actions_oid_seq'::regclass);
 
 
 --
 -- Name: full_temporary_stop_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.full_temporary_stop_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.full_temporary_stop_regulations_oid_seq'::regclass);
+ALTER TABLE ONLY full_temporary_stop_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('full_temporary_stop_regulations_oid_seq'::regclass);
 
 
 --
 -- Name: geographical_area_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_area_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_area_description_periods_oid_seq'::regclass);
+ALTER TABLE ONLY geographical_area_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('geographical_area_description_periods_oid_seq'::regclass);
 
 
 --
 -- Name: geographical_area_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_area_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_area_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY geographical_area_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('geographical_area_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: geographical_area_memberships_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_area_memberships_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_area_memberships_oid_seq'::regclass);
+ALTER TABLE ONLY geographical_area_memberships_oplog ALTER COLUMN oid SET DEFAULT nextval('geographical_area_memberships_oid_seq'::regclass);
 
 
 --
 -- Name: geographical_areas_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_areas_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_areas_oid_seq'::regclass);
+ALTER TABLE ONLY geographical_areas_oplog ALTER COLUMN oid SET DEFAULT nextval('geographical_areas_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclature_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_description_periods_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclature_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclature_description_periods_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclature_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclature_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclature_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclature_group_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_group_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_group_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclature_group_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclature_group_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclature_groups_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_groups_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_groups_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclature_groups_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclature_groups_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclature_indents_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_indents_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_indents_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclature_indents_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclature_indents_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclature_origins_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_origins_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_origins_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclature_origins_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclature_origins_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclature_successors_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_successors_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_successors_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclature_successors_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclature_successors_oid_seq'::regclass);
 
 
 --
 -- Name: goods_nomenclatures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclatures_oid_seq'::regclass);
+ALTER TABLE ONLY goods_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('goods_nomenclatures_oid_seq'::regclass);
 
 
 --
 -- Name: language_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.language_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.language_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY language_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('language_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: languages_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.languages_oplog ALTER COLUMN oid SET DEFAULT nextval('public.languages_oid_seq'::regclass);
+ALTER TABLE ONLY languages_oplog ALTER COLUMN oid SET DEFAULT nextval('languages_oid_seq'::regclass);
 
 
 --
 -- Name: measure_action_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_action_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_action_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY measure_action_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_action_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: measure_actions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_actions_oid_seq'::regclass);
+ALTER TABLE ONLY measure_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_actions_oid_seq'::regclass);
 
 
 --
 -- Name: measure_components_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_components_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_components_oid_seq'::regclass);
+ALTER TABLE ONLY measure_components_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_components_oid_seq'::regclass);
 
 
 --
 -- Name: measure_condition_code_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_condition_code_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_condition_code_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY measure_condition_code_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_condition_code_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: measure_condition_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_condition_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_condition_codes_oid_seq'::regclass);
+ALTER TABLE ONLY measure_condition_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_condition_codes_oid_seq'::regclass);
 
 
 --
 -- Name: measure_condition_components_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_condition_components_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_condition_components_oid_seq'::regclass);
+ALTER TABLE ONLY measure_condition_components_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_condition_components_oid_seq'::regclass);
 
 
 --
 -- Name: measure_conditions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_conditions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_conditions_oid_seq'::regclass);
+ALTER TABLE ONLY measure_conditions_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_conditions_oid_seq'::regclass);
 
 
 --
 -- Name: measure_excluded_geographical_areas_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_excluded_geographical_areas_oid_seq'::regclass);
+ALTER TABLE ONLY measure_excluded_geographical_areas_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_excluded_geographical_areas_oid_seq'::regclass);
 
 
 --
 -- Name: measure_partial_temporary_stops_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_partial_temporary_stops_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_partial_temporary_stops_oid_seq'::regclass);
+ALTER TABLE ONLY measure_partial_temporary_stops_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_partial_temporary_stops_oid_seq'::regclass);
 
 
 --
 -- Name: measure_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_type_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY measure_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_type_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: measure_type_series_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_type_series_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_type_series_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY measure_type_series_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_type_series_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: measure_type_series_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_type_series_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_type_series_oid_seq'::regclass);
+ALTER TABLE ONLY measure_type_series_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_type_series_oid_seq'::regclass);
 
 
 --
 -- Name: measure_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_types_oid_seq'::regclass);
+ALTER TABLE ONLY measure_types_oplog ALTER COLUMN oid SET DEFAULT nextval('measure_types_oid_seq'::regclass);
 
 
 --
 -- Name: measurement_unit_abbreviations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_abbreviations ALTER COLUMN id SET DEFAULT nextval('public.measurement_unit_abbreviations_id_seq'::regclass);
+ALTER TABLE ONLY measurement_unit_abbreviations ALTER COLUMN id SET DEFAULT nextval('measurement_unit_abbreviations_id_seq'::regclass);
 
 
 --
 -- Name: measurement_unit_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_unit_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY measurement_unit_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('measurement_unit_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: measurement_unit_qualifier_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_qualifier_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_unit_qualifier_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY measurement_unit_qualifier_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('measurement_unit_qualifier_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: measurement_unit_qualifiers_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_qualifiers_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_unit_qualifiers_oid_seq'::regclass);
+ALTER TABLE ONLY measurement_unit_qualifiers_oplog ALTER COLUMN oid SET DEFAULT nextval('measurement_unit_qualifiers_oid_seq'::regclass);
 
 
 --
 -- Name: measurement_units_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_units_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_units_oid_seq'::regclass);
+ALTER TABLE ONLY measurement_units_oplog ALTER COLUMN oid SET DEFAULT nextval('measurement_units_oid_seq'::regclass);
 
 
 --
 -- Name: measurements_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurements_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurements_oid_seq'::regclass);
+ALTER TABLE ONLY measurements_oplog ALTER COLUMN oid SET DEFAULT nextval('measurements_oid_seq'::regclass);
 
 
 --
 -- Name: measures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measures_oid_seq'::regclass);
+ALTER TABLE ONLY measures_oplog ALTER COLUMN oid SET DEFAULT nextval('measures_oid_seq'::regclass);
 
 
 --
 -- Name: meursing_additional_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_additional_codes_oid_seq'::regclass);
+ALTER TABLE ONLY meursing_additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('meursing_additional_codes_oid_seq'::regclass);
 
 
 --
 -- Name: meursing_heading_texts_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_heading_texts_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_heading_texts_oid_seq'::regclass);
+ALTER TABLE ONLY meursing_heading_texts_oplog ALTER COLUMN oid SET DEFAULT nextval('meursing_heading_texts_oid_seq'::regclass);
 
 
 --
 -- Name: meursing_headings_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_headings_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_headings_oid_seq'::regclass);
+ALTER TABLE ONLY meursing_headings_oplog ALTER COLUMN oid SET DEFAULT nextval('meursing_headings_oid_seq'::regclass);
 
 
 --
 -- Name: meursing_subheadings_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_subheadings_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_subheadings_oid_seq'::regclass);
+ALTER TABLE ONLY meursing_subheadings_oplog ALTER COLUMN oid SET DEFAULT nextval('meursing_subheadings_oid_seq'::regclass);
 
 
 --
 -- Name: meursing_table_cell_components_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_table_cell_components_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_table_cell_components_oid_seq'::regclass);
+ALTER TABLE ONLY meursing_table_cell_components_oplog ALTER COLUMN oid SET DEFAULT nextval('meursing_table_cell_components_oid_seq'::regclass);
 
 
 --
 -- Name: meursing_table_plans_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_table_plans_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_table_plans_oid_seq'::regclass);
+ALTER TABLE ONLY meursing_table_plans_oplog ALTER COLUMN oid SET DEFAULT nextval('meursing_table_plans_oid_seq'::regclass);
 
 
 --
 -- Name: modification_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.modification_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.modification_regulations_oid_seq'::regclass);
+ALTER TABLE ONLY modification_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('modification_regulations_oid_seq'::regclass);
 
 
 --
 -- Name: monetary_exchange_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_exchange_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_exchange_periods_oid_seq'::regclass);
+ALTER TABLE ONLY monetary_exchange_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('monetary_exchange_periods_oid_seq'::regclass);
 
 
 --
 -- Name: monetary_exchange_rates_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_exchange_rates_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_exchange_rates_oid_seq'::regclass);
+ALTER TABLE ONLY monetary_exchange_rates_oplog ALTER COLUMN oid SET DEFAULT nextval('monetary_exchange_rates_oid_seq'::regclass);
 
 
 --
 -- Name: monetary_unit_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_unit_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_unit_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY monetary_unit_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('monetary_unit_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: monetary_units_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_units_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_units_oid_seq'::regclass);
+ALTER TABLE ONLY monetary_units_oplog ALTER COLUMN oid SET DEFAULT nextval('monetary_units_oid_seq'::regclass);
 
 
 --
 -- Name: nomenclature_group_memberships_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.nomenclature_group_memberships_oplog ALTER COLUMN oid SET DEFAULT nextval('public.nomenclature_group_memberships_oid_seq'::regclass);
+ALTER TABLE ONLY nomenclature_group_memberships_oplog ALTER COLUMN oid SET DEFAULT nextval('nomenclature_group_memberships_oid_seq'::regclass);
 
 
 --
 -- Name: prorogation_regulation_actions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.prorogation_regulation_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.prorogation_regulation_actions_oid_seq'::regclass);
+ALTER TABLE ONLY prorogation_regulation_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('prorogation_regulation_actions_oid_seq'::regclass);
 
 
 --
 -- Name: prorogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.prorogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.prorogation_regulations_oid_seq'::regclass);
+ALTER TABLE ONLY prorogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('prorogation_regulations_oid_seq'::regclass);
 
 
 --
 -- Name: publication_sigles_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.publication_sigles_oplog ALTER COLUMN oid SET DEFAULT nextval('public.publication_sigles_oplog_oid_seq'::regclass);
+ALTER TABLE ONLY publication_sigles_oplog ALTER COLUMN oid SET DEFAULT nextval('publication_sigles_oplog_oid_seq'::regclass);
 
 
 --
 -- Name: quota_associations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_associations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_associations_oid_seq'::regclass);
+ALTER TABLE ONLY quota_associations_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_associations_oid_seq'::regclass);
 
 
 --
 -- Name: quota_balance_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_balance_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_balance_events_oid_seq'::regclass);
+ALTER TABLE ONLY quota_balance_events_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_balance_events_oid_seq'::regclass);
 
 
 --
 -- Name: quota_blocking_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_blocking_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_blocking_periods_oid_seq'::regclass);
+ALTER TABLE ONLY quota_blocking_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_blocking_periods_oid_seq'::regclass);
 
 
 --
 -- Name: quota_critical_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_critical_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_critical_events_oid_seq'::regclass);
+ALTER TABLE ONLY quota_critical_events_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_critical_events_oid_seq'::regclass);
 
 
 --
 -- Name: quota_definitions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_definitions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_definitions_oid_seq'::regclass);
+ALTER TABLE ONLY quota_definitions_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_definitions_oid_seq'::regclass);
 
 
 --
 -- Name: quota_exhaustion_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_exhaustion_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_exhaustion_events_oid_seq'::regclass);
+ALTER TABLE ONLY quota_exhaustion_events_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_exhaustion_events_oid_seq'::regclass);
 
 
 --
 -- Name: quota_order_number_origin_exclusions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_order_number_origin_exclusions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_order_number_origin_exclusions_oid_seq'::regclass);
+ALTER TABLE ONLY quota_order_number_origin_exclusions_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_order_number_origin_exclusions_oid_seq'::regclass);
 
 
 --
 -- Name: quota_order_number_origins_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_order_number_origins_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_order_number_origins_oid_seq'::regclass);
+ALTER TABLE ONLY quota_order_number_origins_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_order_number_origins_oid_seq'::regclass);
 
 
 --
 -- Name: quota_order_numbers_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_order_numbers_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_order_numbers_oid_seq'::regclass);
+ALTER TABLE ONLY quota_order_numbers_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_order_numbers_oid_seq'::regclass);
 
 
 --
 -- Name: quota_reopening_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_reopening_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_reopening_events_oid_seq'::regclass);
+ALTER TABLE ONLY quota_reopening_events_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_reopening_events_oid_seq'::regclass);
 
 
 --
 -- Name: quota_suspension_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_suspension_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_suspension_periods_oid_seq'::regclass);
+ALTER TABLE ONLY quota_suspension_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_suspension_periods_oid_seq'::regclass);
 
 
 --
 -- Name: quota_unblocking_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_unblocking_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_unblocking_events_oid_seq'::regclass);
+ALTER TABLE ONLY quota_unblocking_events_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_unblocking_events_oid_seq'::regclass);
 
 
 --
 -- Name: quota_unsuspension_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_unsuspension_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_unsuspension_events_oid_seq'::regclass);
+ALTER TABLE ONLY quota_unsuspension_events_oplog ALTER COLUMN oid SET DEFAULT nextval('quota_unsuspension_events_oid_seq'::regclass);
 
 
 --
 -- Name: regulation_documents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_documents ALTER COLUMN id SET DEFAULT nextval('public.regulation_documents_id_seq'::regclass);
+ALTER TABLE ONLY regulation_documents ALTER COLUMN id SET DEFAULT nextval('regulation_documents_id_seq'::regclass);
 
 
 --
 -- Name: regulation_group_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_group_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_group_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY regulation_group_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('regulation_group_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: regulation_groups_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_groups_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_groups_oid_seq'::regclass);
+ALTER TABLE ONLY regulation_groups_oplog ALTER COLUMN oid SET DEFAULT nextval('regulation_groups_oid_seq'::regclass);
 
 
 --
 -- Name: regulation_replacements_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_replacements_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_replacements_oid_seq'::regclass);
+ALTER TABLE ONLY regulation_replacements_oplog ALTER COLUMN oid SET DEFAULT nextval('regulation_replacements_oid_seq'::regclass);
 
 
 --
 -- Name: regulation_role_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_role_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_role_type_descriptions_oid_seq'::regclass);
+ALTER TABLE ONLY regulation_role_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('regulation_role_type_descriptions_oid_seq'::regclass);
 
 
 --
 -- Name: regulation_role_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_role_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_role_types_oid_seq'::regclass);
+ALTER TABLE ONLY regulation_role_types_oplog ALTER COLUMN oid SET DEFAULT nextval('regulation_role_types_oid_seq'::regclass);
 
 
 --
 -- Name: rollbacks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.rollbacks ALTER COLUMN id SET DEFAULT nextval('public.rollbacks_id_seq'::regclass);
+ALTER TABLE ONLY rollbacks ALTER COLUMN id SET DEFAULT nextval('rollbacks_id_seq'::regclass);
 
 
 --
 -- Name: search_references id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_references ALTER COLUMN id SET DEFAULT nextval('public.search_references_id_seq'::regclass);
+ALTER TABLE ONLY search_references ALTER COLUMN id SET DEFAULT nextval('search_references_id_seq'::regclass);
 
 
 --
 -- Name: section_notes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.section_notes ALTER COLUMN id SET DEFAULT nextval('public.section_notes_id_seq'::regclass);
+ALTER TABLE ONLY section_notes ALTER COLUMN id SET DEFAULT nextval('section_notes_id_seq'::regclass);
 
 
 --
 -- Name: sections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sections ALTER COLUMN id SET DEFAULT nextval('public.sections_id_seq'::regclass);
+ALTER TABLE ONLY sections ALTER COLUMN id SET DEFAULT nextval('sections_id_seq'::regclass);
 
 
 --
 -- Name: tariff_update_conformance_errors id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tariff_update_conformance_errors ALTER COLUMN id SET DEFAULT nextval('public.tariff_update_conformance_errors_id_seq'::regclass);
+ALTER TABLE ONLY tariff_update_conformance_errors ALTER COLUMN id SET DEFAULT nextval('tariff_update_conformance_errors_id_seq'::regclass);
 
 
 --
 -- Name: transmission_comments_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.transmission_comments_oplog ALTER COLUMN oid SET DEFAULT nextval('public.transmission_comments_oid_seq'::regclass);
+ALTER TABLE ONLY transmission_comments_oplog ALTER COLUMN oid SET DEFAULT nextval('transmission_comments_oid_seq'::regclass);
 
 
 --
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
 -- Name: workbasket_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbasket_items ALTER COLUMN id SET DEFAULT nextval('public.workbasket_items_id_seq'::regclass);
+ALTER TABLE ONLY workbasket_items ALTER COLUMN id SET DEFAULT nextval('workbasket_items_id_seq'::regclass);
 
 
 --
 -- Name: workbaskets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbaskets ALTER COLUMN id SET DEFAULT nextval('public.workbaskets_id_seq'::regclass);
+ALTER TABLE ONLY workbaskets ALTER COLUMN id SET DEFAULT nextval('workbaskets_id_seq'::regclass);
 
 
 --
 -- Name: workbaskets_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbaskets_events ALTER COLUMN id SET DEFAULT nextval('public.workbaskets_events_id_seq'::regclass);
+ALTER TABLE ONLY workbaskets_events ALTER COLUMN id SET DEFAULT nextval('workbaskets_events_id_seq'::regclass);
 
 
 --
 -- Name: xml_export_files id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.xml_export_files ALTER COLUMN id SET DEFAULT nextval('public.xml_export_files_id_seq'::regclass);
+ALTER TABLE ONLY xml_export_files ALTER COLUMN id SET DEFAULT nextval('xml_export_files_id_seq'::regclass);
 
 
 --
 -- Name: additional_code_description_periods_oplog additional_code_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_description_periods_oplog
+ALTER TABLE ONLY additional_code_description_periods_oplog
     ADD CONSTRAINT additional_code_description_periods_pkey PRIMARY KEY (oid);
 
 
@@ -8525,7 +8557,7 @@ ALTER TABLE ONLY public.additional_code_description_periods_oplog
 -- Name: additional_code_descriptions_oplog additional_code_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_descriptions_oplog
+ALTER TABLE ONLY additional_code_descriptions_oplog
     ADD CONSTRAINT additional_code_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8533,7 +8565,7 @@ ALTER TABLE ONLY public.additional_code_descriptions_oplog
 -- Name: additional_code_type_descriptions_oplog additional_code_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_type_descriptions_oplog
+ALTER TABLE ONLY additional_code_type_descriptions_oplog
     ADD CONSTRAINT additional_code_type_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8541,7 +8573,7 @@ ALTER TABLE ONLY public.additional_code_type_descriptions_oplog
 -- Name: additional_code_type_measure_types_oplog additional_code_type_measure_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_type_measure_types_oplog
+ALTER TABLE ONLY additional_code_type_measure_types_oplog
     ADD CONSTRAINT additional_code_type_measure_types_pkey PRIMARY KEY (oid);
 
 
@@ -8549,7 +8581,7 @@ ALTER TABLE ONLY public.additional_code_type_measure_types_oplog
 -- Name: additional_code_types_oplog additional_code_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_code_types_oplog
+ALTER TABLE ONLY additional_code_types_oplog
     ADD CONSTRAINT additional_code_types_pkey PRIMARY KEY (oid);
 
 
@@ -8557,7 +8589,7 @@ ALTER TABLE ONLY public.additional_code_types_oplog
 -- Name: additional_codes_oplog additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.additional_codes_oplog
+ALTER TABLE ONLY additional_codes_oplog
     ADD CONSTRAINT additional_codes_pkey PRIMARY KEY (oid);
 
 
@@ -8565,7 +8597,7 @@ ALTER TABLE ONLY public.additional_codes_oplog
 -- Name: audits audits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.audits
+ALTER TABLE ONLY audits
     ADD CONSTRAINT audits_pkey PRIMARY KEY (id);
 
 
@@ -8573,7 +8605,7 @@ ALTER TABLE ONLY public.audits
 -- Name: base_regulations_oplog base_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.base_regulations_oplog
+ALTER TABLE ONLY base_regulations_oplog
     ADD CONSTRAINT base_regulations_pkey PRIMARY KEY (oid);
 
 
@@ -8581,7 +8613,7 @@ ALTER TABLE ONLY public.base_regulations_oplog
 -- Name: bulk_edit_of_additional_codes_settings bulk_edit_of_additional_codes_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings
+ALTER TABLE ONLY bulk_edit_of_additional_codes_settings
     ADD CONSTRAINT bulk_edit_of_additional_codes_settings_pkey PRIMARY KEY (id);
 
 
@@ -8589,7 +8621,7 @@ ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings
 -- Name: bulk_edit_of_measures_settings bulk_edit_of_measures_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.bulk_edit_of_measures_settings
+ALTER TABLE ONLY bulk_edit_of_measures_settings
     ADD CONSTRAINT bulk_edit_of_measures_settings_pkey PRIMARY KEY (id);
 
 
@@ -8597,7 +8629,7 @@ ALTER TABLE ONLY public.bulk_edit_of_measures_settings
 -- Name: certificate_description_periods_oplog certificate_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_description_periods_oplog
+ALTER TABLE ONLY certificate_description_periods_oplog
     ADD CONSTRAINT certificate_description_periods_pkey PRIMARY KEY (oid);
 
 
@@ -8605,7 +8637,7 @@ ALTER TABLE ONLY public.certificate_description_periods_oplog
 -- Name: certificate_descriptions_oplog certificate_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_descriptions_oplog
+ALTER TABLE ONLY certificate_descriptions_oplog
     ADD CONSTRAINT certificate_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8613,7 +8645,7 @@ ALTER TABLE ONLY public.certificate_descriptions_oplog
 -- Name: certificate_type_descriptions_oplog certificate_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_type_descriptions_oplog
+ALTER TABLE ONLY certificate_type_descriptions_oplog
     ADD CONSTRAINT certificate_type_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8621,7 +8653,7 @@ ALTER TABLE ONLY public.certificate_type_descriptions_oplog
 -- Name: certificate_types_oplog certificate_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificate_types_oplog
+ALTER TABLE ONLY certificate_types_oplog
     ADD CONSTRAINT certificate_types_pkey PRIMARY KEY (oid);
 
 
@@ -8629,7 +8661,7 @@ ALTER TABLE ONLY public.certificate_types_oplog
 -- Name: certificates_oplog certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.certificates_oplog
+ALTER TABLE ONLY certificates_oplog
     ADD CONSTRAINT certificates_pkey PRIMARY KEY (oid);
 
 
@@ -8637,7 +8669,7 @@ ALTER TABLE ONLY public.certificates_oplog
 -- Name: chapter_notes chapter_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chapter_notes
+ALTER TABLE ONLY chapter_notes
     ADD CONSTRAINT chapter_notes_pkey PRIMARY KEY (id);
 
 
@@ -8645,7 +8677,7 @@ ALTER TABLE ONLY public.chapter_notes
 -- Name: chief_duty_expression chief_duty_expression_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chief_duty_expression
+ALTER TABLE ONLY chief_duty_expression
     ADD CONSTRAINT chief_duty_expression_pkey PRIMARY KEY (id);
 
 
@@ -8653,7 +8685,7 @@ ALTER TABLE ONLY public.chief_duty_expression
 -- Name: chief_measure_type_footnote chief_measure_type_footnote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chief_measure_type_footnote
+ALTER TABLE ONLY chief_measure_type_footnote
     ADD CONSTRAINT chief_measure_type_footnote_pkey PRIMARY KEY (id);
 
 
@@ -8661,7 +8693,7 @@ ALTER TABLE ONLY public.chief_measure_type_footnote
 -- Name: chief_measurement_unit chief_measurement_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.chief_measurement_unit
+ALTER TABLE ONLY chief_measurement_unit
     ADD CONSTRAINT chief_measurement_unit_pkey PRIMARY KEY (id);
 
 
@@ -8669,7 +8701,7 @@ ALTER TABLE ONLY public.chief_measurement_unit
 -- Name: complete_abrogation_regulations_oplog complete_abrogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
+ALTER TABLE ONLY complete_abrogation_regulations_oplog
     ADD CONSTRAINT complete_abrogation_regulations_pkey PRIMARY KEY (oid);
 
 
@@ -8677,7 +8709,7 @@ ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
 -- Name: create_additional_code_workbasket_settings create_additional_code_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_additional_code_workbasket_settings
+ALTER TABLE ONLY create_additional_code_workbasket_settings
     ADD CONSTRAINT create_additional_code_workbasket_settings_pkey PRIMARY KEY (id);
 
 
@@ -8685,7 +8717,7 @@ ALTER TABLE ONLY public.create_additional_code_workbasket_settings
 -- Name: create_measures_workbasket_settings create_measures_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_measures_workbasket_settings
+ALTER TABLE ONLY create_measures_workbasket_settings
     ADD CONSTRAINT create_measures_workbasket_settings_pkey PRIMARY KEY (id);
 
 
@@ -8693,7 +8725,7 @@ ALTER TABLE ONLY public.create_measures_workbasket_settings
 -- Name: create_quota_workbasket_settings create_quota_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_quota_workbasket_settings
+ALTER TABLE ONLY create_quota_workbasket_settings
     ADD CONSTRAINT create_quota_workbasket_settings_pkey PRIMARY KEY (id);
 
 
@@ -8701,7 +8733,7 @@ ALTER TABLE ONLY public.create_quota_workbasket_settings
 -- Name: create_regulation_workbasket_settings create_regulation_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.create_regulation_workbasket_settings
+ALTER TABLE ONLY create_regulation_workbasket_settings
     ADD CONSTRAINT create_regulation_workbasket_settings_pkey PRIMARY KEY (id);
 
 
@@ -8709,7 +8741,7 @@ ALTER TABLE ONLY public.create_regulation_workbasket_settings
 -- Name: data_migrations data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.data_migrations
+ALTER TABLE ONLY data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (filename);
 
 
@@ -8717,7 +8749,7 @@ ALTER TABLE ONLY public.data_migrations
 -- Name: db_rollbacks db_rollbacks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.db_rollbacks
+ALTER TABLE ONLY db_rollbacks
     ADD CONSTRAINT db_rollbacks_pkey PRIMARY KEY (id);
 
 
@@ -8725,7 +8757,7 @@ ALTER TABLE ONLY public.db_rollbacks
 -- Name: duty_expression_descriptions_oplog duty_expression_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.duty_expression_descriptions_oplog
+ALTER TABLE ONLY duty_expression_descriptions_oplog
     ADD CONSTRAINT duty_expression_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8733,7 +8765,7 @@ ALTER TABLE ONLY public.duty_expression_descriptions_oplog
 -- Name: duty_expressions_oplog duty_expressions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.duty_expressions_oplog
+ALTER TABLE ONLY duty_expressions_oplog
     ADD CONSTRAINT duty_expressions_pkey PRIMARY KEY (oid);
 
 
@@ -8741,7 +8773,7 @@ ALTER TABLE ONLY public.duty_expressions_oplog
 -- Name: explicit_abrogation_regulations_oplog explicit_abrogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.explicit_abrogation_regulations_oplog
+ALTER TABLE ONLY explicit_abrogation_regulations_oplog
     ADD CONSTRAINT explicit_abrogation_regulations_pkey PRIMARY KEY (oid);
 
 
@@ -8749,7 +8781,7 @@ ALTER TABLE ONLY public.explicit_abrogation_regulations_oplog
 -- Name: export_refund_nomenclature_description_periods_oplog export_refund_nomenclature_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclature_description_periods_oplog
+ALTER TABLE ONLY export_refund_nomenclature_description_periods_oplog
     ADD CONSTRAINT export_refund_nomenclature_description_periods_pkey PRIMARY KEY (oid);
 
 
@@ -8757,7 +8789,7 @@ ALTER TABLE ONLY public.export_refund_nomenclature_description_periods_oplog
 -- Name: export_refund_nomenclature_descriptions_oplog export_refund_nomenclature_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclature_descriptions_oplog
+ALTER TABLE ONLY export_refund_nomenclature_descriptions_oplog
     ADD CONSTRAINT export_refund_nomenclature_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8765,7 +8797,7 @@ ALTER TABLE ONLY public.export_refund_nomenclature_descriptions_oplog
 -- Name: export_refund_nomenclature_indents_oplog export_refund_nomenclature_indents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclature_indents_oplog
+ALTER TABLE ONLY export_refund_nomenclature_indents_oplog
     ADD CONSTRAINT export_refund_nomenclature_indents_pkey PRIMARY KEY (oid);
 
 
@@ -8773,7 +8805,7 @@ ALTER TABLE ONLY public.export_refund_nomenclature_indents_oplog
 -- Name: export_refund_nomenclatures_oplog export_refund_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.export_refund_nomenclatures_oplog
+ALTER TABLE ONLY export_refund_nomenclatures_oplog
     ADD CONSTRAINT export_refund_nomenclatures_pkey PRIMARY KEY (oid);
 
 
@@ -8781,7 +8813,7 @@ ALTER TABLE ONLY public.export_refund_nomenclatures_oplog
 -- Name: footnote_association_additional_codes_oplog footnote_association_additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_additional_codes_oplog
+ALTER TABLE ONLY footnote_association_additional_codes_oplog
     ADD CONSTRAINT footnote_association_additional_codes_pkey PRIMARY KEY (oid);
 
 
@@ -8789,7 +8821,7 @@ ALTER TABLE ONLY public.footnote_association_additional_codes_oplog
 -- Name: footnote_association_erns_oplog footnote_association_erns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_erns_oplog
+ALTER TABLE ONLY footnote_association_erns_oplog
     ADD CONSTRAINT footnote_association_erns_pkey PRIMARY KEY (oid);
 
 
@@ -8797,7 +8829,7 @@ ALTER TABLE ONLY public.footnote_association_erns_oplog
 -- Name: footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_goods_nomenclatures_oplog
+ALTER TABLE ONLY footnote_association_goods_nomenclatures_oplog
     ADD CONSTRAINT footnote_association_goods_nomenclatures_pkey PRIMARY KEY (oid);
 
 
@@ -8805,7 +8837,7 @@ ALTER TABLE ONLY public.footnote_association_goods_nomenclatures_oplog
 -- Name: footnote_association_measures_oplog footnote_association_measures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_measures_oplog
+ALTER TABLE ONLY footnote_association_measures_oplog
     ADD CONSTRAINT footnote_association_measures_pkey PRIMARY KEY (oid);
 
 
@@ -8813,7 +8845,7 @@ ALTER TABLE ONLY public.footnote_association_measures_oplog
 -- Name: footnote_association_meursing_headings_oplog footnote_association_meursing_headings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_association_meursing_headings_oplog
+ALTER TABLE ONLY footnote_association_meursing_headings_oplog
     ADD CONSTRAINT footnote_association_meursing_headings_pkey PRIMARY KEY (oid);
 
 
@@ -8821,7 +8853,7 @@ ALTER TABLE ONLY public.footnote_association_meursing_headings_oplog
 -- Name: footnote_description_periods_oplog footnote_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_description_periods_oplog
+ALTER TABLE ONLY footnote_description_periods_oplog
     ADD CONSTRAINT footnote_description_periods_pkey PRIMARY KEY (oid);
 
 
@@ -8829,7 +8861,7 @@ ALTER TABLE ONLY public.footnote_description_periods_oplog
 -- Name: footnote_descriptions_oplog footnote_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_descriptions_oplog
+ALTER TABLE ONLY footnote_descriptions_oplog
     ADD CONSTRAINT footnote_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8837,7 +8869,7 @@ ALTER TABLE ONLY public.footnote_descriptions_oplog
 -- Name: footnote_type_descriptions_oplog footnote_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_type_descriptions_oplog
+ALTER TABLE ONLY footnote_type_descriptions_oplog
     ADD CONSTRAINT footnote_type_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8845,7 +8877,7 @@ ALTER TABLE ONLY public.footnote_type_descriptions_oplog
 -- Name: footnote_types_oplog footnote_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnote_types_oplog
+ALTER TABLE ONLY footnote_types_oplog
     ADD CONSTRAINT footnote_types_pkey PRIMARY KEY (oid);
 
 
@@ -8853,7 +8885,7 @@ ALTER TABLE ONLY public.footnote_types_oplog
 -- Name: footnotes_oplog footnotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.footnotes_oplog
+ALTER TABLE ONLY footnotes_oplog
     ADD CONSTRAINT footnotes_pkey PRIMARY KEY (oid);
 
 
@@ -8861,7 +8893,7 @@ ALTER TABLE ONLY public.footnotes_oplog
 -- Name: fts_regulation_actions_oplog fts_regulation_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fts_regulation_actions_oplog
+ALTER TABLE ONLY fts_regulation_actions_oplog
     ADD CONSTRAINT fts_regulation_actions_pkey PRIMARY KEY (oid);
 
 
@@ -8869,7 +8901,7 @@ ALTER TABLE ONLY public.fts_regulation_actions_oplog
 -- Name: full_temporary_stop_regulations_oplog full_temporary_stop_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.full_temporary_stop_regulations_oplog
+ALTER TABLE ONLY full_temporary_stop_regulations_oplog
     ADD CONSTRAINT full_temporary_stop_regulations_pkey PRIMARY KEY (oid);
 
 
@@ -8877,7 +8909,7 @@ ALTER TABLE ONLY public.full_temporary_stop_regulations_oplog
 -- Name: geographical_area_description_periods_oplog geographical_area_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_area_description_periods_oplog
+ALTER TABLE ONLY geographical_area_description_periods_oplog
     ADD CONSTRAINT geographical_area_description_periods_pkey PRIMARY KEY (oid);
 
 
@@ -8885,7 +8917,7 @@ ALTER TABLE ONLY public.geographical_area_description_periods_oplog
 -- Name: geographical_area_descriptions_oplog geographical_area_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_area_descriptions_oplog
+ALTER TABLE ONLY geographical_area_descriptions_oplog
     ADD CONSTRAINT geographical_area_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8893,7 +8925,7 @@ ALTER TABLE ONLY public.geographical_area_descriptions_oplog
 -- Name: geographical_area_memberships_oplog geographical_area_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_area_memberships_oplog
+ALTER TABLE ONLY geographical_area_memberships_oplog
     ADD CONSTRAINT geographical_area_memberships_pkey PRIMARY KEY (oid);
 
 
@@ -8901,7 +8933,7 @@ ALTER TABLE ONLY public.geographical_area_memberships_oplog
 -- Name: geographical_areas_oplog geographical_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.geographical_areas_oplog
+ALTER TABLE ONLY geographical_areas_oplog
     ADD CONSTRAINT geographical_areas_pkey PRIMARY KEY (oid);
 
 
@@ -8909,7 +8941,7 @@ ALTER TABLE ONLY public.geographical_areas_oplog
 -- Name: goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_description_periods_oplog
+ALTER TABLE ONLY goods_nomenclature_description_periods_oplog
     ADD CONSTRAINT goods_nomenclature_description_periods_pkey PRIMARY KEY (oid);
 
 
@@ -8917,7 +8949,7 @@ ALTER TABLE ONLY public.goods_nomenclature_description_periods_oplog
 -- Name: goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_descriptions_oplog
+ALTER TABLE ONLY goods_nomenclature_descriptions_oplog
     ADD CONSTRAINT goods_nomenclature_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8925,7 +8957,7 @@ ALTER TABLE ONLY public.goods_nomenclature_descriptions_oplog
 -- Name: goods_nomenclature_group_descriptions_oplog goods_nomenclature_group_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_group_descriptions_oplog
+ALTER TABLE ONLY goods_nomenclature_group_descriptions_oplog
     ADD CONSTRAINT goods_nomenclature_group_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8933,7 +8965,7 @@ ALTER TABLE ONLY public.goods_nomenclature_group_descriptions_oplog
 -- Name: goods_nomenclature_groups_oplog goods_nomenclature_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_groups_oplog
+ALTER TABLE ONLY goods_nomenclature_groups_oplog
     ADD CONSTRAINT goods_nomenclature_groups_pkey PRIMARY KEY (oid);
 
 
@@ -8941,7 +8973,7 @@ ALTER TABLE ONLY public.goods_nomenclature_groups_oplog
 -- Name: goods_nomenclature_indents_oplog goods_nomenclature_indents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_indents_oplog
+ALTER TABLE ONLY goods_nomenclature_indents_oplog
     ADD CONSTRAINT goods_nomenclature_indents_pkey PRIMARY KEY (oid);
 
 
@@ -8949,7 +8981,7 @@ ALTER TABLE ONLY public.goods_nomenclature_indents_oplog
 -- Name: goods_nomenclature_origins_oplog goods_nomenclature_origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_origins_oplog
+ALTER TABLE ONLY goods_nomenclature_origins_oplog
     ADD CONSTRAINT goods_nomenclature_origins_pkey PRIMARY KEY (oid);
 
 
@@ -8957,7 +8989,7 @@ ALTER TABLE ONLY public.goods_nomenclature_origins_oplog
 -- Name: goods_nomenclature_successors_oplog goods_nomenclature_successors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclature_successors_oplog
+ALTER TABLE ONLY goods_nomenclature_successors_oplog
     ADD CONSTRAINT goods_nomenclature_successors_pkey PRIMARY KEY (oid);
 
 
@@ -8965,7 +8997,7 @@ ALTER TABLE ONLY public.goods_nomenclature_successors_oplog
 -- Name: goods_nomenclatures_oplog goods_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.goods_nomenclatures_oplog
+ALTER TABLE ONLY goods_nomenclatures_oplog
     ADD CONSTRAINT goods_nomenclatures_pkey PRIMARY KEY (oid);
 
 
@@ -8973,7 +9005,7 @@ ALTER TABLE ONLY public.goods_nomenclatures_oplog
 -- Name: language_descriptions_oplog language_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.language_descriptions_oplog
+ALTER TABLE ONLY language_descriptions_oplog
     ADD CONSTRAINT language_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8981,7 +9013,7 @@ ALTER TABLE ONLY public.language_descriptions_oplog
 -- Name: languages_oplog languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.languages_oplog
+ALTER TABLE ONLY languages_oplog
     ADD CONSTRAINT languages_pkey PRIMARY KEY (oid);
 
 
@@ -8989,7 +9021,7 @@ ALTER TABLE ONLY public.languages_oplog
 -- Name: measure_action_descriptions_oplog measure_action_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_action_descriptions_oplog
+ALTER TABLE ONLY measure_action_descriptions_oplog
     ADD CONSTRAINT measure_action_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -8997,7 +9029,7 @@ ALTER TABLE ONLY public.measure_action_descriptions_oplog
 -- Name: measure_actions_oplog measure_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_actions_oplog
+ALTER TABLE ONLY measure_actions_oplog
     ADD CONSTRAINT measure_actions_pkey PRIMARY KEY (oid);
 
 
@@ -9005,7 +9037,7 @@ ALTER TABLE ONLY public.measure_actions_oplog
 -- Name: measure_components_oplog measure_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_components_oplog
+ALTER TABLE ONLY measure_components_oplog
     ADD CONSTRAINT measure_components_pkey PRIMARY KEY (oid);
 
 
@@ -9013,7 +9045,7 @@ ALTER TABLE ONLY public.measure_components_oplog
 -- Name: measure_condition_code_descriptions_oplog measure_condition_code_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_condition_code_descriptions_oplog
+ALTER TABLE ONLY measure_condition_code_descriptions_oplog
     ADD CONSTRAINT measure_condition_code_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9021,7 +9053,7 @@ ALTER TABLE ONLY public.measure_condition_code_descriptions_oplog
 -- Name: measure_condition_codes_oplog measure_condition_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_condition_codes_oplog
+ALTER TABLE ONLY measure_condition_codes_oplog
     ADD CONSTRAINT measure_condition_codes_pkey PRIMARY KEY (oid);
 
 
@@ -9029,7 +9061,7 @@ ALTER TABLE ONLY public.measure_condition_codes_oplog
 -- Name: measure_condition_components_oplog measure_condition_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_condition_components_oplog
+ALTER TABLE ONLY measure_condition_components_oplog
     ADD CONSTRAINT measure_condition_components_pkey PRIMARY KEY (oid);
 
 
@@ -9037,7 +9069,7 @@ ALTER TABLE ONLY public.measure_condition_components_oplog
 -- Name: measure_conditions_oplog measure_conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_conditions_oplog
+ALTER TABLE ONLY measure_conditions_oplog
     ADD CONSTRAINT measure_conditions_pkey PRIMARY KEY (oid);
 
 
@@ -9045,7 +9077,7 @@ ALTER TABLE ONLY public.measure_conditions_oplog
 -- Name: measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog
+ALTER TABLE ONLY measure_excluded_geographical_areas_oplog
     ADD CONSTRAINT measure_excluded_geographical_areas_pkey PRIMARY KEY (oid);
 
 
@@ -9053,7 +9085,7 @@ ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog
 -- Name: measure_partial_temporary_stops_oplog measure_partial_temporary_stops_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_partial_temporary_stops_oplog
+ALTER TABLE ONLY measure_partial_temporary_stops_oplog
     ADD CONSTRAINT measure_partial_temporary_stops_pkey PRIMARY KEY (oid);
 
 
@@ -9061,7 +9093,7 @@ ALTER TABLE ONLY public.measure_partial_temporary_stops_oplog
 -- Name: measure_type_descriptions_oplog measure_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_type_descriptions_oplog
+ALTER TABLE ONLY measure_type_descriptions_oplog
     ADD CONSTRAINT measure_type_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9069,7 +9101,7 @@ ALTER TABLE ONLY public.measure_type_descriptions_oplog
 -- Name: measure_type_series_descriptions_oplog measure_type_series_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_type_series_descriptions_oplog
+ALTER TABLE ONLY measure_type_series_descriptions_oplog
     ADD CONSTRAINT measure_type_series_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9077,7 +9109,7 @@ ALTER TABLE ONLY public.measure_type_series_descriptions_oplog
 -- Name: measure_type_series_oplog measure_type_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_type_series_oplog
+ALTER TABLE ONLY measure_type_series_oplog
     ADD CONSTRAINT measure_type_series_pkey PRIMARY KEY (oid);
 
 
@@ -9085,7 +9117,7 @@ ALTER TABLE ONLY public.measure_type_series_oplog
 -- Name: measure_types_oplog measure_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measure_types_oplog
+ALTER TABLE ONLY measure_types_oplog
     ADD CONSTRAINT measure_types_pkey PRIMARY KEY (oid);
 
 
@@ -9093,7 +9125,7 @@ ALTER TABLE ONLY public.measure_types_oplog
 -- Name: measurement_unit_abbreviations measurement_unit_abbreviations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_abbreviations
+ALTER TABLE ONLY measurement_unit_abbreviations
     ADD CONSTRAINT measurement_unit_abbreviations_pkey PRIMARY KEY (id);
 
 
@@ -9101,7 +9133,7 @@ ALTER TABLE ONLY public.measurement_unit_abbreviations
 -- Name: measurement_unit_descriptions_oplog measurement_unit_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_descriptions_oplog
+ALTER TABLE ONLY measurement_unit_descriptions_oplog
     ADD CONSTRAINT measurement_unit_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9109,7 +9141,7 @@ ALTER TABLE ONLY public.measurement_unit_descriptions_oplog
 -- Name: measurement_unit_qualifier_descriptions_oplog measurement_unit_qualifier_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_qualifier_descriptions_oplog
+ALTER TABLE ONLY measurement_unit_qualifier_descriptions_oplog
     ADD CONSTRAINT measurement_unit_qualifier_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9117,7 +9149,7 @@ ALTER TABLE ONLY public.measurement_unit_qualifier_descriptions_oplog
 -- Name: measurement_unit_qualifiers_oplog measurement_unit_qualifiers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_unit_qualifiers_oplog
+ALTER TABLE ONLY measurement_unit_qualifiers_oplog
     ADD CONSTRAINT measurement_unit_qualifiers_pkey PRIMARY KEY (oid);
 
 
@@ -9125,7 +9157,7 @@ ALTER TABLE ONLY public.measurement_unit_qualifiers_oplog
 -- Name: measurement_units_oplog measurement_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurement_units_oplog
+ALTER TABLE ONLY measurement_units_oplog
     ADD CONSTRAINT measurement_units_pkey PRIMARY KEY (oid);
 
 
@@ -9133,7 +9165,7 @@ ALTER TABLE ONLY public.measurement_units_oplog
 -- Name: measurements_oplog measurements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measurements_oplog
+ALTER TABLE ONLY measurements_oplog
     ADD CONSTRAINT measurements_pkey PRIMARY KEY (oid);
 
 
@@ -9141,7 +9173,7 @@ ALTER TABLE ONLY public.measurements_oplog
 -- Name: measures_oplog measures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.measures_oplog
+ALTER TABLE ONLY measures_oplog
     ADD CONSTRAINT measures_pkey PRIMARY KEY (oid);
 
 
@@ -9149,7 +9181,7 @@ ALTER TABLE ONLY public.measures_oplog
 -- Name: meursing_additional_codes_oplog meursing_additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_additional_codes_oplog
+ALTER TABLE ONLY meursing_additional_codes_oplog
     ADD CONSTRAINT meursing_additional_codes_pkey PRIMARY KEY (oid);
 
 
@@ -9157,7 +9189,7 @@ ALTER TABLE ONLY public.meursing_additional_codes_oplog
 -- Name: meursing_heading_texts_oplog meursing_heading_texts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_heading_texts_oplog
+ALTER TABLE ONLY meursing_heading_texts_oplog
     ADD CONSTRAINT meursing_heading_texts_pkey PRIMARY KEY (oid);
 
 
@@ -9165,7 +9197,7 @@ ALTER TABLE ONLY public.meursing_heading_texts_oplog
 -- Name: meursing_headings_oplog meursing_headings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_headings_oplog
+ALTER TABLE ONLY meursing_headings_oplog
     ADD CONSTRAINT meursing_headings_pkey PRIMARY KEY (oid);
 
 
@@ -9173,7 +9205,7 @@ ALTER TABLE ONLY public.meursing_headings_oplog
 -- Name: meursing_subheadings_oplog meursing_subheadings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_subheadings_oplog
+ALTER TABLE ONLY meursing_subheadings_oplog
     ADD CONSTRAINT meursing_subheadings_pkey PRIMARY KEY (oid);
 
 
@@ -9181,7 +9213,7 @@ ALTER TABLE ONLY public.meursing_subheadings_oplog
 -- Name: meursing_table_cell_components_oplog meursing_table_cell_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_table_cell_components_oplog
+ALTER TABLE ONLY meursing_table_cell_components_oplog
     ADD CONSTRAINT meursing_table_cell_components_pkey PRIMARY KEY (oid);
 
 
@@ -9189,7 +9221,7 @@ ALTER TABLE ONLY public.meursing_table_cell_components_oplog
 -- Name: meursing_table_plans_oplog meursing_table_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.meursing_table_plans_oplog
+ALTER TABLE ONLY meursing_table_plans_oplog
     ADD CONSTRAINT meursing_table_plans_pkey PRIMARY KEY (oid);
 
 
@@ -9197,7 +9229,7 @@ ALTER TABLE ONLY public.meursing_table_plans_oplog
 -- Name: modification_regulations_oplog modification_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.modification_regulations_oplog
+ALTER TABLE ONLY modification_regulations_oplog
     ADD CONSTRAINT modification_regulations_pkey PRIMARY KEY (oid);
 
 
@@ -9205,7 +9237,7 @@ ALTER TABLE ONLY public.modification_regulations_oplog
 -- Name: monetary_exchange_periods_oplog monetary_exchange_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_exchange_periods_oplog
+ALTER TABLE ONLY monetary_exchange_periods_oplog
     ADD CONSTRAINT monetary_exchange_periods_pkey PRIMARY KEY (oid);
 
 
@@ -9213,7 +9245,7 @@ ALTER TABLE ONLY public.monetary_exchange_periods_oplog
 -- Name: monetary_exchange_rates_oplog monetary_exchange_rates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_exchange_rates_oplog
+ALTER TABLE ONLY monetary_exchange_rates_oplog
     ADD CONSTRAINT monetary_exchange_rates_pkey PRIMARY KEY (oid);
 
 
@@ -9221,7 +9253,7 @@ ALTER TABLE ONLY public.monetary_exchange_rates_oplog
 -- Name: monetary_unit_descriptions_oplog monetary_unit_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_unit_descriptions_oplog
+ALTER TABLE ONLY monetary_unit_descriptions_oplog
     ADD CONSTRAINT monetary_unit_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9229,7 +9261,7 @@ ALTER TABLE ONLY public.monetary_unit_descriptions_oplog
 -- Name: monetary_units_oplog monetary_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.monetary_units_oplog
+ALTER TABLE ONLY monetary_units_oplog
     ADD CONSTRAINT monetary_units_pkey PRIMARY KEY (oid);
 
 
@@ -9237,7 +9269,7 @@ ALTER TABLE ONLY public.monetary_units_oplog
 -- Name: nomenclature_group_memberships_oplog nomenclature_group_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.nomenclature_group_memberships_oplog
+ALTER TABLE ONLY nomenclature_group_memberships_oplog
     ADD CONSTRAINT nomenclature_group_memberships_pkey PRIMARY KEY (oid);
 
 
@@ -9245,7 +9277,7 @@ ALTER TABLE ONLY public.nomenclature_group_memberships_oplog
 -- Name: prorogation_regulation_actions_oplog prorogation_regulation_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.prorogation_regulation_actions_oplog
+ALTER TABLE ONLY prorogation_regulation_actions_oplog
     ADD CONSTRAINT prorogation_regulation_actions_pkey PRIMARY KEY (oid);
 
 
@@ -9253,7 +9285,7 @@ ALTER TABLE ONLY public.prorogation_regulation_actions_oplog
 -- Name: prorogation_regulations_oplog prorogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.prorogation_regulations_oplog
+ALTER TABLE ONLY prorogation_regulations_oplog
     ADD CONSTRAINT prorogation_regulations_pkey PRIMARY KEY (oid);
 
 
@@ -9261,7 +9293,7 @@ ALTER TABLE ONLY public.prorogation_regulations_oplog
 -- Name: publication_sigles_oplog publication_sigles_oplog_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.publication_sigles_oplog
+ALTER TABLE ONLY publication_sigles_oplog
     ADD CONSTRAINT publication_sigles_oplog_pkey PRIMARY KEY (oid);
 
 
@@ -9269,7 +9301,7 @@ ALTER TABLE ONLY public.publication_sigles_oplog
 -- Name: quota_associations_oplog quota_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_associations_oplog
+ALTER TABLE ONLY quota_associations_oplog
     ADD CONSTRAINT quota_associations_pkey PRIMARY KEY (oid);
 
 
@@ -9277,7 +9309,7 @@ ALTER TABLE ONLY public.quota_associations_oplog
 -- Name: quota_balance_events_oplog quota_balance_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_balance_events_oplog
+ALTER TABLE ONLY quota_balance_events_oplog
     ADD CONSTRAINT quota_balance_events_pkey PRIMARY KEY (oid);
 
 
@@ -9285,7 +9317,7 @@ ALTER TABLE ONLY public.quota_balance_events_oplog
 -- Name: quota_blocking_periods_oplog quota_blocking_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_blocking_periods_oplog
+ALTER TABLE ONLY quota_blocking_periods_oplog
     ADD CONSTRAINT quota_blocking_periods_pkey PRIMARY KEY (oid);
 
 
@@ -9293,7 +9325,7 @@ ALTER TABLE ONLY public.quota_blocking_periods_oplog
 -- Name: quota_critical_events_oplog quota_critical_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_critical_events_oplog
+ALTER TABLE ONLY quota_critical_events_oplog
     ADD CONSTRAINT quota_critical_events_pkey PRIMARY KEY (oid);
 
 
@@ -9301,7 +9333,7 @@ ALTER TABLE ONLY public.quota_critical_events_oplog
 -- Name: quota_definitions_oplog quota_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_definitions_oplog
+ALTER TABLE ONLY quota_definitions_oplog
     ADD CONSTRAINT quota_definitions_pkey PRIMARY KEY (oid);
 
 
@@ -9309,7 +9341,7 @@ ALTER TABLE ONLY public.quota_definitions_oplog
 -- Name: quota_exhaustion_events_oplog quota_exhaustion_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_exhaustion_events_oplog
+ALTER TABLE ONLY quota_exhaustion_events_oplog
     ADD CONSTRAINT quota_exhaustion_events_pkey PRIMARY KEY (oid);
 
 
@@ -9317,7 +9349,7 @@ ALTER TABLE ONLY public.quota_exhaustion_events_oplog
 -- Name: quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_order_number_origin_exclusions_oplog
+ALTER TABLE ONLY quota_order_number_origin_exclusions_oplog
     ADD CONSTRAINT quota_order_number_origin_exclusions_pkey PRIMARY KEY (oid);
 
 
@@ -9325,7 +9357,7 @@ ALTER TABLE ONLY public.quota_order_number_origin_exclusions_oplog
 -- Name: quota_order_number_origins_oplog quota_order_number_origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_order_number_origins_oplog
+ALTER TABLE ONLY quota_order_number_origins_oplog
     ADD CONSTRAINT quota_order_number_origins_pkey PRIMARY KEY (oid);
 
 
@@ -9333,7 +9365,7 @@ ALTER TABLE ONLY public.quota_order_number_origins_oplog
 -- Name: quota_order_numbers_oplog quota_order_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_order_numbers_oplog
+ALTER TABLE ONLY quota_order_numbers_oplog
     ADD CONSTRAINT quota_order_numbers_pkey PRIMARY KEY (oid);
 
 
@@ -9341,7 +9373,7 @@ ALTER TABLE ONLY public.quota_order_numbers_oplog
 -- Name: quota_reopening_events_oplog quota_reopening_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_reopening_events_oplog
+ALTER TABLE ONLY quota_reopening_events_oplog
     ADD CONSTRAINT quota_reopening_events_pkey PRIMARY KEY (oid);
 
 
@@ -9349,7 +9381,7 @@ ALTER TABLE ONLY public.quota_reopening_events_oplog
 -- Name: quota_suspension_periods_oplog quota_suspension_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_suspension_periods_oplog
+ALTER TABLE ONLY quota_suspension_periods_oplog
     ADD CONSTRAINT quota_suspension_periods_pkey PRIMARY KEY (oid);
 
 
@@ -9357,7 +9389,7 @@ ALTER TABLE ONLY public.quota_suspension_periods_oplog
 -- Name: quota_unblocking_events_oplog quota_unblocking_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_unblocking_events_oplog
+ALTER TABLE ONLY quota_unblocking_events_oplog
     ADD CONSTRAINT quota_unblocking_events_pkey PRIMARY KEY (oid);
 
 
@@ -9365,7 +9397,7 @@ ALTER TABLE ONLY public.quota_unblocking_events_oplog
 -- Name: quota_unsuspension_events_oplog quota_unsuspension_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.quota_unsuspension_events_oplog
+ALTER TABLE ONLY quota_unsuspension_events_oplog
     ADD CONSTRAINT quota_unsuspension_events_pkey PRIMARY KEY (oid);
 
 
@@ -9373,7 +9405,7 @@ ALTER TABLE ONLY public.quota_unsuspension_events_oplog
 -- Name: regulation_documents regulation_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_documents
+ALTER TABLE ONLY regulation_documents
     ADD CONSTRAINT regulation_documents_pkey PRIMARY KEY (id);
 
 
@@ -9381,7 +9413,7 @@ ALTER TABLE ONLY public.regulation_documents
 -- Name: regulation_group_descriptions_oplog regulation_group_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_group_descriptions_oplog
+ALTER TABLE ONLY regulation_group_descriptions_oplog
     ADD CONSTRAINT regulation_group_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9389,7 +9421,7 @@ ALTER TABLE ONLY public.regulation_group_descriptions_oplog
 -- Name: regulation_groups_oplog regulation_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_groups_oplog
+ALTER TABLE ONLY regulation_groups_oplog
     ADD CONSTRAINT regulation_groups_pkey PRIMARY KEY (oid);
 
 
@@ -9397,7 +9429,7 @@ ALTER TABLE ONLY public.regulation_groups_oplog
 -- Name: regulation_replacements_oplog regulation_replacements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_replacements_oplog
+ALTER TABLE ONLY regulation_replacements_oplog
     ADD CONSTRAINT regulation_replacements_pkey PRIMARY KEY (oid);
 
 
@@ -9405,7 +9437,7 @@ ALTER TABLE ONLY public.regulation_replacements_oplog
 -- Name: regulation_role_type_descriptions_oplog regulation_role_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_role_type_descriptions_oplog
+ALTER TABLE ONLY regulation_role_type_descriptions_oplog
     ADD CONSTRAINT regulation_role_type_descriptions_pkey PRIMARY KEY (oid);
 
 
@@ -9413,7 +9445,7 @@ ALTER TABLE ONLY public.regulation_role_type_descriptions_oplog
 -- Name: regulation_role_types_oplog regulation_role_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regulation_role_types_oplog
+ALTER TABLE ONLY regulation_role_types_oplog
     ADD CONSTRAINT regulation_role_types_pkey PRIMARY KEY (oid);
 
 
@@ -9421,7 +9453,7 @@ ALTER TABLE ONLY public.regulation_role_types_oplog
 -- Name: rollbacks rollbacks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.rollbacks
+ALTER TABLE ONLY rollbacks
     ADD CONSTRAINT rollbacks_pkey PRIMARY KEY (id);
 
 
@@ -9429,7 +9461,7 @@ ALTER TABLE ONLY public.rollbacks
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.schema_migrations
+ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (filename);
 
 
@@ -9437,7 +9469,7 @@ ALTER TABLE ONLY public.schema_migrations
 -- Name: search_references search_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_references
+ALTER TABLE ONLY search_references
     ADD CONSTRAINT search_references_pkey PRIMARY KEY (id);
 
 
@@ -9445,7 +9477,7 @@ ALTER TABLE ONLY public.search_references
 -- Name: section_notes section_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.section_notes
+ALTER TABLE ONLY section_notes
     ADD CONSTRAINT section_notes_pkey PRIMARY KEY (id);
 
 
@@ -9453,7 +9485,7 @@ ALTER TABLE ONLY public.section_notes
 -- Name: sections sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sections
+ALTER TABLE ONLY sections
     ADD CONSTRAINT sections_pkey PRIMARY KEY (id);
 
 
@@ -9461,7 +9493,7 @@ ALTER TABLE ONLY public.sections
 -- Name: tariff_update_conformance_errors tariff_update_conformance_errors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tariff_update_conformance_errors
+ALTER TABLE ONLY tariff_update_conformance_errors
     ADD CONSTRAINT tariff_update_conformance_errors_pkey PRIMARY KEY (id);
 
 
@@ -9469,7 +9501,7 @@ ALTER TABLE ONLY public.tariff_update_conformance_errors
 -- Name: tariff_updates tariff_updates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tariff_updates
+ALTER TABLE ONLY tariff_updates
     ADD CONSTRAINT tariff_updates_pkey PRIMARY KEY (filename);
 
 
@@ -9477,7 +9509,7 @@ ALTER TABLE ONLY public.tariff_updates
 -- Name: transmission_comments_oplog transmission_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.transmission_comments_oplog
+ALTER TABLE ONLY transmission_comments_oplog
     ADD CONSTRAINT transmission_comments_pkey PRIMARY KEY (oid);
 
 
@@ -9485,7 +9517,7 @@ ALTER TABLE ONLY public.transmission_comments_oplog
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users
+ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
@@ -9493,7 +9525,7 @@ ALTER TABLE ONLY public.users
 -- Name: workbasket_items workbasket_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbasket_items
+ALTER TABLE ONLY workbasket_items
     ADD CONSTRAINT workbasket_items_pkey PRIMARY KEY (id);
 
 
@@ -9501,7 +9533,7 @@ ALTER TABLE ONLY public.workbasket_items
 -- Name: workbaskets_events workbaskets_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbaskets_events
+ALTER TABLE ONLY workbaskets_events
     ADD CONSTRAINT workbaskets_events_pkey PRIMARY KEY (id);
 
 
@@ -9509,7 +9541,7 @@ ALTER TABLE ONLY public.workbaskets_events
 -- Name: workbaskets workbaskets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbaskets
+ALTER TABLE ONLY workbaskets
     ADD CONSTRAINT workbaskets_pkey PRIMARY KEY (id);
 
 
@@ -9517,7 +9549,7 @@ ALTER TABLE ONLY public.workbaskets
 -- Name: xml_export_files xml_export_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.xml_export_files
+ALTER TABLE ONLY xml_export_files
     ADD CONSTRAINT xml_export_files_pkey PRIMARY KEY (id);
 
 
@@ -9525,2016 +9557,2016 @@ ALTER TABLE ONLY public.xml_export_files
 -- Name: abrogation_regulation_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX abrogation_regulation_id ON public.measure_partial_temporary_stops_oplog USING btree (abrogation_regulation_id);
+CREATE INDEX abrogation_regulation_id ON measure_partial_temporary_stops_oplog USING btree (abrogation_regulation_id);
 
 
 --
 -- Name: acdo_addcoddesopl_nalodeonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX acdo_addcoddesopl_nalodeonslog_operation_date ON public.additional_code_descriptions_oplog USING btree (operation_date);
+CREATE INDEX acdo_addcoddesopl_nalodeonslog_operation_date ON additional_code_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: acdpo_addcoddesperopl_nalodeionodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX acdpo_addcoddesperopl_nalodeionodslog_operation_date ON public.additional_code_description_periods_oplog USING btree (operation_date);
+CREATE INDEX acdpo_addcoddesperopl_nalodeionodslog_operation_date ON additional_code_description_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: aco_addcodopl_naldeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX aco_addcodopl_naldeslog_operation_date ON public.additional_codes_oplog USING btree (operation_date);
+CREATE INDEX aco_addcodopl_naldeslog_operation_date ON additional_codes_oplog USING btree (operation_date);
 
 
 --
 -- Name: actdo_addcodtypdesopl_nalodeypeonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX actdo_addcodtypdesopl_nalodeypeonslog_operation_date ON public.additional_code_type_descriptions_oplog USING btree (operation_date);
+CREATE INDEX actdo_addcodtypdesopl_nalodeypeonslog_operation_date ON additional_code_type_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: actmto_addcodtypmeatypopl_nalodeypeurepeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX actmto_addcodtypmeatypopl_nalodeypeurepeslog_operation_date ON public.additional_code_type_measure_types_oplog USING btree (operation_date);
+CREATE INDEX actmto_addcodtypmeatypopl_nalodeypeurepeslog_operation_date ON additional_code_type_measure_types_oplog USING btree (operation_date);
 
 
 --
 -- Name: acto_addcodtypopl_nalodepeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX acto_addcodtypopl_nalodepeslog_operation_date ON public.additional_code_types_oplog USING btree (operation_date);
+CREATE INDEX acto_addcodtypopl_nalodepeslog_operation_date ON additional_code_types_oplog USING btree (operation_date);
 
 
 --
 -- Name: adco_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX adco_desc_pk ON public.additional_code_descriptions_oplog USING btree (additional_code_description_period_sid, additional_code_type_id, additional_code_sid);
+CREATE INDEX adco_desc_pk ON additional_code_descriptions_oplog USING btree (additional_code_description_period_sid, additional_code_type_id, additional_code_sid);
 
 
 --
 -- Name: adco_periods_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX adco_periods_pk ON public.additional_code_description_periods_oplog USING btree (additional_code_description_period_sid, additional_code_sid, additional_code_type_id);
+CREATE INDEX adco_periods_pk ON additional_code_description_periods_oplog USING btree (additional_code_description_period_sid, additional_code_sid, additional_code_type_id);
 
 
 --
 -- Name: adco_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX adco_pk ON public.additional_codes_oplog USING btree (additional_code_sid);
+CREATE INDEX adco_pk ON additional_codes_oplog USING btree (additional_code_sid);
 
 
 --
 -- Name: adco_type_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX adco_type_desc_pk ON public.additional_code_type_descriptions_oplog USING btree (additional_code_type_id);
+CREATE INDEX adco_type_desc_pk ON additional_code_type_descriptions_oplog USING btree (additional_code_type_id);
 
 
 --
 -- Name: adco_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX adco_type_id ON public.additional_codes_oplog USING btree (additional_code_type_id);
+CREATE INDEX adco_type_id ON additional_codes_oplog USING btree (additional_code_type_id);
 
 
 --
 -- Name: adco_type_measure_type_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX adco_type_measure_type_pk ON public.additional_code_type_measure_types_oplog USING btree (measure_type_id, additional_code_type_id);
+CREATE INDEX adco_type_measure_type_pk ON additional_code_type_measure_types_oplog USING btree (measure_type_id, additional_code_type_id);
 
 
 --
 -- Name: adco_types_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX adco_types_pk ON public.additional_code_types_oplog USING btree (additional_code_type_id);
+CREATE INDEX adco_types_pk ON additional_code_types_oplog USING btree (additional_code_type_id);
 
 
 --
 -- Name: additional_code_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX additional_code_type ON public.footnote_association_additional_codes_oplog USING btree (additional_code_type_id);
+CREATE INDEX additional_code_type ON footnote_association_additional_codes_oplog USING btree (additional_code_type_id);
 
 
 --
 -- Name: antidumping_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX antidumping_regulation ON public.base_regulations_oplog USING btree (antidumping_regulation_role, related_antidumping_regulation_id);
+CREATE INDEX antidumping_regulation ON base_regulations_oplog USING btree (antidumping_regulation_role, related_antidumping_regulation_id);
 
 
 --
 -- Name: base_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX base_regulation ON public.modification_regulations_oplog USING btree (base_regulation_id, base_regulation_role);
+CREATE INDEX base_regulation ON modification_regulations_oplog USING btree (base_regulation_id, base_regulation_role);
 
 
 --
 -- Name: base_regulations_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX base_regulations_pk ON public.base_regulations_oplog USING btree (base_regulation_id, base_regulation_role);
+CREATE INDEX base_regulations_pk ON base_regulations_oplog USING btree (base_regulation_id, base_regulation_role);
 
 
 --
 -- Name: bro_basregopl_aseonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX bro_basregopl_aseonslog_operation_date ON public.base_regulations_oplog USING btree (operation_date);
+CREATE INDEX bro_basregopl_aseonslog_operation_date ON base_regulations_oplog USING btree (operation_date);
 
 
 --
 -- Name: caro_comabrregopl_eteiononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX caro_comabrregopl_eteiononslog_operation_date ON public.complete_abrogation_regulations_oplog USING btree (operation_date);
+CREATE INDEX caro_comabrregopl_eteiononslog_operation_date ON complete_abrogation_regulations_oplog USING btree (operation_date);
 
 
 --
 -- Name: cdo_cerdesopl_ateonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cdo_cerdesopl_ateonslog_operation_date ON public.certificate_descriptions_oplog USING btree (operation_date);
+CREATE INDEX cdo_cerdesopl_ateonslog_operation_date ON certificate_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: cdpo_cerdesperopl_ateionodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cdpo_cerdesperopl_ateionodslog_operation_date ON public.certificate_description_periods_oplog USING btree (operation_date);
+CREATE INDEX cdpo_cerdesperopl_ateionodslog_operation_date ON certificate_description_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: cert_desc_certificate; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cert_desc_certificate ON public.certificate_descriptions_oplog USING btree (certificate_code, certificate_type_code);
+CREATE INDEX cert_desc_certificate ON certificate_descriptions_oplog USING btree (certificate_code, certificate_type_code);
 
 
 --
 -- Name: cert_desc_period_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cert_desc_period_pk ON public.certificate_description_periods_oplog USING btree (certificate_description_period_sid);
+CREATE INDEX cert_desc_period_pk ON certificate_description_periods_oplog USING btree (certificate_description_period_sid);
 
 
 --
 -- Name: cert_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cert_desc_pk ON public.certificate_descriptions_oplog USING btree (certificate_description_period_sid);
+CREATE INDEX cert_desc_pk ON certificate_descriptions_oplog USING btree (certificate_description_period_sid);
 
 
 --
 -- Name: cert_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cert_pk ON public.certificates_oplog USING btree (certificate_code, certificate_type_code, validity_start_date);
+CREATE INDEX cert_pk ON certificates_oplog USING btree (certificate_code, certificate_type_code, validity_start_date);
 
 
 --
 -- Name: cert_type_code_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cert_type_code_pk ON public.certificate_type_descriptions_oplog USING btree (certificate_type_code);
+CREATE INDEX cert_type_code_pk ON certificate_type_descriptions_oplog USING btree (certificate_type_code);
 
 
 --
 -- Name: cert_types_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cert_types_pk ON public.certificate_types_oplog USING btree (certificate_type_code, validity_start_date);
+CREATE INDEX cert_types_pk ON certificate_types_oplog USING btree (certificate_type_code, validity_start_date);
 
 
 --
 -- Name: certificate; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX certificate ON public.certificate_description_periods_oplog USING btree (certificate_code, certificate_type_code);
+CREATE INDEX certificate ON certificate_description_periods_oplog USING btree (certificate_code, certificate_type_code);
 
 
 --
 -- Name: chapter_notes_chapter_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_notes_chapter_id_index ON public.chapter_notes USING btree (chapter_id);
+CREATE INDEX chapter_notes_chapter_id_index ON chapter_notes USING btree (chapter_id);
 
 
 --
 -- Name: chapter_notes_section_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_notes_section_id_index ON public.chapter_notes USING btree (section_id);
+CREATE INDEX chapter_notes_section_id_index ON chapter_notes USING btree (section_id);
 
 
 --
 -- Name: chief_country_cd_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chief_country_cd_pk ON public.chief_country_code USING btree (chief_country_cd);
+CREATE INDEX chief_country_cd_pk ON chief_country_code USING btree (chief_country_cd);
 
 
 --
 -- Name: chief_country_grp_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chief_country_grp_pk ON public.chief_country_group USING btree (chief_country_grp);
+CREATE INDEX chief_country_grp_pk ON chief_country_group USING btree (chief_country_grp);
 
 
 --
 -- Name: chief_mfcm_msrgp_code_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chief_mfcm_msrgp_code_index ON public.chief_mfcm USING btree (msrgp_code);
+CREATE INDEX chief_mfcm_msrgp_code_index ON chief_mfcm USING btree (msrgp_code);
 
 
 --
 -- Name: cmdty_code_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cmdty_code_index ON public.chief_comm USING btree (cmdty_code);
+CREATE INDEX cmdty_code_index ON chief_comm USING btree (cmdty_code);
 
 
 --
 -- Name: cmpl_abrg_reg_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cmpl_abrg_reg_pk ON public.complete_abrogation_regulations_oplog USING btree (complete_abrogation_regulation_id, complete_abrogation_regulation_role);
+CREATE INDEX cmpl_abrg_reg_pk ON complete_abrogation_regulations_oplog USING btree (complete_abrogation_regulation_id, complete_abrogation_regulation_role);
 
 
 --
 -- Name: co_ceropl_teslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX co_ceropl_teslog_operation_date ON public.certificates_oplog USING btree (operation_date);
+CREATE INDEX co_ceropl_teslog_operation_date ON certificates_oplog USING btree (operation_date);
 
 
 --
 -- Name: code_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX code_type_id ON public.additional_code_description_periods_oplog USING btree (additional_code_type_id);
+CREATE INDEX code_type_id ON additional_code_description_periods_oplog USING btree (additional_code_type_id);
 
 
 --
 -- Name: complete_abrogation_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX complete_abrogation_regulation ON public.base_regulations_oplog USING btree (complete_abrogation_regulation_role, complete_abrogation_regulation_id);
+CREATE INDEX complete_abrogation_regulation ON base_regulations_oplog USING btree (complete_abrogation_regulation_role, complete_abrogation_regulation_id);
 
 
 --
 -- Name: condition_measurement_unit_qualifier_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX condition_measurement_unit_qualifier_code ON public.measure_conditions_oplog USING btree (condition_measurement_unit_qualifier_code);
+CREATE INDEX condition_measurement_unit_qualifier_code ON measure_conditions_oplog USING btree (condition_measurement_unit_qualifier_code);
 
 
 --
 -- Name: ctdo_certypdesopl_ateypeonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ctdo_certypdesopl_ateypeonslog_operation_date ON public.certificate_type_descriptions_oplog USING btree (operation_date);
+CREATE INDEX ctdo_certypdesopl_ateypeonslog_operation_date ON certificate_type_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: cto_certypopl_atepeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cto_certypopl_atepeslog_operation_date ON public.certificate_types_oplog USING btree (operation_date);
+CREATE INDEX cto_certypopl_atepeslog_operation_date ON certificate_types_oplog USING btree (operation_date);
 
 
 --
 -- Name: data_migrations_filename_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX data_migrations_filename_index ON public.data_migrations USING btree (filename);
+CREATE INDEX data_migrations_filename_index ON data_migrations USING btree (filename);
 
 
 --
 -- Name: dedo_dutexpdesopl_utyiononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX dedo_dutexpdesopl_utyiononslog_operation_date ON public.duty_expression_descriptions_oplog USING btree (operation_date);
+CREATE INDEX dedo_dutexpdesopl_utyiononslog_operation_date ON duty_expression_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: deo_dutexpopl_utyonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX deo_dutexpopl_utyonslog_operation_date ON public.duty_expressions_oplog USING btree (operation_date);
+CREATE INDEX deo_dutexpopl_utyonslog_operation_date ON duty_expressions_oplog USING btree (operation_date);
 
 
 --
 -- Name: description_period_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX description_period_sid ON public.additional_code_description_periods_oplog USING btree (additional_code_description_period_sid);
+CREATE INDEX description_period_sid ON additional_code_description_periods_oplog USING btree (additional_code_description_period_sid);
 
 
 --
 -- Name: duty_exp_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX duty_exp_desc_pk ON public.duty_expression_descriptions_oplog USING btree (duty_expression_id);
+CREATE INDEX duty_exp_desc_pk ON duty_expression_descriptions_oplog USING btree (duty_expression_id);
 
 
 --
 -- Name: duty_exp_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX duty_exp_pk ON public.duty_expressions_oplog USING btree (duty_expression_id, validity_start_date);
+CREATE INDEX duty_exp_pk ON duty_expressions_oplog USING btree (duty_expression_id, validity_start_date);
 
 
 --
 -- Name: earo_expabrregopl_citiononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX earo_expabrregopl_citiononslog_operation_date ON public.explicit_abrogation_regulations_oplog USING btree (operation_date);
+CREATE INDEX earo_expabrregopl_citiononslog_operation_date ON explicit_abrogation_regulations_oplog USING btree (operation_date);
 
 
 --
 -- Name: erndo_exprefnomdesopl_ortundureonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX erndo_exprefnomdesopl_ortundureonslog_operation_date ON public.export_refund_nomenclature_descriptions_oplog USING btree (operation_date);
+CREATE INDEX erndo_exprefnomdesopl_ortundureonslog_operation_date ON export_refund_nomenclature_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: erndpo_exprefnomdesperopl_ortundureionodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX erndpo_exprefnomdesperopl_ortundureionodslog_operation_date ON public.export_refund_nomenclature_description_periods_oplog USING btree (operation_date);
+CREATE INDEX erndpo_exprefnomdesperopl_ortundureionodslog_operation_date ON export_refund_nomenclature_description_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: ernio_exprefnomindopl_ortundurentslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ernio_exprefnomindopl_ortundurentslog_operation_date ON public.export_refund_nomenclature_indents_oplog USING btree (operation_date);
+CREATE INDEX ernio_exprefnomindopl_ortundurentslog_operation_date ON export_refund_nomenclature_indents_oplog USING btree (operation_date);
 
 
 --
 -- Name: erno_exprefnomopl_ortundreslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX erno_exprefnomopl_ortundreslog_operation_date ON public.export_refund_nomenclatures_oplog USING btree (operation_date);
+CREATE INDEX erno_exprefnomopl_ortundreslog_operation_date ON export_refund_nomenclatures_oplog USING btree (operation_date);
 
 
 --
 -- Name: exp_abrg_reg_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX exp_abrg_reg_pk ON public.explicit_abrogation_regulations_oplog USING btree (explicit_abrogation_regulation_id, explicit_abrogation_regulation_role);
+CREATE INDEX exp_abrg_reg_pk ON explicit_abrogation_regulations_oplog USING btree (explicit_abrogation_regulation_id, explicit_abrogation_regulation_role);
 
 
 --
 -- Name: exp_rfnd_desc_period_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX exp_rfnd_desc_period_pk ON public.export_refund_nomenclature_description_periods_oplog USING btree (export_refund_nomenclature_sid, export_refund_nomenclature_description_period_sid);
+CREATE INDEX exp_rfnd_desc_period_pk ON export_refund_nomenclature_description_periods_oplog USING btree (export_refund_nomenclature_sid, export_refund_nomenclature_description_period_sid);
 
 
 --
 -- Name: exp_rfnd_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX exp_rfnd_desc_pk ON public.export_refund_nomenclature_descriptions_oplog USING btree (export_refund_nomenclature_description_period_sid);
+CREATE INDEX exp_rfnd_desc_pk ON export_refund_nomenclature_descriptions_oplog USING btree (export_refund_nomenclature_description_period_sid);
 
 
 --
 -- Name: exp_rfnd_indent_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX exp_rfnd_indent_pk ON public.export_refund_nomenclature_indents_oplog USING btree (export_refund_nomenclature_indents_sid);
+CREATE INDEX exp_rfnd_indent_pk ON export_refund_nomenclature_indents_oplog USING btree (export_refund_nomenclature_indents_sid);
 
 
 --
 -- Name: exp_rfnd_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX exp_rfnd_pk ON public.export_refund_nomenclatures_oplog USING btree (export_refund_nomenclature_sid);
+CREATE INDEX exp_rfnd_pk ON export_refund_nomenclatures_oplog USING btree (export_refund_nomenclature_sid);
 
 
 --
 -- Name: explicit_abrogation_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX explicit_abrogation_regulation ON public.base_regulations_oplog USING btree (explicit_abrogation_regulation_role, explicit_abrogation_regulation_id);
+CREATE INDEX explicit_abrogation_regulation ON base_regulations_oplog USING btree (explicit_abrogation_regulation_role, explicit_abrogation_regulation_id);
 
 
 --
 -- Name: export_refund_nomenclature; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX export_refund_nomenclature ON public.export_refund_nomenclature_descriptions_oplog USING btree (export_refund_nomenclature_sid);
+CREATE INDEX export_refund_nomenclature ON export_refund_nomenclature_descriptions_oplog USING btree (export_refund_nomenclature_sid);
 
 
 --
 -- Name: faaco_fooassaddcodopl_oteionnaldeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX faaco_fooassaddcodopl_oteionnaldeslog_operation_date ON public.footnote_association_additional_codes_oplog USING btree (operation_date);
+CREATE INDEX faaco_fooassaddcodopl_oteionnaldeslog_operation_date ON footnote_association_additional_codes_oplog USING btree (operation_date);
 
 
 --
 -- Name: faeo_fooassernopl_oteionrnslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX faeo_fooassernopl_oteionrnslog_operation_date ON public.footnote_association_erns_oplog USING btree (operation_date);
+CREATE INDEX faeo_fooassernopl_oteionrnslog_operation_date ON footnote_association_erns_oplog USING btree (operation_date);
 
 
 --
 -- Name: fagno_fooassgoonomopl_oteionodsreslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fagno_fooassgoonomopl_oteionodsreslog_operation_date ON public.footnote_association_goods_nomenclatures_oplog USING btree (operation_date);
+CREATE INDEX fagno_fooassgoonomopl_oteionodsreslog_operation_date ON footnote_association_goods_nomenclatures_oplog USING btree (operation_date);
 
 
 --
 -- Name: famho_fooassmeuheaopl_oteioningngslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX famho_fooassmeuheaopl_oteioningngslog_operation_date ON public.footnote_association_meursing_headings_oplog USING btree (operation_date);
+CREATE INDEX famho_fooassmeuheaopl_oteioningngslog_operation_date ON footnote_association_meursing_headings_oplog USING btree (operation_date);
 
 
 --
 -- Name: famo_fooassmeaopl_oteionreslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX famo_fooassmeaopl_oteionreslog_operation_date ON public.footnote_association_measures_oplog USING btree (operation_date);
+CREATE INDEX famo_fooassmeaopl_oteionreslog_operation_date ON footnote_association_measures_oplog USING btree (operation_date);
 
 
 --
 -- Name: fdo_foodesopl_oteonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fdo_foodesopl_oteonslog_operation_date ON public.footnote_descriptions_oplog USING btree (operation_date);
+CREATE INDEX fdo_foodesopl_oteonslog_operation_date ON footnote_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: fdpo_foodesperopl_oteionodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fdpo_foodesperopl_oteionodslog_operation_date ON public.footnote_description_periods_oplog USING btree (operation_date);
+CREATE INDEX fdpo_foodesperopl_oteionodslog_operation_date ON footnote_description_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: fo_fooopl_teslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fo_fooopl_teslog_operation_date ON public.footnotes_oplog USING btree (operation_date);
+CREATE INDEX fo_fooopl_teslog_operation_date ON footnotes_oplog USING btree (operation_date);
 
 
 --
 -- Name: footnote_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX footnote_id ON public.footnote_association_measures_oplog USING btree (footnote_id);
+CREATE INDEX footnote_id ON footnote_association_measures_oplog USING btree (footnote_id);
 
 
 --
 -- Name: frao_ftsregactopl_ftsiononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX frao_ftsregactopl_ftsiononslog_operation_date ON public.fts_regulation_actions_oplog USING btree (operation_date);
+CREATE INDEX frao_ftsregactopl_ftsiononslog_operation_date ON fts_regulation_actions_oplog USING btree (operation_date);
 
 
 --
 -- Name: ftdo_footypdesopl_oteypeonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftdo_footypdesopl_oteypeonslog_operation_date ON public.footnote_type_descriptions_oplog USING btree (operation_date);
+CREATE INDEX ftdo_footypdesopl_oteypeonslog_operation_date ON footnote_type_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: ftn_assoc_adco_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_assoc_adco_pk ON public.footnote_association_additional_codes_oplog USING btree (footnote_id, footnote_type_id, additional_code_sid);
+CREATE INDEX ftn_assoc_adco_pk ON footnote_association_additional_codes_oplog USING btree (footnote_id, footnote_type_id, additional_code_sid);
 
 
 --
 -- Name: ftn_assoc_ern_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_assoc_ern_pk ON public.footnote_association_erns_oplog USING btree (export_refund_nomenclature_sid, footnote_id, footnote_type, validity_start_date);
+CREATE INDEX ftn_assoc_ern_pk ON footnote_association_erns_oplog USING btree (export_refund_nomenclature_sid, footnote_id, footnote_type, validity_start_date);
 
 
 --
 -- Name: ftn_assoc_gono_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_assoc_gono_pk ON public.footnote_association_goods_nomenclatures_oplog USING btree (footnote_id, footnote_type, goods_nomenclature_sid, validity_start_date);
+CREATE INDEX ftn_assoc_gono_pk ON footnote_association_goods_nomenclatures_oplog USING btree (footnote_id, footnote_type, goods_nomenclature_sid, validity_start_date);
 
 
 --
 -- Name: ftn_assoc_meurs_head_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_assoc_meurs_head_pk ON public.footnote_association_meursing_headings_oplog USING btree (footnote_id, meursing_table_plan_id);
+CREATE INDEX ftn_assoc_meurs_head_pk ON footnote_association_meursing_headings_oplog USING btree (footnote_id, meursing_table_plan_id);
 
 
 --
 -- Name: ftn_desc; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_desc ON public.footnote_descriptions_oplog USING btree (footnote_id, footnote_type_id, footnote_description_period_sid);
+CREATE INDEX ftn_desc ON footnote_descriptions_oplog USING btree (footnote_id, footnote_type_id, footnote_description_period_sid);
 
 
 --
 -- Name: ftn_desc_period; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_desc_period ON public.footnote_description_periods_oplog USING btree (footnote_id, footnote_type_id, footnote_description_period_sid);
+CREATE INDEX ftn_desc_period ON footnote_description_periods_oplog USING btree (footnote_id, footnote_type_id, footnote_description_period_sid);
 
 
 --
 -- Name: ftn_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_pk ON public.footnotes_oplog USING btree (footnote_id, footnote_type_id);
+CREATE INDEX ftn_pk ON footnotes_oplog USING btree (footnote_id, footnote_type_id);
 
 
 --
 -- Name: ftn_type_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_type_desc_pk ON public.footnote_type_descriptions_oplog USING btree (footnote_type_id);
+CREATE INDEX ftn_type_desc_pk ON footnote_type_descriptions_oplog USING btree (footnote_type_id);
 
 
 --
 -- Name: ftn_types_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftn_types_pk ON public.footnote_types_oplog USING btree (footnote_type_id);
+CREATE INDEX ftn_types_pk ON footnote_types_oplog USING btree (footnote_type_id);
 
 
 --
 -- Name: fto_footypopl_otepeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fto_footypopl_otepeslog_operation_date ON public.footnote_types_oplog USING btree (operation_date);
+CREATE INDEX fto_footypopl_otepeslog_operation_date ON footnote_types_oplog USING btree (operation_date);
 
 
 --
 -- Name: fts_reg_act_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fts_reg_act_pk ON public.fts_regulation_actions_oplog USING btree (fts_regulation_id, fts_regulation_role, stopped_regulation_id, stopped_regulation_role);
+CREATE INDEX fts_reg_act_pk ON fts_regulation_actions_oplog USING btree (fts_regulation_id, fts_regulation_role, stopped_regulation_id, stopped_regulation_role);
 
 
 --
 -- Name: ftsro_fultemstoregopl_ullarytoponslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ftsro_fultemstoregopl_ullarytoponslog_operation_date ON public.full_temporary_stop_regulations_oplog USING btree (operation_date);
+CREATE INDEX ftsro_fultemstoregopl_ullarytoponslog_operation_date ON full_temporary_stop_regulations_oplog USING btree (operation_date);
 
 
 --
 -- Name: full_temp_explicit_abrogation_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX full_temp_explicit_abrogation_regulation ON public.full_temporary_stop_regulations_oplog USING btree (explicit_abrogation_regulation_role, explicit_abrogation_regulation_id);
+CREATE INDEX full_temp_explicit_abrogation_regulation ON full_temporary_stop_regulations_oplog USING btree (explicit_abrogation_regulation_role, explicit_abrogation_regulation_id);
 
 
 --
 -- Name: full_temp_stop_reg_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX full_temp_stop_reg_pk ON public.full_temporary_stop_regulations_oplog USING btree (full_temporary_stop_regulation_id, full_temporary_stop_regulation_role);
+CREATE INDEX full_temp_stop_reg_pk ON full_temporary_stop_regulations_oplog USING btree (full_temporary_stop_regulation_id, full_temporary_stop_regulation_role);
 
 
 --
 -- Name: gado_geoaredesopl_calreaonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gado_geoaredesopl_calreaonslog_operation_date ON public.geographical_area_descriptions_oplog USING btree (operation_date);
+CREATE INDEX gado_geoaredesopl_calreaonslog_operation_date ON geographical_area_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: gadpo_geoaredesperopl_calreaionodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gadpo_geoaredesperopl_calreaionodslog_operation_date ON public.geographical_area_description_periods_oplog USING btree (operation_date);
+CREATE INDEX gadpo_geoaredesperopl_calreaionodslog_operation_date ON geographical_area_description_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: gamo_geoarememopl_calreaipslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gamo_geoarememopl_calreaipslog_operation_date ON public.geographical_area_memberships_oplog USING btree (operation_date);
+CREATE INDEX gamo_geoarememopl_calreaipslog_operation_date ON geographical_area_memberships_oplog USING btree (operation_date);
 
 
 --
 -- Name: gao_geoareopl_caleaslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gao_geoareopl_caleaslog_operation_date ON public.geographical_areas_oplog USING btree (operation_date);
+CREATE INDEX gao_geoareopl_caleaslog_operation_date ON geographical_areas_oplog USING btree (operation_date);
 
 
 --
 -- Name: geo_area_member_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX geo_area_member_pk ON public.geographical_area_memberships_oplog USING btree (geographical_area_sid, geographical_area_group_sid, validity_start_date);
+CREATE INDEX geo_area_member_pk ON geographical_area_memberships_oplog USING btree (geographical_area_sid, geographical_area_group_sid, validity_start_date);
 
 
 --
 -- Name: geog_area_desc_period_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX geog_area_desc_period_pk ON public.geographical_area_description_periods_oplog USING btree (geographical_area_description_period_sid, geographical_area_sid);
+CREATE INDEX geog_area_desc_period_pk ON geographical_area_description_periods_oplog USING btree (geographical_area_description_period_sid, geographical_area_sid);
 
 
 --
 -- Name: geog_area_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX geog_area_desc_pk ON public.geographical_area_descriptions_oplog USING btree (geographical_area_description_period_sid, geographical_area_sid);
+CREATE INDEX geog_area_desc_pk ON geographical_area_descriptions_oplog USING btree (geographical_area_description_period_sid, geographical_area_sid);
 
 
 --
 -- Name: geog_area_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX geog_area_pk ON public.geographical_areas_oplog USING btree (geographical_area_id);
+CREATE INDEX geog_area_pk ON geographical_areas_oplog USING btree (geographical_area_id);
 
 
 --
 -- Name: gndo_goonomdesopl_odsureonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gndo_goonomdesopl_odsureonslog_operation_date ON public.goods_nomenclature_descriptions_oplog USING btree (operation_date);
+CREATE INDEX gndo_goonomdesopl_odsureonslog_operation_date ON goods_nomenclature_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: gndpo_goonomdesperopl_odsureionodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gndpo_goonomdesperopl_odsureionodslog_operation_date ON public.goods_nomenclature_description_periods_oplog USING btree (operation_date);
+CREATE INDEX gndpo_goonomdesperopl_odsureionodslog_operation_date ON goods_nomenclature_description_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: gngdo_goonomgrodesopl_odsureouponslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gngdo_goonomgrodesopl_odsureouponslog_operation_date ON public.goods_nomenclature_group_descriptions_oplog USING btree (operation_date);
+CREATE INDEX gngdo_goonomgrodesopl_odsureouponslog_operation_date ON goods_nomenclature_group_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: gngo_goonomgroopl_odsureupslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gngo_goonomgroopl_odsureupslog_operation_date ON public.goods_nomenclature_groups_oplog USING btree (operation_date);
+CREATE INDEX gngo_goonomgroopl_odsureupslog_operation_date ON goods_nomenclature_groups_oplog USING btree (operation_date);
 
 
 --
 -- Name: gnio_goonomindopl_odsurentslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gnio_goonomindopl_odsurentslog_operation_date ON public.goods_nomenclature_indents_oplog USING btree (operation_date);
+CREATE INDEX gnio_goonomindopl_odsurentslog_operation_date ON goods_nomenclature_indents_oplog USING btree (operation_date);
 
 
 --
 -- Name: gno_goonomopl_odsreslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gno_goonomopl_odsreslog_operation_date ON public.goods_nomenclatures_oplog USING btree (operation_date);
+CREATE INDEX gno_goonomopl_odsreslog_operation_date ON goods_nomenclatures_oplog USING btree (operation_date);
 
 
 --
 -- Name: gnoo_goonomoriopl_odsureinslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gnoo_goonomoriopl_odsureinslog_operation_date ON public.goods_nomenclature_origins_oplog USING btree (operation_date);
+CREATE INDEX gnoo_goonomoriopl_odsureinslog_operation_date ON goods_nomenclature_origins_oplog USING btree (operation_date);
 
 
 --
 -- Name: gnso_goonomsucopl_odsureorslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gnso_goonomsucopl_odsureorslog_operation_date ON public.goods_nomenclature_successors_oplog USING btree (operation_date);
+CREATE INDEX gnso_goonomsucopl_odsureorslog_operation_date ON goods_nomenclature_successors_oplog USING btree (operation_date);
 
 
 --
 -- Name: gono_desc_periods_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_desc_periods_pk ON public.goods_nomenclature_description_periods_oplog USING btree (goods_nomenclature_sid, validity_start_date, validity_end_date);
+CREATE INDEX gono_desc_periods_pk ON goods_nomenclature_description_periods_oplog USING btree (goods_nomenclature_sid, validity_start_date, validity_end_date);
 
 
 --
 -- Name: gono_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_desc_pk ON public.goods_nomenclature_descriptions_oplog USING btree (goods_nomenclature_sid, goods_nomenclature_description_period_sid);
+CREATE INDEX gono_desc_pk ON goods_nomenclature_descriptions_oplog USING btree (goods_nomenclature_sid, goods_nomenclature_description_period_sid);
 
 
 --
 -- Name: gono_desc_primary_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_desc_primary_key ON public.goods_nomenclature_description_periods_oplog USING btree (goods_nomenclature_description_period_sid);
+CREATE INDEX gono_desc_primary_key ON goods_nomenclature_description_periods_oplog USING btree (goods_nomenclature_description_period_sid);
 
 
 --
 -- Name: gono_grp_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_grp_desc_pk ON public.goods_nomenclature_group_descriptions_oplog USING btree (goods_nomenclature_group_id, goods_nomenclature_group_type);
+CREATE INDEX gono_grp_desc_pk ON goods_nomenclature_group_descriptions_oplog USING btree (goods_nomenclature_group_id, goods_nomenclature_group_type);
 
 
 --
 -- Name: gono_grp_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_grp_pk ON public.goods_nomenclature_groups_oplog USING btree (goods_nomenclature_group_id, goods_nomenclature_group_type);
+CREATE INDEX gono_grp_pk ON goods_nomenclature_groups_oplog USING btree (goods_nomenclature_group_id, goods_nomenclature_group_type);
 
 
 --
 -- Name: gono_indent_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_indent_pk ON public.goods_nomenclature_indents_oplog USING btree (goods_nomenclature_indent_sid);
+CREATE INDEX gono_indent_pk ON goods_nomenclature_indents_oplog USING btree (goods_nomenclature_indent_sid);
 
 
 --
 -- Name: gono_origin_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_origin_pk ON public.goods_nomenclature_origins_oplog USING btree (goods_nomenclature_sid, derived_goods_nomenclature_item_id, derived_productline_suffix, goods_nomenclature_item_id, productline_suffix);
+CREATE INDEX gono_origin_pk ON goods_nomenclature_origins_oplog USING btree (goods_nomenclature_sid, derived_goods_nomenclature_item_id, derived_productline_suffix, goods_nomenclature_item_id, productline_suffix);
 
 
 --
 -- Name: gono_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_pk ON public.goods_nomenclatures_oplog USING btree (goods_nomenclature_sid);
+CREATE INDEX gono_pk ON goods_nomenclatures_oplog USING btree (goods_nomenclature_sid);
 
 
 --
 -- Name: gono_succ_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX gono_succ_pk ON public.goods_nomenclature_successors_oplog USING btree (goods_nomenclature_sid, absorbed_goods_nomenclature_item_id, absorbed_productline_suffix, goods_nomenclature_item_id, productline_suffix);
+CREATE INDEX gono_succ_pk ON goods_nomenclature_successors_oplog USING btree (goods_nomenclature_sid, absorbed_goods_nomenclature_item_id, absorbed_productline_suffix, goods_nomenclature_item_id, productline_suffix);
 
 
 --
 -- Name: goods_nomenclature_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX goods_nomenclature_sid ON public.goods_nomenclature_indents_oplog USING btree (goods_nomenclature_sid);
+CREATE INDEX goods_nomenclature_sid ON goods_nomenclature_indents_oplog USING btree (goods_nomenclature_sid);
 
 
 --
 -- Name: goods_nomenclature_validity_dates; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX goods_nomenclature_validity_dates ON public.goods_nomenclature_indents_oplog USING btree (validity_start_date, validity_end_date);
+CREATE INDEX goods_nomenclature_validity_dates ON goods_nomenclature_indents_oplog USING btree (validity_start_date, validity_end_date);
 
 
 --
 -- Name: index_additional_code_type_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_additional_code_type_descriptions_on_language_id ON public.additional_code_type_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_additional_code_type_descriptions_on_language_id ON additional_code_type_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_additional_code_types_on_meursing_table_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_additional_code_types_on_meursing_table_plan_id ON public.additional_code_types_oplog USING btree (meursing_table_plan_id);
+CREATE INDEX index_additional_code_types_on_meursing_table_plan_id ON additional_code_types_oplog USING btree (meursing_table_plan_id);
 
 
 --
 -- Name: index_base_regulations_on_regulation_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_base_regulations_on_regulation_group_id ON public.base_regulations_oplog USING btree (regulation_group_id);
+CREATE INDEX index_base_regulations_on_regulation_group_id ON base_regulations_oplog USING btree (regulation_group_id);
 
 
 --
 -- Name: index_certificate_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_certificate_descriptions_on_language_id ON public.certificate_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_certificate_descriptions_on_language_id ON certificate_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_certificate_type_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_certificate_type_descriptions_on_language_id ON public.certificate_type_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_certificate_type_descriptions_on_language_id ON certificate_type_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_chapters_sections_on_goods_nomenclature_sid_and_section_i; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_chapters_sections_on_goods_nomenclature_sid_and_section_i ON public.chapters_sections USING btree (goods_nomenclature_sid, section_id);
+CREATE INDEX index_chapters_sections_on_goods_nomenclature_sid_and_section_i ON chapters_sections USING btree (goods_nomenclature_sid, section_id);
 
 
 --
 -- Name: index_chief_tame; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_chief_tame ON public.chief_tame USING btree (msrgp_code, msr_type, tty_code, tar_msr_no, fe_tsmp);
+CREATE INDEX index_chief_tame ON chief_tame USING btree (msrgp_code, msr_type, tty_code, tar_msr_no, fe_tsmp);
 
 
 --
 -- Name: index_chief_tamf; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_chief_tamf ON public.chief_tamf USING btree (fe_tsmp, msrgp_code, msr_type, tty_code, tar_msr_no, amend_indicator);
+CREATE INDEX index_chief_tamf ON chief_tamf USING btree (fe_tsmp, msrgp_code, msr_type, tty_code, tar_msr_no, amend_indicator);
 
 
 --
 -- Name: index_duty_expression_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_duty_expression_descriptions_on_language_id ON public.duty_expression_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_duty_expression_descriptions_on_language_id ON duty_expression_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_export_refund_nomenclature_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_export_refund_nomenclature_descriptions_on_language_id ON public.export_refund_nomenclature_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_export_refund_nomenclature_descriptions_on_language_id ON export_refund_nomenclature_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_export_refund_nomenclatures_on_goods_nomenclature_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_export_refund_nomenclatures_on_goods_nomenclature_sid ON public.export_refund_nomenclatures_oplog USING btree (goods_nomenclature_sid);
+CREATE INDEX index_export_refund_nomenclatures_on_goods_nomenclature_sid ON export_refund_nomenclatures_oplog USING btree (goods_nomenclature_sid);
 
 
 --
 -- Name: index_footnote_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_footnote_descriptions_on_language_id ON public.footnote_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_footnote_descriptions_on_language_id ON footnote_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_footnote_type_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_footnote_type_descriptions_on_language_id ON public.footnote_type_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_footnote_type_descriptions_on_language_id ON footnote_type_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_geographical_area_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_geographical_area_descriptions_on_language_id ON public.geographical_area_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_geographical_area_descriptions_on_language_id ON geographical_area_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_geographical_areas_on_parent_geographical_area_group_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_geographical_areas_on_parent_geographical_area_group_sid ON public.geographical_areas_oplog USING btree (parent_geographical_area_group_sid);
+CREATE INDEX index_geographical_areas_on_parent_geographical_area_group_sid ON geographical_areas_oplog USING btree (parent_geographical_area_group_sid);
 
 
 --
 -- Name: index_goods_nomenclature_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_goods_nomenclature_descriptions_on_language_id ON public.goods_nomenclature_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_goods_nomenclature_descriptions_on_language_id ON goods_nomenclature_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_goods_nomenclature_group_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_goods_nomenclature_group_descriptions_on_language_id ON public.goods_nomenclature_group_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_goods_nomenclature_group_descriptions_on_language_id ON goods_nomenclature_group_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_measure_components_on_measurement_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_components_on_measurement_unit_code ON public.measure_components_oplog USING btree (measurement_unit_code);
+CREATE INDEX index_measure_components_on_measurement_unit_code ON measure_components_oplog USING btree (measurement_unit_code);
 
 
 --
 -- Name: index_measure_components_on_measurement_unit_qualifier_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_components_on_measurement_unit_qualifier_code ON public.measure_components_oplog USING btree (measurement_unit_qualifier_code);
+CREATE INDEX index_measure_components_on_measurement_unit_qualifier_code ON measure_components_oplog USING btree (measurement_unit_qualifier_code);
 
 
 --
 -- Name: index_measure_components_on_monetary_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_components_on_monetary_unit_code ON public.measure_components_oplog USING btree (monetary_unit_code);
+CREATE INDEX index_measure_components_on_monetary_unit_code ON measure_components_oplog USING btree (monetary_unit_code);
 
 
 --
 -- Name: index_measure_condition_components_on_duty_expression_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_condition_components_on_duty_expression_id ON public.measure_condition_components_oplog USING btree (duty_expression_id);
+CREATE INDEX index_measure_condition_components_on_duty_expression_id ON measure_condition_components_oplog USING btree (duty_expression_id);
 
 
 --
 -- Name: index_measure_condition_components_on_measurement_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_condition_components_on_measurement_unit_code ON public.measure_condition_components_oplog USING btree (measurement_unit_code);
+CREATE INDEX index_measure_condition_components_on_measurement_unit_code ON measure_condition_components_oplog USING btree (measurement_unit_code);
 
 
 --
 -- Name: index_measure_condition_components_on_monetary_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_condition_components_on_monetary_unit_code ON public.measure_condition_components_oplog USING btree (monetary_unit_code);
+CREATE INDEX index_measure_condition_components_on_monetary_unit_code ON measure_condition_components_oplog USING btree (monetary_unit_code);
 
 
 --
 -- Name: index_measure_conditions_on_action_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_conditions_on_action_code ON public.measure_conditions_oplog USING btree (action_code);
+CREATE INDEX index_measure_conditions_on_action_code ON measure_conditions_oplog USING btree (action_code);
 
 
 --
 -- Name: index_measure_conditions_on_condition_measurement_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_conditions_on_condition_measurement_unit_code ON public.measure_conditions_oplog USING btree (condition_measurement_unit_code);
+CREATE INDEX index_measure_conditions_on_condition_measurement_unit_code ON measure_conditions_oplog USING btree (condition_measurement_unit_code);
 
 
 --
 -- Name: index_measure_conditions_on_condition_monetary_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_conditions_on_condition_monetary_unit_code ON public.measure_conditions_oplog USING btree (condition_monetary_unit_code);
+CREATE INDEX index_measure_conditions_on_condition_monetary_unit_code ON measure_conditions_oplog USING btree (condition_monetary_unit_code);
 
 
 --
 -- Name: index_measure_conditions_on_measure_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_conditions_on_measure_sid ON public.measure_conditions_oplog USING btree (measure_sid);
+CREATE INDEX index_measure_conditions_on_measure_sid ON measure_conditions_oplog USING btree (measure_sid);
 
 
 --
 -- Name: index_measure_type_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_type_descriptions_on_language_id ON public.measure_type_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_measure_type_descriptions_on_language_id ON measure_type_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_measure_type_series_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_type_series_descriptions_on_language_id ON public.measure_type_series_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_measure_type_series_descriptions_on_language_id ON measure_type_series_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_measure_types_on_measure_type_series_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measure_types_on_measure_type_series_id ON public.measure_types_oplog USING btree (measure_type_series_id);
+CREATE INDEX index_measure_types_on_measure_type_series_id ON measure_types_oplog USING btree (measure_type_series_id);
 
 
 --
 -- Name: index_measurement_unit_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measurement_unit_descriptions_on_language_id ON public.measurement_unit_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_measurement_unit_descriptions_on_language_id ON measurement_unit_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_measures_on_additional_code_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measures_on_additional_code_sid ON public.measures_oplog USING btree (additional_code_sid);
+CREATE INDEX index_measures_on_additional_code_sid ON measures_oplog USING btree (additional_code_sid);
 
 
 --
 -- Name: index_measures_on_geographical_area_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measures_on_geographical_area_sid ON public.measures_oplog USING btree (geographical_area_sid);
+CREATE INDEX index_measures_on_geographical_area_sid ON measures_oplog USING btree (geographical_area_sid);
 
 
 --
 -- Name: index_measures_on_goods_nomenclature_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measures_on_goods_nomenclature_sid ON public.measures_oplog USING btree (goods_nomenclature_sid);
+CREATE INDEX index_measures_on_goods_nomenclature_sid ON measures_oplog USING btree (goods_nomenclature_sid);
 
 
 --
 -- Name: index_measures_on_measure_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_measures_on_measure_type ON public.measures_oplog USING btree (measure_type_id);
+CREATE INDEX index_measures_on_measure_type ON measures_oplog USING btree (measure_type_id);
 
 
 --
 -- Name: index_monetary_unit_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_monetary_unit_descriptions_on_language_id ON public.monetary_unit_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_monetary_unit_descriptions_on_language_id ON monetary_unit_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_quota_definitions_on_measurement_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_quota_definitions_on_measurement_unit_code ON public.quota_definitions_oplog USING btree (measurement_unit_code);
+CREATE INDEX index_quota_definitions_on_measurement_unit_code ON quota_definitions_oplog USING btree (measurement_unit_code);
 
 
 --
 -- Name: index_quota_definitions_on_measurement_unit_qualifier_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_quota_definitions_on_measurement_unit_qualifier_code ON public.quota_definitions_oplog USING btree (measurement_unit_qualifier_code);
+CREATE INDEX index_quota_definitions_on_measurement_unit_qualifier_code ON quota_definitions_oplog USING btree (measurement_unit_qualifier_code);
 
 
 --
 -- Name: index_quota_definitions_on_monetary_unit_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_quota_definitions_on_monetary_unit_code ON public.quota_definitions_oplog USING btree (monetary_unit_code);
+CREATE INDEX index_quota_definitions_on_monetary_unit_code ON quota_definitions_oplog USING btree (monetary_unit_code);
 
 
 --
 -- Name: index_quota_definitions_on_quota_order_number_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_quota_definitions_on_quota_order_number_id ON public.quota_definitions_oplog USING btree (quota_order_number_id);
+CREATE INDEX index_quota_definitions_on_quota_order_number_id ON quota_definitions_oplog USING btree (quota_order_number_id);
 
 
 --
 -- Name: index_quota_order_number_origins_on_geographical_area_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_quota_order_number_origins_on_geographical_area_sid ON public.quota_order_number_origins_oplog USING btree (geographical_area_sid);
+CREATE INDEX index_quota_order_number_origins_on_geographical_area_sid ON quota_order_number_origins_oplog USING btree (geographical_area_sid);
 
 
 --
 -- Name: index_quota_suspension_periods_on_quota_definition_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_quota_suspension_periods_on_quota_definition_sid ON public.quota_suspension_periods_oplog USING btree (quota_definition_sid);
+CREATE INDEX index_quota_suspension_periods_on_quota_definition_sid ON quota_suspension_periods_oplog USING btree (quota_definition_sid);
 
 
 --
 -- Name: index_regulation_group_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_regulation_group_descriptions_on_language_id ON public.regulation_group_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_regulation_group_descriptions_on_language_id ON regulation_group_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: index_regulation_role_type_descriptions_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_regulation_role_type_descriptions_on_language_id ON public.regulation_role_type_descriptions_oplog USING btree (language_id);
+CREATE INDEX index_regulation_role_type_descriptions_on_language_id ON regulation_role_type_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: item_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX item_id ON public.goods_nomenclatures_oplog USING btree (goods_nomenclature_item_id, producline_suffix);
+CREATE INDEX item_id ON goods_nomenclatures_oplog USING btree (goods_nomenclature_item_id, producline_suffix);
 
 
 --
 -- Name: justification_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX justification_regulation ON public.measures_oplog USING btree (justification_regulation_role, justification_regulation_id);
+CREATE INDEX justification_regulation ON measures_oplog USING btree (justification_regulation_role, justification_regulation_id);
 
 
 --
 -- Name: lang_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX lang_desc_pk ON public.language_descriptions_oplog USING btree (language_id, language_code_id);
+CREATE INDEX lang_desc_pk ON language_descriptions_oplog USING btree (language_id, language_code_id);
 
 
 --
 -- Name: language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX language_id ON public.additional_code_descriptions_oplog USING btree (language_id);
+CREATE INDEX language_id ON additional_code_descriptions_oplog USING btree (language_id);
 
 
 --
 -- Name: ldo_landesopl_ageonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ldo_landesopl_ageonslog_operation_date ON public.language_descriptions_oplog USING btree (operation_date);
+CREATE INDEX ldo_landesopl_ageonslog_operation_date ON language_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: lo_lanopl_geslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX lo_lanopl_geslog_operation_date ON public.languages_oplog USING btree (operation_date);
+CREATE INDEX lo_lanopl_geslog_operation_date ON languages_oplog USING btree (operation_date);
 
 
 --
 -- Name: maco_meuaddcodopl_ingnaldeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX maco_meuaddcodopl_ingnaldeslog_operation_date ON public.meursing_additional_codes_oplog USING btree (operation_date);
+CREATE INDEX maco_meuaddcodopl_ingnaldeslog_operation_date ON meursing_additional_codes_oplog USING btree (operation_date);
 
 
 --
 -- Name: mado_meaactdesopl_ureiononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mado_meaactdesopl_ureiononslog_operation_date ON public.measure_action_descriptions_oplog USING btree (operation_date);
+CREATE INDEX mado_meaactdesopl_ureiononslog_operation_date ON measure_action_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: mao_meaactopl_ureonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mao_meaactopl_ureonslog_operation_date ON public.measure_actions_oplog USING btree (operation_date);
+CREATE INDEX mao_meaactopl_ureonslog_operation_date ON measure_actions_oplog USING btree (operation_date);
 
 
 --
 -- Name: mccdo_meaconcoddesopl_ureionodeonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mccdo_meaconcoddesopl_ureionodeonslog_operation_date ON public.measure_condition_code_descriptions_oplog USING btree (operation_date);
+CREATE INDEX mccdo_meaconcoddesopl_ureionodeonslog_operation_date ON measure_condition_code_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: mcco_meaconcodopl_ureiondeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mcco_meaconcodopl_ureiondeslog_operation_date ON public.measure_condition_codes_oplog USING btree (operation_date);
+CREATE INDEX mcco_meaconcodopl_ureiondeslog_operation_date ON measure_condition_codes_oplog USING btree (operation_date);
 
 
 --
 -- Name: mcco_meaconcomopl_ureionntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mcco_meaconcomopl_ureionntslog_operation_date ON public.measure_condition_components_oplog USING btree (operation_date);
+CREATE INDEX mcco_meaconcomopl_ureionntslog_operation_date ON measure_condition_components_oplog USING btree (operation_date);
 
 
 --
 -- Name: mco_meacomopl_urentslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mco_meacomopl_urentslog_operation_date ON public.measure_components_oplog USING btree (operation_date);
+CREATE INDEX mco_meacomopl_urentslog_operation_date ON measure_components_oplog USING btree (operation_date);
 
 
 --
 -- Name: mco_meaconopl_ureonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mco_meaconopl_ureonslog_operation_date ON public.measure_conditions_oplog USING btree (operation_date);
+CREATE INDEX mco_meaconopl_ureonslog_operation_date ON measure_conditions_oplog USING btree (operation_date);
 
 
 --
 -- Name: meas_act_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_act_desc_pk ON public.measure_action_descriptions_oplog USING btree (action_code);
+CREATE INDEX meas_act_desc_pk ON measure_action_descriptions_oplog USING btree (action_code);
 
 
 --
 -- Name: meas_act_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_act_pk ON public.measure_actions_oplog USING btree (action_code, validity_start_date);
+CREATE INDEX meas_act_pk ON measure_actions_oplog USING btree (action_code, validity_start_date);
 
 
 --
 -- Name: meas_comp_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_comp_pk ON public.measure_components_oplog USING btree (measure_sid, duty_expression_id);
+CREATE INDEX meas_comp_pk ON measure_components_oplog USING btree (measure_sid, duty_expression_id);
 
 
 --
 -- Name: meas_cond_cd_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_cond_cd_desc_pk ON public.measure_condition_code_descriptions_oplog USING btree (condition_code);
+CREATE INDEX meas_cond_cd_desc_pk ON measure_condition_code_descriptions_oplog USING btree (condition_code);
 
 
 --
 -- Name: meas_cond_cd_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_cond_cd_pk ON public.measure_condition_codes_oplog USING btree (condition_code, validity_start_date);
+CREATE INDEX meas_cond_cd_pk ON measure_condition_codes_oplog USING btree (condition_code, validity_start_date);
 
 
 --
 -- Name: meas_cond_certificate; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_cond_certificate ON public.measure_conditions_oplog USING btree (certificate_code, certificate_type_code);
+CREATE INDEX meas_cond_certificate ON measure_conditions_oplog USING btree (certificate_code, certificate_type_code);
 
 
 --
 -- Name: meas_cond_comp_cd; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_cond_comp_cd ON public.measure_condition_components_oplog USING btree (measure_condition_sid, duty_expression_id);
+CREATE INDEX meas_cond_comp_cd ON measure_condition_components_oplog USING btree (measure_condition_sid, duty_expression_id);
 
 
 --
 -- Name: meas_cond_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_cond_pk ON public.measure_conditions_oplog USING btree (measure_condition_sid);
+CREATE INDEX meas_cond_pk ON measure_conditions_oplog USING btree (measure_condition_sid);
 
 
 --
 -- Name: meas_excl_geog_area_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_excl_geog_area_pk ON public.measure_excluded_geographical_areas_oplog USING btree (geographical_area_sid);
+CREATE INDEX meas_excl_geog_area_pk ON measure_excluded_geographical_areas_oplog USING btree (geographical_area_sid);
 
 
 --
 -- Name: meas_excl_geog_primary_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_excl_geog_primary_key ON public.measure_excluded_geographical_areas_oplog USING btree (measure_sid, excluded_geographical_area, geographical_area_sid);
+CREATE INDEX meas_excl_geog_primary_key ON measure_excluded_geographical_areas_oplog USING btree (measure_sid, excluded_geographical_area, geographical_area_sid);
 
 
 --
 -- Name: meas_part_temp_stop_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_part_temp_stop_pk ON public.measure_partial_temporary_stops_oplog USING btree (measure_sid, partial_temporary_stop_regulation_id);
+CREATE INDEX meas_part_temp_stop_pk ON measure_partial_temporary_stops_oplog USING btree (measure_sid, partial_temporary_stop_regulation_id);
 
 
 --
 -- Name: meas_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_pk ON public.measures_oplog USING btree (measure_sid);
+CREATE INDEX meas_pk ON measures_oplog USING btree (measure_sid);
 
 
 --
 -- Name: meas_type_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_type_desc_pk ON public.measure_type_descriptions_oplog USING btree (measure_type_id);
+CREATE INDEX meas_type_desc_pk ON measure_type_descriptions_oplog USING btree (measure_type_id);
 
 
 --
 -- Name: meas_type_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_type_pk ON public.measure_types_oplog USING btree (measure_type_id, validity_start_date);
+CREATE INDEX meas_type_pk ON measure_types_oplog USING btree (measure_type_id, validity_start_date);
 
 
 --
 -- Name: meas_type_series_desc; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_type_series_desc ON public.measure_type_series_descriptions_oplog USING btree (measure_type_series_id);
+CREATE INDEX meas_type_series_desc ON measure_type_series_descriptions_oplog USING btree (measure_type_series_id);
 
 
 --
 -- Name: meas_type_series_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_type_series_pk ON public.measure_type_series_oplog USING btree (measure_type_series_id);
+CREATE INDEX meas_type_series_pk ON measure_type_series_oplog USING btree (measure_type_series_id);
 
 
 --
 -- Name: meas_unit_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_unit_desc_pk ON public.measurement_unit_descriptions_oplog USING btree (measurement_unit_code);
+CREATE INDEX meas_unit_desc_pk ON measurement_unit_descriptions_oplog USING btree (measurement_unit_code);
 
 
 --
 -- Name: meas_unit_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_unit_pk ON public.measurement_units_oplog USING btree (measurement_unit_code, validity_start_date);
+CREATE INDEX meas_unit_pk ON measurement_units_oplog USING btree (measurement_unit_code, validity_start_date);
 
 
 --
 -- Name: meas_unit_qual_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_unit_qual_desc_pk ON public.measurement_unit_qualifier_descriptions_oplog USING btree (measurement_unit_qualifier_code);
+CREATE INDEX meas_unit_qual_desc_pk ON measurement_unit_qualifier_descriptions_oplog USING btree (measurement_unit_qualifier_code);
 
 
 --
 -- Name: meas_unit_qual_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meas_unit_qual_pk ON public.measurement_unit_qualifiers_oplog USING btree (measurement_unit_qualifier_code, validity_start_date);
+CREATE INDEX meas_unit_qual_pk ON measurement_unit_qualifiers_oplog USING btree (measurement_unit_qualifier_code, validity_start_date);
 
 
 --
 -- Name: measrm_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX measrm_pk ON public.measurements_oplog USING btree (measurement_unit_code, measurement_unit_qualifier_code);
+CREATE INDEX measrm_pk ON measurements_oplog USING btree (measurement_unit_code, measurement_unit_qualifier_code);
 
 
 --
 -- Name: measure_generating_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX measure_generating_regulation ON public.measures_oplog USING btree (measure_generating_regulation_id);
+CREATE INDEX measure_generating_regulation ON measures_oplog USING btree (measure_generating_regulation_id);
 
 
 --
 -- Name: measure_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX measure_sid ON public.footnote_association_measures_oplog USING btree (measure_sid);
+CREATE INDEX measure_sid ON footnote_association_measures_oplog USING btree (measure_sid);
 
 
 --
 -- Name: measurement_unit_code_qualifier; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX measurement_unit_code_qualifier ON public.measurement_unit_abbreviations USING btree (measurement_unit_code, measurement_unit_qualifier);
+CREATE INDEX measurement_unit_code_qualifier ON measurement_unit_abbreviations USING btree (measurement_unit_code, measurement_unit_qualifier);
 
 
 --
 -- Name: measurement_unit_qualifier_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX measurement_unit_qualifier_code ON public.measure_condition_components_oplog USING btree (measurement_unit_qualifier_code);
+CREATE INDEX measurement_unit_qualifier_code ON measure_condition_components_oplog USING btree (measurement_unit_qualifier_code);
 
 
 --
 -- Name: measures_export_refund_nomenclature_sid_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX measures_export_refund_nomenclature_sid_index ON public.measures_oplog USING btree (export_refund_nomenclature_sid);
+CREATE INDEX measures_export_refund_nomenclature_sid_index ON measures_oplog USING btree (export_refund_nomenclature_sid);
 
 
 --
 -- Name: measures_goods_nomenclature_item_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX measures_goods_nomenclature_item_id_index ON public.measures_oplog USING btree (goods_nomenclature_item_id);
+CREATE INDEX measures_goods_nomenclature_item_id_index ON measures_oplog USING btree (goods_nomenclature_item_id);
 
 
 --
 -- Name: megao_meaexcgeoareopl_urededcaleaslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX megao_meaexcgeoareopl_urededcaleaslog_operation_date ON public.measure_excluded_geographical_areas_oplog USING btree (operation_date);
+CREATE INDEX megao_meaexcgeoareopl_urededcaleaslog_operation_date ON measure_excluded_geographical_areas_oplog USING btree (operation_date);
 
 
 --
 -- Name: mepo_monexcperopl_aryngeodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mepo_monexcperopl_aryngeodslog_operation_date ON public.monetary_exchange_periods_oplog USING btree (operation_date);
+CREATE INDEX mepo_monexcperopl_aryngeodslog_operation_date ON monetary_exchange_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: mero_monexcratopl_aryngeteslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mero_monexcratopl_aryngeteslog_operation_date ON public.monetary_exchange_rates_oplog USING btree (operation_date);
+CREATE INDEX mero_monexcratopl_aryngeteslog_operation_date ON monetary_exchange_rates_oplog USING btree (operation_date);
 
 
 --
 -- Name: meurs_adco_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meurs_adco_pk ON public.meursing_additional_codes_oplog USING btree (meursing_additional_code_sid);
+CREATE INDEX meurs_adco_pk ON meursing_additional_codes_oplog USING btree (meursing_additional_code_sid);
 
 
 --
 -- Name: meurs_head_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meurs_head_pk ON public.meursing_headings_oplog USING btree (meursing_table_plan_id, meursing_heading_number, row_column_code);
+CREATE INDEX meurs_head_pk ON meursing_headings_oplog USING btree (meursing_table_plan_id, meursing_heading_number, row_column_code);
 
 
 --
 -- Name: meurs_head_txt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meurs_head_txt_pk ON public.meursing_heading_texts_oplog USING btree (meursing_table_plan_id, meursing_heading_number, row_column_code);
+CREATE INDEX meurs_head_txt_pk ON meursing_heading_texts_oplog USING btree (meursing_table_plan_id, meursing_heading_number, row_column_code);
 
 
 --
 -- Name: meurs_subhead_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meurs_subhead_pk ON public.meursing_subheadings_oplog USING btree (meursing_table_plan_id, meursing_heading_number, row_column_code, subheading_sequence_number);
+CREATE INDEX meurs_subhead_pk ON meursing_subheadings_oplog USING btree (meursing_table_plan_id, meursing_heading_number, row_column_code, subheading_sequence_number);
 
 
 --
 -- Name: meurs_tbl_cell_comp_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meurs_tbl_cell_comp_pk ON public.meursing_table_cell_components_oplog USING btree (meursing_table_plan_id, heading_number, row_column_code, meursing_additional_code_sid);
+CREATE INDEX meurs_tbl_cell_comp_pk ON meursing_table_cell_components_oplog USING btree (meursing_table_plan_id, heading_number, row_column_code, meursing_additional_code_sid);
 
 
 --
 -- Name: meurs_tbl_plan_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX meurs_tbl_plan_pk ON public.meursing_table_plans_oplog USING btree (meursing_table_plan_id);
+CREATE INDEX meurs_tbl_plan_pk ON meursing_table_plans_oplog USING btree (meursing_table_plan_id);
 
 
 --
 -- Name: mho_meuheaopl_ingngslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mho_meuheaopl_ingngslog_operation_date ON public.meursing_headings_oplog USING btree (operation_date);
+CREATE INDEX mho_meuheaopl_ingngslog_operation_date ON meursing_headings_oplog USING btree (operation_date);
 
 
 --
 -- Name: mhto_meuheatexopl_ingingxtslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mhto_meuheatexopl_ingingxtslog_operation_date ON public.meursing_heading_texts_oplog USING btree (operation_date);
+CREATE INDEX mhto_meuheatexopl_ingingxtslog_operation_date ON meursing_heading_texts_oplog USING btree (operation_date);
 
 
 --
 -- Name: mo_meaopl_ntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mo_meaopl_ntslog_operation_date ON public.measurements_oplog USING btree (operation_date);
+CREATE INDEX mo_meaopl_ntslog_operation_date ON measurements_oplog USING btree (operation_date);
 
 
 --
 -- Name: mo_meaopl_reslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mo_meaopl_reslog_operation_date ON public.measures_oplog USING btree (operation_date);
+CREATE INDEX mo_meaopl_reslog_operation_date ON measures_oplog USING btree (operation_date);
 
 
 --
 -- Name: mod_reg_complete_abrogation_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mod_reg_complete_abrogation_regulation ON public.modification_regulations_oplog USING btree (complete_abrogation_regulation_id, complete_abrogation_regulation_role);
+CREATE INDEX mod_reg_complete_abrogation_regulation ON modification_regulations_oplog USING btree (complete_abrogation_regulation_id, complete_abrogation_regulation_role);
 
 
 --
 -- Name: mod_reg_explicit_abrogation_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mod_reg_explicit_abrogation_regulation ON public.modification_regulations_oplog USING btree (explicit_abrogation_regulation_id, explicit_abrogation_regulation_role);
+CREATE INDEX mod_reg_explicit_abrogation_regulation ON modification_regulations_oplog USING btree (explicit_abrogation_regulation_id, explicit_abrogation_regulation_role);
 
 
 --
 -- Name: mod_reg_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mod_reg_pk ON public.modification_regulations_oplog USING btree (modification_regulation_id, modification_regulation_role);
+CREATE INDEX mod_reg_pk ON modification_regulations_oplog USING btree (modification_regulation_id, modification_regulation_role);
 
 
 --
 -- Name: mon_exch_period_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mon_exch_period_pk ON public.monetary_exchange_periods_oplog USING btree (monetary_exchange_period_sid, parent_monetary_unit_code);
+CREATE INDEX mon_exch_period_pk ON monetary_exchange_periods_oplog USING btree (monetary_exchange_period_sid, parent_monetary_unit_code);
 
 
 --
 -- Name: mon_exch_rate_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mon_exch_rate_pk ON public.monetary_exchange_rates_oplog USING btree (monetary_exchange_period_sid, child_monetary_unit_code);
+CREATE INDEX mon_exch_rate_pk ON monetary_exchange_rates_oplog USING btree (monetary_exchange_period_sid, child_monetary_unit_code);
 
 
 --
 -- Name: mon_unit_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mon_unit_desc_pk ON public.monetary_unit_descriptions_oplog USING btree (monetary_unit_code);
+CREATE INDEX mon_unit_desc_pk ON monetary_unit_descriptions_oplog USING btree (monetary_unit_code);
 
 
 --
 -- Name: mon_unit_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mon_unit_pk ON public.monetary_units_oplog USING btree (monetary_unit_code, validity_start_date);
+CREATE INDEX mon_unit_pk ON monetary_units_oplog USING btree (monetary_unit_code, validity_start_date);
 
 
 --
 -- Name: mptso_meapartemstoopl_ureialaryopslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mptso_meapartemstoopl_ureialaryopslog_operation_date ON public.measure_partial_temporary_stops_oplog USING btree (operation_date);
+CREATE INDEX mptso_meapartemstoopl_ureialaryopslog_operation_date ON measure_partial_temporary_stops_oplog USING btree (operation_date);
 
 
 --
 -- Name: mro_modregopl_iononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mro_modregopl_iononslog_operation_date ON public.modification_regulations_oplog USING btree (operation_date);
+CREATE INDEX mro_modregopl_iononslog_operation_date ON modification_regulations_oplog USING btree (operation_date);
 
 
 --
 -- Name: mso_meusubopl_ingngslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mso_meusubopl_ingngslog_operation_date ON public.meursing_subheadings_oplog USING btree (operation_date);
+CREATE INDEX mso_meusubopl_ingngslog_operation_date ON meursing_subheadings_oplog USING btree (operation_date);
 
 
 --
 -- Name: mtcco_meutabcelcomopl_ingbleellntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mtcco_meutabcelcomopl_ingbleellntslog_operation_date ON public.meursing_table_cell_components_oplog USING btree (operation_date);
+CREATE INDEX mtcco_meutabcelcomopl_ingbleellntslog_operation_date ON meursing_table_cell_components_oplog USING btree (operation_date);
 
 
 --
 -- Name: mtdo_meatypdesopl_ureypeonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mtdo_meatypdesopl_ureypeonslog_operation_date ON public.measure_type_descriptions_oplog USING btree (operation_date);
+CREATE INDEX mtdo_meatypdesopl_ureypeonslog_operation_date ON measure_type_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: mto_meatypopl_urepeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mto_meatypopl_urepeslog_operation_date ON public.measure_types_oplog USING btree (operation_date);
+CREATE INDEX mto_meatypopl_urepeslog_operation_date ON measure_types_oplog USING btree (operation_date);
 
 
 --
 -- Name: mtpo_meutabplaopl_ingbleanslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mtpo_meutabplaopl_ingbleanslog_operation_date ON public.meursing_table_plans_oplog USING btree (operation_date);
+CREATE INDEX mtpo_meutabplaopl_ingbleanslog_operation_date ON meursing_table_plans_oplog USING btree (operation_date);
 
 
 --
 -- Name: mtsdo_meatypserdesopl_ureypeiesonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mtsdo_meatypserdesopl_ureypeiesonslog_operation_date ON public.measure_type_series_descriptions_oplog USING btree (operation_date);
+CREATE INDEX mtsdo_meatypserdesopl_ureypeiesonslog_operation_date ON measure_type_series_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: mtso_meatypseropl_ureypeieslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mtso_meatypseropl_ureypeieslog_operation_date ON public.measure_type_series_oplog USING btree (operation_date);
+CREATE INDEX mtso_meatypseropl_ureypeieslog_operation_date ON measure_type_series_oplog USING btree (operation_date);
 
 
 --
 -- Name: mudo_meaunidesopl_entnitonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mudo_meaunidesopl_entnitonslog_operation_date ON public.measurement_unit_descriptions_oplog USING btree (operation_date);
+CREATE INDEX mudo_meaunidesopl_entnitonslog_operation_date ON measurement_unit_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: mudo_monunidesopl_arynitonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mudo_monunidesopl_arynitonslog_operation_date ON public.monetary_unit_descriptions_oplog USING btree (operation_date);
+CREATE INDEX mudo_monunidesopl_arynitonslog_operation_date ON monetary_unit_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: muo_meauniopl_entitslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX muo_meauniopl_entitslog_operation_date ON public.measurement_units_oplog USING btree (operation_date);
+CREATE INDEX muo_meauniopl_entitslog_operation_date ON measurement_units_oplog USING btree (operation_date);
 
 
 --
 -- Name: muo_monuniopl_aryitslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX muo_monuniopl_aryitslog_operation_date ON public.monetary_units_oplog USING btree (operation_date);
+CREATE INDEX muo_monuniopl_aryitslog_operation_date ON monetary_units_oplog USING btree (operation_date);
 
 
 --
 -- Name: muqdo_meauniquadesopl_entnitieronslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX muqdo_meauniquadesopl_entnitieronslog_operation_date ON public.measurement_unit_qualifier_descriptions_oplog USING btree (operation_date);
+CREATE INDEX muqdo_meauniquadesopl_entnitieronslog_operation_date ON measurement_unit_qualifier_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: muqo_meauniquaopl_entniterslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX muqo_meauniquaopl_entniterslog_operation_date ON public.measurement_unit_qualifiers_oplog USING btree (operation_date);
+CREATE INDEX muqo_meauniquaopl_entniterslog_operation_date ON measurement_unit_qualifiers_oplog USING btree (operation_date);
 
 
 --
 -- Name: ngmo_nomgromemopl_ureoupipslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ngmo_nomgromemopl_ureoupipslog_operation_date ON public.nomenclature_group_memberships_oplog USING btree (operation_date);
+CREATE INDEX ngmo_nomgromemopl_ureoupipslog_operation_date ON nomenclature_group_memberships_oplog USING btree (operation_date);
 
 
 --
 -- Name: nom_grp_member_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX nom_grp_member_pk ON public.nomenclature_group_memberships_oplog USING btree (goods_nomenclature_sid, goods_nomenclature_group_id, goods_nomenclature_group_type, goods_nomenclature_item_id, validity_start_date);
+CREATE INDEX nom_grp_member_pk ON nomenclature_group_memberships_oplog USING btree (goods_nomenclature_sid, goods_nomenclature_group_id, goods_nomenclature_group_type, goods_nomenclature_item_id, validity_start_date);
 
 
 --
 -- Name: period_sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX period_sid ON public.additional_code_descriptions_oplog USING btree (additional_code_description_period_sid);
+CREATE INDEX period_sid ON additional_code_descriptions_oplog USING btree (additional_code_description_period_sid);
 
 
 --
 -- Name: prao_proregactopl_ioniononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX prao_proregactopl_ioniononslog_operation_date ON public.prorogation_regulation_actions_oplog USING btree (operation_date);
+CREATE INDEX prao_proregactopl_ioniononslog_operation_date ON prorogation_regulation_actions_oplog USING btree (operation_date);
 
 
 --
 -- Name: primary_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX primary_key ON public.geographical_areas_oplog USING btree (geographical_area_sid);
+CREATE INDEX primary_key ON geographical_areas_oplog USING btree (geographical_area_sid);
 
 
 --
 -- Name: pro_proregopl_iononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX pro_proregopl_iononslog_operation_date ON public.prorogation_regulations_oplog USING btree (operation_date);
+CREATE INDEX pro_proregopl_iononslog_operation_date ON prorogation_regulations_oplog USING btree (operation_date);
 
 
 --
 -- Name: prorog_reg_act_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX prorog_reg_act_pk ON public.prorogation_regulation_actions_oplog USING btree (prorogation_regulation_id, prorogation_regulation_role, prorogated_regulation_id, prorogated_regulation_role);
+CREATE INDEX prorog_reg_act_pk ON prorogation_regulation_actions_oplog USING btree (prorogation_regulation_id, prorogation_regulation_role, prorogated_regulation_id, prorogated_regulation_role);
 
 
 --
 -- Name: prorog_reg_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX prorog_reg_pk ON public.prorogation_regulations_oplog USING btree (prorogation_regulation_id, prorogation_regulation_role);
+CREATE INDEX prorog_reg_pk ON prorogation_regulations_oplog USING btree (prorogation_regulation_id, prorogation_regulation_role);
 
 
 --
 -- Name: qao_quoassopl_otaonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qao_quoassopl_otaonslog_operation_date ON public.quota_associations_oplog USING btree (operation_date);
+CREATE INDEX qao_quoassopl_otaonslog_operation_date ON quota_associations_oplog USING btree (operation_date);
 
 
 --
 -- Name: qbeo_quobaleveopl_otancentslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qbeo_quobaleveopl_otancentslog_operation_date ON public.quota_balance_events_oplog USING btree (operation_date);
+CREATE INDEX qbeo_quobaleveopl_otancentslog_operation_date ON quota_balance_events_oplog USING btree (operation_date);
 
 
 --
 -- Name: qbpo_quobloperopl_otaingodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qbpo_quobloperopl_otaingodslog_operation_date ON public.quota_blocking_periods_oplog USING btree (operation_date);
+CREATE INDEX qbpo_quobloperopl_otaingodslog_operation_date ON quota_blocking_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: qceo_quocrieveopl_otacalntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qceo_quocrieveopl_otacalntslog_operation_date ON public.quota_critical_events_oplog USING btree (operation_date);
+CREATE INDEX qceo_quocrieveopl_otacalntslog_operation_date ON quota_critical_events_oplog USING btree (operation_date);
 
 
 --
 -- Name: qdo_quodefopl_otaonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qdo_quodefopl_otaonslog_operation_date ON public.quota_definitions_oplog USING btree (operation_date);
+CREATE INDEX qdo_quodefopl_otaonslog_operation_date ON quota_definitions_oplog USING btree (operation_date);
 
 
 --
 -- Name: qeeo_quoexheveopl_otaionntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qeeo_quoexheveopl_otaionntslog_operation_date ON public.quota_exhaustion_events_oplog USING btree (operation_date);
+CREATE INDEX qeeo_quoexheveopl_otaionntslog_operation_date ON quota_exhaustion_events_oplog USING btree (operation_date);
 
 
 --
 -- Name: qono_quoordnumopl_otadererslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qono_quoordnumopl_otadererslog_operation_date ON public.quota_order_numbers_oplog USING btree (operation_date);
+CREATE INDEX qono_quoordnumopl_otadererslog_operation_date ON quota_order_numbers_oplog USING btree (operation_date);
 
 
 --
 -- Name: qonoeo_quoordnumoriexcopl_otaderberginonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qonoeo_quoordnumoriexcopl_otaderberginonslog_operation_date ON public.quota_order_number_origin_exclusions_oplog USING btree (operation_date);
+CREATE INDEX qonoeo_quoordnumoriexcopl_otaderberginonslog_operation_date ON quota_order_number_origin_exclusions_oplog USING btree (operation_date);
 
 
 --
 -- Name: qonoo_quoordnumoriopl_otaderberinslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qonoo_quoordnumoriopl_otaderberinslog_operation_date ON public.quota_order_number_origins_oplog USING btree (operation_date);
+CREATE INDEX qonoo_quoordnumoriopl_otaderberinslog_operation_date ON quota_order_number_origins_oplog USING btree (operation_date);
 
 
 --
 -- Name: qreo_quoreoeveopl_otaingntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qreo_quoreoeveopl_otaingntslog_operation_date ON public.quota_reopening_events_oplog USING btree (operation_date);
+CREATE INDEX qreo_quoreoeveopl_otaingntslog_operation_date ON quota_reopening_events_oplog USING btree (operation_date);
 
 
 --
 -- Name: qspo_quosusperopl_otaionodslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX qspo_quosusperopl_otaionodslog_operation_date ON public.quota_suspension_periods_oplog USING btree (operation_date);
+CREATE INDEX qspo_quosusperopl_otaionodslog_operation_date ON quota_suspension_periods_oplog USING btree (operation_date);
 
 
 --
 -- Name: queo_quounbeveopl_otaingntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX queo_quounbeveopl_otaingntslog_operation_date ON public.quota_unblocking_events_oplog USING btree (operation_date);
+CREATE INDEX queo_quounbeveopl_otaingntslog_operation_date ON quota_unblocking_events_oplog USING btree (operation_date);
 
 
 --
 -- Name: queo_quounseveopl_otaionntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX queo_quounseveopl_otaionntslog_operation_date ON public.quota_unsuspension_events_oplog USING btree (operation_date);
+CREATE INDEX queo_quounseveopl_otaionntslog_operation_date ON quota_unsuspension_events_oplog USING btree (operation_date);
 
 
 --
 -- Name: quota_assoc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_assoc_pk ON public.quota_associations_oplog USING btree (main_quota_definition_sid, sub_quota_definition_sid);
+CREATE INDEX quota_assoc_pk ON quota_associations_oplog USING btree (main_quota_definition_sid, sub_quota_definition_sid);
 
 
 --
 -- Name: quota_balance_evt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_balance_evt_pk ON public.quota_balance_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
+CREATE INDEX quota_balance_evt_pk ON quota_balance_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
 
 
 --
 -- Name: quota_block_period_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_block_period_pk ON public.quota_blocking_periods_oplog USING btree (quota_blocking_period_sid);
+CREATE INDEX quota_block_period_pk ON quota_blocking_periods_oplog USING btree (quota_blocking_period_sid);
 
 
 --
 -- Name: quota_crit_evt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_crit_evt_pk ON public.quota_critical_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
+CREATE INDEX quota_crit_evt_pk ON quota_critical_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
 
 
 --
 -- Name: quota_def_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_def_pk ON public.quota_definitions_oplog USING btree (quota_definition_sid);
+CREATE INDEX quota_def_pk ON quota_definitions_oplog USING btree (quota_definition_sid);
 
 
 --
 -- Name: quota_exhaus_evt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_exhaus_evt_pk ON public.quota_exhaustion_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
+CREATE INDEX quota_exhaus_evt_pk ON quota_exhaustion_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
 
 
 --
 -- Name: quota_ord_num_excl_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_ord_num_excl_pk ON public.quota_order_number_origin_exclusions_oplog USING btree (quota_order_number_origin_sid, excluded_geographical_area_sid);
+CREATE INDEX quota_ord_num_excl_pk ON quota_order_number_origin_exclusions_oplog USING btree (quota_order_number_origin_sid, excluded_geographical_area_sid);
 
 
 --
 -- Name: quota_ord_num_orig_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_ord_num_orig_pk ON public.quota_order_number_origins_oplog USING btree (quota_order_number_origin_sid);
+CREATE INDEX quota_ord_num_orig_pk ON quota_order_number_origins_oplog USING btree (quota_order_number_origin_sid);
 
 
 --
 -- Name: quota_ord_num_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_ord_num_pk ON public.quota_order_numbers_oplog USING btree (quota_order_number_sid);
+CREATE INDEX quota_ord_num_pk ON quota_order_numbers_oplog USING btree (quota_order_number_sid);
 
 
 --
 -- Name: quota_reopen_evt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_reopen_evt_pk ON public.quota_reopening_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
+CREATE INDEX quota_reopen_evt_pk ON quota_reopening_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
 
 
 --
 -- Name: quota_susp_period_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_susp_period_pk ON public.quota_suspension_periods_oplog USING btree (quota_suspension_period_sid);
+CREATE INDEX quota_susp_period_pk ON quota_suspension_periods_oplog USING btree (quota_suspension_period_sid);
 
 
 --
 -- Name: quota_unblock_evt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_unblock_evt_pk ON public.quota_unblocking_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
+CREATE INDEX quota_unblock_evt_pk ON quota_unblocking_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
 
 
 --
 -- Name: quota_unsusp_evt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quota_unsusp_evt_pk ON public.quota_unsuspension_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
+CREATE INDEX quota_unsusp_evt_pk ON quota_unsuspension_events_oplog USING btree (quota_definition_sid, occurrence_timestamp);
 
 
 --
 -- Name: reg_grp_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX reg_grp_desc_pk ON public.regulation_group_descriptions_oplog USING btree (regulation_group_id);
+CREATE INDEX reg_grp_desc_pk ON regulation_group_descriptions_oplog USING btree (regulation_group_id);
 
 
 --
 -- Name: reg_grp_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX reg_grp_pk ON public.regulation_groups_oplog USING btree (regulation_group_id);
+CREATE INDEX reg_grp_pk ON regulation_groups_oplog USING btree (regulation_group_id);
 
 
 --
 -- Name: reg_role_type_desc_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX reg_role_type_desc_pk ON public.regulation_role_type_descriptions_oplog USING btree (regulation_role_type_id);
+CREATE INDEX reg_role_type_desc_pk ON regulation_role_type_descriptions_oplog USING btree (regulation_role_type_id);
 
 
 --
 -- Name: reg_role_type_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX reg_role_type_pk ON public.regulation_role_types_oplog USING btree (regulation_role_type_id);
+CREATE INDEX reg_role_type_pk ON regulation_role_types_oplog USING btree (regulation_role_type_id);
 
 
 --
 -- Name: rgdo_reggrodesopl_ionouponslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX rgdo_reggrodesopl_ionouponslog_operation_date ON public.regulation_group_descriptions_oplog USING btree (operation_date);
+CREATE INDEX rgdo_reggrodesopl_ionouponslog_operation_date ON regulation_group_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: rgo_reggroopl_ionupslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX rgo_reggroopl_ionupslog_operation_date ON public.regulation_groups_oplog USING btree (operation_date);
+CREATE INDEX rgo_reggroopl_ionupslog_operation_date ON regulation_groups_oplog USING btree (operation_date);
 
 
 --
 -- Name: rr_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX rr_pk ON public.regulation_replacements_oplog USING btree (replaced_regulation_role, replaced_regulation_id);
+CREATE INDEX rr_pk ON regulation_replacements_oplog USING btree (replaced_regulation_role, replaced_regulation_id);
 
 
 --
 -- Name: rro_regrepopl_ionntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX rro_regrepopl_ionntslog_operation_date ON public.regulation_replacements_oplog USING btree (operation_date);
+CREATE INDEX rro_regrepopl_ionntslog_operation_date ON regulation_replacements_oplog USING btree (operation_date);
 
 
 --
 -- Name: rrtdo_regroltypdesopl_ionoleypeonslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX rrtdo_regroltypdesopl_ionoleypeonslog_operation_date ON public.regulation_role_type_descriptions_oplog USING btree (operation_date);
+CREATE INDEX rrtdo_regroltypdesopl_ionoleypeonslog_operation_date ON regulation_role_type_descriptions_oplog USING btree (operation_date);
 
 
 --
 -- Name: rrto_regroltypopl_ionolepeslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX rrto_regroltypopl_ionolepeslog_operation_date ON public.regulation_role_types_oplog USING btree (operation_date);
+CREATE INDEX rrto_regroltypopl_ionolepeslog_operation_date ON regulation_role_types_oplog USING btree (operation_date);
 
 
 --
 -- Name: search_references_referenced_id_referenced_class_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX search_references_referenced_id_referenced_class_index ON public.search_references USING btree (referenced_id, referenced_class);
+CREATE INDEX search_references_referenced_id_referenced_class_index ON search_references USING btree (referenced_id, referenced_class);
 
 
 --
 -- Name: section_notes_section_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX section_notes_section_id_index ON public.section_notes USING btree (section_id);
+CREATE INDEX section_notes_section_id_index ON section_notes USING btree (section_id);
 
 
 --
 -- Name: sid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX sid ON public.additional_code_descriptions_oplog USING btree (additional_code_sid);
+CREATE INDEX sid ON additional_code_descriptions_oplog USING btree (additional_code_sid);
 
 
 --
 -- Name: tariff_update_conformance_errors_tariff_update_filename_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tariff_update_conformance_errors_tariff_update_filename_index ON public.tariff_update_conformance_errors USING btree (tariff_update_filename);
+CREATE INDEX tariff_update_conformance_errors_tariff_update_filename_index ON tariff_update_conformance_errors USING btree (tariff_update_filename);
 
 
 --
 -- Name: tbl_code_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tbl_code_index ON public.chief_tbl9 USING btree (tbl_code);
+CREATE INDEX tbl_code_index ON chief_tbl9 USING btree (tbl_code);
 
 
 --
 -- Name: tbl_type_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tbl_type_index ON public.chief_tbl9 USING btree (tbl_type);
+CREATE INDEX tbl_type_index ON chief_tbl9 USING btree (tbl_type);
 
 
 --
 -- Name: tco_tracomopl_ionntslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tco_tracomopl_ionntslog_operation_date ON public.transmission_comments_oplog USING btree (operation_date);
+CREATE INDEX tco_tracomopl_ionntslog_operation_date ON transmission_comments_oplog USING btree (operation_date);
 
 
 --
 -- Name: trans_comm_pk; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX trans_comm_pk ON public.transmission_comments_oplog USING btree (comment_sid, language_id);
+CREATE INDEX trans_comm_pk ON transmission_comments_oplog USING btree (comment_sid, language_id);
 
 
 --
 -- Name: type_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX type_id ON public.additional_code_descriptions_oplog USING btree (additional_code_type_id);
+CREATE INDEX type_id ON additional_code_descriptions_oplog USING btree (additional_code_type_id);
 
 
 --
 -- Name: uoq_code_cdu2_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX uoq_code_cdu2_index ON public.chief_comm USING btree (uoq_code_cdu2);
+CREATE INDEX uoq_code_cdu2_index ON chief_comm USING btree (uoq_code_cdu2);
 
 
 --
 -- Name: uoq_code_cdu3_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX uoq_code_cdu3_index ON public.chief_comm USING btree (uoq_code_cdu3);
+CREATE INDEX uoq_code_cdu3_index ON chief_comm USING btree (uoq_code_cdu3);
 
 
 --
 -- Name: user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_id ON public.rollbacks USING btree (user_id);
+CREATE INDEX user_id ON rollbacks USING btree (user_id);
 
 
 --
@@ -11550,6 +11582,52 @@ CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
 --
 
 SET search_path TO "$user", public;
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180305221434_remove_filename_from_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224610_add_relevant_date_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224900_add_issue_date_in_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180328135527_create_node_envelopes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144030_create_node_transactions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144132_create_node_messages.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180402091320_remove_type_from_xml_nodes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180402142849_add_record_to_node_messages.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180402154232_change_record_id_to_record_filter_ops_in_node_messages.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180406152439_remove_xml_nodes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180410100532_create_db_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180417135500_change_relevant_date_in_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180417141804_change_clear_date_in_db_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180423062256_create_regulation_documents.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180423084717_add_added_by_id_and_added_at_to_managing_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180423085320_update_regulation_related_bd_views.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180425165312_add_national_flag_to_regulation_related_db_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171028_add_national_flag_to_regulation_documents.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171418_add_national_flag_to_measure_related_db_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180504143240_add_added_by_id_and_added_at_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180505084755_add_added_at_and_added_by_id_to_footnotes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180505091501_add_added_at_and_added_by_to_footnote_association_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180505092846_add_added_at_and_added_by_id_to_footnote_descriptions.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180509152938_add_regulations_search_pg_view.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133210_add_base_64_data_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133707_add_zip_data_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180516164658_add_meta_data_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180521132612_add_status_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180521160953_add_some_tracking_fields_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180521170635_create_measure_groups.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180521171648_add_measure_group_id_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180522084958_add_searchable_data_to_measures_oplog.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180607071508_add_searchable_data_updated_at_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180618144957_create_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180618150316_remove_measure_groups.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180619082412_add_some_fields_to_workbasket.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083622_create_workbaskets_events.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083954_rename_title_to_event_type_in_workbaskets_events.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626120716_add_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('1342519058_create_schema.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20120726092749_duty_amount_expressed_in_float.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20120726162358_measure_sid_to_be_unsigned.rb');
@@ -11602,52 +11680,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20130220094325_add_index_f
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221132447_make_effective_end_dates_timestamps.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221140444_change_export_refund_nomenclature_indent_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130417135357_add_users_table.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180305221434_remove_filename_from_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224610_add_relevant_date_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180305224900_add_issue_date_in_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180328135527_create_node_envelopes.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144030_create_node_transactions.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180328144132_create_node_messages.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180402091320_remove_type_from_xml_nodes.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180402142849_add_record_to_node_messages.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180402154232_change_record_id_to_record_filter_ops_in_node_messages.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180406152439_remove_xml_nodes.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180410100532_create_db_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180417135500_change_relevant_date_in_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180417141804_change_clear_date_in_db_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180423062256_create_regulation_documents.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180423084717_add_added_by_id_and_added_at_to_managing_tables.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180423085320_update_regulation_related_bd_views.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180425165312_add_national_flag_to_regulation_related_db_tables.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171028_add_national_flag_to_regulation_documents.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180425171418_add_national_flag_to_measure_related_db_tables.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180504143240_add_added_by_id_and_added_at_to_measures.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180505084755_add_added_at_and_added_by_id_to_footnotes.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180505091501_add_added_at_and_added_by_to_footnote_association_measures.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180505092846_add_added_at_and_added_by_id_to_footnote_descriptions.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180509152938_add_regulations_search_pg_view.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133210_add_base_64_data_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180516133707_add_zip_data_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180516164658_add_meta_data_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180521132612_add_status_to_measures.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180521160953_add_some_tracking_fields_to_measures.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180521170635_create_measure_groups.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180521171648_add_measure_group_id_to_measures.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180522084958_add_searchable_data_to_measures_oplog.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180607071508_add_searchable_data_updated_at_to_measures.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180618144957_create_workbaskets.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180618150316_remove_measure_groups.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180619082412_add_some_fields_to_workbasket.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083622_create_workbaskets_events.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180619083954_rename_title_to_event_type_in_workbaskets_events.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180626120716_add_workbasket_items.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to_workbasket_items.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
@@ -11700,8 +11732,8 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180905172706_remove_no_l
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180906092926_migrate_specific_fields_from_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180907162945_add_original_measure_sid_to_measures_oplog.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbasket_to_xml_export_files.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');

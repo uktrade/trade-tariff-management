@@ -1,0 +1,45 @@
+<script type="text/x-template" id="remove-additional-codes-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Remove additional codes from workbasket
+    </template>
+
+    <div v-if="records.length > 1">
+      <warning-message>
+        You are about to remove {{records.length}} additional codes.
+      </warning-message>
+    </div>
+
+    <info-message>
+      <p>
+        This action will discard any changes made to the selected additional codes and release them from the workbasket (this makes them available for editing separately, e.g. by another user or in a different workbasket).
+      </p>
+
+      <p v-if="selectedAllRecords">
+        Your selection contains all the additional codes in this workbasket. Therefore the workbasket will also be discarded (this does not delete any additional codes from the system).
+      </p>
+    </info-message>
+
+    <p>
+      <strong>
+        Are you sure you want to remove {{records.length}} additional codes<span v-if="selectedAllRecords"> and discard this workbasket</span>?
+      </strong>
+    </p>
+
+    <p v-if="!removingRecords && submissionErrors" class="alert--error">
+      {{submissionErrors}}
+    </p>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="confirmRemove" :disabled="removingRecords">
+        Yes - remove additional codes
+      </button>
+      <span class="loading-spinner-wrapper" v-if="removingRecords">
+        <%= render "shared/bulks/loading_spinner", message: "Removing additional codes..." %>
+      </span>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose" :disabled="removingRecords">
+        No - cancel
+      </a>
+    </div>
+  </pop-up>
+</script>
