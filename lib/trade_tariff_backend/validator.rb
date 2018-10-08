@@ -22,7 +22,7 @@ module TradeTariffBackend
       }.each { |validation|
         unless validation.valid?(record)
           message = if validation.validation_options[:extend_message] == true
-                      validation.extend_error_message(record)
+                      [validation.to_s, validation.extend_error_message(record)].compact.join(" ")
                     else
                       validation.to_s
                     end

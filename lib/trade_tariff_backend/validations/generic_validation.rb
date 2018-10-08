@@ -46,10 +46,17 @@ module TradeTariffBackend
       end
 
       def extend_error_message(record)
-        # WIP
-        association = validation_options[:of]
+        association_key = validation_options[:of]
 
-        "#{description} (#{association}: #{record.send(association)&.validity_start_date&.strftime('%d/%m/%Y')} - #{record.send(association)&.validity_end_date&.strftime('%d/%m/%Y').inspect})"
+        if association_key
+          association = record.send(association_key)
+
+          primary_key = association.send(:primary_key)
+          primary_key_value = association.send(primary_key)
+          validity_period = association.send(:own_validity_period)
+
+          "(#{association_key}-#{primary_key_value}: [#{validity_period}])"
+        end
       end
     end
   end
