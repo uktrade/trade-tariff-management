@@ -1,12 +1,6 @@
 module AdditionalCodes
   class BulkSaver
 
-    VALIDATING_OPS = [
-      "validity_start_date",
-      "validity_end_date",
-      "description"
-    ]
-
     attr_accessor :current_admin,
                   :collection_ops,
                   :errors_collection,
@@ -72,15 +66,14 @@ module AdditionalCodes
             item.validation_errors = [].to_json
 
           else
-            errors = item.validate_measure!(additional_code_params)
+            errors = item.validate!(additional_code_params)
 
             if errors.present?
-              errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
-              @errors_collection[
-                additional_code_params[:measure_sid].to_s
-              ] = errored_columns
-
-              item.validation_errors = errored_columns.to_json
+              # errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
+              # @errors_collection[
+              #   additional_code_params[:additional_code_sid].to_s
+              # ] = errored_columns
+              # item.validation_errors = errored_columns.to_json
             end
           end
 
