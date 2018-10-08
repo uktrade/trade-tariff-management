@@ -1,6 +1,7 @@
 class MeasurementUnit < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include OwnValidityPeriod
 
   plugin :oplog, primary_key: :measurement_unit_code
   plugin :time_machine
