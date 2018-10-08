@@ -1,7 +1,7 @@
 class Ti
   class << self
     def run(measure_sid)
-      DB.transaction(rollback: :always) do
+      Sequel::Model.db.transaction(rollback: :always) do
         measure = Measure.new
 
         measure.measure_sid = measure_sid
@@ -13,15 +13,14 @@ class Ti
         measure.goods_nomenclature_item_id = "3802900011"
         measure.goods_nomenclature_sid = 96982
 
-        measure.validity_start_date = "08/11/2018".to_date
-        measure.validity_end_date = "31/11/2018".to_date
+        measure.validity_start_date = 1.months.from_now
+        measure.validity_end_date = 2.months.from_now
 
         measure.measure_generating_regulation_role = 4
         measure.measure_generating_regulation_id = "C1602001"
 
         measure.reduction_indicator = 1
 
-        measure.approved_flag = true
         measure.stopped_flag = false
         measure.national = true
         measure.save
