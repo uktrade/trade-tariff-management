@@ -1,0 +1,139 @@
+<script type="text/x-template" id="change-additional-codes-validity-period-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Change validity period
+    </template>
+
+    <div v-if="records.length > 1">
+      <warning-message>
+        You are bulk-changing {{records.length}} additional codes. Please check your inputs carefully!
+      </warning-message>
+    </div>
+
+    <div class="error-summary" role="alert" aria-labelledby="validity-period-error-summary-heading" tabindex="-1" v-if="errorSummary.length > 0">
+
+      <h2 class="heading-medium error-summary-heading" id="validity-period-error-summary-heading">
+        Error
+      </h2>
+
+      <p>
+        You cannot confirm the changes yet because you have not entered the minimum required data.
+      </p>
+
+      <p>
+        See individual fields for details.
+      </p>
+    </div>
+
+    <fieldset>
+      <legend>
+        <h4 class='heading-small'>Start date</h4>
+      </legend>
+
+      <div v-if="sameStartDate">
+        <info-message>
+          The selected codes currently start on {{earliestStartDate}}
+          <br />
+          This will be changed to the start date you select below.
+        </info-message>
+      </div>
+
+      <div v-if="!sameStartDate">
+        <info-message>
+          <p>
+            The selection currently contains more than one start date.
+            These will all be replaced by the start date you select below. Leave this blank to retain the existing start dates. Currently:
+          </p>
+
+          <p>
+            The earliest start date is {{earliestStartDate}}
+            <br>
+            The latest start date is {{latestStartDate}}
+          </p>
+        </info-message>
+      </div>
+
+      <label class="form-label">
+        <span class="form-hint">
+          This is the start of the codes' validity period.
+          This will be delayed for any codes that are not approved in time.
+        </span>
+      </label>
+
+      <date-select :value.sync="startDate"></date-select>
+
+    </fieldset>
+
+    <br>
+
+    <fieldset>
+      <legend>
+        <h4 class='heading-small'>End date</h4>
+      </legend>
+
+      <div v-if="sameEndDate && openEndedRecords != records.length">
+        <info-message>
+          The selected codes currently end on {{earliestEndDate}}
+          <br />
+          This will be changed to the end date you select below.
+        </info-message>
+      </div>
+
+      <div v-if="sameEndDate && openEndedRecords == records.length">
+        <info-message>
+          The selected codes currently are all open-ended.
+          <br />
+          This will be changed to the end date you select below.
+        </info-message>
+      </div>
+
+      <div v-if="!sameEndDate">
+        <info-message>
+          <p>
+            The selection currently contains more than one end date.
+            These will all be replaced by the end date you select below. Leave this blank to retain the existing end dates. Currently:
+          </p>
+
+          <p>
+            The earliest end date is {{earliestEndDate}}
+            <br>
+            The latest end date is {{latestEndDate}}
+            <br>
+            <span v-if="openEndedRecords === 1">
+              {{openEndedRecords}} code is open-ended
+            </span>
+            <span v-if="openEndedRecords > 1">
+              {{openEndedRecords}} codes are open-ended
+            </span>
+          </p>
+        </info-message>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span class="form-hint">
+            This is the end of the codes' validity period. This may be open-ended.
+          </span>
+        </label>
+
+        <date-select :value.sync="endDate" :disabled="makeOpenEnded"></date-select>
+      </div>
+
+      <div class="form-group" v-if="showMakeOpenEnded">
+        <div class="multiple-choice">
+          <input id="make-open-ended" name="open_ended" type="checkbox" v-model="makeOpenEnded">
+          <label for="make-open-ended">make open-ended (remove end-date)</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="confirmChanges" :disabled="disableSubmit">
+        Update selected additional codes
+      </button>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>

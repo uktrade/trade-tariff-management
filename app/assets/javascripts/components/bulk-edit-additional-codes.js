@@ -20,9 +20,9 @@ $(document).ready(function() {
         columns: [
           {enabled: true, title: "Type", field: "type_id", sortable: true, type: "string" },
           {enabled: true, title: "Code", field: "additional_code", sortable: true, type: "string" },
-          {enabled: true, title: "Description", field: "description", sortable: true, type: "string" },
-          {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date" },
-          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date" },
+          {enabled: true, title: "Description", field: "description", sortable: true, type: "string", changeProp: "description" },
+          {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },
+          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date", changeProp: "validity_end_date" },
           {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "string" },
           {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
@@ -119,7 +119,13 @@ $(document).ready(function() {
         });
       },
       recordsForTable: function() {
-        return this.records;
+        return this.records.map(function(record) {
+          record.validity_end_date = record.validity_end_date || "-";
+          record.description = record.description || "-";
+          record.status = record.status || "-";
+
+          return record;
+        });
       }
     },
     methods: {
@@ -253,7 +259,7 @@ $(document).ready(function() {
         BulkEditOfMeasuresSaveActions.sendSaveRequest(mode);
       },
       recordsUpdated: function() {
-        DB.insertOrReplaceBulk(this.search_code, this.records);
+        DB.insertOrReplaceAdditionalCodesBulk(this.search_code, this.records);
       },
       recordsDeleted: function(deletedRecords){
         var self = this;
@@ -292,7 +298,7 @@ $(document).ready(function() {
         });
         this.recordsUpdated();
       },
-      allMeasuresRemoved: function() {
+      allRecordsRemoved: function() {
         DB.destroyAdditionalCodesBulk(this.search_code);
       },
       onSortByChange: function(val) {

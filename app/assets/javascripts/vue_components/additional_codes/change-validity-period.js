@@ -21,16 +21,16 @@ Vue.component("change-additional-codes-validity-period-popup", {
   mounted: function() {
     var self = this;
 
-    var startDates = this.measures.map(function(measure) {
-      return moment(measure.validity_start_date, "DD MMM YYYY", true);
+    var startDates = this.records.map(function(record) {
+      return moment(record.validity_start_date, "DD MMM YYYY", true);
     });
 
     var endDates = [];
     this.openEndedMeasures = 0;
 
-    this.measures.forEach(function(measure) {
-      if (measure.validity_end_date && measure.validity_end_date != "-") {
-        endDates.push(moment(measure.validity_end_date + " 12:00:00", "DD MMM YYYY HH:mm:ss", true));
+    this.records.forEach(function(record) {
+      if (record.validity_end_date && record.validity_end_date != "-") {
+        endDates.push(moment(record.validity_end_date + " 12:00:00", "DD MMM YYYY HH:mm:ss", true));
       } else {
         self.openEndedMeasures += 1;
       }
@@ -99,74 +99,44 @@ Vue.component("change-additional-codes-validity-period-popup", {
         return;
       }
 
-      this.measures.forEach(function(measure) {
+      this.records.forEach(function(record) {
         if (startDate) {
-          if (measure.validity_start_date != newStartDate) {
-            if (measure.changes.indexOf("validity_start_date") === -1) {
-              measure.changes.push("validity_start_date");
+          if (record.validity_start_date != newStartDate) {
+            if (record.changes.indexOf("validity_start_date") === -1) {
+              record.changes.push("validity_start_date");
             }
 
-            measure.validity_start_date = newStartDate;
+            record.validity_start_date = newStartDate;
           }
         }
 
-        if (makeOpenEnded && measure.validity_end_date) {
-          if (measure.changes.indexOf("validity_end_date") === -1) {
-            measure.changes.push("validity_end_date");
+        if (makeOpenEnded && record.validity_end_date) {
+          if (record.changes.indexOf("validity_end_date") === -1) {
+            record.changes.push("validity_end_date");
           }
 
-          measure.validity_end_date = null;
-        } else if (endDate && newEndDate != measure.validity_end_date) {
-          if (!measure.validity_end_date || measure.validity_end_date == "-") {
-            if (this.regulation_id) {
-              measure.changes.push("justification_regulation");
-              measure.justification_regulation_id = this.regulation_id;
-              measure.justification_regulation_role = this.regulation_role;
-              measure.justification_regulation = this.regulation;
-            } else if (window.all_settings.regulation_id) {
-              measure.changes.push("justification_regulation");
-              measure.justification_regulation_id = window.all_settings.regulation_id;
-              measure.justification_regulation_role = window.all_settings.regulation_role;
-              measure.justification_regulation = window.all_settings.regulation;
+          record.validity_end_date = null;
+        } else if (endDate && newEndDate != record.validity_end_date) {
+          record.validity_end_date = newEndDate;
 
-            }
-          }
-
-          measure.validity_end_date = newEndDate;
-
-          if (measure.changes.indexOf("validity_end_date") === -1) {
-            measure.changes.push("validity_end_date");
+          if (record.changes.indexOf("validity_end_date") === -1) {
+            record.changes.push("validity_end_date");
           }
         }
 
       });
 
-      this.$emit("measures-updated");
+      this.$emit("records-updated");
       this.onClose();
     },
     triggerClose: function() {
       this.onClose();
-    },
-    regulationSelected: function(obj) {
-      this.regulation_id = obj.regulation_id;
-      this.regulation_role = obj.role;
-      this.regulation = obj;
     }
   },
   computed: {
     showMakeOpenEnded: function() {
-      return any(this.measures, function(measure) {
-        return measure.validity_end_date && measure.validity_end_date != "-";
-      });
-    },
-    showJustificationRegulation: function() {
-      var endDate = this.endDate;
-      if (!endDate || moment(endDate, "DD/MM/YYYY", true).isValid() == false) {
-        return false;
-      }
-
-      return any(this.measures, function(measure) {
-        return !measure.validity_end_date || measure.validity_end_date == "-";
+      return any(this.records, function(record) {
+        return record.validity_end_date && record.validity_end_date != "-";
       });
     }
   },
@@ -174,11 +144,6 @@ Vue.component("change-additional-codes-validity-period-popup", {
     makeOpenEnded: function(val) {
       if (val) {
         this.endDate = null;
-      }
-    },
-    regulation_id: function(val) {
-      if (val && this.errors['regulation_id']) {
-        this.clearErrors();
       }
     }
   }
