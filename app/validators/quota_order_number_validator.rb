@@ -72,28 +72,40 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
     end
   end
 
-  validation :ON8, 'The validity period of the quota order number must span the validity period of the referencing quota definition.' do |record|
-    # validates :validity_date_span, of: :quota_definition # won't work
-    if record.quota_definition.present?
-      (
-        record.validity_start_date <= record.quota_definition.validity_start_date
-      ) && (
-        ( record.validity_end_date.blank? && record.quota_definition.validity_end_date.blank? ) ||
-        ( record.validity_end_date.present? && record.quota_definition.validity_end_date.present? && (record.validity_end_date >= record.quota_definition.validity_end_date) )
-      )
-    end
-  end
+  #
+  # NEED_TO_CHECK
+  #
+  # Need backend rework on that
+  #
+  # validation :ON8, 'The validity period of the quota order number must span the validity period of the referencing quota definition.' do |record|
+  #   # validates :validity_date_span, of: :quota_definition # won't work
+  #   if record.quota_definition.present?
+  #     (
+  #       record.validity_start_date <= record.quota_definition.validity_start_date
+  #     ) && (
+  #       ( record.validity_end_date.blank? && record.quota_definition.validity_end_date.blank? ) ||
+  #       ( record.validity_end_date.present? && record.quota_definition.validity_end_date.present? && (record.validity_end_date >= record.quota_definition.validity_end_date) )
+  #     )
+  #   end
+  # end
 
-  validation :ON9, 'When a quota order number is used in a measure then the validity period of the quota order number must span the validity period of the measure. This rule is only applicable for measure with start date after 31/12/2007.' do |record|
-    if record.measure.present? && record.measure.validity_start_date.to_date > Date.new(2007,12,31)
-      (
-        record.validity_start_date <= record.measure.validity_start_date
-      ) && (
-        ( record.validity_end_date.blank? && record.measure.validity_end_date.blank? ) ||
-        ( record.validity_end_date.present? && record.measure.validity_end_date.present? && (record.validity_end_date >= record.measure.validity_end_date) )
-      )
-    end
-  end
+  #
+  # NEED_TO_CHECK
+  #
+  # Sequel::DatabaseError (PG::UndefinedColumn: ERROR:  column "effective_start_date" does not exist
+  # LINE 1: ...WHERE (("measures"."ordernumber" = '099999') AND ("effective...
+  #
+  #
+  # validation :ON9, 'When a quota order number is used in a measure then the validity period of the quota order number must span the validity period of the measure. This rule is only applicable for measure with start date after 31/12/2007.' do |record|
+  #   if record.measure.present? && record.measure.validity_start_date.to_date > Date.new(2007,12,31)
+  #     (
+  #       record.validity_start_date <= record.measure.validity_start_date
+  #     ) && (
+  #       ( record.validity_end_date.blank? && record.measure.validity_end_date.blank? ) ||
+  #       ( record.validity_end_date.present? && record.measure.validity_end_date.present? && (record.validity_end_date >= record.measure.validity_end_date) )
+  #     )
+  #   end
+  # end
 
   validation :ON11, 'The quota order number cannot be deleted if it is used in a measure. This rule is only applicable for measure with start date after 31/12/2007.', on: [:destroy] do |record|
     record.measure.blank? || record.measure.validity_start_date.to_date <= Date.new(2007,12,31)

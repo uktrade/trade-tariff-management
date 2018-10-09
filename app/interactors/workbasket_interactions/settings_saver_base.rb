@@ -57,6 +57,7 @@ module WorkbasketInteractions
     end
 
     def valid?
+      @measure_sids = []
       check_required_params!
 
       if candidates.present?
@@ -286,6 +287,10 @@ module WorkbasketInteractions
           if measure.measure_type_id.present?
             measure_type = MeasureType.where(measure_type_id: measure.measure_type_id).first
             measure.measure_type = measure_type
+          end
+
+          if @order_number.present?
+            measure.quota_order_number = @order_number
           end
 
           if @persist.present?

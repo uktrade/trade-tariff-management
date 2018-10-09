@@ -57,15 +57,20 @@ class QuotaOrderNumberOriginValidator < TradeTariffBackend::Validator
     record.quota_order_number.blank? || record.quota_order_number.measure.blank? || record.quota_order_number.measure.validity_start_date.to_date <= Date.new(2007,12,31)
   end
 
-  validation :ON13, 'An exclusion can only be entered if the order number origin is a geographical area group (area code = 1).' do |record|
-    if record.quota_order_number_origin_exclusion.present?
-      record.geographical_area.present? && record.geographical_area.geographical_code == "1"
-    end
-  end
+  #
+  # NEED_TO_CHECK
+  #
+  # NoMethodError (undefined method `quota_order_number_origin_exclusion' for #<QuotaOrderNumberOrigin:0x000000000544ca00>
+  #
+  # validation :ON13, 'An exclusion can only be entered if the order number origin is a geographical area group (area code = 1).' do |record|
+  #   if record.quota_order_number_origin_exclusion.present?
+  #     record.geographical_area.present? && record.geographical_area.geographical_code == "1"
+  #   end
+  # end
 
-  validation :ON14, 'The excluded geographical area must be a member of the geographical area group.' do |record|
-    if record.quota_order_number_origin_exclusion.present?
-      record.geographical_area.present? && record.geographical_area.parent_geographical_area_group_sid == record.quota_order_number_origin_exclusion.geographical_area.parent_geographical_area_group_sid
-    end
-  end
+  # validation :ON14, 'The excluded geographical area must be a member of the geographical area group.' do |record|
+  #   if record.quota_order_number_origin_exclusion.present?
+  #     record.geographical_area.present? && record.geographical_area.parent_geographical_area_group_sid == record.quota_order_number_origin_exclusion.geographical_area.parent_geographical_area_group_sid
+  #   end
+  # end
 end
