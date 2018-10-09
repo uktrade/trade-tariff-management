@@ -15,6 +15,7 @@ module WorkbasketServices
           set_primary_key(record)
 
           record.measure = measure
+          record.geographical_area = area
         end
     end
   end
