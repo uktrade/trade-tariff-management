@@ -38,7 +38,12 @@ module WorkbasketValueObjects
             sid = record.class.max(p_key).to_i + 1
           end
           sid += extra_increment_value if extra_increment_value.present?
-          sid += rand(1000)
+
+          if sid.is_a?(String)
+            sid = (sid.to_i + rand(100).to_i).to_s
+          else
+            sid += rand(1000)
+          end
 
           record.public_send("#{p_key}=", sid)
         end

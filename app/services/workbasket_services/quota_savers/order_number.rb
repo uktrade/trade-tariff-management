@@ -116,6 +116,8 @@ module WorkbasketServices
             validity_start_date: first_period_start_date
           )
 
+          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(@order_number).assign!
+
           set_system_data(order_number)
         end
 

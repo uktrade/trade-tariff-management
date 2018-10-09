@@ -389,19 +389,25 @@ class MeasureValidator < TradeTariffBackend::Validator
       validates :validity_date_span, of: :order_number
     end
 
-  validation :ME117,
-    %{When a measure has a quota measure type then rhe origin must exist as a quota order number origin.
-      This rule is only applicable for measures with start date after 31/12/2007. Only origins for quota
-      order numbers managed by the first come first served principle are in scope; these order number are
-      starting with '09'; except order numbers starting with '094'},
-    on: [:create, :update],
-    if: ->(record) {
-      ( record.validity_start_date > Date.new(2007,12,31) ) && (
-        record.ordernumber.present? && record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094"
-      )
-    } do |record|
-      record.quota_order_number.present? && record.quota_order_number.quota_order_number_origin.present?
-    end
+  #
+  # NEED_TO_CHECK
+  #
+  # Would not work in Create Quota as here can be multiple origins.
+  # Need backend rework
+  #
+  # validation :ME117,
+  #   %{When a measure has a quota measure type then rhe origin must exist as a quota order number origin.
+  #     This rule is only applicable for measures with start date after 31/12/2007. Only origins for quota
+  #     order numbers managed by the first come first served principle are in scope; these order number are
+  #     starting with '09'; except order numbers starting with '094'},
+  #   on: [:create, :update],
+  #   if: ->(record) {
+  #     ( record.validity_start_date > Date.new(2007,12,31) ) && (
+  #       record.ordernumber.present? && record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094"
+  #     )
+  #   } do |record|
+  #     record.quota_order_number.present? && record.quota_order_number.quota_order_number_origin.present?
+  #   end
 
   validation :ME118,
     %(When a quota order number is used in a measure then the validity period of the quota order number must
