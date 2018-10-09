@@ -21,7 +21,7 @@
 
       <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item[primaryKey]" :data-record-sid="item[primaryKey]" v-for="(item, index) in sorted">
         <div class="table__column select-all-column" v-if="disableSelection !== true">
-          <input type="radio" name="records[]" :value="item[primaryKey]" :checked="checked[item[primaryKey]]" @change="sendCheckedTrigger" />
+          <input type="checkbox" name="records[]" :value="item[primaryKey]" :checked="checked[item[primaryKey]]" @change="sendCheckedTrigger" />
         </div>
         <div class="table__column select-all-column" v-if="singleSelection === true">
           <input type="radio" name="selected_record" :value="item[primaryKey]" :checked="selectedItem === item[primaryKey]" @change="sendCheckedTrigger" />
