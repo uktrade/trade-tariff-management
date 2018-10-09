@@ -32,7 +32,7 @@
 /       | &nbsp;|&nbsp;
 /       = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
 
-- if current_user.author_of_workbasket?(workbasket)
+- if current_user.author_of_workbasket?(workbasket) && workbasket.object.type == "create_measures"
 
   - if workbasket.can_withdraw?
     | &nbsp;|&nbsp;
