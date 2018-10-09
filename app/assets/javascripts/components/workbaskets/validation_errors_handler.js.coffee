@@ -41,6 +41,9 @@ window.WorkbasketBaseValidationErrorsHandler =
     flattened_errors = []
 
     $.each grouped_errors, (group_key, errors_collection) ->
+      if group_key is "excluded_geographical_areas"
+        group_key = "measure"
+        errors_collection = errors_collection.measure
       group_block = $(".js-workbasket-custom-errors[data-errors-container='" + group_key + "']")
       group_block.removeClass('hidden')
       list_block = group_block.find("ul")
