@@ -91,11 +91,11 @@ window.BulkEditAdditionalCodesSaveActions =
     BulkEditAdditionalCodesSaveActions.disable_other_buttons()
 
     if mode == "save_progress"
-      link = $(".js-bulk-edit-records-save-progress")
-      spinner = $(".js-bulk-edit-records-save-progress-spinner")
+      link = $(".js-bulk-edit-of-records-save-progress")
+      spinner = $(".js-bulk-edit-of-records-save-progress-spinner")
     else
-      link = $(".js-bulk-edit-records-submit-for-cross-check")
-      spinner = $(".js-bulk-edit-records-submit-for-cross-check-spinner")
+      link = $(".js-bulk-edit-of-records-submit-for-cross-check")
+      spinner = $(".js-bulk-edit-of-records-submit-for-cross-check-spinner")
 
     if link.hasClass('hidden')
       spinner.addClass('hidden')
@@ -107,9 +107,9 @@ window.BulkEditAdditionalCodesSaveActions =
       spinner.removeClass('hidden')
 
   disable_other_buttons: ->
-    save_link = $(".js-bulk-edit-records-save-progress")
-    submit_link = $(".js-bulk-edit-records-submit-for-cross-check")
-    exit_link = $(".js-bulk-edit-records-exit")
+    save_link = $(".js-bulk-edit-of-records-save-progress")
+    submit_link = $(".js-bulk-edit-of-records-submit-for-cross-check")
+    exit_link = $(".js-bulk-edit-of-records-exit")
 
     mode = window.__save_bulk_edit_mode
 
@@ -121,9 +121,9 @@ window.BulkEditAdditionalCodesSaveActions =
     exit_link.addClass('disabled')
 
   unlockButtons: ->
-    $(".js-bulk-edit-records-save-progress").removeClass('disabled')
-    $(".js-bulk-edit-records-submit-for-cross-check").removeClass('disabled')
-    $(".js-bulk-edit-records-exit").removeClass('disabled')
+    $(".js-bulk-edit-of-records-save-progress").removeClass('disabled')
+    $(".js-bulk-edit-of-records-submit-for-cross-check").removeClass('disabled')
+    $(".js-bulk-edit-of-records-exit").removeClass('disabled')
 
   showSummaryPopup: ->
     modal_id = "bem-save-progress-summary"
