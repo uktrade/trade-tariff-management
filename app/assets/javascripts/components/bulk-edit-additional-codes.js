@@ -134,6 +134,7 @@ $(document).ready(function() {
       },
       onItemSelected: function(sid) {
         this.selectedRecords.push(sid);
+        this.updateSelectedAll();
       },
       onItemDeselected: function(sid) {
         var index = this.selectedRecords.indexOf(sid);
@@ -143,6 +144,7 @@ $(document).ready(function() {
         }
 
         this.selectedRecords.splice(index, 1);
+        this.updateSelectedAll();
       },
       toggleUnselected: function() {
         var selected = this.selectedRecords;
@@ -273,6 +275,7 @@ $(document).ready(function() {
         });
         this.selectedRecords = [];
         this.recordsUpdated();
+        this.updateSelectedAll();
       },
       selectAllHasChanged: function(value) {
         this.selectedAllMeasures = value;
@@ -297,6 +300,13 @@ $(document).ready(function() {
           }
         });
         this.recordsUpdated();
+        this.updateSelectedAll();
+      },
+      updateSelectedAll: function() {
+        var self = this;
+        this.selectedAllRecords = this.records.filter(function(record) {
+          return self.selectedRecords.indexOf(record.additional_code_sid) > -1;
+        }).length === this.records.length;
       },
       allRecordsRemoved: function() {
         DB.destroyAdditionalCodesBulk(this.search_code);

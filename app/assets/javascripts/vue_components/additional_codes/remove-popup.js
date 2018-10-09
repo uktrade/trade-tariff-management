@@ -28,7 +28,7 @@ Vue.component("remove-additional-codes-popup", {
         jqxhr = BulkRemoveAdditionalCodesActions.removeAllRecordsInWorkbasket();
         jqxhr.done(function(){
           self.allRecordsRemovedCb();
-          $(".js-bulk-edit-of-additional-codes-exit")[0].click(); // click exit
+          $(".js-bulk-edit-of-records-exit")[0].click(); // click exit
         });
       } else {
         jqxhr = BulkRemoveAdditionalCodesActions.removeRecords(this.records);
