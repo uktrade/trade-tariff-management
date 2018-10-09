@@ -87,5 +87,9 @@ window.MainMenuInteractions =
 
     return false
 
+  handleViewPageActionForExportToCds: (read_only_url) ->
+    if $(".js-schedule-export-to-cds").length > 0
+      window.location = read_only_url
+
 $ ->
   MainMenuInteractions.init();

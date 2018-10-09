@@ -1,2 +1,3 @@
 | $("#workbasket_#{workbasket.id}").replaceWith("#{j render('workbaskets/main_menu_parts/item', workbasket: workbasket.decorate)}");
 | MainMenuInteractions.closePopup('schedule_export_to_cds_popup');
+| MainMenuInteractions.handleViewPageActionForExportToCds("#{read_only_url}");
