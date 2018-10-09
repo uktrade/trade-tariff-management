@@ -77,7 +77,7 @@ module WorkbasketInteractions
                     additional_code_type_id: description.additional_code_type_id,
                     additional_code: description.additional_code,
                     language_id: description.language_id,
-                    description: params['description']
+                    description: params['additional_code_description']['description']
                 }),
             AdditionalCodeDescriptionPeriod.new(
                 {
@@ -85,8 +85,7 @@ module WorkbasketInteractions
                     additional_code_sid: description.additional_code_sid,
                     additional_code_type_id: description.additional_code_type_id,
                     additional_code: description.additional_code,
-                    validity_start_date: params['validity_start_date'].to_date,
-                    validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
+                    validity_start_date: params['additional_code_description']['validity_start_date'].to_date
                 })
         ]
       end

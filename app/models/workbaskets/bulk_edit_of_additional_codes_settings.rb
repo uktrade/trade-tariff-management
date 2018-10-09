@@ -19,7 +19,7 @@ module Workbaskets
     def set_workbasket_system_data!
       workbasket.update(
           title: main_step_settings['title'],
-          operation_date: main_step_settings['start_date'].try(:to_date)
+          operation_date: main_step_settings['start_date'].try(:to_date) || Date.today
       )
     end
 
