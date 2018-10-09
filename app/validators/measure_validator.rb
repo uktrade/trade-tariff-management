@@ -16,7 +16,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME5, 'The validity period of the geographical area must span the validity period of the measure.', on: [:create, :update] do
-    validates :validity_date_span, of: :geographical_area
+    validates :validity_date_span, of: :geographical_area, extend_message: true
   end
 
   validation :ME6, 'The goods code must exist.',
