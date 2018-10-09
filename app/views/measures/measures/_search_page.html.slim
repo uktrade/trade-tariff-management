@@ -26,9 +26,6 @@ script
         = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
         p
           = content_tag "button", "Work with selected measures", { class: "button", style: "float: left", ":disabled" => "noSelectedMeasures", type: :submit }
-          span.number_of_measures_badge
-            = pluralize(search_results.total_count, 'measure', 'measures')
-            =<> "found"
 
           .clearfix
       = render "measures_table" if measures_search.present?
