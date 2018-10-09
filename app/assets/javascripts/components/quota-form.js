@@ -590,8 +590,10 @@ $(document).ready(function() {
             var section = clone(_section);
 
             section.duty_expressions.forEach(function(e) {
-              e.original_duty_expression_id = e.duty_expression_id.slice(0);
-              e.duty_expression_id = e.duty_expression_id.substring(0,2);
+              if (e.duty_expression_id) {
+                e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                e.duty_expression_id = e.duty_expression_id.substring(0,2);
+              }
             });
 
             if (section.type == "custom") {
@@ -606,8 +608,10 @@ $(document).ready(function() {
 
               section.periods.forEach(function(period) {
                 period.duty_expressions.forEach(function(e) {
-                  e.original_duty_expression_id = e.duty_expression_id.slice(0);
-                  e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                  if (e.duty_expression_id) {
+                    e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                    e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                  }
                 });
               });
             } else {
@@ -617,8 +621,10 @@ $(document).ready(function() {
               section.opening_balances.forEach(function(balance) {
                 if (section.type == "annual") {
                   balance.duty_expressions.forEach(function(e) {
-                    e.original_duty_expression_id = e.duty_expression_id.slice(0);
-                    e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                    if (e.duty_expression_id) {
+                      e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                      e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                    }
                   });
                 } else {
                   var ks = {
@@ -629,8 +635,10 @@ $(document).ready(function() {
 
                   ks[section.type].forEach(function(k) {
                     balance[k].duty_expressions.forEach(function(e) {
-                      e.original_duty_expression_id = e.duty_expression_id.slice(0);
-                      e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                      if (e.duty_expression_id) {
+                        e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                        e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                      }
                     });
                   });
                 }
@@ -653,8 +661,10 @@ $(document).ready(function() {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);
 
-            c.original_measure_condition_code = c.condition_code.slice(0);
-            c.condition_code = c.condition_code.substring(0, 1);
+            if (c.condition_code) {
+              c.original_measure_condition_code = c.condition_code.slice(0);
+              c.condition_code = c.condition_code.substring(0, 1);
+            }
 
             c.measure_condition_components = c.measure_condition_components.map(function(component) {
               var c = clone(component);
