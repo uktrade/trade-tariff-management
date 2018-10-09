@@ -1,0 +1,25 @@
+script type="text/x-template" id="approve-decision-template"
+  .approve-decision
+    .multiple-choice
+      input type='radio' :id="radioID" class="radio-inline-group js-approve-decision" name="approve[mode]" :checked="approve.selected"
+
+      label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected"
+        | Approve the measures(s).
+
+      label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected"
+        | I am not happy with the measure(s).
+
+    .panel.panel-border-narrow.hidden.js-approve-details-block v-if="approveTypeSelected"
+      label.form-label
+        | Sent to CDS with next export on or after.
+
+      .parent-group-target
+        input.form-control.date-picker.js-approve-form-export-date-date-picker.date-picker-not_initialized*{ "v-model" => "approve.export_date", name: "approve[export_date]" }
+
+    .panel.panel-border-narrow.hidden.js-approve-reject-details-block v-if="rejectTypeSelected"
+      label.form-label
+        | Provide your reasons and/or state the changes required:
+
+      .parent-group-target.col-xs-8.col-md-10.col-lg-12
+        textarea.form-control*{ "v-model" => "approve.reject_reasons", rows: 4, name: "approve[reject_reasons]" }
+

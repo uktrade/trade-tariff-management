@@ -25,3 +25,28 @@
 .main-menu-page {
   padding-bottom: 3em;
 }
+
+.modal__container.workbasket-main-menu-modal {
+
+  &.workbasket-confirmation-modal {
+    width: 660px;
+  }
+
+  .modal__content {
+    margin-bottom: 5px;
+  }
+
+  .js-main-menu-confirm-action {
+    &.hidden {
+      display: none;
+    }
+  }
+
+  .save_progress_block {
+    margin-right: 2px;
+
+    .spinner_block {
+      margin-top: -5px;
+    }
+  }
+}

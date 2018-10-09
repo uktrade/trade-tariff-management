@@ -1,0 +1,21 @@
+.modal aria-hidden="true" id="main-menu-#{modal_id}"
+  .modal__overlay tabindex="-1"
+    .modal__container.workbasket-main-menu-modal.workbasket-confirmation-modal aria-modal="true" role="dialog"
+      header.modal__header
+        h2.modal__title
+          slot name="title"
+            = title
+
+      .modal__content
+        slot
+          div
+            p Are you sure?
+
+          .form-actions
+            .save_progress_block
+              = link_to "Confirm", "#", class: "button js-main-menu-confirm-action"
+              .js-workbasket-base-save-progress-spinner.spinner_block.hidden
+                = render "measures/bulks/loading_spinner", message: "Saving..."
+
+            = link_to "Cancel", "#", class: "secondary-button js-main-menu-close-popup",
+                                     data: { popup_id: modal_id }

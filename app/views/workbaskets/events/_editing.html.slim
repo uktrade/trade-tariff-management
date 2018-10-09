@@ -1,0 +1,20 @@
+tr
+  td.heading_column
+    | Edited by
+  td
+    = event.user_name
+
+tr
+  td.heading_column
+    | Edited on
+  td
+    = workbasket_event_date(event)
+
+/ TODO:
+/ we are not saving description yet!
+/
+/ tr
+/   td.heading_column
+/     | Reasons for changes
+/   td
+/     = event.description
