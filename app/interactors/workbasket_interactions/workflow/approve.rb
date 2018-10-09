@@ -17,7 +17,11 @@ module WorkbasketInteractions
         end
 
         def approve_status
-          workbasket.possible_approved_status
+          if export_date.present?
+            workbasket.possible_approved_status
+          else
+            :ready_for_export
+          end
         end
 
         def reject_status
