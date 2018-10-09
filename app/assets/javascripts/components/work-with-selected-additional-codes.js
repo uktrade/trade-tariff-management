@@ -11,7 +11,8 @@ $(document).ready(function() {
     data: function() {
       return {
         reason: "",
-        title: ""
+        title: "",
+        date: moment().add(1, "day").format("DD/MM/YYYY")
       };
     },
     computed: {

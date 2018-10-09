@@ -248,15 +248,15 @@ $(document).ready(function() {
         this.startSavingProcess('save_progress');
       },
       startSavingProcess: function(mode) {
-        BulkEditOfMeasuresSaveActions.toogleSaveSpinner();
+        BulkEditAdditionalCodesSaveActions.toogleSaveSpinner();
 
         window.__sb_collection =  this.records;
-        window.__sb_total_count = window.__sb_measures_collection.length;
+        window.__sb_total_count = window.__sb_collection.length;
         window.__sb_per_page = window.__pagination_metadata["per_page"];
         window.__sb_total_pages = Math.ceil(window.__sb_total_count / window.__sb_per_page);
         window.__sb_current_batch = 1;
 
-        BulkEditOfMeasuresSaveActions.sendSaveRequest(mode);
+        BulkEditAdditionalCodesSaveActions.sendSaveRequest(mode);
       },
       recordsUpdated: function() {
         DB.insertOrReplaceAdditionalCodesBulk(this.search_code, this.records);

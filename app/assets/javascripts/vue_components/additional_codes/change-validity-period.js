@@ -67,19 +67,32 @@ Vue.component("change-additional-codes-validity-period-popup", {
 
       var self = this;
       var isValid = true;
-      var endDate = this.endDate;
+      var startDate = moment(this.startDate, "DD/MM/YYYY", true);
+      var endDate = moment(this.endDate, "DD/MM/YYYY", true);
       var makeOpenEnded = this.makeOpenEnded;
       var errors = {};
-      var errorSummary = [];
+      this.errorSummary = "";
 
-      if (makeOpenEnded || !endDate) {
-        return true;
+      if (startDate.isValid() === false) {
+        isValid = false;
+        errors.startDate = "You must specify a start date.";
       }
 
-      //TODO: add validations later
+      if (!makeOpenEnded) {
+        if (endDate.isValid() === false) {
+          isValid = false;
+          errors.endDate = "You must specify an end date.";
+        } else if (endDate.diff(startDate, "days") <= 0) {
+          isValid = false;
+          errors.endDate = "End date must be after the start date.";
+        }
+      }
+
+      if (!isValid) {
+        this.errorSummary = "The change could not be made because some fields are missing or contain invalid data.";
+      }
 
       this.errors = errors;
-      this.errorSummary = errorSummary;
 
       return isValid;
     },

@@ -10,7 +10,7 @@ module WorkbasketInteractions
       def initialize(workbasket_item)
         @workbasket_item = workbasket_item
         @workbasket = workbasket_item.workbasket
-        @operation_date = workbasket.operation_date.midnight
+        @operation_date = workbasket.operation_date.try(:midnight)
         @existing = workbasket_item.record
         @records = []
       end
