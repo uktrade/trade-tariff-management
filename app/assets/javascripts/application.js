@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require moment
 //= require pikaday
+//= require parsley
 //= require ./vendors/selectize
 //= require ./vendors/numeral.min
 //= require ./vendors/URI.min
