@@ -77,7 +77,7 @@ module Workbaskets
     def update
       saver.save!
 
-      if step_pointer.main_step? 
+      if step_pointer.main_step?
         render json: saver.success_ops,
                      status: :ok
 
