@@ -14,6 +14,7 @@ $(document).ready(function() {
       var self = this;
 
       var data = {
+        disableButtons: false,
         savedSuccessfully: false,
         goods_nomenclature_code: "",
         additional_code_preview: "",

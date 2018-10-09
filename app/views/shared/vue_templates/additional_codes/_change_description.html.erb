@@ -1,0 +1,86 @@
+<script type="text/x-template" id="change-additional-codes-description-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Change description
+    </template>
+
+    <div class="error-summary" role="alert" aria-labelledby="validity-period-error-summary-heading" tabindex="-1" v-if="errorSummary.length > 0">
+
+      <h2 class="heading-medium error-summary-heading" id="validity-period-error-summary-heading">
+        Error
+      </h2>
+
+      <p>
+        You cannot confirm the changes yet because you have not entered the minimum required data.
+      </p>
+    </div>
+
+    <div v-if="records.length > 1">
+      <warning-message>
+        You are bulk-changing {{records.length}} additional codes. Please check your inputs carefully!
+      </warning-message>
+    </div>
+
+    <div v-if="!sameDescription">
+      <info-message>
+        The selection contains differing descriptions.
+        <br>
+        These will be replaced with the description you specify here. This will result in multiple additional codes having the same description - proceed with caution!
+      </info-message>
+    </div>
+
+    <form-group :errors="errors" error-key="description">
+      <template slot-scope="slotProps">
+        <fieldset>
+          <legend>
+            <h4 class='heading-small'>Description</h4>
+          </legend>
+
+          <label class="form-label">
+            <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+              {{slotProps.error}}
+            </span>
+
+            <span class="form-hint">
+              This is the start of the codes' validity period.
+              This will be delayed for any codes that are not approved in time.
+            </span>
+          </label>
+
+          <textarea class="form-control" v-model="description" rows="5"></textarea>
+        </fieldset>
+      </template>
+    </form-group>
+
+    <form-group :errors="errors" error-key="validityDate">
+      <template slot-scope="slotProps">
+        <fieldset>
+          <legend>
+            <h4 class='heading-small'>Description validity start date</h4>
+          </legend>
+
+          <label class="form-label">
+            <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+              {{slotProps.error}}
+            </span>
+
+            <span class="form-hint">
+              This is the date when the new description will take effect, subject to being approved in time. If This must be within the narrowest of the selected codes’ validity periods.
+            </span>
+          </label>
+
+          <date-select :value.sync="validityDate"></date-select>
+        </fieldset>
+      </template>
+    </form-group>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="confirmChanges" :disabled="disableSubmit">
+        Update selected codes
+      </button>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>

@@ -15,7 +15,8 @@ module WorkbasketInteractions
       end
 
       def valid?
-        Sequel::Model.db.transaction(rollback: :always) do
+        @persist = true
+        Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           super
 
           parent_errors = {}
@@ -38,6 +39,7 @@ module WorkbasketInteractions
 
       def persist!
         @persist = true
+        @do_not_rollback_transactions = true
         @measure_sids = []
         @quota_period_sids = []
         @parent_quota_period_sids = []

@@ -12,7 +12,7 @@ class AdditionalCodeDescription < Sequel::Model
   format :formatted_description, with: DescriptionFormatter,
                                  using: :description
 
-  # one_to_one :additional_code_description_period, key: [:additional_code_description_period_sid, :additional_code_sid, :additional_code_type_id]
+  one_to_one :additional_code_description_period, key: [:additional_code_description_period_sid, :additional_code_sid], primary_key: [:additional_code_description_period_sid, :additional_code_sid]
 
   # many_to_one :language
   # many_to_one :additional_code_type, key: :additional_code_type_id
@@ -23,5 +23,12 @@ class AdditionalCodeDescription < Sequel::Model
 
   def subrecord_code
     "10".freeze
+  end
+
+  def to_json
+    {
+      description: description,
+      validity_start_date: additional_code_description_period.validity_start_date.try(:strftime, "%d %b %Y") || "-"
+    }
   end
 end

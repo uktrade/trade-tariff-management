@@ -69,11 +69,10 @@ module AdditionalCodes
             errors = item.validate!(additional_code_params)
 
             if errors.present?
-              # errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
-              # @errors_collection[
-              #   additional_code_params[:additional_code_sid].to_s
-              # ] = errored_columns
-              # item.validation_errors = errored_columns.to_json
+              @errors_collection[
+                additional_code_params[:additional_code_sid].to_s
+              ] = errors
+              item.validation_errors = errors.to_json
             end
           end
 

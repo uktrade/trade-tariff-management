@@ -32,7 +32,7 @@ module WorkbasketInteractions
           check_additional_codes!
 
           if errors.blank?
-            Sequel::Model.db.transaction(rollback: :always) do
+            Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
               build_additional_codes!
               validate_additional_codes!
             end
@@ -43,6 +43,7 @@ module WorkbasketInteractions
       end
 
       def persist!
+        @do_not_rollback_transactions = true
         save_additional_codes!
       end
 
