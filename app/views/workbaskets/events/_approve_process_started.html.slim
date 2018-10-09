@@ -1,0 +1,11 @@
+tr
+  td.heading_column
+    | Review for approval process started by
+  td
+    = event.user_name
+
+tr
+  td.heading_column
+    | Review for approval process started on
+  td
+    = workbasket_event_date(event)

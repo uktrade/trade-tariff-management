@@ -11,6 +11,7 @@ module Workbaskets
     before_action :clean_up_persisted_data_on_update!,
                   :handle_submit_for_cross_check!, only: [:update]
 
+    before_action :require_workbasket_to_be_new_in_progress!, only: [:destroy]
 
     expose(:workbasket_settings) do
       workbasket.settings
@@ -90,6 +91,23 @@ module Workbaskets
       end
     end
 
+    def destroy
+      workbasket.clean_up_workbasket!
+
+      redirect_to root_url
+    end
+
+    def move_to_editing_mode
+      workbasket.status = "editing"
+      workbasket.save
+
+      redirect_to initial_step_url
+    end
+
+    def withdraw_workbasket_from_workflow
+      move_to_editing_mode
+    end
+
     private
 
       def require_step_declaration_in_params!
@@ -99,8 +117,15 @@ module Workbaskets
         end
       end
 
-      def status_check!
+      def require_workbasket_to_be_new_in_progress!
         unless workbasket.new_in_progress?
+          redirect_to root_url
+          return false
+        end
+      end
+
+      def status_check!
+        unless workbasket.editable?
           redirect_to read_only_section_url
           return false
         end

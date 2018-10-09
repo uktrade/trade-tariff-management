@@ -75,8 +75,8 @@ module WorkbasketHelpers
     end
 
     def measures
-      Measure.where(measure_sid: measure_sids)
-             .order(:measure_sid)
+      @measures ||= Measure.where(measure_sid: measure_sids)
+                           .order(:measure_sid)
     end
 
     def start_date

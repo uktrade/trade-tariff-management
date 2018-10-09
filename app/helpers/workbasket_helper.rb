@@ -39,6 +39,15 @@ module WorkbasketHelper
     end
   end
 
+  def create_geographical_area_section_header
+    case current_step
+    when "main"
+      "Add geographical area"
+    when "review_and_submit"
+      "Review and submit"
+    end
+  end
+
   def workbasket_quota_periods_overview
     annual = workbasket_get_quota_periods('annual')
     bi_annual = workbasket_get_quota_periods('bi_annual')
@@ -163,21 +172,20 @@ module WorkbasketHelper
         step: :main
       )
 
-      when :bulk_edit_of_quotas
+    when :bulk_edit_of_quotas
 
-        if workbasket.settings.settings["start_date"].blank?
-          work_with_selected_quotas_bulk_url(
-              workbasket.id,
-              search_code: workbasket.settings.search_code
-          )
+      if workbasket.settings.settings["start_date"].blank?
+        work_with_selected_quotas_bulk_url(
+            workbasket.id,
+            search_code: workbasket.settings.search_code
+        )
 
-        else
-          edit_quotas_bulk_url(
-              workbasket.id,
-              search_code: workbasket.settings.search_code
-          )
-        end
-
+      else
+        edit_quotas_bulk_url(
+            workbasket.id,
+            search_code: workbasket.settings.search_code
+        )
+      end
     end
   end
 
