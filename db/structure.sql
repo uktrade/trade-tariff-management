@@ -11005,6 +11005,13 @@ CREATE INDEX measures_goods_nomenclature_item_id_index ON public.measures_oplog 
 
 
 --
+-- Name: measures_oplog_ordernumber_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_ordernumber_index ON public.measures_oplog USING btree (ordernumber);
+
+
+--
 -- Name: megao_meaexcgeoareopl_urededcaleaslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11814,3 +11821,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approve
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflow_fields_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
