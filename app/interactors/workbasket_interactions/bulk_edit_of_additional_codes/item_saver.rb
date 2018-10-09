@@ -17,17 +17,20 @@ module WorkbasketInteractions
 
       def persist!
         params = workbasket_item.hash_data
-        params[:validity_end_date] = operation_date if workbasket_item.deleted?
 
-        if params[:validity_end_date].present?
+        if workbasket_item.deleted?
+          params['validity_end_date'] = operation_date
+        end
+        
+        if params['changes'].include?('validity_end_date')
           @records << build_additional_code!(params)
         end
 
-        if params[:description].present?
-          @records = records + build_additional_code_description!(params)
+        if params['changes'].include?('description')
+          @records = @records + build_additional_code_description!(params)
         end
 
-        records.each do |record|
+        @records.each do |record|
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
               record, system_ops
           ).assign!
@@ -38,7 +41,7 @@ module WorkbasketInteractions
       def validate!(params)
         return {validity_start_date: "Start date can't be blank!"} if params[:validity_start_date].blank?
 
-        if params[:validity_end_date].present?
+        if params['changes'].include?('validity_end_date')
           additional_code = build_additional_code!(params)
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
               additional_code,
@@ -51,17 +54,20 @@ module WorkbasketInteractions
       private
 
       def build_additional_code!(params)
+        AdditionalCode.unrestrict_primary_key
         AdditionalCode.new(
             {
                 additional_code_sid: existing.additional_code_sid,
                 additional_code_type_id: existing.additional_code_type_id,
                 additional_code: existing.additional_code,
-                validity_start_date: params[:validity_start_date],
-                validity_end_date: params[:validity_end_date]
+                validity_start_date: params['validity_start_date'].to_date,
+                validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
             })
       end
 
       def build_additional_code_description!(params)
+        AdditionalCodeDescription.unrestrict_primary_key
+        AdditionalCodeDescriptionPeriod.unrestrict_primary_key
         description = existing.additional_code_description
         [
             AdditionalCodeDescription.new(
@@ -71,7 +77,7 @@ module WorkbasketInteractions
                     additional_code_type_id: description.additional_code_type_id,
                     additional_code: description.additional_code,
                     language_id: description.language_id,
-                    description: params[:description]
+                    description: params['description']
                 }),
             AdditionalCodeDescriptionPeriod.new(
                 {
@@ -79,8 +85,8 @@ module WorkbasketInteractions
                     additional_code_sid: description.additional_code_sid,
                     additional_code_type_id: description.additional_code_type_id,
                     additional_code: description.additional_code,
-                    validity_start_date: params[:validity_start_date],
-                    validity_end_date: params[:validity_end_date]
+                    validity_start_date: params['validity_start_date'].to_date,
+                    validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
                 })
         ]
       end
