@@ -91,14 +91,16 @@ $(document).ready(function() {
         return {
           mode: payload.mode,
           submit_for_approval: payload.submit_for_approval,
-          reject_reasons: payload.reject_reasons
+          reject_reasons: payload.reject_reasons,
+          export_date: payload.export_date
         };
       },
       emptyApprove: function() {
         return {
           mode: null,
           submit_for_approval: null,
-          reject_reasons: null
+          reject_reasons: null,
+          export_date: null
         };
       },
       crossCheckPayLoad: function() {
@@ -111,7 +113,8 @@ $(document).ready(function() {
         return {
           mode: mode,
           submit_for_approval: $("input[name='approve[submit_for_approval]']").val(),
-          reject_reasons: $("textarea[name='approve[reject_reasons]']").val()
+          reject_reasons: $("textarea[name='approve[reject_reasons]']").val(),
+          export_date: $("input[name='approve[export_date]']").val()
         };
       }
     }

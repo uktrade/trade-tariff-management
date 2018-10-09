@@ -14,10 +14,7 @@ script type="text/x-template" id="approve-decision-template"
         | Sent to CDS with next export on or after.
 
       .parent-group-target
-        .form-group
-          .find-measures__checkbox-column
-            .multiple-choice
-              input.date-picker.form-control autocomplete="off" name="export_date" data-behaviour="datepicker"
+        input.form-control.date-picker*{ "v-model" => "approve.export_date", name: "approve[export_date]" }
 
     .panel.panel-border-narrow.hidden.js-approve-reject-details-block v-if="rejectTypeSelected"
       label.form-label

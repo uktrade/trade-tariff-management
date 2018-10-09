@@ -21,8 +21,8 @@ script
 
           .bootstrap-row
             .controls
-              = content_tag "cross-check-decision", "", { kind: "approve", ":approve" => "types.approve" }
-              = content_tag "cross-check-decision", "", { kind: "reject", ":approve" => "types.reject" }
+              = content_tag "approve-decision", "", { kind: "approve", ":approve" => "types.approve" }
+              = content_tag "approve-decision", "", { kind: "reject", ":approve" => "types.reject" }
 
   = render "workbaskets/shared/success_message", f: f
   = render "workbaskets/approves/action_links", f: f
