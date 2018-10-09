@@ -1,8 +1,8 @@
 module Workbaskets
   class CrossChecksController < Workbaskets::WorkflowBaseController
 
-    before_action :require_cross_check_not_to_be_aready_started!, only: [:new]
-    before_action :check_cross_check_permissions!, only: [:create, :show]
+    # before_action :require_cross_check_not_to_be_aready_started!, only: [:new]
+    # before_action :check_cross_check_permissions!, only: [:create, :show]
 
     expose(:checker) do
       ::WorkbasketInteractions::Workflow::CrossCheck.new(

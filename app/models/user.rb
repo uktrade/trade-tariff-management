@@ -68,7 +68,10 @@ class User < Sequel::Model
   end
 
   def approver?
-    approver_user.present?
+    #
+    # FIXME
+    #
+    true # approver_user.present?
   end
 
   def remotely_signed_out?

@@ -1,7 +1,7 @@
 module Workbaskets
   class WorkflowTransitionsController < Workbaskets::WorkflowBaseController
 
-    before_action :check_permissions!, only: [:submit_for_approval]
+    # before_action :check_permissions!, only: [:submit_for_approval]
 
     def submit_for_approval
       workbasket.move_status_to!(current_user, :awaiting_approval)
