@@ -18,14 +18,11 @@ class MeasureComponentValidator < TradeTariffBackend::Validator
       validates :validity_date_span, of: :duty_expression, extend_message: true
     end
 
-  #
-  # NEED_TO_CHECK
-  #
-  # validation :ME43,
-  #   "The same duty expression can only be used once with the same measure.",
-  #   on: [:create, :update] do
-  #     validates :uniqueness, of: [:measure_sid, :duty_expression_id]
-  #   end
+  validation :ME43,
+    "The same duty expression can only be used once with the same measure.",
+    on: [:create, :update] do
+      validates :uniqueness, of: [:measure_sid, :duty_expression_id]
+    end
 
   validation :ME45,
     %(If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified.
