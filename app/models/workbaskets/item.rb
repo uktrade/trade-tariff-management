@@ -64,11 +64,11 @@ module Workbaskets
     end
 
     def persist!
-      "::WorkbasketInteractions::BulkEditOf#{record_type.capitalize}s::ItemSaver".constantize.new(self).persist!
+      "::WorkbasketInteractions::BulkEditOf#{record_type}s::ItemSaver".constantize.new(self).persist!
     end
 
     def validate!(params)
-      "::WorkbasketInteractions::BulkEditOf#{record_type.capitalize}s::ItemSaver".constantize.new(self).validate!(params)
+      "::WorkbasketInteractions::BulkEditOf#{record_type}s::ItemSaver".constantize.new(self).validate!(params)
     end
 
     def deleted?
