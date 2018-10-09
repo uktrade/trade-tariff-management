@@ -14,7 +14,7 @@ script type="text/x-template" id="approve-decision-template"
         | Sent to CDS with next export on or after.
 
       .parent-group-target
-        input.form-control.date-picker*{ "v-model" => "approve.export_date", name: "approve[export_date]" }
+        input.form-control.date-picker.js-approve-form-export-date-date-picker.date-picker-not_initialized*{ "v-model" => "approve.export_date", name: "approve[export_date]" }
 
     .panel.panel-border-narrow.hidden.js-approve-reject-details-block v-if="rejectTypeSelected"
       label.form-label

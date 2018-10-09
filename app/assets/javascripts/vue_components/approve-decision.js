@@ -55,6 +55,11 @@ Vue.component("approve-decision", {
         }
 
         $("input.js-approve-decision").val(this.kind);
+
+        if ($(".js-approve-form-export-date-date-picker").hasClass('date-picker-not_initialized')) {
+          MainMenuInteractions.scheduleExportToCdsFormInit();
+          $(".js-approve-form-export-date-date-picker").removeClass('date-picker-not_initialized');
+        }
       }
     },
     "approve.submit_for_approval": function(newVal)  {
