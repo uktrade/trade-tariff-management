@@ -98,8 +98,7 @@ module Workbaskets
     end
 
     def move_to_editing_mode
-      workbasket.status = "editing"
-      workbasket.save
+      workbasket.move_status_to!(current_user, "editing")
 
       redirect_to initial_step_url
     end
