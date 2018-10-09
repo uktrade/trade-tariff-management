@@ -10963,6 +10963,13 @@ CREATE INDEX measrm_pk ON public.measurements_oplog USING btree (measurement_uni
 
 
 --
+-- Name: measure_conditions_oplog_measure_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_conditions_oplog_measure_sid_index ON public.measure_conditions_oplog USING btree (measure_sid);
+
+
+--
 -- Name: measure_generating_regulation; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11002,6 +11009,13 @@ CREATE INDEX measures_export_refund_nomenclature_sid_index ON public.measures_op
 --
 
 CREATE INDEX measures_goods_nomenclature_item_id_index ON public.measures_oplog USING btree (goods_nomenclature_item_id);
+
+
+--
+-- Name: measures_oplog_measure_type_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_measure_type_id_index ON public.measures_oplog USING btree (measure_type_id);
 
 
 --
@@ -11439,6 +11453,13 @@ CREATE INDEX quota_def_pk ON public.quota_definitions_oplog USING btree (quota_d
 
 
 --
+-- Name: quota_definitions_oplog_quota_order_number_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX quota_definitions_oplog_quota_order_number_id_index ON public.quota_definitions_oplog USING btree (quota_order_number_id);
+
+
+--
 -- Name: quota_exhaus_evt_pk; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11464,6 +11485,27 @@ CREATE INDEX quota_ord_num_orig_pk ON public.quota_order_number_origins_oplog US
 --
 
 CREATE INDEX quota_ord_num_pk ON public.quota_order_numbers_oplog USING btree (quota_order_number_sid);
+
+
+--
+-- Name: quota_order_number_origin_exclusions_oplog_quota_order_number_o; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX quota_order_number_origin_exclusions_oplog_quota_order_number_o ON public.quota_order_number_origin_exclusions_oplog USING btree (quota_order_number_origin_sid);
+
+
+--
+-- Name: quota_order_number_origins_oplog_quota_order_number_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX quota_order_number_origins_oplog_quota_order_number_sid_index ON public.quota_order_number_origins_oplog USING btree (quota_order_number_sid);
+
+
+--
+-- Name: quota_order_numbers_oplog_quota_order_number_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX quota_order_numbers_oplog_quota_order_number_id_index ON public.quota_order_numbers_oplog USING btree (quota_order_number_id);
 
 
 --
@@ -11822,3 +11864,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflo
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
