@@ -76,6 +76,7 @@ module WorkbasketInteractions
 
       def persist!
         @persist = true
+        @do_not_rollback_transactions = true
         @measure_sids = []
 
         validate!
@@ -153,7 +154,7 @@ module WorkbasketInteractions
           @persist = true
           @measure_sids = []
 
-          Sequel::Model.db.transaction(rollback: :always) do
+          Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
             validate_candidates!
           end
 

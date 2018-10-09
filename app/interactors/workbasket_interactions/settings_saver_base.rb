@@ -82,6 +82,7 @@ module WorkbasketInteractions
 
     def persist!
       @persist = true
+      @do_not_rollback_transactions = true
       @measure_sids = []
       @quota_period_sids = [] if self.class::WORKBASKET_TYPE == "CreateQuota"
 
@@ -188,7 +189,9 @@ module WorkbasketInteractions
       end
 
       def validate!
-        Sequel::Model.db.transaction(rollback: :always) do
+        @persist = true
+
+        Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           validate_candidates!
         end
 

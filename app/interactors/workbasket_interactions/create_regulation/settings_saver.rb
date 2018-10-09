@@ -178,7 +178,7 @@ module WorkbasketInteractions
         check_required_params!
         return false if @errors.present?
 
-        Sequel::Model.db.transaction(rollback: :always) do
+        Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           @regulation = target_class.new(filtered_ops)
           regulation.public_send("#{target_class.primary_key[0]}=", regulation_params[target_class.primary_key[0]])
           regulation.public_send("#{target_class.primary_key[1]}=", regulation_params[target_class.primary_key[1]])
@@ -212,6 +212,8 @@ module WorkbasketInteractions
       end
 
       def persist!
+        @do_not_rollback_transactions = true
+
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
           regulation, create_system_ops
         ).assign!
