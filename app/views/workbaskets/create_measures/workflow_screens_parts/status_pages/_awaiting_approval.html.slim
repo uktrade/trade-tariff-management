@@ -1,11 +1,14 @@
 .panel.panel--confirmation
   h1.heading-xlarge
-    | Measures approved
+    | Measures cross-checked.
 
   h3.heading-medium
-    => pluralize(workbasket_settings.measures.count, "measure", "measures")
-    | in the workbasket
-    =<> "'#{workbasket.title}'"
-    | have been approved and scheduled for export to CDS.
+    | The measure(s) have been cross-checked but not yet sent through to CDS. They are currently pending approval.
+
+    br
+    br
+    | Once approved,
+    =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
+    | will be made live.
 
 = render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
