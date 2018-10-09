@@ -524,6 +524,8 @@ module Workbaskets
           ::Workbaskets::BulkEditOfMeasuresSettings
         when :create_quota
           ::Workbaskets::CreateQuotaSettings
+        when :bulk_edit_of_quotas
+          ::Workbaskets::BulkEditOfQuotasSettings
         when :create_regulation
           ::Workbaskets::CreateRegulationSettings
         when :create_additional_code

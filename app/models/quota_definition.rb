@@ -98,11 +98,11 @@ class QuotaDefinition < Sequel::Model
   end
 
   def quota_origin
-    quota_order_number.quota_order_number_origin.geographical_area_id
+    quota_order_number.quota_order_number_origin&.geographical_area_id
   end
 
   def origin_exclusions
-    quota_order_number.quota_order_number_origin.quota_order_number_origin_exclusions.map do |exclusion|
+    quota_order_number.quota_order_number_origin&.quota_order_number_origin_exclusions.map do |exclusion|
       exclusion.geographical_area_id
     end
   end
@@ -140,7 +140,7 @@ class QuotaDefinition < Sequel::Model
         regulation_id: regulation_id,
         license: license || "-",
         validity_start_date: validity_start_date.try(:strftime, "%d %b %Y") || "-",
-        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "Never (repeats)",
         goods_nomenclature_item_ids: goods_nomenclature_item_ids.join(', '),
         additional_code_ids: additional_code_ids.join(', '),
         origin: quota_origin,
