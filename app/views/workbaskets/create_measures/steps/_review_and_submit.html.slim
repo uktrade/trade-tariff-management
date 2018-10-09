@@ -1,3 +1,5 @@
+- cache [ "measure_form_js_variables", expires_in: 8.hours ] do
+  = render "workbaskets/shared/js_variables"
 = simple_form_for form, url: create_measure_url(id: workbasket.id),
                         html: { \
                           class: "measure-form create-measures-v2",
