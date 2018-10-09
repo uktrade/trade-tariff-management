@@ -8,7 +8,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME3, 'The validity period of the measure type must span the validity period of the measure.', on: [:create, :update] do
-    validates :validity_date_span, of: :measure_type
+    validates :validity_date_span, of: :measure_type, extend_message: true
   end
 
   validation :ME4, 'The geographical area must exist.', on: [:create, :update] do
@@ -154,7 +154,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.additional_code_type.application_code.in?("0") &&
       record.goods_nomenclature_item_id.present? && record.additional_code.present?
     } do
-      validates :validity_date_span, of: :additional_code_type
+      validates :validity_date_span, of: :additional_code_type, extend_message: true
     end
 
   #validation :ME24, 'The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date.', on: [:create, :update] do
