@@ -8,7 +8,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME3, 'The validity period of the measure type must span the validity period of the measure.', on: [:create, :update] do
-    validates :validity_date_span, of: :measure_type
+    validates :validity_date_span, of: :measure_type, extend_message: true
   end
 
   validation :ME4, 'The geographical area must exist.', on: [:create, :update] do
@@ -16,7 +16,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME5, 'The validity period of the geographical area must span the validity period of the measure.', on: [:create, :update] do
-    validates :validity_date_span, of: :geographical_area
+    validates :validity_date_span, of: :geographical_area, extend_message: true
   end
 
   validation :ME6, 'The goods code must exist.',
@@ -51,7 +51,7 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME8, 'The validity period of the goods code must span the validity period of the measure.',
       on: [:create, :update] do
-    validates :validity_date_span, of: :goods_nomenclature
+    validates :validity_date_span, of: :goods_nomenclature, extend_message: true
   end
 
   validation :ME9, 'If no additional code is specified then the goods code is mandatory.', on: [:create, :update] do |record|
@@ -154,7 +154,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.additional_code_type.application_code.in?("0") &&
       record.goods_nomenclature_item_id.present? && record.additional_code.present?
     } do
-      validates :validity_date_span, of: :additional_code_type
+      validates :validity_date_span, of: :additional_code_type, extend_message: true
     end
 
   #validation :ME24, 'The role + regulation id must exist. If no measure start date is specified it defaults to the regulation start date.', on: [:create, :update] do
@@ -375,7 +375,7 @@ class MeasureValidator < TradeTariffBackend::Validator
     end
 
   validation :ME115, 'The validity period of the referenced additional code must span the validity period of the measure', on: [:create, :update] do
-    validates :validity_date_span, of: :additional_code
+    validates :validity_date_span, of: :additional_code, extend_message: true
   end
 
   validation :ME116, 'When a quota order number is used in a measure then the validity period of the quota order number must span the validity period of the measure.  This rule is only applicable for measures with start date after 31/12/2007.',
@@ -386,7 +386,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.order_number.present? && record.ordernumber =~ /^09[012356789]/
     } do
       # Only quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'
-      validates :validity_date_span, of: :order_number
+      validates :validity_date_span, of: :order_number, extend_message: true
     end
 
   #
@@ -420,7 +420,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
       (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094")
     } do
-    validates :validity_date_span, of: :order_number
+      validates :validity_date_span, of: :order_number, extend_message: true
   end
 
   validation :ME119,
@@ -434,6 +434,6 @@ class MeasureValidator < TradeTariffBackend::Validator
        (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094") &&
        (record.quota_order_number_origin.present?)
      } do
-    validates :validity_date_span, of: :quota_order_number_origin
+       validates :validity_date_span, of: :quota_order_number_origin, extend_message: true
   end
 end

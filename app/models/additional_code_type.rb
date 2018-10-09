@@ -1,6 +1,7 @@
 class AdditionalCodeType < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include OwnValidityPeriod
 
   plugin :time_machine, period_start_column: :additional_code_types__validity_start_date,
                         period_end_column:   :additional_code_types__validity_end_date
