@@ -528,6 +528,8 @@ module Workbaskets
           ::Workbaskets::CreateRegulationSettings
         when :create_additional_code
           ::Workbaskets::CreateAdditionalCodeSettings
+        when :bulk_edit_of_additional_codes
+          ::Workbaskets::BulkEditOfAdditionalCodesSettings
         when :create_geographical_area
           ::Workbaskets::CreateGeographicalAreaSettings
         end
