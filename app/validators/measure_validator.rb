@@ -386,7 +386,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       record.order_number.present? && record.ordernumber =~ /^09[012356789]/
     } do
       # Only quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'
-      validates :validity_date_span, of: :order_number
+      validates :validity_date_span, of: :order_number, extend_message: true
     end
 
   #
@@ -420,7 +420,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
       (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094")
     } do
-    validates :validity_date_span, of: :order_number
+      validates :validity_date_span, of: :order_number, extend_message: true
   end
 
   validation :ME119,
@@ -434,6 +434,6 @@ class MeasureValidator < TradeTariffBackend::Validator
        (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094") &&
        (record.quota_order_number_origin.present?)
      } do
-    validates :validity_date_span, of: :quota_order_number_origin
+       validates :validity_date_span, of: :quota_order_number_origin, extend_message: true
   end
 end
