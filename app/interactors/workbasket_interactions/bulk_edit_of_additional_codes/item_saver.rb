@@ -21,8 +21,8 @@ module WorkbasketInteractions
         if workbasket_item.deleted?
           params['validity_end_date'] = operation_date
         end
-        
-        if params['changes'].include?('validity_end_date')
+
+        if params['changes'].include?('validity_end_date') || workbasket_item.deleted?
           @records << build_additional_code!(params)
         end
 

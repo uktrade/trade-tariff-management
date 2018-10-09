@@ -1,13 +1,14 @@
-.breadcrumbs
-  ol
-    li
-      = link_to "Tariff Management", root_url
-
-    li
-      = link_to "Find Additional codes", additional_codes_url
-
-    li
-      = link_to "Back to search results", additional_codes_url(search_code: workbasket_settings.initial_search_results_code)
+= render "shared/breadcrumbs" do
+  .breadcrumbs
+    ol
+      li
+        = link_to "Main menu", root_url
+      li
+        = link_to "Find and edit additional codes", additional_codes_url
+      li
+        = link_to "Search results", additional_codes_url(search_code: workbasket_settings.initial_search_results_code)
+      li aria-current="page"
+        = link_to "Work with selected codes", edit_additional_codes_bulk_url(workbasket.id, search_code: workbasket_settings.initial_search_results_code)
 
 h2.heading-large
   - if workbasket.awaiting_cross_check?
