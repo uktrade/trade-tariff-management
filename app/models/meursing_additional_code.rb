@@ -1,6 +1,7 @@
 class MeursingAdditionalCode < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: :meursing_additional_code_sid
   plugin :time_machine

@@ -45,7 +45,7 @@ Vue.component("opening-balances-manager", {
       return !this.section.criticality_each_period;
     },
     showCriticality: function() {
-      return !this.omitCriticality && (this.section.criticality_each_period || this.section.duties_each_period);
+      return !this.omitCriticality && this.section.criticality_each_period;
     },
     showDuties: function() {
       return window.all_settings.quota_is_licensed != "true";

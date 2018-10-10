@@ -5,6 +5,10 @@ module Measures
 
     skip_around_action :configure_time_machine, only: [:index, :search]
 
+    expose(:separator) do
+      "_SM_"
+    end
+
     expose(:search_ops) do
       ops = params[:search]
 

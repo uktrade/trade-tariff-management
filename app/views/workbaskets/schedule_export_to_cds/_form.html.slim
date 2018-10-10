@@ -1,0 +1,18 @@
+= simple_form_for(:workbasket, url: schedule_export_to_cds_url(workbasket.id), method: :post, remote: true) do |f|
+
+  fieldset
+    legend
+    h4.heading-small Send to CDS with the next export on or after
+
+    label.form-label
+      span.form-hint
+    input.date-picker.form-control autocomplete="off" name="export_date" data-behaviour="datepicker" value="#{workbasket.operation_date.try(:strftime, '%d/%m/%Y')}"
+
+  .form-actions
+    .save_progress_block
+      = f.submit "Schedule export", class: "button js-main-menu-submit-action"
+      .js-workbasket-base-save-progress-spinner.spinner_block.hidden
+        = render "measures/bulks/loading_spinner", message: "Saving..."
+
+    = link_to "Cancel", "#", class: "secondary-button js-main-menu-close-popup",
+                             data: { popup_id: "schedule_export_to_cds_popup" }

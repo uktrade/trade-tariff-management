@@ -1,0 +1,20 @@
+- details = workbasket_settings.main_step_settings
+
+br
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Workbasket name
+      td
+        = workbasket.title
+
+    tr
+      td.heading_column
+        | Reason for these changes
+      td
+        = details['reason']
+
+br
+br

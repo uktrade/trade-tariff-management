@@ -2,6 +2,7 @@ class Measure < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
+  include ::ForceValidatorConcern
 
   VALID_ROLE_TYPE_IDS = [
     1, # Base regulation
@@ -95,8 +96,12 @@ class Measure < Sequel::Model
     full_temporary_stop_regulations.first
   end
 
-  one_to_many :measure_partial_temporary_stops, primary_key: :measure_generating_regulation_id,
-                                                key: :partial_temporary_stop_regulation_id
+  one_to_many :measure_partial_temporary_stops,
+              primary_key: :measure_generating_regulation_id,
+              key: :partial_temporary_stop_regulation_id do |ds|
+    ds.with_actual(MeasurePartialTemporaryStop)
+      .order(Sequel.asc(:validity_start_date))
+  end
 
   def measure_partial_temporary_stop
     measure_partial_temporary_stops.first
@@ -497,6 +502,12 @@ class Measure < Sequel::Model
     end
   end
 
+  def quota_order_number_origin
+    if quota_order_number.present?
+      quota_order_number.quota_order_number_origin
+    end
+  end
+
   def self.changes_for(depth = 1, conditions = {})
     operation_klass.select(
       Sequel.as(Sequel.cast_string("Measure"), :model),
@@ -537,22 +548,12 @@ class Measure < Sequel::Model
   end
 
   class << self
-    def limit_per_page
-      if Rails.env.production?
-        300
-      elsif Rails.env.development?
-        30
-      elsif Rails.env.test?
-        10
-      end
-    end
-
     def max_per_page
-      limit_per_page
+      25
     end
 
     def default_per_page
-      limit_per_page
+      25
     end
 
     def max_pages

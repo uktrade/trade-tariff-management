@@ -51,6 +51,11 @@ $(document).ready(function() {
           enabled: false,
           definitions: []
         },
+        precisions: [
+          { text: "1", value: 1 },
+          { text: "2", value: 2 },
+          { text: "3", value: 3 }
+        ],
         errors: []
       };
 
@@ -61,6 +66,7 @@ $(document).ready(function() {
         quota_is_licensed: null,
         quota_licence: null,
         quota_ordernumber: null,
+        quota_precision: null,
         quota_status: "open",
         quota_criticality_threshold: null,
         quota_description: null,
@@ -464,6 +470,7 @@ $(document).ready(function() {
           commodity_codes: payload.commodity_codes,
           commodity_codes_exclusions: payload.commodity_codes_exclusions,
           quota_ordernumber: payload.quota_ordernumber,
+          quota_precision: payload.quota_precision,
           quota_is_licensed: payload.quota_is_licensed === "true",
           quota_licence: payload.quota_licence,
           quota_description: payload.quota_description,
@@ -583,8 +590,10 @@ $(document).ready(function() {
             var section = clone(_section);
 
             section.duty_expressions.forEach(function(e) {
-              e.original_duty_expression_id = e.duty_expression_id.slice(0);
-              e.duty_expression_id = e.duty_expression_id.substring(0,2);
+              if (e.duty_expression_id) {
+                e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                e.duty_expression_id = e.duty_expression_id.substring(0,2);
+              }
             });
 
             if (section.type == "custom") {
@@ -599,8 +608,10 @@ $(document).ready(function() {
 
               section.periods.forEach(function(period) {
                 period.duty_expressions.forEach(function(e) {
-                  e.original_duty_expression_id = e.duty_expression_id.slice(0);
-                  e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                  if (e.duty_expression_id) {
+                    e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                    e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                  }
                 });
               });
             } else {
@@ -610,8 +621,10 @@ $(document).ready(function() {
               section.opening_balances.forEach(function(balance) {
                 if (section.type == "annual") {
                   balance.duty_expressions.forEach(function(e) {
-                    e.original_duty_expression_id = e.duty_expression_id.slice(0);
-                    e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                    if (e.duty_expression_id) {
+                      e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                      e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                    }
                   });
                 } else {
                   var ks = {
@@ -622,8 +635,10 @@ $(document).ready(function() {
 
                   ks[section.type].forEach(function(k) {
                     balance[k].duty_expressions.forEach(function(e) {
-                      e.original_duty_expression_id = e.duty_expression_id.slice(0);
-                      e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                      if (e.duty_expression_id) {
+                        e.original_duty_expression_id = e.duty_expression_id.slice(0);
+                        e.duty_expression_id = e.duty_expression_id.substring(0,2);
+                      }
                     });
                   });
                 }
@@ -646,8 +661,10 @@ $(document).ready(function() {
           payload.conditions = this.measure.conditions.map(function(condition) {
             var c = clone(condition);
 
-            c.original_measure_condition_code = c.condition_code.slice(0);
-            c.condition_code = c.condition_code.substring(0, 1);
+            if (c.condition_code) {
+              c.original_measure_condition_code = c.condition_code.slice(0);
+              c.condition_code = c.condition_code.substring(0, 1);
+            }
 
             c.measure_condition_components = c.measure_condition_components.map(function(component) {
               var c = clone(component);
@@ -781,6 +798,19 @@ $(document).ready(function() {
       },
       usingExistingQuota: function() {
         return this.measure.existing_quota === "existing";
+      },
+      disableButtons: function() {
+        if (!this.measure.measure_type_id) {
+          return true;
+        }
+
+        if (window.current_step == "configure_quota") {
+          if (this.quota_sections.length === 1 && !this.quota_sections[0].type) {
+            return true;
+          }
+        }
+
+        return false;
       }
     },
     watch: {

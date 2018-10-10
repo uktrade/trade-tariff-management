@@ -8,7 +8,7 @@ Vue.component("grid-column", {
   props: ["column", "item", "changeProp"],
   computed: {
     changed: function() {
-      return this.changeProp && this.item.changes.indexOf(this.changeProp) > -1;
+      return this.changeProp && this.item.changes && this.item.changes.indexOf(this.changeProp) > -1;
     },
     content: function() {
       return this.item[this.column];

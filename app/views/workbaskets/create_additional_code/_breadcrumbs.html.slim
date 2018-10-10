@@ -1,0 +1,19 @@
+- details = workbasket_settings.main_step_settings
+
+= render "shared/breadcrumbs" do
+  .breadcrumbs
+    ol
+      li
+        = link_to "Main menu", root_url
+      - if details["reason"].present?
+        li
+          = link_to "Manage additional codes", additional_codes_url
+
+        li aria-current="page"
+          = link_to "Work with selected additional codes", current_url
+      - elsif workbasket.submitted?
+        li
+          = link_to "Manage additional codes", additional_codes_url
+
+        li aria-current="page"
+          = link_to "Create new additional codes", "#"

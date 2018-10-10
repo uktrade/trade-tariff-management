@@ -27,6 +27,7 @@ module WorkbasketServices
         if associate?
 
           record = QuotaOrderNumber.new(quota_order_number_id: ops['order_number'])
+          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
               record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
             @errors.merge!("#{key.join(',')}": error.join('. '))

@@ -1,0 +1,21 @@
+= simple_form_for form, url: create_additional_code_url(id: workbasket.id),
+                        html: { class: "create-additional-codes", method: :put } do |f|
+  .error-summary role="alert" aria-labelledby="create-additional-codes-error-heading" tabindex="-1" v-cloak="" v-if="hasErrors"
+
+    h2.heading-medium.error-summary-heading#create-additional-codes-error-heading
+      | Error
+
+    p
+      | {{errorsSummary}}
+
+    p
+      | See individual fields for details.
+
+  - if workbasket.submitted?
+    = render "workbaskets/create_additional_code/steps/main/details"
+
+  = render "workbaskets/create_additional_code/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/create_additional_code/conformance_errors", f: f
+
+  = render "workbaskets/create_additional_code/action_links", f: f

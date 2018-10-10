@@ -1,0 +1,19 @@
+= render "breadcrumbs"
+
+- if workbasket.submitted?
+  script
+    = "window.additional_codes = #{workbasket_settings.additional_codes.map(&:to_json).to_json}".html_safe
+
+.additional-codes-show-page
+  h1.heading-large
+    - if workbasket_settings.main_step_settings["reason"].present?
+      | Work with selected additional codes
+    - else
+      | Create new additional codes
+
+  - if workbasket.submitted?
+    = render "workbaskets/create_additional_code/steps/main/details"
+
+    records-grid table-class="additional-codes-table" primary-key="additional_code_sid" :data="additional_codes" :columns="columns" :client-sorting="true"
+
+= render "shared/vue_templates/records_grid"

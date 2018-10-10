@@ -1,0 +1,139 @@
+$find-item-gutter: 5px;
+
+.find-items {
+  margin-bottom: 100px;
+}
+
+.find-items__row {
+  display: flex;
+  border-bottom: 2px solid $border-colour;
+}
+
+.find-items__checkbox-column {
+  flex: 0 0 200px;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.find-items__is,
+.find-items__type,
+.find-item__short {
+  flex: 0 0 220px;
+  max-width: 220px;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.find-item__full{
+  flex: 1 0 auto;
+  max-width: none;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.find-item__long {
+  flex: 0 0 365px;
+  max-width: 365px;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.find-item__tiny {
+  flex: 0 0 110px;
+  max-width: 110px;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.find-item__text {
+  flex: 0 0 150px;
+  max-width: 150px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.find-item__date {
+  flex: 0 0 500px;
+  max-width: 500px;
+  padding: $find-item-gutter $find-item-gutter $find-item-gutter 0;
+}
+
+.origin-exclusion + .origin-exclusion {
+  margin-top: 5px;
+}
+
+.footnote-search {
+  padding-top: 5px;
+  >div {
+    display: inline-block;
+    width: 350px;
+  }
+  >span {
+    display: inline-block;
+    padding: 8px 10px;
+    vertical-align: top;
+  }
+  .tiny-input {
+    vertical-align: top;
+    display: inline-block;
+    width: 70px !important
+  }
+}
+
+.origin-exclusion-search {
+  padding: 5px 0;
+  >div {
+    width: 220px;
+    display: inline-block;
+  }
+}
+
+.duty-search {
+  padding: 0;
+
+  &:first-child {
+    padding-top: 5px;
+  }
+
+  >div {
+    width: 300px;
+    display: inline-block;
+  }
+  .small-input {
+    width: 100px !important;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 2px;
+  }
+}
+
+.condition-search {
+  padding: 5px 0;
+  >div {
+    width: 300px;
+    display: inline-block;
+  }
+  .small-input {
+    width: 100px !important;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+  }
+}
+
+.items-table-wrapper,
+.records-table-wrapper,
+.measures-table-wrapper {
+  width: 100%;
+
+  .recycle-list {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+}
+
+.number_of_items_badge {
+  display: block;
+  margin-left: 20px;
+  margin-top: 0px;
+  padding-top: 5px;
+  width: 200px;
+  float: left;
+}

@@ -20,7 +20,15 @@ module TradeTariffBackend
       relevant_validations_for(record).select { |validation|
         validation.operations.include?(record.operation)
       }.each { |validation|
-        record.conformance_errors.add(validation.identifiers, validation.to_s) unless validation.valid?(record)
+        unless validation.valid?(record)
+          message = if validation.validation_options[:extend_message] == true
+                      [validation.to_s, validation.extend_error_message(record)].compact.join(" ")
+                    else
+                      validation.to_s
+                    end
+
+          record.conformance_errors.add(validation.identifiers, message)
+        end
       }
     end
 

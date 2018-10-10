@@ -44,6 +44,20 @@ module TradeTariffBackend
       def to_s
         description
       end
+
+      def extend_error_message(record)
+        association_key = validation_options[:of]
+
+        if association_key
+          association = record.send(association_key)
+
+          primary_key = association.send(:primary_key)
+          primary_key_value = association.send(primary_key)
+          validity_period = association.send(:own_validity_period)
+
+          "(#{association_key}-#{primary_key_value}: [#{validity_period}])"
+        end
+      end
     end
   end
 end
