@@ -244,6 +244,10 @@ Vue.component("quota-section", {
           this.section.parent_quota.balances = [];
         }
 
+        if (newVal == "annual" && !this.section.period) {
+          this.section.period = this.periods[0].id;
+        }
+
         this.section.parent_quota.balances.splice(0, 999);
       }
     },

@@ -30,7 +30,7 @@ Vue.component("quota-sections-manager", {
       this.sections.push({
         type: null, // anual, monthly
         start_date: "",
-        period: "1_repeating", // 1_repeating, 1, 2, 3, 4, 5
+        period: "1", // 1_repeating, 1, 2, 3, 4, 5
         balance: "",
 
         staged: false,
