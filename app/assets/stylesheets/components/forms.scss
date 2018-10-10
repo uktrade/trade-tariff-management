@@ -36,6 +36,10 @@ input.date-picker {
   &[disabled] {
     opacity: 0.5;
   }
+
+  &.has-error {
+    border-color: $error-colour !important;
+  }
 }
 
 .col-has-error {

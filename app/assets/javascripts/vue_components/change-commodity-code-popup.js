@@ -2,7 +2,8 @@ Vue.component("change-commodity-code-popup", {
   template: "#change-commodity-code-popup-template",
   data: function() {
     return {
-      measuresCommodityCodes: []
+      measuresCommodityCodes: [],
+      allCodesValid: true
     };
   },
   props: ["measures", "onClose", "open"],
@@ -21,6 +22,7 @@ Vue.component("change-commodity-code-popup", {
   },
   methods: {
     confirmChanges: function() {
+      if (!this.allCodesValid) { return; }
       var measuresChangesObjs = [];
       for (var currentCommodityCode in this.commodityCodesMap) {
         if (this.commodityCodesMap.hasOwnProperty(currentCommodityCode)) {
@@ -59,6 +61,18 @@ Vue.component("change-commodity-code-popup", {
     setCommodityCode: function(currentCommodityCode, newCommodityCode){
       var key = currentCommodityCode || "";
       this.commodityCodesMap[key] = newCommodityCode;
+      this.commodityCodesChanged();
+    },
+    commodityCodesChanged: function(){
+      this.allCodesValid = true;
+      for (var code in this.commodityCodesMap) {
+        if (this.commodityCodesMap.hasOwnProperty(code)) {
+          var value = this.commodityCodesMap[code];
+          if (value && value.length !== 10) {
+            this.allCodesValid = false;
+          }
+        }
+      }
     }
   },
   provide: function(){
