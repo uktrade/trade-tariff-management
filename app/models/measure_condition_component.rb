@@ -2,6 +2,7 @@ class MeasureConditionComponent < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
+  include ::ForceValidatorConcern
 
   plugin :time_machine
   plugin :oplog, primary_key: [:measure_condition_sid,
@@ -36,6 +37,7 @@ class MeasureConditionComponent < Sequel::Model
   delegate :description, :abbreviation, to: :duty_expression, prefix: true
   delegate :abbreviation, to: :monetary_unit, prefix: true, allow_nil: true
   delegate :description, to: :monetary_unit, prefix: true, allow_nil: true
+  delegate :validity_start_date, :validity_end_date, to: :measure_condition, allow_nil: true
 
   def formatted_duty_expression
     DutyExpressionFormatter.format({

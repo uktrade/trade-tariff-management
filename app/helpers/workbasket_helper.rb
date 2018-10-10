@@ -10,6 +10,13 @@ module WorkbasketHelper
     end
   end
 
+  def create_additional_code_section_header
+    case current_step
+    when "main"
+      "Create new additional codes"
+    end
+  end
+
   def create_quota_section_header
     case current_step
     when "main"
@@ -27,6 +34,15 @@ module WorkbasketHelper
     case current_step
     when "main"
       "Create a regulation"
+    when "review_and_submit"
+      "Review and submit"
+    end
+  end
+
+  def create_geographical_area_section_header
+    case current_step
+    when "main"
+      "Add geographical area"
     when "review_and_submit"
       "Review and submit"
     end
@@ -149,6 +165,27 @@ module WorkbasketHelper
           step: :main
         )
       end
+
+    when :create_additional_code
+      edit_create_additional_code_url(
+        workbasket.id,
+        step: :main
+      )
+
+    when :bulk_edit_of_quotas
+
+      if workbasket.settings.settings["start_date"].blank?
+        work_with_selected_quotas_bulk_url(
+            workbasket.id,
+            search_code: workbasket.settings.search_code
+        )
+
+      else
+        edit_quotas_bulk_url(
+            workbasket.id,
+            search_code: workbasket.settings.search_code
+        )
+      end
     end
   end
 
@@ -162,6 +199,10 @@ module WorkbasketHelper
       create_quotum_url(workbasket.id)
     when :create_regulation
       create_regulation_url(workbasket.id)
+    when :create_additional_code
+      create_additional_code_url(workbasket.id)
+    when :bulk_edit_of_quotas
+      quotas_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
     end
   end
 end

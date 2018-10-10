@@ -1,0 +1,65 @@
+.quotas-show-page {
+  padding-bottom: 100px;
+}
+
+.records-table.quotas-table {
+  .quota_order_number_id-column {
+    min-width: 60px !important;
+    max-width: 60px !important;
+  }
+
+  .quota_type_id-column {
+    min-width: 30px !important;
+    max-width: 30px !important;
+  }
+
+  .regulation_id-column {
+    min-width: 70px !important;
+    max-width: 70px !important;
+  }
+
+  .license-column {
+    min-width: 60px !important;
+    max-width: 60px !important;
+  }
+
+  .validity_start_date-column {
+    min-width: 110px !important;
+    max-width: 110px !important;
+  }
+
+  .validity_end_date-column {
+    min-width: 110px !important;
+    max-width: 110px !important;
+  }
+
+  .goods_nomenclature_item_ids-column {
+    min-width: 300px !important;
+    max-width: 300px !important;
+  }
+
+  .additional_code_ids-column {
+    min-width: 60px !important;
+    max-width: 60px !important;
+  }
+
+  .origin-column {
+    min-width: 40px !important;
+    max-width: 40px !important;
+  }
+
+  .origin_exclusions-column {
+    min-width: 100px !important;
+    max-width: 100px !important;
+  }
+
+  .last_updated-column {
+    min-width: 180px !important;
+    max-width: 180px !important;
+  }
+
+  .status-column {
+    min-width: 250px !important;
+    max-width: 250px !important;
+  }
+}

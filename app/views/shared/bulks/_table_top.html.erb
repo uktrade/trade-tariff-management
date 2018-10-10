@@ -1,0 +1,38 @@
+<div class="table-top">
+  <% if workbasket_is_editable? %>
+    <button-dropdown :disabled="noSelectedRecords">
+      <template slot="text">&ndash; select bulk action &ndash;</template>
+
+      <ul>
+        <li v-for="action in actions">
+          <a href="#" v-on:click.prevent="triggerAction(action.value)">
+            {{action.label}}
+          </a>
+        </li>
+      </ul>
+    </button-dropdown>
+  <% end %>
+    <button-dropdown>
+      <template slot="text">&ndash; show/hide columns &ndash;</template>
+
+      <ul>
+        <li v-for="(column, idx) in columns">
+          <span class="small-checkbox">
+            <input type="checkbox" :id="'column-' + idx" v-model="column.enabled" :value="true" />
+            <label :for="'column-' + idx">
+              {{column.title}}
+            </label>
+          </span>
+        </li>
+      </ul>
+    </button-dropdown>
+
+    <!--
+    <div class="col-md-6 text-right">
+      <div class="multiple-choice">
+        <input id="show-tooltips" v-model="showTooltips" type="checkbox" value="1">
+        <label for="show-tooltips">Show tool-tips when hovering over table cells</label>
+      </div>
+    </div>
+    -->
+</div>

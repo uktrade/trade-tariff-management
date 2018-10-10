@@ -16,6 +16,11 @@ class ModificationRegulation < Sequel::Model
   one_to_one :base_regulation, key: [:base_regulation_id, :base_regulation_role],
                                primary_key: [:base_regulation_id, :base_regulation_role]
 
+  one_to_many :fts_regulations,
+              class_name: :FullTemporaryStopRegulation,
+              key: [ :full_temporary_stop_regulation_id,
+                     :full_temporary_stop_regulation_role ]
+
   # TODO confirm this assumption
   # 0 not replaced
   # 1 fully replaced
@@ -37,6 +42,10 @@ class ModificationRegulation < Sequel::Model
     number = modification_regulation_id.slice(3,4)
 
     "#{year}/#{number}"
+  end
+
+  def last_fts_regulation
+    fts_regulations.last
   end
 
   def to_json(options = {})

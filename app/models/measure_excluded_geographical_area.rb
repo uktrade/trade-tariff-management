@@ -27,4 +27,13 @@ class MeasureExcludedGeographicalArea < Sequel::Model
       geographical_area: geographical_area.to_json
     }
   end
+
+  def validity_start_date
+    geographical_area.membership_validity_start_date
+  end
+
+  def validity_end_date
+    geographical_area.membership_validity_end_date
+  end
+
 end

@@ -25,7 +25,7 @@
 
 module Measures
   module SearchFilters
-    class Conditions < ::Measures::SearchFilters::CollectionFilterBase
+    class Conditions < ::Shared::SearchFilters::CollectionFilterBase
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         are

@@ -1,6 +1,24 @@
+[class*="heading-"] small {
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 20px;
+  display: inline-block;
+}
+
 input.datepicker,
 input.date-picker {
   max-width: 140px;
+}
+
+.error-summary {
+  p {
+    font-size: 19px;
+  }
+}
+
+.error-message {
+  font-weight: 600;
+  margin-bottom: 15px;
 }
 
 .form-group.text {
@@ -17,6 +35,12 @@ input.date-picker {
 
   &[disabled] {
     opacity: 0.5;
+  }
+}
+
+.col-has-error {
+  input, textarea, .selectize-input {
+    border-color: $error-colour !important;
   }
 }
 

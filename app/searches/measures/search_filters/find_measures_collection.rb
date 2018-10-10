@@ -1,6 +1,9 @@
 module Measures
   module SearchFilters
     module FindMeasuresCollection
+
+      include ::Shared::SearchFilters::FindCollection
+
       def by_start_date_and_measure_sid_reverse
         order(
           Sequel.desc(:validity_start_date),
@@ -19,37 +22,12 @@ module Measures
         where("searchable_data::text <> '{}'::text")
       end
 
-      def operator_search_by_status(operator, status=nil)
-        is_or_is_not_search_query("status", operator, status)
-      end
-
       def operator_search_by_measure_type(operator, measure_type_id=nil)
         is_or_is_not_search_query("measure_type_id", operator, measure_type_id)
       end
 
       def operator_search_by_origin(operator, geographical_area_id=nil)
         is_or_is_not_search_query("geographical_area_id", operator,  geographical_area_id)
-      end
-
-      def operator_search_by_date_of(ops={})
-        q_rules = ::Measures::SearchFilters::DateOf.new(ops).sql_rules
-        q_rules.present? ? where(q_rules) : self
-      end
-
-      def operator_search_by_valid_from(operator, date=nil)
-        date_filter_search_query("validity_start_date", operator, date)
-      end
-
-      def operator_search_by_valid_to(operator, date=nil)
-        date_filter_search_query("validity_end_date", operator, date)
-      end
-
-      def operator_search_by_author(user_id)
-        where(added_by_id: user_id)
-      end
-
-      def operator_search_by_last_updated_by(user_id)
-        where(last_update_by_id: user_id)
       end
 
       def operator_search_by_commodity_code(operator, commodity_code=nil)
@@ -90,33 +68,14 @@ module Measures
 
       private
 
-        def operator_search_where_clause(klass_name, operator, value=nil)
-          q_rules = "::Measures::SearchFilters::#{klass_name}".constantize.new(
+      def operator_search_where_clause(klass_name, operator, value=nil)
+        q_rules = "::Measures::SearchFilters::#{klass_name}".constantize.new(
             operator, value
-          ).sql_rules
+        ).sql_rules
 
-          q_rules.present? ? where(q_rules) : self
-        end
+        q_rules.present? ? where(q_rules) : self
+      end
 
-        def date_filter_search_query(field_name, operator, date)
-          q_rules = ::Measures::SearchFilters::DateUniversal.new(
-            field_name, operator, date
-          ).sql_rules
-
-          q_rules.present? ? where(q_rules) : self
-        end
-
-        def is_or_is_not_search_query(field_name, operator, value=nil)
-          return self if value.blank?
-
-          q_rule = if operator == "is"
-            "#{field_name} = ?"
-          else
-            "#{field_name} IS NULL OR #{field_name} != ?"
-          end
-
-          where(q_rule, value)
-        end
     end
   end
 end

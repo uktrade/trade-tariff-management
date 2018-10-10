@@ -14,6 +14,12 @@ class QuotaOrderNumber < Sequel::Model
     ds.with_actual(QuotaDefinition)
   end
 
+  one_to_one :measure, key: :ordernumber,
+                       primary_key: :quota_order_number_id do |ds|
+    ds.with_actual(Measure)
+      .order(Sequel.desc(:validity_start_date))
+  end
+
   one_to_one :quota_order_number_origin, primary_key: :quota_order_number_sid,
                                          key: :quota_order_number_sid
 

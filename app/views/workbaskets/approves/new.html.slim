@@ -1,0 +1,20 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Measures", measures_url
+
+    li aria-current="page"
+      | Approve new measures
+
+header
+  h1.heading-large
+    | Approve new measures
+
+  .view-workbasket-container
+    = render "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/block", partial_name: "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/approves/general"
+    = render "workbaskets/#{workbasket.type}/workflow_screens_parts/workbasket_details"
+    = render "workbaskets/shared/steps/review_and_submit/measures", read_only: true, record_type: workbasket.type
+    = render "workbaskets/approves/form"

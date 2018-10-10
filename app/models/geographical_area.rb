@@ -1,6 +1,7 @@
 class GeographicalArea < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   COUNTRIES_CODES = ['0', '2'].freeze
   ERGA_OMNES = '1011'
@@ -22,9 +23,8 @@ class GeographicalArea < Sequel::Model
       .order(Sequel.desc(:geographical_area_description_periods__validity_start_date))
   end
 
-  def geographical_area_description
-    geographical_area_descriptions.first
-  end
+  one_to_one :geographical_area_membership, key: :geographical_area_sid,
+                                            primary_key: :geographical_area_sid
 
   many_to_one :parent_geographical_area, class: self
   one_to_many :children_geographical_areas, key: :parent_geographical_area_group_sid,
@@ -120,12 +120,21 @@ class GeographicalArea < Sequel::Model
 
         scope
       else
-        q_search(filter_ops)
+
+        if filter_ops[:groups_only].present?
+          groups.q_search(filter_ops)
+        else
+          q_search(filter_ops)
+        end
       end
     end
   end
 
   delegate :description, to: :geographical_area_description, allow_nil: true
+
+  def geographical_area_description
+    geographical_area_descriptions.first
+  end
 
   def to_json
     {
@@ -156,5 +165,17 @@ class GeographicalArea < Sequel::Model
       id: geographical_area_id,
       description: "#{geographical_area_id} - #{description}"
     }
+  end
+
+  def membership_validity_start_date
+    geographical_area_membership&.validity_start_date
+  end
+
+  def membership_validity_end_date
+    geographical_area_membership&.validity_end_date
+  end
+
+  def decorate
+    GeographicalAreaDecorator.decorate(self)
   end
 end

@@ -26,7 +26,7 @@
 
 module Measures
   module SearchFilters
-    class Footnotes < ::Measures::SearchFilters::CollectionFilterBase
+    class Footnotes < ::Shared::SearchFilters::CollectionFilterBase
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         are

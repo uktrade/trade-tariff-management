@@ -5,32 +5,69 @@ module Workbaskets
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
-      :create_regulation
+      :create_regulation,
+      :create_additional_code,
+      :bulk_edit_of_additional_codes,
+      :bulk_edit_of_quotas,
+      :create_geographical_area
     ]
 
     STATUS_LIST = [
-      :new_in_progress,                # "New - in progress"
-      :editing,                        # "Editing"
-      :awaiting_cross_check,           # "Awaiting cross-check"
-      :cross_check_rejected,           # "Cross-check rejected"
-      :ready_for_approval,             # "Ready for approval"
-      :awaiting_approval,              # "Awaiting approval"
-      :approval_rejected,              # "Approval rejected"
-      :ready_for_export,               # "Ready for export"
-      :awaiting_cds_upload_create_new, # "Awaiting CDS upload - create new"
-      :awaiting_cds_upload_edit,       # "Awaiting CDS upload - edit"
-      :awaiting_cds_upload_overwrite,  # "Awaiting CDS upload - overwrite"
-      :awaiting_cds_upload_delete,     # "Awaiting CDS upload - delete"
-      :sent_to_cds,                    # "Sent to CDS"
-      :sent_to_cds_delete,             # "Sent to CDS - delete"
-      :published,                      # "Published"
-      :cds_error                       # "CDS error"
+      :new_in_progress,                # New - in progress
+                                       # Newly started, but not yet submitted into workflow
+                                       #
+      :editing,                        # Editing
+                                       # Existing item, already on CDS, being edited but not yet submitted into workflow
+                                       #
+      :awaiting_cross_check,           # Awaiting cross-check
+                                       # Check Submitted into workflow, not yet cross-checked
+                                       #
+      :cross_check_rejected,           # Cross-check rejected
+                                       # Did not pass cross-check, returned to submitter
+                                       #
+      :ready_for_approval,             # Ready for approval
+                                       # Has passed cross-check but not yet submitted for approval
+                                       #
+      :awaiting_approval,              # Awaiting approval
+                                       # Submitted for approval, pending response from Approver
+                                       #
+      :approval_rejected,              # Approval rejected
+                                       # Was not approved, returned to submitter
+                                       #
+      :ready_for_export,               # Ready for export
+                                       # Approved but not yet scheduled for sending to CDS
+                                       #
+      :awaiting_cds_upload_create_new, # Awaiting CDS upload - create new
+                                       # New item approved and scheduled for sending to CDS
+                                       #
+      :awaiting_cds_upload_edit,       # Awaiting CDS upload - edit
+                                       # Edited item approved and scheduled for sending to CDS,
+                                       # existing version will be end-dated and replaced
+                                       #
+      :awaiting_cds_upload_overwrite,  # Awaiting CDS upload - overwrite
+                                       # Edited item approved and scheduled for sending to CDS,
+                                       # existing version will be updated
+                                       #
+      :awaiting_cds_upload_delete,     # Awaiting CDS upload - delete
+                                       # Delete instruction approved and scheduled for sending to CDS
+                                       #
+      :sent_to_cds,                    # Sent to CDS
+                                       # Sent to CDS, waiting for response
+                                       #
+      :sent_to_cds_delete,             # Sent to CDS - delete
+                                       # Delete instruction sent to CDS, waiting for response
+                                       #
+      :published,                      # Published
+                                       # On CDS, may or may not have taken effect
+                                       #
+      :cds_error                       # CDS error
+                                       # Sent to CDS, but CDS returned an error
+                                       #
     ]
 
     EDITABLE_STATES = [
       :new_in_progress,  # "New - in progress"
-      :editing,          # "Editing"
-      :approval_rejected # "Approval rejected"
+      :editing          # "Editing"
     ]
 
     SENT_TO_CDS_STATES = [
@@ -44,6 +81,23 @@ module Workbaskets
       :approval_rejected,
       :cds_error
     ]
+
+    APPROVER_SCOPE = [
+      :awaiting_cross_check,
+      :awaiting_approval
+    ]
+
+    CREATE_WORKBASKETS = %w(
+      create_measures
+      create_quota
+      create_regulation
+      create_geographical_area
+      create_additional_code
+    )
+
+    EDIT_WORKABSKETS = %w(
+      bulk_edit_of_measures
+    )
 
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
@@ -63,9 +117,33 @@ module Workbaskets
     one_to_one :create_regulation_settings, key: :workbasket_id,
                                             class_name: "Workbaskets::CreateRegulationSettings"
 
+    one_to_one :create_additional_code_settings, key: :workbasket_id,
+                                                 class_name: "Workbaskets::CreateAdditionalCodeSettings"
+
+    one_to_one :bulk_edit_of_additional_codes_settings, key: :workbasket_id,
+                                                        class_name: "Workbaskets::BulkEditOfAdditionalCodesSettings"
+
+    one_to_one :bulk_edit_of_quotas_settings, key: :workbasket_id,
+                                              class_name: "Workbaskets::BulkEditOfQuotasSettings"
+
+    one_to_one :create_geographical_area_settings, key: :workbasket_id,
+                                                   class_name: "Workbaskets::CreateGeographicalAreaSettings"
+
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
                        class_name: "User"
+
+    many_to_one :cross_checker, key: :cross_checker_id,
+                                foreign_key: :id,
+                                class_name: "User"
+
+    many_to_one :approver, key: :approver_id,
+                           foreign_key: :id,
+                           class_name: "User"
+
+    many_to_one :last_update_by, key: :last_update_by_id,
+                                 foreign_key: :id,
+                                 class_name: "User"
 
     plugin :timestamps
     plugin :validation_helpers
@@ -104,8 +182,18 @@ module Workbaskets
         end
       end
 
-      def for_author(current_user)
-        where(user_id: current_user.id)
+      def relevant_for_manager(current_user)
+        if current_user.approver?
+          where(
+            "user_id = ? OR status = ?",
+            current_user.id, "awaiting_cross_check"
+          )
+        else
+          where(
+            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval')",
+            current_user.id
+          )
+        end
       end
 
       def q_search(keyword)
@@ -124,7 +212,7 @@ module Workbaskets
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status(["awaiting_cross_check", "ready_for_export"])
+        ).in_status(["awaiting_cds_upload_create_new", "awaiting_cds_upload_edit"])
          .order(:operation_date)
       end
 
@@ -147,6 +235,14 @@ module Workbaskets
       def by_type(type_name)
         where(type: type_name)
       end
+
+      def cross_check_can_be_started
+        where("cross_checker_id IS NULL and status = 'awaiting_cross_check'")
+      end
+
+      def approve_can_be_started
+        where("approver_id IS NULL and status = 'awaiting_approval'")
+      end
     end
 
     begin :callbacks
@@ -160,28 +256,130 @@ module Workbaskets
       end
     end
 
+    def class_name
+      type.split('_')
+          .map(&:capitalize)
+          .join('')
+    end
+
     def decorate
       Workbaskets::WorkbasketDecorator.decorate(self)
     end
 
-    def editable?
-      status.to_sym.in?(EDITABLE_STATES)
+    begin :workflow_related_helpers
+      def assign_cross_checker!(current_user)
+        add_event!(current_user, :cross_check_process_started)
+
+        self.cross_checker_id = current_user.id
+        save
+      end
+
+      def assign_approver!(current_user)
+        add_event!(current_user, :approve_process_started)
+
+        self.approver_id = current_user.id
+        save
+      end
+
+      def cross_checker_is?(current_user)
+        cross_checker_id.to_i == current_user.id
+      end
+
+      def approver_is?(current_user)
+        approver_id.to_i == current_user.id
+      end
+
+      def edit_type?
+        EDIT_WORKABSKETS.include?(type)
+      end
+
+      def possible_approved_status
+        edit_type? ? "awaiting_cds_upload_edit" : "awaiting_cds_upload_create_new"
+      end
+
+      def editable?
+        status.to_sym.in?(EDITABLE_STATES)
+      end
+
+      def submitted?
+        !editable?
+      end
+
+      def can_withdraw?
+        awaiting_cross_check? || awaiting_approval?
+      end
+
+      def cross_check_process_can_be_started?
+        awaiting_cross_check? &&
+        cross_checker_id.blank?
+      end
+
+      def cross_check_process_can_not_be_started?
+        !cross_check_process_can_be_started?
+      end
+
+      def can_continue_cross_check?(current_user)
+        awaiting_cross_check? && cross_checker_is?(current_user)
+      end
+
+      def approve_process_can_be_started?
+        awaiting_approval? &&
+        approver_id.blank?
+      end
+
+      def approve_process_can_not_be_started?
+        !approve_process_can_be_started?
+      end
+
+      def can_continue_approve?(current_user)
+        awaiting_approval? && approver_is?(current_user)
+      end
+
+      def awaiting_cds_upload_new_or_edit_item?
+        awaiting_cds_upload_create_new? ||
+        awaiting_cds_upload_edit?
+      end
+
+      def operation_date_can_be_rescheduled?
+        awaiting_cds_upload_new_or_edit_item? &&
+        operation_date.present? &&
+        operation_date > Date.today + 1.day
+      end
+    end
+
+    def author_name
+      user.name
+    end
+
+    def ordered_events
+      events.sort do |a, b|
+        a.created_at <=> b.created_at
+      end
+    end
+
+    def submitted?
+      !status.to_sym.in? [:new_in_progress, :editing]
     end
 
     def move_status_to!(current_user, new_status, description=nil)
-      event = Workbaskets::Event.new(
-        workbasket_id: self.id,
-        user_id: current_user.id,
-        event_type: new_status,
-        description: description
-      )
-      event.save
+      add_event!(current_user, new_status, description)
 
       self.status = new_status
       self.last_update_by_id = current_user.id
       self.last_status_change_at = Time.zone.now
 
       save
+    end
+
+    def add_event!(current_user, new_status, description=nil)
+      event = Workbaskets::Event.new(
+        workbasket_id: self.id,
+        user_id: current_user.id,
+        event_type: new_status,
+        description: description
+      )
+
+      event.save
     end
 
     def settings
@@ -194,11 +392,32 @@ module Workbaskets
         create_quota_settings
       when :create_regulation
         create_regulation_settings
+      when :create_additional_code
+        create_additional_code_settings
+      when :bulk_edit_of_additional_codes
+        bulk_edit_of_additional_codes_settings
+      when :bulk_edit_of_quotas
+        bulk_edit_of_quotas_settings
+      when :create_geographical_area
+        create_geographical_area_settings
       end
     end
 
     def generate_next_sequence_number
       @sequence_number = (@sequence_number || 0) + 1
+    end
+
+    def to_json
+      {
+        title: title,
+        type: type,
+        status: status,
+        user: user.try(:to_json),
+        last_update_by: last_update_by.try(:to_json),
+        last_status_change_at: last_status_change_at.try(:strftime, "%d %b %Y") || "-",
+        updated_at: updated_at.try(:strftime, "%d %b %Y") || "-",
+        created_at: created_at.try(:strftime, "%d %b %Y") || "-"
+      }
     end
 
     def debug_collection
@@ -283,6 +502,10 @@ module Workbaskets
           create_measures
           create_quota
           create_regulation
+          create_additional_code
+          bulk_edit_of_additional_codes
+          bulk_edit_of_quotas
+          create_geographical_area
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -294,25 +517,26 @@ module Workbaskets
     private
 
       def build_related_settings_table!
-        settings = case type.to_sym
+        target_class = case type.to_sym
         when :create_measures
-          ::Workbaskets::CreateMeasuresSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::CreateMeasuresSettings
         when :bulk_edit_of_measures
-          ::Workbaskets::BulkEditOfMeasuresSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::BulkEditOfMeasuresSettings
         when :create_quota
-          ::Workbaskets::CreateQuotaSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::CreateQuotaSettings
         when :create_regulation
-          ::Workbaskets::CreateRegulationSettings.new(
-            workbasket_id: id
-          )
+          ::Workbaskets::CreateRegulationSettings
+        when :create_additional_code
+          ::Workbaskets::CreateAdditionalCodeSettings
+        when :bulk_edit_of_additional_codes
+          ::Workbaskets::BulkEditOfAdditionalCodesSettings
+        when :create_geographical_area
+          ::Workbaskets::CreateGeographicalAreaSettings
         end
 
+        settings = target_class.new(
+          workbasket_id: id
+        )
         settings.save if settings.present?
       end
   end

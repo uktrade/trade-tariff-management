@@ -19,6 +19,6 @@ class BaseController < ApplicationController
   private
 
     def ilike?(str, q_rule)
-      str.downcase.starts_with?(q_rule)
+      !str.nil? && str.to_s.downcase.starts_with?(q_rule)
     end
 end
