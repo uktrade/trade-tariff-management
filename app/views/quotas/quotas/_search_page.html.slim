@@ -20,7 +20,7 @@ script
 
   - if quotas_search.present?
     div v-if="!isLoading"
-      = simple_form_for :search, url: workbasket_quotas_url(ops), method: :post do |f|
+      = simple_form_for :search, url: setup_workbasket_quotas_url(ops), method: :post do |f|
         = content_tag :input, nil, { type: "hidden", "name" => "quota_sids[]", "v-for" => "(sid, idx) in selectedQuotas", ":value" => "sid" }
         = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
         p

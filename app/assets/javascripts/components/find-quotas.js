@@ -298,7 +298,7 @@ $(document).ready(function() {
     },
     computed: {
       noSelectedQuota: function() {
-        return !this.selectedItem;
+        return false;//!this.selectedItem;
       },
 
       validityStartDateValueDisabled: function() {

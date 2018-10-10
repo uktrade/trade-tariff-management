@@ -49,5 +49,9 @@ module Quotas
       redirect_to quotas_url(search_code: code)
     end
 
+    def setup_workbasket
+
+    end
+
   end
 end
