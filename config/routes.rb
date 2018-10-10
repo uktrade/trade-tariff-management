@@ -174,6 +174,10 @@ Rails.application.routes.draw do
     end
   end
 
+  scope module: :geo_areas do
+    resources :geo_areas, only: [:index]
+  end
+
   namespace :regulation_form_api do
     resources :regulation_groups, only: [:index]
     resources :base_regulations, only: [:index]

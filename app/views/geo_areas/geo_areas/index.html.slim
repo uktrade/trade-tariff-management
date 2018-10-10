@@ -1,0 +1,16 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li aria-current="page"
+      | Find and edit geographical areas
+
+header
+  h1.heading-large
+    | Find and edit geographical areas
+
+  = render "geo_areas/geo_areas/search/form"
+  = render "geo_areas/geo_areas/search/results"
+
+= paginate search_results
