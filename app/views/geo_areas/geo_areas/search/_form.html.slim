@@ -1,7 +1,11 @@
+script
+  == "window.save_url = '#{geo_areas_url}';"
+  == "window.__search_geo_areas_settings_json = #{search_form.settings.to_json};"
+
 = simple_form_for search_form, as: :search,
                                url: geo_areas_url,
                                method: :get,
-                               html: { class: "", "data-parsley-validate" => true } do |f|
+                               html: { class: "js-search-geographical-areas-form", "data-parsley-validate" => true } do |f|
 
   .bootstrap-row
     .col-lg-5.col-md-7.col-sm-10.col-xs-12
@@ -43,5 +47,5 @@
       .bootstrap-row
         .col-lg-5.col-md-7.col-sm-10.col-xs-12
           .form-actions
-            = f.button :submit, "Search", class: "button"
+            = link_to "Search", "#", class: "button js-validate-geographical-areas-search-form"
             = link_to "Clear", geo_areas_url, class: 'secondary-button'

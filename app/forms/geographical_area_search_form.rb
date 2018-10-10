@@ -10,4 +10,13 @@ class GeographicalAreaSearchForm
       instance_variable_set("@#{filter_name}", params[filter_name])
     end
   end
+
+  def settings
+    {
+      q: q,
+      start_date: start_date,
+      end_date: end_date,
+      code: code
+    }
+  end
 end
