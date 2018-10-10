@@ -110,6 +110,15 @@ module WorkbasketInteractions
       end
     end
 
+    def assign_system_ops!(measure)
+      system_ops_assigner = ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          measure, system_ops
+      )
+      system_ops_assigner.assign!
+
+      system_ops_assigner.record
+    end
+
     private
 
       ASSOCIATION_LIST.map do |name|
@@ -184,11 +193,11 @@ module WorkbasketInteractions
       end
 
       def validate_candidates!
-        candidates.map do |gn_and_additional_codes|
-          candidate_errors = candidate_validation_errors(gn_and_additional_codes)
+        candidates.map do |variable_params|
+          candidate_errors = candidate_validation_errors(variable_params)
 
           if candidate_errors.present?
-            @candidates_with_errors[gn_and_additional_codes.to_s] = candidate_errors
+            @candidates_with_errors[variable_params.to_s] = candidate_errors
           end
         end
       end
@@ -236,10 +245,10 @@ module WorkbasketInteractions
       end
 
       begin :measures_related_methods
-        def candidate_validation_errors(gn_and_additional_codes)
+        def candidate_validation_errors(variable_params)
           errors_collection = {}
 
-          measure = generate_new_measure!(gn_and_additional_codes)
+          measure = generate_new_measure!(variable_params)
 
           m_errors = measure_errors(measure)
           errors_collection[:measure] = m_errors if m_errors.present?
@@ -262,9 +271,9 @@ module WorkbasketInteractions
           )
         end
 
-        def generate_new_measure!(gn_and_additional_codes)
+        def generate_new_measure!(variable_params)
           measure = Measure.new(
-            attrs_parser.measure_params(gn_and_additional_codes)
+            attrs_parser.measure_params(variable_params)
           )
 
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
@@ -293,15 +302,6 @@ module WorkbasketInteractions
             operation_date: operation_date,
             current_admin_id: current_admin.id
           }
-        end
-
-        def assign_system_ops!(measure)
-          system_ops_assigner = ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            measure, system_ops
-          )
-          system_ops_assigner.assign!
-
-          system_ops_assigner.record
         end
 
         def workbasket_type_prefix

@@ -38,7 +38,7 @@ window.WorkbasketBaseSaveActions =
     $(".js-workbasket-base-submit-button, .js-workbasket-base-exit-button, .js-workbasket-base-previous-step-link").removeClass('disabled')
                                                                                                                       .removeClass('hidden')
 
-  handleSuccessResponse: (resp, submit_mode) ->
+  handleSuccessResponse: (resp, submit_mode, callback) ->
     WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
 
     if resp.redirect_url isnt undefined
@@ -53,14 +53,8 @@ window.WorkbasketBaseSaveActions =
           window.location = window.save_url + '/edit?step=' + resp.next_step
         ), 1000
       else
-        WorkbasketBaseSaveActions.showSuccessMessage()
         WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner()
-
-  showSuccessMessage: ->
-    $(".js-workbasket-base-success-message-container").removeClass('hidden')
-
-  hideSuccessMessage: ->
-    $(".js-workbasket-base-success-message-container").addClass('hidden')
+        callback() if callback isnt undefined
 
   setSpinnerText: (message) ->
     $(".js-workbasket-base-continue-spinner .saving_message").text(message)

@@ -20,7 +20,7 @@ module Measures
 
       def prepare
         if current_page.present?
-          if workbasket_settings.initial_items_populated.present?
+          if workbasket_settings.initial_items_populated.present? || current_batch_is_loaded?
             load_workbasket_items
 
           elsif current_batch_is_not_loaded?
@@ -73,9 +73,13 @@ module Measures
           workbasket.items.count == paginator.total_count
         end
 
+        def current_batch_is_loaded?
+          workbasket_settings.batches_loaded_pages
+                             .include?(current_page)
+        end
+
         def current_batch_is_not_loaded?
-          !workbasket_settings.batches_loaded_pages
-                              .include?(current_page)
+          !current_batch_is_loaded?
         end
 
         def current_page

@@ -29,19 +29,19 @@ describe "Main XML generation" do
   end
 
   let(:xml_message_nodes) do
-    xml_envelope_node["env:transaction"]["env:app.message"]
+    xml_envelope_node["env:transaction"]
   end
 
   let(:xml_additional_code_transaction_node) do
-    xml_message_nodes[0]
+    xml_message_nodes[0]["env:app.message"]
   end
 
   let(:xml_transmission_comment_transaction_node) do
-    xml_message_nodes[1]
+    xml_message_nodes[1]["env:app.message"]
   end
 
   let(:xml_measure_transaction_node) do
-    xml_message_nodes[2]
+    xml_message_nodes[2]["env:app.message"]
   end
 
   let(:workbasket) do

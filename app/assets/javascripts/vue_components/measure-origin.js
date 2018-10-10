@@ -3,8 +3,50 @@ Vue.component("measure-origin", {
   props: [
     "placeholder",
     "kind",
-    "origin"
+    "origin",
+    "multiple"
   ],
+  data: function() {
+    var data = {
+      origins: [{
+        type: "country",
+        placeholder: "― select a country or region ―",
+        id: null,
+        options: window.all_geographical_countries,
+        key: 1
+      }],
+      key: 2
+    };
+
+    if (this.origin.geographical_area_id instanceof Array && this.origin.geographical_area_id.length > 0) {
+      var arr = [];
+      var selected_ids = this.origin.geographical_area_id;
+
+      selected_ids.forEach(function(id) {
+        var isCountry = window.geographical_areas_json[id].length === 0;
+        var exclusions = selected_ids.slice(0).filter(function(e) {
+          return e != id;
+        });
+
+        var options = isCountry ? window.all_geographical_countries : window.geographical_groups_except_erga_omnes;
+        var opts = options.filter(function(o) {
+          return exclusions.indexOf(o.geographical_area_id) === -1;
+        });
+
+        arr.push({
+          type: "country",
+          placeholder: isCountry ? "― select a country or region ―" : "― select a group of countries ―",
+          id: id,
+          key: data.key++,
+          options: opts
+        });
+      });
+
+      data.origins = arr;
+    }
+
+    return data;
+  },
   mounted: function() {
     var self = this,
         radio = $(this.$el).find("input[type='radio']"),
@@ -33,13 +75,16 @@ Vue.component("measure-origin", {
       }
     },
     showExclusions: function() {
-      return this.kind !== "country" && !!this.origin.geographical_area_id;
+      return this.kind !== "country" && this.origin.selected;
+    },
+    alreadySelected: function() {
+      return this.origins.map(function(o) {
+        return o.id;
+      });
     }
   },
   watch: {
     "origin.geographical_area_id": function(newVal) {
-      this.origin.exclusions.splice(0, 999);
-
       if (newVal) {
         this.origin.selected = true;
         $(this.$el).find("input[type='radio']").prop("checked", true).trigger("change");
@@ -51,11 +96,19 @@ Vue.component("measure-origin", {
       if (newVal) {
         if (this.kind === "erga_omnes") {
           this.origin.geographical_area_id = '1011';
-          this.addExclusion();
         }
-      } else {
-        this.origin.geographical_area_id = null;
       }
+    },
+    alreadySelected: function() {
+      if (!this.multiple) {
+        return;
+      }
+
+      this.origin.geographical_area_id = this.origins.map(function(o) {
+        return o.id;
+      });
+
+      this.origin.selected = true;
     }
   },
   methods: {
@@ -111,11 +164,36 @@ Vue.component("measure-origin", {
       }, []);
     },
     getExclusionOptions: function(geographicalAreaId){
+      if (this.multiple) {
+        return [];
+      }
+
       var currentExclusions = this.getCurrentExclusionsArray(),
           areas = window.geographical_areas_json[geographicalAreaId];
       return areas.slice().filter(function(area){
         return !currentExclusions.includes(area.geographical_area_id);
       });
+    },
+    addCountryOrTerritory: function() {
+      this.origins.push({
+        type: "country",
+        placeholder: "― select a country or region ―",
+        id: null,
+        options: window.all_geographical_countries,
+        key: this.key++
+      });
+    },
+    addGroup: function() {
+      this.origins.push({
+        type: "group",
+        placeholder: "― select a group of countries ―",
+        id: null,
+        options: window.geographical_groups_except_erga_omnes,
+        key: this.key++
+      });
+    },
+    removeSubOrigin: function(index) {
+      this.origins.splice(index, 1);
     }
   }
 });

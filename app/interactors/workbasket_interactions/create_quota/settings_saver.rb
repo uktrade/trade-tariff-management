@@ -10,12 +10,37 @@ module WorkbasketInteractions
         @order_number_saver ||= build_order_number!
       end
 
+      def sub_quota_saver
+        @sub_quota_saver ||= WorkbasketServices::QuotaSavers::SubQuota.new(self, settings.settings)
+      end
+
+      def valid?
+        super
+
+        parent_errors = {}
+        quota_periods.map do |position, section_ops|
+          saver = WorkbasketServices::QuotaSavers::ParentQuota.new(
+              self,
+              section_ops['parent_quota'],
+              settings.settings,
+              nil)
+          parent_errors.merge!(saver.errors) unless saver.valid?
+        end
+        @errors[:parent_quota] = parent_errors if parent_errors.present?
+
+        @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
+
+        @errors.blank?
+      end
+
       def persist!
         @persist = true
         @measure_sids = []
         @quota_period_sids = []
+        @parent_quota_period_sids = []
 
         @order_number = persist_order_number!
+        sub_quota_saver.persist!
 
         quota_periods.map do |position, section_ops|
           save_period_by_type(position, section_ops)
@@ -23,6 +48,7 @@ module WorkbasketInteractions
 
         settings.measure_sids_jsonb = @measure_sids.to_json
         settings.quota_period_sids_jsonb = @quota_period_sids.to_json
+        settings.parent_quota_period_sids_jsonb = @parent_quota_period_sids.to_json
         settings.set_searchable_data_for_created_measures! if settings.save
       end
 
@@ -30,7 +56,7 @@ module WorkbasketInteractions
 
         def build_order_number!(persist_mode=false)
           ::WorkbasketServices::QuotaSavers::OrderNumber.new(
-            self, settings.settings, persist_mode
+              self, settings.settings, persist_mode
           )
         end
 
@@ -42,27 +68,67 @@ module WorkbasketInteractions
         end
 
         def save_period_by_type(position, section_ops)
+          parent_quota_saver = WorkbasketServices::QuotaSavers::ParentQuota.new(
+              self,
+              section_ops['parent_quota'],
+              settings.settings,
+              order_number)
+          if parent_quota_saver.associate?
+            parent_quota_saver.persist!
+          end
+
           setup_initial_date_range!(section_ops)
 
           case section_ops['type']
           when "annual"
 
             section_ops["opening_balances"].map do |k, balance_ops|
-              add_period!(section_ops, balance_ops)
+
+              year_start_point = @start_point
+              sub_definition = add_period!(section_ops, balance_ops)
+              if parent_quota_saver.associate?
+                main_definition = parent_quota_saver.add_period!(
+                    sub_definition,
+                    k,
+                    year_start_point)
+                parent_quota_saver.build_quota_association!(main_definition, sub_definition)
+                @parent_quota_period_sids << main_definition.quota_definition_sid
+              end
+
             end
 
           when "bi_annual", "quarterly", "monthly"
 
             section_ops["opening_balances"].map do |k, opening_balance_ops|
+              year_start_point = @start_point
+              main_definition = nil
               opening_balance_ops.map do |target_key, balance_part_ops|
-                add_period!(section_ops, balance_part_ops, target_key)
+                sub_definition = add_period!(section_ops, balance_part_ops, target_key)
+                if parent_quota_saver.associate?
+                  main_definition ||= parent_quota_saver.add_period!(
+                      sub_definition,
+                      k,
+                      year_start_point)
+                  parent_quota_saver.build_quota_association!(main_definition, sub_definition)
+                  @parent_quota_period_sids << main_definition.quota_definition_sid
+                end
               end
+
             end
 
           when "custom"
 
             section_ops["periods"].map do |k, balance_ops|
-              add_custom_period!(section_ops, balance_ops)
+              sub_definition = add_custom_period!(section_ops, balance_ops)
+              if parent_quota_saver.associate?
+                main_definition = parent_quota_saver.add_period!(
+                    sub_definition,
+                    k,
+                    balance_ops['start_date'].to_date,
+                    balance_ops['end_date'].try(:to_date))
+                parent_quota_saver.build_quota_association!(main_definition, sub_definition)
+                @parent_quota_period_sids << main_definition.quota_definition_sid
+              end
             end
 
           end
@@ -86,6 +152,8 @@ module WorkbasketInteractions
           @start_point, @end_point = period_next_date_generator_class.new(
             section_ops['type'], @end_point
           ).date_range
+          sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
+          period_saver.quota_definition
         end
 
         def add_custom_period!(section_ops, balance_ops)
@@ -98,6 +166,8 @@ module WorkbasketInteractions
           period_saver.persist!
 
           @quota_period_sids << period_saver.quota_definition.quota_definition_sid
+          sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
+          period_saver.quota_definition
         end
 
         def setup_initial_date_range!(section_ops)

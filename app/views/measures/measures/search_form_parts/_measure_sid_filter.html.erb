@@ -3,16 +3,16 @@
     <div class="multiple-choice">
       <input name="search[measure_sid][enabled]" id="toggle-measure-sid" type="checkbox" value="1" v-model="measure_sid.enabled" />
       <label for="toggle-measure-sid">
-        Measure SID
+        Measure SIDs
       </label>
     </div>
   </div>
 
   <div class="find-measures__is">
-    <custom-select :options="conditionsForMeasureSid" label-field="label" value-field="value"  v-model="measure_sid.operator" v-bind:disabled="measureSidDisabled" name="search[measure_sid][operator]"></custom-select>
+    <custom-select :options="conditionsForMeasureSid" label-field="label" value-field="value"  v-model="measure_sid.operator" name="search[measure_sid][operator]"></custom-select>
   </div>
 
   <div class="find-measure__long">
-    <input name="search[measure_sid][value]" class="form-control" v-model="measure_sid.value" v-bind:disabled="measureSidDisabled" />
+    <input name="search[measure_sid][value]" class="form-control" v-model="measure_sid.value" />
   </div>
 </div>

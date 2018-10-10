@@ -5,8 +5,5 @@ fieldset
   .form-group v-bind:class="{ 'form-group-error': errors.operation_date }"
     label.form-label
       | Operation date
-
-    .row
-      .col-md-6
-        span.error-message v-if="errors.operation_date" v-html="errors.operation_date"
-        = content_tag "date-select", "", ":value.sync" => "regulation.operation_date"
+    span.error-message v-if="errors.operation_date" v-html="errors.operation_date"
+    = content_tag "date-select", "", ":value.sync" => "regulation.operation_date"

@@ -25,13 +25,17 @@ html {
   background: #fff !important;
 }
 
+[v-cloak] {
+  display: none;
+}
+
 #global-header-bar,
 #global-cookie-message p,
 #footer .footer-wrapper,
 .header-wrapper,
 #wrapper {
   max-width: calc(100% - 60px) !important;
-  min-width: 1440px !important;
+  min-width: 1024px !important;
 }
 
 .desktop-title {

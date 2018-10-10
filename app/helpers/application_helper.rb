@@ -11,4 +11,18 @@ module ApplicationHelper
       link_to name, url
     end
   end
+
+  def sortable(column, title, options = nil)
+    css_class = column.to_s == params[:sort_by].to_s ? "current #{params[:sort_dir]}" : nil
+    direction = column.to_s == params[:sort_by].to_s && params[:sort_dir].to_s == "asc" ? "desc" : "asc"
+
+    if column.to_s == params[:sort_by].to_s
+      title = (title + (direction == "desc" ? "<arrow-up></arrow-up>" : "<arrow-down></arrow-down>")).html_safe
+    end
+
+    options ||= {}
+    options.merge!({sort_by: column, sort_dir: direction})
+
+    link_to title, options, {class: css_class}
+  end
 end

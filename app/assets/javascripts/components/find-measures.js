@@ -116,92 +116,92 @@ $(document).ready(function() {
 
       var default_params = {
         measure_sid: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         group_name: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         status: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         author: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         date_of: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
         last_updated_by: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         regulation: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         type: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         validity_start_date: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
         validity_end_date: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null,
           mode: "creation"
         },
         commodity_code: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         additional_code: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         origin: {
-          enabled: true,
+          enabled: false,
           operator: "is",
           value: null
         },
         origin_exclusions: {
-          enabled: true,
+          enabled: false,
           operator: "include",
           value: [{value: ""}]
         },
         duties: {
-          enabled: true,
+          enabled: false,
           operator: "are",
           value: [{duty_expression_id: null, duty_amount: null}]
         },
         conditions: {
-          enabled: true,
+          enabled: false,
           operator: "are",
           value: [{
             measure_condition_code: null
           }]
         },
         footnotes: {
-          enabled: true,
+          enabled: false,
           operator: "are",
           value: [{
             footnote_type_id: null,
@@ -380,6 +380,13 @@ $(document).ready(function() {
                 });
               }
             }
+
+            if (data.footnotes.value.length === 0) {
+              data.footnotes.value.push({
+                footnote_type_id: null,
+                footnote_id: null
+              });
+            }
           }
         }
       }
@@ -387,82 +394,37 @@ $(document).ready(function() {
       return data;
     },
     computed: {
-      measureSidDisabled: function() {
-        return !this.measure_sid.enabled;
-      },
-      groupNameDisabled: function() {
-        return !this.group_name.enabled;
-      },
-      statusDisabled: function() {
-        return !this.status.enabled;
-      },
-      authorDisabled: function() {
-        return !this.author.enabled;
-      },
-      dateDisabled: function() {
-        return !this.date_of.enabled;
-      },
-      lastUpdatedByDisabled: function() {
-        return !this.last_updated_by.enabled;
-      },
-      regulationDisabled: function() {
-        return !this.regulation.enabled;
-      },
-      typeDisabled: function() {
-        return !this.type.enabled;
-      },
-      validityStartDateDisabled: function() {
-        return !this.validity_start_date.enabled;
-      },
-      validityEndDateDisabled: function() {
-        return !this.validity_end_date.enabled;
-      },
-      commodityCodeDisabled: function() {
-        return !this.commodity_code.enabled;
-      },
-      additionalCodeDisabled: function() {
-        return !this.additional_code.enabled;
-      },
-      originDisabled: function() {
-        return !this.origin.enabled;
-      },
-      originExclusionsDisabled: function() {
-        return !this.origin_exclusions.enabled;
-      },
-      dutiesDisabled: function() {
-        return !this.duties.enabled;
-      },
-      conditionsDisabled: function() {
-        return !this.conditions.enabled;
-      },
-      footnotesDisabled: function() {
-        return !this.footnotes.enabled;
-      },
       noSelectedMeasures: function() {
         return (this.selectionType == "all" && this.selectedMeasures.length === this.pagination.total_count) ||
                (this.selectionType == "none" && this.selectedMeasures.length === 0);
       },
 
       validityStartDateValueDisabled: function() {
-        return this.validityStartDateDisabled || this.disableValue.indexOf(this.validity_start_date.operator) > -1;
+        return this.disableValue.indexOf(this.validity_start_date.operator) > -1;
       },
       validityEndDateValueDisabled: function() {
-        return this.validityEndDateDisabled || this.disableValue.indexOf(this.validity_end_date.operator) > -1;
+        return this.disableValue.indexOf(this.validity_end_date.operator) > -1;
       },
       commodityCodeValueDisabled: function() {
-        return this.commodityCodeDisabled || this.disableValue.indexOf(this.commodity_code.operator) > -1;
+        return this.disableValue.indexOf(this.commodity_code.operator) > -1;
       },
       conditionsValueDisabled: function() {
-        return this.conditionsDisabled || this.disableValue.indexOf(this.conditions.operator) > -1;
+        return this.disableValue.indexOf(this.conditions.operator) > -1;
       },
       footnotesValueDisabled: function() {
-        return this.footnotesDisabled || this.disableValue.indexOf(this.footnotes.operator) > -1;
+        return this.disableValue.indexOf(this.footnotes.operator) > -1;
       },
       exclusionsValueDisabled: function () {
-        return this.originExclusionsDisabled || this.disableValue.indexOf(this.origin_exclusions.operator) > -1;
+        return this.disableValue.indexOf(this.origin_exclusions.operator) > -1;
       }
     },
     methods: {
+      footnotesIdDisabled: function(index) {
+        return this.footnotesValueDisabled || !this.footnotes.value[index].footnote_type_id;
+      },
+      dutyExpressionAmountDisabled: function(index) {
+        return !this.duties.value[index].duty_expression_id;
+      },
       addOriginExclusion: function() {
         this.origin_exclusions.value.push({ value: '' });
       },
@@ -561,7 +523,43 @@ $(document).ready(function() {
       },
       changeSelectionType: function(selectAll) {
         this.selectionType = selectAll ? "all" : "none";
-      }
+      },
+      exclusionsChanged: function() {
+        var selected = any(this.origin_exclusions.value, function(oe) {
+          return oe.value;
+        });
+
+        if (selected) {
+          this.origin_exclusions.enabled = true;
+        }
+      },
+      dutyChanged: function() {
+        var selected = any(this.duties.value, function(oe) {
+          return oe.duty_expression_id || oe.duty_amount;
+        });
+
+        if (selected) {
+          this.duties.enabled = true;
+        }
+      },
+      conditionChanged: function() {
+        var selected = any(this.conditions.value, function(oe) {
+          return oe.measure_condition_code;
+        });
+
+        if (selected) {
+          this.conditions.enabled = true;
+        }
+      },
+      footnoteChanged: function() {
+        var selected = any(this.footnotes.value, function(oe) {
+          return oe.footnote_type_id || oe.footnote_id;
+        });
+
+        if (selected) {
+          this.footnotes.enabled = true;
+        }
+      },
     },
     mounted: function() {
       var self = this;
@@ -585,7 +583,187 @@ $(document).ready(function() {
       selectionType: function(val) {
         this.selectedMeasures.splice(0, this.selectedMeasures.length);
         window.localStorage.setItem(this.searchCode + "_selection_type", val);
-      }
+      },
+      "measure_sid.operator": function(val) {
+        if (val) {
+          this.measure_sid.enabled = true;
+        }
+      },
+      "measure_sid.value": function(val) {
+        if (val) {
+          this.measure_sid.enabled = true;
+        }
+      },
+      "group_name.operator": function(val) {
+        if (val) {
+          this.group_name.enabled = true;
+        }
+      },
+      "group_name.value": function(val) {
+        if (val) {
+          this.group_name.enabled = true;
+        }
+      },
+      "type.operator": function(val) {
+        if (val) {
+          this.type.enabled = true;
+        }
+      },
+      "type.value": function(val) {
+        if (val) {
+          this.type.enabled = true;
+        }
+      },
+      "regulation.operator": function(val) {
+        if (val) {
+          this.regulation.enabled = true;
+        }
+      },
+      "regulation.value": function(val) {
+        if (val) {
+          this.regulation.enabled = true;
+        }
+      },
+      "date_of.mode": function(val) {
+        if (val) {
+          this.date_of.enabled = true;
+        }
+      },
+      "date_of.operator": function(val) {
+        if (val) {
+          this.date_of.enabled = true;
+        }
+      },
+      "date_of.value": function(val) {
+        if (val) {
+          this.date_of.enabled = true;
+        }
+      },
+      "validity_start_date.operator": function(val) {
+        if (val) {
+          this.validity_start_date.enabled = true;
+        }
+      },
+      "validity_start_date.value": function(val) {
+        if (val) {
+          this.validity_start_date.enabled = true;
+        }
+      },
+      "validity_end_date.operator": function(val) {
+        if (val) {
+          this.validity_end_date.enabled = true;
+        }
+      },
+      "validity_end_date.value": function(val) {
+        if (val) {
+          this.validity_end_date.enabled = true;
+        }
+      },
+      "commodity_code.operator": function(val) {
+        if (val) {
+          this.commodity_code.enabled = true;
+        }
+      },
+      "commodity_code.value": function(val) {
+        if (val) {
+          this.commodity_code.enabled = true;
+        }
+      },
+      "additional_code.operator": function(val) {
+        if (val) {
+          this.additional_code.enabled = true;
+        }
+      },
+      "additional_code.value": function(val) {
+        if (val) {
+          this.additional_code.enabled = true;
+        }
+      },
+      "origin.operator": function(val) {
+        if (val) {
+          this.origin.enabled = true;
+        }
+      },
+      "origin.value": function(val) {
+        if (val) {
+          this.origin.enabled = true;
+        }
+      },
+      "origin_exclusions.operator": function(val) {
+        if (val) {
+          this.origin_exclusions.enabled = true;
+        }
+      },
+      "origin_exclusions.value": function(val) {
+        if (val) {
+          this.origin_exclusions.enabled = true;
+        }
+      },
+      "duties.operator": function(val) {
+        if (val) {
+          this.duties.enabled = true;
+        }
+      },
+      "duties.value": function(val) {
+        if (val) {
+          this.duties.enabled = true;
+        }
+      },
+      "conditions.operator": function(val) {
+        if (val) {
+          this.conditions.enabled = true;
+        }
+      },
+      "condition.value": function(val) {
+        if (val) {
+          this.condition.enabled = true;
+        }
+      },
+      "footnotes.operator": function(val) {
+        if (val) {
+          this.footnotes.enabled = true;
+        }
+      },
+      "footnotes.value": function(val) {
+        if (val) {
+          this.footnotes.enabled = true;
+        }
+      },
+      "status.operator": function(val) {
+        if (val) {
+          this.status.enabled = true;
+        }
+      },
+      "status.value": function(val) {
+        if (val) {
+          this.status.enabled = true;
+        }
+      },
+      "author.value": function(val) {
+        if (val) {
+          this.author.enabled = true;
+        }
+      },
+      "date_of.mode": function(val) {
+        if (val) {
+          this.date_of.enabled = true;
+        }
+      },
+      "date_of.operator": function(val) {
+        if (val) {
+          this.date_of.enabled = true;
+        }
+      },
+      "date_of.value": function(val) {
+        if (val) {
+          this.date_of.enabled = true;
+        }
+      },
+      "last_updated_by.value": function(val) {
+        if (val) {
+          this.last_updated_by.enabled = true;
+        }
+      },
     }
   });
 });

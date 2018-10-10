@@ -631,6 +631,11 @@ GEM
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       xpath (~> 3.0)
+    capybara-selenium (0.0.6)
+      capybara
+      selenium-webdriver
+    childprocess (0.9.0)
+      ffi (~> 1.0, >= 1.0.11)
     codeclimate-test-reporter (1.0.7)
       simplecov
     coderay (1.1.2)
@@ -820,7 +825,6 @@ GEM
       rack
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
-    rack-timeout (0.4.2)
     rails (5.1.5)
       actioncable (= 5.1.5)
       actionmailer (= 5.1.5)
@@ -914,6 +918,9 @@ GEM
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
     selectize-rails (0.12.4.1)
+    selenium-webdriver (3.14.0)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.2)
     sentry-raven (2.7.2)
       faraday (>= 0.7.6, < 1.0)
     sequel (4.49.0)
@@ -1001,6 +1008,7 @@ DEPENDENCIES
   builder (~> 3.2)
   byebug
   capybara
+  capybara-selenium
   codeclimate-test-reporter
   coffee-rails (~> 4.2.2)
   connection_pool (~> 2.2)
@@ -1047,7 +1055,6 @@ DEPENDENCIES
   puma (~> 3.4)
   pundit (= 0.3.0)
   rabl (~> 0.12)
-  rack-timeout (~> 0.4)
   rails (= 5.1.5)
   rails_12factor
   redis-rails
@@ -1057,6 +1064,7 @@ DEPENDENCIES
   rubyzip (~> 1.2.2)
   sass-rails (= 5.0.6)
   selectize-rails
+  selenium-webdriver
   sentry-raven
   sequel (~> 4.32)
   sequel-rails (~> 0.9, >= 0.9.12)

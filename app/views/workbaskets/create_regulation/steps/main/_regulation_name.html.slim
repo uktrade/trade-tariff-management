@@ -4,4 +4,4 @@ h3.heading-medium
   .col-md-12
     .form-group v-bind:class="{ 'form-group-error': errors.information_text }"
       span.error-message v-if="errors.information_text" v-html="errors.information_text"
-      = f.input :information_text, as: :text, label: false, input_html: { rows: 4, "v-model" => "regulation.information_text" }
+      = f.input :information_text, label: "Information text", as: :text, input_html: { rows: 4, "v-model" => "regulation.information_text" }

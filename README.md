@@ -16,7 +16,7 @@
 
     bin/setup
 
-2. Update `.env` file with valid data.
+2. Update `.env` file with valid data (or copy .env.test)
 
 3. Start Foreman.
 

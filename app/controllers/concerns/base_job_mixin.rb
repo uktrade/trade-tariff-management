@@ -8,13 +8,19 @@ module BaseJobMixin
              .page(params[:page])
       )
     end
+
+    expose(:additional_params) do
+      {}
+    end
   end
 
   def create
     record = klass.new(
-      date_filters: date_filters,
-      issue_date: Time.zone.now,
-      state: "P"
+      {
+        date_filters: date_filters,
+        issue_date: Time.zone.now,
+        state: "P"
+      }.merge(additional_params)
     )
 
     if record.save
@@ -30,13 +36,12 @@ module BaseJobMixin
 
   private
 
-    def date_filters
-      ops = {}
+  def date_filters
+    ops = {}
 
-      ops[:start_date] = params[:start_date].try(:to_date) || Date.today
-      ops[:end_date] = params[:end_date].try(:to_date) if params[:end_date].present?
+    ops[:start_date] = params[:start_date].try(:to_date) || Date.today
+    ops[:end_date] = params[:end_date].try(:to_date) if params[:end_date].present?
 
-      ops
-
-    end
+    ops
+  end
 end

@@ -53,3 +53,38 @@ function any(arr, func) {
     return func(obj);
   }).length > 0;
 }
+
+function retryAjax(options, retries, time, success, error) {
+  var _retries = 0;
+
+  options.success = success;
+  options.error = function() {
+    if (_retries == retries) {
+      error();
+      return;
+    }
+
+    _retries++;
+    var ajaxThis = this;
+
+    setTimeout(function() {
+      $.ajax(ajaxThis);
+    }, time);
+  };
+
+  $.ajax(options);
+}
+
+function makeRandomString() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);;
+}
+
+function getSearchParam(param) {
+  var params = {};
+  window.location.search.replace("?", "").split("&").forEach(function(s) {
+    var parts = s.split("=");
+    params[parts[0]] = parts[1];
+  });
+
+  return params[param];
+}

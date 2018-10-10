@@ -1,37 +1,31 @@
 <div class="table-top">
-  <div class="row">
-    <% if workbasket_is_editable? %>
-      <div class="col-md-3 col-lg-2">
-        <button-dropdown :disabled="noSelectedMeasures">
-          <template slot="text">&ndash; select bulk action &ndash;</template>
+  <% if workbasket_is_editable? %>
+    <button-dropdown :disabled="noSelectedMeasures">
+      <template slot="text">&ndash; select bulk action &ndash;</template>
 
-          <ul>
-            <li v-for="action in actions">
-              <a href="#" v-on:click.prevent="triggerAction(action.value)">
-                {{action.label}}
-              </a>
-            </li>
-          </ul>
-        </button-dropdown>
-      </div>
-    <% end %>
+      <ul>
+        <li v-for="action in actions">
+          <a href="#" v-on:click.prevent="triggerAction(action.value)">
+            {{action.label}}
+          </a>
+        </li>
+      </ul>
+    </button-dropdown>
+  <% end %>
+    <button-dropdown>
+      <template slot="text">&ndash; show/hide columns &ndash;</template>
 
-    <div class="col-md-3 col-lg-2">
-      <button-dropdown>
-        <template slot="text">&ndash; show/hide columns &ndash;</template>
-
-        <ul>
-          <li v-for="(column, idx) in columns">
-            <span class="small-checkbox">
-              <input type="checkbox" :id="'column-' + idx" v-model="column.enabled" :value="true" />
-              <label :for="'column-' + idx">
-                {{column.title}}
-              </label>
-            </span>
-          </li>
-        </ul>
-      </button-dropdown>
-    </div>
+      <ul>
+        <li v-for="(column, idx) in columns">
+          <span class="small-checkbox">
+            <input type="checkbox" :id="'column-' + idx" v-model="column.enabled" :value="true" />
+            <label :for="'column-' + idx">
+              {{column.title}}
+            </label>
+          </span>
+        </li>
+      </ul>
+    </button-dropdown>
 
     <!--
     <div class="col-md-6 text-right">
@@ -41,5 +35,4 @@
       </div>
     </div>
     -->
-  </div>
 </div>

@@ -48,6 +48,7 @@ module WorkbasketValueObjects
         %w(
           conditions
           footnotes
+          sub_quotas
         )
       end
 

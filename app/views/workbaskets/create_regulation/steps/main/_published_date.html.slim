@@ -3,5 +3,7 @@ div v-if="showPublishedDate"
     | Specify the published date
   = f.input :published_date, as: :hidden, input_html: { "v-model" => "regulation.published_date" }
   .form-group v-bind:class="{ 'form-group-error': errors.published_date }"
+    label.form-label
+      | Published date
     span.error-message v-if="errors.published_date" v-html="errors.published_date"
     = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.published_date"  }
