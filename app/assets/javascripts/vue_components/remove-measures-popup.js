@@ -28,7 +28,7 @@ Vue.component("remove-measures-popup", {
         jqxhr = BulkRemoveMeasuresActions.removeAllMeasuresInWorkbasket();
         jqxhr.done(function(){
           self.allMeasuresRemovedCb();
-          $(".js-bulk-edit-of-measures-exit")[0].click(); // click exit
+          $(".js-bulk-edit-of-measures-exit-to-search")[0].click(); // click exit
         });
       } else {
         jqxhr = BulkRemoveMeasuresActions.removeMeasures(this.measures);
