@@ -1,3 +1,19 @@
+<%= render "shared/breadcrumbs" do %>
+  <div class="breadcrumbs">
+    <ol>
+      <li>
+        <%= link_to "Main menu", root_url %>
+      </li>
+      <li>
+        <%= link_to "Find a quota", quotas_url %>
+      </li>
+      <li>
+        <%= link_to "Search results", quotas_url(search_code: search_code) %>
+      </li>
+    </ol>
+  </div>
+<% end %>
+
 <div class="work-with-selected-quota">
   <%= form_tag({}, { method: :post }) do %>
     <h1 class="heading-xlarge">
@@ -69,26 +85,24 @@
           </label>
         </div>
 
-        <div class="panel panel-border-narrow" v-if="suspendingQuota">
-          <form-group :errors="errors" error-key="suspension_date">
-            <template slot-scope="slotProps">
-              <label for="action" class="form-label">
-                Optionally, when should the suspension end?
+        <form-group :errors="errors" classes="panel panel-border-narrow" error-key="suspension_date" v-if="suspendingQuota">
+          <template slot-scope="slotProps">
+            <label for="action" class="form-label">
+              Optionally, when should the suspension end?
 
-                <span class="error-message" v-if="slotProps.hasError" v-cloak="">
-                  {{slotProps.error}}
-                </span>
+              <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+                {{slotProps.error}}
+              </span>
 
-                <span class="form-hint">
-                  The quota will be suspended from the date you specified above. You can optionally specify an end-date now, or you can leave this open-ended and remove the suspension later if needed.
-                </span>
-              </label>
+              <span class="form-hint">
+                The quota will be suspended from the date you specified above. You can optionally specify an end-date now, or you can leave this open-ended and remove the suspension later if needed.
+              </span>
+            </label>
 
-              <date-select :value.sync="suspension_date"></date-select>
-              <input type="hidden" name="suspension_date" v-model="suspension_date" />
-            </template>
-          </form-group>
-        </div>
+            <date-select :value.sync="suspension_date"></date-select>
+            <input type="hidden" name="suspension_date" v-model="suspension_date" />
+          </template>
+        </form-group>
 
         <div class="multiple-choice">
           <input type='radio' id="action-remove-suspension" class="radio-inline-group" name="action" v-model="action" value="remove_suspension">
@@ -126,7 +140,7 @@
           </span>
         </label>
         <div class="row">
-          <div class="col-md-5 col-lg-3">
+          <div class="col-md-8 col-lg-6">
             <custom-select url="/regulations.json" label-field="description" value-field="regulation_id" placeholder="― start typing ―" min-length="2" v-model="regulation_id" date-sensitive="true" :scope-date="validity_start_date" :disabled="changesNotFromLegislation" :on-change="regulationSelected"></custom-select>
             <input type="hidden" name="regulation_id" v-model="regulation_id" />
             <input type="hidden" name="regulation_role" v-model="regulation_role" />
@@ -157,7 +171,7 @@
           </span>
         </label>
         <div class="row">
-          <div class="col-md-7 col-lg-5">
+          <div class="col-md-9 col-lg-7">
             <textarea name="reason" id="reason" rows="4" class="form-control" v-model="reason"></textarea>
           </div>
         </div>
@@ -177,7 +191,7 @@
           </span>
         </label>
         <div class="row">
-          <div class="col-md-6 col-lg-4">
+          <div class="col-md-9 col-lg-7">
             <input type="text" name="workbasket_name" class="form-control" v-model="workbasket_name">
           </div>
         </div>

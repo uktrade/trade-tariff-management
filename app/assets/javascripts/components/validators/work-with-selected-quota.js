@@ -69,7 +69,7 @@ WorkWithSelectedQuotaValidator.prototype.validateLevelThree = function() {
     valid = false;
   }
 
-  if (this.data.suspendingQuota && this.data.suspension_date && !suspension_date.isValid()) {
+  if (this.data.action == "suspend_quota" && this.data.suspension_date && !suspension_date.isValid()) {
     this.errors.suspension_date = "The suspension end date, if specified, must be valid.";
     this.errors.action = " ";
     valid = false;

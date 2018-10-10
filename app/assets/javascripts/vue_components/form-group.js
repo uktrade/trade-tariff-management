@@ -1,11 +1,20 @@
 var template = `
-<div :class="{'form-group': true, 'form-group-error': hasError}"><slot v-bind:error="error" v-bind:hasError="hasError"></slot></div>
+<div :class="classObj"><slot v-bind:error="error" v-bind:hasError="hasError"></slot></div>
 `;
 
 Vue.component("form-group", {
   template: template,
-  props: ["errors", "errorKey"],
+  props: ["errors", "errorKey", "classes"],
   computed: {
+    classObj: function() {
+      var classes = {'form-group': true, 'form-group-error': this.hasError};
+
+      if (this.classes) {
+        classes[this.classes] = true;
+      }
+
+      return classes;
+    },
     hasError: function() {
       return !!this.error;
     },
