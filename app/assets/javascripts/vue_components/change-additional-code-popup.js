@@ -3,7 +3,8 @@ Vue.component("change-additional-code-popup", {
   data: function(){
     return {
       removeAdditionalCodes: [],
-      measuresAdditionalCodes: []
+      measuresAdditionalCodes: [],
+      allCodesValid: true
     };
   },
   props: ["measures", "onClose", "open"],
@@ -22,6 +23,7 @@ Vue.component("change-additional-code-popup", {
   },
   methods: {
     confirmChanges: function(){
+      if (!this.allCodesValid) { return; }
       var measuresChangesObjs = [];
       for (var currentAdditionalCode in this.additionalCodesMap) {
         if (this.additionalCodesMap.hasOwnProperty(currentAdditionalCode)) {
@@ -62,6 +64,7 @@ Vue.component("change-additional-code-popup", {
     setAdditionalCode: function(currentAdditionalCode, newAdditionalCode){
       var key = currentAdditionalCode || "";
       this.additionalCodesMap[key] = newAdditionalCode;
+      this.additionalCodesChanged();
     },
     additionalCodeForRemoval: function(currentAdditionalCode){
       this.removeAdditionalCodes.push(currentAdditionalCode);
@@ -70,6 +73,17 @@ Vue.component("change-additional-code-popup", {
       var idx = this.removeAdditionalCodes.indexOf(currentAdditionalCode);
       if (idx != -1) {
         this.removeAdditionalCodes.splice(idx, 1);
+      }
+    },
+    additionalCodesChanged: function(){
+      this.allCodesValid = true;
+      for (var code in this.additionalCodesMap) {
+        if (this.additionalCodesMap.hasOwnProperty(code)) {
+          var value = this.additionalCodesMap[code];
+          if (value && value.length !== 4) {
+            this.allCodesValid = false;
+          }
+        }
       }
     }
   },

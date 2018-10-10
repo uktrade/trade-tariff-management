@@ -1,7 +1,7 @@
 script type="text/x-template" id="measure-change-additional-code-input-template"
   .bootstrap-row.measure-change-additional-code-input
     .col-xs-4
-      p
+      p :class=="{ 'blank-additional-code' : !additionalCode }"
         | {{additionalCode || "-"}}
     .col-xs-8
       .multiple-choice-wrapper
@@ -10,7 +10,7 @@ script type="text/x-template" id="measure-change-additional-code-input-template"
           label
         .or or
         .text-input-wrapper
-          input type="text" v-model="newAdditionalCode" class="form-control" :disabled="removeAdditionalCode"
+          input type="text" v-model="newAdditionalCode" class="form-control" :disabled="removeAdditionalCode" :class=="{ 'has-error' : isWrong }"
         p
 
 script type="text/x-template" id="measure-additional-code-previewer-template"
@@ -58,5 +58,5 @@ script type="text/x-template" id="change-additional-code-popup-template"
             measure-additional-code-previewer
 
       .form-actions
-        button.button @click.prevent="confirmChanges" Update selected measures
+        button.button @click.prevent="confirmChanges" :disabled="!allCodesValid" Update selected measures
         a.secondary-button href="#" @click.prevent="onClose" Cancel
