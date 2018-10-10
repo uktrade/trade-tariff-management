@@ -19,6 +19,29 @@
 
       .bootstrap-row
         .col-lg-5.col-md-7.col-sm-10.col-xs-12
+          .find-items__row.without_border
+            .find-items__checkbox-column
+              .multiple-choice
+                input#toggle-country-code name="search[code]" type="checkbox" value="0" /
+                label for="toggle-country-code"
+                  | Country
+
+          .find-items__row.without_border
+            .find-items__checkbox-column
+              .multiple-choice
+                input#toggle-region-code name="search[code]" type="checkbox" value="2" /
+                label for="toggle-region-code"
+                  | Region
+
+          .find-items__row.without_border
+            .find-items__checkbox-column
+              .multiple-choice
+                input#toggle-group-code name="search[code]" type="checkbox" value="1" /
+                label for="toggle-group-code"
+                  | Group
+
+      .bootstrap-row
+        .col-lg-5.col-md-7.col-sm-10.col-xs-12
           .form-actions
             = f.button :submit, "Search", class: "button"
             = link_to "Clear", geo_areas_url, class: 'secondary-button'
