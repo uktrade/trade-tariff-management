@@ -255,12 +255,12 @@ $gutter: 15px;
 
   @each $col in $cols {
     .col-#{$col} {
-      max-width: $single * $col;
+      max-width: calc(#{$single * $col} - #{$gutter});
       flex-basis: calc(#{$single * $col} - #{$gutter});
     }
 
     .col-xs-#{$col} {
-      max-width: $single * $col;
+      max-width: calc(#{$single * $col} - #{$gutter});
       flex-basis: calc(#{$single * $col} - #{$gutter});
     }
   }
@@ -268,7 +268,7 @@ $gutter: 15px;
   @media (min-width: 768px) {
     @each $col in $cols {
       .col-sm-#{$col} {
-        max-width: $single * $col;
+        max-width: calc(#{$single * $col} - #{$gutter});
         flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
@@ -277,7 +277,7 @@ $gutter: 15px;
   @media (min-width: 992px) {
     @each $col in $cols {
       .col-md-#{$col} {
-        max-width: $single * $col;
+        max-width: calc(#{$single * $col} - #{$gutter});
         flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
@@ -290,7 +290,7 @@ $gutter: 15px;
   @media (min-width: 1024px) {
     @each $col in $cols {
       .col-lg-#{$col} {
-        max-width: $single * $col;
+        max-width: calc(#{$single * $col} - #{$gutter});
         flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
@@ -299,7 +299,7 @@ $gutter: 15px;
   @media (min-width: 1600px) {
     @each $col in $cols {
       .col-xl-#{$col} {
-        max-width: $single * $col;
+        max-width: calc(#{$single * $col} - #{$gutter});
         flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }

@@ -494,7 +494,7 @@ $(document).ready(function() {
         this.isLoading = true;
 
         $.get(window.location.href).success(function(data) {
-          self.measures = data.measures;
+          self.measures = data.collection;
           self.isLoading = false;
 
           if (callback) {

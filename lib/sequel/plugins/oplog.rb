@@ -83,7 +83,7 @@ module Sequel
 
         def _update_columns(columns)
           if manual_add
-            sql = _update_dataset.update_sql(columns)
+            sql = _update_dataset.update_sql(columns.except(:oid))
             _update_dataset.send(:returning_fetch_rows, sql)
 
           else

@@ -1,0 +1,64 @@
+= render "shared/breadcrumbs" do
+  .breadcrumbs
+    ol
+      li
+        = link_to "Main menu", root_url
+      li
+        = link_to "Find and edit additional codes", additional_codes_url
+      li
+        = link_to "Search results", additional_codes_url(search_code: workbasket_settings.initial_search_results_code)
+      li aria-current="page"
+        = link_to "Work with selected codes", edit_additional_codes_bulk_url(workbasket.id, search_code: workbasket_settings.initial_search_results_code)
+
+h2.heading-large
+  - if workbasket.awaiting_cross_check?
+    | Submitted for Cross-Check
+  - else
+    = workbasket_author? ? 'Edit additional codes' : 'Review additional codes'
+
+= render "additional_codes/bulks/details"
+
+script
+  == "window.__workbasket_id = #{workbasket.id};"
+  == "window.__pagination_metadata = #{pagination_metadata.to_json};"
+  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+  == "window.current_step_settings = #{workbasket_settings.main_step_settings.to_json};"
+
+- cache [ "measure_form_js_variabless", expires_in: 8.hours ] do
+ = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
+
+.bulk-edit-additional-codes
+ = render "shared/bulks/table_top"
+
+ = content_tag "records-grid", nil, { "table-class" => "additional-codes-table", "primary-key" => "additional_code_sid", ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleRecordsPage", ":columns" => "columns", ":selected-rows" => "selectedRecords", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
+   p Loading additional codes...
+
+ = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
+
+ = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
+   h1.heading-xlarge slot="title"
+     | Loading additional codes
+   h4.heading-medium slot-scope="slotProps"
+     | Please wait while we load and prepare additional codes for editing
+     br
+     | {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
+     br
+     = content_tag "loading-spinner", nil
+
+ = render "shared/bulks/action_buttons"
+
+ = content_tag "change-additional-codes-description-popup", nil, { "v-if" => "changingDescription", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", "@records-updated" => "recordsUpdated" }
+
+ = content_tag "change-additional-codes-validity-period-popup", nil, { "v-if" => "changingValidityPeriod", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", "@records-updated" => "recordsUpdated" }
+
+ = content_tag "remove-additional-codes-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", ":selected-all-records" => "selectedAllRecords", ":records-removed-cb" => "recordsRemoved", ":all-records-removed-cb" => "allRecordsRemoved" }
+
+ = content_tag "delete-additional-codes-popup", nil, { "v-if" => "deleting", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", "@records-deleted" => "recordsDeleted" }
+
+= render "shared/vue_templates/records_grid"
+= render "shared/vue_templates/additional_codes/change_description"
+= render "shared/vue_templates/additional_codes/change_validity_period"
+= render "shared/vue_templates/additional_codes/remove"
+= render "shared/vue_templates/additional_codes/delete"
+
+= render "measures/bulks/save_actions_popups/collection"

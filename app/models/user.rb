@@ -12,6 +12,14 @@ class User < Sequel::Model
                                   class_name: "Workbaskets::Event"
 
   dataset_module do
+    def approvers
+      where(approver_user: true)
+    end
+
+    def managers
+      where(approver_user: false)
+    end
+
     def q_search(filter_ops)
       q_rule = "#{filter_ops[:q]}%"
 
@@ -59,6 +67,13 @@ class User < Sequel::Model
     has_permission?(Permissions::HMRC_EDITOR)
   end
 
+  def approver?
+    #
+    # FIXME
+    #
+    true # approver_user.present?
+  end
+
   def remotely_signed_out?
     remotely_signed_out
   end
@@ -83,7 +98,27 @@ class User < Sequel::Model
     }
   end
 
+  def to_json
+    json_mapping
+  end
+
   def author_of_workbasket?(workbasket)
     workbasket.user_id == id
+  end
+
+  def workbaskets_queue
+    WorkbasketsSearch.new(
+      self
+    ).results
+  end
+
+  def next_workbasket_to_cross_check
+    workbaskets_queue.cross_check_can_be_started
+                     .first
+  end
+
+  def next_workbasket_to_approve
+    workbaskets_queue.approve_can_be_started
+                     .first
   end
 end

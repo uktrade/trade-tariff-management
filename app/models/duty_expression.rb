@@ -1,6 +1,7 @@
 class DutyExpression < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include OwnValidityPeriod
 
   MEURSING_DUTY_EXPRESSION_IDS = %w[12 14 21 25 27 29]
 

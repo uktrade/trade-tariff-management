@@ -3,6 +3,9 @@ module WorkbasketValueObjects
     class PrimaryKeyGenerator
 
       PRIMARY_KEYS = {
+        "AdditionalCode" => :additional_code_sid,
+        "AdditionalCodeDescriptionPeriod" => :additional_code_description_period_sid,
+        "MeursingAdditionalCode" => :meursing_additional_code_sid,
         "QuotaDefinition" => :quota_definition_sid,
         "Footnote" => :footnote_id,
         "FootnoteDescriptionPeriod" => :footnote_description_period_sid,
@@ -16,6 +19,7 @@ module WorkbasketValueObjects
 
       def initialize(record, extra_increment_value=nil)
         @record = record
+        @extra_increment_value = extra_increment_value
       end
 
       def assign!
@@ -34,6 +38,12 @@ module WorkbasketValueObjects
             sid = record.class.max(p_key).to_i + 1
           end
           sid += extra_increment_value if extra_increment_value.present?
+
+          if sid.is_a?(String)
+            sid = (sid.to_i + rand(100).to_i).to_s
+          else
+            sid += rand(1000)
+          end
 
           record.public_send("#{p_key}=", sid)
         end

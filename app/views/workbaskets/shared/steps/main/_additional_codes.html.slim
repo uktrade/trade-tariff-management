@@ -1,6 +1,6 @@
 fieldset.js-workbasket-check-code-parent-container
   h3.heading-medium
-    | Which additional code(s) will the measures apply to?
+    = "Which additional code(s) will the #{record_type} apply to?"
 
   .form-group
     label.form-label
@@ -8,7 +8,9 @@ fieldset.js-workbasket-check-code-parent-container
         | Additional codes
 
       span.form-hint
-        | You can optionally specify one or more additional codes. If you do not provide a commodity code above, then you must provide at least one Meursing code here. Separate individual codes with comma. Separate measures will be created for every combination of commodity code and additional code.
+        | You can optionally specify one or more additional codes. If you do not provide a commodity code above, then you must provide at least one Meursing code here. Separate individual codes with comma.
+        - if record_type != 'quota'
+          | Separate measures will be created for every combination of commodity code and additional code.
         br
 
     .row

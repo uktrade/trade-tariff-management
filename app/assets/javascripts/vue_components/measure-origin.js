@@ -75,7 +75,7 @@ Vue.component("measure-origin", {
       }
     },
     showExclusions: function() {
-      return this.kind !== "country" && this.origin.selected;
+      return this.kind !== "country" && this.origin.selected && this.origin.geographical_area_id;
     },
     alreadySelected: function() {
       return this.origins.map(function(o) {

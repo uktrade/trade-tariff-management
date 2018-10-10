@@ -11,12 +11,6 @@ module WorkbasketInteractions
 
     def run!
       workbasket.move_status_to!(current_admin, :awaiting_cross_check)
-      #
-      # Temporary decision (until we finish check / approve flow):
-      #
-      #  Submitting a workbasket would auto approve the workbasket (for now)
-      #
-      workbasket.move_status_to!(current_admin, :ready_for_export)
       update_collection!
     end
 

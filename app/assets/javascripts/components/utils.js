@@ -49,8 +49,8 @@ function objectToArray(obj) {
 }
 
 function any(arr, func) {
-  return arr.filter(function(obj) {
-    return func(obj);
+  return arr.filter(function(obj, index) {
+    return func(obj, index);
   }).length > 0;
 }
 
@@ -87,4 +87,19 @@ function getSearchParam(param) {
   });
 
   return params[param];
+}
+
+function isObject(obj) {
+  return obj === Object(obj) && Object.prototype.toString.call(obj) !== '[object Array]';
+}
+
+function allValuesSame(arr) {
+  for(var i = 1; i < arr.length; i++)
+  {
+    if(arr[i] !== arr[0]) {
+      return false;
+    }
+  }
+
+  return true;
 }

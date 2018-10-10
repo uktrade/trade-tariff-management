@@ -1,5 +1,5 @@
-<div class="find-measures__row">
-  <div class="find-measures__checkbox-column">
+<div class="find-items__row">
+  <div class="find-items__checkbox-column">
     <div class="multiple-choice">
       <input name="search[measure_sid][enabled]" id="toggle-measure-sid" type="checkbox" value="1" v-model="measure_sid.enabled" />
       <label for="toggle-measure-sid">
@@ -8,11 +8,11 @@
     </div>
   </div>
 
-  <div class="find-measures__is">
+  <div class="find-items__is">
     <custom-select :options="conditionsForMeasureSid" label-field="label" value-field="value"  v-model="measure_sid.operator" name="search[measure_sid][operator]"></custom-select>
   </div>
 
-  <div class="find-measure__long">
+  <div class="find-item__long">
     <input name="search[measure_sid][value]" class="form-control" v-model="measure_sid.value" />
   </div>
 </div>

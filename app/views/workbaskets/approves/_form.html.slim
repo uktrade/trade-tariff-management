@@ -1,0 +1,29 @@
+script
+  == "window.save_url = '#{approve_url(workbasket.id)}';"
+  == "window.__approve_json = #{(params[:approve] || {}).to_json};"
+
+= simple_form_for form, url: approve_url(workbasket.id),
+                        html: { \
+                          class: "approve-form create-measures-v2", \
+                          method: :post \
+                        } do |f|
+
+  .approve-form-fields
+    fieldset
+      h3.heading-medium
+        | Approve or reject
+
+      form-group :errors="errors" error-key="general"
+        template slot-scope="slotProps"
+          label.form-label
+            span.error-message v-if="slotProps.hasError" v-cloak=""
+              | {{slotProps.error}}
+
+          .bootstrap-row
+            .controls
+              = content_tag "approve-decision", "", { kind: "approve", ":approve" => "types.approve" }
+              = content_tag "approve-decision", "", { kind: "reject", ":approve" => "types.reject" }
+
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/approves/action_links", f: f
+  = render "shared/vue_templates/approve_decision"

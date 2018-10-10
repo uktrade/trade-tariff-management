@@ -14,6 +14,9 @@ class FootnoteAssociationMeasure < Sequel::Model
   one_to_one :measure, key: :measure_sid,
                        primary_key: :measure_sid
 
+  delegate :validity_start_date, :validity_end_date, to: :footnote, allow_nil: true
+  delegate :validity_end_date, :validity_end_date, to: :footnote, allow_nil: true
+
   def record_code
     "430".freeze
   end

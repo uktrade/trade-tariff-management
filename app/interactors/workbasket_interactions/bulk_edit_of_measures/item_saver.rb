@@ -29,6 +29,29 @@ module WorkbasketInteractions
         end
       end
 
+      def validate!(measure_params={})
+        return { validity_start_date: "Start date can't be blank!" } if measure_params[:validity_start_date].blank?
+
+        errors = {}
+
+        measure = Measure.new(
+            ::Measures::BulkParamsConverter.new(
+                existing_measure, measure_params
+            ).converted_ops
+        )
+
+        measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+        if measure.measure_type_id.present?
+          measure_type = MeasureType.where(measure_type_id: measure.measure_type_id).first
+          measure.measure_type = measure_type
+        end
+        measure.updating_measure = existing_measure
+
+        ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
+            measure, MeasureValidator, {}
+        ).errors
+      end
+
       private
 
         def end_date_existing_measure!
@@ -59,6 +82,11 @@ module WorkbasketInteractions
           measure.validity_start_date = operation_date
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
           measure.original_measure_sid = existing_measure.measure_sid
+
+          if measure.measure_type_id.present?
+            measure_type = MeasureType.where(measure_type_id: measure.measure_type_id).first
+            measure.measure_type = measure_type
+          end
 
           set_oplog_attrs_and_save!(measure)
         end

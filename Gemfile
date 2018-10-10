@@ -43,8 +43,8 @@ gem "rubyzip", "~> 1.2.2"
 
 # Helpers
 gem "hashie", "~> 3.4"
+gem 'oj'
 gem "multi_json", "~> 1.11"
-gem "yajl-ruby", "~> 1.3.1", require: "yajl"
 gem "builder", "~> 3.2"
 gem "ox", ">= 2.8.1"
 gem "nokogiri", "~> 1.8.1"
@@ -86,11 +86,7 @@ gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "bootscale", "~> 0.5", require: false
 
-# We freezed it, as it installs higher version by default,
-# which conflicts with cloud foundary's ruby_buildpack
-# as in new version 'ffi' require 'automake' package
-#
-gem "ffi", "1.9.18"
+gem "ffi", "~> 1.9.24"
 
 group :production do
   gem "sentry-raven"

@@ -15,26 +15,31 @@ module WorkbasketInteractions
       end
 
       def valid?
-        super
+        @persist = true
+        Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
+          super
 
-        parent_errors = {}
-        quota_periods.map do |position, section_ops|
-          saver = WorkbasketServices::QuotaSavers::ParentQuota.new(
-              self,
-              section_ops['parent_quota'],
-              settings.settings,
-              nil)
-          parent_errors.merge!(saver.errors) unless saver.valid?
+          parent_errors = {}
+
+          quota_periods.map do |position, section_ops|
+            saver = WorkbasketServices::QuotaSavers::ParentQuota.new(
+                self,
+                section_ops['parent_quota'],
+                settings.settings,
+                nil)
+            parent_errors.merge!(saver.errors) unless saver.valid?
+          end
+
+          @errors[:parent_quota] = parent_errors if parent_errors.present?
+          @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
         end
-        @errors[:parent_quota] = parent_errors if parent_errors.present?
-
-        @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
 
         @errors.blank?
       end
 
       def persist!
         @persist = true
+        @do_not_rollback_transactions = true
         @measure_sids = []
         @quota_period_sids = []
         @parent_quota_period_sids = []

@@ -31,7 +31,7 @@ script
     | The server is overloaded at the moment or there is an error preventing the request to load the current batch of measures. Retrying in 30 seconds&hellip;
   = render "table_top"
 
-  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
+  = content_tag "records-grid", nil, { "table-class" => "measures-table", "primary-key" => "measure_sid", ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
     p Loading measures table...
 
   = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
@@ -68,7 +68,7 @@ script
 
   = content_tag "change-footnotes-popup", nil, { "v-if" => "changingFootnotes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
 
-= render "shared/vue_templates/measures_grid"
+= render "shared/vue_templates/records_grid"
 = render "shared/vue_templates/measure_origin"
 = render "shared/vue_templates/change_duties"
 = render "shared/vue_templates/change_conditions"
