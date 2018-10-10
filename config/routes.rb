@@ -65,6 +65,7 @@ Rails.application.routes.draw do
     resources :quotas, only: [:index] do
       collection do
         post :search
+        post :workbasket
       end
     end
   end
