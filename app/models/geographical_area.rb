@@ -75,15 +75,15 @@ class GeographicalArea < Sequel::Model
       end
 
       def by_code(code)
-        # TODO
+        where(geographical_code: code)
       end
 
       def after_or_equal(start_date)
-        # TODO
+        where("validity_start_date >= ?", start_date)
       end
 
       def before_or_equal(end_date)
-        # TODO
+        where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
       end
 
       def q_search(filter_ops={})
