@@ -1,0 +1,84 @@
+<script type="text/x-template" id="footnote-template">
+  <div class="footnote-template">
+    <dl v-if="onlyOneMeasure && index == 0">
+      <dt>
+        Footnote type
+      </dt>
+      <dd>
+        {{footnote.footnote_type_id}}
+      </dd>
+      <div class="clear"></div>
+      <dt>
+        Footnote ID
+      </dt>
+      <dd>
+        {{footnote.footnote_id}}
+      </dd>
+    </dl>
+
+    <div class="form-group" v-if="!onlyOneMeasure || (onlyOneMeasure && index != 0)">
+      <label class="form-label">
+        <span class="create-measures-sub_header">
+          Footnote type
+        </span>
+      </label>
+
+      <div class="row">
+        <div class="col-md-5">
+          <custom-select url="/footnote_types" label-field="description" value-field="footnote_type_id" code-field="footnote_type_id" v-model="footnote.footnote_type_id" placeholder="― select the footnote type to use ―" date-sensitive="true" code-class-name="prefix--footnote-type" :id="'footnote-' + index + '-footnote-type'"></custom-select>
+        </div>
+      </div>
+    </div>
+    <div v-if="footnote.footnote_type_id">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">
+              <span class="create-measures-sub_header">
+                Footnote
+              </span>
+
+              <span class="form-hint" v-if="onlyOneMeasure && index == 0">
+                Note: editing the copy here will, when you click Update, create a new footnote (with a new footnote ID) to replace the current one in the selection. It will not change any other instance of this footnote used elsewhere. If you want to change this footnote everywhere it is used, you can do so via
+                <a href="#">Manage reference data - Manage footnotes</a>
+              </span>
+              <span class="form-hint" v-if="!onlyOneMeasure || (onlyOneMeasure && index != 0)">
+                Start typing your footnote in the field below.
+                Matching or similar footnotes (within the type selected above) will be listed below - select one to re-use it, or continue typing to create a new one.
+              </span>
+            </label>
+
+            <textarea class="form-control" v-model="footnote.description" rows="5" :id="'footnote-' + index + '-footnote'"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <form-group v-if="hasSuggestions">
+        <div class="row">
+          <div class="col-md-8">
+            <label class="form-label">
+              <span class="form-hint">
+                If you choose to use one of the following existing footnotes, its text will be copied into the field above. Optionally you can then edit the text - this will create a new footnote. If you leave the text unchanged, the existing footnote will be referenced.
+              </span>
+            </label>
+
+            <div class="footnote-suggestions" :id="'footnote-' + index + '-suggestions'">
+              <div class="footnote-suggestion" v-for="(suggestion, idx) in suggestions">
+                <p>
+                  ID:&nbsp;
+                  <span v-html="suggestion.footnote_id"></span>
+                  &nbsp;
+                  <a href="#" v-on:click.prevent="useSuggestion(suggestion)" :id="'footnote-' + index + '-suggestion-' + idx + '-use-button'">
+                    Use this
+                  </a>
+                </p>
+
+                <p v-html="suggestion.description" :id="'footnote-' + index + '-suggestion-' + idx + '-description'"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form-group>
+    </div>
+  </div>
+</script>
