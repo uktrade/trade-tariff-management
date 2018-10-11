@@ -23,6 +23,10 @@
     cron: "0 22 * * *" #
     description: "UpdatesSynchronizerWorker will run at 10 PM every day"
 
+  SetupPublishedStatusForImportedRecordsWorker:
+    cron: "0 1 * * *"
+    description: "SetupPublishedStatusForImportedRecordsWorker will run at 1 AM every day"
+
   RefreshCacheWorker:
     cron: "0 5 * * *"
     description: "RefreshCacheWorker will run at 5 AM every day"
