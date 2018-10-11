@@ -98,11 +98,11 @@ class QuotaDefinition < Sequel::Model
   end
 
   def quota_origin
-    quota_order_number.quota_order_number_origin.geographical_area_id
+    quota_order_number.quota_order_number_origin&.geographical_area_id
   end
 
   def origin_exclusions
-    quota_order_number.quota_order_number_origin.quota_order_number_origin_exclusions.map do |exclusion|
+    quota_order_number.quota_order_number_origin&.quota_order_number_origin_exclusions&.map do |exclusion|
       exclusion.geographical_area_id
     end
   end
@@ -144,7 +144,7 @@ class QuotaDefinition < Sequel::Model
         goods_nomenclature_item_ids: goods_nomenclature_item_ids.join(', '),
         additional_code_ids: additional_code_ids.join(', '),
         origin: quota_origin,
-        origin_exclusions: origin_exclusions.join(', '),
+        origin_exclusions: origin_exclusions&.join(', '),
         last_updated: (operation_date || added_at).try(:strftime, "%d %b %Y") || "-",
         status: status_title
     }
