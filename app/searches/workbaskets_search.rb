@@ -5,6 +5,10 @@ class WorkbasketsSearch
   )
 
   FIELDS_ALLOWED_FOR_ORDER = %w(
+    id
+    title
+    type
+    status
     last_status_change_at
     operation_date
   )
