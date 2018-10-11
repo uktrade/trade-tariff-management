@@ -72,5 +72,10 @@ script
       .bootstrap-row
         .col-lg-5.col-md-7.col-sm-10.col-xs-12
           .form-actions
-            = link_to "Search", "#", class: "button js-validate-geographical-areas-search-form"
-            = link_to "Clear", geo_areas_url, class: 'secondary-button'
+            .submit_group_for_cross_check_block
+              = link_to "Search", "#", name: "save_progress", class: "button js-validate-geographical-areas-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
+
+              .js-workbasket-base-continue-spinner.spinner_block.hidden
+                = render "measures/bulks/loading_spinner", message: "Checking form settings..."
+
+            = link_to "Clear form", geo_areas_url, class: 'secondary-button js-workbasket-base-exit-button'

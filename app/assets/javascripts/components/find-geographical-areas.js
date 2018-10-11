@@ -25,6 +25,9 @@ $(document).ready(function() {
       var self = this;
 
       $(document).on('click', ".js-validate-geographical-areas-search-form", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         submit_button = $(this);
 
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
