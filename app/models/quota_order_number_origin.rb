@@ -2,6 +2,7 @@ class QuotaOrderNumberOrigin < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
+  include OwnValidityPeriod
 
   plugin :oplog, primary_key: :quota_order_number_origin_sid
   plugin :conformance_validator

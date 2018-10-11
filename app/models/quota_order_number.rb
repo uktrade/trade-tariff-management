@@ -2,6 +2,7 @@ class QuotaOrderNumber < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
+  include OwnValidityPeriod
 
   plugin :time_machine
   plugin :oplog, primary_key: :quota_definition_sid

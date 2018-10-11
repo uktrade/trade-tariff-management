@@ -2,6 +2,7 @@ class AdditionalCode < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
+  include OwnValidityPeriod
 
   plugin :time_machine
   plugin :oplog, primary_key: :additional_code_sid
