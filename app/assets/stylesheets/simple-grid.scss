@@ -49,12 +49,21 @@ $gutter: 6px;
     }
   }
 
+  .col-1-5,
+  .col-sm-1-5 {
+    max-width: $single * 1.2;
+  }
+
   @media (min-width: 768px) {
     @each $col in $cols {
       .col-sm-#{$col} {
         max-width: $single * $col;
         flex-basis: calc(#{$single * $col} - #{$gutter});
       }
+    }
+
+    .col-sm-1-5 {
+      max-width: $single * 1.2;
     }
   }
 
@@ -78,6 +87,10 @@ $gutter: 6px;
         flex-basis: calc(#{$single * $col} - #{$gutter});
       }
     }
+
+    .col-lg-1-5 {
+      max-width: $single * 1.2;
+    }
   }
 
   @media (min-width: 1600px) {
@@ -86,6 +99,10 @@ $gutter: 6px;
         max-width: $single * $col;
         flex-basis: calc(#{$single * $col} - #{$gutter});
       }
+    }
+
+    .col-xl-1-5 {
+      max-width: $single * 1.2;
     }
   }
 }

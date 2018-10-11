@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div :class="classes" v-for="(component, idx) in components">',
-      '<measure-condition-component v-if="isMeasureConditionComponent" :measure-condition-component="component" :index="Math.max(idx,index)" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit" :room-monetary-unit="showMonetaryUnit">',
+      '<measure-condition-component :id="\'measure-condition-\' + index + \'-measure-condition-component-\' + idx" v-if="isMeasureConditionComponent" :measure-condition-component="component" :prefix="\'measure-condition-\' + index + \'-measure-condition-component-\' + idx + \'-\'" :index="Math.max(idx,index)" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit" :room-monetary-unit="showMonetaryUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
@@ -11,7 +11,7 @@ var template = [
           '</div>',
         '</div>',
       '</measure-condition-component>',
-      '<measure-component v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit">',
+      '<measure-component :id="\'measure-component-\' + idx" v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
