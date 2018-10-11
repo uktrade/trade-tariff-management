@@ -51,7 +51,7 @@ describe 'workbasket table', js: true do
         )
       end
 
-      it 'should not display another users workbasket data' do
+      it 'should display another users workbasket data' do
         visit root_path
 
         expect(page).to have_content('093456')
@@ -60,10 +60,10 @@ describe 'workbasket table', js: true do
         expect(page).to have_content(Date.today.strftime('%d %b %Y'))
         expect(page).to have_content('Continue')
 
-        expect(page).to_not have_content('091234')
-        expect(page).to_not have_content('Create Quota')
-        expect(page).to_not have_content('Awaiting cross-check')
-        expect(page).to_not have_content('View')
+        expect(page).to have_content('091234')
+        expect(page).to have_content('Create Quota')
+        expect(page).to have_content('Awaiting cross-check')
+        expect(page).to have_content('View')
       end
     end
 

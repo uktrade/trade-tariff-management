@@ -1,4 +1,4 @@
-require 'measures/refresh_cache'
+require 'workbasket_scripts/set_published_status_for_imported_data'
 
 class SetupPublishedStatusForImportedRecordsWorker
   include Sidekiq::Worker
