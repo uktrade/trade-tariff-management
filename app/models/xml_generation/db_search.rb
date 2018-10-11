@@ -130,6 +130,5 @@ module XmlGeneration
         ['operation_date = ?', start_date]
       end
     end
-
   end
 end

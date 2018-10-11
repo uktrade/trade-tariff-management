@@ -2,6 +2,7 @@ class GeographicalArea < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
+  include OwnValidityPeriod
 
   COUNTRIES_CODES = ['0', '2'].freeze
   ERGA_OMNES = '1011'

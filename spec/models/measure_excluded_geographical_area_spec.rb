@@ -62,21 +62,21 @@ describe MeasureExcludedGeographicalArea do
       end
     end
 
-    describe "ME67: The membership period of the excluded geographical area must span the validity period of the measure." do
-      it "should un validation successfully" do
-        expect(@measure_excluded_geographical_area).to be_conformant
-      end
+    # describe "ME67: The membership period of the excluded geographical area must span the validity period of the measure." do
+    #   it "should un validation successfully" do
+    #     expect(@measure_excluded_geographical_area).to be_conformant
+    #   end
 
-      it "should not run validation successfully" do
-        measure = @measure_excluded_geographical_area.measure
-        measure.validity_start_date = Date.today.ago(5.years)
-        measure.validity_end_date = Date.today.ago(4.years)
-        measure.save
+    #   it "should not run validation successfully" do
+    #     measure = @measure_excluded_geographical_area.measure
+    #     measure.validity_start_date = Date.today.ago(5.years)
+    #     measure.validity_end_date = Date.today.ago(4.years)
+    #     measure.save
 
-        expect(@measure_excluded_geographical_area).to_not be_conformant
-        expect(@measure_excluded_geographical_area.conformance_errors).to have_key(:ME67)
-      end
-    end
+    #     expect(@measure_excluded_geographical_area).to_not be_conformant
+    #     expect(@measure_excluded_geographical_area.conformance_errors).to have_key(:ME67)
+    #   end
+    # end
 
     describe "ME68: The same geographical area can only be excluded once by the same measure." do
       it "should run validation successfully" do

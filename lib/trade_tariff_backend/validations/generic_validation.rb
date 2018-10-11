@@ -46,6 +46,10 @@ module TradeTariffBackend
       end
 
       def extend_error_message(record)
+        # This is not place to keep this method here.
+        # Mostly this method is related to validity date span
+        # validation. Might need to move into that class.
+
         association_key = validation_options[:of]
 
         if association_key

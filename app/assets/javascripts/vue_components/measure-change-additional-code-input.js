@@ -9,7 +9,8 @@ Vue.component("measure-change-additional-code-input", {
   data: function(){
     return {
       removeAdditionalCode: false,
-      newAdditionalCode: ""
+      newAdditionalCode: "",
+      isWrong: false
     };
   },
   watch: {
@@ -24,6 +25,7 @@ Vue.component("measure-change-additional-code-input", {
     },
     newAdditionalCode: function(){
       this.setAdditionalCode(this.additionalCode, this.newAdditionalCode);
+      this.isWrong = this.newAdditionalCode !== "" && this.newAdditionalCode.length !== 4;
     }
   }
 });

@@ -1,6 +1,7 @@
 class MeasureType < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include OwnValidityPeriod
 
   IMPORT_MOVEMENT_CODES = [0, 2]
   EXPORT_MOVEMENT_CODES = [1, 2]
