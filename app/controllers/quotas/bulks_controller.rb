@@ -1,19 +1,13 @@
 module Quotas
   class BulksController < Measures::BulksBaseController
 
-    # include ::SearchCacheHelpers
-
     before_action :require_to_be_workbasket_owner!, only: [
         :update, :destroy
     ]
 
-    # expose(:separator) do
-    #   "_BEQ_"
-    # end
-
-    # expose(:current_page) do
-    #   params[:page]
-    # end
+    expose(:current_page) do
+      params[:page]
+    end
 
     expose(:main_step_settings) do
       {
@@ -45,46 +39,56 @@ module Quotas
     #   params[:final_batch].to_s == "true"
     # end
 
-    # expose(:workbasket_container) do
-    #   ::Quotas::Workbasket::Items.new(
-    #       workbasket, cached_search_ops
-    #   ).prepare
-    # end
+    expose(:workbasket_container) do
+      ::Measures::Workbasket::Items.new(
+          workbasket, cached_search_ops
+      ).prepare
+    end
 
-    # expose(:cached_search_ops) do
-    #   if workbasket_settings.initial_items_populated.present?
-    #     {
-    #         quota_sids: workbasket_items.pluck(:record_id),
-    #         page: current_page
-    #     }
-    #   else
-    #     Rails.cache.read(params[:search_code]).merge(
-    #         page: current_page
-    #     )
-    #   end
-    # end
+    expose(:cached_search_ops) do
+      if workbasket_settings.initial_items_populated.present?
+        {
+            measure_sids: workbasket_items.pluck(:record_id),
+            page: current_page
+        }
+      else
+        {
+            measure_sids: ::Measures::Search.new(measures_search_ops).measure_sids,
+            page: current_page
+        }
+      end
+    end
 
-    # expose(:pagination_metadata) do
-    #   {
-    #       page: search_results.current_page,
-    #       total_count: search_results.total_count,
-    #       per_page: search_results.limit_value
-    #   }
-    # end
+    expose(:pagination_metadata) do
+      {
+          page: search_results.current_page,
+          total_count: search_results.total_count,
+          per_page: search_results.limit_value
+      }
+    end
 
-    # expose(:search_results) do
-    #   workbasket_container.pagination_metadata
-    # end
+    expose(:search_results) do
+      workbasket_container.pagination_metadata
+    end
 
-    # expose(:json_collection) do
-    #   workbasket_container.collection
-    # end
+    expose(:json_collection) do
+      workbasket_container.collection
+    end
 
-    # expose(:search_ops) do
-    #   {
-    #       quota_sids: ::QuotaService::FetchQuotaSids.new(params).ids
-    #   }
-    # end
+    expose(:measures_search_ops) do
+      {
+          'order_number': {
+              'enabled': '1',
+              'operator': 'is',
+              'value': workbasket_settings.quota_definition.quota_order_number_id
+          },
+          'valid_to': {
+              'enabled': '1',
+              'operator': 'is_after_or_nil',
+              'value': workbasket.operation_date
+          }
+      }
+    end
 
     # expose(:bulk_quotas_collection) do
     #   JSON.parse(request.body.read)["bulk_quotas_collection"]
@@ -98,16 +102,20 @@ module Quotas
     #   )
     # end
 
+    expose(:json_response) do
+      {
+          collection: json_collection,
+          total_pages: search_results.total_pages,
+          current_page: search_results.current_page,
+          has_more: !search_results.last_page?
+      }
+    end
+
     def edit
-      # if search_mode?
-      #   respond_to do |format|
-      #     format.json { render json: json_response }
-      #     format.html
-      #   end
-      #
-      # else
-      #   redirect_to edit_url
-      # end
+      respond_to do |format|
+        format.json { render json: json_response }
+        format.html
+      end
     end
 
     def create
@@ -134,7 +142,6 @@ module Quotas
     end
 
     def persist_work_with_selected
-      puts "!!! #{main_step_settings.inspect}"
       workbasket_settings.set_settings_for!("main", main_step_settings)
       workbasket_settings.set_workbasket_system_data!
 

@@ -683,9 +683,8 @@ CREATE TABLE public.bulk_edit_of_quotas_settings (
     initial_search_results_code text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    measures_search_code text,
-    measures_initial_items_populated boolean DEFAULT false,
-    measures_batches_loaded jsonb DEFAULT '{}'::jsonb,
+    initial_items_populated boolean DEFAULT false,
+    batches_loaded jsonb DEFAULT '{}'::jsonb,
     quota_sid integer
 );
 

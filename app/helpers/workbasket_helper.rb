@@ -181,8 +181,7 @@ module WorkbasketHelper
 
       else
         edit_quotas_bulk_url(
-            workbasket.id,
-            search_code: workbasket.settings.search_code
+            workbasket.id
         )
       end
     end
