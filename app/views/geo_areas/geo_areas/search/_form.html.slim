@@ -9,38 +9,51 @@ script
 
   .bootstrap-row
     .col-lg-5.col-md-7.col-sm-10.col-xs-12
-      .bootstrap-row
-        .col-lg-12.col-md-12.col-sm-12.col-xs-12
-          = f.input :q, label: "Enter", class: "form-control"
+      = render "geo_areas/geo_areas/search/errors_summary"
+
+      fieldset
+        form-group :errors="errors" error-key="q"
+          template slot-scope="slotProps"
+            h3.heading-medium
+             | Enter a geographical area code
+
+            label.form-label.search-geographical-areas-error-container
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+              span.form-hint
+
+            .bootstrap-row
+              .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                input.form-control v-model="search.q"
 
       .bootstrap-row
         .col-lg-5.col-md-7.col-sm-10.col-xs-12
-          = f.input :start_date, label: "Select date from", input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }
+          = f.input :start_date, label: "Select date from", input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.start_date" }
 
       .bootstrap-row
         .col-lg-5.col-md-7.col-sm-10.col-xs-12
-          = f.input :end_date, label: "Select date to", input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }
+          = f.input :end_date, label: "Select date to", input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.end_date" }
 
       .bootstrap-row
         .col-lg-5.col-md-7.col-sm-10.col-xs-12
           .find-items__row.without_border
             .find-items__checkbox-column
               .multiple-choice
-                input#toggle-country-code name="search[code]" type="checkbox" value="0" /
+                input#toggle-country-code name="search[code_country]" type="checkbox" value="0" v-model="search.code_country"
                 label for="toggle-country-code"
                   | Country
 
           .find-items__row.without_border
             .find-items__checkbox-column
               .multiple-choice
-                input#toggle-region-code name="search[code]" type="checkbox" value="2" /
+                input#toggle-region-code name="search[code_region]" type="checkbox" value="2" v-model="search.code_region"
                 label for="toggle-region-code"
                   | Region
 
           .find-items__row.without_border
             .find-items__checkbox-column
               .multiple-choice
-                input#toggle-group-code name="search[code]" type="checkbox" value="1" /
+                input#toggle-group-code name="search[code_group]" type="checkbox" value="1" v-model="search.code_group"
                 label for="toggle-group-code"
                   | Group
 

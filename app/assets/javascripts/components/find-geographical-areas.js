@@ -14,9 +14,9 @@ $(document).ready(function() {
       };
 
       if (!$.isEmptyObject(window.__search_geo_areas_settings_json)) {
-        data.geographical_area = this.parseGeoAreaFormPayload(window.__search_geo_areas_settings_json);
+        data.search = this.parseGeoAreaFormPayload(window.__search_geo_areas_settings_json);
       } else {
-        data.geographical_area = this.emptyGeoAreaForm();
+        data.search = this.emptyGeoAreaForm();
       }
 
       return data;
@@ -73,7 +73,9 @@ $(document).ready(function() {
           q: payload.q,
           start_date: payload.start_date,
           end_date: payload.end_date,
-          code: payload.code
+          code_country: payload.code_country,
+          code_region: payload.code_region,
+          code_group: payload.code_group
         };
       },
       emptyGeoAreaForm: function() {
@@ -81,15 +83,19 @@ $(document).ready(function() {
           q: null,
           start_date: null,
           end_date: null,
-          code: null
+          code_country: null,
+          code_region: null,
+          code_group: null
         };
       },
       geoAreaFormPayload: function() {
         return {
-          q: this.geographical_area.q,
-          start_date: this.geographical_area.start_date,
-          end_date: this.geographical_area.end_date,
-          code: this.geographical_area.code
+          q: this.search.q,
+          start_date: this.search.start_date,
+          end_date: this.search.end_date,
+          code_country: this.search.code_country,
+          code_region: this.search.code_region,
+          code_group: this.search.code_group
         };
       }
     }
