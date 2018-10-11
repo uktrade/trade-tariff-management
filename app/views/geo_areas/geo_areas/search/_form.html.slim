@@ -1,5 +1,5 @@
 script
-  == "window.save_url = '#{geo_areas_url}';"
+  == "window.validate_search_settings_url = '#{validate_search_settings_geo_areas_url}';"
   == "window.__search_geo_areas_settings_json = #{search_form.settings.to_json};"
 
 = simple_form_for search_form, as: :search,

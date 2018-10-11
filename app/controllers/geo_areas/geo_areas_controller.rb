@@ -18,5 +18,15 @@ module GeoAreas
     expose(:search_results) do
       searcher.results
     end
+
+    def validate_search_settings
+      if search_form.valid?
+        render json: {}, status: :ok
+      else
+        render json: {
+          errors: search_form.parsed_errors
+        }, status: :unprocessable_entity
+      end
+    end
   end
 end

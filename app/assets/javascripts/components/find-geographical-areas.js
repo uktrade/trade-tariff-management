@@ -30,16 +30,22 @@ $(document).ready(function() {
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
         self.errors = [];
 
+        console.log('------STARTING AJAX-----');
+
         $.ajax({
-          url: window.save_url,
+          url: window.validate_search_settings_url,
           type: "GET",
           data: {
             search: self.geoAreaFormPayload()
           },
           success: function(response) {
+            console.log('------SUCCESS-----');
+
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
           },
           error: function(response) {
+            console.log('------ERRORS-----');
+
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
 
             if (response.status == 500) {
@@ -48,6 +54,9 @@ $(document).ready(function() {
             }
 
             self.errorsSummary = "All bad guys!";
+
+            console.dir(response.responseJSON.errors);
+
             self.errors = response.responseJSON.errors;
           }
         });
