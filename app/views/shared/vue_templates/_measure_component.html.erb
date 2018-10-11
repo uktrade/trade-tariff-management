@@ -1,21 +1,21 @@
 <script type="text/x-template" id="measure-component-template">
   <div class="static-row">
-    <div class="col-1-5">
+    <div class="col-sm-1-5">
       <form-group>
         <label class="form-label" v-if="index === 0">
           Duty expression
         </label>
 
-        <custom-select url="/duty_expressions" label-field="description" value-field="duty_expression_id" code-field="duty_expression_code" v-model="measureComponent.duty_expression_id" date-sensitive="true" code-class-name="prefix--duty-expression" abbreviation-class-name="abbreviation--duty-expression" :options-filter="expressionsFriendlyDuplicate" :on-change="onDutyExpressionSelected" :compact="true" :showCompactAbbreviation="true" placeholder="―" :id="'measure-component-' + index + '-duty-expression'"></custom-select>
+        <custom-select url="/duty_expressions" label-field="description" value-field="duty_expression_id" code-field="duty_expression_code" v-model="measureComponent.duty_expression_id" date-sensitive="true" code-class-name="prefix--duty-expression" abbreviation-class-name="abbreviation--duty-expression" :options-filter="expressionsFriendlyDuplicate" :on-change="onDutyExpressionSelected" :compact="true" :showCompactAbbreviation="true" placeholder="―" :id="(prefix ? prefix : '') + '-duty-expression'"></custom-select>
       </form-group>
     </div>
 
-    <div class="col-1" v-if="roomDutyAmount">
+    <div class="col-sm-1" v-if="roomDutyAmount">
       <form-group v-if="showDutyAmount">
         <label class="form-label" v-if="index === 0">
           Duty amount
         </label>
-        <input class="form-control" v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001" :id="'measure-component-' + index + '-amount'">
+        <input class="form-control" v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001" :id="(prefix ? prefix : '') + '-amount'">
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index === 0">
@@ -24,12 +24,12 @@
         &nbsp;
       </form-group>
     </div>
-    <div class="col-1-5" v-if="roomMonetaryUnit">
+    <div class="col-sm-1-5" v-if="roomMonetaryUnit">
       <form-group v-if="showMonetaryUnit">
         <label class="form-label" v-if="index === 0">
           Monetary unit
         </label>
-        <custom-select url="/monetary_units" label-field="description" value-field="monetary_unit_code" code-field="monetary_unit_code" v-model="measureComponent.monetary_unit_code" date-sensitive="true" code-class-name="prefix--monetary-unit" :on-change="onMonetaryUnitSelected" :compact="true" placeholder="―" :id="'measure-component-' + index + '-monetary-unit'"></custom-select>
+        <custom-select url="/monetary_units" label-field="description" value-field="monetary_unit_code" code-field="monetary_unit_code" v-model="measureComponent.monetary_unit_code" date-sensitive="true" code-class-name="prefix--monetary-unit" :on-change="onMonetaryUnitSelected" :compact="true" placeholder="―" :id="(prefix ? prefix : '') + '-monetary-unit'"></custom-select>
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index === 0">
@@ -38,12 +38,12 @@
         &nbsp;
       </form-group>
     </div>
-    <div class="col-1-5" v-if="roomMeasurementUnit">
+    <div class="col-sm-1-5" v-if="roomMeasurementUnit">
       <form-group v-if="showMeasurementUnit">
         <label class="form-label" v-if="index === 0">
           Unit of measure
         </label>
-        <custom-select url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="measureComponent.measurement_unit_code" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit" :on-change="onMeasurementUnitSelected" :compact="true" placeholder="―" :id="'measure-component-' + index + '-measurement-unit'"></custom-select>
+        <custom-select url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="measureComponent.measurement_unit_code" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit" :on-change="onMeasurementUnitSelected" :compact="true" placeholder="―" :id="(prefix ? prefix : '') + '-measurement-unit'"></custom-select>
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index === 0">
@@ -52,12 +52,12 @@
         &nbsp;
       </form-group>
     </div>
-    <div class="col-1" v-if="roomMeasurementUnit">
+    <div class="col-sm-1" v-if="roomMeasurementUnit">
       <form-group v-if="showMeasurementUnit">
         <label class="form-label" v-if="index === 0">
           Qualifier
         </label>
-        <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="measureComponent.measurement_unit_qualifier_code" date-sensitive="true" code-class-name="prefix--measurement-unit-qualifier" :on-change="onMeasurementUnitQualifierSelected" :compact="true" placeholder="―" :id="'measure-component-' + index + '-measurement-unit-qualifier'"></custom-select>
+        <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="measureComponent.measurement_unit_qualifier_code" date-sensitive="true" code-class-name="prefix--measurement-unit-qualifier" :on-change="onMeasurementUnitQualifierSelected" :compact="true" placeholder="―" :id="(prefix ? prefix : '') + '-measurement-unit-qualifier'"></custom-select>
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index === 0">
