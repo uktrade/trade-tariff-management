@@ -45,13 +45,7 @@ module Quotas
 
     def search
       code = search_code
-      ::QuotaService::TrackQuotaSids.new(code).run
       redirect_to quotas_url(search_code: code)
     end
-
-    def setup_workbasket
-
-    end
-
   end
 end

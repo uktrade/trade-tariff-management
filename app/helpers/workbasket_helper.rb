@@ -176,8 +176,7 @@ module WorkbasketHelper
 
       if workbasket.settings.settings["start_date"].blank?
         work_with_selected_quotas_bulk_url(
-            workbasket.id,
-            search_code: workbasket.settings.search_code
+            workbasket.id
         )
 
       else

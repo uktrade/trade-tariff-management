@@ -8,7 +8,7 @@
         <%= link_to "Find a quota", quotas_url %>
       </li>
       <li>
-        <%= link_to "Search results", quotas_url(search_code: search_code) %>
+        <%= link_to "Search results", quotas_url(search_code: workbasket_settings.initial_search_results_code) %>
       </li>
     </ol>
   </div>
@@ -62,7 +62,7 @@
         </label>
 
         <div class="multiple-choice">
-          <input type='radio' id="action-edit-quota" class="radio-inline-group" name="action" v-model="action" value="edit_quota">
+          <input type='radio' id="action-edit-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="edit_quota">
 
           <label for="action-edit-quota">
             Edit the quota
@@ -70,7 +70,7 @@
         </div>
 
         <div class="multiple-choice">
-          <input type='radio' id="action-edit-quota-measures" class="radio-inline-group" name="action" v-model="action" value="edit_quota_measures">
+          <input type='radio' id="action-edit-quota-measures" class="radio-inline-group" name="workbasket_action" v-model="action" value="edit_quota_measures">
 
           <label for="action-edit-quota-measures">
             Edit the quota's measures
@@ -78,7 +78,7 @@
         </div>
 
         <div class="multiple-choice">
-          <input type='radio' id="action-suspend-quota" class="radio-inline-group" name="action" v-model="action" value="suspend_quota">
+          <input type='radio' id="action-suspend-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="suspend_quota">
 
           <label for="action-suspend-quota">
             Suspend the quota
@@ -105,7 +105,7 @@
         </form-group>
 
         <div class="multiple-choice">
-          <input type='radio' id="action-remove-suspension" class="radio-inline-group" name="action" v-model="action" value="remove_suspension">
+          <input type='radio' id="action-remove-suspension" class="radio-inline-group" name="workbasket_action" v-model="action" value="remove_suspension">
 
           <label for="action-remove-suspension">
             Remove suspension
@@ -113,7 +113,7 @@
         </div>
 
         <div class="multiple-choice">
-          <input type='radio' id="action-stop-quota" class="radio-inline-group" name="action" v-model="action" value="stop_quota">
+          <input type='radio' id="action-stop-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="stop_quota">
 
           <label for="action-stop-quota">
             Stop the quota
@@ -204,7 +204,7 @@
       <button type="submit" class="button" v-on:click="validate" :disabled="disableSubmit">
         {{buttonText}}
       </button>
-      <a href="/" class="secondary-button">
+      <a href="/app/assets/stylesheets" class="secondary-button">
         Cancel
       </a>
     </div>
