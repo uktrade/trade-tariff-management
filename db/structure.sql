@@ -11075,20 +11075,6 @@ CREATE INDEX measrm_pk ON public.measurements_oplog USING btree (measurement_uni
 
 
 --
--- Name: measure_components_oplog_duty_expression_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX measure_components_oplog_duty_expression_id_index ON public.measure_components_oplog USING btree (duty_expression_id);
-
-
---
--- Name: measure_components_oplog_measure_sid_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX measure_components_oplog_measure_sid_index ON public.measure_components_oplog USING btree (measure_sid);
-
-
---
 -- Name: measure_condition_code_descriptions_oplog_condition_code_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12168,3 +12154,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernu
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011184220_add_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011190000_add_more_search_indexes_to_speed_up.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181012181311_rollback_duty_expression_indexes.rb');
