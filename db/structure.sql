@@ -7401,7 +7401,8 @@ CREATE TABLE public.sections (
     "position" integer,
     numeral character varying(255),
     title character varying(255),
-    created_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone
 );
 
 
@@ -12155,3 +12156,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011184220_add_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011190000_add_more_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012181311_rollback_duty_expression_indexes.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181012184040_add_updated_at_to_sections.rb');
