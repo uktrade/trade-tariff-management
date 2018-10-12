@@ -4,6 +4,8 @@ class AllAdditionalCode < Sequel::Model
 
   plugin :time_machine
 
+  set_primary_key  [:additional_code_sid]
+
   dataset_module do
     def q_search(filter_ops)
       scope = actual
@@ -46,6 +48,7 @@ class AllAdditionalCode < Sequel::Model
       scope.first
     end
 
+    include ::BulkEditHelpers::OrderByIdsQuery
     include ::AdditionalCodes::SearchFilters::FindAdditionalCodesCollection
   end
 

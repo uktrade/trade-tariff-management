@@ -62,8 +62,6 @@ class AdditionalCode < Sequel::Model
 
       scope.first
     end
-
-    include ::BulkEditHelpers::OrderByIdsQuery
   end
 
   def additional_code_description

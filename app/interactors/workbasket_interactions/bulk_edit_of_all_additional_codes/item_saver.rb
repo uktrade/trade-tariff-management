@@ -1,5 +1,5 @@
 module WorkbasketInteractions
-  module BulkEditOfAdditionalCodes
+  module BulkEditOfAllAdditionalCodes
     class ItemSaver
 
       attr_accessor :workbasket_item,
@@ -23,10 +23,14 @@ module WorkbasketInteractions
         end
 
         if params['changes'].include?('validity_end_date') || workbasket_item.deleted?
-          @records << build_additional_code!(params)
+          @records << if meursing?(params)
+                        build_meursing_additiona_code!(params)
+                      else
+                        build_additional_code!(params)
+                      end
         end
 
-        if params['changes'].include?('description')
+        if params['changes'].include?('description') && !meursing?(params)
           @records = @records + build_additional_code_description!(params)
         end
 
@@ -41,7 +45,7 @@ module WorkbasketInteractions
       def validate!(params)
         return {validity_start_date: "Start date can't be blank!"} if params[:validity_start_date].blank?
 
-        if params['changes'].include?('validity_end_date')
+        if params['changes'].include?('validity_end_date') && !meursing?(params)
           additional_code = build_additional_code!(params)
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
               additional_code,
@@ -52,6 +56,22 @@ module WorkbasketInteractions
       end
 
       private
+
+      def meursing?(params)
+        AdditionalCodeType.find(additional_code_type_id: params['type_id']).meursing?
+      end
+
+      def build_meursing_additiona_code!(params)
+        MeursingAdditionalCode.unrestrict_primary_key
+        MeursingAdditionalCode.new(
+          {
+              meursing_additional_code_sid: existing.additional_code_sid,
+              additional_code: existing.additional_code,
+              validity_start_date: params['validity_start_date'].to_date,
+              validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
+          }
+        )
+      end
 
       def build_additional_code!(params)
         AdditionalCode.unrestrict_primary_key
