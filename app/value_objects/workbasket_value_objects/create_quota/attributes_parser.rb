@@ -8,6 +8,7 @@ module WorkbasketValueObjects
         operation_date
         workbasket_name
         quota_ordernumber
+        quota_precision
         commodity_codes
         additional_codes
         quota_is_licensed
