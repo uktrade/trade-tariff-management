@@ -9,7 +9,7 @@
     </div>
     <div class="col-xs-7">
       <p>
-        <input type="text" @change="updateCommodityCode" class="form-control" :id="labelUid"/>
+        <input type="text" @keyup="updateCommodityCode" class="form-control" :class="{ 'has-error' : isWrong }" :id="labelUid"/>
       </p>
     </div>
   </div>
@@ -92,7 +92,7 @@
     </div>
 
     <div class="form-actions">
-      <button class="button" v-on:click.prevent="confirmChanges">
+      <button class="button" v-on:click.prevent="confirmChanges" :disabled="!allCodesValid">
         Update selected measures
       </button>
       <a href="#" class="secondary-button" v-on:click.prevent="onClose">

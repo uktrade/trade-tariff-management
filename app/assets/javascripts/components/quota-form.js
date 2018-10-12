@@ -194,6 +194,9 @@ $(document).ready(function() {
               });
             }
 
+            section.parent_quota.associate = section.parent_quota.associate === true ||
+                                             section.parent_quota.associate === "true";
+
             if (section.parent_quota.associate) {
               section.parent_quota.balances = objectToArray(section.parent_quota.balances);
             }

@@ -60,7 +60,7 @@ module Workbaskets
     end
 
     def last_event_at
-      object.last_status_change_at.strftime("%d %b %Y")
+      (object.last_status_change_at || object.created_at).strftime("%d %b %Y")
     end
   end
 end

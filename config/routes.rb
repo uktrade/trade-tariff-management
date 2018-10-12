@@ -17,6 +17,11 @@ Rails.application.routes.draw do
     resources :rollbacks, only: [:index, :create]
   end
 
+  namespace :api do
+    get "/v1/taricdelta(/:date)", to: "xml_files#index"
+    get "/v1/taricfile/:date",    to: "xml_files#show"
+  end
+
   resources :goods_nomenclatures, only: [:index]
   resources :regulations, only: [:index]
   resources :duty_expressions, only: [:index]
