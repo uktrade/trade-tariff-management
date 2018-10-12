@@ -4,6 +4,9 @@ class GeographicalAreaSearch
     q
     start_date
     end_date
+    code_country
+    code_region
+    code_group
     code
   )
 
