@@ -75,7 +75,8 @@ class MeasureValidator < TradeTariffBackend::Validator
      record.additional_code_type.meursing? &&
      record.meursing_additional_code.present? &&
      record.goods_nomenclature_item_id.blank? &&
-     record.ordernumber.blank?) ||
+     record.ordernumber.blank? &&
+     record.reduction_indicator.blank?) ||
      (record.additional_code_type.present? && !record.additional_code_type.meursing?) ||
      record.additional_code_type.blank?
   end
@@ -131,8 +132,8 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
     on: [:create, :update],
-    if: -> (record) { record.additional_code_type.present? && record.additional_code.present? } do |record|
-      record.additional_code_type.non_meursing? && (record.additional_code.additional_code_type_id == record.additional_code_type_id)
+    if: -> (record) { record.additional_code_type.present? && record.additional_code_type.non_meursing? } do |record|
+      record.additional_code.present?
     end
 
   validation :ME19,
@@ -189,7 +190,7 @@ class MeasureValidator < TradeTariffBackend::Validator
      additional code and reduction indicator. This rule is not applicable for Meursing additional
      codes.),
      on: [:create, :update],
-     if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
+     if: ->(record) { (record.additional_code.present? && record.additional_code_type.present? && record.additional_code_type.non_meursing?) } do |record|
        record.duplicates_by_attributes.count.zero?
      end
 
