@@ -71,9 +71,6 @@ class AdditionalCode < Sequel::Model
     additional_code_descriptions(reload: true).first
   end
 
-  one_to_one :meursing_additional_code, key: :additional_code,
-                                        primary_key: :additional_code
-
   one_to_one :export_refund_nomenclature, key: :export_refund_code,
                                           primary_key: :additional_code
 

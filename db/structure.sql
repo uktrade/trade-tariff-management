@@ -465,6 +465,45 @@ ALTER SEQUENCE public.additional_codes_oid_seq OWNED BY public.additional_codes_
 
 
 --
+-- Name: all_additional_codes; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.all_additional_codes AS
+ SELECT meursing_additional_codes.meursing_additional_code_sid AS additional_code_sid,
+    '7'::character varying AS additional_code_type_id,
+    meursing_additional_codes.additional_code,
+    NULL::text AS description,
+    NULL::character varying AS language_id,
+    meursing_additional_codes.validity_start_date,
+    meursing_additional_codes.validity_end_date,
+    meursing_additional_codes.operation_date,
+    meursing_additional_codes.status,
+    meursing_additional_codes.workbasket_id,
+    meursing_additional_codes.added_by_id,
+    meursing_additional_codes.added_at,
+    meursing_additional_codes."national"
+   FROM public.meursing_additional_codes
+UNION
+ SELECT additional_codes.additional_code_sid,
+    additional_codes.additional_code_type_id,
+    additional_codes.additional_code,
+    additional_code_descriptions.description,
+    additional_code_descriptions.language_id,
+    additional_codes.validity_start_date,
+    additional_codes.validity_end_date,
+    additional_codes.operation_date,
+    additional_codes.status,
+    additional_codes.workbasket_id,
+    additional_codes.added_by_id,
+    additional_codes.added_at,
+    additional_codes."national"
+   FROM public.additional_codes,
+    public.additional_code_description_periods,
+    public.additional_code_descriptions
+  WHERE ((additional_code_description_periods.additional_code_sid = additional_codes.additional_code_sid) AND ((additional_code_description_periods.additional_code_type_id)::text = (additional_codes.additional_code_type_id)::text) AND ((additional_code_description_periods.additional_code)::text = (additional_codes.additional_code)::text) AND (additional_code_descriptions.additional_code_description_period_sid = additional_code_description_periods.additional_code_description_period_sid));
+
+
+--
 -- Name: audits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -11865,3 +11904,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
