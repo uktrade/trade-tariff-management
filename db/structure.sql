@@ -9745,6 +9745,20 @@ CREATE INDEX base_regulation ON public.modification_regulations_oplog USING btre
 
 
 --
+-- Name: base_regulations_oplog_base_regulation_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX base_regulations_oplog_base_regulation_id_index ON public.base_regulations_oplog USING btree (base_regulation_id);
+
+
+--
+-- Name: base_regulations_oplog_base_regulation_role_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX base_regulations_oplog_base_regulation_role_index ON public.base_regulations_oplog USING btree (base_regulation_role);
+
+
+--
 -- Name: base_regulations_pk; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9962,6 +9976,20 @@ CREATE INDEX duty_exp_pk ON public.duty_expressions_oplog USING btree (duty_expr
 
 
 --
+-- Name: duty_expression_descriptions_oplog_duty_expression_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX duty_expression_descriptions_oplog_duty_expression_id_index ON public.duty_expression_descriptions_oplog USING btree (duty_expression_id);
+
+
+--
+-- Name: duty_expressions_oplog_duty_expression_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX duty_expressions_oplog_duty_expression_id_index ON public.duty_expressions_oplog USING btree (duty_expression_id);
+
+
+--
 -- Name: earo_expabrregopl_citiononslog_operation_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10102,10 +10130,66 @@ CREATE INDEX fo_fooopl_teslog_operation_date ON public.footnotes_oplog USING btr
 
 
 --
+-- Name: footnote_association_measures_oplog_footnote_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnote_association_measures_oplog_footnote_id_index ON public.footnote_association_measures_oplog USING btree (footnote_id);
+
+
+--
+-- Name: footnote_association_measures_oplog_footnote_type_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnote_association_measures_oplog_footnote_type_id_index ON public.footnote_association_measures_oplog USING btree (footnote_type_id);
+
+
+--
+-- Name: footnote_association_measures_oplog_measure_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnote_association_measures_oplog_measure_sid_index ON public.footnote_association_measures_oplog USING btree (measure_sid);
+
+
+--
 -- Name: footnote_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX footnote_id ON public.footnote_association_measures_oplog USING btree (footnote_id);
+
+
+--
+-- Name: footnote_type_descriptions_oplog_footnote_type_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnote_type_descriptions_oplog_footnote_type_id_index ON public.footnote_type_descriptions_oplog USING btree (footnote_type_id);
+
+
+--
+-- Name: footnote_types_oplog_application_code_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnote_types_oplog_application_code_index ON public.footnote_types_oplog USING btree (application_code);
+
+
+--
+-- Name: footnote_types_oplog_footnote_type_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnote_types_oplog_footnote_type_id_index ON public.footnote_types_oplog USING btree (footnote_type_id);
+
+
+--
+-- Name: footnotes_oplog_footnote_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnotes_oplog_footnote_id_index ON public.footnotes_oplog USING btree (footnote_id);
+
+
+--
+-- Name: footnotes_oplog_footnote_type_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX footnotes_oplog_footnote_type_id_index ON public.footnotes_oplog USING btree (footnote_type_id);
 
 
 --
@@ -10274,6 +10358,34 @@ CREATE INDEX geog_area_desc_pk ON public.geographical_area_descriptions_oplog US
 --
 
 CREATE INDEX geog_area_pk ON public.geographical_areas_oplog USING btree (geographical_area_id);
+
+
+--
+-- Name: geographical_areas_oplog_geographical_area_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX geographical_areas_oplog_geographical_area_id_index ON public.geographical_areas_oplog USING btree (geographical_area_id);
+
+
+--
+-- Name: geographical_areas_oplog_geographical_area_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX geographical_areas_oplog_geographical_area_sid_index ON public.geographical_areas_oplog USING btree (geographical_area_sid);
+
+
+--
+-- Name: geographical_areas_oplog_geographical_code_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX geographical_areas_oplog_geographical_code_index ON public.geographical_areas_oplog USING btree (geographical_code);
+
+
+--
+-- Name: geographical_areas_oplog_parent_geographical_area_group_sid_ind; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX geographical_areas_oplog_parent_geographical_area_group_sid_ind ON public.geographical_areas_oplog USING btree (parent_geographical_area_group_sid);
 
 
 --
@@ -10963,10 +11075,66 @@ CREATE INDEX measrm_pk ON public.measurements_oplog USING btree (measurement_uni
 
 
 --
+-- Name: measure_components_oplog_duty_expression_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_components_oplog_duty_expression_id_index ON public.measure_components_oplog USING btree (duty_expression_id);
+
+
+--
+-- Name: measure_components_oplog_measure_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_components_oplog_measure_sid_index ON public.measure_components_oplog USING btree (measure_sid);
+
+
+--
+-- Name: measure_condition_code_descriptions_oplog_condition_code_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_condition_code_descriptions_oplog_condition_code_index ON public.measure_condition_code_descriptions_oplog USING btree (condition_code);
+
+
+--
+-- Name: measure_conditions_oplog_condition_code_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_conditions_oplog_condition_code_index ON public.measure_conditions_oplog USING btree (condition_code);
+
+
+--
+-- Name: measure_conditions_oplog_measure_condition_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_conditions_oplog_measure_condition_sid_index ON public.measure_conditions_oplog USING btree (measure_condition_sid);
+
+
+--
 -- Name: measure_conditions_oplog_measure_sid_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX measure_conditions_oplog_measure_sid_index ON public.measure_conditions_oplog USING btree (measure_sid);
+
+
+--
+-- Name: measure_excluded_geographical_areas_oplog_excluded_geographical; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_excluded_geographical_areas_oplog_excluded_geographical ON public.measure_excluded_geographical_areas_oplog USING btree (excluded_geographical_area);
+
+
+--
+-- Name: measure_excluded_geographical_areas_oplog_geographical_area_sid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_excluded_geographical_areas_oplog_geographical_area_sid ON public.measure_excluded_geographical_areas_oplog USING btree (geographical_area_sid);
+
+
+--
+-- Name: measure_excluded_geographical_areas_oplog_measure_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measure_excluded_geographical_areas_oplog_measure_sid_index ON public.measure_excluded_geographical_areas_oplog USING btree (measure_sid);
 
 
 --
@@ -11012,6 +11180,97 @@ CREATE INDEX measures_goods_nomenclature_item_id_index ON public.measures_oplog 
 
 
 --
+-- Name: measures_oplog_additional_code_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_additional_code_id_index ON public.measures_oplog USING btree (additional_code_id);
+
+
+--
+-- Name: measures_oplog_additional_code_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_additional_code_sid_index ON public.measures_oplog USING btree (additional_code_sid);
+
+
+--
+-- Name: measures_oplog_additional_code_type_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_additional_code_type_id_index ON public.measures_oplog USING btree (additional_code_type_id);
+
+
+--
+-- Name: measures_oplog_export_refund_nomenclature_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_export_refund_nomenclature_sid_index ON public.measures_oplog USING btree (export_refund_nomenclature_sid);
+
+
+--
+-- Name: measures_oplog_geographical_area_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_geographical_area_id_index ON public.measures_oplog USING btree (geographical_area_id);
+
+
+--
+-- Name: measures_oplog_geographical_area_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_geographical_area_sid_index ON public.measures_oplog USING btree (geographical_area_sid);
+
+
+--
+-- Name: measures_oplog_goods_nomenclature_item_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_goods_nomenclature_item_id_index ON public.measures_oplog USING btree (goods_nomenclature_item_id);
+
+
+--
+-- Name: measures_oplog_goods_nomenclature_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_goods_nomenclature_sid_index ON public.measures_oplog USING btree (goods_nomenclature_sid);
+
+
+--
+-- Name: measures_oplog_justification_regulation_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_justification_regulation_id_index ON public.measures_oplog USING btree (justification_regulation_id);
+
+
+--
+-- Name: measures_oplog_justification_regulation_role_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_justification_regulation_role_index ON public.measures_oplog USING btree (justification_regulation_role);
+
+
+--
+-- Name: measures_oplog_measure_generating_regulation_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_measure_generating_regulation_id_index ON public.measures_oplog USING btree (measure_generating_regulation_id);
+
+
+--
+-- Name: measures_oplog_measure_generating_regulation_role_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_measure_generating_regulation_role_index ON public.measures_oplog USING btree (measure_generating_regulation_role);
+
+
+--
+-- Name: measures_oplog_measure_sid_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_measure_sid_index ON public.measures_oplog USING btree (measure_sid);
+
+
+--
 -- Name: measures_oplog_measure_type_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11019,10 +11278,52 @@ CREATE INDEX measures_oplog_measure_type_id_index ON public.measures_oplog USING
 
 
 --
+-- Name: measures_oplog_operation_date_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_operation_date_index ON public.measures_oplog USING btree (operation_date);
+
+
+--
 -- Name: measures_oplog_ordernumber_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX measures_oplog_ordernumber_index ON public.measures_oplog USING btree (ordernumber);
+
+
+--
+-- Name: measures_oplog_reduction_indicator_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_reduction_indicator_index ON public.measures_oplog USING btree (reduction_indicator);
+
+
+--
+-- Name: measures_oplog_status_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_status_index ON public.measures_oplog USING btree (status);
+
+
+--
+-- Name: measures_oplog_validity_end_date_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_validity_end_date_index ON public.measures_oplog USING btree (validity_end_date);
+
+
+--
+-- Name: measures_oplog_validity_start_date_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_validity_start_date_index ON public.measures_oplog USING btree (validity_start_date);
+
+
+--
+-- Name: measures_oplog_workbasket_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX measures_oplog_workbasket_id_index ON public.measures_oplog USING btree (workbasket_id);
 
 
 --
@@ -11865,3 +12166,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011184220_add_search_indexes_to_speed_up.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011190000_add_more_search_indexes_to_speed_up.rb');
