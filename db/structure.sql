@@ -90,7 +90,7 @@ CREATE TABLE public.additional_code_description_periods_oplog (
     validity_end_date timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer,
@@ -160,7 +160,7 @@ CREATE TABLE public.additional_code_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer,
@@ -226,7 +226,7 @@ CREATE TABLE public.additional_code_type_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -286,7 +286,7 @@ CREATE TABLE public.additional_code_type_measure_types_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -348,7 +348,7 @@ CREATE TABLE public.additional_code_types_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -411,7 +411,7 @@ CREATE TABLE public.additional_codes_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer,
@@ -527,7 +527,7 @@ CREATE TABLE public.base_regulations_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     status text,
@@ -724,7 +724,7 @@ CREATE TABLE public.certificate_description_periods_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -787,7 +787,7 @@ CREATE TABLE public.certificate_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -848,7 +848,7 @@ CREATE TABLE public.certificate_type_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -907,7 +907,7 @@ CREATE TABLE public.certificate_types_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -968,7 +968,7 @@ CREATE TABLE public.certificates_oplog (
     national_abbrev text,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -1396,7 +1396,7 @@ CREATE TABLE public.complete_abrogation_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -1682,7 +1682,7 @@ CREATE TABLE public.duty_expression_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -1742,7 +1742,7 @@ CREATE TABLE public.duty_expressions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -1808,7 +1808,7 @@ CREATE TABLE public.explicit_abrogation_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -1882,7 +1882,7 @@ CREATE TABLE public.export_refund_nomenclature_description_periods_oplog (
     validity_end_date timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -1949,7 +1949,7 @@ CREATE TABLE public.export_refund_nomenclature_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2017,7 +2017,7 @@ CREATE TABLE public.export_refund_nomenclature_indents_oplog (
     validity_end_date timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2085,7 +2085,7 @@ CREATE TABLE public.export_refund_nomenclatures_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2151,7 +2151,7 @@ CREATE TABLE public.footnote_association_additional_codes_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2218,7 +2218,7 @@ CREATE TABLE public.footnote_association_erns_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2286,7 +2286,7 @@ CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2349,7 +2349,7 @@ CREATE TABLE public.footnote_association_measures_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     status text,
@@ -2415,7 +2415,7 @@ CREATE TABLE public.footnote_association_meursing_headings_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2479,7 +2479,7 @@ CREATE TABLE public.footnote_description_periods_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     status text,
@@ -2546,7 +2546,7 @@ CREATE TABLE public.footnote_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     status text,
@@ -2611,7 +2611,7 @@ CREATE TABLE public.footnote_type_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2671,7 +2671,7 @@ CREATE TABLE public.footnote_types_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2732,7 +2732,7 @@ CREATE TABLE public.footnotes_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     status text,
@@ -2796,7 +2796,7 @@ CREATE TABLE public.fts_regulation_actions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -2864,7 +2864,7 @@ CREATE TABLE public.full_temporary_stop_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -2944,7 +2944,7 @@ CREATE TABLE public.geographical_area_description_periods_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3007,7 +3007,7 @@ CREATE TABLE public.geographical_area_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3069,7 +3069,7 @@ CREATE TABLE public.geographical_area_memberships_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3132,7 +3132,7 @@ CREATE TABLE public.geographical_areas_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3196,7 +3196,7 @@ CREATE TABLE public.goods_nomenclature_description_periods_oplog (
     validity_end_date timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3259,7 +3259,7 @@ CREATE TABLE public.goods_nomenclature_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3320,7 +3320,7 @@ CREATE TABLE public.goods_nomenclature_group_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3380,7 +3380,7 @@ CREATE TABLE public.goods_nomenclature_groups_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3443,7 +3443,7 @@ CREATE TABLE public.goods_nomenclature_indents_oplog (
     validity_end_date timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3506,7 +3506,7 @@ CREATE TABLE public.goods_nomenclature_origins_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3567,7 +3567,7 @@ CREATE TABLE public.goods_nomenclature_successors_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3629,7 +3629,7 @@ CREATE TABLE public.goods_nomenclatures_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3699,7 +3699,7 @@ CREATE TABLE public.language_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3756,7 +3756,7 @@ CREATE TABLE public.languages_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3813,7 +3813,7 @@ CREATE TABLE public.measure_action_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3870,7 +3870,7 @@ CREATE TABLE public.measure_actions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -3930,7 +3930,7 @@ CREATE TABLE public.measure_components_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -3998,7 +3998,7 @@ CREATE TABLE public.measure_condition_code_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4055,7 +4055,7 @@ CREATE TABLE public.measure_condition_codes_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4115,7 +4115,7 @@ CREATE TABLE public.measure_condition_components_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -4191,7 +4191,7 @@ CREATE TABLE public.measure_conditions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -4264,7 +4264,7 @@ CREATE TABLE public.measure_excluded_geographical_areas_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -4333,7 +4333,7 @@ CREATE TABLE public.measure_partial_temporary_stops_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4397,7 +4397,7 @@ CREATE TABLE public.measure_type_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4456,7 +4456,7 @@ CREATE TABLE public.measure_type_series_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4495,7 +4495,7 @@ CREATE TABLE public.measure_type_series_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4580,7 +4580,7 @@ CREATE TABLE public.measure_types_oplog (
     measure_type_acronym character varying(3),
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4677,7 +4677,7 @@ CREATE TABLE public.measurement_unit_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4734,7 +4734,7 @@ CREATE TABLE public.measurement_unit_qualifier_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4791,7 +4791,7 @@ CREATE TABLE public.measurement_unit_qualifiers_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4848,7 +4848,7 @@ CREATE TABLE public.measurement_units_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4906,7 +4906,7 @@ CREATE TABLE public.measurements_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -4984,7 +4984,7 @@ CREATE TABLE public.measures_oplog (
     invalidated_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     status text,
@@ -5078,7 +5078,7 @@ CREATE TABLE public.meursing_additional_codes_oplog (
     validity_end_date timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer,
@@ -5144,7 +5144,7 @@ CREATE TABLE public.meursing_heading_texts_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5205,7 +5205,7 @@ CREATE TABLE public.meursing_headings_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5268,7 +5268,7 @@ CREATE TABLE public.meursing_subheadings_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5334,7 +5334,7 @@ CREATE TABLE public.meursing_table_cell_components_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5396,7 +5396,7 @@ CREATE TABLE public.meursing_table_plans_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5468,7 +5468,7 @@ CREATE TABLE public.modification_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -5547,7 +5547,7 @@ CREATE TABLE public.monetary_exchange_periods_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5605,7 +5605,7 @@ CREATE TABLE public.monetary_exchange_rates_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5662,7 +5662,7 @@ CREATE TABLE public.monetary_unit_descriptions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5719,7 +5719,7 @@ CREATE TABLE public.monetary_units_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5780,7 +5780,7 @@ CREATE TABLE public.nomenclature_group_memberships_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5843,7 +5843,7 @@ CREATE TABLE public.prorogation_regulation_actions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -5907,7 +5907,7 @@ CREATE TABLE public.prorogation_regulations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -5978,7 +5978,7 @@ CREATE TABLE public.publication_sigles_oplog (
     validity_start_date timestamp without time zone,
     created_at timestamp without time zone,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6039,7 +6039,7 @@ CREATE TABLE public.quota_associations_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer,
@@ -6106,7 +6106,7 @@ CREATE TABLE public.quota_balance_events_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6169,7 +6169,7 @@ CREATE TABLE public.quota_blocking_periods_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6230,7 +6230,7 @@ CREATE TABLE public.quota_critical_events_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6301,7 +6301,7 @@ CREATE TABLE public.quota_definitions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -6377,7 +6377,7 @@ CREATE TABLE public.quota_exhaustion_events_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6433,7 +6433,7 @@ CREATE TABLE public.quota_order_number_origin_exclusions_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -6498,7 +6498,7 @@ CREATE TABLE public.quota_order_number_origins_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -6565,7 +6565,7 @@ CREATE TABLE public.quota_order_numbers_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     added_by_id integer,
     added_at timestamp without time zone,
     "national" boolean,
@@ -6629,7 +6629,7 @@ CREATE TABLE public.quota_reopening_events_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6688,7 +6688,7 @@ CREATE TABLE public.quota_suspension_periods_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6747,7 +6747,7 @@ CREATE TABLE public.quota_unblocking_events_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6804,7 +6804,7 @@ CREATE TABLE public.quota_unsuspension_events_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6898,7 +6898,7 @@ CREATE TABLE public.regulation_group_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -6957,7 +6957,7 @@ CREATE TABLE public.regulation_groups_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -7019,7 +7019,7 @@ CREATE TABLE public.regulation_replacements_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -7081,7 +7081,7 @@ CREATE TABLE public.regulation_role_type_descriptions_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -7140,7 +7140,7 @@ CREATE TABLE public.regulation_role_types_oplog (
     "national" boolean,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -7401,7 +7401,8 @@ CREATE TABLE public.sections (
     "position" integer,
     numeral character varying(255),
     title character varying(255),
-    created_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -7489,7 +7490,7 @@ CREATE TABLE public.transmission_comments_oplog (
     created_at timestamp without time zone,
     oid integer NOT NULL,
     operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date date,
+    operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
     workbasket_sequence_number integer
@@ -7628,7 +7629,7 @@ CREATE TABLE public.workbaskets (
     last_status_change_at timestamp without time zone,
     updated_at timestamp without time zone,
     created_at timestamp without time zone,
-    operation_date date,
+    operation_date timestamp without time zone,
     cross_checker_id integer,
     approver_id integer
 );
@@ -12166,5 +12167,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011184220_add_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011190000_add_more_search_indexes_to_speed_up.rb');
