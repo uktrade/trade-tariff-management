@@ -25,13 +25,13 @@ Vue.component("remove-measures-popup", {
       this.removingMeasures = true;
 
       if (this.selectedAllMeasures) {
-        jqxhr = BulkRemoveMeasuresActions.removeAllMeasuresInWorkbasket();
+        jqxhr = BulkRemoveMeasuresActions.removeAllItemsInWorkbasket();
         jqxhr.done(function(){
           self.allMeasuresRemovedCb();
           $(".js-bulk-edit-of-measures-exit-to-search")[0].click(); // click exit
         });
       } else {
-        jqxhr = BulkRemoveMeasuresActions.removeMeasures(this.measures);
+        jqxhr = BulkRemoveMeasuresActions.removeItems(this.measures);
         jqxhr.done(function(){
           self.measuresRemovedCb(self.measures);
           self.triggerClose();

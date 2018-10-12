@@ -201,11 +201,18 @@ $(document).ready(function() {
       }
     },
     methods: {
+      updateSelectedAll: function() {
+        var self = this;
+        this.selectedAllMeasures = this.measures.filter(function(measure) {
+          return self.selectedMeasures.indexOf(measure.measure_sid) > -1;
+        }).length === this.measures.length;
+      },
       addOriginExclusion: function() {
         this.origin_exclusions.push({ value: '' });
       },
       onItemSelected: function(sid) {
         this.selectedMeasures.push(sid);
+        this.updateSelectedAll();
       },
       onItemDeselected: function(sid) {
         var index = this.selectedMeasures.indexOf(sid);
@@ -215,6 +222,7 @@ $(document).ready(function() {
         }
 
         this.selectedMeasures.splice(index, 1);
+        this.updateSelectedAll();
       },
       toggleUnselected: function() {
         var selected = this.selectedMeasures;
