@@ -2,7 +2,50 @@ class AllAdditionalCode < Sequel::Model
 
   include ::WorkbasketHelpers::Association
 
+  plugin :time_machine
+
   dataset_module do
+    def q_search(filter_ops)
+      scope = actual
+
+      if filter_ops[:q].present?
+        q_rule = "#{filter_ops[:q]}%"
+
+        scope = scope.where("
+          all_additional_codes.additional_code ilike ? OR
+          all_additional_codes.description ilike ?",
+                q_rule, q_rule
+        )
+      end
+
+      if filter_ops[:additional_code_type_id].present?
+        scope = scope.where(
+            "all_additional_codes.additional_code_type_id = ?", filter_ops[:additional_code_type_id]
+        )
+      end
+
+      scope.order(Sequel.asc(:all_additional_codes__additional_code))
+    end
+
+    def by_code(code=nil)
+      full_code = code.to_s
+                      .delete(" ")
+                      .downcase
+
+      return nil unless (full_code.present? && full_code.size == 4)
+
+      additional_code_type_id = full_code[0]
+      additional_code = full_code[1..-1]
+
+      scope = actual.where(additional_code: additional_code)
+
+      if additional_code_type_id.present?
+        scope = scope.where("lower(additional_code_type_id) = ?", additional_code_type_id)
+      end
+
+      scope.first
+    end
+
     include ::AdditionalCodes::SearchFilters::FindAdditionalCodesCollection
   end
 

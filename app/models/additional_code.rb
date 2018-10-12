@@ -63,7 +63,6 @@ class AdditionalCode < Sequel::Model
       scope.first
     end
 
-    include ::AdditionalCodes::SearchFilters::FindAdditionalCodesCollection
     include ::BulkEditHelpers::OrderByIdsQuery
   end
 
