@@ -1,0 +1,102 @@
+script
+  == "window.validate_search_settings_url = '#{validate_search_settings_footnotes_url}';"
+  == "window.__search_footnotes_settings_json = #{search_form.settings.to_json};"
+
+= simple_form_for search_form, as: :search,
+                               url: footnotes_url,
+                               method: :get,
+                               html: { class: "js-search-geographical-areas-form", "data-parsley-validate" => true } do |f|
+
+  .bootstrap-row
+    .col-lg-5.col-md-7.col-sm-10.col-xs-12
+      = render "footnotes/footnotes/search/errors_summary"
+
+      fieldset
+        form-group :errors="errors" error-key="q"
+          template slot-scope="slotProps"
+            h3.heading-medium
+              | Enter a footnote code or serach string
+
+            label.form-label.search-geographical-areas-error-container
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+              span.form-hint
+
+            .bootstrap-row
+              .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                input.form-control v-model="search.q"
+
+      fieldset
+        form-group :errors="errors" error-key="start_date"
+          template slot-scope="slotProps"
+            h3.heading-medium
+              | Select date from
+
+            label.form-label.search-geographical-areas-error-container
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+              span.form-hint
+
+              .bootstrap-row
+                .col-lg-5.col-md-7.col-sm-10.col-xs-12
+                  = f.input :start_date, label: false, input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.start_date" }
+
+      fieldset
+        form-group :errors="errors" error-key="end_date"
+          template slot-scope="slotProps"
+            h3.heading-medium
+              | Select date to
+
+            label.form-label.search-geographical-areas-error-container
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+              span.form-hint
+
+            .bootstrap-row
+              .col-lg-5.col-md-7.col-sm-10.col-xs-12
+                = f.input :end_date, label: false, input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.end_date" }
+
+      fieldset
+        form-group :errors="errors" error-key="code"
+          template slot-scope="slotProps"
+            h3.heading-medium
+             | Filter by footnote type
+
+            label.form-label.search-geographical-areas-error-container
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+              span.form-hint
+
+            .bootstrap-row
+              .col-lg-5.col-md-7.col-sm-10.col-xs-12
+                .find-items__row.without_border
+                  .find-items__checkbox-column
+                    .multiple-choice
+                      input#toggle-country-code name="search[code_country]" type="checkbox" value="0" v-model="search.code_country"
+                      label for="toggle-country-code"
+                        | Country
+
+                .find-items__row.without_border
+                  .find-items__checkbox-column
+                    .multiple-choice
+                      input#toggle-region-code name="search[code_region]" type="checkbox" value="2" v-model="search.code_region"
+                      label for="toggle-region-code"
+                        | Region
+
+                .find-items__row.without_border
+                  .find-items__checkbox-column
+                    .multiple-choice
+                      input#toggle-group-code name="search[code_group]" type="checkbox" value="1" v-model="search.code_group"
+                      label for="toggle-group-code"
+                        | Group
+
+      .bootstrap-row
+        .col-lg-5.col-md-7.col-sm-10.col-xs-12
+          .form-actions
+            .submit_group_for_cross_check_block
+              = link_to "Search", "#", name: "save_progress", class: "button js-validate-geographical-areas-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
+
+              .js-workbasket-base-continue-spinner.spinner_block.hidden
+                = render "measures/bulks/loading_spinner", message: "Checking form settings..."
+
+            = link_to "Clear form", footnotes_url, class: 'secondary-button js-workbasket-base-exit-button'

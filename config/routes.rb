@@ -63,7 +63,12 @@ Rails.application.routes.draw do
 
   scope module: :footnotes do
     resources :footnote_types, only: [:index]
-    resources :footnotes, only: [:index]
+    resources :footnotes, only: [:new, :index] do
+      collection do
+        get :search
+        get :validate_search_settings
+      end
+    end
   end
 
   scope module: :quotas do
