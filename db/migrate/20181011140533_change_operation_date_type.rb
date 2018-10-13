@@ -31,6 +31,7 @@ Sequel.migration do
                           {:"#{view_name}1__#{pk}" => :"#{view_name}2__#{pk}"}
                         end
         column_names = (Sequel::Model.db[table_name].columns - [:updated_at, :created_at])
+        column_names += [:updated_at] if table_name == :measures_oplog
       end
 
       puts "Processing #{table_name} table"
@@ -100,6 +101,7 @@ Sequel.migration do
                           {:"#{view_name}1__#{pk}" => :"#{view_name}2__#{pk}"}
                         end
         column_names = (Sequel::Model.db[table_name].columns - [:updated_at, :created_at])
+        column_names += [:updated_at] if table_name == :measures_oplog
       end
 
       # drop view
