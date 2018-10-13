@@ -212,7 +212,7 @@ module Workbaskets
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status(["awaiting_cds_upload_create_new", "awaiting_cds_upload_edit"])
+        ).in_status(["awaiting_cds_upload_create_new", "awaiting_cds_upload_edit", "awaiting_cross_check"])
          .order(:operation_date)
       end
 
