@@ -9,6 +9,14 @@ class FootnoteSearch
     end_date
   )
 
+  FIELDS_ALLOWED_FOR_ORDER = %w(
+    footnote_type_id
+    footnote_id
+    description
+    start_date
+    end_date
+  )
+
   attr_accessor :search_ops,
                 :q,
                 :footnote_type_id,
@@ -17,15 +25,17 @@ class FootnoteSearch
                 :start_date,
                 :end_date,
                 :relation,
+                :sort_by_field,
                 :page
 
   def initialize(search_ops)
     @search_ops = search_ops
     @page = search_ops[:page] || 1
+    @sort_by_field = search_ops[:sort_by]
   end
 
   def results(paginate=true)
-    @relation = Footnote.default_order
+    setup_initial_scope!
 
     search_ops.select do |k, v|
       ALLOWED_FILTERS.include?(k.to_s) && v.present?
@@ -42,6 +52,21 @@ class FootnoteSearch
   end
 
   private
+
+    def setup_initial_scope!
+      @relation = if sort_by_field.present?
+        if FIELDS_ALLOWED_FOR_ORDER.include?(sort_by_field)
+          Footnote.custom_field_order(
+            sort_by_field, search_ops[:sort_dir]
+          )
+        else
+          Footnote.default_order
+        end
+
+      else
+        Footnote.default_order
+      end
+    end
 
     def apply_q_filter
       @relation = relation.keywords_search(q)

@@ -144,6 +144,14 @@ class Footnote < Sequel::Model
           footnote_id: :footnote_id
         ).order(Sequel.asc(:footnote_descriptions__description))
       end
+
+      def custom_field_order(sort_by_field, sort_direction)
+        if sort_direction.to_sym == :desc
+          reverse_order(sort_by_field.to_sym)
+        else
+          order(sort_by_field.to_sym)
+        end
+      end
     end
   end
 
