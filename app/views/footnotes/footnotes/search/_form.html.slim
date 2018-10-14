@@ -1,6 +1,7 @@
 script
-  == "window.validate_search_settings_url = '#{validate_search_settings_footnotes_url}';"
+  == "window.__footnote_types_list_json = '#{search_form.footnote_types_list.to_json}';"
   == "window.__search_footnotes_settings_json = #{search_form.settings.to_json};"
+  == "window.__validate_search_settings_url = '#{validate_search_settings_footnotes_url}';"
 
 = simple_form_for search_form, as: :search,
                                url: footnotes_url,
@@ -12,7 +13,7 @@ script
       = render "footnotes/footnotes/search/errors_summary"
 
       fieldset
-        form-group :errors="errors" error-key="q"
+        form-group :errors="errors" error-key="footnote_type_id"
           template slot-scope="slotProps"
             h3.heading-medium
               | What is the footnote type?
@@ -25,7 +26,7 @@ script
 
             .bootstrap-row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                = content_tag "custom-select", "", { ":options" => "groups_list" , "allow-clear" => true, "code-field" => "footnote_type_id", "label-field" => "description", "value-field" => "footnote_type_id", "v-model" => "search.footnote_type_id", placeholder: "― select footnote type ―", "name" => "search[footnote_type_id]", "code-class-name" => "prefix--country" }
+                = content_tag "custom-select", "", { ":options" => "footnote_types_list" , "allow-clear" => true, "code-field" => "footnote_type_id", "label-field" => "description", "value-field" => "footnote_type_id", "v-model" => "search.footnote_type_id", placeholder: "― select footnote type ―", "name" => "search[footnote_type_id]", "code-class-name" => "prefix--country" }
 
       fieldset
         form-group :errors="errors" error-key="q"
@@ -96,7 +97,7 @@ script
         form-group :errors="errors" error-key="end_date"
           template slot-scope="slotProps"
             h3.heading-medium
-              | ptionally search for footnotes that are valid until
+              | Optionally search for footnotes that are valid until
 
             label.form-label.search-footnotes-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""

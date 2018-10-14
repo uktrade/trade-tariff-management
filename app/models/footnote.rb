@@ -94,16 +94,10 @@ class Footnote < Sequel::Model
 
     begin :find_footnotes_search_filters
       def keywords_search(keyword)
-        q_rule = "#{keyword}%"
-
-        join_table(:inner,
-          :footnote_descriptions,
-          footnote_type_id: :footnote_type_id,
-          footnote_id: :footnote_id
-        ).where("
+        where("
           footnotes.footnote_id ilike ? OR
           footnote_descriptions.description ilike ?",
-          q_rule, q_rule
+          "#{keyword}%", "#{keyword}%"
         )
       end
 
@@ -133,8 +127,20 @@ class Footnote < Sequel::Model
         )
       end
 
+      def after_or_equal(start_date)
+        where("validity_start_date >= ?", start_date)
+      end
+
+      def before_or_equal(end_date)
+        where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
+      end
+
       def default_order
-        order()
+        join_table(:inner,
+          :footnote_descriptions,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        ).order(Sequel.asc(:footnote_descriptions__description))
       end
     end
   end
@@ -190,5 +196,19 @@ class Footnote < Sequel::Model
     measures.count +
     additional_codes.count +
     meursing_headings.count
+  end
+
+  class << self
+    def max_per_page
+      10
+    end
+
+    def default_per_page
+      10
+    end
+
+    def max_pages
+      999
+    end
   end
 end

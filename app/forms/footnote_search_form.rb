@@ -34,6 +34,17 @@ class FootnoteSearchForm
     }
   end
 
+  def footnote_types_list
+    FootnoteType.actual.map do |ft|
+      {
+        footnote_type_id: ft.footnote_type_id,
+        description: ft.description
+      }
+    end.sort do |a, b|
+      a[:footnote_type_id] <=> b[:footnote_type_id]
+    end
+  end
+
   def parsed_errors
     res = {}
 

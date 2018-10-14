@@ -10,7 +10,8 @@ $(document).ready(function() {
     data: function() {
       var data = {
         errors: {},
-        errorsSummary: ""
+        errorsSummary: "",
+        footnote_types_list: window.__footnote_types_list_json
       };
 
       if (!$.isEmptyObject(window.__search_footnotes_settings_json)) {

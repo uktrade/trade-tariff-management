@@ -12,6 +12,10 @@ class FootnoteDecorator < ApplicationDecorator
     to_date(object.validity_end_date)
   end
 
+  def locked?
+    false # TODO
+  end
+
   private
 
     def to_date(value)
