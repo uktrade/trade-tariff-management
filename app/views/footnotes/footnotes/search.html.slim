@@ -11,4 +11,12 @@ header
     | Find and edit footnotes
 
   = render "footnotes/footnotes/search/form"
-  = render "footnotes/footnotes/search/results"
+
+  - if params[:search].present?
+    h3.heading-medium.search-results-heading
+      | Search results
+
+    - if search_results.present?
+      = render "footnotes/footnotes/search/results"
+    - else
+      = render "footnotes/footnotes/search/nothing_found_block"
