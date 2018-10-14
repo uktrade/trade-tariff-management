@@ -62,6 +62,7 @@ $(document).ready(function() {
             search: self.footnoteFormPayload()
           },
           success: function(response) {
+            self.errors = [];
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
           },
           error: function(response) {
@@ -74,28 +75,28 @@ $(document).ready(function() {
 
             self.errorsSummary = response.responseJSON.errors.general_summary;
             self.errors = response.responseJSON.errors;
-
-            //
-            // FIX ME:
-            // So this fix is temporary.
-            // Issue is that when you call:
-            //
-            // self.errors = [SET ANY VALUE HERE];
-            //
-            // when start_date and end_date datepicker inputs
-            // are refreshing to empty values.
-            //
-            setTimeout(function fixdate() {
-              if (start_date_formatted.length > 0) {
-                window.js_start_date_pikaday_instance.setDate(start_date_formatted);
-              }
-
-              if (end_date_formatted.length > 0) {
-                window.js_end_date_pikaday_instance.setDate(end_date_formatted);
-              }
-            }, 50);
           }
         });
+
+        //
+        // FIX ME:
+        // So this fix is temporary.
+        // Issue is that when you call:
+        //
+        // self.errors = [SET ANY VALUE HERE];
+        //
+        // when start_date and end_date datepicker inputs
+        // are refreshing to empty values.
+        //
+        setTimeout(function fixdate() {
+          if (start_date_formatted.length > 0) {
+            window.js_start_date_pikaday_instance.setDate(start_date_formatted);
+          }
+
+          if (end_date_formatted.length > 0) {
+            window.js_end_date_pikaday_instance.setDate(end_date_formatted);
+          }
+        }, 50);
       });
     },
     computed: {

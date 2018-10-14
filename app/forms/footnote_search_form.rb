@@ -52,7 +52,7 @@ class FootnoteSearchForm
     end
 
     if res["general_summary"].blank?
-      errors.add("general_summary", errors_translator(:general_errors))
+      res["general_summary"] = errors_translator(:general_errors)
     end
 
     res
@@ -81,10 +81,11 @@ class FootnoteSearchForm
     end
 
     def validate_date(field_name)
-      date = parse_date(public_send(field_name))
+      str_value = public_send(field_name)
+      date = parse_date(str_value)
 
-      if date.nil?
-        errors.add(field_name, errors_translator("#{field_name}_invalid"))
+      if str_value.present? && date.nil?
+        errors.add(field_name, errors_translator("#{field_name}_invalid".to_sym))
       end
     end
 

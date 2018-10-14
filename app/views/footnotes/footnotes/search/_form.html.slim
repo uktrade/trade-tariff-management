@@ -15,10 +15,14 @@ script
       fieldset
         form-group :errors="errors" error-key="general"
           template slot-scope="slotProps"
-            h3.heading-medium
+            label.form-label
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+
+            h3.heading-medium.sub_heading_block
               | What is the footnote type?
 
-            label.form-label.search-footnotes-error-container
+            label.form-label
               span.form-hint
                 | You must make a selection here if entering an ID in the next field.
 
@@ -29,7 +33,7 @@ script
             h3.heading-medium
               | Enter a footnote ID or search string
 
-            label.form-label.search-footnotes-error-container
+            label.form-label
               span.form-hint
                 | This is usually mandatory but you can leave it blank if you are searching for associations below.
 
@@ -40,9 +44,7 @@ script
             h3.heading-medium
               | Optionally search for footnotes that have these associations
 
-            label.form-label.search-footnotes-error-container
-              span.error-message v-if="slotProps.hasError" v-cloak=""
-                | {{slotProps.error}}
+            label.form-label
               span.form-hint
                 | You can populate any or all of the following fields to find footnotes that are associated with ALL of the values you enter there in.
 
