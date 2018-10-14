@@ -84,11 +84,13 @@ class FootnoteSearch
     end
 
     def apply_commodity_codes_filter
-      @relation = relation.by_commodity_codes(commodity_codes)
+      parsed_list = parse_list_of_values(commodity_codes)
+      @relation = relation.by_commodity_codes(commodity_codes) unless commodity_codes.count.zero?
     end
 
     def apply_measure_sids_filter
-      @relation = relation.by_measure_sids(measure_sids)
+      parsed_list = parse_list_of_values(measure_sids)
+      @relation = relation.by_measure_sids(measure_sids) unless measure_sids.count.zero?
     end
 
     def apply_start_date_filter
@@ -97,5 +99,24 @@ class FootnoteSearch
 
     def apply_end_date_filter
       @relation = relation.before_or_equal(end_date.to_date.end_of_day)
+    end
+
+    def parse_list_of_values(list_of_ids)
+      # Split by linebreaks
+      linebreaks_separated_list = list_of_ids.split(/\n+/)
+
+      # Split by commas
+      comma_separated_list = linebreaks_separated_list.map do |item|
+        item.split(",")
+      end.flatten
+
+      # Split by whitespaces
+      white_space_separated_list = comma_separated_list.map do |item|
+        item.split(" ")
+      end.flatten
+
+      white_space_separated_list.map(&:squish)
+                                .flatten
+                                .reject { |i| i.blank? }.uniq
     end
 end
