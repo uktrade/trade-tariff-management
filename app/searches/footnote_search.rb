@@ -13,8 +13,8 @@ class FootnoteSearch
     footnote_type_id
     footnote_id
     description
-    start_date
-    end_date
+    validity_start_date
+    validity_end_date
   )
 
   SIMPLE_SORTABLE_MODES = %w(

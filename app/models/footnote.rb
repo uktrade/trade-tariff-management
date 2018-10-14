@@ -137,12 +137,16 @@ class Footnote < Sequel::Model
         )
       end
 
-      def default_order
+      def default_join
         join_table(:inner,
           :footnote_descriptions,
           footnote_type_id: :footnote_type_id,
           footnote_id: :footnote_id
-        ).order(
+        )
+      end
+
+      def default_order
+        default_join.order(
           Sequel.asc(:footnote_descriptions__description)
         )
       end
@@ -154,15 +158,13 @@ class Footnote < Sequel::Model
           :footnote_descriptions__description
         end
 
-        if sort_direction.to_sym == :desc
-          order(
-            Sequel.desc(sortable_rule)
-          )
+        order_rule = if sort_direction.to_sym == :desc
+          Sequel.desc(sortable_rule)
         else
-          order(
-            Sequel.asc(sortable_rule)
-          )
+          Sequel.asc(sortable_rule)
         end
+
+        default_join.order(order_rule)
       end
     end
   end

@@ -15,6 +15,9 @@ module Footnotes
         page: params[:page]
       )
 
+      ops[:sort_by] = params[:sort_by]
+      ops[:sort_dir] = params[:sort_dir]
+
       ops
     end
 

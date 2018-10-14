@@ -18,15 +18,15 @@
         th
           = sortable(:footnote_type_id, "Footnote type", { search: search_ops })
         th
-          = sortable(:id, "ID", { search: search_ops })
+          = sortable(:footnote_id, "ID", { search: search_ops })
         th
           = sortable(:description, "Description", { search: search_ops })
         th
           | Associations
         th
-          = sortable(:start_date, "Start date", { search: search_ops })
+          = sortable(:validity_start_date, "Start date", { search: search_ops })
         th
-          = sortable(:end_date, "End date", { search: search_ops })
+          = sortable(:validity_end_date, "End date", { search: search_ops })
 
         - if false
           th width="1"
