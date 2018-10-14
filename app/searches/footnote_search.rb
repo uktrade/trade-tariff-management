@@ -17,6 +17,13 @@ class FootnoteSearch
     end_date
   )
 
+  SIMPLE_SORTABLE_MODES = %w(
+    footnote_type_id
+    footnote_id
+    validity_start_date
+    validity_end_date
+  )
+
   attr_accessor :search_ops,
                 :q,
                 :footnote_type_id,

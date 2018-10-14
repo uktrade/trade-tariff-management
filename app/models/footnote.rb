@@ -142,14 +142,26 @@ class Footnote < Sequel::Model
           :footnote_descriptions,
           footnote_type_id: :footnote_type_id,
           footnote_id: :footnote_id
-        ).order(Sequel.asc(:footnote_descriptions__description))
+        ).order(
+          Sequel.asc(:footnote_descriptions__description)
+        )
       end
 
       def custom_field_order(sort_by_field, sort_direction)
-        if sort_direction.to_sym == :desc
-          reverse_order(sort_by_field.to_sym)
+        sortable_rule = if sort_by_field.in?(FootnoteSearch::SIMPLE_SORTABLE_MODES)
+          "footnotes__#{sort_by_field}".to_sym
         else
-          order(sort_by_field.to_sym)
+          :footnote_descriptions__description
+        end
+
+        if sort_direction.to_sym == :desc
+          order(
+            Sequel.desc(sortable_rule)
+          )
+        else
+          order(
+            Sequel.asc(sortable_rule)
+          )
         end
       end
     end
