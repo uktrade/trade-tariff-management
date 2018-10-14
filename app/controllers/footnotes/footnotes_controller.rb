@@ -11,7 +11,7 @@ module Footnotes
         ops = {}
       end
 
-      ops.merge(
+      ops = ops.merge(
         page: params[:page]
       )
 
