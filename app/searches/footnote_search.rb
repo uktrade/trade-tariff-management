@@ -84,13 +84,21 @@ class FootnoteSearch
     end
 
     def apply_commodity_codes_filter
-      parsed_list = parse_list_of_values(commodity_codes)
-      @relation = relation.by_commodity_codes(commodity_codes) unless commodity_codes.count.zero?
+      apply_list_of_ids_filter(:commodity_codes)
     end
 
     def apply_measure_sids_filter
-      parsed_list = parse_list_of_values(measure_sids)
-      @relation = relation.by_measure_sids(measure_sids) unless measure_sids.count.zero?
+      apply_list_of_ids_filter(:measure_sids)
+    end
+
+    def apply_list_of_ids_filter(list_name)
+      parsed_list = parse_list_of_values(
+        public_send(list_name)
+      )
+
+      unless parsed_list.count.zero?
+        @relation = relation.public_send("by_#{list_name}", parsed_list)
+      end
     end
 
     def apply_start_date_filter

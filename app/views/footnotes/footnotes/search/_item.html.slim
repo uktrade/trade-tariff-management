@@ -9,6 +9,8 @@ tr class="#{'workbasket-record-locked' if item.locked?}"
   td
     = item.associated_records_count
   td
+    = item.measures.map(&:measure_sid).join(', ')
+  td
     = item.start_date
   td
     = item.end_date

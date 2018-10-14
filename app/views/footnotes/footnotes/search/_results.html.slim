@@ -9,6 +9,7 @@
       col width="120"
       col width="200"
       col width="200"
+      col width="200"
 
       - if false
         col width="1"
@@ -23,6 +24,8 @@
           = sortable(:description, "Description", { search: search_ops })
         th
           | Associations
+        th
+          | Measure SIDs
         th
           = sortable(:validity_start_date, "Start date", { search: search_ops })
         th
