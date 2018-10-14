@@ -91,6 +91,52 @@ class Footnote < Sequel::Model
            .all
            .uniq { |item| item.description }
     end
+
+    begin :find_footnotes_search_filters
+      def keywords_search(keyword)
+        q_rule = "#{keyword}%"
+
+        join_table(:inner,
+          :footnote_descriptions,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        ).where("
+          footnotes.footnote_id ilike ? OR
+          footnote_descriptions.description ilike ?",
+          q_rule, q_rule
+        )
+      end
+
+      def by_footnote_type_id(footnote_type_id)
+        where(footnote_type_id: footnote_type_id)
+      end
+
+      def by_commodity_codes(commodity_codes)
+        join_table(:inner,
+          :footnote_association_goods_nomenclatures,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        ).where("
+          footnote_association_goods_nomenclatures.goods_nomenclature_item_id IN ?",
+          list_of_measure_sids
+        )
+      end
+
+      def by_measure_sids(list_of_measure_sids)
+        join_table(:inner,
+          :footnote_association_measures,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        ).where("
+          footnote_association_measures.measure_sid IN ?",
+          list_of_measure_sids
+        )
+      end
+
+      def default_order
+        order()
+      end
+    end
   end
 
     # FO4
@@ -132,5 +178,17 @@ class Footnote < Sequel::Model
 
   def to_json(options = {})
     json_mapping
+  end
+
+  def decorate
+    FootnoteDecorator.decorate(self)
+  end
+
+  def associated_records_count
+    goods_nomenclatures.count +
+    export_refund_nomenclatures.count +
+    measures.count +
+    additional_codes.count +
+    meursing_headings.count
   end
 end
