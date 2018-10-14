@@ -40,6 +40,11 @@ module Footnotes
       end
     end
 
+    def search
+      params[:sort_by] ||= "description"
+      params[:sort_dir] ||= "asc"
+    end
+
     def collection
       Footnote.q_search(params)
     end

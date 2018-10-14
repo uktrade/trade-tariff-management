@@ -10,13 +10,23 @@ header
   h1.heading-large
     | Find and edit footnotes
 
-  = render "footnotes/footnotes/search/form"
+  .js-search-footnotes-section
+    = render "footnotes/footnotes/search/form"
+
+    - if params[:search].present?
+      h3.heading-medium.search-results-heading
+        | Search results
+
+      - if search_results.present?
+        = render "footnotes/footnotes/search/results"
 
   - if params[:search].present?
-    h3.heading-medium.search-results-heading
-      | Search results
-
     - if search_results.present?
-      = render "footnotes/footnotes/search/results"
+      = paginate search_results
     - else
       = render "footnotes/footnotes/search/nothing_found_block"
+
+script
+  == "window.__footnote_types_list_json = #{search_form.footnote_types_list.to_json};"
+  == "window.__search_footnotes_settings_json = #{search_form.settings.to_json};"
+  == "window.__validate_search_settings_url = '#{validate_search_settings_footnotes_url}';"

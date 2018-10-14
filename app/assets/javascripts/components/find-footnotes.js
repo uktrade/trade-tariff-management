@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var form = document.querySelector(".js-search-footnotes-form");
+  var form = document.querySelector(".js-search-footnotes-section");
 
   if (!form) {
     return;

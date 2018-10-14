@@ -16,17 +16,17 @@
     thead
       tr
         th
-          = sortable(:footnote_type_id, "Footnote type", { search_settings: search_ops })
+          = sortable(:footnote_type_id, "Footnote type", { search: search_ops })
         th
-          = sortable(:id, "ID", { search_settings: search_ops })
+          = sortable(:id, "ID", { search: search_ops })
         th
-          = sortable(:description, "Description", { search_settings: search_ops })
+          = sortable(:description, "Description", { search: search_ops })
         th
           | Associations
         th
-          = sortable(:start_date, "Start date", { search_settings: search_ops })
+          = sortable(:start_date, "Start date", { search: search_ops })
         th
-          = sortable(:end_date, "End date", { search_settings: search_ops })
+          = sortable(:end_date, "End date", { search: search_ops })
 
         - if false
           th width="1"
@@ -36,4 +36,3 @@
       - search_results.map do |item|
         = render "footnotes/footnotes/search/item", item: item.decorate
 
-  = paginate search_results
