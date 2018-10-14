@@ -34,9 +34,9 @@
 
             .bootstrap-row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                input.form-control v-model="search.q"
+                = f.input :q, label: false, input_html: { class: "form-control", "v-model" => "search.q" }
 
-            h3.heading-medium
+            h3.heading-medium.sub_heading_block
               | Optionally search for footnotes that have these associations
 
             label.form-label
