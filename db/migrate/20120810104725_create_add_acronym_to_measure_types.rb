@@ -1,7 +1,13 @@
 Sequel.migration do
-  change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+  up do
+    alter_table :measure_types do
+      add_column :measure_type_acronym, String, size: 3
+    end
+  end
+
+  down do
+    alter_table :measure_types do
+      drop_column :measure_type_acronym
+    end
   end
 end

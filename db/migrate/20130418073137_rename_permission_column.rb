@@ -1,7 +1,13 @@
 Sequel.migration do
-  change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+  up do
+    alter_table :users do
+      rename_column :permission, :permissions
+    end
+  end
+
+  down do
+    alter_table :users do
+      rename_column :permissions, :permission
+    end
   end
 end

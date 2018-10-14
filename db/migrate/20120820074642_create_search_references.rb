@@ -1,7 +1,9 @@
 Sequel.migration do
   change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+    create_table :search_references do
+      primary_key :id
+      String :title
+      String :reference
+    end
   end
 end

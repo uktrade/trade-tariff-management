@@ -1,7 +1,15 @@
 Sequel.migration do
-  change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+  up do
+    create_table :users do
+      primary_key :uid
+      String      :name
+      String      :email
+      String      :permission, text: true
+      TrueClass   :remotely_signed_out, default: false
+    end
+  end
+
+  down do
+    drop_table :users
   end
 end

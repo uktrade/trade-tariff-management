@@ -1,7 +1,13 @@
 Sequel.migration do
   change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+    alter_table :chief_mfcm do
+      add_column :transformed, :boolean, default: false
+    end
+    alter_table :chief_tame do
+      add_column :transformed, :boolean, default: false
+    end    
+    alter_table :chief_tamf do
+      add_column :transformed, :boolean, default: false
+    end
   end
 end
