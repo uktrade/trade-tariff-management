@@ -64,6 +64,8 @@ $(document).ready(function() {
           success: function(response) {
             self.errors = [];
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+
+            $(".js-search-footnotes-form").submit();
           },
           error: function(response) {
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
