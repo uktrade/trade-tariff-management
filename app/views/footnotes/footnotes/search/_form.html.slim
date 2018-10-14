@@ -25,7 +25,7 @@ script
                 | You must make a selection here if entering an ID in the next field.
 
             .bootstrap-row
-              .col-lg-12.col-md-12.col-sm-12.col-xs-12
+              .col-lg-8.col-md-10.col-sm-12.col-xs-12
                 = content_tag "custom-select", "", { ":options" => "footnote_types_list" , "allow-clear" => true, "code-field" => "footnote_type_id", "label-field" => "description", "value-field" => "footnote_type_id", "v-model" => "search.footnote_type_id", placeholder: "― select footnote type ―", "name" => "search[footnote_type_id]", "code-class-name" => "prefix--country" }
 
       fieldset
@@ -56,7 +56,7 @@ script
               span.form-hint
                 | You can populate any or all of the following fields to find footnotes that are associated with ALL of the values you enter there in.
 
-            h4.heading-medium
+            h3.heading-medium.sub_heading_block
               | Goods classiciation codes
 
             label.form-label
@@ -65,9 +65,9 @@ script
 
             .bootstrap-row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                = f.input :commodity_codes, label: false, input_html: { "v-model" => "search.commodity_codes" }
+                = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "search.commodity_codes", rows: 3 }
 
-            h4.heading-medium
+            h3.heading-medium.sub_heading_block
               | Measures
 
             label.form-label
@@ -76,12 +76,12 @@ script
 
             .bootstrap-row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                = f.input :measure_sids, label: false, input_html: { "v-model" => "search.measure_sids" }
+                = f.input :measure_sids, as: :text, label: false, input_html: { "v-model" => "search.measure_sids", rows: 3 }
 
       fieldset
         form-group :errors="errors" error-key="start_date"
           template slot-scope="slotProps"
-            h3.heading-medium
+            h3.heading-medium.with_smaller_top_border
               | Optionally search for footnotes that are valid from
 
             label.form-label.search-footnotes-error-container
@@ -96,7 +96,7 @@ script
       fieldset
         form-group :errors="errors" error-key="end_date"
           template slot-scope="slotProps"
-            h3.heading-medium
+            h3.heading-medium.with_smaller_top_border
               | Optionally search for footnotes that are valid until
 
             label.form-label.search-footnotes-error-container
