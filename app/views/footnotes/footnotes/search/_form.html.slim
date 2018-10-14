@@ -13,14 +13,12 @@ script
       = render "footnotes/footnotes/search/errors_summary"
 
       fieldset
-        form-group :errors="errors" error-key="footnote_type_id"
+        form-group :errors="errors" error-key="general"
           template slot-scope="slotProps"
             h3.heading-medium
               | What is the footnote type?
 
             label.form-label.search-footnotes-error-container
-              span.error-message v-if="slotProps.hasError" v-cloak=""
-                | {{slotProps.error}}
               span.form-hint
                 | You must make a selection here if entering an ID in the next field.
 
@@ -28,15 +26,10 @@ script
               .col-lg-8.col-md-10.col-sm-12.col-xs-12
                 = content_tag "custom-select", "", { ":options" => "footnote_types_list" , "allow-clear" => true, "code-field" => "footnote_type_id", "label-field" => "description", "value-field" => "footnote_type_id", "v-model" => "search.footnote_type_id", placeholder: "― select footnote type ―", "name" => "search[footnote_type_id]", "code-class-name" => "prefix--country" }
 
-      fieldset
-        form-group :errors="errors" error-key="q"
-          template slot-scope="slotProps"
             h3.heading-medium
               | Enter a footnote ID or search string
 
             label.form-label.search-footnotes-error-container
-              span.error-message v-if="slotProps.hasError" v-cloak=""
-                | {{slotProps.error}}
               span.form-hint
                 | This is usually mandatory but you can leave it blank if you are searching for associations below.
 
@@ -44,9 +37,6 @@ script
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
                 input.form-control v-model="search.q"
 
-      fieldset
-        form-group :errors="errors" error-key="associations"
-          template slot-scope="slotProps"
             h3.heading-medium
               | Optionally search for footnotes that have these associations
 

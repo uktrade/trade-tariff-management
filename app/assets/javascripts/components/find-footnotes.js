@@ -72,7 +72,7 @@ $(document).ready(function() {
               return;
             }
 
-            self.errorsSummary = "All bad guys!";
+            self.errorsSummary = response.responseJSON.errors.general_summary;
             self.errors = response.responseJSON.errors;
 
             //
