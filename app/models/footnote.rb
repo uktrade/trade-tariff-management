@@ -97,12 +97,12 @@ class Footnote < Sequel::Model
         where("
           footnotes.footnote_id ilike ? OR
           footnote_descriptions.description ilike ?",
-          "#{keyword}%", "#{keyword}%"
+          "#{keyword}%", "%#{keyword}%"
         )
       end
 
       def by_footnote_type_id(footnote_type_id)
-        where(footnote_type_id: footnote_type_id)
+        where("footnotes.footnote_type_id = ?", footnote_type_id)
       end
 
       def by_commodity_codes(commodity_codes)
@@ -128,11 +128,13 @@ class Footnote < Sequel::Model
       end
 
       def after_or_equal(start_date)
-        where("validity_start_date >= ?", start_date)
+        where("footnotes.validity_start_date >= ?", start_date)
       end
 
       def before_or_equal(end_date)
-        where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
+        where(
+          "footnotes.validity_end_date IS NOT NULL AND footnotes.validity_end_date <= ?", end_date
+        )
       end
 
       def default_order

@@ -16,17 +16,17 @@
     thead
       tr
         th
-          = sortable(:id, "Footnote type", { search_settings: params[:search] })
+          = sortable(:id, "Footnote type", { search_settings: search_ops })
         th
-          = sortable(:id, "ID", { search_settings: params[:search] })
+          = sortable(:id, "ID", { search_settings: search_ops })
         th
-          = sortable(:description, "Description", { search_settings: params[:search] })
+          = sortable(:description, "Description", { search_settings: search_ops })
         th
           | Associations
         th
-          = sortable(:status, "Start date", { search_settings: params[:search] })
+          = sortable(:status, "Start date", { search_settings: search_ops })
         th
-          = sortable(:last_status_change_at, "End date", { search_settings: params[:search] })
+          = sortable(:last_status_change_at, "End date", { search_settings: search_ops })
 
         - if false
           th width="1"

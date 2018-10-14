@@ -31,25 +31,40 @@ $(document).ready(function() {
 
         submit_button = $(this);
 
-        WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-        self.errors = [];
+        //
+        // FIX ME:
+        // So this fix is temporary.
+        // Issue is that when you call:
+        //
+        // self.errors = [SET ANY VALUE HERE];
+        //
+        // when start_date and end_date datepicker inputs
+        // are refreshing to empty values.
+        //
+        var start_date = $("input[name='search[start_date]']").val();
+        var start_date_formatted = '';
+        if (start_date.length > 0) {
+          start_date_formatted = moment(start_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        }
 
-        console.log('------STARTING AJAX-----');
+        var end_date = $("input[name='search[end_date]']").val();
+        var end_date_formatted = '';
+        if (end_date.length > 0) {
+          end_date_formatted = moment(end_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        }
+
+        WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
 
         $.ajax({
-          url: window.validate_search_settings_url,
+          url: window.__validate_search_settings_url,
           type: "GET",
           data: {
             search: self.footnoteFormPayload()
           },
           success: function(response) {
-            console.log('------SUCCESS-----');
-
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
           },
           error: function(response) {
-            console.log('------ERRORS-----');
-
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
 
             if (response.status == 500) {
@@ -58,10 +73,27 @@ $(document).ready(function() {
             }
 
             self.errorsSummary = "All bad guys!";
-
-            console.dir(response.responseJSON.errors);
-
             self.errors = response.responseJSON.errors;
+
+            //
+            // FIX ME:
+            // So this fix is temporary.
+            // Issue is that when you call:
+            //
+            // self.errors = [SET ANY VALUE HERE];
+            //
+            // when start_date and end_date datepicker inputs
+            // are refreshing to empty values.
+            //
+            setTimeout(function fixdate() {
+              if (start_date_formatted.length > 0) {
+                window.js_start_date_pikaday_instance.setDate(start_date_formatted);
+              }
+
+              if (end_date_formatted.length > 0) {
+                window.js_end_date_pikaday_instance.setDate(end_date_formatted);
+              }
+            }, 50);
           }
         });
       });

@@ -2,9 +2,20 @@ module Footnotes
   class FootnotesController < ::BaseController
 
     expose(:search_ops) do
-      (params[:search] || {}).merge(
+      ops = params[:search]
+
+      if ops.present?
+        ops.send("permitted=", true)
+        ops = ops.to_h
+      else
+        ops = {}
+      end
+
+      ops.merge(
         page: params[:page]
       )
+
+      ops
     end
 
     expose(:search_form) do

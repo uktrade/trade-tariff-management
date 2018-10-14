@@ -47,15 +47,15 @@ class FootnoteSearch
       @relation = relation.keywords_search(q)
     end
 
-    def apply_footnote_type_id
+    def apply_footnote_type_id_filter
       @relation = relation.by_footnote_type_id(footnote_type_id)
     end
 
-    def apply_commodity_codes
+    def apply_commodity_codes_filter
       @relation = relation.by_commodity_codes(commodity_codes)
     end
 
-    def apply_measure_sids
+    def apply_measure_sids_filter
       @relation = relation.by_measure_sids(measure_sids)
     end
 
