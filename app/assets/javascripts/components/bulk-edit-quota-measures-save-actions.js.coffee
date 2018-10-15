@@ -1,4 +1,4 @@
-window.BulkEditOfMeasuresSaveActions =
+window.BulkEditOfQuotaMeasuresSaveActions =
 
   sendSaveRequest: (mode) ->
     bottom_limit = (window.__sb_current_batch - 1) * window.__sb_per_page
@@ -9,7 +9,7 @@ window.BulkEditOfMeasuresSaveActions =
       top_limit = window.__sb_total_count
       final_batch = true
 
-    measures_collection = JSON.parse(JSON.stringify(window.__sb_collection))
+    measures_collection = JSON.parse(JSON.stringify(window.window.__sb_collection))
 
     data = {
       mode: mode,
@@ -20,7 +20,7 @@ window.BulkEditOfMeasuresSaveActions =
     ops = 'page=' + window.__sb_current_batch + '&bottom_limit=' + bottom_limit + '&top_limit=' + top_limit
 
     $.ajax
-      url: '/measures/bulks/' + window.__workbasket_id.toString() + '.json?' + ops
+      url: '/quotas/bulks/' + window.__workbasket_id.toString() + '.json?' + ops
       data: JSON.stringify(data)
       type: 'PUT'
       processData: false

@@ -66,6 +66,11 @@ Vue.component("bulk-edit-records", {
     });
   },
   computed: {
+    tableClass: function() {
+      var thing = this.thing;
+
+      return thing.toLowerCase().split(" ").join("-");
+    },
     noSelectedRecords: function() {
       return this.selectedRecords.length === 0;
     },

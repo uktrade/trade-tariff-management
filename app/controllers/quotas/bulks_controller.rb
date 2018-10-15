@@ -27,7 +27,8 @@ module Quotas
 
     expose(:edit_url) do
       edit_quotas_bulk_url(
-          workbasket.id
+          workbasket.id,
+          search_code: workbasket_settings.initial_search_results_code
       )
     end
 
