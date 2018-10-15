@@ -24,6 +24,7 @@ module WorkbasketValueObjects
           end_date
           regulation_id
           quota_ordernumber
+          quota_precision
           quota_description
           quota_is_licensed
           quota_licence

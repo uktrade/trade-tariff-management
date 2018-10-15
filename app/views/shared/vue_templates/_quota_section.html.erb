@@ -82,7 +82,7 @@
           </div>
         </div>
 
-        <opening-balances-manager :section="section" v-if="showOpeningBalanceFields"></opening-balances-manager>
+        <opening-balances-manager :prefix="'quota-section-' + index" :section="section" v-if="showOpeningBalanceFields"></opening-balances-manager>
       </fieldset>
 
       <fieldset v-else>
@@ -129,7 +129,7 @@
             </div>
           </div>
 
-          <opening-balances-manager :section="section" :period="period" v-if="period.measurement_unit_code"></opening-balances-manager>
+          <opening-balances-manager :prefix="'quota-section-' + index + '-period-' + idx" :section="section" :period="period" v-if="period.measurement_unit_code"></opening-balances-manager>
 
           <p>
             <a href="#" v-on:click.prevent="removePeriod(idx)">Remove period</a>

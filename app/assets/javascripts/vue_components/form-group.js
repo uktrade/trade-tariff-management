@@ -10,7 +10,7 @@ Vue.component("form-group", {
       return !!this.error;
     },
     error: function() {
-      return this.errors[this.errorKey];
+      return this.errors ? this.errors[this.errorKey] : null;
     }
   }
 });

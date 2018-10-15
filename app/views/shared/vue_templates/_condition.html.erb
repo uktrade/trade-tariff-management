@@ -1,0 +1,99 @@
+<script type="text/x-template" id="condition-template">
+  <div>
+    <div class="static-row">
+      <div class="col-xs-12 col-sm-6 col-md-1">
+        <form-group>
+          <label class="form-label" v-if="index == 0">
+            Condition
+          </label>
+
+          <custom-select :id="'measure-condition-' + index + '-condition'" url="/measure_condition_codes" v-model="condition.condition_code" codeField="condition_code" valueField="condition_code" labelField="description" date-sensitive="true" code-class-name="prefix--condition" :on-change="onConditionCodeSelected" :options-filter="splitConditions" :compact="true"></custom-select>
+        </form-group>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-1-5" v-if="roomReferencedValue">
+        <form-group v-if="showReferencedValue">
+          <label class="form-label" v-if="index == 0">
+            Referenced value
+          </label>
+          <input :id="'measure-condition-' + index + '-amount'" class="form-control" type="text" v-model="condition.amount">
+        </form-group>
+        <form-group v-else>
+          <label class="form-label" v-if="index == 0">
+            Referenced value
+          </label>
+          &nbsp;
+        </form-group>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-1-5" v-if="roomMeasurementUnit">
+        <form-group v-if="showMeasurementUnit">
+          <label class="form-label" v-if="index == 0">
+            Unit of measure
+          </label>
+          <custom-select :id="'measure-condition-' + index + '-measurement-unit'" url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="condition.measurement_unit_code" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit" :on-change="onMeasurementUnitSelected" :compact="true"></custom-select>
+        </form-group>
+        <form-group v-else>
+          <label class="form-label" v-if="index == 0">
+            Unit of measure
+          </label>
+          &nbsp;
+        </form-group>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-1" v-if="roomMeasurementUnit">
+        <form-group v-if="showMeasurementUnit">
+          <label class="form-label" v-if="index == 0">
+            Qualifier
+          </label>
+          <custom-select :id="'measure-condition-' + index + '-measurement-unit-qualifier'" url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="condition.measurement_unit_qualifier_code" date-sensitive="true" code-class-name="prefix--measurement-unit-qualifier" :on-change="onMeasurementUnitQualifierSelected" :compact="true"></custom-select>
+        </form-group>
+        <form-group v-else>
+          <label class="form-label" v-if="index == 0">
+            Qualifier
+          </label>
+          &nbsp;
+        </form-group>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-2" v-if="roomCertificateType">
+        <form-group v-if="showCertificateType">
+          <label class="form-label" v-if="index == 0">
+            Certificate type(s)
+          </label>
+          <custom-select :id="'measure-condition-' + index + '-certificate-type'" url="/certificate_types" v-model="condition.certificate_type_code" codeField="certificate_type_code" valueField="certificate_type_code" labelField="description" date-sensitive="true" code-class-name="prefix--certificate-type" :on-change="onCertificateTypeSelected" :compact="true"></custom-select>
+        </form-group>
+        <form-group v-else>
+          <label class="form-label" v-if="index == 0">
+            Certificate type(s)
+          </label>
+          &nbsp;
+        </form-group>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-1" v-if="roomCertificate">
+        <form-group v-if="showCertificate">
+          <label class="form-label" v-if="index == 0">
+            Certificate
+          </label>
+          <custom-select :id="'measure-condition-' + index + '-certificate'" url="/certificates" v-model="condition.certificate_code" codeField="certificate_code" valueField="certificate_code" labelField="description" date-sensitive="true" drilldown-name="certificate_type_code" :drilldown-value="condition.certificate_type_code" :drilldown-required="showCertificateType" code-class-name="prefix--certificate" :on-change="onCertificateSelected" :compact="true"></custom-select>
+        </form-group>
+        <form-group v-else>
+          <label class="form-label" v-if="index == 0">
+            Certificate
+          </label>
+          &nbsp;
+        </form-group>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-1">
+        <form-group>
+          <label class="form-label" v-if="index == 0">
+            Action
+          </label>
+          <custom-select :id="'measure-condition-' + index + '-action'" url="/measure_actions" v-model="condition.action_code" codeField="action_code" valueField="action_code" labelField="description" date-sensitive="true" code-class-name="prefix--measure-action" :on-change="onActionSelected" :compact="true"></custom-select>
+        </form-group>
+      </div>
+      <div class="col-md-6">
+        <components-coordinator :components="condition.measure_condition_components" type="measure_condition_component" classes="measure-condition-component" :hide-help="hideHelp !== true && index == 0" :index="index" :compact="true" :show-conditions-duty-amount="showConditionsDutyAmount" :show-conditions-measurement-unit="showConditionsMeasurementUnit"></components-coordinator>
+      </div>
+
+      <slot></slot>
+    </div>
+  </div>
+</script>
