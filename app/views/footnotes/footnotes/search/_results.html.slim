@@ -1,0 +1,41 @@
+- if search_results.present?
+  = render "footnotes/footnotes/search/download_link"
+
+  table.table
+    colgroup
+      col width="180"
+      col width="80"
+      col width="*"
+      col width="120"
+      col width="200"
+      col width="200"
+      col width="200"
+
+      - if false
+        col width="1"
+
+    thead
+      tr
+        th
+          = sortable(:footnote_type_id, "Footnote type", { search: search_ops })
+        th
+          = sortable(:footnote_id, "ID", { search: search_ops })
+        th
+          = sortable(:description, "Description", { search: search_ops })
+        th
+          | Associations
+        th
+          | Measure SIDs
+        th
+          = sortable(:validity_start_date, "Start date", { search: search_ops })
+        th
+          = sortable(:validity_end_date, "End date", { search: search_ops })
+
+        - if false
+          th width="1"
+            | &nbsp;
+
+    tbody
+      - search_results.map do |item|
+        = render "footnotes/footnotes/search/item", item: item.decorate
+
