@@ -2,9 +2,23 @@ module GeoAreas
   class GeoAreasController < ApplicationController
 
     expose(:search_ops) do
-      (params[:search] || {}).merge(
+      ops = params[:search]
+
+      if ops.present?
+        ops.send("permitted=", true)
+        ops = ops.to_h
+      else
+        ops = {}
+      end
+
+      ops = ops.merge(
         page: params[:page]
       )
+
+      ops[:sort_by] = params[:sort_by]
+      ops[:sort_dir] = params[:sort_dir]
+
+      ops
     end
 
     expose(:search_form) do
@@ -27,6 +41,11 @@ module GeoAreas
           errors: search_form.parsed_errors
         }, status: :unprocessable_entity
       end
+    end
+
+    def index
+      params[:sort_by] ||= "geographical_area_id"
+      params[:sort_dir] ||= "asc"
     end
   end
 end

@@ -20,7 +20,7 @@
 
             .bootstrap-row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                input.form-control v-model="search.q"
+                input.form-control name="search[q]" v-model="search.q"
 
       fieldset
         form-group :errors="errors" error-key="start_date"

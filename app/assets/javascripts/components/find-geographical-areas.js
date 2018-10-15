@@ -29,26 +29,21 @@ $(document).ready(function() {
         e.stopPropagation();
 
         submit_button = $(this);
-
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-        self.errors = [];
-
-        console.log('------STARTING AJAX-----');
 
         $.ajax({
-          url: window.validate_search_settings_url,
+          url: window.__validate_search_settings_url,
           type: "GET",
           data: {
             search: self.geoAreaFormPayload()
           },
           success: function(response) {
-            console.log('------SUCCESS-----');
-
+            self.errors = [];
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+
+            $(".js-search-geographical-areas-form").submit();
           },
           error: function(response) {
-            console.log('------ERRORS-----');
-
             WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
 
             if (response.status == 500) {
@@ -56,13 +51,12 @@ $(document).ready(function() {
               return;
             }
 
-            self.errorsSummary = "Error";
-
-            console.dir(response.responseJSON.errors);
-
+            self.errorsSummary = response.responseJSON.errors.general_summary;
             self.errors = response.responseJSON.errors;
           }
         });
+
+        DatepickerRangeMonkeyPatch.fix();
       });
     },
     computed: {
@@ -94,8 +88,8 @@ $(document).ready(function() {
       geoAreaFormPayload: function() {
         return {
           q: this.search.q,
-          start_date: this.search.start_date,
-          end_date: this.search.end_date,
+          start_date: $('input[name=\'search[start_date]\']').val(),
+          end_date: $('input[name=\'search[end_date]\']').val(),
           code_country: this.search.code_country,
           code_region: this.search.code_region,
           code_group: this.search.code_group
