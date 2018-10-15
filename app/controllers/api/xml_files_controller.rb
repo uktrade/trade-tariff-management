@@ -8,8 +8,9 @@ module Api
       render json: serialized
     end
 
+    # timestamp format YYYYMMDDTHHMMSS
     def show
-      file = XmlExport::File.where("issue_date::date = ?", Date.parse(params[:date])).first
+      file = XmlExport::File.where("date_trunc('second', issue_date) = ?", Time.zone.parse(params[:timestamp]).utc).first
 
       if file&.xml.present?
         redirect_to file.xml.url
