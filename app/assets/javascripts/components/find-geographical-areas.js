@@ -56,7 +56,7 @@ $(document).ready(function() {
               return;
             }
 
-            self.errorsSummary = "All bad guys!";
+            self.errorsSummary = "Error";
 
             console.dir(response.responseJSON.errors);
 

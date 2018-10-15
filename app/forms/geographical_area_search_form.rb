@@ -18,8 +18,8 @@ class GeographicalAreaSearchForm
                 :code_group,
                 :code
 
-  validates :q, presence: { message: "Hey bro! need to feel in!" }
-  validates :code, presence: { message: "Hey bro! need to provide code!" }, if: :country_region_and_blank?
+  validates :q, presence: { message: "You must enter geographical area code or search string here." }
+  validates :code, presence: { message: "Please select at least one area type." }, if: :country_region_and_blank?
   validate :validate_start_date, if: "start_date.present?"
   validate :validate_end_date, if: "end_date.present?"
   validate :validate_start_date_end_date, if: "start_date.present? && end_date.present?"
