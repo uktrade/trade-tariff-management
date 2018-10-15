@@ -18,8 +18,8 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-    get "/v1/taricdelta(/:date)", to: "xml_files#index"
-    get "/v1/taricfile/:date",    to: "xml_files#show"
+    get "/v1/taricdelta(/:date)",   to: "xml_files#index"
+    get "/v1/taricfile/:timestamp", to: "xml_files#show"
   end
 
   resources :goods_nomenclatures, only: [:index]
