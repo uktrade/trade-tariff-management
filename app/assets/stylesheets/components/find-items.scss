@@ -7,6 +7,11 @@ $find-item-gutter: 5px;
 .find-items__row {
   display: flex;
   border-bottom: 2px solid $border-colour;
+
+  &.without_border {
+    border-bottom: none;
+    margin-bottom: 2px;
+  }
 }
 
 .find-items__checkbox-column {
