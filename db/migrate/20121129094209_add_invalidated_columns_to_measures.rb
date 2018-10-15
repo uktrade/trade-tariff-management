@@ -1,7 +1,8 @@
 Sequel.migration do
   change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+    alter_table :measures do
+      add_column :invalidated_by, Integer
+      add_column :invalidated_at, DateTime
+    end
   end
 end

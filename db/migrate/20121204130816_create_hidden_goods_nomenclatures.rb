@@ -1,7 +1,9 @@
 Sequel.migration do
   change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+    create_table :hidden_goods_nomenclatures do
+      String   :goods_nomenclature_item_id
+      DateTime :updated_at
+      DateTime :created_at
+    end
   end
 end
