@@ -92,7 +92,8 @@ module WorkbasketServices
             quota_order_number_sid: order_number.quota_order_number_sid,
             measurement_unit_code: measurement_unit_code,
             measurement_unit_qualifier_code: measurement_unit_qualifier_code,
-            workbasket_type_of_quota: section_ops['type']
+            workbasket_type_of_quota: section_ops['type'],
+            maximum_precision: all_settings["quota_precision"]
           }
         end
 

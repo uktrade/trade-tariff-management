@@ -1,7 +1,14 @@
 Sequel.migration do
-  change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+  up do
+    alter_table :chief_mfcm do
+      add_column :tar_msr_no, String
+    end
+
+  end
+  
+  down do
+    alter_table :chief_mfcm do
+      drop_column :tar_msr_no
+    end
   end
 end

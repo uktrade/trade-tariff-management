@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div class="measure-condition" v-for="(measureCondition, index) in conditions">',
-      '<measure-condition :condition="measureCondition" :index="index" :hide-help="hideHelp" :room-referenced-value="showReferencedValue" :room-certificate-type="showCertificateType" :room-certificate="showCertificate" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit" :show-conditions-duty-amount="showConditionsDutyAmount" :show-conditions-measurement-unit="showConditionsMeasurementUnit">',
+      '<measure-condition :condition="measureCondition" :id="\'measure-condition-\' + index" :index="index" :hide-help="hideHelp" :room-referenced-value="showReferencedValue" :room-certificate-type="showCertificateType" :room-certificate="showCertificate" :room-monetary-unit="showMonetaryUnit" :room-measurement-unit="showMeasurementUnit" :show-conditions-duty-amount="showConditionsDutyAmount" :show-conditions-measurement-unit="showConditionsMeasurementUnit">',
         '<div class="col-md-2">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0">&nbsp;<span class="form-hint-3-line">&nbsp;</span></label>',

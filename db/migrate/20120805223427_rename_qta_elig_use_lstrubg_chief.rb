@@ -1,7 +1,13 @@
 Sequel.migration do
-  change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+  up do
+    alter_table :chief_tame do
+      rename_column :qta_elig_useLstrubg, :qta_elig_use
+    end
+  end
+  
+  down do
+    alter_table :chief_tame do
+      rename_column :qta_elig_use, :qta_elig_useLstrubg
+    end
   end
 end

@@ -1,6 +1,6 @@
 Vue.component("opening-balances-manager", {
   template: "#opening-balances-manager-template",
-  props: ["section", "period"],
+  props: ["section", "period", "prefix"],
   computed: {
     single: function() {
       return ["1", "1_repeating"].indexOf(this.section.period) > -1;
