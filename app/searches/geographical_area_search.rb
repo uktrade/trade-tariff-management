@@ -50,6 +50,10 @@ class GeographicalAreaSearch
       @relation = relation.by_code(code)
     end
 
+    alias_method :apply_code_country_filter, :apply_code_filter
+    alias_method :apply_code_region_filter, :apply_code_filter
+    alias_method :apply_code_group_filter, :apply_code_filter
+
     def apply_start_date_filter
       @relation = relation.after_or_equal(start_date.to_date.beginning_of_day)
     end
