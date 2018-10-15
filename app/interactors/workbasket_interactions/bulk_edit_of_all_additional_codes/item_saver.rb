@@ -24,7 +24,7 @@ module WorkbasketInteractions
 
         if params['changes'].include?('validity_end_date') || workbasket_item.deleted?
           @records << if meursing?(params)
-                        build_meursing_additiona_code!(params)
+                        build_meursing_additional_code!(params)
                       else
                         build_additional_code!(params)
                       end
@@ -61,7 +61,7 @@ module WorkbasketInteractions
         AdditionalCodeType.find(additional_code_type_id: params['type_id']).meursing?
       end
 
-      def build_meursing_additiona_code!(params)
+      def build_meursing_additional_code!(params)
         MeursingAdditionalCode.unrestrict_primary_key
         MeursingAdditionalCode.new(
           {
