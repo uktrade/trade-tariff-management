@@ -1,0 +1,29 @@
+<script type="text/x-template" id="bulk-edit-records-template">
+  <div class="bulk-edit-records">
+    <%= render "shared/bulks/table_top" %>
+
+    <records-grid table-class="additional-codes-table" primary-key="additional_code_sid" :on-item-selected="onItemSelected" :on-item-deselected="onItemDeselected" :data="visibleRecordsPage" :columns="columns" :selected-rows="selectedRecords" v-if="!isLoading" selection-type="none" :client-selection="true" :select-all-has-changed="selectAllHasChanged" :disable-scroller="true" :sort-by-changed="onSortByChange" :sort-dir-changed="onSortDirChanged"></records-grid>
+
+    <table-pagination v-if="!isLoading" :page="currentPage" :total="visibleCount" :per-page="pagination.per_page" :on-click="onPageChange"></table-pagination>
+
+    <loading-indicator v-if="isLoading" :metadata="pagination">
+      <h1 class="heading-xlarge" slot="title">
+        Loading additional codes
+      </h1>
+      <h4 class="heading-medium" slot-scope="slotProps">
+        Please wait while we load and prepare additional codes for editing
+        <br>
+        {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
+        <br>
+        <loading-spinner></loading-spinner>
+      </h4>
+    </loading-indicator>
+
+    <slot :selected-action="selectedAction" :selected-record-objects="selectedRecordObjects" :close-all-popups="closeAllPopups" :records-updated="recordsUpdated" :selected-all-records="selectedAllRecords" :records-removed="recordsRemoved" :all-records-removed="allRecordsRemoved" :records-deleted="recordsDeleted"></slot>
+
+    <%= render "shared/bulks/action_buttons" %>
+  </div>
+</script>
+
+<%= render "shared/vue_templates/records_grid" %>
+<%= render "measures/bulks/save_actions_popups/collection" %>

@@ -28,37 +28,18 @@ script
  = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
 
 .bulk-edit-additional-codes
- = render "shared/bulks/table_top"
+  bulk-edit-records primary-key="additional_code_sid" initial-sort-key="type_id" :bulk-actions="bulkActions" thing="additional_codes" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
+    template slot-scope="slotProps"
+      = content_tag "change-additional-codes-description-popup", nil, { "v-if" => "slotProps.selectedAction == 'change_description'", ":open" => "true", ":records" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@records-updated" => "slotProps.recordsUpdated" }
 
- = content_tag "records-grid", nil, { "table-class" => "additional-codes-table", "primary-key" => "additional_code_sid", ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleRecordsPage", ":columns" => "columns", ":selected-rows" => "selectedRecords", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
-   p Loading additional codes...
+      = content_tag "change-additional-codes-validity-period-popup", nil, { "v-if" => "slotProps.selectedAction == 'change_validity_period'", ":open" => "true", ":records" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@records-updated" => "slotProps.recordsUpdated" }
 
- = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
+      = content_tag "remove-additional-codes-popup", nil, { "v-if" => "slotProps.selectedAction == 'remove_from_group'", ":open" => "true", ":records" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", ":selected-all-records" => "slotProps.selectedAllRecords", ":records-removed-cb" => "slotProps.recordsRemoved", ":all-records-removed-cb" => "slotProps.allRecordsRemoved" }
 
- = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
-   h1.heading-xlarge slot="title"
-     | Loading additional codes
-   h4.heading-medium slot-scope="slotProps"
-     | Please wait while we load and prepare additional codes for editing
-     br
-     | {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
-     br
-     = content_tag "loading-spinner", nil
+      = content_tag "delete-additional-codes-popup", nil, { "v-if" => "slotProps.selectedAction == 'delete'", ":open" => "true", ":records" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@records-deleted" => "slotProps.recordsDeleted" }
 
- = render "shared/bulks/action_buttons"
-
- = content_tag "change-additional-codes-description-popup", nil, { "v-if" => "changingDescription", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", "@records-updated" => "recordsUpdated" }
-
- = content_tag "change-additional-codes-validity-period-popup", nil, { "v-if" => "changingValidityPeriod", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", "@records-updated" => "recordsUpdated" }
-
- = content_tag "remove-additional-codes-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", ":selected-all-records" => "selectedAllRecords", ":records-removed-cb" => "recordsRemoved", ":all-records-removed-cb" => "allRecordsRemoved" }
-
- = content_tag "delete-additional-codes-popup", nil, { "v-if" => "deleting", ":open" => "true", ":records" => "selectedRecordObjects", ":on-close" => "closeAllPopups", "@records-deleted" => "recordsDeleted" }
-
-= render "shared/vue_templates/records_grid"
+= render "shared/vue_templates/bulk_edit_records"
 = render "shared/vue_templates/additional_codes/change_description"
 = render "shared/vue_templates/additional_codes/change_validity_period"
 = render "shared/vue_templates/additional_codes/remove"
 = render "shared/vue_templates/additional_codes/delete"
-
-= render "measures/bulks/save_actions_popups/collection"
