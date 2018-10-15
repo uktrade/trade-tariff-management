@@ -19,6 +19,6 @@ class FootnoteDecorator < ApplicationDecorator
   private
 
     def to_date(value)
-      value.try(:strftime, "%d %B %Y")
+      value.try(:strftime, "%d %B %Y") || '-'
     end
 end

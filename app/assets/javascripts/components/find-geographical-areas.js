@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var form = document.querySelector(".js-search-geographical-areas-form");
+  var form = document.querySelector(".js-search-geographical-areas-section");
 
   if (!form) {
     return;

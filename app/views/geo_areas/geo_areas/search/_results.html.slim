@@ -1,17 +1,35 @@
 - if search_results.present?
-  table.table.regulations-table
+  = render "geo_areas/geo_areas/search/download_link"
+
+  table.table
+    colgroup
+      col width="80"
+      col width="*"
+      col width="120"
+      col width="200"
+      col width="200"
+
+      - if false
+        col width="1"
+
     thead
       tr
-        th width="30%"
-          | Code
         th
-          | Description
+          = sortable(:geographical_area_id, "Code", { search: search_ops })
         th
-          | &nbsp;
+          = sortable(:description, "Description", { search: search_ops })
+        th
+          = sortable(:geographical_code, "Type", { search: search_ops })
+        th
+          = sortable(:validity_start_date, "Start date", { search: search_ops })
+        th
+          = sortable(:validity_end_date, "End date", { search: search_ops })
+
+        - if false
+          th width="1"
+            | &nbsp;
+
     tbody
-      - search_results.each do |item|
-        tr
-          td
-            = item.geographical_area_id
-          td
-            = item.description
+      - search_results.map do |item|
+        = render "geo_areas/geo_areas/search/item", item: item.decorate
+
