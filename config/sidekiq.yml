@@ -19,9 +19,9 @@
   #
   # Online converter: https://crontab.guru/#0_22_*_*_*
   #
-  UpdatesSynchronizerWorker:
-    cron: "0 22 * * *" #
-    description: "UpdatesSynchronizerWorker will run at 10 PM every day"
+  #  UpdatesSynchronizerWorker:
+  #    cron: "0 22 * * *" #
+  #    description: "UpdatesSynchronizerWorker will run at 10 PM every day"
 
   SetupPublishedStatusForImportedRecordsWorker:
     cron: "0 1 * * *"
