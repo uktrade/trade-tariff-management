@@ -648,9 +648,12 @@ describe Measure do
 
     describe 'ME13' do
       context 'additional code type meursing and attributes missing' do
+        let(:additional_code_type) { create :additional_code_type, :meursing }
+        let(:meursing_additional_code) { create :meursing_additional_code }
         let(:measure) { create :measure, :with_related_additional_code_type,
-                                        additional_code_type_id: 3,
-                                        additional_code_id: '123',
+                                        additional_code_type_id: additional_code_type.additional_code_type_id,
+                                        additional_code_sid: meursing_additional_code.meursing_additional_code_sid,
+                                        additional_code_id: meursing_additional_code.additional_code,
                                         goods_nomenclature_item_id: nil,
                                         ordernumber: nil,
                                         reduction_indicator: nil }
@@ -661,9 +664,10 @@ describe Measure do
       end
 
       context 'additional code type meursing and attributes present' do
+        let(:additional_code_type) { create :additional_code_type, :meursing }
         let(:measure) { create :measure, :with_related_additional_code_type,
                                          :with_quota_order_number,
-                                        additional_code_type_id: 3,
+                                        additional_code_type_id: additional_code_type.additional_code_type_id,
                                         additional_code_id: '123',
                                         goods_nomenclature_item_id: '1234567890',
                                         ordernumber: '12345',
@@ -841,7 +845,7 @@ describe Measure do
 
       let!(:additional_code2) {
         create(
-          :additional_code,
+          :meursing_additional_code,
           validity_start_date: Date.yesterday,
         )
       }
@@ -863,7 +867,7 @@ describe Measure do
           measure_type_id: measure_type.measure_type_id,
           additional_code_type_id: additional_code_type.additional_code_type_id,
           additional_code_id: additional_code2.additional_code,
-          additional_code_sid: additional_code2.additional_code_sid,
+          additional_code_sid: additional_code2.meursing_additional_code_sid,
           validity_start_date: Date.yesterday,
         )
       }
@@ -1054,14 +1058,47 @@ describe Measure do
     describe "ME32: There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature
               hierarchy which references the same measure type, geo area, order number, additional code and reduction indicator.
               This rule is not applicable for Meursing additional codes." do
+      let!(:measure_type) { create :measure_type }
       let!(:goods_nomenclature) { create(:goods_nomenclature) }
-      let!(:additional_code) { create(:additional_code, validity_start_date: Date.yesterday) }
+      let!(:additional_code_type) { create(:additional_code_type) }
+      let!(:additional_code) {
+        create(
+            :additional_code,
+            additional_code_sid: 1,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            validity_start_date: Date.yesterday)
+      }
+      let!(:additional_code_type_measure_type) {
+        create(
+            :additional_code_type_measure_type,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            measure_type_id: measure_type.measure_type_id,
+            validity_start_date: Date.yesterday,
+        )
+      }
+      let!(:meursing_additional_code_type) { create(:additional_code_type, :meursing) }
+      let!(:meursing_additional_code) {
+        create(
+            :meursing_additional_code,
+            meursing_additional_code_sid: 2,
+            validity_start_date: Date.yesterday)
+      }
+      let!(:meursing_additional_code_type_measure_type) {
+        create(
+            :additional_code_type_measure_type,
+            additional_code_type_id: meursing_additional_code_type.additional_code_type_id,
+            measure_type_id: measure_type.measure_type_id,
+            validity_start_date: Date.yesterday,
+        )
+      }
 
       it "should run validation successfully if there is no existing measure with such criteria" do
         measure = build(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          measure_type_id: measure_type.measure_type_id,
           validity_start_date: Date.yesterday
         )
 
@@ -1071,21 +1108,17 @@ describe Measure do
       end
 
       it "should run validation successfully if meursing additional code is present" do
-        create(
-          :meursing_additional_code,
-          additional_code: additional_code.additional_code,
-          validity_start_date: Date.yesterday
-        )
-
         measure = build(
           :measure,
-          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-          additional_code_sid: additional_code.additional_code_sid,
+          goods_nomenclature_item_id: nil,
+          additional_code_sid: meursing_additional_code.meursing_additional_code_sid,
+          additional_code_id: meursing_additional_code.additional_code,
+          additional_code_type_id: meursing_additional_code_type.additional_code_type_id,
+          measure_type_id: measure_type.measure_type_id,
           validity_start_date: Date.yesterday
         )
 
-        expect(measure.additional_code).to_not be(nil)
-        expect(measure.additional_code.meursing_additional_code).to_not be(nil)
+        expect(measure.meursing_additional_code).to_not be(nil)
         expect(measure).to be_conformant
       end
 
@@ -1094,6 +1127,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: 10.year.ago,
           validity_end_date: 2.year.ago
         )
@@ -1113,7 +1147,6 @@ describe Measure do
         measure2.justification_regulation_role =  1
 
         expect(measure2.additional_code).to_not be(nil)
-        expect(measure2.additional_code.meursing_additional_code).to be(nil)
         expect(measure2).to be_conformant
       end
 
@@ -1122,6 +1155,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: Date.yesterday
         )
 
@@ -1129,11 +1163,11 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: Date.yesterday
         )
 
         expect(measure2.additional_code).to_not be(nil)
-        expect(measure2.additional_code.meursing_additional_code).to be(nil)
         expect(measure2).to_not be_conformant
         expect(measure2.conformance_errors).to have_key(:ME32)
       end
@@ -1145,6 +1179,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: 1.year.ago,
           validity_end_date: Date.current + 1.month
         )
@@ -1157,7 +1192,6 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
@@ -1172,6 +1206,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: 1.year.ago,
           validity_end_date: nil
         )
@@ -1184,7 +1219,6 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
@@ -1198,6 +1232,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: Date.current + 1.month,
           validity_end_date: nil
         )
@@ -1210,7 +1245,6 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
@@ -1225,6 +1259,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: Date.current + 1.month,
           validity_end_date: Date.current + 2.months
         )
@@ -1237,7 +1272,6 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end

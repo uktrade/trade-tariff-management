@@ -43,7 +43,7 @@ module AdditionalCodes
       private
 
         def fetch_target_records
-          @target_records = ::AdditionalCode.bulk_edit_scope(
+          @target_records = ::AllAdditionalCode.bulk_edit_scope(
             :additional_code_sid, paginator.current_batch_ids
           )
         end
