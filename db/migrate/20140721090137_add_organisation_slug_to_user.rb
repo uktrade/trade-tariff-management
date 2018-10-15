@@ -1,7 +1,7 @@
 Sequel.migration do
   change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+    alter_table :users do
+      add_column :organisation_slug, String
+    end
   end
 end

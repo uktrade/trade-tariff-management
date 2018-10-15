@@ -1,7 +1,8 @@
 Sequel.migration do
   change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+    alter_table :tariff_updates do
+      add_column :filesize, Integer
+      add_column :applied_at, DateTime
+    end
   end
 end

@@ -1,7 +1,13 @@
 Sequel.migration do
-  change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+  up do
+    alter_table :certificates do
+      add_column :national_abbrev, String
+    end
+  end
+
+  down do
+    alter_table :certificates do
+      drop_column :national_abbrev
+    end
   end
 end
