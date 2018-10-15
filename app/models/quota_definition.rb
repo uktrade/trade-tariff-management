@@ -64,6 +64,10 @@ class QuotaDefinition < Sequel::Model
     measure.measure_generating_regulation_id if measure.present?
   end
 
+  def reduction_indicator
+    measure.reduction_indicator if measure.present?
+  end
+
   def license
     if measure.present? && measure.measure_conditions.present?
       measure.measure_conditions.each do |condition|
