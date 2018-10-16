@@ -113,6 +113,10 @@ class Certificate < Sequel::Model
     json_mapping
   end
 
+  def decorate
+    CertificateDecorator.decorate(self)
+  end
+
   class << self
     def max_per_page
       10
