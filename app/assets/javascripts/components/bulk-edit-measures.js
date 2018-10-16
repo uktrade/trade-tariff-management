@@ -44,7 +44,7 @@ $(document).ready(function() {
           { value: 'change_duties', label: 'Change duties...' },
           { value: 'change_conditions', label: 'Change conditions...' },
           { value: 'change_footnotes', label: 'Change footnotes...' },
-          { value: 'remove_from_group', label: 'Remove from group...' },
+          { value: 'remove_from_group', label: 'Remove from workbasket...' },
           { value: 'delete', label: 'Delete measures' },
         ],
         currentPage: 1,
