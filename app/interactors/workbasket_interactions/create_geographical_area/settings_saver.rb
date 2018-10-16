@@ -39,17 +39,17 @@ module WorkbasketInteractions
         @persist = true # For now it always true
       end
 
-      def valid?
-        validate!
-        @errors.blank?
-      end
-
       def save!
         workbasket.title = geographical_area_id
         workbasket.operation_date = operation_date
         workbasket.save
 
         settings.set_settings_for!(current_step, settings_params)
+      end
+
+      def valid?
+        validate!
+        @errors.blank?
       end
 
       def persist!
@@ -96,7 +96,7 @@ module WorkbasketInteractions
             validity_end_date: validity_end_date
           )
 
-          if parent_geographical_area_id.present?
+          if parent_geographical_area_group_id.present?
             geographical_area.parent_geographical_area_group_sid = parent_geographical_area_sid
           end
 
@@ -123,8 +123,6 @@ module WorkbasketInteractions
         def add_geographical_area_description!
           @geographical_area_description = GeographicalAreaDescription.new(
             geographical_area_id: geographical_area_id,
-            validity_start_date: validity_start_date,
-            validity_end_date: validity_end_date,
             description: description
           )
 

@@ -3032,7 +3032,9 @@ CREATE TABLE public.geographical_area_description_periods_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -3052,7 +3054,9 @@ CREATE VIEW public.geographical_area_description_periods AS
     geographical_area_description_periods1.operation_date,
     geographical_area_description_periods1.status,
     geographical_area_description_periods1.workbasket_id,
-    geographical_area_description_periods1.workbasket_sequence_number
+    geographical_area_description_periods1.workbasket_sequence_number,
+    geographical_area_description_periods1.added_by_id,
+    geographical_area_description_periods1.added_at
    FROM public.geographical_area_description_periods_oplog geographical_area_description_periods1
   WHERE ((geographical_area_description_periods1.oid IN ( SELECT max(geographical_area_description_periods2.oid) AS max
            FROM public.geographical_area_description_periods_oplog geographical_area_description_periods2
@@ -3095,7 +3099,9 @@ CREATE TABLE public.geographical_area_descriptions_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -3115,7 +3121,9 @@ CREATE VIEW public.geographical_area_descriptions AS
     geographical_area_descriptions1.operation_date,
     geographical_area_descriptions1.status,
     geographical_area_descriptions1.workbasket_id,
-    geographical_area_descriptions1.workbasket_sequence_number
+    geographical_area_descriptions1.workbasket_sequence_number,
+    geographical_area_descriptions1.added_by_id,
+    geographical_area_descriptions1.added_at
    FROM public.geographical_area_descriptions_oplog geographical_area_descriptions1
   WHERE ((geographical_area_descriptions1.oid IN ( SELECT max(geographical_area_descriptions2.oid) AS max
            FROM public.geographical_area_descriptions_oplog geographical_area_descriptions2
@@ -3157,7 +3165,9 @@ CREATE TABLE public.geographical_area_memberships_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -3176,7 +3186,9 @@ CREATE VIEW public.geographical_area_memberships AS
     geographical_area_memberships1.operation_date,
     geographical_area_memberships1.status,
     geographical_area_memberships1.workbasket_id,
-    geographical_area_memberships1.workbasket_sequence_number
+    geographical_area_memberships1.workbasket_sequence_number,
+    geographical_area_memberships1.added_by_id,
+    geographical_area_memberships1.added_at
    FROM public.geographical_area_memberships_oplog geographical_area_memberships1
   WHERE ((geographical_area_memberships1.oid IN ( SELECT max(geographical_area_memberships2.oid) AS max
            FROM public.geographical_area_memberships_oplog geographical_area_memberships2
@@ -3220,7 +3232,9 @@ CREATE TABLE public.geographical_areas_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -3241,7 +3255,9 @@ CREATE VIEW public.geographical_areas AS
     geographical_areas1.operation_date,
     geographical_areas1.status,
     geographical_areas1.workbasket_id,
-    geographical_areas1.workbasket_sequence_number
+    geographical_areas1.workbasket_sequence_number,
+    geographical_areas1.added_by_id,
+    geographical_areas1.added_at
    FROM public.geographical_areas_oplog geographical_areas1
   WHERE ((geographical_areas1.oid IN ( SELECT max(geographical_areas2.oid) AS max
            FROM public.geographical_areas_oplog geographical_areas2
@@ -12197,3 +12213,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181012184040_add_updated
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181016175408_add_workbasket_related_columns_to_geo_areas_tables.rb');

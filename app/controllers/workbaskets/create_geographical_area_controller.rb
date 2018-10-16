@@ -79,7 +79,7 @@ module Workbaskets
       end
 
       def workbasket_data_can_be_persisted?
-        true
+        params[:mode] == "submit_for_cross_check"
       end
   end
 end
