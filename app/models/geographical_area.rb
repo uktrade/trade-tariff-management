@@ -69,6 +69,26 @@ class GeographicalArea < Sequel::Model
       exclude(geographical_area_id: GeographicalArea::ERGA_OMNES)
     end
 
+    def to_csv
+      headers = ["Code", "Description", "Type", "Start date", "End date"]
+
+      CSV.generate(headers: true) do |csv|
+        csv << headers
+
+        all.each do |geo_area|
+          geo_area = geo_area.decorate
+
+          csv << [
+            geo_area.geographical_area_id,
+            geo_area.description,
+            geo_area.type,
+            geo_area.start_date,
+            geo_area.end_date
+          ]
+        end
+      end
+    end
+
     begin :search_functionality
       def default_order
         order(Sequel.asc(:geographical_areas__geographical_area_id))

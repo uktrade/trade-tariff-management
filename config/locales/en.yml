@@ -71,6 +71,15 @@ en:
       validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
       operation_date_blank: "Operation date must be specified."
 
+  find_geographical_areas:
+    start_date_invalid: Start date is invalid.
+    end_date_invalid: End date is invalid.
+    start_date_higher_end_date: Start date should not be greater than end date.
+    search_string_blank: "You must enter geographical area code or search string here."
+    type_is_blank: "If you deselect all these options, there will not be search results to show."
+    minimum_required_filters: "Search count not run because you did not specify any search terms. You must specify at least a geographical area code or a search string."
+    general_errors: "See individual fields for details."
+
   workflow:
     errors:
       cross_check_mode_blank: "It is required to specify if you are going to confirm or reject changes in this workbasket."
