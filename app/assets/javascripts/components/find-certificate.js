@@ -11,7 +11,7 @@ $(document).ready(function() {
       var data = {
         errors: {},
         errorsSummary: "",
-        footnote_types_list: window.__footnote_types_list_json
+        certificate_types_list: window.__certificate_types_list_json
       };
 
       if (!$.isEmptyObject(window.__search_certificate_settings_json)) {
@@ -37,7 +37,7 @@ $(document).ready(function() {
           url: window.__validate_search_settings_url,
           type: "GET",
           data: {
-            search: self.footnoteFormPayload()
+            search: self.certificateFormPayload()
           },
           success: function(response) {
             self.errors = [];
@@ -69,7 +69,7 @@ $(document).ready(function() {
     methods: {
       parseFootnoteFormPayload: function(payload) {
         return {
-          footnote_type_id: payload.footnote_type_id,
+          certificate_type_code: payload.certificate_type_code,
           q: payload.q,
           commodity_codes: payload.commodity_codes,
           measure_sids: payload.measure_sids,
@@ -79,7 +79,7 @@ $(document).ready(function() {
       },
       emptyFootnoteForm: function() {
         return {
-          footnote_type_id: null,
+          certificate_type_code: null,
           q: null,
           commodity_codes: null,
           measure_sids: null,
@@ -87,9 +87,9 @@ $(document).ready(function() {
           end_date: null
         };
       },
-      footnoteFormPayload: function() {
+      certificateFormPayload: function() {
         return {
-          footnote_type_id: this.search.footnote_type_id,
+          certificate_type_code: this.search.certificate_type_code,
           q: this.search.q,
           commodity_codes: this.search.commodity_codes,
           measure_sids: this.search.measure_sids,

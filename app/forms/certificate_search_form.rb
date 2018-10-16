@@ -5,9 +5,7 @@ class CertificateSearchForm
   include ActiveModel::Validations
 
   attr_accessor :q,
-                :certificate_type_id,
-                :commodity_codes,
-                :measure_sids,
+                :certificate_type_code,
                 :start_date,
                 :end_date
 
@@ -25,9 +23,7 @@ class CertificateSearchForm
   def settings
     {
       q: q,
-      certificate_type_id: certificate_type_id,
-      commodity_codes: commodity_codes,
-      measure_sids: measure_sids,
+      certificate_type_code: certificate_type_code,
       start_date: start_date,
       end_date: end_date
     }
@@ -40,7 +36,7 @@ class CertificateSearchForm
         description: ft.description
       }
     end.sort do |a, b|
-      a[:certificate_type_id] <=> b[:certificate_type_id]
+      a[:certificate_type_code] <=> b[:certificate_type_code]
     end
   end
 
@@ -66,10 +62,8 @@ class CertificateSearchForm
     end
 
     def all_minimum_required_fields_are_blank?
-      q.blank? &&
-      certificate_type_id.blank? &&
-      commodity_codes.blank? &&
-      measure_sids.blank?
+      certificate_type_code.blank? &&
+      q.blank?
     end
 
     def validate_start_date
