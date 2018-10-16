@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var form = document.querySelector(".js-search-certificate-section");
+  var form = document.querySelector(".js-search-certificates-section");
 
   if (!form) {
     return;
@@ -14,8 +14,8 @@ $(document).ready(function() {
         certificate_types_list: window.__certificate_types_list_json
       };
 
-      if (!$.isEmptyObject(window.__search_certificate_settings_json)) {
-        data.search = this.parseCertificateFormPayload(window.__search_certificate_settings_json);
+      if (!$.isEmptyObject(window.__search_certificates_settings_json)) {
+        data.search = this.parseCertificateFormPayload(window.__search_certificates_settings_json);
       } else {
         data.search = this.emptyCertificateForm();
       }

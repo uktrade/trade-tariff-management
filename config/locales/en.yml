@@ -91,7 +91,7 @@ en:
     end_date_invalid: End date is invalid.
     start_date_higher_end_date: Start date should not be greater than end date.
     minimum_required_filters: Search could not run because you did not specify any search terms. You must specify at least a certificate type or a search string
-    minimum_required_filters_short: You must specify a value for at least one of these fields.
+    minimum_required_filters_short: You must complete one or both of these fields.
     general_errors: See individual fields for details.
 
   find_footnotes:
