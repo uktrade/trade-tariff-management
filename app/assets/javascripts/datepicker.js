@@ -72,5 +72,8 @@ $(document).ready(function(){
         start.setMaxDate(moment().add(300, "years").toDate());
       }
     });
+
+    window.js_start_date_pikaday_instance = start;
+    window.js_end_date_pikaday_instance = end;
   }
 });

@@ -24,10 +24,8 @@ module AdditionalCodes
     end
 
     def results(paginated_query=true)
-      @relation = AdditionalCode.by_start_date_and_additional_code_sid_reverse
+      @relation = AllAdditionalCode.by_start_date_and_additional_code_sid_reverse
       @relation = relation.page(page) if paginated_query
-      # @relation = relation.operation_search_jsonb_default if jsonb_search_required?
-      #
       search_ops.select do |k, v|
         ALLOWED_FILTERS.include?(k.to_s) &&
             v.present? &&

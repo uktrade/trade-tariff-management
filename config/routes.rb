@@ -18,8 +18,8 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-    get "/v1/taricdelta(/:date)", to: "xml_files#index"
-    get "/v1/taricfile/:date",    to: "xml_files#show"
+    get "/v1/taricdelta(/:date)",   to: "xml_files#index"
+    get "/v1/taricfile/:timestamp", to: "xml_files#show"
   end
 
   resources :goods_nomenclatures, only: [:index]
@@ -63,7 +63,12 @@ Rails.application.routes.draw do
 
   scope module: :footnotes do
     resources :footnote_types, only: [:index]
-    resources :footnotes, only: [:index]
+    resources :footnotes, only: [:new, :index] do
+      collection do
+        get :search
+        get :validate_search_settings
+      end
+    end
   end
 
   scope module: :quotas do

@@ -84,32 +84,32 @@ module AdditionalCodes
 
         def is_clause
           <<-eos
-            additional_code = ?
+            all_additional_codes.additional_code = ?
           eos
         end
 
         def is_not_clause
           <<-eos
             #{is_not_specified_clause} OR
-            additional_code != ?
+            all_additional_codes.additional_code != ?
           eos
         end
 
         def starts_with_clause
           <<-eos
-            additional_code ilike ?
+            all_additional_codes.additional_code ilike ?
           eos
         end
 
         def is_not_specified_clause
           <<-eos
-            additional_code IS NULL
+            all_additional_codes.additional_code IS NULL
           eos
         end
 
         def is_not_unspecified_clause
           <<-eos
-            additional_code IS NOT NULL
+            all_additional_codes.additional_code IS NOT NULL
           eos
         end
     end

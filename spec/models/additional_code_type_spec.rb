@@ -72,9 +72,8 @@ describe AdditionalCodeType do
       end
 
       context 'meursing additional code' do
-        let!(:additional_code_type) { create :additional_code_type }
-        let!(:additional_code)      { create :additional_code, additional_code_type_id: additional_code_type.additional_code_type_id }
-        let!(:meursing_additional_code) { create :meursing_additional_code, additional_code: additional_code.additional_code }
+        let!(:additional_code_type) { create :additional_code_type, :meursing }
+        let!(:meursing_additional_code) { create :meursing_additional_code }
 
         before {
           additional_code_type.destroy

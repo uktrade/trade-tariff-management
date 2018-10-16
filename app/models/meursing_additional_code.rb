@@ -9,6 +9,10 @@ class MeursingAdditionalCode < Sequel::Model
 
   set_primary_key  [:meursing_additional_code_sid]
 
+  def code
+    "7#{additional_code}"
+  end
+
   def record_code
     "340".freeze
   end

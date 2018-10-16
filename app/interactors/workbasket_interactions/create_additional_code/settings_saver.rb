@@ -69,13 +69,20 @@ module WorkbasketInteractions
           else
             @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can contain only numbers and characters" if item['additional_code_type_id'].upcase =~ /[^A-Z0-9]/
           end
-          @errors["additional_code_description_#{index}"] = "\##{index.to_i + 1} - Description can't be blank" if item['description'].blank?
+          @errors["additional_code_description_#{index}"] = "\##{index.to_i + 1} - Description can't be blank" if item['description'].blank? && !attrs_parser.meursing?(item)
         end
         errors[:additional_codes] = additional_codes_errors if additional_codes_errors.present?
       end
 
       def build_additional_codes!
         filtered_additional_codes.each do |position, item|
+          if attrs_parser.meursing?(item)
+            meursing_additional_code = MeursingAdditionalCode.new(attrs_parser.meursing_additional_code_attributes(item))
+            ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(meursing_additional_code, position.to_i).assign!
+            @records << meursing_additional_code
+            next
+          end
+
           additional_code = AdditionalCode.new(attrs_parser.additional_code_attributes(item))
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code, position.to_i).assign!
           additional_code_sid = additional_code.additional_code_sid
@@ -92,12 +99,6 @@ module WorkbasketInteractions
           additional_code_description = AdditionalCodeDescription.new(
               attrs_parser.additional_code_description_attributes(additional_code_description_period_sid, additional_code_sid, item))
           @records << additional_code_description
-
-          if attrs_parser.meursing?(item)
-            meursing_additional_code = MeursingAdditionalCode.new(attrs_parser.meursing_additional_code_attributes(item))
-            ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(meursing_additional_code, position.to_i).assign!
-            @records << meursing_additional_code
-          end
         end
       end
 
