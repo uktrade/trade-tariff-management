@@ -305,6 +305,11 @@ Vue.component("bulk-edit-records", {
       var sorter = new RecordSorter(sortBy);
 
       return sorter.getSortingFunction(column.type);
+    },
+    recordsCloned: function(newRecords) {
+      for (var i = 0; i < newRecords.length; i++) {
+        this.records.push(newRecords[i]);
+      }
     }
   }
 });

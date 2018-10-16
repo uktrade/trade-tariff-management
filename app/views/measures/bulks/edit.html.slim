@@ -43,11 +43,15 @@ script
 
       = content_tag "remove-measures-popup", nil, {"v-if" => "slotProps.selectedAction == 'remove_from_group'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", ":selected-all-measures" => "slotProps.selectedAllMeasures", ":measures-removed-cb" => "slotProps.recordsRemoved", ":all-measures-removed-cb" => "slotProps.allRecordsRemoved"}
 
-      = content_tag "delete-measures-popup", nil, {"v-if" => "slotProps.selectedAction == 'delete'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-deleted" => "slotProps.recordsDeleted"}
+      = content_tag "remove-measures-popup", nil, {"v-if" => "slotProps.selectedAction == 'remove_from_group'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", ":selected-all-measures" => "slotProps.selectedAllMeasures", ":measures-removed-cb" => "slotProps.recordsRemoved", ":all-measures-removed-cb" => "slotProps.allRecordsRemoved"}
+
+      = content_tag "force-delete-measures-popup", nil, {"v-if" => "slotProps.selectedAction == 'force_delete'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-force-deleted" => "slotProps.recordsForceDeleted"}
 
       = content_tag "change-additional-code-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_additional_code'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
       = content_tag "change-footnotes-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_footnotes'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
+
+      = content_tag "restore-records-popup", nil, {"v-if" => "slotProps.selectedAction == 'restore_records'", ":open" => "true", ":records" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@records-restored" => "slotProps.restoreRecords"}
 
 = render "shared/vue_templates/bulk_edit_records"
 = render "shared/vue_templates/measure_origin"
@@ -59,7 +63,9 @@ script
 = render "shared/vue_templates/change_origins"
 = render "shared/vue_templates/remove_measures"
 = render "shared/vue_templates/delete_measures"
+= render "shared/vue_templates/force_delete_measures"
 = render "shared/vue_templates/change_additional_code"
 = render "shared/vue_templates/change_footnotes"
+= render "shared/vue_templates/restore_records"
 
 = render "shared/bulks/save_actions_popups/collection"
