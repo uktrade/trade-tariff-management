@@ -35,6 +35,8 @@ module WorkbasketInteractions
 
         setup_attrs_parser!
         clear_cached_sequence_number!
+
+        @persist = true # For now it always true
       end
 
       def valid?
@@ -51,10 +53,8 @@ module WorkbasketInteractions
       end
 
       def persist!
-        @persist = true
+        @do_not_rollback_transactions = true
         validate!
-
-        settings.save
       end
 
       def success_ops
@@ -81,9 +81,11 @@ module WorkbasketInteractions
         end
 
         def check_conformance_rules!
-          add_geographical_area!
-          add_geographical_area_description_period!
-          add_geographical_area_description!
+          Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
+            add_geographical_area!
+            add_geographical_area_description_period!
+            add_geographical_area_description!
+          end
         end
 
         def add_geographical_area!
