@@ -48,6 +48,12 @@ module GeoAreas
     def index
       params[:sort_by] ||= "geographical_area_id"
       params[:sort_dir] ||= "asc"
+
+      respond_to do |format|
+        format.html
+        format.json
+        format.csv { send_data searcher.results(false).to_csv }
+      end
     end
   end
 end
