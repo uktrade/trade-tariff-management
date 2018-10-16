@@ -24,11 +24,11 @@ module Certificates
     end
 
     expose(:search_form) do
-      CertificatesSearchForm.new(search_ops)
+      CertificateSearchForm.new(search_ops)
     end
 
     expose(:searcher) do
-      CertificatesSearch.new(search_ops)
+      CertificateSearch.new(search_ops)
     end
 
     expose(:search_results) do
