@@ -13,55 +13,18 @@
                 | {{slotProps.error}}
 
             h3.heading-medium.sub_heading_block
-              | What is the footnote type?
-
-            label.form-label
-              span.form-hint
-                | You must make a selection here if entering an ID in the next field.
+              | What is the certificate type?
 
             .bootstrap-row
               .col-lg-8.col-md-10.col-sm-12.col-xs-12
-                = content_tag "custom-select", "", { ":options" => "footnote_types_list" , "allow-clear" => true, "code-field" => "footnote_type_id", "label-field" => "description", "value-field" => "footnote_type_id", "v-model" => "search.footnote_type_id", placeholder: "― select footnote type ―", "name" => "search[footnote_type_id]", "code-class-name" => "prefix--country" }
+                = content_tag "custom-select", "", { ":options" => "certificate_types_list" , "allow-clear" => true, "code-field" => "certificate_type_code", "label-field" => "description", "value-field" => "certificate_type_code", "v-model" => "search.certificate_type_code", placeholder: "― select certificate type ―", "name" => "search[certificate_type_code]", "code-class-name" => "prefix--country" }
 
             h3.heading-medium
-              | Enter a footnote ID or search string
-
-            label.form-label
-              span.form-hint
-                | This is usually mandatory but you can leave it blank if you are searching for associations below.
+              | Enter a certificate code or search string
 
             .bootstrap-row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
                 = f.input :q, label: false, input_html: { class: "form-control", "v-model" => "search.q" }
-
-            h3.heading-medium.sub_heading_block
-              | Optionally search for certificates that have these associations
-
-            label.form-label
-              span.form-hint
-                | You can populate any or all of the following fields to find certificates that are associated with ALL of the values you enter there in.
-
-            h3.heading-medium.sub_heading_block
-              | Goods classiciation codes
-
-            label.form-label
-              span.form-hint
-                | Enter one or more commodity codes, separated by comma, space or line break.
-
-            .bootstrap-row
-              .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "search.commodity_codes", rows: 3 }
-
-            h3.heading-medium.sub_heading_block
-              | Measures
-
-            label.form-label
-              span.form-hint
-                | Enter one or more measure IDs, separated by comma, space or line break.
-
-            .bootstrap-row
-              .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                = f.input :measure_sids, as: :text, label: false, input_html: { "v-model" => "search.measure_sids", rows: 3 }
 
       fieldset
         form-group :errors="errors" error-key="start_date"
