@@ -70,19 +70,21 @@ class GeographicalArea < Sequel::Model
     end
 
     def to_csv
-      headers = %w(code description type start_date end_date)
+      headers = ["Code", "Description", "Type", "Start date", "End date"]
 
       CSV.generate(headers: true) do |csv|
         csv << headers
 
         all.each do |geo_area|
-          code        = geo_area.geographical_area_id
-          description = geo_area.description
-          type        = geo_area.description
-          start_date  = geo_area.validity_start_date
-          end_date    = geo_area.validity_end_date
+          geo_area = geo_area.decorate
 
-          csv << [code, description, type, start_date, end_date]
+          csv << [
+            geo_area.geographical_area_id,
+            geo_area.description,
+            geo_area.type,
+            geo_area.start_date,
+            geo_area.end_date
+          ]
         end
       end
     end

@@ -94,10 +94,7 @@ class GeographicalAreaSearchForm
     start_date = parse_date(start_date)
     end_date = parse_date(end_date)
 
-    if start_date.present? &&
-       end_date.present? &&
-       start_date > end_date
-
+    if start_date.present? && end_date.present? && start_date > end_date
       errors.add(:start_date, errors_translator(:start_date_higher_end_date))
     end
   end
