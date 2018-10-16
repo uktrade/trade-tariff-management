@@ -2,33 +2,31 @@ class CertificateSearch
 
   ALLOWED_FILTERS = %w(
     q
-    footnote_type_id
-    commodity_codes
-    measure_sids
+    certificate_type_code
+    certificate_code
     start_date
     end_date
   )
 
   FIELDS_ALLOWED_FOR_ORDER = %w(
-    footnote_type_id
-    footnote_id
+    certificate_type_code
+    certificate_code
     description
     validity_start_date
     validity_end_date
   )
 
   SIMPLE_SORTABLE_MODES = %w(
-    footnote_type_id
-    footnote_id
+    certificate_type_code
+    certificate_code
     validity_start_date
     validity_end_date
   )
 
   attr_accessor :search_ops,
                 :q,
-                :footnote_type_id,
-                :commodity_codes,
-                :measure_sids,
+                :certificate_type_code,
+                :certificate_code,
                 :start_date,
                 :end_date,
                 :relation,
@@ -63,15 +61,15 @@ class CertificateSearch
     def setup_initial_scope!
       @relation = if sort_by_field.present?
         if FIELDS_ALLOWED_FOR_ORDER.include?(sort_by_field)
-          Footnote.custom_field_order(
+          Certificate.custom_field_order(
             sort_by_field, search_ops[:sort_dir]
           )
         else
-          Footnote.default_order
+          Certificate.default_order
         end
 
       else
-        Footnote.default_order
+        Certificate.default_order
       end
     end
 
@@ -79,26 +77,12 @@ class CertificateSearch
       @relation = relation.keywords_search(q)
     end
 
-    def apply_footnote_type_id_filter
-      @relation = relation.by_footnote_type_id(footnote_type_id)
+    def apply_certificate_type_code_filter
+      @relation = relation.by_certificate_type_code(certificate_type_code)
     end
 
-    def apply_commodity_codes_filter
-      apply_list_of_ids_filter(:commodity_codes)
-    end
-
-    def apply_measure_sids_filter
-      apply_list_of_ids_filter(:measure_sids)
-    end
-
-    def apply_list_of_ids_filter(list_name)
-      parsed_list = parse_list_of_values(
-        public_send(list_name)
-      )
-
-      unless parsed_list.count.zero?
-        @relation = relation.public_send("by_#{list_name}", parsed_list)
-      end
+    def apply_certificate_code_filter
+      @relation = relation.by_certificate_code(certificate_code)
     end
 
     def apply_start_date_filter
@@ -109,22 +93,4 @@ class CertificateSearch
       @relation = relation.before_or_equal(end_date.to_date.end_of_day)
     end
 
-    def parse_list_of_values(list_of_ids)
-      # Split by linebreaks
-      linebreaks_separated_list = list_of_ids.split(/\n+/)
-
-      # Split by commas
-      comma_separated_list = linebreaks_separated_list.map do |item|
-        item.split(",")
-      end.flatten
-
-      # Split by whitespaces
-      white_space_separated_list = comma_separated_list.map do |item|
-        item.split(" ")
-      end.flatten
-
-      white_space_separated_list.map(&:squish)
-                                .flatten
-                                .reject { |i| i.blank? }.uniq
-    end
 end

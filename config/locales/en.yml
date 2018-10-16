@@ -86,6 +86,14 @@ en:
       approve_mode_blank: "It is required to specify if you are going to approve or reject changes in this workbasket."
       reject_reasons_blank: "Please, provide your reasons and/or state the changes required."
 
+  find_certificates:
+    start_date_invalid: Start date is invalid.
+    end_date_invalid: End date is invalid.
+    start_date_higher_end_date: Start date should not be greater than end date.
+    minimum_required_filters: Search could not run because you did not specify any search terms. You must specify at least a certificate type or a search string
+    minimum_required_filters_short: You must specify a value for at least one of these fields.
+    general_errors: See individual fields for details.
+
   find_footnotes:
     start_date_invalid: Start date is invalid.
     end_date_invalid: End date is invalid.

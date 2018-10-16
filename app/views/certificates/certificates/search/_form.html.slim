@@ -1,7 +1,7 @@
 = simple_form_for search_form, as: :search,
                                url: search_certificates_url,
                                method: :get,
-                               html: { class: "js-search-certificates-form", "data-parsley-validate" => true } do |f|
+                               html: { class: "js-search-certificate-form", "data-parsley-validate" => true } do |f|
 
   .bootstrap-row
     .col-lg-5.col-md-7.col-sm-10.col-xs-12
@@ -60,7 +60,7 @@
         .col-lg-5.col-md-7.col-sm-10.col-xs-12
           .form-actions
             .submit_group_for_cross_check_block
-              = link_to "Search", "#", name: "save_progress", class: "button js-validate-certificates-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
+              = link_to "Search", "#", name: "save_progress", class: "button js-validate-certificate-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
 
               .js-workbasket-base-continue-spinner.spinner_block.hidden
                 = render "measures/bulks/loading_spinner", message: "Checking form settings..."

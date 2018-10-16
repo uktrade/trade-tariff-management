@@ -15,9 +15,9 @@ $(document).ready(function() {
       };
 
       if (!$.isEmptyObject(window.__search_certificate_settings_json)) {
-        data.search = this.parseFootnoteFormPayload(window.__search_certificate_settings_json);
+        data.search = this.parseCertificateFormPayload(window.__search_certificate_settings_json);
       } else {
-        data.search = this.emptyFootnoteForm();
+        data.search = this.emptyCertificateForm();
       }
 
       return data;
@@ -67,22 +67,18 @@ $(document).ready(function() {
       }
     },
     methods: {
-      parseFootnoteFormPayload: function(payload) {
+      parseCertificateFormPayload: function(payload) {
         return {
           certificate_type_code: payload.certificate_type_code,
           q: payload.q,
-          commodity_codes: payload.commodity_codes,
-          measure_sids: payload.measure_sids,
           start_date: payload.start_date,
           end_date: payload.end_date
         };
       },
-      emptyFootnoteForm: function() {
+      emptyCertificateForm: function() {
         return {
           certificate_type_code: null,
           q: null,
-          commodity_codes: null,
-          measure_sids: null,
           start_date: null,
           end_date: null
         };
@@ -91,8 +87,6 @@ $(document).ready(function() {
         return {
           certificate_type_code: this.search.certificate_type_code,
           q: this.search.q,
-          commodity_codes: this.search.commodity_codes,
-          measure_sids: this.search.measure_sids,
           start_date: $('input[name=\'search[start_date]\']').val(),
           end_date: $('input[name=\'search[end_date]\']').val()
         };
