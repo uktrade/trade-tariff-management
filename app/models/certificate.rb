@@ -48,28 +48,23 @@ class Certificate < Sequel::Model
       end
 
       def keywords_search(keyword)
-        # join_table(
-        #   :inner,
-        #   :certificate_descriptions,
-        #   "certificates.certificate_type_code" => "certificate_descriptions.certificate_type_code",
-        #   "certificates.certificate_code" => "certificate_descriptions.certificate_code",
-        # ).where(
-        #   "certificates.certificate_code ilike ? OR certificate_descriptions.description ilike ?",
-        #   "#{keyword}%", "%#{keyword}%"
-        # )
-
-        where(
+        join_table(
+          :inner,
+          :certificate_descriptions,
+          certificate_type_code: :certificate_type_code,
+          certificate_code: :certificate_code
+        ).where(
           "certificates.certificate_code ilike ? OR certificate_descriptions.description ilike ?",
           "#{keyword}%", "%#{keyword}%"
         )
       end
 
       def by_certificate_type_code(certificate_type_code)
-        where(certificate_type_code: certificate_type_code)
+        where("certificates.certificate_type_code = ?", certificate_type_code)
       end
 
       def by_certificate_code(certificate_code)
-        where(certificate_code: certificate_code)
+        where("certificates.certificate_code = ? ", certificate_code)
       end
 
       def after_or_equal(start_date)

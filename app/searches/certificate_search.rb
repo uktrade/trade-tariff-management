@@ -59,18 +59,7 @@ class CertificateSearch
   private
 
     def setup_initial_scope!
-      @relation = if sort_by_field.present?
-        if FIELDS_ALLOWED_FOR_ORDER.include?(sort_by_field)
-          Certificate.custom_field_order(
-            sort_by_field, search_ops[:sort_dir]
-          )
-        else
-          Certificate.default_order
-        end
-
-      else
-        Certificate.default_order
-      end
+      @relation = Certificate.default_order
     end
 
     def apply_q_filter
