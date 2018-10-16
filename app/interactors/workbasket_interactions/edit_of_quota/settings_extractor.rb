@@ -20,6 +20,7 @@ module WorkbasketInteractions
             'quota_description': quota_definition.description,
             'measure_type_id': quota_definition.quota_type_id,
             'regulation_id': quota_definition.regulation_id,
+            'maximum_precision': quota_definition.maximum_precision,
             'commodity_codes': quota_definition.goods_nomenclature_item_ids.join('\r\n'),
             'commodity_codes_exclusions': '',
             'additional_codes': quota_definition.additional_code_ids.join('\r\n'),
@@ -52,11 +53,29 @@ module WorkbasketInteractions
                   'critical': (period.critical_state == 'Y').to_s,
                   'end_date': period.validity_end_date.strftime('%Y-%m-%d'),
                   'start_date': period.validity_start_date.strftime('%Y-%m-%d'),
-                  'measurement_unit_id': '',
                   'criticality_threshold': period.critical_threshold.to_s,
+                  'measurement_unit_id': '',
                   'measurement_unit_code': period.measurement_unit_code,
                   'measurement_unit_qualifier_id': '',
-                  'measurement_unit_qualifier_code': period.measurement_unit_qualifier_code
+                  'measurement_unit_qualifier_code': period.measurement_unit_qualifier_code,
+                  'duty_expressions': extract_duty_expressions(period)
+              }
+          }
+        end.reduce(:merge)
+      end
+
+      def extract_duty_expressions(period)
+        measure = Measure.where(ordernumber: period.quota_order_number_id, validity_start_date: period.validity_start_date).first
+        measure.measure_components.map.with_index do |component, index|
+          {
+              "#{index}": {
+                  'amount': '',
+                  'duty_amount': component.duty_amount.to_s,
+                  'duty_expression_id': component.duty_expression_id,
+                  'original_duty_expression_id': "#{component.duty_expression_id}#{component.monetary_unit_code.present? ? 'B' : 'A'}",
+                  'monetary_unit_code': component.monetary_unit_code,
+                  'measurement_unit_code': component.measurement_unit_code,
+                  'measurement_unit_qualifier_code': component.measurement_unit_qualifier_code
               }
           }
         end.reduce(:merge)

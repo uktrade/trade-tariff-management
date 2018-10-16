@@ -1,6 +1,10 @@
 - cache [ "measure_form_js_variables", expires_in: 8.hours ] do
   = render "workbaskets/shared/js_variables"
 
+script
+  == "window.__workbasket_id = #{workbasket.id};"
+  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+
 = simple_form_for form, url: current_url(id: workbasket.id),
                         html: { \
                           class: "quota-form",

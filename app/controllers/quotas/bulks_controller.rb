@@ -127,9 +127,12 @@ module Quotas
       )
 
       if workbasket.save
+        quota_sid = params[:quota_sids].first
+        quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(quota_sid).settings
         workbasket_settings.update(
             initial_search_results_code: params[:search_code],
-            quota_sid: params[:quota_sids].first
+            quota_sid: quota_sid,
+            quota_settings_jsonb: quota_settings.to_json
         )
 
         redirect_to work_with_selected_quotas_bulk_url(
