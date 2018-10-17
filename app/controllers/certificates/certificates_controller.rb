@@ -24,11 +24,11 @@ module Certificates
     end
 
     expose(:search_form) do
-      CertificatesSearchForm.new(search_ops)
+      CertificateSearchForm.new(search_ops)
     end
 
     expose(:searcher) do
-      CertificatesSearch.new(search_ops)
+      CertificateSearch.new(search_ops)
     end
 
     expose(:search_results) do
@@ -48,12 +48,6 @@ module Certificates
     def search
       params[:sort_by] ||= "geographical_area_id"
       params[:sort_dir] ||= "asc"
-
-      respond_to do |format|
-        format.html
-        format.json
-        format.csv { send_data searcher.results(false).to_csv }
-      end
     end
 
     def collection

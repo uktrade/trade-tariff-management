@@ -17,6 +17,8 @@ module Workbaskets
         "Bulk Edit of Additional Codes"
       when "bulk_edit_of_quotas"
         "Edit of Quota"
+      when "create_geographical_area"
+        "Create Geographical Area"
       end
     end
 

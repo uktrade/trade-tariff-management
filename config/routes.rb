@@ -57,7 +57,12 @@ Rails.application.routes.draw do
   end
 
   scope module: :certificates do
-    resources :certificates, only: [:index]
+    resources :certificates, only: [:index] do
+      collection do
+        get :search
+        get :validate_search_settings
+      end
+    end
     resources :certificate_types, only: [:index]
   end
 
