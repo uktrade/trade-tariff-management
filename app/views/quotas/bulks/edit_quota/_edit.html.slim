@@ -3,7 +3,8 @@
 
 script
   == "window.__workbasket_id = #{workbasket.id};"
-  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+  == "window.all_settings = #{workbasket_settings.main_step_settings.to_json};"
+  == "window.quota_settings = #{workbasket_settings.quota_settings.to_json};"
 
 = simple_form_for form, url: current_url(id: workbasket.id),
                         html: { \

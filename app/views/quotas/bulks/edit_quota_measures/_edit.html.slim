@@ -20,7 +20,7 @@ h2.heading-large
 script
   == "window.__workbasket_id = #{workbasket.id};"
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"
-  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+  == "window.all_settings = #{workbasket_settings.main_step_settings.to_json};"
   == "window.current_step_settings = #{workbasket_settings.main_step_settings.to_json};"
 
 - cache ["measure_form_js_variabless", expires_in: 8.hours] do

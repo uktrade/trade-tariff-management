@@ -23,8 +23,8 @@ module Workbaskets
       )
     end
 
-    def settings
-      JSON.parse(main_step_settings_jsonb).merge(JSON.parse(quota_settings_jsonb))
+    def quota_settings
+      JSON.parse(quota_settings_jsonb)
     end
 
     def set_workbasket_system_data!
