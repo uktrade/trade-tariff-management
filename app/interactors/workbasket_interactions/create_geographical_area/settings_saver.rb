@@ -4,12 +4,28 @@ module WorkbasketInteractions
 
       include ::WorkbasketHelpers::SettingsSaverHelperMethods
 
+      ATTRS_PARSER_METHODS = %w(
+        geographical_code
+        geographical_area_id
+        parent_geographical_area_group_id
+        parent_geographical_area_group_sid
+        description
+        validity_start_date
+        validity_end_date
+        operation_date
+      )
+
       attr_accessor :current_step,
                     :save_mode,
                     :settings,
                     :workbasket,
                     :settings_params,
-                    :errors
+                    :errors,
+                    :attrs_parser,
+                    :geographical_area,
+                    :geographical_area_description,
+                    :geographical_area_description_period,
+                    :persist
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
         @workbasket = workbasket
@@ -18,7 +34,18 @@ module WorkbasketInteractions
         @settings = workbasket.settings
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
 
+        setup_attrs_parser!
         clear_cached_sequence_number!
+
+        @persist = true # For now it always true
+      end
+
+      def save!
+        workbasket.title = geographical_area_id
+        workbasket.operation_date = operation_date
+        workbasket.save
+
+        settings.set_settings_for!(current_step, settings_params)
       end
 
       def valid?
@@ -26,30 +53,26 @@ module WorkbasketInteractions
         @errors.blank?
       end
 
-      def save!
-        workbasket.title = settings_params[:geographical_area_id]
-        workbasket.operation_date = settings_params[:operation_date].try(:to_date)
-        workbasket.save
-
-        settings.set_settings_for!(current_step, settings_params)
-      end
-
       def persist!
-        @persist = true
+        @do_not_rollback_transactions = true
         validate!
-
-        settings.save
       end
 
       def success_ops
         {}
       end
 
+      ATTRS_PARSER_METHODS.map do |option|
+        define_method(option) do
+          attrs_parser.public_send(option)
+        end
+      end
+
       private
 
         def validate!
           check_initial_validation_rules!
-          check_conformance_rules!
+          check_conformance_rules! if @errors.blank?
         end
 
         def check_initial_validation_rules!
@@ -59,41 +82,65 @@ module WorkbasketInteractions
         end
 
         def check_conformance_rules!
-          add_geographical_area!
-          add_geographical_area_description_period!
-          add_geographical_area_description!
+          Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
+            add_geographical_area!
+            add_geographical_area_description_period!
+            add_geographical_area_description!
+          end
         end
 
         def add_geographical_area!
           @geographical_area = GeographicalArea.new(
-            geographical_area_id: '2WAW',
-            geographical_code: "0",
-            validity_start_date: Date.today,
-            validity_end_date: Date.today + 3.days
-          )
-
-          @geographical_area.parent_geographical_area_group_sid = parent_geographical_area_sid
-        end
-
-        def add_geographical_area_description_period!
-          @geographical_area_description_period = GeographicalAreaDescriptionPeriod.new(
-            geographical_area_id: geographical_area.geographical_area_id,
-            validity_start_date: geographical_area.validity_start_date,
-            validity_end_date: geographical_area.validity_end_date
-          )
-
-          @geographical_area_description_period.geographical_area_sid = geographical_area.geographical_area_sid
-        end
-
-        def add_geographical_area_description!
-          @geographical_area_description = GeographicalAreaDescription.new(
-            geographical_area_id: geographical_code.geographical_area_id,
+            geographical_area_id: geographical_area_id,
+            geographical_code: geographical_code,
             validity_start_date: validity_start_date,
             validity_end_date: validity_end_date
           )
 
-          @geographical_area_description.geographical_area_sid = geographical_area.geographical_area_sid
-          @geographical_area_description.geographical_area_description_period_sid = geographical_area_description_period.geographical_area_description_period_sid
+          if parent_geographical_area_group_id.present?
+            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
+          end
+
+          assign_system_ops!(geographical_area)
+          set_primary_key!(geographical_area)
+
+          geographical_area.save if persist_mode?
+        end
+
+        def add_geographical_area_description_period!
+          @geographical_area_description_period = GeographicalAreaDescriptionPeriod.new(
+            geographical_area_id: geographical_area_id,
+            validity_start_date: validity_start_date,
+            validity_end_date: validity_end_date
+          )
+          geographical_area_description_period.geographical_area_sid = geographical_area.geographical_area_sid
+
+          assign_system_ops!(geographical_area_description_period)
+          set_primary_key!(geographical_area_description_period)
+
+          geographical_area_description_period.save if persist_mode?
+        end
+
+        def add_geographical_area_description!
+          @geographical_area_description = GeographicalAreaDescription.new(
+            geographical_area_id: geographical_area_id,
+            description: description
+          )
+
+          assign_system_ops!(geographical_area_description)
+          set_primary_key!(geographical_area_description)
+
+          geographical_area_description.geographical_area_sid = geographical_area.geographical_area_sid
+          geographical_area_description.geographical_area_description_period_sid = geographical_area_description_period.geographical_area_description_period_sid
+
+          geographical_area_description.geographical_area = geographical_area
+          geographical_area_description.geographical_area_description_period = geographical_area_description_period
+
+          geographical_area_description.save if persist_mode?
+        end
+
+        def persist_mode?
+          @persist.present?
         end
     end
   end
