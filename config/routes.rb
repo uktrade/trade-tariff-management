@@ -172,6 +172,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :create_certificate, only: [:new, :show, :edit, :update, :destroy]
+
     resources :create_measures, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check

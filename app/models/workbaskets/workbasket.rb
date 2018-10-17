@@ -9,7 +9,8 @@ module Workbaskets
       :create_additional_code,
       :bulk_edit_of_additional_codes,
       :bulk_edit_of_quotas,
-      :create_geographical_area
+      :create_geographical_area,
+      :create_certificate,
     ]
 
     STATUS_LIST = [
@@ -93,6 +94,7 @@ module Workbaskets
       create_regulation
       create_geographical_area
       create_additional_code
+      create_certificate
     )
 
     EDIT_WORKABSKETS = %w(
@@ -128,6 +130,9 @@ module Workbaskets
 
     one_to_one :create_geographical_area_settings, key: :workbasket_id,
                                                    class_name: "Workbaskets::CreateGeographicalAreaSettings"
+
+    one_to_one :create_certificate_settings, key: :workbasket_id,
+                                                   class_name: "Workbaskets::CreateCertificateSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -400,6 +405,8 @@ module Workbaskets
         bulk_edit_of_quotas_settings
       when :create_geographical_area
         create_geographical_area_settings
+      when :create_certificate
+        create_certificate_settings
       end
     end
 
@@ -506,6 +513,7 @@ module Workbaskets
           bulk_edit_of_additional_codes
           bulk_edit_of_quotas
           create_geographical_area
+          create_certificate
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -532,6 +540,8 @@ module Workbaskets
           ::Workbaskets::BulkEditOfAdditionalCodesSettings
         when :create_geographical_area
           ::Workbaskets::CreateGeographicalAreaSettings
+        when :create_certificate
+          ::Workbaskets::CreateCertificateSettings
         end
 
         settings = target_class.new(
