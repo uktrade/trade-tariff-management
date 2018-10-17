@@ -172,7 +172,13 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :create_certificate, only: [:new, :show, :edit, :update, :destroy]
+    resources :create_certificate, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
 
     resources :create_measures, only: [:new, :show, :edit, :update, :destroy] do
       member do

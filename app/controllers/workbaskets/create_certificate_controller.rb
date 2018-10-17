@@ -33,7 +33,18 @@ module Workbaskets
       saver.save!
 
       if saver.valid?
-        handle_success_saving!
+        workbasket_settings.track_step_validations_status!(current_step, true)
+
+        if submit_for_cross_check_mode?
+          saver.persist!
+          submit_for_cross_check.run!
+
+          render json: { redirect_url: submitted_url },
+                       status: :ok
+        else
+          render json: saver.success_ops,
+                       status: :ok
+        end
       else
         workbasket_settings.track_step_validations_status!(current_step, false)
 
@@ -43,5 +54,27 @@ module Workbaskets
         }, status: :unprocessable_entity
       end
     end
+
+    private
+
+      def handle_validate_request!(validator)
+        if validator.valid?
+          render json: {},
+                 status: :ok
+        else
+          render json: {
+            step: :main,
+            errors: validator.errors
+          }, status: :unprocessable_entity
+        end
+      end
+
+      def check_if_action_is_permitted!
+        true
+      end
+
+      def submit_for_cross_check_mode?
+        params[:mode] == "submit_for_cross_check"
+      end
   end
 end

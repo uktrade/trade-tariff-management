@@ -1,0 +1,18 @@
+fieldset
+  h3.heading-medium
+    | What code will identify this area?
+
+  form-group :errors="errors" error-key="certificate_type_id"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | This must ne unique and either a two-letter ISO code (for a country or region) or a string of four
+          br
+          | letters and/or numbers (for a group).
+
+      .bootstrap-row
+        .col-lg-8.col-md-10.col-sm-12.col-xs-12
+          = content_tag "custom-select", "", { ":options" => "certificate_types_list" , "allow-clear" => true, "code-field" => "certificate_type_id", "label-field" => "description", "value-field" => "certificate_type_id", "v-model" => "certificate.certificate_type_id", placeholder: "― select certificate type ―", "name" => "certificate[certificate_type_id]", "code-class-name" => "prefix--country" }
+
