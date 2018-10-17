@@ -94,6 +94,16 @@ en:
     minimum_required_filters_short: You must complete one or both of these fields.
     general_errors: See individual fields for details.
 
+  create_footnote:
+    footnote_type_id_blank: "Foonote type must be specified."
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Valid until date is optional, but if specified must be a complete date - day, month, and year must be specified."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    operation_date_blank: "Operation date must be specified."
+
   find_footnotes:
     start_date_invalid: Start date is invalid.
     end_date_invalid: End date is invalid.
