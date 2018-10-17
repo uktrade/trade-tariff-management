@@ -1,0 +1,56 @@
+script type="text/x-template" id="edit-geographical-area-membership-popup-template"
+  pop-up :open="open" :on-close="triggerClose"
+    template slot="title" Edit membership
+
+    .error-summary role="alert" aria-labelledby="memberships-popup-error-heading" tabindex="-1" v-cloak="" v-if="!valid"
+
+      h2.heading-medium.error-summary-heading#memberships-popup-error-heading
+        | Error
+
+      p
+        | {{errorSummary}}
+
+      p
+        | See individual fields for details.
+
+
+    info-message v-if="geographicalArea.geographical_code === 'group'"
+      | You are editing the membership of {{membership.geographical_area_id}} {{membership.geographicalArea.description}} within {{geographicalArea.geographical_area_id}} {{geographicalArea.description}}. To delete the membership, unset (clear) the join date.
+    info-message v-else=""
+      | You are editing the membership of {{geographicalArea.geographical_area_id}} {{geographicalArea.description}} within group {{membership.geographical_area_id}} {{membership.geographicalArea.description}}. To delete the membership, unset (clear) the join date.
+
+    form-group :errors="errors" error-key="delete"
+      template slot-scope="slotProps"
+        label.form-label
+          span.error-message v-if="slotProps.hasError" v-cloak=""
+            | {{slotProps.error}}
+
+        .multiple-choice
+          input id="delete-membership" type="checkbox" v-model="delete"
+          label for="delete-membership"
+            | Delete this membership
+
+    form-group :errors="errors" error-key="join_date"
+      template slot-scope="slotProps"
+        label.form-label
+          | Join group on this date
+
+          span.error-message v-if="slotProps.hasError" v-cloak=""
+            | {{slotProps.error}}
+
+        date-select :value.sync="join_date"
+
+    form-group :errors="errors" error-key="leave_date"
+      template slot-scope="slotProps"
+        label.form-label
+          | Leave group on this date (optional)
+
+          span.error-message v-if="slotProps.hasError" v-cloak=""
+            | {{slotProps.error}}
+
+        date-select :value.sync="leave_date"
+
+    .form-actions
+      button.button @click.prevent="updateMembership" :disabled="processing"
+        | Update membership
+      a.secondary-button href="#" @click.prevent="onClose" Cancel

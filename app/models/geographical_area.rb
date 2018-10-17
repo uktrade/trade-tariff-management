@@ -124,6 +124,8 @@ class GeographicalArea < Sequel::Model
 
         if filter_ops[:groups_only].present?
           groups.q_search(filter_ops)
+        elsif filter_ops[:countries_only].present?
+          countries.q_search(filter_ops)
         else
           q_search(filter_ops)
         end
@@ -137,7 +139,9 @@ class GeographicalArea < Sequel::Model
     {
       geographical_area_id: geographical_area_id,
       description: description || '',
-      is_country: is_country?
+      is_country: is_country?,
+      validity_start_date: validity_start_date,
+      validity_end_date: validity_end_date
     }
   end
 
