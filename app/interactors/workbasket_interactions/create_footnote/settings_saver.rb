@@ -87,10 +87,11 @@ module WorkbasketInteractions
 
         def add_footnote!
           @footnote = Footnote.new(
-            footnote_type_id: footnote_type_id,
             validity_start_date: validity_start_date,
             validity_end_date: validity_end_date
           )
+
+          footnote.footnote_type_id = footnote_type_id
 
           assign_system_ops!(footnote)
           set_primary_key!(footnote)
@@ -100,11 +101,12 @@ module WorkbasketInteractions
 
         def add_footnote_description_period!
           @footnote_description_period = FootnoteDescriptionPeriod.new(
-            footnote_id: footnote.footnote_id,
-            footnote_type_id: footnote_type_id,
             validity_start_date: validity_start_date,
             validity_end_date: validity_end_date
           )
+
+          footnote_description_period.footnote_id = footnote.footnote_id
+          footnote_description_period.footnote_type_id = footnote_type_id
 
           assign_system_ops!(footnote_description_period)
           set_primary_key!(footnote_description_period)
@@ -114,10 +116,11 @@ module WorkbasketInteractions
 
         def add_footnote_description!
           @footnote_description = FootnoteDescription.new(
-            footnote_id: footnote.footnote_id,
-            footnote_type_id: footnote_type_id
             description: description
           )
+
+          footnote_description.footnote_id = footnote.footnote_id
+          footnote_description.footnote_type_id = footnote_type_id
 
           assign_system_ops!(footnote_description)
           set_primary_key!(footnote_description)
@@ -129,6 +132,12 @@ module WorkbasketInteractions
 
         def persist_mode?
           @persist.present?
+        end
+
+        def setup_attrs_parser!
+          @attrs_parser = ::WorkbasketValueObjects::CreateFootnote::AttributesParser.new(
+            settings_params
+          )
         end
     end
   end

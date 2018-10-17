@@ -142,6 +142,12 @@ module WorkbasketInteractions
         def persist_mode?
           @persist.present?
         end
+
+        def setup_attrs_parser!
+          @attrs_parser = ::WorkbasketValueObjects::CreateGeographicalArea::AttributesParser.new(
+            settings_params
+          )
+        end
     end
   end
 end

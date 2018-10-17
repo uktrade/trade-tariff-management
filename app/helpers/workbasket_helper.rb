@@ -215,6 +215,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :create_footnote
+      edit_create_footnote_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
