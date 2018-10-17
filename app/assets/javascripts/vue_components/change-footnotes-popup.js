@@ -8,7 +8,9 @@ Vue.component("change-footnotes-popup", {
       onlyOneMeasure: false,
       confirmBtnDisabled: true,
       updateMode: null,
-      hideUpdateMode: false
+      hideUpdateMode: false,
+      hasChanged: false,
+      beforeRender: true
     };
   },
   methods: {
@@ -65,6 +67,9 @@ Vue.component("change-footnotes-popup", {
   },
   watch: {
     updateMode: function(){
+      this.hasChanged = true;
+    },
+    hasChanged: function(){
       this.confirmBtnDisabled = false;
     },
     measuresFootnotes: {
@@ -73,9 +78,8 @@ Vue.component("change-footnotes-popup", {
         var anyFootnote = this.measuresFootnotes.some(function(footnote){
           return footnote.footnote_type_id && footnote.description;
         });
-        if (anyFootnote) {
-          this.confirmBtnDisabled = false;
-        }
+        if (anyFootnote && !this.beforeRender) { this.hasChanged = true; }
+        if (this.beforeRender) { this.beforeRender = false; }
       },
       deep: true
     }
@@ -88,7 +92,10 @@ Vue.component("change-footnotes-popup", {
       var existsInMemo = memo.some(function(filteredFootnote){
         return filteredFootnote.footnote_id == footnote.footnote_id && filteredFootnote.footnote_type_id == footnote.footnote_type_id;
       });
-      if (!existsInMemo) { return memo.concat(footnote); }
+      if (!existsInMemo) {
+        var footnoteClone = Object.assign({}, footnote);
+        return memo.concat(footnoteClone);
+      }
       return memo;
     }, []);
 
