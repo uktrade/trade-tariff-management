@@ -3,6 +3,7 @@ module WorkbasketServices
     class ParentQuota
 
       attr_accessor :settings_saver,
+                    :all_settings,
                     :ops,
                     :base_params,
                     :sub_quota,
@@ -12,6 +13,8 @@ module WorkbasketServices
       def initialize(settings_saver, parent_quota_ops, base_params, sub_quota)
         @errors = {}
         @settings_saver = settings_saver
+        @all_settings = settings_saver.settings
+                                      .settings
         @ops = parent_quota_ops
         @base_params = base_params
         @base_params['quota_ordernumber'] = parent_quota_ops['order_number']
@@ -63,7 +66,8 @@ module WorkbasketServices
             quota_order_number_sid: order_number.quota_order_number_sid,
             measurement_unit_code: source_definition.measurement_unit_code,
             measurement_unit_qualifier_code: source_definition.measurement_unit_qualifier_code,
-            workbasket_type_of_quota: source_definition.workbasket_type_of_quota
+            workbasket_type_of_quota: source_definition.workbasket_type_of_quota,
+            maximum_precision: all_settings["quota_precision"]
         )
         ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(definition).assign!
         settings_saver.assign_system_ops!(definition)
