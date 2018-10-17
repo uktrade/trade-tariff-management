@@ -32,13 +32,13 @@ module Quotas
       )
     end
 
-    # expose(:submit_group_for_cross_check) do
-    #   params[:mode] == "save_group_for_cross_check"
-    # end
+    expose(:submit_group_for_cross_check) do
+      params[:mode] == "save_group_for_cross_check"
+    end
 
-    # expose(:final_saving_batch) do
-    #   params[:final_batch].to_s == "true"
-    # end
+    expose(:final_saving_batch) do
+      params[:final_batch].to_s == "true"
+    end
 
     expose(:workbasket_container) do
       ::Measures::Workbasket::Items.new(
@@ -91,17 +91,17 @@ module Quotas
       }
     end
 
-    # expose(:bulk_quotas_collection) do
-    #   JSON.parse(request.body.read)["bulk_quotas_collection"]
-    # end
+    expose(:bulk_measures_collection) do
+      JSON.parse(request.body.read)["bulk_measures_collection"]
+    end
 
-    # expose(:bulk_saver) do
-    #   ::Quotas::BulkSaver.new(
-    #       current_user,
-    #       workbasket,
-    #       bulk_quotas_collection
-    #   )
-    # end
+    expose(:bulk_saver) do
+      ::Quotas::BulkSaver.new(
+          current_user,
+          workbasket,
+          bulk_measures_collection
+      )
+    end
 
     expose(:json_response) do
       {

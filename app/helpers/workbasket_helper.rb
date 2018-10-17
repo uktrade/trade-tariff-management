@@ -200,7 +200,7 @@ module WorkbasketHelper
     when :create_additional_code
       create_additional_code_url(workbasket.id)
     when :bulk_edit_of_quotas
-      quotas_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
+      quotas_bulk_url(workbasket.id)
     end
   end
 end
