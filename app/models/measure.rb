@@ -558,11 +558,11 @@ class Measure < Sequel::Model
 
   class << self
     def max_per_page
-      25
+      300
     end
 
     def default_per_page
-      25
+      300
     end
 
     def max_pages
