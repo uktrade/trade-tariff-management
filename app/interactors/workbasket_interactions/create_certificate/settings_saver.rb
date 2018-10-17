@@ -107,7 +107,7 @@ module WorkbasketInteractions
             validity_end_date: validity_end_date
           )
 
-          certificate_description_period.certificate_id = certificate.certificate_id
+          certificate_description_period.certificate_code = certificate.certificate_code
           certificate_description_period.certificate_type_code = certificate_type_code
 
           assign_system_ops!(certificate_description_period)
@@ -121,7 +121,7 @@ module WorkbasketInteractions
             description: description
           )
 
-          certificate_description.certificate_id = certificate.certificate_id
+          certificate_description.certificate_code = certificate.certificate_code
           certificate_description.certificate_type_code = certificate_type_code
 
           assign_system_ops!(certificate_description)
