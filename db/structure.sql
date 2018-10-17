@@ -672,7 +672,8 @@ CREATE TABLE bulk_edit_of_quotas_settings (
     batches_loaded jsonb DEFAULT '{}'::jsonb,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    quota_sid integer
+    quota_sid integer,
+    quota_settings_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -11897,3 +11898,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflo
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011092756_change_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_settings_to_edit_quota.rb');

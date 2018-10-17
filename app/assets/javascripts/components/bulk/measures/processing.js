@@ -41,7 +41,8 @@ window.BulkEditing.Measures.Processing = {
     }
 
     return {
-      measure_sid: measure.clone ? " " : measure.measure_sid,
+      measure_sid: measure.measure_sid,
+      sid: measure.clone ? " " : measure.measure_sid,
       regulation: measure.regulation.formatted_id,
       justification_regulation: measure.justification_regulation ? measure.justification_regulation.formatted_id : "-",
       measure_type_id: measure.measure_type.measure_type_id,
@@ -73,7 +74,7 @@ window.BulkEditing.Measures.Processing = {
       validity_start_date: measure.validity_start_date
     };
 
-    measure.validity_start_date = moment(window.all_settings.start_date, "DD/MM/YYYY", true).format("DD MMM YYYY");
+    measure.validity_start_date = moment(window.all_settings.start_date, ["DD/MM/YYYY", "DD MMM YYYY", "YYYY-MM-DD"], true).format("DD MMM YYYY");
     measure.changes.push("validity_start_date");
 
     if (window.all_settings.regulation) {
