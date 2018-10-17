@@ -9,5 +9,5 @@ fieldset
           | {{slotProps.error}}
 
       .bootstrap-row
-        .col-md-6
-          = f.input :description, label: false, input_html: { "v-model" => "certificate.description" }
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = f.input :description, as: :text, label: false, input_html: { "v-model" => "certificate.description", rows: 5 }

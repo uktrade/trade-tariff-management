@@ -17,6 +17,13 @@ module WorkbasketHelper
     end
   end
 
+  def create_certificate_section_header
+    case current_step
+    when "main"
+      "Create a new certificate"
+    end
+  end
+
   def create_quota_section_header
     case current_step
     when "main"

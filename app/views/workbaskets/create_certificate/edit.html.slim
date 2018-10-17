@@ -1,6 +1,5 @@
-.js-create-certificate-workbasket-page
-  = render "workbaskets/shared/edit_base", subheader: link_to("(find and edit existing ones instead)", serach_certificates_url)
+= render "workbaskets/shared/edit_base", subheader: link_to("(find and edit existing ones instead)", search_certificates_url)
 
 script
   == "window.__certificate_json = #{workbasket_settings.settings.to_json};"
-  == "window.__certificate_types_list_json = #{search_form.certificate_types_list.to_json};"
+  == "window.__certificate_types_list_json = #{form.certificate_types_list.to_json};"

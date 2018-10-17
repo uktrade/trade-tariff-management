@@ -13,6 +13,6 @@ fieldset
           | letters and/or numbers (for a group).
 
       .bootstrap-row
-        .col-lg-8.col-md-10.col-sm-12.col-xs-12
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
           = content_tag "custom-select", "", { ":options" => "certificate_types_list" , "allow-clear" => true, "code-field" => "certificate_type_id", "label-field" => "description", "value-field" => "certificate_type_id", "v-model" => "certificate.certificate_type_id", placeholder: "― select certificate type ―", "name" => "certificate[certificate_type_id]", "code-class-name" => "prefix--country" }
 

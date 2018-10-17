@@ -21,6 +21,8 @@ $(document).ready(function() {
         data.certificate = this.emptyCertificate();
       }
 
+      data.certificate_types_list = window.__certificate_types_list_json;
+
       return data;
     },
     mounted: function() {
