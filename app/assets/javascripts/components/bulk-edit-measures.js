@@ -64,7 +64,7 @@ $(document).ready(function() {
         pagination: {
           total_count: window.__pagination_metadata.total_count,
           page: window.__pagination_metadata.page,
-          per_page: 300,
+          per_page: window.__pagination_metadata.per_page,
           pages: Math.ceil(window.__pagination_metadata.total_count / window.__pagination_metadata.per_page)
         },
         sortBy: "measure_sid",
@@ -124,9 +124,9 @@ $(document).ready(function() {
       },
 
       visibleMeasuresPage: function() {
-        var offset = (this.currentPage - 1) * 25;
+        var offset = (this.currentPage - 1) * this.pagination.per_page;
 
-        return this.visibleMeasures.slice(offset, offset + 25);
+        return this.visibleMeasures.slice(offset, offset + this.pagination.per_page);
       },
       visibleCount: function() {
         return this.visibleMeasures.length;
