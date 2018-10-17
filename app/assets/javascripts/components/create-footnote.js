@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var form = document.querySelector(".js-create-footnote-workbasket-page");
+  var form = document.querySelector(".js-create-footnote-form");
 
   if (!form) {
     return;
@@ -20,6 +20,8 @@ $(document).ready(function() {
       } else {
         data.footnote = this.emptyFootnote();
       }
+
+      data.footnote_types_list = window.__footnote_types_list_json;
 
       return data;
     },

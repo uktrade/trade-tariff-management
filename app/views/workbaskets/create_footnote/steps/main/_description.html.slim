@@ -11,5 +11,5 @@ fieldset
           | This will be the name of the country or region, but for groups you should use something descriptive that will allow others to easily identify it.
 
       .bootstrap-row
-        .col-md-6
-          = f.input :description, label: false, input_html: { "v-model" => "footnote.description" }
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = f.input :description, as: :text, label: false, input_html: { "v-model" => "footnote.description", rows: 5 }
