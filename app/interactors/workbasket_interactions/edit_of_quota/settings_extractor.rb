@@ -66,19 +66,21 @@ module WorkbasketInteractions
 
       def extract_duty_expressions(period)
         measure = Measure.where(ordernumber: period.quota_order_number_id, validity_start_date: period.validity_start_date).first
-        measure.measure_components.map.with_index do |component, index|
-          {
-              "#{index}": {
-                  'amount': '',
-                  'duty_amount': component.duty_amount.to_s,
-                  'duty_expression_id': component.duty_expression_id,
-                  'original_duty_expression_id': "#{component.duty_expression_id}#{component.monetary_unit_code.present? ? 'B' : 'A'}",
-                  'monetary_unit_code': component.monetary_unit_code,
-                  'measurement_unit_code': component.measurement_unit_code,
-                  'measurement_unit_qualifier_code': component.measurement_unit_qualifier_code
-              }
-          }
-        end.reduce(:merge)
+        if measure.present?
+          measure.measure_components.map.with_index do |component, index|
+            {
+                "#{index}": {
+                    'amount': '',
+                    'duty_amount': component.duty_amount.to_s,
+                    'duty_expression_id': component.duty_expression_id,
+                    'original_duty_expression_id': "#{component.duty_expression_id}#{component.monetary_unit_code.present? ? 'B' : 'A'}",
+                    'monetary_unit_code': component.monetary_unit_code,
+                    'measurement_unit_code': component.measurement_unit_code,
+                    'measurement_unit_qualifier_code': component.measurement_unit_qualifier_code
+                }
+            }
+          end.reduce(:merge)
+        end
       end
 
       def extract_excluded_geographical_area_ids

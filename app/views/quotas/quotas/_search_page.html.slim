@@ -34,6 +34,13 @@ script
       a href="#"
         | Withdraw request...
 
+  - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'stop_quota'
+    p
+      | A stop quota has been requested for quota#{(' ' + previous_workbasket.settings.quota_definition.quota_order_number_id) if previous_workbasket.settings.quota_definition.present?},&nbsp;
+      | with workbasket name '#{previous_workbasket.title}'.&nbsp;
+      a href="#"
+        | Withdraw request...
+
   - if quotas_search.present?
     div v-if="!isLoading"
       = simple_form_for :search, url: quotas_bulks_url(ops), method: :post do |f|

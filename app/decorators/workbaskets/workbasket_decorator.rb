@@ -14,7 +14,7 @@ module Workbaskets
       when "create_additional_code"
         "Create Additional Codes"
       when "bulk_edit_of_quotas"
-        "Edit of Quota"
+        "Edit of Quota" + (object.settings.workbasket_action.present? ? " (#{object.settings.workbasket_action.gsub('_', ' ')})" : '')
       end
     end
 

@@ -11,6 +11,7 @@ module Workbaskets
         QuotaOrderNumberOriginExclusion
         QuotaDefinition
         QuotaSuspensionPeriod
+        QuotaUnsuspensionEvent
         Measure
         Footnote
         FootnoteDescription
@@ -21,6 +22,10 @@ module Workbaskets
         MeasureConditionComponent
         MeasureExcludedGeographicalArea
       )
+    end
+
+    def settings
+      JSON.parse(main_step_settings_jsonb)
     end
 
     def quota_settings
