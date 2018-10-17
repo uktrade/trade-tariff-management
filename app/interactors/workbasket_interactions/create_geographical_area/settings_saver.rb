@@ -8,6 +8,7 @@ module WorkbasketInteractions
         geographical_code
         geographical_area_id
         parent_geographical_area_group_id
+        parent_geographical_area_group_sid
         description
         validity_start_date
         validity_end_date
@@ -97,7 +98,7 @@ module WorkbasketInteractions
           )
 
           if parent_geographical_area_group_id.present?
-            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_sid
+            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
           end
 
           assign_system_ops!(geographical_area)

@@ -201,6 +201,13 @@ module WorkbasketHelper
             search_code: workbasket.settings.search_code
         )
       end
+
+    when :create_geographical_area
+      edit_create_geographical_area_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
@@ -220,6 +227,8 @@ module WorkbasketHelper
       additional_codes_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
     when :bulk_edit_of_quotas
       quotas_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
+    when :create_geographical_area
+      create_geographical_area_url(workbasket.id)
     end
   end
 end
