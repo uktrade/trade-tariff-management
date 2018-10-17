@@ -3,7 +3,7 @@ module WorkbasketInteractions
     class InitialValidator
 
       ALLOWED_OPS = %w(
-        certificate_type_id
+        certificate_type_code
         certificate_code
         description
         validity_start_date
@@ -32,7 +32,7 @@ module WorkbasketInteractions
       end
 
       def fetch_errors
-        check_certificate_type_id!
+        check_certificate_type_code!
         certificate_code!
         check_description!
         check_validity_period!
@@ -43,9 +43,9 @@ module WorkbasketInteractions
 
       private
 
-        def check_certificate_type_id!
-          if certificate_type_id.blank?
-            @errors[:certificate_type_id] = errors_translator(:certificate_type_id_blank)
+        def check_certificate_type_code!
+          if certificate_type_code.blank?
+            @errors[:certificate_type_code] = errors_translator(:certificate_type_code_blank)
           end
         end
 

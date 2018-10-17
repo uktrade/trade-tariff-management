@@ -14,7 +14,7 @@ module WorkbasketValueObjects
 
       def main_step_settings
         %w(
-          certificate_type_id
+          certificate_type_code
           certificate_code
           description
           operation_date

@@ -5,7 +5,7 @@ module WorkbasketForms
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
-    attr_accessor :certificate_type_id,
+    attr_accessor :certificate_type_code,
                   :certificate_code,
                   :description,
                   :operation_date,

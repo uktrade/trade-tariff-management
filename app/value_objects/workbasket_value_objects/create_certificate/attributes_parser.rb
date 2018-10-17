@@ -3,7 +3,7 @@ module WorkbasketValueObjects
     class AttributesParser
 
       SIMPLE_OPS = %w(
-        certificate_type_id
+        certificate_type_code
         certificate_code
         description
       )

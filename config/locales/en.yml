@@ -73,7 +73,7 @@ en:
       operation_date_blank: "Operation date must be specified."
 
   create_certificate:
-    certificate_type_id_blank: "Certificate type must be specified."
+    certificate_type_code_blank: "Certificate type must be specified."
     certificate_code_blank: "Certificate code must be specified."
     certificate_code_in_use: "Certificate code is already in use for the selected certificate type."
     certificate_code_max_limit: "Certificate code cant not be more than three characters long"

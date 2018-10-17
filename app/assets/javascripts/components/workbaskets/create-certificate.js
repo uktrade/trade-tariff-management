@@ -87,7 +87,7 @@ $(document).ready(function() {
     methods: {
       parseCertificatePayload: function(payload) {
         return {
-          certificate_type_id: payload.certificate_type_id,
+          certificate_type_code: payload.certificate_type_code,
           certificate_code: payload.certificate_code,
           description: payload.description,
           validity_start_date: payload.validity_start_date,
@@ -97,7 +97,7 @@ $(document).ready(function() {
       },
       emptyCertificate: function() {
         return {
-          certificate_type_id: null,
+          certificate_type_code: null,
           certificate_code: null,
           description: null,
           validity_start_date: null,
@@ -107,7 +107,7 @@ $(document).ready(function() {
       },
       createCertificateMainStepPayLoad: function() {
         return {
-          certificate_type_id: this.certificate.certificate_type_id,
+          certificate_type_code: this.certificate.certificate_type_code,
           certificate_code: this.certificate.certificate_code,
           description: this.certificate.description,
           validity_start_date: this.certificate.validity_start_date,
