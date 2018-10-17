@@ -119,7 +119,7 @@ module Quotas
     WORKBASKET_ACTION_SAVER = {
         'edit_quota' => '::',
         'edit_quota_measures' => '::Measures::BulkSaver',
-        'remove_suspension' => '::Quotas::UnSuspendSaver',
+        'remove_suspension' => '::Quotas::RemoveSuspensionSaver',
         'stop_quota' => '::Quotas::StopSaver',
         'suspend_quota' => '::Quotas::SuspendSaver'
     }
