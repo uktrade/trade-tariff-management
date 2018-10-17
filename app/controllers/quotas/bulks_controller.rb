@@ -17,7 +17,8 @@ module Quotas
         regulation_id: params[:regulation_id],
         regulation_role: params[:regulation_role],
         reason: params[:reason],
-        title: params[:workbasket_name]
+        title: params[:workbasket_name],
+        suspension_date: params[:suspension_date]
       }
     end
 
@@ -91,15 +92,43 @@ module Quotas
       }
     end
 
-    expose(:bulk_measures_collection) do
+    expose(:edit_quota_ops) do
+      ops = params[:settings]
+      ops.send("permitted=", true) if ops.present?
+      ops = (ops || {}).to_h
+
+      ops
+    end
+
+    expose(:edit_quota_measures_ops) do
       JSON.parse(request.body.read)["bulk_measures_collection"]
     end
 
+    expose(:remove_suspension_ops) do
+      {}
+    end
+
+    expose(:stop_quota_ops) do
+      {}
+    end
+
+    expose(:suspend_quota_ops) do
+      {}
+    end
+
+    WORKBASKET_ACTION_SAVER = {
+        'edit_quota' => '::',
+        'edit_quota_measures' => '::Measures::BulkSaver',
+        'remove_suspension' => '::Quotas::UnSuspendSaver',
+        'stop_quota' => '::Quotas::StopSaver',
+        'suspend_quota' => '::Quotas::SuspendSaver'
+    }
+
     expose(:bulk_saver) do
-      ::Quotas::BulkSaver.new(
+      WORKBASKET_ACTION_SAVER[workbasket_settings.workbasket_action].constantize.new(
           current_user,
           workbasket,
-          bulk_measures_collection
+          send("#{workbasket_settings.workbasket_action}_ops")
       )
     end
 
@@ -149,7 +178,18 @@ module Quotas
       workbasket_settings.set_settings_for!("main", main_step_settings)
       workbasket_settings.set_workbasket_system_data!
 
-      redirect_to edit_url
+      if workbasket_settings.editable_workbasket?
+        redirect_to edit_url
+      else
+        if bulk_saver.valid?
+          bulk_saver.persist!
+
+          redirect_to quotas_url(
+                          search_code: workbasket_settings.initial_search_results_code,
+                          previous_workbasket_id: workbasket.id
+                      )
+        end
+      end
     end
 
     def update

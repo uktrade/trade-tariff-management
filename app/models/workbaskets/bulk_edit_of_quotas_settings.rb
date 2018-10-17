@@ -10,6 +10,7 @@ module Workbaskets
         QuotaOrderNumberOrigin
         QuotaOrderNumberOriginExclusion
         QuotaDefinition
+        QuotaSuspensionPeriod
         Measure
         Footnote
         FootnoteDescription
@@ -35,6 +36,10 @@ module Workbaskets
 
     def workbasket_action
       main_step_settings['workbasket_action'] if main_step_settings.present?
+    end
+
+    def editable_workbasket?
+      workbasket_action.in?(%w(edit_quota edit_quota_measures))
     end
 
     def quota_definition

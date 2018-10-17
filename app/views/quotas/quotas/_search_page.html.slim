@@ -18,6 +18,15 @@ script
   - ops = {}
   - ops[:search_code] = params[:search_code] if params[:search_code].present?
 
+  - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'suspend_quota'
+    p
+      | You have requested that quota #{previous_workbasket.settings.quota_definition.quota_order_number_id},&nbsp;
+      | with workbasket name '#{previous_workbasket.title}', be suspended from #{previous_workbasket.operation_date.strftime('%d %b %Y')}
+      | #{((' to ' + previous_workbasket.settings.main_step_settings['suspension_date']) if previous_workbasket.settings.main_step_settings['suspension_date'].present?)}
+      | .&nbsp;
+      a href="#"
+        | Withdraw request...
+
   - if quotas_search.present?
     div v-if="!isLoading"
       = simple_form_for :search, url: quotas_bulks_url(ops), method: :post do |f|
