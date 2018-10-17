@@ -22,7 +22,7 @@ module Workbaskets
     end
 
     expose(:form) do
-      Workbaskets::CreateCertificateForm.new
+      WorkbasketForms::CreateCertificateForm.new
     end
 
     expose(:certificate) do

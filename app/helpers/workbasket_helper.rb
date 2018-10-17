@@ -179,6 +179,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :create_certificate
+      edit_create_certificate_url(
+        workbasket.id,
+        step: :main
+      )
+
     when :bulk_edit_of_additional_codes
 
       if workbasket.settings.settings["title"].blank?

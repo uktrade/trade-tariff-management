@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module WorkbasketFroms
+module WorkbasketForms
   class CreateCertificateForm
     extend ActiveModel::Naming
     include ActiveModel::Conversion

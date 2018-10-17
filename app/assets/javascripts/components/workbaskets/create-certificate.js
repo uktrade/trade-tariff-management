@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var form = document.querySelector(".js-create-certificate-workbasket-page");
+  var form = document.querySelector(".js-create-certificate-form");
 
   if (!form) {
     return;
