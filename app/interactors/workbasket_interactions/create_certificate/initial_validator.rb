@@ -43,24 +43,27 @@ module WorkbasketInteractions
         check_description!
         check_validity_period!
         check_operation_date!
-
-        if !minimal_required_fields_present?
-          @errors_summary = errors_translator(:summary_minimal_required_fields)
-        end
-
-        if @errors_summary.blank? && VALIDITY_PERIOD_ERRORS_KEYS.any? { |error_key| errors.has_key?(error_key) }
-          @errors_summary = errors_translator(:summary_invalid_validity_period)
-        end
+        handle_errors_summary
 
         errors
       end
 
       private
 
+        def handle_errors_summary
+          if !minimal_required_fields_present?
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
+          end
+
+          if @errors_summary.blank? && VALIDITY_PERIOD_ERRORS_KEYS.any? { |error_key| errors.has_key?(error_key) }
+            @errors_summary = errors_translator(:summary_invalid_validity_period)
+          end
+        end
+
         def minimal_required_fields_present?
           certificate_type_code.present?
             certificate_code.present? &&
-            (description.present? && !(description.present? && description.squish.split.size.zero?)) &&
+            (description.present? && !description.squish.split.size.zero?) &&
             start_date.present? &&
             operation_date.present?
         end
