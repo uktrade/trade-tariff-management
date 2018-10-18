@@ -41,14 +41,40 @@ module WorkbasketInteractions
             'balance': '',
             'measurement_unit_id': '',
             'measurement_unit_qualifier_id': '',
-            'periods': extract_period_values
+            'periods': extract_period_settings,
+            'parent_quota': extract_parent_quota_settings
         }
       end
 
-      def extract_period_values
+      def extract_parent_quota_settings
+        quota_association = QuotaAssociation.where(sub_quota_definition_sid: quota_definition.quota_definition_sid, relation_type: 'NM')
+        if quota_association.present?
+          parent_quota_order_number = QuotaDefinition.find(quota_definition_sid: quota_association.main_quota_definition_sid).quota_order_number_id
+          balance_settings = QuotaDefinition.where(quota_order_number_id: parent_quota_order_number).order(:validity_start_date).
+              map.with_index do |period, index|
+            {
+                "#{index}": {
+                    'balance': period.initial_volume.to_s
+                }
+            }
+          end.reduce(:merge)
+          {
+              'associate': 'true',
+              'order_number': parent_quota_order_number,
+              'balances': balance_settings
+          }
+        else
+          {
+              'associate': 'false'
+          }
+        end
+      end
+
+      def extract_period_settings
         quota_definitions.map.with_index do |period, index|
           {
               "#{index}": {
+                  'quota_definition_sid': period.quota_definition_sid,
                   'balance': period.initial_volume.to_s,
                   'critical': (period.critical_state == 'Y').to_s,
                   'end_date': period.validity_end_date.strftime('%Y-%m-%d'),
