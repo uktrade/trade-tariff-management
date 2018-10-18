@@ -32,15 +32,15 @@ module Quotas
         else
           #delete all in future
           definition.measures.each do |measure|
-            # ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            #     measure, system_ops
-            # ).assign!
-            measure.delete
+            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+                measure, system_ops.merge(operation: "D")
+            ).assign!(false)
+            measure.destroy
           end
-          # ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-          #     definition, system_ops
-          # ).assign!
-          definition.delete
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+              definition, system_ops.merge(operation: "D")
+          ).assign!(false)
+          definition.destroy
         end
       end
       workbasket.move_status_to!(current_admin, :awaiting_cross_check)

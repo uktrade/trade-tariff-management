@@ -10,11 +10,11 @@ module WorkbasketValueObjects
         @ops = ops
       end
 
-      def assign!
+      def assign!(manual_add = true)
         operation = ops[:operation] || "C"
 
         record.operation = operation
-        record.manual_add = true if operation == "C"
+        record.manual_add = manual_add
         record.status = ops[:status] || "new_in_progress"
 
         record.workbasket_id = ops[:workbasket_id]
