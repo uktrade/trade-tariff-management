@@ -38,7 +38,7 @@ module WorkbasketInteractions
       def fetch_errors
         check_footnote_type_id!
         check_description!
-        #check_validity_period!
+        check_validity_period!
         check_operation_date!
 
         errors
