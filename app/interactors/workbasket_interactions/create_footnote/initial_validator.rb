@@ -69,15 +69,13 @@ module WorkbasketInteractions
         end
 
         def check_validity_period!
-          if errors.has_key?(:validity_start_date)
-            if start_date.present?
-              if end_date.present? && start_date > end_date
-                @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
-              end
-
-            elsif @errors[:validity_start_date].blank?
-              @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
+          if start_date.present?
+            if end_date.present? && start_date > end_date
+              @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
             end
+
+          elsif @errors[:validity_start_date].blank?
+            @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
           end
 
           if start_date.present? &&
