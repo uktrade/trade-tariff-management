@@ -51,7 +51,7 @@ module WorkbasketInteractions
 
       def valid?
         validate!
-        @errors.blank?
+        errors.blank? && conformance_errors.blank?
       end
 
       def persist!
@@ -96,18 +96,18 @@ module WorkbasketInteractions
         end
 
         def parse_and_format_conformance_rules
-          @conformance_errors = []
+          @conformance_errors = {}
 
           unless footnote.conformant?
-            @conformance_errors << formatter_class.new(footnote).errors
+            @conformance_errors.merge!(get_conformance_errors(footnote))
           end
 
           unless footnote_description_period.conformant?
-            @conformance_errors << formatter_class.new(footnote_description_period).errors
+            @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
           end
 
           unless footnote_description.conformant?
-            @conformance_errors << formatter_class.new(footnote_description).errors
+            @conformance_errors.merge!(get_conformance_errors(footnote_description))
           end
 
           if conformance_errors.present?
@@ -170,8 +170,24 @@ module WorkbasketInteractions
           )
         end
 
-        def formatter_class
-          ::WorkbasketValueObjects::Shared::ConformanceErrorsFormatter
+        def get_conformance_errors(record)
+          res = {}
+
+          record.conformance_errors.map do |k, v|
+            message = if v.is_a?(Array)
+              v.flatten.join(' ')
+            else
+              v
+            end
+
+            res[k.to_s] = "<strong class='workbasket-conformance-error-code'>#{k.to_s}</strong>: #{message}".html_safe
+          end
+
+          res
+        end
+
+        def validator_class(record)
+          "#{record.class.name}Validator".constantize
         end
     end
   end

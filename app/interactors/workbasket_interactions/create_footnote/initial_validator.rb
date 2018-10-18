@@ -22,12 +22,11 @@ module WorkbasketInteractions
                     :end_date
 
       def initialize(settings)
+        @errors = {}
         @settings = settings
 
         @start_date = parse_date(:validity_start_date)
         @end_date = parse_date(:validity_end_date)
-
-        @errors = {}
       end
 
       ALLOWED_OPS.map do |option_name|
@@ -39,10 +38,14 @@ module WorkbasketInteractions
       def fetch_errors
         check_footnote_type_id!
         check_description!
-        check_validity_period!
+        #check_validity_period!
         check_operation_date!
 
         errors
+      end
+
+      def errors_translator(key)
+        I18n.t(:create_footnote)[key]
       end
 
       private
@@ -66,7 +69,7 @@ module WorkbasketInteractions
         end
 
         def check_validity_period!
-          if @errors[:validity_start_date].blank?
+          if errors.has_key?(:validity_start_date)
             if start_date.present?
               if end_date.present? && start_date > end_date
                 @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
@@ -98,19 +101,13 @@ module WorkbasketInteractions
           end
         end
 
-        def errors_translator(key)
-          I18n.t(:create_footnote)[key]
-        end
-
         def parse_date(option_name)
           date_in_string = public_send(option_name)
-          date_in_string.blank? rescue nil
 
           begin
-            @errors = {} if @errors.nil?
             Date.strptime(date_in_string, "%d/%m/%Y")
           rescue Exception => e
-            if public_send(option_name).present?
+            if date_in_string.present?
               @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
             end
 
