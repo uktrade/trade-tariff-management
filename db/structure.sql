@@ -1572,6 +1572,39 @@ ALTER SEQUENCE public.create_additional_code_workbasket_settings_id_seq OWNED BY
 
 
 --
+-- Name: create_footnotes_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_footnotes_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_footnotes_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_footnotes_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_footnotes_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_footnotes_workbasket_settings_id_seq OWNED BY public.create_footnotes_workbasket_settings.id;
+
+
+--
 -- Name: create_geographical_area_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7935,6 +7968,13 @@ ALTER TABLE ONLY public.create_additional_code_workbasket_settings ALTER COLUMN 
 
 
 --
+-- Name: create_footnotes_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_footnotes_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_footnotes_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: create_geographical_area_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8829,6 +8869,14 @@ ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
 
 ALTER TABLE ONLY public.create_additional_code_workbasket_settings
     ADD CONSTRAINT create_additional_code_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_footnotes_workbasket_settings create_footnotes_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_footnotes_workbasket_settings
+    ADD CONSTRAINT create_footnotes_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12214,3 +12262,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnot
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181016175408_add_workbasket_related_columns_to_geo_areas_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017095105_create_create_footnotes_settings.rb');

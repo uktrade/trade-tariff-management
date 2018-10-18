@@ -33,11 +33,5 @@ module WorkbasketHelpers
         extra_increment_value
       ).assign!
     end
-
-    def setup_attrs_parser!
-      @attrs_parser = ::WorkbasketValueObjects::CreateGeographicalArea::AttributesParser.new(
-        settings_params
-      )
-    end
   end
 end

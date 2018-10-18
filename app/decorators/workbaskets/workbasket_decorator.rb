@@ -19,6 +19,8 @@ module Workbaskets
         "Edit of Quota"
       when "create_geographical_area"
         "Create Geographical Area"
+      when "create_footnote"
+        "Create Footnote"
       end
     end
 
