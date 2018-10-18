@@ -65,7 +65,9 @@ module Workbaskets
     def get_item_by_id(target_id)
       workbasket.items.detect do |i|
         i.record_id.to_s == target_id
-      end
+      end || ::Workbaskets::Item.create_from_target_record(
+          workbasket, Measure.new
+      )
     end
 
   end

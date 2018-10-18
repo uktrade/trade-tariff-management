@@ -15,18 +15,11 @@ module Workbaskets
     validates do
       presence_of :status,
                   :workbasket_id,
-                  :record_id,
                   :record_key,
                   :record_type
 
       inclusion_of :status, in: STATES.map(&:to_s)
 
-      uniqueness_of [
-        :workbasket_id,
-        :record_id,
-        :record_key,
-        :record_type
-      ]
     end
 
     dataset_module do
@@ -86,7 +79,7 @@ module Workbaskets
     def record
       record_type.constantize
                  .where(record_key.to_sym => record_id)
-                 .first
+                 .first if record_id
     end
 
     def error_details(errored_column)
