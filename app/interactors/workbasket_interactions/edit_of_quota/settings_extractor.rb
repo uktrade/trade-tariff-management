@@ -30,8 +30,25 @@ module WorkbasketInteractions
             'start_date': quota_order_number.validity_start_date.strftime('%Y-%m-%d'),
             'geographical_area_id': extract_geographical_area_ids,
             'excluded_geographical_areas': extract_excluded_geographical_area_ids,
-            'quota_periods': extract_quota_periods_settings
+            'quota_periods': extract_quota_periods_settings,
+            'sub_quotas': extract_sub_quotas_settings,
+            'footnotes': quota_definition.measure.present? ? quota_definition.measure.to_json[:footnotes] : [],
+            'conditions': quota_definition.measure.present? ? quota_definition.measure.to_json[:measure_conditions] : []
         }
+      end
+
+      def extract_sub_quotas_settings
+        quota_associations = QuotaAssociation.where(main_quota_definition_sid: quota_definition.quota_definition_sid, relation_type: 'EQ')
+        quota_associations.map.with_index do |association, index|
+          sub_quota = QuotaDefinition.find(quota_definition_sid: association.sub_quota_definition_sid)
+          {
+              "#{index}": {
+                  'coefficient': association.coefficient,
+                  'order_number': sub_quota.quota_order_number_id,
+                  'commodity_codes': sub_quota.goods_nomenclature_item_ids.join('\r\n')
+              }
+          }
+        end.reduce(:merge)
       end
 
       def extract_quota_periods_settings
@@ -47,7 +64,7 @@ module WorkbasketInteractions
       end
 
       def extract_parent_quota_settings
-        quota_association = QuotaAssociation.where(sub_quota_definition_sid: quota_definition.quota_definition_sid, relation_type: 'NM')
+        quota_association = QuotaAssociation.where(sub_quota_definition_sid: quota_definition.quota_definition_sid, relation_type: 'NM').first
         if quota_association.present?
           parent_quota_order_number = QuotaDefinition.find(quota_definition_sid: quota_association.main_quota_definition_sid).quota_order_number_id
           balance_settings = QuotaDefinition.where(quota_order_number_id: parent_quota_order_number).order(:validity_start_date).
@@ -95,15 +112,7 @@ module WorkbasketInteractions
         if measure.present?
           measure.measure_components.map.with_index do |component, index|
             {
-                "#{index}": {
-                    'amount': '',
-                    'duty_amount': component.duty_amount.to_s,
-                    'duty_expression_id': component.duty_expression_id,
-                    'original_duty_expression_id': "#{component.duty_expression_id}#{component.monetary_unit_code.present? ? 'B' : 'A'}",
-                    'monetary_unit_code': component.monetary_unit_code,
-                    'measurement_unit_code': component.measurement_unit_code,
-                    'measurement_unit_qualifier_code': component.measurement_unit_qualifier_code
-                }
+                "#{index}": component.to_json
             }
           end.reduce(:merge)
         end
