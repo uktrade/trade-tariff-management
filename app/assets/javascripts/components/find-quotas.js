@@ -366,8 +366,10 @@ $(document).ready(function() {
         var self = this;
 
         this.isLoading = true;
+        var search = window.location.search;
+        var url = window.location.href.replace(search, "") + ".json" + search;
 
-        $.get(window.location.href).success(function(data) {
+        $.get(url).success(function(data) {
           self.quotas = data.collection;
           self.isLoading = false;
 
