@@ -84,6 +84,9 @@ en:
     validity_end_date_wrong_format: "Valid until date is optional, but if specified must be a complete date - day, month, and year must be specified."
     validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
     operation_date_blank: "Operation date must be specified."
+    summary_minimal_required_fields: "The certificate could not be submitted because one or more required fields are missing."
+    summary_invalid_validity_period: "The certificate could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The certificate not be submitted because there are conformance errors."
 
   find_geographical_areas:
     start_date_invalid: Start date is invalid.

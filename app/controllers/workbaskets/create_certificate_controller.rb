@@ -50,7 +50,9 @@ module Workbaskets
 
         render json: {
           step: current_step,
-          errors: saver.errors
+          errors_summary: saver.errors_summary,
+          errors: saver.errors,
+          conformance_errors: saver.conformance_errors
         }, status: :unprocessable_entity
       end
     end

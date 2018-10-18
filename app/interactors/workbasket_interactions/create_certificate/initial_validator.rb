@@ -11,8 +11,14 @@ module WorkbasketInteractions
         operation_date
       )
 
+      VALIDITY_PERIOD_ERRORS_KEYS = [
+        :validity_start_date,
+        :validity_end_date
+      ]
+
       attr_accessor :settings,
                     :errors,
+                    :errors_summary,
                     :start_date,
                     :end_date
 
@@ -38,10 +44,26 @@ module WorkbasketInteractions
         check_validity_period!
         check_operation_date!
 
+        if !minimal_required_fields_present?
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
+        end
+
+        if @errors_summary.blank? && VALIDITY_PERIOD_ERRORS_KEYS.any? { |error_key| errors.has_key?(error_key) }
+          @errors_summary = errors_translator(:summary_invalid_validity_period)
+        end
+
         errors
       end
 
       private
+
+        def minimal_required_fields_present?
+          certificate_type_code.present?
+            certificate_code.present? &&
+            (description.present? && !(description.present? && description.squish.split.size.zero?)) &&
+            start_date.present? &&
+            operation_date.present?
+        end
 
         def check_certificate_type_code!
           if certificate_type_code.blank?
@@ -56,11 +78,7 @@ module WorkbasketInteractions
         end
 
         def check_description!
-          if description.blank? || (
-              description.present? &&
-              description.squish.split.size.zero?
-            )
-
+          if description.blank? || ( description.present? && description.squish.split.size.zero?)
             @errors[:description] = errors_translator(:description_blank)
           end
         end
@@ -70,15 +88,10 @@ module WorkbasketInteractions
             if end_date.present? && start_date > end_date
               @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
             end
-
-          elsif @errors[:validity_start_date].blank?
+          elsif
             @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
           end
-
-          if start_date.present? &&
-             end_date.present? &&
-             end_date < start_date
-
+          if start_date.present? && end_date.present? && end_date < start_date
             @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
           end
         end
