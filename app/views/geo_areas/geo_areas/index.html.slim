@@ -22,7 +22,8 @@ header
 
   - if params[:search].present?
     - if search_results.present?
-      = paginate search_results
+      .js-workbasket-find-geo-areas-results-pagination-block
+        = render "geo_areas/geo_areas/search/pagination"
     - else
       = render "geo_areas/geo_areas/search/nothing_found_block"
 
