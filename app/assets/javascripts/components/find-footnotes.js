@@ -58,9 +58,7 @@ $(document).ready(function() {
         DatepickerRangeMonkeyPatch.fix();
       });
 
-      $(document).on('click', ".pagination-link", function(e) {
-        WorkbasketSubmitSpinnerSupport.showSpinnerAndLockSubmissionButtons($(this));
-      });
+      WorkbasketSearchResultsPaginationHelper.init();
     },
     computed: {
       hasErrors: function() {

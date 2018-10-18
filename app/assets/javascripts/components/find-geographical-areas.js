@@ -24,12 +24,15 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
+      if (window.__search_geo_areas_no_search_mode !== undefined) {
+        $("input[type='checkbox']").click();
+      }
+
       $(document).on('click', ".js-validate-geographical-areas-search-form", function(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        submit_button = $(this);
-        WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
+        WorkbasketSubmitSpinnerSupport.showSpinnerAndLockSubmissionButtons($(this));
 
         $.ajax({
           url: window.__validate_search_settings_url,
@@ -39,12 +42,11 @@ $(document).ready(function() {
           },
           success: function(response) {
             self.errors = [];
-            WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
 
             $(".js-search-geographical-areas-form").submit();
           },
           error: function(response) {
-            WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+            WorkbasketSubmitSpinnerSupport.hideSpinnerAndUnlockSubmissionButtons();
 
             if (response.status == 500) {
               alert("There was a server error which prevented the search to be performed. Please try again in a few moments.");
@@ -58,6 +60,8 @@ $(document).ready(function() {
 
         DatepickerRangeMonkeyPatch.fix();
       });
+
+      WorkbasketSearchResultsPaginationHelper.init();
     },
     computed: {
       hasErrors: function() {
