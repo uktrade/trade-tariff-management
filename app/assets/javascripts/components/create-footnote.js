@@ -69,8 +69,11 @@ $(document).ready(function() {
                 return;
               }
 
-              self.errorsSummary = "All bad guys!";
-              self.errors = response.responseJSON.errors;
+              json_resp = response.responseJSON;
+
+              self.errorsSummary = json_resp.errors_summary;
+              self.errors = json_resp.errors;
+              self.conformanceErrors = json_resp.conformance_errors;
             }
           });
         });

@@ -18,7 +18,10 @@ module WorkbasketInteractions
                     :workbasket,
                     :settings_params,
                     :errors,
+                    :conformance_errors,
+                    :errors_summary,
                     :attrs_parser,
+                    :initial_validator,
                     :footnote,
                     :footnote_description,
                     :footnote_description_period,
@@ -35,6 +38,8 @@ module WorkbasketInteractions
         clear_cached_sequence_number!
 
         @persist = true # For now it always true
+        @errors = {}
+        @conformance_errors = {}
       end
 
       def save!
@@ -72,9 +77,12 @@ module WorkbasketInteractions
         end
 
         def check_initial_validation_rules!
-          @errors = ::WorkbasketInteractions::CreateFootnote::InitialValidator.new(
+          @initial_validator = ::WorkbasketInteractions::CreateFootnote::InitialValidator.new(
             settings_params
-          ).fetch_errors
+          )
+
+          @errors = initial_validator.fetch_errors
+          @errors_summary = initial_validator.errors_summary
         end
 
         def check_conformance_rules!
@@ -82,6 +90,28 @@ module WorkbasketInteractions
             add_footnote!
             add_footnote_description_period!
             add_footnote_description!
+
+            parse_and_format_conformance_rules
+          end
+        end
+
+        def parse_and_format_conformance_rules
+          @conformance_errors = []
+
+          unless footnote.conformant?
+            @conformance_errors << formatter_class.new(footnote).errors
+          end
+
+          unless footnote_description_period.conformant?
+            @conformance_errors << formatter_class.new(footnote_description_period).errors
+          end
+
+          unless footnote_description.conformant?
+            @conformance_errors << formatter_class.new(footnote_description).errors
+          end
+
+          if conformance_errors.present?
+            @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
           end
         end
 
@@ -138,6 +168,10 @@ module WorkbasketInteractions
           @attrs_parser = ::WorkbasketValueObjects::CreateFootnote::AttributesParser.new(
             settings_params
           )
+        end
+
+        def formatter_class
+          ::WorkbasketValueObjects::Shared::ConformanceErrorsFormatter
         end
     end
   end

@@ -10,8 +10,14 @@ module WorkbasketInteractions
         operation_date
       )
 
+      VALIDITY_PERIOD_ERRORS_KEYS = [
+        :validity_start_date,
+        :validity_end_date
+      ]
+
       attr_accessor :settings,
                     :errors,
+                    :errors_summary,
                     :start_date,
                     :end_date
 
@@ -44,6 +50,7 @@ module WorkbasketInteractions
         def check_footnote_type_id!
           if footnote_type_id.blank?
             @errors[:footnote_type_id] = errors_translator(:footnote_type_id_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
 
@@ -54,17 +61,20 @@ module WorkbasketInteractions
             )
 
             @errors[:description] = errors_translator(:description_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
 
         def check_validity_period!
-          if start_date.present?
-            if end_date.present? && start_date > end_date
-              @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
-            end
+          if @errors[:validity_start_date].blank?
+            if start_date.present?
+              if end_date.present? && start_date > end_date
+                @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
+              end
 
-          elsif @errors[:validity_start_date].blank?
-            @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
+            elsif @errors[:validity_start_date].blank?
+              @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
+            end
           end
 
           if start_date.present? &&
@@ -72,6 +82,13 @@ module WorkbasketInteractions
              end_date < start_date
 
             @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
+          end
+
+          if VALIDITY_PERIOD_ERRORS_KEYS.any? do |error_key|
+              errors.has_key?(error_key)
+            end
+
+            @errors_summary = errors_translator(:summary_invalid_validity_period) if @errors_summary.blank?
           end
         end
 
@@ -90,6 +107,7 @@ module WorkbasketInteractions
           date_in_string.blank? rescue nil
 
           begin
+            @errors = {} if @errors.nil?
             Date.strptime(date_in_string, "%d/%m/%Y")
           rescue Exception => e
             if public_send(option_name).present?
