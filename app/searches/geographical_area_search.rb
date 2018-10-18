@@ -46,7 +46,7 @@ class GeographicalAreaSearch
   private
 
     def apply_q_filter
-      @relation = relation.q_search({ q: q })
+      @relation = relation.keywords_search(q)
     end
 
     def apply_code_filter

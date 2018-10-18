@@ -91,7 +91,9 @@ class GeographicalArea < Sequel::Model
 
     begin :search_functionality
       def default_order
-        order(Sequel.asc(:geographical_areas__geographical_area_id))
+        distinct(:geographical_areas__geographical_area_id).order(
+          Sequel.asc(:geographical_areas__geographical_area_id)
+        )
       end
 
       def by_code(code)
@@ -104,6 +106,17 @@ class GeographicalArea < Sequel::Model
 
       def before_or_equal(end_date)
         where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
+      end
+
+      def keywords_search(keywords)
+        join_table(:inner,
+          :geographical_area_descriptions,
+          geographical_area_id: :geographical_area_id,
+        ).where("
+          geographical_areas.geographical_area_id ilike ? OR
+          geographical_area_descriptions.description ilike ?",
+          "#{keywords}%", "%#{keywords}%"
+        )
       end
 
       def q_search(filter_ops={})
