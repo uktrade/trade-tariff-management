@@ -17,7 +17,7 @@ data/*.xml
 .env
 
 # Cloud Foundry manifest files
-*manifest.yml
+*_manifest.yml
 cf-ssh.yml
 
 # Other files
