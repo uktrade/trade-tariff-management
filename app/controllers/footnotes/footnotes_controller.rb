@@ -46,8 +46,11 @@ module Footnotes
     end
 
     def search
-      params[:sort_by] ||= "description"
-      params[:sort_dir] ||= "asc"
+      #
+      # We will back it later
+      #
+      # params[:sort_by] ||= "description"
+      # params[:sort_dir] ||= "asc"
     end
 
     def collection
