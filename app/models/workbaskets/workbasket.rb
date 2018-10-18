@@ -362,6 +362,7 @@ module Workbaskets
     end
 
     def move_status_to!(current_user, new_status, description=nil)
+      reload
       add_event!(current_user, new_status, description)
 
       self.status = new_status
