@@ -70,7 +70,9 @@ class GeographicalAreaSearchForm
   private
 
   def country_region_and_group_are_blank?
-    code_country.blank? && code_region.blank? && code_group.blank?
+    !option_present_and_turned_on?(:code_country) &&
+    !option_present_and_turned_on?(:code_group) &&
+    !option_present_and_turned_on?(:code_region)
   end
 
   def validate_start_date
@@ -105,5 +107,10 @@ class GeographicalAreaSearchForm
 
   def errors_translator(key)
     I18n.t(:find_geographical_areas)[key]
+  end
+
+  def option_present_and_turned_on?(name)
+    public_send(name).present? &&
+    ::GeographicalAreaSearch::ALLOWED_TYPES.include?(public_send(name).to_s)
   end
 end
