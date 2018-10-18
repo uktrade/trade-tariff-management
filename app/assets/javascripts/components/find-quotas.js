@@ -391,7 +391,7 @@ $(document).ready(function() {
 
         setTimeout(function() {
           $("html,body").animate({
-            scrollTop: $(".quotas-table-wrapper").offset().top - 200
+            scrollTop: $(".records-table").offset().top - 200
           });
         }, 200);
       },
