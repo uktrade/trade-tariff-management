@@ -20,7 +20,7 @@ module WorkbasketHelper
   def create_certificate_section_header
     case current_step
     when "main"
-      "Create a new certificate"
+      "Add certificate"
     end
   end
 
