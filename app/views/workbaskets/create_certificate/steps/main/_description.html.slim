@@ -1,0 +1,13 @@
+fieldset
+  h3.heading-medium
+    | What is the certificate description?
+
+  form-group.without_bottom_margin :errors="errors" error-key="description"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+
+      .bootstrap-row
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = f.input :description, as: :text, label: false, input_html: { "v-model" => "certificate.description", rows: 5 }

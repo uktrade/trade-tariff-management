@@ -72,6 +72,22 @@ en:
       validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
       operation_date_blank: "Operation date must be specified."
 
+  create_certificate:
+    certificate_type_code_blank: "Certificate type must be specified."
+    certificate_code_blank: "Certificate code must be specified."
+    certificate_code_in_use: "Certificate code is already in use for the selected certificate type."
+    certificate_code_max_limit: "Certificate code cant not be more than three characters long"
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Valid until date is optional, but if specified must be a complete date - day, month, and year must be specified."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    operation_date_blank: "Operation date must be specified."
+    summary_minimal_required_fields: "The certificate could not be submitted because one or more required fields are missing."
+    summary_invalid_validity_period: "The certificate could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The certificate not be submitted because there are conformance errors."
+
   find_geographical_areas:
     start_date_invalid: Start date is invalid.
     end_date_invalid: End date is invalid.

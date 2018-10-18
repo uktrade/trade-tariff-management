@@ -45,16 +45,16 @@
           = link_to "Find and edit certificates, licences, documents", search_certificates_url
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
-        a.disabled
-          | Create a certificate, licence, or document
+        - if Rails.env.production?
+          a.disabled
+            | Create a certificate, licence, or document
+        - else
+          = link_to "Create a certificate, licence, or document", new_create_certificate_url
+
   .bootstrap-row
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
-        - if Rails.env.production?
-          a.disabled
-            | Find and edit footnotes
-        - else
-          = link_to "Find and edit footnotes", search_footnotes_url
+        = link_to "Find and edit footnotes", search_footnotes_url
 
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
