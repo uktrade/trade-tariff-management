@@ -20,7 +20,7 @@ script
       | See individual fields for details.
 
   - if workbasket.submitted?
-    = render "workbaskets/create_additional_code/steps/main/details"
+    = render "workbaskets/create_geographical_area/steps/main/details"
 
   = render "workbaskets/create_geographical_area/steps/#{params[:step].to_s}", f: f
   = render "workbaskets/shared/success_message", f: f
