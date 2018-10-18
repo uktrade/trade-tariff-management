@@ -1,6 +1,7 @@
 class Certificate < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: [:certificate_code, :certificate_type_code]
   plugin :time_machine

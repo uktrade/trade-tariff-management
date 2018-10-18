@@ -24,6 +24,13 @@ module WorkbasketHelper
     end
   end
 
+  def create_certificate_section_header
+    case current_step
+    when "main"
+      "Add certificate"
+    end
+  end
+
   def create_quota_section_header
     case current_step
     when "main"
@@ -175,6 +182,12 @@ module WorkbasketHelper
 
     when :create_additional_code
       edit_create_additional_code_url(
+        workbasket.id,
+        step: :main
+      )
+
+    when :create_certificate
+      edit_create_certificate_url(
         workbasket.id,
         step: :main
       )
