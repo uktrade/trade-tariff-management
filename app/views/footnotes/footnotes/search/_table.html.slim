@@ -1,0 +1,39 @@
+table.table
+  colgroup
+    col width="180"
+    col width="80"
+    col width="*"
+    col width="120"
+    col width="200"
+    col width="200"
+
+    - if false
+      col width="1"
+
+  thead
+    tr
+      th
+        | Footnote type
+        / = sortable(:footnote_type_id, "Footnote type", { search: search_ops })
+      th
+        | ID
+        / = sortable(:footnote_id, "ID", { search: search_ops })
+      th
+        | Description
+        / = sortable(:description, "Description", { search: search_ops })
+      th
+        | Associations
+      th
+        | Start date
+        / = sortable(:validity_start_date, "Start date", { search: search_ops })
+      th
+        | End date
+        / = sortable(:validity_end_date, "End date", { search: search_ops })
+
+      - if false
+        th width="1"
+          | &nbsp;
+
+  tbody
+    - search_results.map do |item|
+      = render "footnotes/footnotes/search/item", item: item.decorate
