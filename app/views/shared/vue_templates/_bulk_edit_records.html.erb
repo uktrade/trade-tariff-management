@@ -4,7 +4,7 @@
 
     <records-grid :table-class="tableClass" :primary-key="primaryKey" :on-item-selected="onItemSelected" :on-item-deselected="onItemDeselected" :data="visibleRecordsPage" :columns="columns" :selected-rows="selectedRecords" v-if="!isLoading" selection-type="none" :client-selection="true" :select-all-has-changed="selectAllHasChanged" :disable-scroller="true" :sort-by-changed="onSortByChange" :sort-dir-changed="onSortDirChanged"></records-grid>
 
-    <table-pagination v-if="!isLoading" :page="currentPage" :total="visibleCount" :per-page="pagination.per_page" :on-click="onPageChange"></table-pagination>
+    <table-pagination v-if="!isLoading" :page="currentPage" :total="visibleCount" :per-page="25" :on-click="onPageChange"></table-pagination>
 
     <loading-indicator v-if="isLoading" :metadata="pagination">
       <h1 class="heading-xlarge" slot="title">

@@ -89,9 +89,9 @@ Vue.component("bulk-edit-records", {
     },
 
     visibleRecordsPage: function() {
-      var offset = (this.currentPage - 1) * this.pagination.per_page;
+      var offset = (this.currentPage - 1) * 25;
 
-      return this.visibleRecords.slice(offset, offset + this.pagination.per_page);
+      return this.visibleRecords.slice(offset, offset + 25);
     },
     visibleCount: function() {
       return this.visibleRecords.length;

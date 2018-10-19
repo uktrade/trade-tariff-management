@@ -71,8 +71,6 @@ window.BulkEditing.Measures.Processing = {
       return measure;
     }
 
-    console.log("HERE", measure)
-
     measure.row_id = makeRandomString();
 
     measure.original_values = {

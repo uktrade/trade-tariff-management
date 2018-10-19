@@ -8,7 +8,7 @@ window.BulkEditing.Measures.Actions = {
   duties: { value: 'change_duties', label: 'Change duties...' },
   conditions: { value: 'change_conditions', label: 'Change conditions...' },
   footnotes: { value: 'change_footnotes', label: 'Change footnotes...' },
-  remove: { value: 'remove_from_group', label: 'Remove from group...' },
+  remove: { value: 'remove_from_group', label: 'Remove from workbasket...' },
   clone: { value: 'clone_measures', label: 'Clone measures...' },
   delete: { value: 'delete', label: 'Delete/immediately end-date...' },
   forcedelete: { value: 'force_delete', label: 'Force delete...' },
