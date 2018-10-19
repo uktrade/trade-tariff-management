@@ -183,6 +183,10 @@ module Workbaskets
         reverse_order(:last_status_change_at)
       end
 
+      def default_filter
+        where("title IS NOT NULL AND title != ''")
+      end
+
       def custom_field_order(sort_by_field, sort_direction)
         if sort_direction.to_sym == :desc
           reverse_order(sort_by_field.to_sym)
