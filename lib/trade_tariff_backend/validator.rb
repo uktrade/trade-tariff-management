@@ -21,11 +21,13 @@ module TradeTariffBackend
         validation.operations.include?(record.operation)
       }.each { |validation|
         unless validation.valid?(record)
-          message = if validation.validation_options[:extend_message] == true
-                      [validation.to_s, validation.extend_error_message(record)].compact.join(" ")
-                    else
-                      validation.to_s
-                    end
+          message =  if validation.options[:extend_message].present?
+                       [validation.to_s, validation.options[:extend_message].call(record)].compact.join(" ")
+                     elsif validation.validation_options[:extend_message] == true
+                       [validation.to_s, validation.extend_error_message(record)].compact.join(" ")
+                     else
+                       validation.to_s
+                     end
 
           record.conformance_errors.add(validation.identifiers, message)
         end
