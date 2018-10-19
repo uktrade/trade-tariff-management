@@ -22,7 +22,8 @@ header
 
   - if params[:search].present?
     - if search_results.present?
-      = paginate search_results
+      .js-workbasket-find-certificates-results-pagination-block
+        = render "certificates/certificates/search/pagination"
     - else
       = render "certificates/certificates/search/nothing_found_block"
 
