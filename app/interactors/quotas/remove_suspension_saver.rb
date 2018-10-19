@@ -26,7 +26,7 @@ module Quotas
         suspension_period.save
 
         record = QuotaUnsuspensionEvent.new({
-                                               quota_definition_sid: workbasket_settings.quota_sid,
+                                               quota_definition_sid: workbasket_settings.initial_quota_sid,
                                                occurrence_timestamp: operation_date,
                                                unsuspension_date: operation_date
                                            })

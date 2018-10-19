@@ -147,7 +147,7 @@ module WorkbasketInteractions
           end
           GeographicalArea.where(geographical_area_sid: area_ids).map do |area|
             area.geographical_area_id
-          end
+          end.uniq
         else
           ['']
         end
@@ -159,7 +159,7 @@ module WorkbasketInteractions
         else
           quota_origins.map do |area|
             area.geographical_area_id
-          end
+          end.uniq
         end
       end
 

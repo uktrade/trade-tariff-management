@@ -17,7 +17,7 @@ module Quotas
 
     def persist!
       record = QuotaSuspensionPeriod.new({
-                                    quota_definition_sid: workbasket_settings.quota_sid,
+                                    quota_definition_sid: workbasket_settings.initial_quota_sid,
                                     suspension_start_date: operation_date,
                                     suspension_end_date: workbasket_settings.main_step_settings['suspension_date'].try(:to_date),
                                     description: workbasket_settings.main_step_settings['reason']

@@ -1,0 +1,69 @@
+<%= render "shared/breadcrumbs" do %>
+  <div class="breadcrumbs">
+    <ol>
+      <li>
+        <%= link_to "Main menu", root_url %>
+      </li>
+      <li>
+        <%= link_to "Find a quota", quotas_url %>
+      </li>
+      <li>
+        <%= link_to "Search results", quotas_url(search_code: workbasket_settings.initial_search_results_code) %>
+      </li>
+    </ol>
+  </div>
+<% end %>
+
+<div class="work-with-selected-quota">
+  <%= form_tag({}, { method: :post }) do %>
+    <h1 class="heading-xlarge">
+      Clone selected quota
+    </h1>
+
+    <div class="error-summary" role="alert" aria-labelledby="work-with-selected-quota-error-heading" tabindex="-1" v-cloak="" v-if="hasErrors">
+
+      <h2 class="heading-medium error-summary-heading" id="work-with-selected-quota-error-heading">
+        Error
+      </h2>
+
+      <p>
+        {{errorsSummary}}
+      </p>
+
+      <p>
+        See individual fields for details.
+      </p>
+    </div>
+
+    <form-group :errors="errors" error-key="workbasket_name">
+      <template slot-scope="slotProps">
+        <label for="workbasket_name" class="form-label">
+          What is the name of this workbasket?
+          <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+            {{slotProps.error}}
+          </span>
+
+          <span class="form-hint">
+            This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
+          </span>
+        </label>
+        <div class="row">
+          <div class="col-md-9 col-lg-7">
+            <input type="text" name="workbasket_name" class="form-control" v-model="workbasket_name">
+          </div>
+        </div>
+      </template>
+    </form-group>
+
+    <br>
+
+    <div class="form-group" v-cloak>
+      <button type="submit" class="button">
+        {{buttonText}}
+      </button>
+      <a href="/app/assets/stylesheets" class="secondary-button">
+        Cancel
+      </a>
+    </div>
+  <% end %>
+</div>

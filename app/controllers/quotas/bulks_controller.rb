@@ -149,6 +149,14 @@ module Quotas
     end
 
     def create
+      if params[:clone].present?
+        handle_clone_quota_request
+      else
+        handle_edit_quota_request
+      end
+    end
+
+    def handle_edit_quota_request
       self.workbasket = Workbaskets::Workbasket.new(
           status: :new_in_progress,
           type: :bulk_edit_of_quotas,
@@ -157,11 +165,13 @@ module Quotas
 
       if workbasket.save
         quota_sid = params[:quota_sids].first
-        quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(quota_sid).settings
+        quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(quota_sid)
         workbasket_settings.update(
             initial_search_results_code: params[:search_code],
-            quota_sid: quota_sid,
-            quota_settings_jsonb: quota_settings.to_json
+            initial_quota_sid: quota_sid,
+            quota_main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
+            configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
+            conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
         )
 
         redirect_to work_with_selected_quotas_bulk_url(
@@ -170,6 +180,26 @@ module Quotas
       else
         redirect_to quotas_url(
                         notice: "You have to select 1 quota from list!"
+                    )
+      end
+    end
+
+    def handle_clone_quota_request
+      self.workbasket = Workbaskets::Workbasket.new(
+          status: :new_in_progress,
+          type: :create_quota,
+          user: current_user
+      )
+      if workbasket.save
+
+        quota_sid = params[:quota_sids].first
+        workbasket_settings.update(
+            initial_search_results_code: params[:search_code],
+            initial_quota_sid: quota_sid
+        )
+
+        redirect_to configure_cloned_quotas_bulk_url(
+                        workbasket.id
                     )
       end
     end
@@ -190,6 +220,20 @@ module Quotas
                       )
         end
       end
+    end
+
+    def persist_configure_cloned
+      workbasket.update(title: params['workbasket_name'])
+      quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(workbasket_settings.initial_quota_sid)
+      workbasket_settings.update(
+          main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
+          configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
+          conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
+      )
+      redirect_to edit_create_quotum_url(
+          workbasket.id,
+          step: :main
+      )
     end
 
     def update

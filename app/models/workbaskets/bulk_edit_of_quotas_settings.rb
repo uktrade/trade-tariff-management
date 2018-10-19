@@ -48,7 +48,7 @@ module Workbaskets
     end
 
     def quota_definition
-      QuotaDefinition.find(quota_definition_sid: quota_sid)
+      QuotaDefinition.find(quota_definition_sid: initial_quota_sid)
     end
 
     def track_current_page_loaded!(current_page)
