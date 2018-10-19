@@ -145,10 +145,16 @@ module WorkbasketHelper
         )
 
       else
-        edit_create_quotum_url(
-          workbasket.id,
-          step: :main
-        )
+        if workbasket.object.type.to_sym == :clone_quota && workbasket.title.blank?
+          configure_cloned_quotas_bulk_url(
+              workbasket.id
+          )
+        else
+          edit_create_quotum_url(
+              workbasket.id,
+              step: :main
+          )
+        end
       end
 
 
