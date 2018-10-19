@@ -15,9 +15,11 @@ $(document).ready(function() {
         errorsSummary: "",
         hasErrors: false,
         selectAll: false,
-        excludeCommodityCode: false,
+        excludeOrderNumber: false,
+        excludeCommodityCodes: false,
+        excludeAdditionalCodes: false,
+        excludeRegulation: false,
         excludeOrigin: false,
-        excludeDuties: false,
         excludeConditions: false,
         excludeFootnotes: false,
 
@@ -26,11 +28,10 @@ $(document).ready(function() {
     },
     computed: {
       allSame: function() {
-        var all = !this.excludeCommodityCode &&
-                  !this.excludeOrigin &&
-                  !this.excludeDuties &&
-                  !this.excludeConditions &&
-                  !this.excludeFootnotes;
+        var all = !this.excludeCommodityCodes &&
+                  !this.excludeAdditionalCodes &&
+                  !this.excludeOrderNumber &&
+                  !this.excludeOrigin;
 
         return all;
       }
@@ -39,9 +40,11 @@ $(document).ready(function() {
       updateSelectAll: function() {
         var self = this;
 
-        var all = this.excludeCommodityCode &&
+        var all = this.excludeCommodityCodes &&
+                  this.excludeAdditionalCodes &&
+                  this.excludeOrderNumber &&
+                  this.excludeRegulation &&
                   this.excludeOrigin &&
-                  this.excludeDuties &&
                   this.excludeConditions &&
                   this.excludeFootnotes;
 
@@ -86,9 +89,11 @@ $(document).ready(function() {
           return;
         }
 
-        this.excludeCommodityCode = val;
+        this.excludeCommodityCodes = val;
+        this.excludeAdditionalCodes = val;
         this.excludeOrigin = val;
-        this.excludeDuties = val;
+        this.excludeOrderNumber = val;
+        this.excludeRegulation = val;
         this.excludeConditions = val;
         this.excludeFootnotes = val;
       },

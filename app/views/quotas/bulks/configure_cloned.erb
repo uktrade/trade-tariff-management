@@ -35,10 +35,12 @@
 
         <info-message>
           <p>
-            This action will create copies of the selected measures, which you will then be able to edit as needed. The original (source) measures will remain unchanged.
+            This action will create a copy of the selected quota, which you will then be able to edit as needed.
+            <br>
+            The original (source) quota will remain unchanged.
           </p>
           <p>
-            If you intend your copies to replace the source measures, you will need separately to end-date those measures - you should usually do that first, to avoid conformance errors, as you cannot have multiple identical measures on the system. You may prefer to edit the source measures directly rather than make copies, as the system will then automatically manage version control.
+            If you intend your copy to replace the source quota, you will need separately to end-date that quota - you should usually do that first, to avoid conformance errors, as you cannot have multiple identical quotas on the system. You may prefer to edit the source quota directly rather than make a copy, as the system will then automatically manage version control.
           </p>
         </info-message>
 
@@ -62,14 +64,46 @@
             </p>
 
             <warning-message>
-              Note that you cannot have multiple identical measures. Nor can you create measures that are outside the quota’s existing validity periods (definitions) from here (to do that, you should edit the quota itself, or create a new quota using the same order number but covering a different time period). Cloning measures from here should only be used when you need to add commodity code or origins to the quota. You should therefore select at least one of Commodity code or Origin from the list below. You may optionally select any of the other attributes.
+              Note that you cannot have multiple identical quotas. Therefore please ensure you select at least one of:
+              <br>
+              Order number
+              <br>
+              Commodity codes
+              <br>
+              Additional codes
+              <br>
+              Origin
             </warning-message>
 
             <p>
               <span class="small-checkbox">
-                <input type="checkbox" id="clone-commodity-code" v-model="excludeCommodityCode" :checked="excludeCommodityCode" name="exclusions[]" value="commodity_codes" />
-                <label for="clone-commodity-code">
-                  Commodity code
+                <input type="checkbox" id="clone-order-number" v-model="excludeOrderNumber" :checked="excludeOrderNumber" name="exclusions[]" value="order_number" />
+                <label for="clone-order-number">
+                  Order number
+                </label>
+              </span>
+            </p>
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-regulation" v-model="excludeRegulation" :checked="excludeRegulation" name="exclusions[]" value="regulation" />
+                <label for="clone-regulation">
+                  Regulation
+                </label>
+              </span>
+            </p>
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-commodity-codes" v-model="excludeCommodityCodes" :checked="excludeCommodityCodes" name="exclusions[]" value="commodity_codes" />
+                <label for="clone-commodity-codes">
+                  Commodity codes
+                </label>
+              </span>
+            </p>
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-additional-codes" v-model="excludeAdditionalCodes" :checked="excludeAdditionalCodes" name="exclusions[]" value="additional_codes" />
+                <label for="clone-additional-codes">
+                  Additional codes
                 </label>
               </span>
             </p>
@@ -78,14 +112,6 @@
                 <input type="checkbox" id="clone-origin" v-model="excludeOrigin" :checked="excludeOrigin" name="exclusions[]" value="origin" />
                 <label for="clone-origin">
                   Origin
-                </label>
-              </span>
-            </p>
-            <p>
-              <span class="small-checkbox">
-                <input type="checkbox" id="clone-duties" v-model="excludeDuties" :checked="excludeDuties" name="exclusions[]" value="duties" />
-                <label for="clone-duties">
-                  Duties
                 </label>
               </span>
             </p>
@@ -134,7 +160,7 @@
           <button type="submit" class="button">
             Clone selected measures
           </button>
-          <%= link_to "Cancel", quotas_url(search_code: workbasket_settings.initial_search_results_code) %>
+          <%= link_to "Cancel", quotas_url(search_code: workbasket_settings.initial_search_results_code), class: "secondary-button" %>
         </div>
       </div>
     </div>
