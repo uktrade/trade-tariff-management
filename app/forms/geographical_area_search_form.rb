@@ -10,6 +10,8 @@ class GeographicalAreaSearchForm
     code_group
   )
 
+  ALLOWED_TYPE_VALUES = ["0", "1", "2"]
+
   attr_accessor :q,
                 :start_date,
                 :end_date,
@@ -70,9 +72,9 @@ class GeographicalAreaSearchForm
   private
 
   def country_region_and_group_are_blank?
-    !option_present_and_turned_on?(:code_country) &&
-    !option_present_and_turned_on?(:code_group) &&
-    !option_present_and_turned_on?(:code_region)
+    code_filter_value(code_country).blank? &&
+    code_filter_value(code_region).blank? &&
+    code_filter_value(code_group).blank?
   end
 
   def validate_start_date
@@ -109,8 +111,13 @@ class GeographicalAreaSearchForm
     I18n.t(:find_geographical_areas)[key]
   end
 
-  def option_present_and_turned_on?(name)
-    public_send(name).present? &&
-    ::GeographicalAreaSearch::ALLOWED_TYPES.include?(public_send(name).to_s)
+  def code_filter_value(code_val)
+    parsing_code = code_val.to_s
+
+    parsing_code.present? &&
+    (
+      parsing_code == 'true' ||
+      ALLOWED_TYPE_VALUES.include?(parsing_code)
+    )
   end
 end
