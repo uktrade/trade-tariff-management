@@ -106,6 +106,19 @@ module Workbaskets
 
         item.save
       end
+
+      def new_from_empty_record(workbasket, target_record, row_id)
+        item = new(workbasket_id: workbasket.id)
+
+        key = target_record.primary_key
+        item.row_id = row_id
+        item.record_key = key
+        item.record_type = target_record.class.to_s
+        item.original_data = target_record.to_json.to_json
+        item.status = "in_progress"
+
+        item.save
+      end
     end
   end
 end
