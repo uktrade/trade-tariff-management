@@ -25,7 +25,7 @@ module WorkbasketInteractions
       def main_step_settings
         {
             'end_date': nil,
-            'start_date': quota_order_number.validity_start_date.strftime('%Y-%m-%d'),
+            'start_date': quota_order_number.validity_start_date.strftime('%d/%m/%Y'),
             'quota_licence': quota_definition.license,
             'quota_is_licensed': quota_definition.license.present?.to_s,
             'regulation_id': 'regulation'.in?(exclusions) ? '' : quota_definition.regulation_id,
@@ -74,13 +74,15 @@ module WorkbasketInteractions
 
       def extract_quota_periods_settings
         {
-            'type': 'custom',
-            'repeat': 'false',
-            'balance': '',
-            'measurement_unit_id': '',
-            'measurement_unit_qualifier_id': '',
-            'periods': extract_period_settings,
-            'parent_quota': extract_parent_quota_settings
+            '0': {
+                'type': 'custom',
+                'repeat': 'false',
+                'balance': '',
+                'measurement_unit_id': '',
+                'measurement_unit_qualifier_id': '',
+                'periods': extract_period_settings,
+                'parent_quota': extract_parent_quota_settings
+            }
         }
       end
 
@@ -115,8 +117,8 @@ module WorkbasketInteractions
                   'quota_definition_sid': period.quota_definition_sid,
                   'balance': period.initial_volume.to_s,
                   'critical': (period.critical_state == 'Y').to_s,
-                  'end_date': period.validity_end_date.strftime('%Y-%m-%d'),
-                  'start_date': period.validity_start_date.strftime('%Y-%m-%d'),
+                  'end_date': period.validity_end_date.strftime('%d/%m/%Y'),
+                  'start_date': period.validity_start_date.strftime('%d/%m/%Y'),
                   'criticality_threshold': period.critical_threshold.to_s,
                   'measurement_unit_id': '',
                   'measurement_unit_code': period.measurement_unit_code,
