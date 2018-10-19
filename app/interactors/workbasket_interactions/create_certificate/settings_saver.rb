@@ -53,7 +53,7 @@ module WorkbasketInteractions
 
       def valid?
         validate!
-        @errors.blank?
+        errors.blank? && conformance_errors.blank?
       end
 
       def persist!
@@ -75,7 +75,7 @@ module WorkbasketInteractions
 
         def validate!
           check_initial_validation_rules!
-          check_conformance_rules! if @errors.blank?
+          check_conformance_rules! if errors.blank?
         end
 
         def check_initial_validation_rules!
@@ -98,18 +98,18 @@ module WorkbasketInteractions
         end
 
         def parse_and_format_conformance_rules
-          @conformance_errors = []
+          @conformance_errors = {}
 
           unless certificate.conformant?
-            @conformance_errors << formatter_class.new(certificate).errors
+            @conformance_errors.merge!(get_conformance_errors(footnote))
           end
 
           unless certificate_description_period.conformant?
-            @conformance_errors << formatter_class.new(certificate_description_period).errors
+            @conformance_errors.merge!(get_conformance_errors(certificate_description_period))
           end
 
           unless certificate_description.conformant?
-            @conformance_errors << formatter_class.new(certificate_description).errors
+            @conformance_errors.merge!(get_conformance_errors(certificate_description))
           end
 
           if conformance_errors.present?
@@ -173,8 +173,20 @@ module WorkbasketInteractions
           )
         end
 
-        def formatter_class
-          ::WorkbasketValueObjects::Shared::ConformanceErrorsFormatter
+        def get_conformance_errors(record)
+          res = {}
+
+          record.conformance_errors.map do |k, v|
+            message = if v.is_a?(Array)
+                        v.flatten.join(' ')
+                      else
+                        v
+                      end
+
+            res[k.to_s] = "<strong class='workbasket-conformance-error-code'>#{k.to_s}</strong>: #{message}".html_safe
+          end
+
+          res
         end
     end
   end
