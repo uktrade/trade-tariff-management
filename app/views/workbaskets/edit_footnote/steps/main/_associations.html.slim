@@ -1,0 +1,31 @@
+fieldset
+  h3.heading-medium.sub_heading_block
+    | Optionally configure footnote associations
+
+  label.form-label
+    span.form-hint
+      | If you already know which objects this footnote should be associated with, you can add them en-masse here; otherwise it can be individually associated when measures or quotas etc are created.
+
+  h3.heading-medium.sub_heading_block
+    | Goods classiciation codes
+
+  label.form-label
+    span.form-hint
+      | Enter one or more commodity codes, separated by comma, space or line break.
+
+  .bootstrap-row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "search.commodity_codes", rows: 3 }
+
+  h3.heading-medium.sub_heading_block
+    | Measures
+
+  label.form-label
+    span.form-hint
+      | Enter one or more measure IDs separated by comma, space or line break. This will associate the footnote with all of the measures in the specified here. To find measure ID, you can search for measures on the
+      =<> link_to "Find and edit measures", measures_url
+      | screen.
+
+  .bootstrap-row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      = f.input :measure_sids, as: :text, label: false, input_html: { "v-model" => "search.measure_sids", rows: 3 }

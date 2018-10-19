@@ -1,0 +1,20 @@
+fieldset
+  h3.heading-medium
+    | Description validity
+
+  form-group :errors="errors" error-key="description_validity_start_date"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | You have edited the footnote description. Please specify the date when this change should applym if different from the change-date already given above.
+
+      .bootstrap-row
+        .col-md-12
+          = content_tag "date-select", "", ":value.sync" => "footnote.description_validity_start_date"
+
+      label.form-label
+        span.form-hint
+          | This must fall between the footnote validity dates shown below.
+
