@@ -1,0 +1,18 @@
+fieldset
+  h3.heading-medium
+    | What is the certificate type?
+
+  form-group :errors="errors" error-key="certificate_type_code"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+
+      .bootstrap-row
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = content_tag "custom-select", "", { ":options" => "certificate_types_list" , "allow-clear" => true, "code-field" => "certificate_type_code", "label-field" => "description", "value-field" => "certificate_type_code", "v-model" => "certificate.certificate_type_code", placeholder: "― select certificate type ―", "name" => "certificate[certificate_type_code]", "code-class-name" => "prefix--country" }
+
+      label.form-label
+        br
+        span.form-hint
+          | Selected type is valid from 01 Jan 1970 [to 31 Dec 2025 | onward ].

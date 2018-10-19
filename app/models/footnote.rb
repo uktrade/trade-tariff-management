@@ -145,9 +145,17 @@ class Footnote < Sequel::Model
         )
       end
 
+      def default_distinct
+        distinct(
+          :footnotes__footnote_type_id,
+          :footnotes__footnote_id
+        )
+      end
+
       def default_order
-        default_join.order(
-          Sequel.asc(:footnote_descriptions__description)
+        default_distinct.default_join.order(
+          Sequel.asc(:footnotes__footnote_type_id),
+          Sequel.asc(:footnotes__footnote_id)
         )
       end
 

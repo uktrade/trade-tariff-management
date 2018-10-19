@@ -17,6 +17,20 @@ module WorkbasketHelper
     end
   end
 
+  def create_footnote_section_header
+    case current_step
+    when "main"
+      "Create a new footnote"
+    end
+  end
+
+  def create_certificate_section_header
+    case current_step
+    when "main"
+      "Add certificate"
+    end
+  end
+
   def create_quota_section_header
     case current_step
     when "main"
@@ -172,6 +186,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :create_certificate
+      edit_create_certificate_url(
+        workbasket.id,
+        step: :main
+      )
+
     when :bulk_edit_of_additional_codes
 
       if workbasket.settings.settings["title"].blank?
@@ -204,6 +224,12 @@ module WorkbasketHelper
 
     when :create_geographical_area
       edit_create_geographical_area_url(
+        workbasket.id,
+        step: :main
+      )
+
+    when :create_footnote
+      edit_create_footnote_url(
         workbasket.id,
         step: :main
       )

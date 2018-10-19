@@ -7,8 +7,6 @@ module WorkbasketValueObjects
         geographical_area_id
         parent_geographical_area_group_id
         description
-        validity_start_date
-        validity_end_date
       )
 
       attr_accessor :settings

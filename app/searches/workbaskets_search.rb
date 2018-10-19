@@ -60,7 +60,8 @@ class WorkbasketsSearch
         Workbaskets::Workbasket.default_order
       end
 
-      @relation = relation.relevant_for_manager(current_user)
+      @relation = relation.default_filter
+                          .relevant_for_manager(current_user)
     end
 
     def apply_q_filter

@@ -1,0 +1,9 @@
+.number-of-records-badge {
+  position: relative;
+  top: 7px;
+
+  a + &,
+  button + & {
+    left: 15px;
+  }
+}

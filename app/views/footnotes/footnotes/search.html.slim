@@ -22,7 +22,8 @@ header
 
   - if params[:search].present?
     - if search_results.present?
-      = paginate search_results
+      .js-workbasket-find-footnotes-results-pagination-block
+        = render "footnotes/footnotes/search/pagination"
     - else
       = render "footnotes/footnotes/search/nothing_found_block"
 
