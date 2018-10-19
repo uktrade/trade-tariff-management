@@ -557,6 +557,7 @@ $(document).ready(function() {
           regulation_id: this.measure.regulation_id,
           measure_type_id: this.measure.measure_type_id,
           quota_ordernumber: this.measure.quota_ordernumber,
+          quota_precision: this.measure.quota_precision,
           quota_description: this.measure.quota_description,
           quota_is_licensed: this.measure.quota_is_licensed,
           quota_licence: this.measure.quota_licence,

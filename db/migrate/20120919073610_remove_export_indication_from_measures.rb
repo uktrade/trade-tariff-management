@@ -1,7 +1,13 @@
 Sequel.migration do
-  change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+  up do
+    alter_table :measures do
+      drop_column :export
+    end
+  end
+
+  down do
+    alter_table :measures do
+      add_column :export, TrueClass
+    end
   end
 end

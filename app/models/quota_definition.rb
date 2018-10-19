@@ -92,7 +92,7 @@ class QuotaDefinition < Sequel::Model
   def additional_code_ids
     if measures.present?
       measures.map do |measure|
-        measure.additional_code_id
+        "#{measure.additional_code_type_id}#{measure.additional_code_id}"
       end.select do |item|
         item.present?
       end.uniq

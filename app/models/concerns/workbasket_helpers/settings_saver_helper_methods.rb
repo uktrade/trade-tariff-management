@@ -18,13 +18,20 @@ module WorkbasketHelpers
       }
     end
 
-    def assign_system_ops!(measure)
+    def assign_system_ops!(record)
       system_ops_assigner = ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-        measure, system_ops
+        record, system_ops
       )
       system_ops_assigner.assign!
 
       system_ops_assigner.record
+    end
+
+    def set_primary_key!(record, extra_increment_value=nil)
+      ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(
+        record,
+        extra_increment_value
+      ).assign!
     end
   end
 end

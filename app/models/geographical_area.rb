@@ -69,29 +69,92 @@ class GeographicalArea < Sequel::Model
       exclude(geographical_area_id: GeographicalArea::ERGA_OMNES)
     end
 
-    def q_search(filter_ops={})
-      scope = actual
+    def to_csv
+      headers = ["Code", "Description", "Type", "Start date", "End date"]
 
-      if filter_ops[:q].present?
-        q_rule = "#{filter_ops[:q]}%"
+      CSV.generate(headers: true) do |csv|
+        csv << headers
 
-        scope = scope.join_table(:inner,
+        all.each do |geo_area|
+          geo_area = geo_area.decorate
+
+          csv << [
+            geo_area.geographical_area_id,
+            geo_area.description,
+            geo_area.type,
+            geo_area.start_date,
+            geo_area.end_date
+          ]
+        end
+      end
+    end
+
+    begin :search_functionality
+      def default_order
+        distinct(:geographical_areas__geographical_area_id).order(
+          Sequel.asc(:geographical_areas__geographical_area_id)
+        )
+      end
+
+      def by_code(code)
+        where(geographical_code: code)
+      end
+
+      def after_or_equal(start_date)
+        where("validity_start_date >= ?", start_date)
+      end
+
+      def before_or_equal(end_date)
+        where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
+      end
+
+      def keywords_search(keywords)
+        join_table(:inner,
           :geographical_area_descriptions,
           geographical_area_id: :geographical_area_id,
         ).where("
           geographical_areas.geographical_area_id ilike ? OR
           geographical_area_descriptions.description ilike ?",
-          q_rule, q_rule
+          "#{keywords}%", "%#{keywords}%"
         )
+      end
 
-        scope.order(Sequel.asc(:geographical_area_descriptions__description))
-      else
-        scope.order(Sequel.asc(:geographical_areas__geographical_area_id))
+      def q_search(filter_ops={})
+        scope = actual
+
+        if filter_ops[:q].present?
+          q_rule = "#{filter_ops[:q]}%"
+
+          scope = scope.join_table(:inner,
+            :geographical_area_descriptions,
+            geographical_area_id: :geographical_area_id,
+          ).where("
+            geographical_areas.geographical_area_id ilike ? OR
+            geographical_area_descriptions.description ilike ?",
+            q_rule, q_rule
+          )
+
+          scope.order(Sequel.asc(:geographical_area_descriptions__description))
+        else
+          scope.order(Sequel.asc(:geographical_areas__geographical_area_id))
+        end
       end
     end
   end
 
   class << self
+    def max_per_page
+      10
+    end
+
+    def default_per_page
+      10
+    end
+
+    def max_pages
+      999
+    end
+
     def erga_omnes_group
       actual.by_id(GeographicalArea::ERGA_OMNES)
             .first

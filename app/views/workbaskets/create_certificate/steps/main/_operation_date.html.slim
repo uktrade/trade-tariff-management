@@ -1,0 +1,14 @@
+fieldset
+  h3.heading-medium
+    | Specify the operation date
+
+  form-group :errors="errors" error-key="operation_date"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+
+      .bootstrap-row
+        .col-md-12
+          = content_tag "date-select", "", ":value.sync" => "certificate.operation_date"

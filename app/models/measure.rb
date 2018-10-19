@@ -67,8 +67,8 @@ class Measure < Sequel::Model
     ds.with_actual(AdditionalCode)
   end
 
-  one_to_one :meursing_additional_code, key: :additional_code,
-                                        primary_key: :additional_code_id do |ds|
+  one_to_one :meursing_additional_code, key: :meursing_additional_code_sid,
+                                        primary_key: :additional_code_sid do |ds|
     ds.with_actual(MeursingAdditionalCode)
   end
 
@@ -332,8 +332,11 @@ class Measure < Sequel::Model
     end
 
     if excluded_geographical_areas.present?
-      joined_areas_str = excluded_geographical_areas.map(&:geographical_area_id).uniq.join("_")
+      areas_list = excluded_geographical_areas.map(&:geographical_area_id).uniq
+      joined_areas_str = areas_list.join("_")
+
       ops[:excluded_geographical_areas_names] = "_" + joined_areas_str + "_"
+      ops[:cached_excluded_geographical_areas_info] = areas_list.join(", ")
     end
 
     if measure_components.present?
@@ -348,12 +351,15 @@ class Measure < Sequel::Model
         }
       end
       ops[:duty_expressions_count] = measure_components.count
+
+      ops[:cached_duty_expression_info] = duty_expression
     end
 
     if measure_conditions.present?
       condition_codes = measure_conditions.map(&:condition_code).uniq
       ops[:measure_conditions] = "_" + condition_codes.join("_") + "_"
       ops[:measure_conditions_count] = condition_codes.count
+      ops[:cached_conditions_short_list] = conditions_short_list
     end
 
     if footnotes.present?
@@ -364,6 +370,9 @@ class Measure < Sequel::Model
         }
       end
       ops[:footnotes_count] = footnotes.count
+
+      ops[:cached_footnotes_abbreviation_info] = footnotes.map(&:abbreviation)
+                                                          .join(", ")
     end
 
     self.manual_add = true
@@ -525,7 +534,7 @@ class Measure < Sequel::Model
     if status.present?
       I18n.t(:measures)[:states][status.to_sym]
     else
-      "Imported to TARIFF"
+      "Published"
     end
   end
 
@@ -565,6 +574,44 @@ class Measure < Sequel::Model
   # TODO: removed duplications
   #
 
+  begin :searchable_data_cache_helpers
+    def parsed_searchable_data
+      JSON.parse(searchable_data) || {}
+    end
+
+    def get_from_index(value_name)
+      parsed_searchable_data[value_name]
+    end
+
+    def cached_excluded_geographical_areas_info
+      get_from_index('cached_excluded_geographical_areas_info')
+    end
+
+    def cached_conditions_short_list
+      get_from_index('cached_conditions_short_list')
+    end
+
+    def cached_footnotes_abbreviation_info
+      get_from_index('cached_footnotes_abbreviation_info')
+    end
+
+    def cached_duty_expression_info
+      get_from_index('cached_duty_expression_info')
+    end
+
+    def justification_regulation_info
+      generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?
+    end
+
+    def last_updated_at_info
+      (updated_at || added_at).try(:strftime, "%d %b %Y")
+    end
+
+    def value_or_default(value)
+      value || "-"
+    end
+  end
+
   def to_table_json
     {
       measure_sid: measure_sid,
@@ -582,6 +629,36 @@ class Measure < Sequel::Model
       conditions: conditions_short_list,
       footnotes: footnotes.map(&:abbreviation).join(", "),
       last_updated: (updated_at || added_at).try(:strftime, "%d %b %Y") || "-",
+      status: status_title,
+      sent_to_cds: sent_to_cds?
+    }
+  end
+
+  #
+  # TODO: set using of V2 after reindex of data
+  #
+  def to_table_json_v2
+    {
+      measure_sid: measure_sid,
+      measure_type_id: measure_type_id,
+
+      validity_start_date: validity_start_date.strftime("%d %b %Y"),
+      validity_end_date: value_or_default(validity_end_date.try(:strftime, "%d %b %Y")),
+
+      regulation: generating_regulation_code,
+      justification_regulation: value_or_default(justification_regulation_info),
+
+      goods_nomenclature_id: goods_nomenclature_item_id,
+      geographical_area: geographical_area_id,
+
+      additional_code_id: value_or_default(additional_code_title),
+
+      excluded_geographical_areas: value_or_default(cached_excluded_geographical_areas_info),
+      duties: value_or_default(cached_duty_expression_info),
+      conditions: value_or_default(cached_conditions_short_list),
+      footnotes: value_or_default(cached_footnotes_abbreviation_info),
+
+      last_updated: value_or_default(last_updated_at_info),
       status: status_title,
       sent_to_cds: sent_to_cds?
     }

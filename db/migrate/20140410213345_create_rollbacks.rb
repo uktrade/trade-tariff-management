@@ -1,7 +1,16 @@
 Sequel.migration do
   change do
-    # Do nothing.
-    # This file migration need if we are loading DB dump from
-    # Tariff app into DIT app
+
+    create_table :rollbacks do
+      primary_key :id
+      Integer :user_id
+      Date :date
+      TrueClass :redownload
+      DateTime :enqueued_at
+      String :reason, text: true
+
+      index [:user_id], name: :user_id
+    end
+
   end
 end

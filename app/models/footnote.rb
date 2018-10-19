@@ -57,7 +57,7 @@ class Footnote < Sequel::Model
                                   right_key: [:meursing_table_plan_id, :meursing_heading_number]
 
 
-  delegate :description, :formatted_description, to: :footnote_description
+  delegate :description, :formatted_description, to: :footnote_description, allow_nil: true
 
   dataset_module do
     def national
@@ -90,6 +90,90 @@ class Footnote < Sequel::Model
       scope.order(Sequel.asc(:footnotes__footnote_id))
            .all
            .uniq { |item| item.description }
+    end
+
+    begin :find_footnotes_search_filters
+      def keywords_search(keyword)
+        where("
+          footnotes.footnote_id ilike ? OR
+          footnote_descriptions.description ilike ?",
+          "#{keyword}%", "%#{keyword}%"
+        )
+      end
+
+      def by_footnote_type_id(footnote_type_id)
+        where("footnotes.footnote_type_id = ?", footnote_type_id)
+      end
+
+      def by_commodity_codes(commodity_codes)
+        join_table(:inner,
+          :footnote_association_goods_nomenclatures,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        ).where("
+          footnote_association_goods_nomenclatures.goods_nomenclature_item_id IN ?",
+          list_of_measure_sids
+        )
+      end
+
+      def by_measure_sids(list_of_measure_sids)
+        join_table(:inner,
+          :footnote_association_measures,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        ).where("
+          footnote_association_measures.measure_sid IN ?",
+          list_of_measure_sids
+        )
+      end
+
+      def after_or_equal(start_date)
+        where("footnotes.validity_start_date >= ?", start_date)
+      end
+
+      def before_or_equal(end_date)
+        where(
+          "footnotes.validity_end_date IS NOT NULL AND footnotes.validity_end_date <= ?", end_date
+        )
+      end
+
+      def default_join
+        join_table(:inner,
+          :footnote_descriptions,
+          footnote_type_id: :footnote_type_id,
+          footnote_id: :footnote_id
+        )
+      end
+
+      def default_distinct
+        distinct(
+          :footnotes__footnote_type_id,
+          :footnotes__footnote_id
+        )
+      end
+
+      def default_order
+        default_distinct.default_join.order(
+          Sequel.asc(:footnotes__footnote_type_id),
+          Sequel.asc(:footnotes__footnote_id)
+        )
+      end
+
+      def custom_field_order(sort_by_field, sort_direction)
+        sortable_rule = if sort_by_field.in?(FootnoteSearch::SIMPLE_SORTABLE_MODES)
+          "footnotes__#{sort_by_field}".to_sym
+        else
+          :footnote_descriptions__description
+        end
+
+        order_rule = if sort_direction.to_sym == :desc
+          Sequel.desc(sortable_rule)
+        else
+          Sequel.asc(sortable_rule)
+        end
+
+        default_join.order(order_rule)
+      end
     end
   end
 
@@ -132,5 +216,31 @@ class Footnote < Sequel::Model
 
   def to_json(options = {})
     json_mapping
+  end
+
+  def decorate
+    FootnoteDecorator.decorate(self)
+  end
+
+  def associated_records_count
+    goods_nomenclatures.count +
+    export_refund_nomenclatures.count +
+    measures.count +
+    additional_codes.count +
+    meursing_headings.count
+  end
+
+  class << self
+    def max_per_page
+      10
+    end
+
+    def default_per_page
+      10
+    end
+
+    def max_pages
+      999
+    end
   end
 end

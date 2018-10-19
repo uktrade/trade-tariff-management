@@ -25,12 +25,6 @@ module WorkbasketHelpers
       end
     end
 
-    def collection_by_type(target_klass)
-      collection.select do |item|
-        item.class == target_klass
-      end
-    end
-
     def collection_by_type(type_of_record)
       collection.select do |rec|
         rec.class.name == type_of_record.to_s

@@ -1,0 +1,7 @@
+.js-workbasket-errors-container.alert.alert-danger v-cloak="" v-if="hasConformanceErrors"
+  h3.workbasket-form-errors-header
+    | Please, review the following conformance rules:
+
+  ul
+    li v-for="error in conformanceErrors"
+      .workbasket-error-block :data-error-message="error" v-html="error"

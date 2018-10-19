@@ -5,7 +5,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   prepend_before_action :authenticate_user!
-  before_action :require_signin_permission!
+  before_action do
+    authorise_user!('signin')
+  end
   around_action :configure_time_machine
 
   rescue_from Pundit::NotAuthorizedError do |e|

@@ -18,8 +18,8 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-    get "/v1/taricdelta(/:date)", to: "xml_files#index"
-    get "/v1/taricfile/:date",    to: "xml_files#show"
+    get "/v1/taricdelta(/:date)",   to: "xml_files#index"
+    get "/v1/taricfile/:timestamp", to: "xml_files#show"
   end
 
   resources :goods_nomenclatures, only: [:index]
@@ -57,13 +57,23 @@ Rails.application.routes.draw do
   end
 
   scope module: :certificates do
-    resources :certificates, only: [:index]
+    resources :certificates, only: [:index] do
+      collection do
+        get :search
+        get :validate_search_settings
+      end
+    end
     resources :certificate_types, only: [:index]
   end
 
   scope module: :footnotes do
     resources :footnote_types, only: [:index]
-    resources :footnotes, only: [:index]
+    resources :footnotes, only: [:new, :index] do
+      collection do
+        get :search
+        get :validate_search_settings
+      end
+    end
   end
 
   scope module: :quotas do
@@ -165,6 +175,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :create_certificate, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
     resources :create_measures, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
@@ -178,6 +196,22 @@ Rails.application.routes.draw do
         get :submitted_for_cross_check
         get :move_to_editing_mode
         get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :create_footnote, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+  end
+
+  scope module: :geo_areas do
+    resources :geo_areas, only: [:index] do
+      collection do
+        get :validate_search_settings
       end
     end
   end

@@ -1,0 +1,36 @@
+table.table
+  colgroup
+    col width="80"
+    col width="*"
+    col width="120"
+    col width="200"
+    col width="200"
+
+    - if false
+      col width="1"
+
+  thead
+    tr
+      th
+        | Code
+        / = sortable(:geographical_area_id, "Code", { search: search_ops })
+      th
+        | Description
+        /= sortable(:description, "Description", { search: search_ops })
+      th
+        | Type
+        /= sortable(:geographical_code, "Type", { search: search_ops })
+      th
+        | Start date
+        / = sortable(:validity_start_date, "Start date", { search: search_ops })
+      th
+        | End date
+        / = sortable(:validity_end_date, "End date", { search: search_ops })
+
+      - if false
+        th width="1"
+          | &nbsp;
+
+  tbody
+    - search_results.map do |item|
+      = render "geo_areas/geo_areas/search/item", item: item.decorate

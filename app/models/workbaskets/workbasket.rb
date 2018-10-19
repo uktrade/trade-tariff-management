@@ -10,7 +10,9 @@ module Workbaskets
       :create_additional_code,
       :bulk_edit_of_additional_codes,
       :bulk_edit_of_quotas,
-      :create_geographical_area
+      :create_geographical_area,
+      :create_footnote,
+      :create_certificate
     ]
 
     STATUS_LIST = [
@@ -95,6 +97,8 @@ module Workbaskets
       create_regulation
       create_geographical_area
       create_additional_code
+      create_footnote
+      create_certificate
     )
 
     EDIT_WORKABSKETS = %w(
@@ -130,6 +134,11 @@ module Workbaskets
 
     one_to_one :create_geographical_area_settings, key: :workbasket_id,
                                                    class_name: "Workbaskets::CreateGeographicalAreaSettings"
+    one_to_one :create_footnote_settings, key: :workbasket_id,
+                                          class_name: "Workbaskets::CreateFootnoteSettings"
+
+    one_to_one :create_certificate_settings, key: :workbasket_id,
+                                                   class_name: "Workbaskets::CreateCertificateSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -176,6 +185,10 @@ module Workbaskets
         reverse_order(:last_status_change_at)
       end
 
+      def default_filter
+        where("title IS NOT NULL AND title != ''")
+      end
+
       def custom_field_order(sort_by_field, sort_direction)
         if sort_direction.to_sym == :desc
           reverse_order(sort_by_field.to_sym)
@@ -214,7 +227,7 @@ module Workbaskets
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status(["awaiting_cds_upload_create_new", "awaiting_cds_upload_edit"])
+        ).in_status(["awaiting_cds_upload_create_new", "awaiting_cds_upload_edit", "awaiting_cross_check"])
          .order(:operation_date)
       end
 
@@ -403,6 +416,10 @@ module Workbaskets
         bulk_edit_of_quotas_settings
       when :create_geographical_area
         create_geographical_area_settings
+      when :create_footnote
+        create_footnote_settings
+      when :create_certificate
+        create_certificate_settings
       end
     end
 
@@ -510,6 +527,8 @@ module Workbaskets
           bulk_edit_of_additional_codes
           bulk_edit_of_quotas
           create_geographical_area
+          create_footnote
+          create_certificate
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -538,6 +557,10 @@ module Workbaskets
           ::Workbaskets::BulkEditOfAdditionalCodesSettings
         when :create_geographical_area
           ::Workbaskets::CreateGeographicalAreaSettings
+        when :create_footnote
+          ::Workbaskets::CreateFootnoteSettings
+        when :create_certificate
+          ::Workbaskets::CreateCertificateSettings
         end
 
         settings = target_class.new(

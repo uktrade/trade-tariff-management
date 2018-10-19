@@ -492,8 +492,10 @@ $(document).ready(function() {
         var self = this;
 
         this.isLoading = true;
+        var search = window.location.search;
+        var url = window.location.href.replace(search, "") + ".json" + search;
 
-        $.get(window.location.href).success(function(data) {
+        $.get(url).success(function(data) {
           self.measures = data.collection;
           self.isLoading = false;
 
@@ -517,7 +519,7 @@ $(document).ready(function() {
 
         setTimeout(function() {
           $("html,body").animate({
-            scrollTop: $(".measures-table-wrapper").offset().top - 200
+            scrollTop: $(".records-table").offset().top - 200
           });
         }, 200);
       },
