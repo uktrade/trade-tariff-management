@@ -224,7 +224,7 @@ module Quotas
 
     def persist_configure_cloned
       workbasket.update(title: params['workbasket_name'])
-      quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(workbasket_settings.initial_quota_sid)
+      quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(workbasket_settings.initial_quota_sid, params[:exclusions])
       workbasket_settings.update(
           main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
           configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
