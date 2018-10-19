@@ -101,7 +101,7 @@ Vue.component("bulk-edit-records", {
       var pk = this.primaryKey;
 
       return this.records.filter(function(record) {
-        return selectedSids.indexOf(record[pk]) > -1;
+        return selectedSids.indexOf(record[pk] + '') > -1;
       });
     },
     recordsForTable: function() {
@@ -110,11 +110,14 @@ Vue.component("bulk-edit-records", {
   },
   methods: {
     onItemSelected: function(sid) {
-      this.selectedRecords.push(sid);
+      if (this.selectedRecords.indexOf(sid + '') === -1) {
+        this.selectedRecords.push(sid + '');
+      }
+
       this.updateSelectedAll();
     },
     onItemDeselected: function(sid) {
-      var index = this.selectedRecords.indexOf(sid);
+      var index = this.selectedRecords.indexOf(sid + '');
 
       if (index === -1) {
         return;
@@ -128,7 +131,7 @@ Vue.component("bulk-edit-records", {
       var pk = this.primaryKey;
 
       this.records.forEach(function(record) {
-        if (selected.indexOf(record[pk]) === -1) {
+        if (selected.indexOf(record[pk] + '') === -1) {
           record.visible = !record.visible;
         }
       });
@@ -164,7 +167,7 @@ Vue.component("bulk-edit-records", {
 
           self.preprocessRecord(record);
 
-          self.selectedRecords.push(record[pk]);
+          self.selectedRecords.push(record[pk] + '');
 
           return record;
         }));
@@ -249,8 +252,8 @@ Vue.component("bulk-edit-records", {
       var pk = this.primaryKey;
 
       if (value) {
-        this.selectedRecords = this.visibleRecords.map(function(m) {
-          return m[pk];
+        this.selectedRecords = this.records.map(function(m) {
+          return m[pk] + '';
         });
       } else {
         this.selectedRecords.splice(0, this.selectedRecords.length);
@@ -264,7 +267,7 @@ Vue.component("bulk-edit-records", {
         var index = self.records.indexOf(record);
         self.records.splice(index, 1);
 
-        index = self.selectedRecords.indexOf(record[pk]);
+        index = self.selectedRecords.indexOf(record[pk] + '');
         if (index != -1) {
           self.selectedRecords.splice(index, 1);
         }
@@ -277,7 +280,7 @@ Vue.component("bulk-edit-records", {
       var pk = this.primaryKey;
 
       this.selectedAllRecords = this.records.filter(function(record) {
-        return self.selectedRecords.indexOf(record[pk]) > -1;
+        return self.selectedRecords.indexOf(record[pk] + '') > -1;
       }).length === this.records.length;
     },
     allRecordsRemoved: function() {

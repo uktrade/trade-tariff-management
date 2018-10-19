@@ -26,11 +26,11 @@ window.BulkEditOfQuotaMeasuresSaveActions =
       processData: false
       contentType: 'application/json'
       success: (response) ->
-        BulkEditOfMeasuresSaveActions.cleanUpErrorBlocks(response)
-        BulkEditOfMeasuresSaveActions.sendNextBatch(mode, response)
+        BulkEditOfQuotaMeasuresSaveActions.cleanUpErrorBlocks(response)
+        BulkEditOfQuotaMeasuresSaveActions.sendNextBatch(mode, response)
       error: (response) ->
-        BulkEditOfMeasuresSaveActions.handleErrors(response)
-        BulkEditOfMeasuresSaveActions.sendNextBatch(mode, response)
+        BulkEditOfQuotaMeasuresSaveActions.handleErrors(response)
+        BulkEditOfQuotaMeasuresSaveActions.sendNextBatch(mode, response)
 
     return false
 
@@ -39,7 +39,7 @@ window.BulkEditOfQuotaMeasuresSaveActions =
     if window.__sb_current_batch <= window.__sb_total_pages
 
       setTimeout (->
-        BulkEditOfMeasuresSaveActions.sendSaveRequest(mode)
+        BulkEditOfQuotaMeasuresSaveActions.sendSaveRequest(mode)
       ), 3000
     else
       if mode == "save_group_for_cross_check" && response.redirect_url isnt undefined
@@ -47,9 +47,9 @@ window.BulkEditOfQuotaMeasuresSaveActions =
           window.location = response.redirect_url
         ), 1000
       else
-        BulkEditOfMeasuresSaveActions.toogleSaveSpinner()
-        BulkEditOfMeasuresSaveActions.unlockButtons()
-        BulkEditOfMeasuresSaveActions.showSummaryPopup()
+        BulkEditOfQuotaMeasuresSaveActions.toogleSaveSpinner()
+        BulkEditOfQuotaMeasuresSaveActions.unlockButtons()
+        BulkEditOfQuotaMeasuresSaveActions.showSummaryPopup()
 
     return false
 
@@ -88,7 +88,7 @@ window.BulkEditOfQuotaMeasuresSaveActions =
 
   toogleSaveSpinner: ->
     mode = window.__save_bulk_edit_mode
-    BulkEditOfMeasuresSaveActions.disable_other_buttons()
+    BulkEditOfQuotaMeasuresSaveActions.disable_other_buttons()
 
     if mode == "save_progress"
       link = $(".js-bulk-edit-of-records-save-progress")
@@ -148,5 +148,5 @@ window.BulkEditOfQuotaMeasuresSaveActions =
     return false
 
 $ ->
-  BulkEditOfMeasuresSaveActions.getValidationErrors()
+  BulkEditOfQuotaMeasuresSaveActions.getValidationErrors()
 
