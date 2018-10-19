@@ -14,56 +14,129 @@
   </div>
 <% end %>
 
-<div class="work-with-selected-quota">
-  <%= form_tag({}, { method: :post }) do %>
-    <h1 class="heading-xlarge">
-      Clone selected quota
-    </h1>
+<div class="clone-quota">
+  <%= form_tag({}, { method: :post, "v-on:submit" => "validate" }) do %>
+    <div class="bootstrap-row">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6">
+        <h1 class="heading-xlarge">
+          Clone selected quota
+        </h1>
 
-    <div class="error-summary" role="alert" aria-labelledby="work-with-selected-quota-error-heading" tabindex="-1" v-cloak="" v-if="hasErrors">
+        <div class="error-summary" role="alert" aria-labelledby="work-with-selected-quota-error-heading" tabindex="-1" v-cloak="" v-if="hasErrors">
 
-      <h2 class="heading-medium error-summary-heading" id="work-with-selected-quota-error-heading">
-        Error
-      </h2>
+          <h2 class="heading-medium error-summary-heading" id="work-with-selected-quota-error-heading">
+            Error
+          </h2>
 
-      <p>
-        {{errorsSummary}}
-      </p>
-
-      <p>
-        See individual fields for details.
-      </p>
-    </div>
-
-    <form-group :errors="errors" error-key="workbasket_name">
-      <template slot-scope="slotProps">
-        <label for="workbasket_name" class="form-label">
-          What is the name of this workbasket?
-          <span class="error-message" v-if="slotProps.hasError" v-cloak="">
-            {{slotProps.error}}
-          </span>
-
-          <span class="form-hint">
-            This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
-          </span>
-        </label>
-        <div class="row">
-          <div class="col-md-9 col-lg-7">
-            <input type="text" name="workbasket_name" class="form-control" v-model="workbasket_name">
-          </div>
+          <p>
+            {{errorsSummary}}
+          </p>
         </div>
-      </template>
-    </form-group>
 
-    <br>
+        <info-message>
+          <p>
+            This action will create copies of the selected measures, which you will then be able to edit as needed. The original (source) measures will remain unchanged.
+          </p>
+          <p>
+            If you intend your copies to replace the source measures, you will need separately to end-date those measures - you should usually do that first, to avoid conformance errors, as you cannot have multiple identical measures on the system. You may prefer to edit the source measures directly rather than make copies, as the system will then automatically manage version control.
+          </p>
+        </info-message>
 
-    <div class="form-group" v-cloak>
-      <button type="submit" class="button">
-        {{buttonText}}
-      </button>
-      <a href="/app/assets/stylesheets" class="secondary-button">
-        Cancel
-      </a>
+        <form-group :errors="errors" error-key="exclusions">
+          <template slot-scope="slotProps">
+            <label class="form-label">
+              Which attributes do you want to exclude from the copied measures?
+
+              <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+                {{slotProps.error}}
+              </span>
+            </label>
+
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-select-all" v-model="selectAll" />
+                <label for="clone-select-all">
+                  Select all
+                </label>
+              </span>
+            </p>
+
+            <warning-message>
+              Note that you cannot have multiple identical measures. Nor can you create measures that are outside the quota’s existing validity periods (definitions) from here (to do that, you should edit the quota itself, or create a new quota using the same order number but covering a different time period). Cloning measures from here should only be used when you need to add commodity code or origins to the quota. You should therefore select at least one of Commodity code or Origin from the list below. You may optionally select any of the other attributes.
+            </warning-message>
+
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-commodity-code" v-model="excludeCommodityCode" :checked="excludeCommodityCode" name="exclusions[]" value="commodity_codes" />
+                <label for="clone-commodity-code">
+                  Commodity code
+                </label>
+              </span>
+            </p>
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-origin" v-model="excludeOrigin" :checked="excludeOrigin" name="exclusions[]" value="origin" />
+                <label for="clone-origin">
+                  Origin
+                </label>
+              </span>
+            </p>
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-duties" v-model="excludeDuties" :checked="excludeDuties" name="exclusions[]" value="duties" />
+                <label for="clone-duties">
+                  Duties
+                </label>
+              </span>
+            </p>
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-conditions" v-model="excludeConditions" :checked="excludeConditions" name="exclusions[]" value="conditions" />
+                <label for="clone-conditions">
+                  Conditions
+                </label>
+              </span>
+            </p>
+            <p>
+              <span class="small-checkbox">
+                <input type="checkbox" id="clone-footnotes" v-model="excludeFootnotes" :checked="excludeFootnotes" name="exclusions[]" value="footnotes" />
+                <label for="clone-footnotes">
+                  Footnotes
+                </label>
+              </span>
+            </p>
+          </template>
+        </form-group>
+
+        <form-group :errors="errors" error-key="workbasket_name">
+          <template slot-scope="slotProps">
+            <label for="workbasket_name" class="form-label">
+              What is the name of this workbasket?
+              <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+                {{slotProps.error}}
+              </span>
+
+              <span class="form-hint">
+                This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
+              </span>
+            </label>
+            <div class="row">
+              <div class="col-md-9 col-lg-7">
+                <input type="text" name="workbasket_name" class="form-control" v-model="workbasket_name">
+              </div>
+            </div>
+          </template>
+        </form-group>
+
+        <br>
+
+        <div class="form-group" v-cloak>
+          <button type="submit" class="button">
+            Clone selected measures
+          </button>
+          <%= link_to "Cancel", quotas_url(search_code: workbasket_settings.initial_search_results_code) %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
