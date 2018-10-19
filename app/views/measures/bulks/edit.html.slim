@@ -27,48 +27,33 @@ script
   = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
 
 .bulk-edit-measures
-  warning-message v-if="overloaded"
-    | The server is overloaded at the moment or there is an error preventing the request to load the current batch of measures. Retrying in 30 seconds&hellip;
-  = render "table_top"
+  bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
+    template slot-scope="slotProps"
+      = content_tag "change-duties-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_duties'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = content_tag "records-grid", nil, { "table-class" => "measures-table", "primary-key" => "measure_sid", ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
-    p Loading measures table...
+      = content_tag "change-conditions-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_conditions'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
+      = content_tag "change-validity-period-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_validity_period'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
-    h1.heading-xlarge slot="title"
-      | Loading measures
-    h4.heading-medium slot-scope="slotProps"
-      | Please wait while we load and prepare measures for editing
-      br
-      | {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
-      br
-      = content_tag "loading-spinner", nil
+      = content_tag "change-regulation-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_regulation'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = render "measures/bulks/action_buttons"
+      = content_tag "change-commodity-code-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_commodity_codes'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = content_tag "change-duties-popup", nil, { "v-if" => "changingDuties", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+      = content_tag "change-origins-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_origin'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = content_tag "change-conditions-popup", nil, { "v-if" => "changingConditions", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+      = content_tag "remove-measures-popup", nil, {"v-if" => "slotProps.selectedAction == 'remove_from_group'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", ":selected-all-measures" => "slotProps.selectedAllMeasures", ":measures-removed-cb" => "slotProps.recordsRemoved", ":all-measures-removed-cb" => "slotProps.allRecordsRemoved"}
 
-  = content_tag "change-validity-period-popup", nil, { "v-if" => "changingValidityPeriod", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+      = content_tag "remove-measures-popup", nil, {"v-if" => "slotProps.selectedAction == 'remove_from_group'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", ":selected-all-measures" => "slotProps.selectedAllMeasures", ":measures-removed-cb" => "slotProps.recordsRemoved", ":all-measures-removed-cb" => "slotProps.allRecordsRemoved"}
 
-  = content_tag "change-regulation-popup", nil, { "v-if" => "changingRegulation", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+      = content_tag "force-delete-measures-popup", nil, {"v-if" => "slotProps.selectedAction == 'force_delete'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-force-deleted" => "slotProps.recordsForceDeleted"}
 
-  = content_tag "change-commodity-code-popup", nil, { "v-if" => "changingCommodityCodes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+      = content_tag "change-additional-code-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_additional_code'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = content_tag "change-origins-popup", nil, { "v-if" => "changingOrigin", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
+      = content_tag "change-footnotes-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_footnotes'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
-  = content_tag "remove-measures-popup", nil, { "v-if" => "removingFromGroup", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", ":selected-all-measures" => "selectedAllMeasures", ":measures-removed-cb" => "measuresRemoved", ":all-measures-removed-cb" => "allMeasuresRemoved" }
+      = content_tag "restore-records-popup", nil, {"v-if" => "slotProps.selectedAction == 'restore_records'", ":open" => "true", ":records" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@records-restored" => "slotProps.restoreRecords"}
 
-  = content_tag "delete-measures-popup", nil, { "v-if" => "deleting", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-deleted" => "measuresDeleted" }
-
-  = content_tag "change-additional-code-popup", nil, { "v-if" => "changingAdditionalCode", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
-
-  = content_tag "change-footnotes-popup", nil, { "v-if" => "changingFootnotes", ":open" => "true", ":measures" => "selectedMeasureObjects", ":on-close" => "closeAllPopups", "@measures-updated" => "measuresUpdated" }
-
-= render "shared/vue_templates/records_grid"
+= render "shared/vue_templates/bulk_edit_records"
 = render "shared/vue_templates/measure_origin"
 = render "shared/vue_templates/change_duties"
 = render "shared/vue_templates/change_conditions"
@@ -78,7 +63,9 @@ script
 = render "shared/vue_templates/change_origins"
 = render "shared/vue_templates/remove_measures"
 = render "shared/vue_templates/delete_measures"
+= render "shared/vue_templates/force_delete_measures"
 = render "shared/vue_templates/change_additional_code"
 = render "shared/vue_templates/change_footnotes"
+= render "shared/vue_templates/restore_records"
 
-= render "measures/bulks/save_actions_popups/collection"
+= render "shared/bulks/save_actions_popups/collection"

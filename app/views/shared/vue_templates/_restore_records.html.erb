@@ -1,0 +1,45 @@
+<script type="text/x-template" id="restore-records-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Remove measures from edit group
+    </template>
+
+    <div v-if="measures.length > 1">
+      <warning-message>
+        You are about to remove {{measures.length}} measures.
+      </warning-message>
+    </div>
+
+    <info-message>
+      <p>
+        This action will discard any changes made to the selected measures and release them from the edit group (this makes them available for editing separately, e.g. by another user or in a different edit group).
+      </p>
+
+      <p v-if="selectedAllMeasures">
+        Your selection contains all the measures in this edit group. Therefore the group will also be discarded (this does not delete any measures from the system).
+      </p>
+    </info-message>
+
+    <p>
+      <strong>
+        Are you sure you want to remove {{measures.length}} measures<span v-if="selectedAllMeasures"> and discard this edit group</span>?
+      </strong>
+    </p>
+
+    <p v-if="!removingMeasures && submissionErrors" class="alert--error">
+      {{submissionErrors}}
+    </p>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="confirmRemove" :disabled="removingMeasures">
+        Yes - remove measures
+      </button>
+      <span class="loading-spinner-wrapper" v-if="removingMeasures">
+        <%= render "measures/bulks/loading_spinner", message: "Removing measures..." %>
+      </span>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose" :disabled="removingMeasures">
+        No - cancel
+      </a>
+    </div>
+  </pop-up>
+</script>
