@@ -9,6 +9,8 @@ module Workbaskets
         "Bulk Edit of Measures"
       when "create_quota"
         "Create Quota"
+      when "clone_quota"
+        "Clone Quota"
       when "create_regulation"
         "Create Regulation"
       when "create_additional_code"

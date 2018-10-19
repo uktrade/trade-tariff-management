@@ -124,7 +124,7 @@ module WorkbasketHelper
         )
       end
 
-    when :create_quota
+    when :create_quota, :clone_quota
 
       if workbasket.settings.conditions_footnotes_step_validation_passed.present?
         edit_create_quotum_url(
@@ -193,7 +193,7 @@ module WorkbasketHelper
       create_measure_url(workbasket.id)
     when :bulk_edit_of_measures
       measures_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
-    when :create_quota
+    when :create_quota, :clone_quota
       create_quotum_url(workbasket.id)
     when :create_regulation
       create_regulation_url(workbasket.id)

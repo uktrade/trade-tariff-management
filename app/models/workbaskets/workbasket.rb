@@ -5,6 +5,7 @@ module Workbaskets
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
+      :clone_quota,
       :create_regulation,
       :create_additional_code,
       :bulk_edit_of_additional_codes,
@@ -90,6 +91,7 @@ module Workbaskets
     CREATE_WORKBASKETS = %w(
       create_measures
       create_quota
+      clone_quota
       create_regulation
       create_geographical_area
       create_additional_code
@@ -389,7 +391,7 @@ module Workbaskets
         create_measures_settings
       when :bulk_edit_of_measures
         bulk_edit_of_measures_settings
-      when :create_quota
+      when :create_quota, :clone_quota
         create_quota_settings
       when :create_regulation
         create_regulation_settings
@@ -502,6 +504,7 @@ module Workbaskets
           bulk_edit_of_measures
           create_measures
           create_quota
+          clone_quota
           create_regulation
           create_additional_code
           bulk_edit_of_additional_codes
@@ -523,7 +526,7 @@ module Workbaskets
           ::Workbaskets::CreateMeasuresSettings
         when :bulk_edit_of_measures
           ::Workbaskets::BulkEditOfMeasuresSettings
-        when :create_quota
+        when :create_quota, :clone_quota
           ::Workbaskets::CreateQuotaSettings
         when :bulk_edit_of_quotas
           ::Workbaskets::BulkEditOfQuotasSettings

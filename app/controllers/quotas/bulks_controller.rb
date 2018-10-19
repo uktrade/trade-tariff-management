@@ -187,7 +187,7 @@ module Quotas
     def handle_clone_quota_request
       self.workbasket = Workbaskets::Workbasket.new(
           status: :new_in_progress,
-          type: :create_quota,
+          type: :clone_quota,
           user: current_user
       )
       if workbasket.save
