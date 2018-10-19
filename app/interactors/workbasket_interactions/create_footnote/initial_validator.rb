@@ -96,6 +96,7 @@ module WorkbasketInteractions
         def check_operation_date!
           if operation_date.blank?
             @errors[:operation_date] = errors_translator(:operation_date_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
 
