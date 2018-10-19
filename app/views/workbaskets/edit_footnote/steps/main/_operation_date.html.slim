@@ -1,6 +1,6 @@
 fieldset
   h3.heading-medium
-    | Specify the operation date
+    | When do these changes take effect?
 
   form-group :errors="errors" error-key="operation_date"
     template slot-scope="slotProps"
@@ -8,6 +8,7 @@ fieldset
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}
         span.form-hint
+          | Note: this does not change the footnote's validity period - edit the fields below if you need to do that.
 
       .bootstrap-row
         .col-md-12

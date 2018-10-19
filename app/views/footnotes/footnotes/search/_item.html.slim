@@ -4,7 +4,7 @@ tr class="#{'workbasket-record-locked' if item.locked?}"
   td
     = item.footnote_id
   td
-    = link_to new_edit_footnote_url(footnote_type_id: item.footnote_type_id, footnote_id: item.footnote_id, oid: item.oid) do
+    = link_to new_edit_footnote_url(footnote_type_id: item.footnote_type_id, footnote_id: item.footnote_id) do
       p.ellipsis_max_height_container
         = item.description
   td

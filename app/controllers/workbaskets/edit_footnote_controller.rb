@@ -23,8 +23,26 @@ module Workbaskets
       WorkbasketForms::EditFootnoteForm.new
     end
 
+    expose(:original_footnote) do
+      workbasket_settings.original_footnote
+                         .decorate
+    end
+
     expose(:footnote) do
       workbasket_settings.collection.first
+    end
+
+    def new
+      self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
+        settings_type, current_user
+      )
+
+      workbasket_settings.update(
+        original_footnote_type_id: params[:footnote_type_id],
+        original_footnote_id: params[:footnote_id]
+      )
+
+      redirect_to initial_step_url
     end
 
     def update

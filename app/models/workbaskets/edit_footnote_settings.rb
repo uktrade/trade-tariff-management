@@ -18,5 +18,12 @@ module Workbaskets
     def measure_sids_jsonb
       '{}'
     end
+
+    def original_footnote
+      Footnote.where(
+        footnote_id: original_footnote_id,
+        footnote_type_id: original_footnote_type_id
+      ).first
+    end
   end
 end

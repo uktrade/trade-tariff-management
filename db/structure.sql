@@ -1964,7 +1964,9 @@ CREATE TABLE public.edit_footnotes_workbasket_settings (
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     main_step_validation_passed boolean DEFAULT false,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    original_footnote_type_id text,
+    original_footnote_id text
 );
 
 
@@ -12374,3 +12376,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181017095105_create_crea
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017141845_create_certificate_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017165251_add_workbasket_related_columns_to_certificate_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019151225_edit_footnotes_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019161518_add_original_fields_to_edit_footnote_settings.rb');

@@ -1,5 +1,9 @@
 class FootnoteDecorator < ApplicationDecorator
 
+  def title
+    "#{object.footnote_type_id} #{object.footnote_id}"
+  end
+
   def footnote_type_description
     "#{object.footnote_type_id} #{object.footnote_type.description}"
   end
