@@ -21,6 +21,8 @@ module Workbaskets
         "Create Geographical Area"
       when "create_footnote"
         "Create Footnote"
+      when "create_certificate"
+        "Create Certificate"
       end
     end
 
