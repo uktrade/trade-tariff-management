@@ -63,6 +63,14 @@ module WorkbasketInteractions
           if certificate_code.blank?
             @errors[:certificate_code] = errors_translator(:certificate_code_blank)
             @errors_summary = errors_translator(:summary_minimal_required_fields)
+          else
+            if Certificate.where(certificate_type_code: certificate_type_code, certificate_code: certificate_code).present?
+              @errors[:certificate_code] = errors_translator(:certificate_code_in_use)
+            elsif certificate_code.size > 3
+              @errors[:certificate_code] = errors_translator(:certificate_code_max_limit)
+            end
+
+            @errors_summary = errors_translator(:summary_invalid_data) if @errors[:certificate_code].present?
           end
         end
 
@@ -94,7 +102,7 @@ module WorkbasketInteractions
               errors.has_key?(error_key)
             end
 
-            @errors_summary = errors_translator(:summary_invalid_validity_period) if @errors_summary.blank?
+            @errors_summary = errors_translator(:summary_invalid_data) if @errors_summary.blank?
           end
         end
 
