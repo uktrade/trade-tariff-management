@@ -11,6 +11,7 @@ module Workbaskets
       :bulk_edit_of_quotas,
       :create_geographical_area,
       :create_footnote,
+      :edit_footnote,
       :create_certificate
     ]
 
@@ -101,6 +102,9 @@ module Workbaskets
 
     EDIT_WORKABSKETS = %w(
       bulk_edit_of_measures
+      bulk_edit_of_quotas
+      bulk_edit_of_additional_codes
+      edit_footnote
     )
 
     one_to_many :events, key: :workbasket_id,
@@ -137,6 +141,10 @@ module Workbaskets
 
     one_to_one :create_certificate_settings, key: :workbasket_id,
                                                    class_name: "Workbaskets::CreateCertificateSettings"
+
+    one_to_one :edit_footnote_settings, key: :workbasket_id,
+                                        class_name: "Workbaskets::EditFootnoteSettings"
+
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -417,6 +425,8 @@ module Workbaskets
         create_footnote_settings
       when :create_certificate
         create_certificate_settings
+      when :edit_footnote
+        edit_footnote_settings
       end
     end
 
@@ -525,6 +535,7 @@ module Workbaskets
           create_geographical_area
           create_footnote
           create_certificate
+          edit_footnote
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -555,6 +566,8 @@ module Workbaskets
           ::Workbaskets::CreateFootnoteSettings
         when :create_certificate
           ::Workbaskets::CreateCertificateSettings
+        when :edit_footnote
+          ::Workbaskets::EditFootnoteSettings
         end
 
         settings = target_class.new(
