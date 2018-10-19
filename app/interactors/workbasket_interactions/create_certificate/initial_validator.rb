@@ -46,6 +46,10 @@ module WorkbasketInteractions
         errors
       end
 
+      def errors_translator(key)
+        I18n.t(:create_certificate)[key]
+      end
+
       private
 
         def check_certificate_type_code!
@@ -99,10 +103,6 @@ module WorkbasketInteractions
             @errors[:operation_date] = errors_translator(:operation_date_blank)
             @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
-        end
-
-        def errors_translator(key)
-          I18n.t(:create_certificate)[key]
         end
 
         def parse_date(option_name)

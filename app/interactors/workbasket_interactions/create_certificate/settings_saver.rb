@@ -101,7 +101,7 @@ module WorkbasketInteractions
           @conformance_errors = {}
 
           unless certificate.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote))
+            @conformance_errors.merge!(get_conformance_errors(certificate))
           end
 
           unless certificate_description_period.conformant?
