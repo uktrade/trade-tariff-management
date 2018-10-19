@@ -5,13 +5,15 @@ module WorkbasketInteractions
       attr_reader :quota_order_number,
                   :quota_definition,
                   :quota_definitions,
-                  :quota_origins
+                  :quota_origins,
+                  :exclusions
 
-      def initialize(quota_definition_sid)
+      def initialize(quota_definition_sid, exclusions = [])
         @quota_definition = QuotaDefinition.find(quota_definition_sid: quota_definition_sid)
         @quota_order_number = quota_definition.quota_order_number
         @quota_definitions = QuotaDefinition.where(quota_order_number_sid: quota_order_number.quota_order_number_sid).all
         @quota_origins = QuotaOrderNumberOrigin.where(quota_order_number_sid: quota_order_number.quota_order_number_sid).all
+        @exclusions = exclusions
       end
 
       def settings
@@ -26,17 +28,17 @@ module WorkbasketInteractions
             'start_date': quota_order_number.validity_start_date.strftime('%Y-%m-%d'),
             'quota_licence': quota_definition.license,
             'quota_is_licensed': quota_definition.license.present?.to_s,
-            'regulation_id': quota_definition.regulation_id,
-            'commodity_codes': quota_definition.goods_nomenclature_item_ids.join('\r\n'),
+            'regulation_id': 'regulation'.in?(exclusions) ? '' : quota_definition.regulation_id,
+            'commodity_codes': 'commodity_codes'.in?(exclusions) ? '' : quota_definition.goods_nomenclature_item_ids.join('\r\n'),
             'commodity_codes_exclusions': '',
             'measure_type_id': quota_definition.quota_type_id,
-            'additional_codes': quota_definition.additional_code_ids.join('\r\n'),
+            'additional_codes': 'additional_codes'.in?(exclusions) ? '' : quota_definition.additional_code_ids.join('\r\n'),
             'quota_description': quota_definition.description,
-            'quota_ordernumber': quota_order_number.quota_order_number_id,
+            'quota_ordernumber': 'order_number'.in?(exclusions) ? '' : quota_order_number.quota_order_number_id,
             'maximum_precision': quota_definition.maximum_precision,
             'reduction_indicator': quota_definition.reduction_indicator.to_s,
-            'geographical_area_id': extract_geographical_area_ids,
-            'excluded_geographical_areas': extract_excluded_geographical_area_ids,
+            'geographical_area_id': 'origin'.in?(exclusions) ? '' : extract_geographical_area_ids,
+            'excluded_geographical_areas': 'origin'.in?(exclusions) ? '' : extract_excluded_geographical_area_ids,
         }
       end
 
@@ -49,8 +51,8 @@ module WorkbasketInteractions
       def conditions_footnotes_step_settings
         {
             'sub_quotas': extract_sub_quotas_settings,
-            'footnotes': quota_definition.measure.present? ? quota_definition.measure.to_json[:footnotes] : [],
-            'conditions': quota_definition.measure.present? ? quota_definition.measure.to_json[:measure_conditions] : []
+            'footnotes': 'footnotes'.in?(exclusions) || quota_definition.measure.blank? ? [] : quota_definition.measure.to_json[:footnotes],
+            'conditions': 'conditions'.in?(exclusions) || quota_definition.measure.blank? ? [] : quota_definition.measure.to_json[:measure_conditions]
         }
       end
 
