@@ -41,8 +41,9 @@ window.BulkEditing.Measures.Processing = {
     }
 
     return {
+      row_id: measure.row_id,
       measure_sid: measure.measure_sid,
-      sid: measure.clone ? " " : measure.measure_sid,
+      sid: measure.clone ? "&nbsp;" : measure.measure_sid,
       regulation: measure.regulation.formatted_id,
       justification_regulation: measure.justification_regulation ? measure.justification_regulation.formatted_id : "-",
       measure_type_id: measure.measure_type.measure_type_id,
@@ -69,6 +70,10 @@ window.BulkEditing.Measures.Processing = {
     if (measure.changes && measure.changes.length > 0) {
       return measure;
     }
+
+    console.log("HERE", measure)
+
+    measure.row_id = makeRandomString();
 
     measure.original_values = {
       validity_start_date: measure.validity_start_date

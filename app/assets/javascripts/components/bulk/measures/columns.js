@@ -1,5 +1,5 @@
 window.BulkEditing.Measures.Columns = [
-  {enabled: true, title: "Old ID", field: "sid", sortable: true, type: "string", changeProp: "measure_sid" },
+  {enabled: true, title: "Old ID", field: "measure_sid", sortable: true, type: "string", changeProp: "measure_sid" },
   {enabled: true, title: "Regulation", field: "regulation", sortable: true, type: "string", changeProp: "regulation" },
   {enabled: true, title: "Type", field: "measure_type_id", sortable: true, type: "string", changeProp: "measure_type" },
   {enabled: true, title: "Start date", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },

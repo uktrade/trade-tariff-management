@@ -48,6 +48,7 @@ Vue.component("clone-measures-popup", {
       var newMeasures = this.records.map(function(measure) {
         var newMeasure = clone(measure);
 
+        newMeasure.row_id = makeRandomString();
         newMeasure.measure_sid = makeRandomString();
         newMeasure.clone = true;
 

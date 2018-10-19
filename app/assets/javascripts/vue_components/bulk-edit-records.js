@@ -310,6 +310,9 @@ Vue.component("bulk-edit-records", {
       for (var i = 0; i < newRecords.length; i++) {
         this.records.push(newRecords[i]);
       }
+
+      this.recordsUpdated();
+      this.updateSelectedAll();
     }
   }
 });

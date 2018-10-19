@@ -41,9 +41,12 @@ table {
     max-width: 20px;
   }
 
+  .sid-column,
   .measure_sid-column {
     min-width: 80px;
     max-width: 80px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .regulation-column {
