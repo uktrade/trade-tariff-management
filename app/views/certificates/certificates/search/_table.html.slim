@@ -1,0 +1,31 @@
+table.table
+  colgroup
+    col width="180"
+    col width="80"
+    col width="*"
+    col width="200"
+    col width="200"
+
+    - if false
+      col width="1"
+
+  thead
+    tr
+      th
+        | Certificate Type
+      th
+        | Code
+      th
+        | Description
+      th
+        | Start date
+      th
+        | End date
+
+      - if false
+        th width="1"
+          | &nbsp;
+
+  tbody
+    - search_results.map do |item|
+      = render "certificates/certificates/search/item", item: item.decorate

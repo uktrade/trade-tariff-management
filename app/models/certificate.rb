@@ -45,7 +45,13 @@ class Certificate < Sequel::Model
 
     begin :find_ceritificates_search_filters
       def default_order
-        order Sequel.asc(:validity_start_date)
+        distinct(
+          :certificates__certificate_type_code,
+          :certificates__certificate_code
+        ).order(
+          Sequel.asc(:certificates__certificate_type_code),
+          Sequel.asc(:certificates__certificate_code)
+        )
       end
 
       def keywords_search(keyword)
