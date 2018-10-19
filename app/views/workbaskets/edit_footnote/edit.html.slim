@@ -1,0 +1,4 @@
+= render "workbaskets/shared/edit_base", subheader: link_to("(and a new one instead)", new_create_footnote_url)
+
+script
+  == "window.__footnote_json = #{workbasket_settings.settings.to_json};"
