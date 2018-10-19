@@ -24,6 +24,10 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
+      if (window.__search_geo_areas_no_search_mode !== undefined) {
+        $("input[type='checkbox']").click();
+      }
+
       $(document).on('click', ".js-validate-geographical-areas-search-form", function(e) {
         e.preventDefault();
         e.stopPropagation();
