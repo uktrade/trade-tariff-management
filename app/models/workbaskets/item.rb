@@ -15,18 +15,11 @@ module Workbaskets
     validates do
       presence_of :status,
                   :workbasket_id,
-                  :record_id,
                   :record_key,
                   :record_type
 
       inclusion_of :status, in: STATES.map(&:to_s)
 
-      uniqueness_of [
-        :workbasket_id,
-        :record_id,
-        :record_key,
-        :record_type
-      ]
     end
 
     dataset_module do
@@ -86,7 +79,7 @@ module Workbaskets
     def record
       record_type.constantize
                  .where(record_key.to_sym => record_id)
-                 .first
+                 .first if record_id
     end
 
     def error_details(errored_column)
@@ -107,6 +100,19 @@ module Workbaskets
         key = target_record.primary_key
         item.record_key = key
         item.record_id = target_record.public_send(key)
+        item.record_type = target_record.class.to_s
+        item.original_data = target_record.to_json.to_json
+        item.status = "in_progress"
+
+        item.save
+      end
+
+      def new_from_empty_record(workbasket, target_record, row_id)
+        item = new(workbasket_id: workbasket.id)
+
+        key = target_record.primary_key
+        item.row_id = row_id
+        item.record_key = key
         item.record_type = target_record.class.to_s
         item.original_data = target_record.to_json.to_json
         item.status = "in_progress"

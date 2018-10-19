@@ -21,6 +21,7 @@ module Measures
       duties
       conditions
       footnotes
+      order_number
     )
 
     attr_accessor *([:relation, :search_ops, :page] + ALLOWED_FILTERS)
@@ -148,6 +149,12 @@ module Measures
       def apply_footnotes_filter
         @relation = relation.operator_search_by_footnotes(
           *query_ops(footnotes)
+        )
+      end
+
+      def apply_order_number_filter
+        @relation = relation.operator_search_by_order_number(
+          *query_ops(order_number)
         )
       end
   end

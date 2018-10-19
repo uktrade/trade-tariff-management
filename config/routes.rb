@@ -89,6 +89,9 @@ Rails.application.routes.draw do
       member do
         get '/work_with_selected', to: "bulks#work_with_selected"
         post '/work_with_selected', to: "bulks#persist_work_with_selected"
+        get '/configure_cloned', to: "bulks#configure_cloned"
+        post '/configure_cloned', to: "bulks#persist_configure_cloned"
+        get :submitted_for_cross_check
       end
     end
   end
