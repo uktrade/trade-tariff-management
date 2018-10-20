@@ -2,7 +2,7 @@ fieldset
   h3.heading-medium
     | Description validity
 
-  form-group :errors="errors" error-key="description_validity_start_date"
+  form-group.edit-footnote-description-validity-period-block :errors="errors" error-key="description_validity_start_date"
     template slot-scope="slotProps"
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -15,6 +15,6 @@ fieldset
           = content_tag "date-select", "", ":value.sync" => "footnote.description_validity_start_date"
 
       label.form-label
-        span.form-hint
+        span.form-hint.hint_below_input
           | This must fall between the footnote validity dates shown below.
 
