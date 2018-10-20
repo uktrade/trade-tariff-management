@@ -30,4 +30,8 @@
       margin-bottom: 0px;
     }
   }
+
+  input.js-changes_take_effect_date_input, input.js-description-validity-period-date {
+    max-width: 140px;
+  }
 }
