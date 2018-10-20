@@ -21,8 +21,6 @@ $(document).ready(function() {
         data.footnote = this.emptyFootnote();
       }
 
-      data.footnote_types_list = window.__footnote_types_list_json;
-
       return data;
     },
     mounted: function() {
