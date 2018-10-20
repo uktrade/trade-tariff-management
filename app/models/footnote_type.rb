@@ -56,4 +56,22 @@ class FootnoteType < Sequel::Model
       description: description
     }
   end
+
+  class << self
+    def nomenclature_type
+      detect_by_desc_part('nomenclature')
+    end
+
+    def measure_type
+      detect_by_desc_part('measure')
+    end
+
+    def detect_by_desc_part(desc_part)
+      all.select do |item|
+        item.description
+            .downcase
+            .include?(desc_part)
+      end
+    end
+  end
 end

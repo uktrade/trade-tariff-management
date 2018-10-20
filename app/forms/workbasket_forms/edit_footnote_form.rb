@@ -12,5 +12,15 @@ module WorkbasketForms
                   :validity_end_date,
                   :commodity_codes,
                   :measure_sids
+
+    def nomenclature_footnote_type_ids
+      FootnoteType.nomenclature_type
+                  .map(&:footnote_type_id)
+    end
+
+    def measure_footnote_type_ids
+      FootnoteType.measure_type
+                  .map(&:footnote_type_id)
+    end
   end
 end

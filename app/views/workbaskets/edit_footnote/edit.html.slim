@@ -2,3 +2,5 @@
 
 script
   == "window.__footnote_json = #{workbasket_settings.settings.to_json};"
+  == "window.__nomeclature_footnote_type_ids = #{form.nomenclature_footnote_type_ids.to_json};"
+  == "window.__measure_footnote_type_ids = #{form.measure_footnote_type_ids.to_json};"

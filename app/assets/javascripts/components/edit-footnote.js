@@ -12,7 +12,9 @@ $(document).ready(function() {
         savedSuccessfully: false,
         errors: {},
         conformanceErrors: {},
-        errorsSummary: ""
+        errorsSummary: "",
+        nomeclature_footnote_type_ids: window.__nomeclature_footnote_type_ids,
+        measure_footnote_type_ids: window.__measure_footnote_type_ids
       };
 
       if (!$.isEmptyObject(window.__footnote_json)) {
@@ -28,54 +30,52 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
-      $(document).ready(function(){
-        $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
-          e.preventDefault();
-          e.stopPropagation();
+      $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-          submit_button = $(this);
+        submit_button = $(this);
 
-          self.savedSuccessfully = false;
-          WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-          self.errors = [];
+        self.savedSuccessfully = false;
+        WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
+        self.errors = [];
 
-          $.ajax({
-            url: window.save_url,
-            type: "PUT",
-            data: {
-              step: window.current_step,
-              mode: submit_button.attr('name'),
-              settings: self.createFootnoteMainStepPayLoad()
-            },
-            success: function(response) {
-              WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
+        $.ajax({
+          url: window.save_url,
+          type: "PUT",
+          data: {
+            step: window.current_step,
+            mode: submit_button.attr('name'),
+            settings: self.createFootnoteMainStepPayLoad()
+          },
+          success: function(response) {
+            WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
 
-              if (response.redirect_url !== undefined) {
-                setTimeout(function tick() {
-                  window.location = response.redirect_url;
-                }, 1000);
+            if (response.redirect_url !== undefined) {
+              setTimeout(function tick() {
+                window.location = response.redirect_url;
+              }, 1000);
 
-              } else {
-                WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
-                self.savedSuccessfully = true;
-              }
-            },
-            error: function(response) {
-              WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
+            } else {
               WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
-
-              if (response.status == 500) {
-                alert("There was a server error which prevented the additional codes to be saved. Please try again in a few moments.");
-                return;
-              }
-
-              json_resp = response.responseJSON;
-
-              self.errorsSummary = json_resp.errors_summary;
-              self.errors = json_resp.errors;
-              self.conformanceErrors = json_resp.conformance_errors;
+              self.savedSuccessfully = true;
             }
-          });
+          },
+          error: function(response) {
+            WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
+            WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+
+            if (response.status == 500) {
+              alert("There was a server error which prevented the additional codes to be saved. Please try again in a few moments.");
+              return;
+            }
+
+            json_resp = response.responseJSON;
+
+            self.errorsSummary = json_resp.errors_summary;
+            self.errors = json_resp.errors;
+            self.conformanceErrors = json_resp.conformance_errors;
+          }
         });
       });
     },
