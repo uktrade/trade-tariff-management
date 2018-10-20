@@ -15,7 +15,7 @@ fieldset
 
   .bootstrap-row
     .col-lg-12.col-md-12.col-sm-12.col-xs-12
-      = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "search.commodity_codes", rows: 3 }
+      = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "footnote.commodity_codes", rows: 3 }
 
   h3.heading-medium.sub_heading_block
     | Measures
@@ -28,4 +28,4 @@ fieldset
 
   .bootstrap-row
     .col-lg-12.col-md-12.col-sm-12.col-xs-12
-      = f.input :measure_sids, as: :text, label: false, input_html: { "v-model" => "search.measure_sids", rows: 3 }
+      = f.input :measure_sids, as: :text, label: false, input_html: { "v-model" => "footnote.measure_sids", rows: 3 }
