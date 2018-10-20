@@ -67,6 +67,9 @@ $(document).ready(function() {
         self.savedSuccessfully = false;
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
 
+        self.errors = {};
+        self.conformanceErrors = {};
+
         $.ajax({
           url: window.save_url,
           type: "PUT",
@@ -76,9 +79,6 @@ $(document).ready(function() {
             settings: self.footnotePayLoad()
           },
           success: function(response) {
-            self.errors = {};
-            self.conformanceErrors = {};
-
             WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
             DatepickerRangeMonkeyPatch.fix('workbasket_forms_edit_footnote_form[operation_date]', 'workbasket_forms_edit_footnote_form[description_validity_start_date]');
 
@@ -174,8 +174,8 @@ $(document).ready(function() {
       footnotePayLoad: function() {
         return {
           reason_for_changes: this.footnote.reason_for_changes,
-          operation_date: $(".js-changes_take_effect_date_input").val(),
           description: this.footnote.description,
+          operation_date: $(".js-changes_take_effect_date_input").val(),
           description_validity_start_date: $(".js-description-validity-period-date").val(),
           validity_start_date: this.footnote.validity_start_date,
           validity_end_date: this.footnote.validity_end_date,

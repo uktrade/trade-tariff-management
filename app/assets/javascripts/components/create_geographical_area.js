@@ -54,6 +54,9 @@ $(document).ready(function() {
           self.savedSuccessfully = false;
           WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
 
+          self.errors = {};
+          self.conformanceErrors = {};
+
           $.ajax({
             url: window.save_url,
             type: "PUT",
@@ -63,9 +66,6 @@ $(document).ready(function() {
               settings: self.createGeographicalAreaMainStepPayLoad()
             },
             success: function(response) {
-              self.errors = {};
-              self.conformanceErrors = {};
-
               WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
 
               if (response.redirect_url !== undefined) {
