@@ -52,6 +52,12 @@ $(document).ready(function() {
         }
       });
 
+      current_footnote_description = $(".js-footnote-description-textarea").val();
+
+      if (current_footnote_description !== window.__original_footnote_description) {
+        this.showDescriptionValidityStartDateBlock();
+      }
+
       $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -111,12 +117,22 @@ $(document).ready(function() {
     },
     watch: {
       "footnote.description": function(newVal) {
-        if (newVal && newVal !== window.__original_footnote_description) {
-          console.log("-----------------" + newVal);
+        if (newVal && newVal == window.__original_footnote_description) {
+          this.hideDescriptionValidityStartDateBlock();
+        } else {
+          this.showDescriptionValidityStartDateBlock();
         }
       }
     },
     methods: {
+      showDescriptionValidityStartDateBlock: function() {
+        $(".edit-footnote-description-validity-period-block").removeClass('hidden');
+        $(".js-validity-period-start-date-block").removeClass("without_top_margin");
+      },
+      hideDescriptionValidityStartDateBlock: function() {
+        $(".edit-footnote-description-validity-period-block").addClass('hidden');
+        $(".js-validity-period-start-date-block").addClass("without_top_margin");
+      },
       parseFootnotePayload: function(payload) {
         return {
           reason_for_changes: payload.reason_for_changes,

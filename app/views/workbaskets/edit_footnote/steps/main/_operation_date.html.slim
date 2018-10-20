@@ -2,7 +2,7 @@ fieldset
   h3.heading-medium
     | When do these changes take effect?
 
-  form-group :errors="errors" error-key="operation_date"
+  form-group.without_bottom_margin :errors="errors" error-key="operation_date"
     template slot-scope="slotProps"
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""

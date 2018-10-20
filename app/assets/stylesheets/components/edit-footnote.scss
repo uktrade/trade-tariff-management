@@ -31,6 +31,16 @@
     }
   }
 
+  .form-group.without_bottom_margin {
+    margin-bottom: 0px;
+  }
+
+  fieldset.js-validity-period-start-date-block {
+    &.without_top_margin {
+      margin-top: 0px;
+    }
+  }
+
   input.js-changes_take_effect_date_input, input.js-description-validity-period-date {
     max-width: 140px;
   }
