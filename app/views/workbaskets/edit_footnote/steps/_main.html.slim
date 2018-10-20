@@ -4,5 +4,7 @@
 = render "workbaskets/edit_footnote/steps/main/description", f: f
 = render "workbaskets/edit_footnote/steps/main/description_validity_start_date", f: f
 = render "workbaskets/edit_footnote/steps/main/validity_period", f: f
-= render "workbaskets/edit_footnote/steps/main/associations", f: f
+
+- if show_commodity_codes_block || show_measures_block
+  = render "workbaskets/edit_footnote/steps/main/associations", f: f
 

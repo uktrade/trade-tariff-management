@@ -32,6 +32,18 @@ module Workbaskets
       workbasket_settings.collection.first
     end
 
+    expose(:show_commodity_codes_block) do
+      FootnoteType.nomenclature_type
+                  .map(&:footnote_type_id)
+                  .include?(original_footnote.footnote_type_id)
+    end
+
+    expose(:show_measures_block) do
+      FootnoteType.measure_type
+                  .map(&:footnote_type_id)
+                  .include?(original_footnote.footnote_type_id)
+    end
+
     def new
       self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
         settings_type, current_user

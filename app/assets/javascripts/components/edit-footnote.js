@@ -12,9 +12,7 @@ $(document).ready(function() {
         savedSuccessfully: false,
         errors: {},
         conformanceErrors: {},
-        errorsSummary: "",
-        nomeclature_footnote_type_ids: window.__nomeclature_footnote_type_ids,
-        measure_footnote_type_ids: window.__measure_footnote_type_ids
+        errorsSummary: ""
       };
 
       if (!$.isEmptyObject(window.__footnote_json)) {
