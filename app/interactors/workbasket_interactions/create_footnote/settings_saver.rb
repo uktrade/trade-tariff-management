@@ -43,6 +43,9 @@ module WorkbasketInteractions
       end
 
       def save!
+        if settings_params[:footnote_type_id].present?
+          workbasket.title = "#{settings_params[:footnote_type_id]} ___"
+        end
         workbasket.operation_date = operation_date
         workbasket.save
 
@@ -57,6 +60,9 @@ module WorkbasketInteractions
       def persist!
         @do_not_rollback_transactions = true
         validate!
+
+        workbasket.title = footnote.decorate.title
+        workbasket.save
       end
 
       def success_ops

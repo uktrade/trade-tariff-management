@@ -46,6 +46,7 @@ module WorkbasketInteractions
       end
 
       def save!
+        workbasket.title = settings.original_footnote.title
         workbasket.operation_date = operation_date
         workbasket.save
 
