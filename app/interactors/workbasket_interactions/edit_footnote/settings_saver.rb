@@ -25,6 +25,7 @@ module WorkbasketInteractions
                     :errors_summary,
                     :attrs_parser,
                     :initial_validator,
+                    :original_footnote,
                     :footnote,
                     :footnote_description,
                     :footnote_description_period,
@@ -32,6 +33,7 @@ module WorkbasketInteractions
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
         @workbasket = workbasket
+        @original_footnote = original_footnote
         @save_mode = save_mode
         @current_step = current_step
         @settings = workbasket.settings
@@ -46,7 +48,7 @@ module WorkbasketInteractions
       end
 
       def save!
-        workbasket.title = settings.original_footnote.title
+        workbasket.title = original_footnote.title
         workbasket.operation_date = operation_date
         workbasket.save
 
@@ -91,6 +93,8 @@ module WorkbasketInteractions
 
         def check_conformance_rules!
           Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
+            end_date_existing_footnote! if @do_not_rollback_transactions.present?
+
             add_footnote!
             add_footnote_description_period!
             add_footnote_description!
@@ -117,6 +121,16 @@ module WorkbasketInteractions
           if conformance_errors.present?
             @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
           end
+        end
+
+        def end_date_existing_footnote!
+          original_footnote.validity_end_date = operation_date
+
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            original_footnote, system_ops.merge(operation: "U")
+          ).assign!
+
+          original_footnote.save
         end
 
         def add_footnote!
