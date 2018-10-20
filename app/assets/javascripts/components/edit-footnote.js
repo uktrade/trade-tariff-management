@@ -28,18 +28,7 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
-      var changes_take_effect_date_input = $(".js-changes_take_effect_date_input");
       var description_validity_period_date_input = $(".js-description-validity-period-date");
-
-      var changes_take_effect_date_picker = new Pikaday({
-        field: changes_take_effect_date_input[0],
-        format: "DD/MM/YYYY",
-        blurFieldOnSelect: true,
-        onSelect: function(value) {
-          changes_take_effect_date_input.trigger("change");
-          console.log('---------------- select ----------------');
-        }
-      });
 
       var description_validity_period_date_picker = new Pikaday({
         field: description_validity_period_date_input[0],
@@ -50,9 +39,16 @@ $(document).ready(function() {
         }
       });
 
-      changes_take_effect_date_input.on("change", function() {
-        if (!$(this).val()) {
-          console.log('---------------- change - zero value ----------------');
+      var changes_take_effect_date_input = $(".js-changes_take_effect_date_input");
+
+      var changes_take_effect_date_picker = new Pikaday({
+        field: changes_take_effect_date_input[0],
+        format: "DD/MM/YYYY",
+        blurFieldOnSelect: true,
+        onSelect: function(value) {
+          changes_take_effect_date_input.trigger("change");
+          new_val = moment(changes_take_effect_date_input.val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+          description_validity_period_date_picker.setDate(new_val);
         }
       });
 
