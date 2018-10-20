@@ -1,9 +1,9 @@
 fieldset
-  h3.heading-medium
-    | What is the reason for these changes?
-
   form-group.without_bottom_margin :errors="errors" error-key="reason_for_changes"
     template slot-scope="slotProps"
+      h3.heading-medium
+        | What is the reason for these changes?
+
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}

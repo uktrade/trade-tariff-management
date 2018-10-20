@@ -1,10 +1,10 @@
 fieldset
   .edit-footnote-description-validity-period-block.hidden
-    h3.heading-medium.without_top_margin
-      | Description validity
-
     form-group :errors="errors" error-key="description_validity_start_date"
       template slot-scope="slotProps"
+        h3.heading-medium.without_top_margin
+          | Description validity
+
         label.form-label
           span.error-message v-if="slotProps.hasError" v-cloak=""
             | {{slotProps.error}}
