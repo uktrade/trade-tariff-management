@@ -30,6 +30,6 @@ window.DatepickerRangeMonkeyPatch =
       if end_date_formatted.length > 0
         window.js_end_date_pikaday_instance.setDate end_date_formatted
       return
-    ), 500
+    ), 200
 
     return false

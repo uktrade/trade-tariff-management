@@ -127,7 +127,7 @@ $(document).ready(function() {
             end_date_formatted = moment(description_validity_period__date, 'DD/MM/YYYY').format('YYYY-MM-DD');
             description_validity_period_date_picker.setDate(end_date_formatted);
           }
-        }, 1000);
+        }, 500);
       });
     },
     computed: {

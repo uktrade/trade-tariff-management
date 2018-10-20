@@ -151,7 +151,7 @@ module WorkbasketInteractions
                                          .distinct(:goods_nomenclature_item_id)
 
               if db_list.count < list.count
-                @errors[:commodity_codes] = errors_translator(:commodity_codes_not_recognized)
+                @errors[:commodity_codes] = errors_translator(:commodity_codes_not_recognised)
                 @errors_summary = errors_translator(:summary_invalid_fields)
               end
             end
@@ -167,7 +167,7 @@ module WorkbasketInteractions
                                .distinct(:measure_sid)
 
               if db_list.count < list.count
-                @errors[:measure_sids] = errors_translator(:measures_not_recognized)
+                @errors[:measure_sids] = errors_translator(:measures_not_recognised)
                 @errors_summary = errors_translator(:summary_invalid_fields)
               end
             end
