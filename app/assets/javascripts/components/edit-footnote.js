@@ -73,7 +73,7 @@ $(document).ready(function() {
           data: {
             step: window.current_step,
             mode: submit_button.attr('name'),
-            settings: self.createFootnoteMainStepPayLoad()
+            settings: self.footnotePayLoad()
           },
           success: function(response) {
             self.errors = [];
@@ -169,12 +169,12 @@ $(document).ready(function() {
           measure_sids: null
         };
       },
-      createFootnoteMainStepPayLoad: function() {
+      footnotePayLoad: function() {
         return {
           reason_for_changes: this.footnote.reason_for_changes,
-          operation_date: this.footnote.operation_date,
+          operation_date: $(".js-changes_take_effect_date_input").val(),
           description: this.footnote.description,
-          description_validity_start_date: this.footnote.description_validity_start_date,
+          description_validity_start_date: $(".js-description-validity-period-date").val(),
           validity_start_date: this.footnote.validity_start_date,
           validity_end_date: this.footnote.validity_end_date,
           commodity_codes: this.footnote.commodity_codes,

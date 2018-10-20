@@ -49,7 +49,7 @@ module WorkbasketInteractions
 
       def save!
         workbasket.title = original_footnote.title
-        workbasket.operation_date = operation_date
+        workbasket.operation_date = (Date.strptime(operation_date, "%d/%m/%Y") rescue nil)
         workbasket.save
 
         settings.set_settings_for!(current_step, settings_params)

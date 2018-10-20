@@ -43,7 +43,11 @@ module WorkbasketValueObjects
       end
 
       def to_date(param_name)
-        settings[param_name].try(:to_date)
+        begin
+          settings[param_name].try(:to_date)
+        rescue Exception => e
+          settings[param_name]
+        end
       end
 
       def date_to_format(date)
