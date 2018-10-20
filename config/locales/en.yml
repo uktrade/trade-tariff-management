@@ -132,7 +132,7 @@ en:
     minimum_required_filters_short: You must specify a value for at least one of these fields.
     general_errors: "See individual fields for details."
 
-  create_footnote:
+  edit_footnote:
     reason_for_changes_blank: "Reason cannot be left blank and must comprise at least one word."
     operation_date_blank: "You must specify a date, and this date must be on or after the footnote's valid-from date."
     operation_date_is_before_start_date: "This date must be on or after the footnote's valid-from date."

@@ -33,10 +33,10 @@ module WorkbasketInteractions
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
         @workbasket = workbasket
-        @original_footnote = original_footnote
         @save_mode = save_mode
         @current_step = current_step
         @settings = workbasket.settings
+        @original_footnote = settings.original_footnote.decorate
         @settings_params = ActiveSupport::HashWithIndifferentAccess.new(settings_ops)
 
         setup_attrs_parser!

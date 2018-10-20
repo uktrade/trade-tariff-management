@@ -18,7 +18,8 @@ module WorkbasketInteractions
         :validity_end_date
       ]
 
-      attr_accessor :settings,
+      attr_accessor :original_footnote,
+                    :settings,
                     :errors,
                     :errors_summary,
                     :start_date,
@@ -65,7 +66,7 @@ module WorkbasketInteractions
         end
 
         def check_operation_date!
-          oper_date = parse_date(operation_date)
+          oper_date = parse_date(:operation_date)
 
           if oper_date.present?
             if start_date.present? && oper_date < start_date
@@ -89,7 +90,7 @@ module WorkbasketInteractions
         end
 
         def check_description_validity_start_date!
-          desc_date = parse_date(description_validity_start_date)
+          desc_date = parse_date(:description_validity_start_date)
 
           if desc_date.present?
             if start_date.present?
