@@ -152,7 +152,8 @@ module WorkbasketInteractions
 
         def add_footnote_description!
           @footnote_description = FootnoteDescription.new(
-            description: description
+            description: description,
+            language_id: "EN"
           )
 
           footnote_description.footnote_id = footnote.footnote_id

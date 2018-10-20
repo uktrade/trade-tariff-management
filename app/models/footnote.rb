@@ -59,6 +59,8 @@ class Footnote < Sequel::Model
 
   delegate :description, :formatted_description, to: :footnote_description, allow_nil: true
 
+  attr_accessor :updating_mode
+
   dataset_module do
     def national
       where(national: true)

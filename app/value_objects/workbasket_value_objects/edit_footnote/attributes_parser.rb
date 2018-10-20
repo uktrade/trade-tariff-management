@@ -30,6 +30,10 @@ module WorkbasketValueObjects
         to_date(:operation_date)
       end
 
+      def description_validity_start_date
+        to_date(:description_validity_start_date)
+      end
+
       def operation_date_formatted
         date_to_format(ops[:operation_date])
       end
