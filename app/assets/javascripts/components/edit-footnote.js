@@ -50,7 +50,11 @@ $(document).ready(function() {
         onSelect: function(value) {
           changes_take_effect_date_input.trigger("change");
           new_val = moment(changes_take_effect_date_input.val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-          description_validity_period_date_picker.setDate(new_val);
+
+          current_val = $(".js-description-validity-period-date").val();
+          if (current_val.length < 1) {
+            description_validity_period_date_picker.setDate(new_val);
+          }
         }
       });
 
@@ -67,6 +71,9 @@ $(document).ready(function() {
         self.savedSuccessfully = false;
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
 
+        changes_take_effect__date = $(".js-changes_take_effect_date_input").val();
+        description_validity_period__date = $(".js-description-validity-period-date").val();
+
         self.errors = {};
         self.conformanceErrors = {};
 
@@ -80,7 +87,6 @@ $(document).ready(function() {
           },
           success: function(response) {
             WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
-            DatepickerRangeMonkeyPatch.fix('workbasket_forms_edit_footnote_form[operation_date]', 'workbasket_forms_edit_footnote_form[description_validity_start_date]');
 
             if (response.redirect_url !== undefined) {
               setTimeout(function tick() {
@@ -106,10 +112,22 @@ $(document).ready(function() {
             self.errorsSummary = json_resp.errors_summary;
             self.errors = json_resp.errors;
             self.conformanceErrors = json_resp.conformance_errors;
-
-            DatepickerRangeMonkeyPatch.fix('workbasket_forms_edit_footnote_form[operation_date]', 'workbasket_forms_edit_footnote_form[description_validity_start_date]');
           }
         });
+
+        setTimeout(function() {
+          var start_date_formatted = '';
+          if (changes_take_effect__date.length > 0) {
+            start_date_formatted = moment(changes_take_effect__date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+            changes_take_effect_date_picker.setDate(start_date_formatted);
+          }
+
+          var end_date_formatted = ''
+          if (description_validity_period__date.length > 0) {
+            end_date_formatted = moment(description_validity_period__date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+            description_validity_period_date_picker.setDate(end_date_formatted);
+          }
+        }, 1000);
       });
     },
     computed: {
