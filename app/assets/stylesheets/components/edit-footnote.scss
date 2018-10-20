@@ -1,6 +1,12 @@
 .js-edit-footnote-form {
-  h3.heading-medium.sub_heading_block {
-    margin-top: 20px;
+  h3.heading-medium {
+    &.sub_heading_block {
+      margin-top: 20px;
+    }
+
+    &.without_top_margin {
+      margin-top: 0px;
+    }
   }
 
   .alert.alert--info {
@@ -13,9 +19,15 @@
     margin-bottom: 0px;
   }
 
-  .form-group.edit-footnote-description-validity-period-block {
+  .edit-footnote-description-validity-period-block {
+    margin-top: 45px;
+    margin-bottom: 45px;
     overflow: hidden;
     border-left: 3px solid gray;
     padding-left: 20px;
+
+    .form-group {
+      margin-bottom: 0px;
+    }
   }
 }
