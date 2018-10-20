@@ -116,16 +116,20 @@ $(document).ready(function() {
         setTimeout(function() {
           var start_date_formatted = '';
           if (changes_take_effect__date.length > 0) {
+            $(".js-changes_take_effect_date_input").val(changes_take_effect__date);
+
             start_date_formatted = moment(changes_take_effect__date, 'DD/MM/YYYY').format('YYYY-MM-DD');
             changes_take_effect_date_picker.setDate(start_date_formatted);
           }
 
           var end_date_formatted = ''
           if (description_validity_period__date.length > 0) {
+            $(".js-description-validity-period-date").val(description_validity_period__date);
+
             end_date_formatted = moment(description_validity_period__date, 'DD/MM/YYYY').format('YYYY-MM-DD');
             description_validity_period_date_picker.setDate(end_date_formatted);
           }
-        }, 500);
+        }, 1000);
       });
     },
     computed: {
