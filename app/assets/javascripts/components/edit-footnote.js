@@ -39,6 +39,8 @@ $(document).ready(function() {
         }
       });
 
+      window.js_start_date_pikaday_instance = description_validity_period_date_picker;
+
       var changes_take_effect_date_input = $(".js-changes_take_effect_date_input");
 
       var changes_take_effect_date_picker = new Pikaday({
@@ -52,6 +54,8 @@ $(document).ready(function() {
         }
       });
 
+      window.js_end_date_pikaday_instance = changes_take_effect_date_picker;
+
       this.initialCheckOfDescriptionBlock();
 
       $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
@@ -62,7 +66,6 @@ $(document).ready(function() {
 
         self.savedSuccessfully = false;
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-        self.errors = [];
 
         $.ajax({
           url: window.save_url,
@@ -73,7 +76,9 @@ $(document).ready(function() {
             settings: self.createFootnoteMainStepPayLoad()
           },
           success: function(response) {
+            self.errors = [];
             WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
+            DatepickerRangeMonkeyPatch.fix('workbasket_forms_edit_footnote_form[operation_date]', 'workbasket_forms_edit_footnote_form[description_validity_start_date]');
 
             if (response.redirect_url !== undefined) {
               setTimeout(function tick() {
@@ -99,6 +104,8 @@ $(document).ready(function() {
             self.errorsSummary = json_resp.errors_summary;
             self.errors = json_resp.errors;
             self.conformanceErrors = json_resp.conformance_errors;
+
+            DatepickerRangeMonkeyPatch.fix('workbasket_forms_edit_footnote_form[operation_date]', 'workbasket_forms_edit_footnote_form[description_validity_start_date]');
           }
         });
       });
