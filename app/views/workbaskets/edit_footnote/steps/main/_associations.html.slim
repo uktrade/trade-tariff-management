@@ -6,7 +6,7 @@ fieldset
     span.form-hint
       | If you already know which objects this footnote should be associated with, you can add them en-masse here; otherwise it can be individually associated when measures or quotas etc are created.
 
-  - if show_commodity_codes_block
+  - if form.show_commodity_codes_block
     h3.heading-medium.sub_heading_block
       | Goods classiciation codes
 
@@ -18,7 +18,7 @@ fieldset
       .col-lg-6.col-md-8.col-sm-12.col-xs-12
         = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "footnote.commodity_codes", rows: 3 }
 
-  - if show_measures_block
+  - if form.show_measures_block
     h3.heading-medium.sub_heading_block
       | Measures
 

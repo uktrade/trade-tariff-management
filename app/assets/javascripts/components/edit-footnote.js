@@ -85,6 +85,13 @@ $(document).ready(function() {
         return Object.keys(this.conformanceErrors).length > 0;
       }
     },
+    watch: {
+      "footnote.description": function(newVal) {
+        if (newVal && newVal !== window.__original_footnote_description) {
+          console.log("-----------------" + newVal);
+        }
+      }
+    },
     methods: {
       parseFootnotePayload: function(payload) {
         return {

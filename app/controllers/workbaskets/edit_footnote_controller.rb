@@ -20,7 +20,7 @@ module Workbaskets
     end
 
     expose(:form) do
-      WorkbasketForms::EditFootnoteForm.new
+      WorkbasketForms::EditFootnoteForm.new(original_footnote)
     end
 
     expose(:original_footnote) do
@@ -30,18 +30,6 @@ module Workbaskets
 
     expose(:footnote) do
       workbasket_settings.collection.first
-    end
-
-    expose(:show_commodity_codes_block) do
-      FootnoteType.nomenclature_type
-                  .map(&:footnote_type_id)
-                  .include?(original_footnote.footnote_type_id)
-    end
-
-    expose(:show_measures_block) do
-      FootnoteType.measure_type
-                  .map(&:footnote_type_id)
-                  .include?(original_footnote.footnote_type_id)
     end
 
     def new
