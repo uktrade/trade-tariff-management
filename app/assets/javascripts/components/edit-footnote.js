@@ -52,11 +52,7 @@ $(document).ready(function() {
         }
       });
 
-      current_footnote_description = $(".js-footnote-description-textarea").val();
-
-      if (current_footnote_description !== window.__original_footnote_description) {
-        this.showDescriptionValidityStartDateBlock();
-      }
+      this.initialCheckOfDescriptionBlock();
 
       $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
         e.preventDefault();
@@ -132,6 +128,15 @@ $(document).ready(function() {
       hideDescriptionValidityStartDateBlock: function() {
         $(".edit-footnote-description-validity-period-block").addClass('hidden');
         $(".js-validity-period-start-date-block").addClass("without_top_margin");
+      },
+      initialCheckOfDescriptionBlock: function() {
+        current_footnote_description = $(".js-footnote-description-textarea").val();
+
+        if (current_footnote_description !== window.__original_footnote_description) {
+          this.showDescriptionValidityStartDateBlock();
+        } else {
+          this.hideDescriptionValidityStartDateBlock();
+        }
       },
       parseFootnotePayload: function(payload) {
         return {
