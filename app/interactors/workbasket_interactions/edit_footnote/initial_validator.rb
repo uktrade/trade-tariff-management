@@ -24,8 +24,9 @@ module WorkbasketInteractions
                     :start_date,
                     :end_date
 
-      def initialize(settings)
+      def initialize(original_footnote, settings)
         @errors = {}
+        @original_footnote = original_footnote
         @settings = settings
 
         @start_date = parse_date(:validity_start_date)
@@ -51,7 +52,7 @@ module WorkbasketInteractions
       end
 
       def errors_translator(key)
-        I18n.t(:create_footnote)[key]
+        I18n.t(:edit_footnote)[key]
       end
 
       private
@@ -107,8 +108,11 @@ module WorkbasketInteractions
             end
 
           else
-            @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
+
+            if description.present? && description_does_not_match_original_description?
+              @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_blank)
+              @errors_summary = errors_translator(:summary_minimal_required_fields)
+            end
           end
         end
 
@@ -133,7 +137,7 @@ module WorkbasketInteractions
               errors.has_key?(error_key)
             end
 
-            @errors_summary = errors_translator(:summary_invalid_validity_period) if @errors_summary.blank?
+            @errors_summary = errors_translator(:summary_invalid_fields) if @errors_summary.blank?
           end
         end
 
@@ -200,6 +204,10 @@ module WorkbasketInteractions
           white_space_separated_list.map(&:squish)
                                     .flatten
                                     .reject { |i| i.blank? }.uniq
+        end
+
+        def description_does_not_match_original_description?
+          description.squish != original_footnote.description.squish
         end
     end
   end

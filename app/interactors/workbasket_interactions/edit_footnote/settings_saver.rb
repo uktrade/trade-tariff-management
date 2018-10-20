@@ -84,7 +84,7 @@ module WorkbasketInteractions
 
         def check_initial_validation_rules!
           @initial_validator = ::WorkbasketInteractions::EditFootnote::InitialValidator.new(
-            settings_params
+            original_footnote, settings_params
           )
 
           @errors = initial_validator.fetch_errors
