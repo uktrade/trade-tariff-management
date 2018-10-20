@@ -45,7 +45,7 @@ module Measures
       end
 
       res[:reduction_indicator] = existing_measure&.reduction_indicator || ops["reduction_indicator"]
-      res[:quota_ordernumber] = existing_measure&.ordernumber || ops["ordernumber"]
+      res[:quota_ordernumber] = existing_measure&.ordernumber || ops["order_number"]
       res[:export_refund_nomenclature_sid] = existing_measure&.export_refund_nomenclature_sid || ops["export_refund_nomenclature_sid"]
 
       ::Measures::AttributesNormalizer.new(

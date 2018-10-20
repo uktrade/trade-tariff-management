@@ -92,6 +92,13 @@ Rails.application.routes.draw do
         get '/configure_cloned', to: "bulks#configure_cloned"
         post '/configure_cloned', to: "bulks#persist_configure_cloned"
         get :submitted_for_cross_check
+
+        resources :bulk_items, only: [] do
+          collection do
+            get :validation_details
+            post :remove_items
+          end
+        end
       end
     end
   end
