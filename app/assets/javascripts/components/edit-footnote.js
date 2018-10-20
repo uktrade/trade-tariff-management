@@ -76,7 +76,9 @@ $(document).ready(function() {
             settings: self.footnotePayLoad()
           },
           success: function(response) {
-            self.errors = [];
+            self.errors = {};
+            self.conformanceErrors = {};
+
             WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
             DatepickerRangeMonkeyPatch.fix('workbasket_forms_edit_footnote_form[operation_date]', 'workbasket_forms_edit_footnote_form[description_validity_start_date]');
 
