@@ -66,33 +66,33 @@ jobs:
           command: "RAILS_ENV=test CODECLIMATE_REPO_TOKEN=${CODECLIMATE_REPO_TOKEN} bundle exec codeclimate-test-reporter"
       - store_test_results:
           path: /tmp/test-results
-      - deploy:
-          command: |
-            curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
-            sudo dpkg -i cf-cli_amd64.deb
-            cf -v
-      - deploy:
-          command: |
-            curl -v -L -o autopilot https://github.com/contraband/autopilot/releases/download/0.0.3/autopilot-linux
-            chmod +x autopilot
-            cf install-plugin autopilot -f
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ];
-              then CF_ORG=dit-staging CF_SPACE=dev-tariffs CF_APP=tariffs-dev CF_APP_WORKER=tariffs-worker-dev ./bin/deploy
-            fi
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "staging" ];
-              then CF_ORG=dit-staging CF_SPACE=uat-tariffs CF_APP=tariffs-uat CF_APP_WORKER=tariffs-worker-uat ./bin/deploy
-            fi
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "production" ];
-              then CF_ORG=dit-staging CF_SPACE=training-tariffs CF_APP=tariffs-training CF_APP_WORKER=tariffs-worker-training ./bin/deploy
-            fi
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "production" ];
-              then CF_ORG=dit-services CF_SPACE=tariffs CF_APP=tariffs-production CF_APP_WORKER=tariffs-worker-production ./bin/deploy
-            fi
+      # - deploy:
+      #     command: |
+      #       curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
+      #       sudo dpkg -i cf-cli_amd64.deb
+      #       cf -v
+      # - deploy:
+      #     command: |
+      #       curl -v -L -o autopilot https://github.com/contraband/autopilot/releases/download/0.0.3/autopilot-linux
+      #       chmod +x autopilot
+      #       cf install-plugin autopilot -f
+      # - deploy:
+      #     command: |
+      #       if [ "${CIRCLE_BRANCH}" == "master" ];
+      #         then CF_ORG=dit-staging CF_SPACE=dev-tariffs CF_APP=tariffs-dev CF_APP_WORKER=tariffs-worker-dev ./bin/deploy
+      #       fi
+      # - deploy:
+      #     command: |
+      #       if [ "${CIRCLE_BRANCH}" == "staging" ];
+      #         then CF_ORG=dit-staging CF_SPACE=uat-tariffs CF_APP=tariffs-uat CF_APP_WORKER=tariffs-worker-uat ./bin/deploy
+      #       fi
+      # - deploy:
+      #     command: |
+      #       if [ "${CIRCLE_BRANCH}" == "production" ];
+      #         then CF_ORG=dit-staging CF_SPACE=training-tariffs CF_APP=tariffs-training CF_APP_WORKER=tariffs-worker-training ./bin/deploy
+      #       fi
+      # - deploy:
+      #     command: |
+      #       if [ "${CIRCLE_BRANCH}" == "production" ];
+      #         then CF_ORG=dit-services CF_SPACE=tariffs CF_APP=tariffs-production CF_APP_WORKER=tariffs-worker-production ./bin/deploy
+      #       fi
