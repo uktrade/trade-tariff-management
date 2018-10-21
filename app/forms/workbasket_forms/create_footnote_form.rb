@@ -23,18 +23,16 @@ module WorkbasketForms
       end
     end
 
-    def show_commodity_codes_block
-      show_type_block?(:nomenclature_type)
+    def goods_footnote_type_ids
+      FootnoteType::NOMENCLATURE_TYPES
     end
 
-    def show_measures_block
-      show_type_block?(:measure_type)
+    def measures_footnote_type_ids
+      FootnoteType::MEASURE_TYPES
     end
 
-    def show_type_block?(scope)
-      FootnoteType.public_send(scope)
-                  .pluck(:footnote_type_id)
-                  .include?(original_footnote.footnote_type_id)
+    def goods_and_measures_footnote_type_ids
+      goods_footnote_type_ids + measures_footnote_type_ids
     end
   end
 end

@@ -87,6 +87,24 @@ $(document).ready(function() {
       },
       hasConformanceErrors: function() {
         return Object.keys(this.conformanceErrors).length > 0;
+      },
+      showAssociations: function() {
+        var ft_id = this.footnote.footnote_type_id;
+        console.log("------- Footnote Type ID ----- " + ft_id);
+
+        $.inArray( ft_id.toString(), window.__goods_and_measures_footnote_type_ids_json ) !== -1;
+      },
+      showGoodsClassificationCodes: function() {
+        var ft_id = this.footnote.footnote_type_id;
+        console.log("------- Goods ------ 2 ----- " + ft_id);
+
+        $.inArray( ft_id.toString(), window.__goods_footnote_type_ids_json ) !== -1;
+      },
+      showMeasures: function() {
+        var ft_id = this.footnote.footnote_type_id;
+        console.log("------- Measures ------ 3 ----- " + ft_id);
+
+        $.inArray( ft_id.toString(), window.__measures_footnote_type_ids_json ) !== -1;
       }
     },
     methods: {
