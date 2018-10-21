@@ -41,6 +41,7 @@ window.BulkEditing.Measures.Processing = {
     }
 
     return {
+      clone: measure.clone,
       row_id: measure.row_id,
       measure_sid: measure.measure_sid,
       sid: measure.clone ? "&nbsp;" : measure.measure_sid,
@@ -71,7 +72,7 @@ window.BulkEditing.Measures.Processing = {
       return measure;
     }
 
-    measure.row_id = makeRandomString();
+    measure.row_id = makeBigNumber();
 
     measure.original_values = {
       validity_start_date: measure.validity_start_date

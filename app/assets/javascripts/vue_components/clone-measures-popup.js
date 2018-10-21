@@ -48,8 +48,8 @@ Vue.component("clone-measures-popup", {
       var newMeasures = this.records.map(function(measure) {
         var newMeasure = clone(measure);
 
-        newMeasure.row_id = makeRandomString();
-        newMeasure.measure_sid = makeRandomString();
+        newMeasure.row_id = makeBigNumber();
+        newMeasure.measure_sid = newMeasure.row_id;
         newMeasure.clone = true;
 
         if (excludeCommodityCode) {

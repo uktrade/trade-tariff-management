@@ -84,7 +84,7 @@ module Measures
                 measure_params[:row_id].to_s
               ] = errored_columns
 
-              item.validation_errors = errored_columns.to_json
+              item.validation_errors = errors.to_json
             end
           end
 

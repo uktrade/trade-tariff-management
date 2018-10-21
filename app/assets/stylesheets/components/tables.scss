@@ -4,15 +4,18 @@ table {
   }
 }
 
+.records-table.measures,
 .measures-table {
   min-width: 1700px !important;
 }
 
-.additional-codes-table {
+.additional-codes-table,
+.records-table.additional-codes {
   min-width: 1200px !important;
 }
 
-.quotas-table {
+.quotas-table,
+.records-table.quotas {
   min-width: 1500px !important;
 }
 

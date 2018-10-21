@@ -16,6 +16,22 @@ module Quotas
     end
 
     def persist!
+      order_number = QuotaOrderNumber.where(quota_order_number_id: workbasket_settings.quota_definition.quota_order_number_id).first
+      if order_number.validity_start_date <= operation_date
+        if order_number.validity_end_date > operation_date
+          order_number.validity_end_date = operation_date
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+              order_number, system_ops.merge(operation: "U")
+          ).assign!
+          order_number.save
+        end
+      else
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            order_number, system_ops.merge(operation: "D")
+        ).assign!(false)
+        order_number.destroy
+      end
+
       QuotaDefinition.where(quota_order_number_id: workbasket_settings.quota_definition.quota_order_number_id).each do |definition|
         if definition.validity_start_date <= operation_date
           if definition.validity_end_date > operation_date
