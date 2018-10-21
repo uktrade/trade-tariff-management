@@ -19,10 +19,12 @@ module WorkbasketValueObjects
       end
 
       def commodity_codes
+        return [] if settings[:commodity_codes].blank?
         parse_list_of_values(settings[:commodity_codes])
       end
 
       def measure_sids
+        return [] if settings[:measure_sids].blank?
         parse_list_of_values(settings[:measure_sids])
       end
 
