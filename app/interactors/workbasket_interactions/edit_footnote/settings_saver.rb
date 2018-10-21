@@ -139,6 +139,22 @@ module WorkbasketInteractions
             @conformance_errors.merge!(get_conformance_errors(footnote_description))
           end
 
+          if commodity_codes_candidates.present?
+            commodity_codes_candidates.map do |item|
+              unless item.conformant?
+                @conformance_errors.merge!(get_conformance_errors(item))
+              end
+            end
+          end
+
+          if measures_candidates.present?
+            measures_candidates.map do |item|
+              unless item.conformant?
+                @conformance_errors.merge!(get_conformance_errors(item))
+              end
+            end
+          end
+
           if conformance_errors.present?
             @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
           end
