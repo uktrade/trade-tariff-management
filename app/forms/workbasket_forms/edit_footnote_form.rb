@@ -32,7 +32,7 @@ module WorkbasketForms
 
     def show_type_block?(scope)
       FootnoteType.public_send(scope)
-                  .map(&:footnote_type_id)
+                  .pluck(:footnote_type_id)
                   .include?(original_footnote.footnote_type_id)
     end
   end

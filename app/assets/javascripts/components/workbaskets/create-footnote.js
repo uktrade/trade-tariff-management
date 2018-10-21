@@ -87,6 +87,33 @@ $(document).ready(function() {
       },
       hasConformanceErrors: function() {
         return Object.keys(this.conformanceErrors).length > 0;
+      },
+      showAssociations: function() {
+        var ft_id = this.footnote.footnote_type_id;
+
+        if (ft_id !== null && ft_id.length > 0) {
+          return $.inArray( ft_id.toString(), window.__goods_and_measures_footnote_type_ids_json ) !== -1;
+        } else {
+          return false;
+        }
+      },
+      showGoodsClassificationCodes: function() {
+        var ft_id = this.footnote.footnote_type_id;
+
+        if (ft_id !== null && ft_id.length > 0) {
+          return $.inArray( ft_id.toString(), window.__goods_footnote_type_ids_json ) !== -1;
+        } else {
+          return false;
+        }
+      },
+      showMeasures: function() {
+        var ft_id = this.footnote.footnote_type_id;
+
+        if (ft_id !== null && ft_id.length > 0) {
+          return $.inArray( ft_id.toString(), window.__measures_footnote_type_ids_json ) !== -1;
+        } else {
+          return false;
+        }
       }
     },
     methods: {
@@ -96,6 +123,8 @@ $(document).ready(function() {
           description: payload.description,
           validity_start_date: payload.validity_start_date,
           validity_end_date: payload.validity_end_date,
+          commodity_codes: payload.commodity_codes,
+          measure_sids: payload.measure_sids,
           operation_date: payload.operation_date
         };
       },
@@ -105,6 +134,8 @@ $(document).ready(function() {
           description: null,
           validity_start_date: null,
           validity_end_date: null,
+          commodity_codes: null,
+          measure_sids: null,
           operation_date: null
         };
       },
@@ -114,6 +145,8 @@ $(document).ready(function() {
           description: this.footnote.description,
           validity_start_date: this.footnote.validity_start_date,
           validity_end_date: this.footnote.validity_end_date,
+          commodity_codes: this.footnote.commodity_codes,
+          measure_sids: this.footnote.measure_sids,
           operation_date: this.footnote.operation_date
         };
       }

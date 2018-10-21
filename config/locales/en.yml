@@ -120,6 +120,8 @@ en:
     validity_end_date_wrong_format: "Format is invalid."
     validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
     operation_date_blank: "Operation date must be specified."
+    measures_not_recognised: "One or more of the entered IDs is not a recognised measure ID."
+    commodity_codes_not_recognised: "One or more of the entered codes is not a recognised goods commodity code."
     summary_minimal_required_fields: "The footnote could not be submitted because one or more required fields are missing."
     summary_invalid_validity_period: "The footnote could not be submitted because invalid data has been entered for one or more fields."
     summary_conformance_rules: "The footnote could not be submitted because there are conformance errors."
