@@ -29,7 +29,7 @@ module Workbaskets
     end
 
     expose(:footnote) do
-      workbasket_settings.collection.second
+      workbasket_settings.updated_footnote
     end
 
     def new

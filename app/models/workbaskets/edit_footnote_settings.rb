@@ -65,5 +65,11 @@ module Workbaskets
         footnote_type_id: original_footnote_type_id
       ).first
     end
+
+    def updated_footnote
+      collection_by_type(Footnote).detect do |item|
+        item.footnote_id != original_footnote.footnote_id
+      end
+    end
   end
 end
