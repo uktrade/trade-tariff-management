@@ -255,7 +255,7 @@ module WorkbasketInteractions
         end
 
         def add_new_commodity_codes_associations!
-          commodity_codes.map do |code|
+          initial_validator.send(:parse_list_of_values, commodity_codes).map do |code|
             gn = GoodsNomenclature.actual
                                   .by_code(code)
                                   .first
@@ -282,7 +282,7 @@ module WorkbasketInteractions
         end
 
         def add_new_measures_associations!
-          measure_sids.map do |measure_sid|
+          initial_validator.send(:parse_list_of_values, measure_sids).map do |measure_sid|
             measure = Measure.actual
                              .by_measure_sid(measure_sid)
                              .first
