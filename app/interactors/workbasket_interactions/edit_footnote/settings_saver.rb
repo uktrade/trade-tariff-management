@@ -99,7 +99,7 @@ module WorkbasketInteractions
 
         def check_conformance_rules!
           Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
-            end_date_existing_footnote! if @do_not_rollback_transactions.present?
+            end_date_existing_footnote!
 
             add_footnote!
             add_footnote_description_period!
@@ -158,13 +158,15 @@ module WorkbasketInteractions
         end
 
         def end_date_existing_footnote!
-          original_footnote.validity_end_date = validity_start_date
+          unless original_footnote.already_end_dated?
+            original_footnote.validity_end_date = validity_start_date
 
-          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            original_footnote, system_ops.merge(operation: "U")
-          ).assign!
+            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+              original_footnote, system_ops.merge(operation: "U")
+            ).assign!
 
-          original_footnote.save
+            original_footnote.save
+          end
         end
 
         def add_footnote!
@@ -245,11 +247,13 @@ module WorkbasketInteractions
 
         def end_date_existing_commodity_codes_associations!
           original_footnote.footnote_association_goods_nomenclatures.map do |item|
-            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              item, system_ops.merge(operation: "D")
-            ).assign!
+            unless item.already_end_dated?
+              ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+                item, system_ops.merge(operation: "D")
+              ).assign!
 
-            item.save
+              item.save
+            end
           end
         end
 
