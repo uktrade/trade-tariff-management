@@ -110,13 +110,13 @@ module WorkbasketInteractions
               add_next_footnote_description!
             end
 
+            end_date_existing_commodity_codes_associations!
             if commodity_codes.present?
-              end_date_existing_commodity_codes_associations!
               add_new_commodity_codes_associations!
             end
 
+            end_date_existing_measures_associations!
             if measure_sids.present?
-              end_date_existing_measures_associations!
               add_new_measures_associations!
             end
 
@@ -243,7 +243,15 @@ module WorkbasketInteractions
         end
 
         def end_date_existing_measures_associations!
-          # TODO
+          original_footnote.footnote_association_measures.map do |item|
+            item.validity_end_date = validity_start_date
+
+            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+              item, system_ops.merge(operation: "U")
+            ).assign!
+
+            item.save
+          end
         end
 
         def add_new_commodity_codes_associations!
@@ -274,7 +282,28 @@ module WorkbasketInteractions
         end
 
         def add_new_measures_associations!
-          # TODO
+          measure_sids.map do |measure_sid|
+            measure = Measure.actual
+                             .by_measure_sid(measure_sid)
+                             .first
+
+            if measure.present?
+              association = FootnoteAssociationMeasure.new(
+                validity_start_date: validity_start_date,
+                validity_end_date: validity_end_date
+              )
+
+              association.measure_sid = measure.measure_sid
+
+              association.footnote_type_id = footnote.footnote_type_id
+              association.footnote_id = footnote.footnote_id
+
+              assign_system_ops!(association)
+              association.save if persist_mode?
+
+              @measures_candidates << association
+            end
+          end
         end
 
         def persist_mode?
