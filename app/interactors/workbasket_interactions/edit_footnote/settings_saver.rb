@@ -113,7 +113,6 @@ module WorkbasketInteractions
         def parse_and_format_conformance_rules
           @conformance_errors = {}
 
-          footnote.updating_mode = true
           unless footnote.conformant?
             @conformance_errors.merge!(get_conformance_errors(footnote))
           end

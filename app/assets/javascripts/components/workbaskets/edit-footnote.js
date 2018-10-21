@@ -48,11 +48,7 @@ $(document).ready(function() {
         onSelect: function(value) {
           changes_take_effect_date_input.trigger("change");
           new_val = moment(changes_take_effect_date_input.val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-
-          current_val = $(".js-description-validity-period-date").val();
-          if (current_val.length < 1) {
-            description_validity_period_date_picker.setDate(new_val);
-          }
+          description_validity_period_date_picker.setDate(new_val);
         }
       });
 
