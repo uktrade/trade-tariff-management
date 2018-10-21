@@ -23,7 +23,8 @@ module WorkbasketInteractions
                     :errors,
                     :errors_summary,
                     :start_date,
-                    :end_date
+                    :end_date,
+                    :attrs_parser
 
       def initialize(original_footnote, settings)
         @errors = {}
@@ -32,6 +33,10 @@ module WorkbasketInteractions
 
         @start_date = parse_date(:validity_start_date)
         @end_date = parse_date(:validity_end_date)
+
+        @attrs_parser = ::WorkbasketValueObjects::EditFootnote::AttributesParser.new(
+          settings
+        )
       end
 
       ALLOWED_OPS.map do |option_name|
@@ -144,7 +149,7 @@ module WorkbasketInteractions
 
         def check_commodity_codes!
           if commodity_codes.present?
-            list = parse_list_of_values(commodity_codes)
+            list = attrs_parser.parse_list_of_values(commodity_codes)
 
             if list.present?
               db_list = GoodsNomenclature.where(goods_nomenclature_item_id: list)
@@ -160,7 +165,7 @@ module WorkbasketInteractions
 
         def check_measures!
           if measure_sids.present?
-            list = parse_list_of_values(measure_sids)
+            list = attrs_parser.parse_list_of_values(measure_sids)
 
             if list.present?
               db_list = Measure.where(measure_sid: list)
@@ -186,25 +191,6 @@ module WorkbasketInteractions
 
             nil
           end
-        end
-
-        def parse_list_of_values(list_of_ids)
-          # Split by linebreaks
-          linebreaks_separated_list = list_of_ids.split(/\n+/)
-
-          # Split by commas
-          comma_separated_list = linebreaks_separated_list.map do |item|
-            item.split(",")
-          end.flatten
-
-          # Split by whitespaces
-          white_space_separated_list = comma_separated_list.map do |item|
-            item.split(" ")
-          end.flatten
-
-          white_space_separated_list.map(&:squish)
-                                    .flatten
-                                    .reject { |i| i.blank? }.uniq
         end
 
         def description_does_not_match_original_description?
