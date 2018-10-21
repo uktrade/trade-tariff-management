@@ -29,6 +29,8 @@ module WorkbasketInteractions
                     :footnote,
                     :footnote_description,
                     :footnote_description_period,
+                    :next_footnote_description,
+                    :next_footnote_description_period,
                     :persist
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
@@ -99,6 +101,11 @@ module WorkbasketInteractions
             add_footnote_description_period!
             add_footnote_description!
 
+            if description_validity_start_date.present?
+              add_next_footnote_description_period!
+              add_next_footnote_description!
+            end
+
             parse_and_format_conformance_rules
           end
         end
@@ -150,8 +157,8 @@ module WorkbasketInteractions
 
         def add_footnote_description_period!
           @footnote_description_period = FootnoteDescriptionPeriod.new(
-            validity_start_date: (description_validity_start_date || validity_start_date),
-            validity_end_date: validity_end_date
+            validity_start_date: validity_start_date,
+            validity_end_date: (description_validity_start_date || validity_end_date)
           )
 
           footnote_description_period.footnote_id = footnote.footnote_id
@@ -165,19 +172,49 @@ module WorkbasketInteractions
 
         def add_footnote_description!
           @footnote_description = FootnoteDescription.new(
-            description: description,
+            description: original_footnote.description,
             language_id: "EN"
           )
 
           footnote_description.footnote_id = footnote.footnote_id
           footnote_description.footnote_type_id = footnote.footnote_type_id
+          footnote_description.footnote_description_period_sid = footnote_description_period.footnote_description_period_sid
 
           assign_system_ops!(footnote_description)
           set_primary_key!(footnote_description)
 
-          footnote_description.footnote_description_period_sid = footnote_description_period.footnote_description_period_sid
-
           footnote_description.save if persist_mode?
+        end
+
+        def add_next_footnote_description_period!
+          @next_footnote_description_period = FootnoteDescriptionPeriod.new(
+            validity_start_date: description_validity_start_date,
+            validity_end_date: validity_end_date
+          )
+
+          next_footnote_description_period.footnote_id = footnote.footnote_id
+          next_footnote_description_period.footnote_type_id = footnote.footnote_type_id
+
+          assign_system_ops!(next_footnote_description_period)
+          set_primary_key!(next_footnote_description_period)
+
+          next_footnote_description_period.save if persist_mode?
+        end
+
+        def add_next_footnote_description!
+          @next_footnote_description = FootnoteDescription.new(
+            description: description,
+            language_id: "EN"
+          )
+
+          next_footnote_description.footnote_id = footnote.footnote_id
+          next_footnote_description.footnote_type_id = footnote.footnote_type_id
+          next_footnote_description.footnote_description_period_sid = next_footnote_description_period.footnote_description_period_sid
+
+          assign_system_ops!(next_footnote_description)
+          set_primary_key!(next_footnote_description)
+
+          next_footnote_description.save if persist_mode?
         end
 
         def persist_mode?
