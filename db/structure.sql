@@ -2487,7 +2487,9 @@ CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2509,7 +2511,9 @@ CREATE VIEW public.footnote_association_goods_nomenclatures AS
     footnote_association_goods_nomenclatures1.operation_date,
     footnote_association_goods_nomenclatures1.status,
     footnote_association_goods_nomenclatures1.workbasket_id,
-    footnote_association_goods_nomenclatures1.workbasket_sequence_number
+    footnote_association_goods_nomenclatures1.workbasket_sequence_number,
+    footnote_association_goods_nomenclatures1.added_by_id,
+    footnote_association_goods_nomenclatures1.added_at
    FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures1
   WHERE ((footnote_association_goods_nomenclatures1.oid IN ( SELECT max(footnote_association_goods_nomenclatures2.oid) AS max
            FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures2
@@ -12377,3 +12381,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181017141845_create_cert
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017165251_add_workbasket_related_columns_to_certificate_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019151225_edit_footnotes_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019161518_add_original_fields_to_edit_footnote_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181021085816_add_workbasket_fields_to_footnote_associations.rb');

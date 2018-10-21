@@ -31,6 +31,8 @@ module WorkbasketInteractions
                     :footnote_description_period,
                     :next_footnote_description,
                     :next_footnote_description_period,
+                    :commodity_codes_candidates,
+                    :measures_candidates,
                     :persist
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
@@ -47,6 +49,8 @@ module WorkbasketInteractions
         @persist = true # For now it always true
         @errors = {}
         @conformance_errors = {}
+        @commodity_codes_candidates = []
+        @measures_candidates = []
       end
 
       def save!
@@ -106,6 +110,16 @@ module WorkbasketInteractions
               add_next_footnote_description!
             end
 
+            if commodity_codes.present?
+              end_date_existing_commodity_codes_associations!
+              add_new_commodity_codes_associations!
+            end
+
+            if measure_sids.present?
+              end_date_existing_measures_associations!
+              add_new_measures_associations!
+            end
+
             parse_and_format_conformance_rules
           end
         end
@@ -131,7 +145,7 @@ module WorkbasketInteractions
         end
 
         def end_date_existing_footnote!
-          original_footnote.validity_end_date = operation_date
+          original_footnote.validity_end_date = validity_start_date
 
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
             original_footnote, system_ops.merge(operation: "U")
@@ -214,6 +228,53 @@ module WorkbasketInteractions
           set_primary_key!(next_footnote_description)
 
           next_footnote_description.save if persist_mode?
+        end
+
+        def end_date_existing_commodity_codes_associations!
+          original_footnote.footnote_association_goods_nomenclatures.map do |item|
+            item.validity_end_date = validity_start_date
+
+            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+              item, system_ops.merge(operation: "U")
+            ).assign!
+
+            item.save
+          end
+        end
+
+        def end_date_existing_measures_associations!
+          # TODO
+        end
+
+        def add_new_commodity_codes_associations!
+          commodity_codes.map do |code|
+            gn = GoodsNomenclature.actual
+                                  .by_code(code)
+                                  .first
+
+            if gn.present?
+              association = FootnoteAssociationGoodsNomenclature.new(
+                validity_start_date: validity_start_date,
+                validity_end_date: validity_end_date
+              )
+
+              association.goods_nomenclature_sid = gn.goods_nomenclature_sid
+              association.goods_nomenclature_item_id = gn.goods_nomenclature_item_id
+              association.productline_suffix = gn.producline_suffix
+
+              association.footnote_type = footnote.footnote_type_id
+              association.footnote_id = footnote.footnote_id
+
+              assign_system_ops!(association)
+              association.save if persist_mode?
+
+              @commodity_codes_candidates << association
+            end
+          end
+        end
+
+        def add_new_measures_associations!
+          # TODO
         end
 
         def persist_mode?
