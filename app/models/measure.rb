@@ -183,6 +183,10 @@ class Measure < Sequel::Model
   end
 
   dataset_module do
+    def by_measure_sid(m_sid)
+      where(measure_sid: m_sid)
+    end
+
     def without_status
       where("status IS NULL")
     end

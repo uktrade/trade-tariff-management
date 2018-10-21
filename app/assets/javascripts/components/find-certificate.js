@@ -55,7 +55,7 @@ $(document).ready(function() {
           }
         });
 
-        DatepickerRangeMonkeyPatch.fix();
+        DatepickerRangeMonkeyPatch.fix('search[start_date]', 'search[end_date]');
       });
 
       WorkbasketSearchResultsPaginationHelper.init();
