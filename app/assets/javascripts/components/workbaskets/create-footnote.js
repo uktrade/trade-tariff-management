@@ -96,6 +96,8 @@ $(document).ready(function() {
           description: payload.description,
           validity_start_date: payload.validity_start_date,
           validity_end_date: payload.validity_end_date,
+          commodity_codes: payload.commodity_codes,
+          measure_sids: payload.measure_sids,
           operation_date: payload.operation_date
         };
       },
@@ -105,6 +107,8 @@ $(document).ready(function() {
           description: null,
           validity_start_date: null,
           validity_end_date: null,
+          commodity_codes: null,
+          measure_sids: null,
           operation_date: null
         };
       },
@@ -114,6 +118,8 @@ $(document).ready(function() {
           description: this.footnote.description,
           validity_start_date: this.footnote.validity_start_date,
           validity_end_date: this.footnote.validity_end_date,
+          commodity_codes: this.footnote.commodity_codes,
+          measure_sids: this.footnote.measure_sids,
           operation_date: this.footnote.operation_date
         };
       }
