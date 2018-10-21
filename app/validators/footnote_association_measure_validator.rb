@@ -11,6 +11,8 @@ class FootnoteAssociationMeasureValidator < TradeTariffBackend::Validator
       measure_sid: record.measure_sid,
       footnote_type_id: record.footnote_type_id,
       footnote_id: record.footnote_id,
+    ).where(
+      "oid != ?", record.oid
     ).empty?
   end
 
