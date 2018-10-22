@@ -1182,7 +1182,7 @@ describe Measure do
       it "should fail validation for test case 1" do
         # Case 1: When validity start date of new measure is before
         # the existing measure's validity end date.
-        measure = create(
+        _measure = create(
           :measure,
           measure_type_id: measure_type.measure_type_id,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
@@ -1193,7 +1193,6 @@ describe Measure do
           validity_start_date: 1.year.ago,
           validity_end_date: Date.current + 1.month
         )
-
 
         new_measure = build(
           :measure,
@@ -1216,35 +1215,44 @@ describe Measure do
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
 
-      #
-      # FIXME
-      #
-      # it "should not run validation successfully for test Case 2" do
-      #   # Case 2: When new measure's validity start date is before
-      #   # existing measure's validity start date and existing measure is having
-      #   # validity end date as nil and new measure's is also having validity end
-      #   # date as nil.
+      it "should fail validation for test Case 2" do
+        # Case 2: When new measure's validity start date is before
+        # existing measure's validity start date and existing measure is having
+        # validity end date as nil and new measure's is also having validity end
+        # date as nil.
 
-      #   measure = create(
-      #     :measure,
-      #     goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-      #     additional_code_sid: additional_code.additional_code_sid,
-      #     additional_code_type_id: additional_code_type.additional_code_type_id,
-      #     validity_start_date: 1.year.ago,
-      #     validity_end_date: nil
-      #   )
+        _measure = create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+          validity_start_date: 1.year.ago,
+          validity_end_date: nil
+        )
 
-      #   new_measure = measure.reload.dup
-      #   new_measure.validity_start_date = Date.current
-      #   new_measure.validity_end_date = nil
+        new_measure = build(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+        )
 
-      #   new_measure.justification_regulation_id = "abc"
-      #   new_measure.justification_regulation_role = 1
+        new_measure.validity_start_date = Date.current
+        new_measure.validity_end_date = nil
 
-      #   expect(new_measure.additional_code).to_not be(nil)
-      #   expect(new_measure).to_not be_conformant
-      #   expect(new_measure.conformance_errors).to have_key(:ME32)
-      # end
+        new_measure.justification_regulation_id = "abc"
+        new_measure.justification_regulation_role = 1
+
+        expect(new_measure.additional_code).to_not be(nil)
+        expect(new_measure).to_not be_conformant
+        expect(new_measure.conformance_errors).to have_key(:ME32)
+      end
 
       #
       # FIXME
