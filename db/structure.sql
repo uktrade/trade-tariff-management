@@ -2029,6 +2029,41 @@ ALTER SEQUENCE public.edit_footnotes_workbasket_settings_id_seq OWNED BY public.
 
 
 --
+-- Name: edit_geographical_areas_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_geographical_areas_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    original_geographical_area_sid text,
+    original_geographical_area_id text
+);
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_geographical_areas_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_geographical_areas_workbasket_settings_id_seq OWNED BY public.edit_geographical_areas_workbasket_settings.id;
+
+
+--
 -- Name: explicit_abrogation_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8181,6 +8216,13 @@ ALTER TABLE ONLY public.edit_footnotes_workbasket_settings ALTER COLUMN id SET D
 
 
 --
+-- Name: edit_geographical_areas_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_geographical_areas_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: explicit_abrogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9122,6 +9164,14 @@ ALTER TABLE ONLY public.edit_certificates_workbasket_settings
 
 ALTER TABLE ONLY public.edit_footnotes_workbasket_settings
     ADD CONSTRAINT edit_footnotes_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings edit_geographical_areas_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings
+    ADD CONSTRAINT edit_geographical_areas_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12456,3 +12506,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quot
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit_certificate_settings_table.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164645_create_edit_geographical_areas_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_original_fields_to_edit_geographical_areas_workbasket_settings.rb');
