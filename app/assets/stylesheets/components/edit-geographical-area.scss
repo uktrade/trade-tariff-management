@@ -1,0 +1,47 @@
+.js-edit-geographical_area-form {
+  h3.heading-medium {
+    &.sub_heading_block {
+      margin-top: 20px;
+    }
+
+    &.without_top_margin {
+      margin-top: 0px;
+    }
+  }
+
+  .alert.alert--info {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  span.form-hint.hint_below_input {
+    margin-top: 20px;
+    margin-bottom: 0px;
+  }
+
+  .edit-geographical_area-description-validity-period-block {
+    margin-top: 45px;
+    margin-bottom: 45px;
+    overflow: hidden;
+    border-left: 3px solid gray;
+    padding-left: 20px;
+
+    .form-group {
+      margin-bottom: 0px;
+    }
+  }
+
+  .form-group.without_bottom_margin {
+    margin-bottom: 0px;
+  }
+
+  fieldset.js-validity-period-start-date-block {
+    &.without_top_margin {
+      margin-top: 0px;
+    }
+  }
+
+  input.js-changes_take_effect_date_input, input.js-description-validity-period-date {
+    max-width: 140px;
+  }
+}
