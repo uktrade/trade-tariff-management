@@ -54,6 +54,8 @@ Vue.component("bulk-edit-records", {
             record.changes = [];
           }
 
+          record[self.primaryKey] = record[self.primaryKey] + '';
+
           self.selectedRecords.push(record[self.primaryKey]);
 
           return record;
