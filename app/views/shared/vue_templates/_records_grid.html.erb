@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item[primaryKey]" :data-record-sid="item[primaryKey]" v-for="(item, index) in sorted">
+      <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item.row_id" :data-record-sid="item.row_id" v-for="(item, index) in sorted">
         <div class="table__column select-all-column" v-if="disableSelection !== true && singleSelection !== true">
           <input type="checkbox" name="records[]" :value="item[primaryKey]" :checked="checked[item[primaryKey]]" @change="sendCheckedTrigger" />
         </div>

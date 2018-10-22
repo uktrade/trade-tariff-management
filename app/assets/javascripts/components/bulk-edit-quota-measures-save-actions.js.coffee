@@ -9,7 +9,7 @@ window.BulkEditOfQuotaMeasuresSaveActions =
       top_limit = window.__sb_total_count
       final_batch = true
 
-    measures_collection = JSON.parse(JSON.stringify(window.window.__sb_collection))
+    measures_collection = JSON.parse(JSON.stringify(window.__sb_collection))
 
     data = {
       mode: mode,
