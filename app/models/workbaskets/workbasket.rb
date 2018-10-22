@@ -13,7 +13,8 @@ module Workbaskets
       :create_geographical_area,
       :create_footnote,
       :edit_footnote,
-      :create_certificate
+      :create_certificate,
+      :edit_certificate
     ]
 
     STATUS_LIST = [
@@ -107,6 +108,7 @@ module Workbaskets
       bulk_edit_of_quotas
       bulk_edit_of_additional_codes
       edit_footnote
+      edit_certificate
     )
 
     one_to_many :events, key: :workbasket_id,
@@ -147,6 +149,8 @@ module Workbaskets
     one_to_one :edit_footnote_settings, key: :workbasket_id,
                                         class_name: "Workbaskets::EditFootnoteSettings"
 
+    one_to_one :edit_certificate_settings, key: :workbasket_id,
+                                           class_name: "Workbaskets::EditCertificateSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -430,6 +434,8 @@ module Workbaskets
         create_certificate_settings
       when :edit_footnote
         edit_footnote_settings
+      when :edit_certificate
+        edit_certificate_settings
       end
     end
 
@@ -540,6 +546,7 @@ module Workbaskets
           create_footnote
           create_certificate
           edit_footnote
+          edit_certificate
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -574,6 +581,8 @@ module Workbaskets
           ::Workbaskets::CreateCertificateSettings
         when :edit_footnote
           ::Workbaskets::EditFootnoteSettings
+        when :edit_certificate
+          ::Workbaskets::EditCertificateSettings
         end
 
         settings = target_class.new(

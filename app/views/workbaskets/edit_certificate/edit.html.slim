@@ -1,0 +1,5 @@
+= render "workbaskets/shared/edit_base", subheader: link_to("(add a new one instead)", new_edit_certificate_url)
+
+script
+  == "window.__original_certificate_description = '#{j(form.original_certificate_description)}';"
+  == "window.__certificate_json = #{workbasket_settings.settings.to_json};"

@@ -1,6 +1,8 @@
 module Workbaskets
   class CreateGeographicalAreaController < Workbaskets::BaseController
 
+    skip_around_action :configure_time_machine, only: [:submitted_for_cross_check]
+
     expose(:sub_klass) { "CreateGeographicalArea" }
     expose(:settings_type) { :create_geographical_area }
 

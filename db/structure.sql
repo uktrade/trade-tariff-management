@@ -1959,6 +1959,41 @@ ALTER SEQUENCE public.duty_expressions_oid_seq OWNED BY public.duty_expressions_
 
 
 --
+-- Name: edit_certificates_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_certificates_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    original_certificate_type_code text,
+    original_certificate_code text
+);
+
+
+--
+-- Name: edit_certificates_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_certificates_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_certificates_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_certificates_workbasket_settings_id_seq OWNED BY public.edit_certificates_workbasket_settings.id;
+
+
+--
 -- Name: edit_footnotes_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8132,6 +8167,13 @@ ALTER TABLE ONLY public.duty_expressions_oplog ALTER COLUMN oid SET DEFAULT next
 
 
 --
+-- Name: edit_certificates_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_certificates_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_certificates_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: edit_footnotes_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9064,6 +9106,14 @@ ALTER TABLE ONLY public.duty_expression_descriptions_oplog
 
 ALTER TABLE ONLY public.duty_expressions_oplog
     ADD CONSTRAINT duty_expressions_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: edit_certificates_workbasket_settings edit_certificates_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_certificates_workbasket_settings
+    ADD CONSTRAINT edit_certificates_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12404,3 +12454,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_s
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbasket_fileds_to_quota_relations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit_certificate_settings_table.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');

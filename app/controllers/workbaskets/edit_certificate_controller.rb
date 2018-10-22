@@ -1,34 +1,48 @@
-# frozen_string_literal: true
-
 module Workbaskets
-  class CreateCertificateController < Workbaskets::BaseController
+  class EditCertificateController < Workbaskets::BaseController
 
-    skip_around_action :configure_time_machine, only: [:submitted_for_cross_check]
-
-    expose(:sub_klass) { "CreateCertificate" }
-    expose(:settings_type) { :create_certificate }
+    expose(:sub_klass) { "EditCertificate" }
+    expose(:settings_type) { :edit_certificate }
 
     expose(:initial_step_url) do
-      edit_create_certificate_url(
+      edit_edit_certificate_url(
         workbasket.id,
         step: :main
       )
     end
 
     expose(:read_only_section_url) do
-      create_certificate_url(workbasket.id)
+      edit_certificate_url(workbasket.id)
     end
 
     expose(:submitted_url) do
-      submitted_for_cross_check_create_certificate_url(workbasket.id)
+      submitted_for_cross_check_edit_certificate_url(workbasket.id)
     end
 
     expose(:form) do
-      WorkbasketForms::CreateCertificateForm.new
+      WorkbasketForms::EditCertificateForm.new(original_certificate)
+    end
+
+    expose(:original_certificate) do
+      workbasket_settings.original_certificate
+                         .decorate
     end
 
     expose(:certificate) do
-      workbasket_settings.collection.first
+      workbasket_settings.updated_certificate
+    end
+
+    def new
+      self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
+        settings_type, current_user
+      )
+
+      workbasket_settings.update(
+        original_certificate_type_code: params[:certificate_type_code],
+        original_certificate_code: params[:certificate_code]
+      )
+
+      redirect_to initial_step_url
     end
 
     def update
@@ -42,7 +56,7 @@ module Workbaskets
           submit_for_cross_check.run!
 
           render json: { redirect_url: submitted_url },
-                       status: :ok
+                 status: :ok
         else
           render json: saver.success_ops,
                        status: :ok
