@@ -1,0 +1,15 @@
+- scheduled_date = workbasket.operation_date
+
+- if scheduled_date > Date.today
+  p
+    | The workbasket has been approved, but has not yet been sent through to CDS. It will be sent in the first batch on or after
+    =<> "#{scheduled_date.day.ordinalize} #{scheduled_date.strftime("%B %Y")}"
+    | . It contains
+    =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
+    | .
+
+- else
+  p
+    | The workbasket has been approved, but has not yet been sent through to CDS. It will be sent in the next batch. It contains
+    =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
+    | .

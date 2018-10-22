@@ -198,6 +198,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :bulk_edit_of_measures, only: [:show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
     resources :create_quota, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
