@@ -128,7 +128,6 @@ Rails.application.routes.draw do
       member do
         get '/work_with_selected_measures', to: "bulks#work_with_selected_measures"
         post '/work_with_selected_measures', to: "bulks#persist_work_with_selected_measures"
-        get :submitted_for_cross_check
 
         resources :bulk_items, only: [] do
           collection do
@@ -191,6 +190,14 @@ Rails.application.routes.draw do
     end
 
     resources :create_measures, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :bulk_edit_of_measures, only: [:show, :destroy] do
       member do
         get :submitted_for_cross_check
         get :move_to_editing_mode
