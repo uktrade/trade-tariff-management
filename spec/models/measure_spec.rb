@@ -1254,7 +1254,7 @@ describe Measure do
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
 
-      it "should not run validation successfully for test case 3" do
+      it "should fail validation for test case 3" do
         # Case 3:  When existing measure's validity start date is after new
         # measure's validity start date and existing measure is having validity
         # end date as nil.
@@ -1292,7 +1292,7 @@ describe Measure do
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
 
-      it "should not run validation successfully for test case 4" do
+      it "should fail validation for test case 4" do
         # Case 4: When one period is inside of another period.
         # When existing measure validity start date is after new measure's
         # validity start date and existing measure's validity end date
