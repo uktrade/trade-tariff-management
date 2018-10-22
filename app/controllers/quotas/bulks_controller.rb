@@ -9,7 +9,7 @@ module Quotas
       params[:page]
     end
 
-    expose(:main_step_settings) do
+    expose(:configure_step_settings) do
       {
         start_date: params[:validity_start_date],
         workbasket_action: params[:workbasket_action],
@@ -26,11 +26,49 @@ module Quotas
       workbasket.settings
     end
 
-    expose(:edit_url) do
+    expose(:initial_step_url) do
+      if workbasket_settings.edit_quota_workbasket?
+        edit_quotas_bulk_url(
+            workbasket.id,
+            step: :main
+        )
+      else
+        edit_quotas_bulk_url(
+            workbasket.id,
+            search_code: workbasket_settings.initial_search_results_code
+        )
+      end
+    end
+
+    expose(:current_step) { params[:step] }
+
+    expose(:previous_step_url) do
       edit_quotas_bulk_url(
           workbasket.id,
-          search_code: workbasket_settings.initial_search_results_code
+          step: previous_step
       )
+    end
+
+    expose(:read_only_section_url) do
+      edit_quotas_bulk_url(workbasket.id)
+    end
+
+    expose(:quota_periods) do
+      workbasket_settings.quota_periods
+    end
+
+    expose(:parent_quota_periods) do
+      workbasket_settings.parent_quota_periods
+    end
+
+    expose(:saver_mode) { params[:mode] }
+
+    expose(:previous_step) do
+      step_pointer.previous_step
+    end
+
+    expose(:submitted_url) do
+      submitted_for_cross_check_quotas_bulk_url(workbasket.id)
     end
 
     expose(:submit_group_for_cross_check) do
@@ -92,12 +130,33 @@ module Quotas
       }
     end
 
-    expose(:edit_quota_ops) do
+    expose(:settings_params) do
       ops = params[:settings]
       ops.send("permitted=", true) if ops.present?
       ops = (ops || {}).to_h
 
       ops
+    end
+
+    expose(:step_pointer) do
+      ::WorkbasketValueObjects::CreateQuota::StepPointer.new(current_step)
+    end
+
+    expose(:form) do
+      WorkbasketForms::CreateQuotaForm.new(Measure.new)
+    end
+
+    expose(:attributes_parser) do
+      ::WorkbasketValueObjects::CreateQuota::AttributesParser.new(
+          workbasket_settings,
+          current_step
+      )
+    end
+
+    expose(:submit_for_cross_check) do
+      ::WorkbasketInteractions::CreateQuota::SubmitForCrossCheck.new(
+          current_user, workbasket
+      )
     end
 
     expose(:edit_quota_measures_ops) do
@@ -117,7 +176,6 @@ module Quotas
     end
 
     WORKBASKET_ACTION_SAVER = {
-        'edit_quota' => '::',
         'edit_quota_measures' => '::Measures::BulkSaver',
         'remove_suspension' => '::Quotas::RemoveSuspensionSaver',
         'stop_quota' => '::Quotas::StopSaver',
@@ -129,6 +187,15 @@ module Quotas
           current_user,
           workbasket,
           send("#{workbasket_settings.workbasket_action}_ops")
+      )
+    end
+
+    expose(:saver) do
+      ::WorkbasketInteractions::EditOfQuota::SettingsSaver.new(
+          workbasket,
+          current_step,
+          saver_mode,
+          settings_params
       )
     end
 
@@ -169,7 +236,7 @@ module Quotas
         workbasket_settings.update(
             initial_search_results_code: params[:search_code],
             initial_quota_sid: quota_sid,
-            quota_main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
+            main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
             configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
             conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
         )
@@ -205,11 +272,11 @@ module Quotas
     end
 
     def persist_work_with_selected
-      workbasket_settings.set_settings_for!("main", main_step_settings)
+      workbasket_settings.set_settings_for!("configure", configure_step_settings)
       workbasket_settings.set_workbasket_system_data!
 
       if workbasket_settings.editable_workbasket?
-        redirect_to edit_url
+        redirect_to initial_step_url
       else
         if bulk_saver.valid?
           bulk_saver.persist!
@@ -237,6 +304,14 @@ module Quotas
     end
 
     def update
+      if workbasket_settings.edit_quota_workbasket?
+        handle_update_edit_quota_request
+      else
+        handle_update_edit_quota_measures_request
+      end
+    end
+
+    def handle_update_edit_quota_measures_request
       if bulk_saver.valid?
         if submit_group_for_cross_check && final_saving_batch
           bulk_saver.persist!
@@ -254,10 +329,60 @@ module Quotas
       end
     end
 
+    def handle_update_edit_quota_request
+      if step_pointer.review_and_submit_step?
+        submit_for_cross_check.run!
+
+        render json: {redirect_url: submitted_url},
+               status: :ok
+      else
+        saver.save!
+
+        if step_pointer.main_step?
+          render json: saver.success_ops,
+                 status: :ok
+          return
+        end
+
+        if saver.valid?
+          workbasket_settings.track_step_validations_status!(current_step, true)
+          saver.persist! if workbasket_data_can_be_persisted?
+
+          render json: saver.success_ops,
+                 status: :ok
+        else
+          workbasket_settings.track_step_validations_status!(current_step, false)
+
+          render json: {
+              step: current_step,
+              errors: saver.errors,
+              candidates_with_errors: saver.candidates_with_errors
+          }, status: :unprocessable_entity
+        end
+      end
+    end
+
     def destroy
       workbasket.destroy
 
       render json: {}, head: :ok
+    end
+
+    private
+
+    def check_if_action_is_permitted!
+      if (step_pointer.conditions_footnotes? ||
+          step_pointer.review_and_submit_step?) &&
+          !workbasket_settings.validations_passed?(previous_step)
+
+        redirect_to previous_step_url
+        false
+      end
+    end
+
+    def workbasket_data_can_be_persisted?
+      step_pointer.conditions_footnotes? &&
+          saver_mode == 'continue'
     end
 
   end
