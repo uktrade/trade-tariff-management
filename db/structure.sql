@@ -1968,7 +1968,9 @@ CREATE TABLE public.edit_certificates_workbasket_settings (
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     main_step_validation_passed boolean DEFAULT false,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    original_certificate_type_code text,
+    original_certificate_code text
 );
 
 
@@ -12453,3 +12455,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit_certificate_settings_table.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');
