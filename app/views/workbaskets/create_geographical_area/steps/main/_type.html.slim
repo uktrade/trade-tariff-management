@@ -1,9 +1,9 @@
 fieldset
-  h3.heading-medium
-    | What type of geographical area are you creating?
-
   form-group :errors="errors" error-key="geographical_code"
     template slot-scope="slotProps"
+      h3.heading-medium
+        | What type of geographical area are you creating?
+
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}

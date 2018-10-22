@@ -1,0 +1,16 @@
+= simple_form_for form, url: edit_geographical_area_url(id: workbasket.id),
+                        html: { \
+                          class: "js-edit-geographical_area-form create-measures-v2", \
+                          method: :put \
+                        } do |f|
+
+  = render "workbaskets/edit_geographical_area/errors_summary"
+
+  - if workbasket.submitted?
+    = render "workbaskets/edit_geographical_area/steps/main/details"
+
+  = render "workbaskets/edit_geographical_area/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/edit_geographical_area/conformance_rules_container", f: f
+
+  = render "workbaskets/edit_geographical_area/action_links", f: f

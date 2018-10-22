@@ -31,6 +31,13 @@ module WorkbasketHelper
     end
   end
 
+  def edit_geographical_area_section_header
+    case current_step
+    when "main"
+      "Edit geographical area"
+    end
+  end
+
   def edit_certificate_section_header
     case current_step
     when "main"
@@ -264,6 +271,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :edit_geographical_area
+      edit_edit_geographical_area_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
@@ -293,6 +306,8 @@ module WorkbasketHelper
       edit_footnote_url(workbasket.id)
     when :edit_certificate
       edit_certificate_url(workbasket.id)
+    when :edit_geographical_area
+      edit_geographical_area_url(workbasket.id)
     end
   end
 end

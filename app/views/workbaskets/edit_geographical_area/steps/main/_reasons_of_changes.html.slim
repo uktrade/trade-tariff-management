@@ -1,0 +1,15 @@
+fieldset
+  form-group.without_bottom_margin :errors="errors" error-key="reason_for_changes"
+    template slot-scope="slotProps"
+      h3.heading-medium.sub_heading_block
+        | What is the reason for these changes?
+
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | Be as descriptive as you can. Please list the changes you intend to make.
+
+      .bootstrap-row
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = f.input :reason_for_changes, as: :text, label: false, input_html: { "v-model" => "geographical_area.reason_for_changes", rows: 4 }

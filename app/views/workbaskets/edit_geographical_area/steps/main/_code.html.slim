@@ -1,12 +1,10 @@
 fieldset
-  form-group :errors="errors" error-key="geographical_area_id"
+  form-group
     template slot-scope="slotProps"
       h3.heading-medium
         | What code will identify this area?
 
       label.form-label
-        span.error-message v-if="slotProps.hasError" v-cloak=""
-          | {{slotProps.error}}
         span.form-hint
           | This must ne unique and either a two-letter ISO code (for a country or region) or a string of four
           br

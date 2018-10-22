@@ -1,0 +1,17 @@
+.form-actions
+  h3.heading-medium
+    | Finish
+
+  .submit_group_for_cross_check_block
+    = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button"
+
+    .js-workbasket-base-continue-spinner.spinner_block.hidden
+      = render "measures/bulks/loading_spinner", message: "Checking data..."
+
+  .save_progress_block
+    = f.button :submit, "Save progress", name: "save_progress", class: "button js-workbasket-base-save-progress-button js-workbasket-base-submit-button"
+
+    .js-workbasket-base-save-progress-spinner.spinner_block.hidden
+      = render "measures/bulks/loading_spinner", message: "Saving..."
+
+  = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-workbasket-base-exit-button"
