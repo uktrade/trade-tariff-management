@@ -77,40 +77,42 @@
           </label>
         </div>
 
-        <div class="multiple-choice">
-          <input type='radio' id="action-suspend-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="suspend_quota">
+        <% if !workbasket_settings.quota_definition_suspended? %>
+          <div class="multiple-choice">
+            <input type='radio' id="action-suspend-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="suspend_quota">
 
-          <label for="action-suspend-quota">
-            Suspend the quota
-          </label>
-        </div>
-
-        <form-group :errors="errors" classes="panel panel-border-narrow" error-key="suspension_date" v-if="suspendingQuota">
-          <template slot-scope="slotProps">
-            <label for="action" class="form-label">
-              Optionally, when should the suspension end?
-
-              <span class="error-message" v-if="slotProps.hasError" v-cloak="">
-                {{slotProps.error}}
-              </span>
-
-              <span class="form-hint">
-                The quota will be suspended from the date you specified above. You can optionally specify an end-date now, or you can leave this open-ended and remove the suspension later if needed.
-              </span>
+            <label for="action-suspend-quota">
+              Suspend the quota
             </label>
+          </div>
 
-            <date-select :value.sync="suspension_date"></date-select>
-            <input type="hidden" name="suspension_date" v-model="suspension_date" />
-          </template>
-        </form-group>
+          <form-group :errors="errors" classes="panel panel-border-narrow" error-key="suspension_date" v-if="suspendingQuota">
+            <template slot-scope="slotProps">
+              <label for="action" class="form-label">
+                Optionally, when should the suspension end?
 
-        <div class="multiple-choice">
-          <input type='radio' id="action-remove-suspension" class="radio-inline-group" name="workbasket_action" v-model="action" value="remove_suspension">
+                <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+                  {{slotProps.error}}
+                </span>
 
-          <label for="action-remove-suspension">
-            Remove suspension
-          </label>
-        </div>
+                <span class="form-hint">
+                  The quota will be suspended from the date you specified above. You can optionally specify an end-date now, or you can leave this open-ended and remove the suspension later if needed.
+                </span>
+              </label>
+
+              <date-select :value.sync="suspension_date"></date-select>
+              <input type="hidden" name="suspension_date" v-model="suspension_date" />
+            </template>
+          </form-group>
+        <% else %>
+          <div class="multiple-choice">
+            <input type='radio' id="action-remove-suspension" class="radio-inline-group" name="workbasket_action" v-model="action" value="remove_suspension">
+
+            <label for="action-remove-suspension">
+              Remove suspension
+            </label>
+          </div>
+        <% end %>
 
         <div class="multiple-choice">
           <input type='radio' id="action-stop-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="stop_quota">
