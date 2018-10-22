@@ -15,9 +15,9 @@
       </p>
     </div>
 
-    <div v-if="records.length > 1">
+    <div v-if="additional_codes.length > 1">
       <warning-message>
-        You are bulk-changing {{records.length}} additional codes. Please check your inputs carefully!
+        You are bulk-changing {{additional_codes.length}} additional codes. Please check your inputs carefully!
       </warning-message>
     </div>
 
@@ -29,58 +29,76 @@
       </info-message>
     </div>
 
-    <form-group :errors="errors" error-key="description">
-      <template slot-scope="slotProps">
-        <fieldset>
-          <legend>
-            <h4 class='heading-small'>Description</h4>
-          </legend>
+    <warning-message v-if="meursing > 0 && meursing < records.length">
+      You selected {{meursing}} meursing codes. As they don't have associated descriptions, they will be ignored.
+    </warning-message>
 
-          <label class="form-label">
-            <span class="error-message" v-if="slotProps.hasError" v-cloak="">
-              {{slotProps.error}}
-            </span>
+    <div v-if="meursing != records.length">
+      <form-group :errors="errors" error-key="description">
+        <template slot-scope="slotProps">
+          <fieldset>
+            <legend>
+              <h4 class='heading-small'>Description</h4>
+            </legend>
 
-            <span class="form-hint">
-              This is the start of the codes' validity period.
-              This will be delayed for any codes that are not approved in time.
-            </span>
-          </label>
+            <label class="form-label">
+              <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+                {{slotProps.error}}
+              </span>
 
-          <textarea class="form-control" v-model="description" rows="5"></textarea>
-        </fieldset>
-      </template>
-    </form-group>
+              <span class="form-hint">
+                This is the start of the codes' validity period.
+                This will be delayed for any codes that are not approved in time.
+              </span>
+            </label>
 
-    <form-group :errors="errors" error-key="validityDate">
-      <template slot-scope="slotProps">
-        <fieldset>
-          <legend>
-            <h4 class='heading-small'>Description validity start date</h4>
-          </legend>
+            <textarea class="form-control" v-model="description" rows="5"></textarea>
+          </fieldset>
+        </template>
+      </form-group>
 
-          <label class="form-label">
-            <span class="error-message" v-if="slotProps.hasError" v-cloak="">
-              {{slotProps.error}}
-            </span>
+      <form-group :errors="errors" error-key="validityDate">
+        <template slot-scope="slotProps">
+          <fieldset>
+            <legend>
+              <h4 class='heading-small'>Description validity start date</h4>
+            </legend>
 
-            <span class="form-hint">
-              This is the date when the new description will take effect, subject to being approved in time. If This must be within the narrowest of the selected codes’ validity periods.
-            </span>
-          </label>
+            <label class="form-label">
+              <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+                {{slotProps.error}}
+              </span>
 
-          <date-select :value.sync="validityDate"></date-select>
-        </fieldset>
-      </template>
-    </form-group>
+              <span class="form-hint">
+                This is the date when the new description will take effect, subject to being approved in time. If This must be within the narrowest of the selected codes’ validity periods.
+              </span>
+            </label>
 
-    <div class="form-actions">
-      <button class="button" v-on:click.prevent="confirmChanges" :disabled="disableSubmit">
-        Update selected codes
-      </button>
-      <a href="#" class="secondary-button" v-on:click.prevent="onClose">
-        Cancel
-      </a>
+            <date-select :value.sync="validityDate"></date-select>
+          </fieldset>
+        </template>
+      </form-group>
+
+      <div class="form-actions">
+        <button class="button" v-on:click.prevent="confirmChanges" :disabled="disableSubmit">
+          Update selected codes
+        </button>
+        <a href="#" class="secondary-button" v-on:click.prevent="onClose">
+          Cancel
+        </a>
+      </div>
+    </div>
+
+    <div v-else>
+      <warning-message>
+        All of the {{meursing}} additional codes you selected are meursing codes. As they don't have associated descriptions, no action can be taken.
+      </warning-message>
+
+      <p>
+        <a href="#" class="button" v-on:click.prevent="onClose">
+          Close
+        </a>
+      </p>
     </div>
   </pop-up>
 </script>
