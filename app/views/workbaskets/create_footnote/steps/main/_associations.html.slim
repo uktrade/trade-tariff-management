@@ -1,0 +1,39 @@
+fieldset v-if="showAssociations"
+  h3.heading-medium
+    | Optionally configure footnote associations
+
+  label.form-label
+    span.form-hint
+      | If you already know which objects this footnote should be associated with, you can add them en-masse here; otherwise it can be individually associated when measures are created.
+
+  form-group.without_bottom_margin :errors="errors" error-key="commodity_codes" v-if="showGoodsClassificationCodes"
+    template slot-scope="slotProps"
+      h3.heading-medium.sub_heading_block
+        | Goods classiciation codes
+
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | Enter one or more commodity codes, separated by comma, space or line break.
+
+      .bootstrap-row
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "footnote.commodity_codes", rows: 3 }
+
+  form-group.without_bottom_margin :errors="errors" error-key="measure_sids" v-if="showMeasures"
+    template slot-scope="slotProps"
+      h3.heading-medium.sub_heading_block
+        | Measures
+
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | Enter one or more measure IDs separated by comma, space or line break. This will associate the footnote with all of the measures specified here. To find measure ID, you can search for measures on the
+          =<> link_to "Find and edit measures", measures_url, target: "_blank"
+          | screen.
+
+      .bootstrap-row
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = f.input :measure_sids, as: :text, label: false, input_html: { "v-model" => "footnote.measure_sids", rows: 3 }

@@ -1,0 +1,16 @@
+= simple_form_for form, url: edit_footnote_url(id: workbasket.id),
+                        html: { \
+                          class: "js-edit-footnote-form create-measures-v2", \
+                          method: :put \
+                        } do |f|
+
+  = render "workbaskets/edit_footnote/errors_summary"
+
+  - if workbasket.submitted?
+    = render "workbaskets/edit_footnote/steps/main/details"
+
+  = render "workbaskets/edit_footnote/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/edit_footnote/conformance_rules_container", f: f
+
+  = render "workbaskets/edit_footnote/action_links", f: f

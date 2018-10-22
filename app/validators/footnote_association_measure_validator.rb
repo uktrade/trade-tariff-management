@@ -7,11 +7,16 @@ class FootnoteAssociationMeasureValidator < TradeTariffBackend::Validator
 
   validation :ME70, "The same footnote can only be associated once with the same measure.",
     on: [:create, :update] do |record|
-    FootnoteAssociationMeasure.where(
+
+    existing_list = FootnoteAssociationMeasure.where(
       measure_sid: record.measure_sid,
       footnote_type_id: record.footnote_type_id,
       footnote_id: record.footnote_id,
-    ).empty?
+    )
+
+    existing_list = existing_list.where("oid != ?", record.oid) if record.oid.present?
+
+    existing_list.empty?
   end
 
   validation :ME73,

@@ -24,6 +24,20 @@ module WorkbasketHelper
     end
   end
 
+  def edit_footnote_section_header
+    case current_step
+    when "main"
+      "Edit footnote"
+    end
+  end
+
+  def edit_certificate_section_header
+    case current_step
+    when "main"
+      "Edit certificate"
+    end
+  end
+
   def create_certificate_section_header
     case current_step
     when "main"
@@ -238,6 +252,18 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :edit_footnote
+      edit_edit_footnote_url(
+        workbasket.id,
+        step: :main
+      )
+
+    when :edit_certificate
+      edit_edit_certificate_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
@@ -259,6 +285,14 @@ module WorkbasketHelper
       quotas_bulk_url(workbasket.id)
     when :create_geographical_area
       create_geographical_area_url(workbasket.id)
+    when :create_certificate
+      create_certificate_url(workbasket.id)
+    when :create_footnote
+      create_footnote_url(workbasket.id)
+    when :edit_footnote
+      edit_footnote_url(workbasket.id)
+    when :edit_certificate
+      edit_certificate_url(workbasket.id)
     end
   end
 end

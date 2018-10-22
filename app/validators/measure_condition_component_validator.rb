@@ -39,24 +39,6 @@ class MeasureConditionComponentValidator < TradeTariffBackend::Validator
     validates :validity_date_span, of: :duty_expression
   end
 
-  validation :ME107, "If the short description of a duty expression starts with a '+' then a measure condition component with a preceding duty expression must exist (sequential ascending order) for a condition (at least one, not necessarily the same condition) of the same measure.",
-    on: [:create, :update],
-    if: ->(record) { record.measure_condition.present? } do |record|
-      mccs = record.measure_condition.measure_condition_components
-      last_mcc = mccs.last
-
-      if mccs.size == 1
-        last_mcc.duty_expression.present? && last_mcc.duty_expression.abbreviation.exclude?("+")
-      else
-        preceding_mccs = mccs[0..-2] # Removing last element
-
-        # TODO: Need to refactor and use SQL query to achieve this.
-        abbreviations = preceding_mccs.select{|mcc| mcc.duty_expression.present?}.map{ |mcc| mcc.duty_expression.abbreviation[0] }
-
-        abbreviations.exclude?("+") && last_mcc.duty_expression.present? && last_mcc.duty_expression.abbreviation.include?("+")
-      end
-    end
-
   validation :ME108, "The same duty expression can only be used once within condition components of the same condition of the same measure. (i.e. it can be re-used in other conditions, no matter what condition type, of the same measure)", on: [:create, :update] do
     validates :uniqueness, of: [:measure_condition_sid, :duty_expression_id]
   end

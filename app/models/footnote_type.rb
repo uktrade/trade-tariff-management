@@ -1,5 +1,25 @@
 class FootnoteType < Sequel::Model
 
+  NOMENCLATURE_TYPES = %w(
+    TN
+    PN
+    NC
+  )
+
+  MEASURE_TYPES = %w(
+    CD
+    TM
+    DU
+    PB
+    MG
+    EU
+    MX
+    TR
+    IS
+    CG
+    OZ
+  )
+
   include ::XmlGeneration::BaseHelper
 
   plugin :time_machine
@@ -32,6 +52,18 @@ class FootnoteType < Sequel::Model
       end
 
       scope.order(Sequel.asc(:footnote_types__footnote_type_id))
+    end
+
+    def by_type(list)
+      where(footnote_type_id: list)
+    end
+
+    def nomenclature_type
+      by_type(NOMENCLATURE_TYPES)
+    end
+
+    def measure_type
+      by_type(MEASURE_TYPES)
     end
   end
 

@@ -10,6 +10,8 @@ module WorkbasketInteractions
         validity_start_date
         validity_end_date
         operation_date
+        commodity_codes
+        measure_sids
       )
 
       attr_accessor :current_step,
@@ -25,6 +27,8 @@ module WorkbasketInteractions
                     :footnote,
                     :footnote_description,
                     :footnote_description_period,
+                    :commodity_codes_candidates,
+                    :measures_candidates,
                     :persist
 
       def initialize(workbasket, current_step, save_mode, settings_ops={})
@@ -40,9 +44,14 @@ module WorkbasketInteractions
         @persist = true # For now it always true
         @errors = {}
         @conformance_errors = {}
+        @commodity_codes_candidates = []
+        @measures_candidates = []
       end
 
       def save!
+        if settings_params[:footnote_type_id].present?
+          workbasket.title = "#{settings_params[:footnote_type_id]} ___"
+        end
         workbasket.operation_date = operation_date
         workbasket.save
 
@@ -57,6 +66,9 @@ module WorkbasketInteractions
       def persist!
         @do_not_rollback_transactions = true
         validate!
+
+        workbasket.title = footnote.decorate.title
+        workbasket.save
       end
 
       def success_ops
@@ -91,6 +103,9 @@ module WorkbasketInteractions
             add_footnote_description_period!
             add_footnote_description!
 
+            add_new_commodity_codes_associations! if commodity_codes.present?
+            add_new_measures_associations! if measure_sids.present?
+
             parse_and_format_conformance_rules
           end
         end
@@ -108,6 +123,22 @@ module WorkbasketInteractions
 
           unless footnote_description.conformant?
             @conformance_errors.merge!(get_conformance_errors(footnote_description))
+          end
+
+          if commodity_codes_candidates.present?
+            commodity_codes_candidates.map do |item|
+              unless item.conformant?
+                @conformance_errors.merge!(get_conformance_errors(item))
+              end
+            end
+          end
+
+          if measures_candidates.present?
+            measures_candidates.map do |item|
+              unless item.conformant?
+                @conformance_errors.merge!(get_conformance_errors(item))
+              end
+            end
           end
 
           if conformance_errors.present?
@@ -146,7 +177,8 @@ module WorkbasketInteractions
 
         def add_footnote_description!
           @footnote_description = FootnoteDescription.new(
-            description: description
+            description: description,
+            language_id: "EN"
           )
 
           footnote_description.footnote_id = footnote.footnote_id
@@ -158,6 +190,53 @@ module WorkbasketInteractions
           footnote_description.footnote_description_period_sid = footnote_description_period.footnote_description_period_sid
 
           footnote_description.save if persist_mode?
+        end
+
+        def add_new_commodity_codes_associations!
+          commodity_codes.map do |code|
+            gn = GoodsNomenclature.actual
+                                  .by_code(code)
+                                  .first
+
+            if gn.present?
+              association = FootnoteAssociationGoodsNomenclature.new(
+                validity_start_date: validity_start_date,
+                validity_end_date: validity_end_date
+              )
+
+              association.goods_nomenclature_sid = gn.goods_nomenclature_sid
+              association.goods_nomenclature_item_id = gn.goods_nomenclature_item_id
+              association.productline_suffix = gn.producline_suffix
+
+              association.footnote_type = footnote.footnote_type_id
+              association.footnote_id = footnote.footnote_id
+
+              assign_system_ops!(association)
+              association.save if persist_mode?
+
+              @commodity_codes_candidates << association
+            end
+          end
+        end
+
+        def add_new_measures_associations!
+          measure_sids.map do |measure_sid|
+            measure = Measure.by_measure_sid(measure_sid)
+                             .first
+
+            if measure.present?
+              association = FootnoteAssociationMeasure.new()
+              association.measure_sid = measure.measure_sid
+
+              association.footnote_type_id = footnote.footnote_type_id
+              association.footnote_id = footnote.footnote_id
+
+              assign_system_ops!(association)
+              association.save if persist_mode?
+
+              @measures_candidates << association
+            end
+          end
         end
 
         def persist_mode?
