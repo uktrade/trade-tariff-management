@@ -2,8 +2,8 @@
 - additional_codes_count = workbasket_settings.additional_codes_covered.count
 
 p
-  | You are about to create
-  =< pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
+  | You are about to update
+  =< pluralize(workbasket_items.count, "measure", "measures")
   | , covering
 
   - if commodity_codes_count > 0 && additional_codes_count > 0

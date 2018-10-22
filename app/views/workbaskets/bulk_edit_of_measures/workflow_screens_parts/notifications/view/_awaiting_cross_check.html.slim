@@ -3,8 +3,8 @@
 
 p
   | The measure(s) detailed below have not yet been cross-checked. Once cross-checked,
-  =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
-  | will be created, covering
+  =<> pluralize(workbasket_items.count, "measure", "measures")
+  | will be updated, covering
 
   - if commodity_codes_count > 0 && additional_codes_count > 0
     =<> pluralize(commodity_codes_count, "commodity code", "commodity codes")

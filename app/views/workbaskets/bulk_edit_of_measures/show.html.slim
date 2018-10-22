@@ -22,7 +22,7 @@ header
       = link_to "Edit measures", move_to_editing_mode_bulk_edit_of_measure_url(workbasket.id),
                                  class: "secondary-button view-workbasket-edit-measures-link"
 
-    h3.heading-medium Measures to be created after cross-check
+    h3.heading-medium Measures to be updated after cross-check
 
     .bulk-edit-measures.submitted-for-cross-check-view
       bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"

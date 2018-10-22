@@ -3,7 +3,7 @@
     | Measures approved
 
   h3.heading-medium
-    => pluralize(workbasket_settings.measures.count, "measure", "measures")
+    => pluralize(workbasket_items.count, "measure", "measures")
     | in the workbasket
     =<> "'#{workbasket.title}'"
     | have been approved and scheduled for export to CDS.
