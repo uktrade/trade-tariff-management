@@ -52,9 +52,9 @@ module Workbaskets
     end
 
     def quota_definition_suspended?(date = Date.today)
-      quota_definition.last_suspension_period.suspension_start_date < date &&
-          (quota_definition.last_suspension_period.suspension_end_date.blank? ||
-              quota_definition.last_suspension_period.suspension_end_date < date)
+      quota_definition.last_suspension_period.present? &&
+        (quota_definition.last_suspension_period.suspension_end_date.blank? ||
+          quota_definition.last_suspension_period.suspension_end_date < date)
     end
 
     def track_current_page_loaded!(current_page)
