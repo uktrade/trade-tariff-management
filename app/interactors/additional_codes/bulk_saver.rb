@@ -72,7 +72,7 @@ module AdditionalCodes
             if errors.present?
               @errors_collection[
                 additional_code_params[:row_id].to_s
-              ] = errors
+              ] = ['additional_code_sid']
               item.validation_errors = errors.to_json
             end
           end
