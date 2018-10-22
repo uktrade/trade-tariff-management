@@ -1,5 +1,9 @@
 class CertificateDecorator < ApplicationDecorator
 
+  def title
+    "#{object.certificate_type_code} #{object.certificate_code}"
+  end
+
   def certificate_type_description
     "#{object.certificate_type_code} #{object.certificate_type.description}"
   end

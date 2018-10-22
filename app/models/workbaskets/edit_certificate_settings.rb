@@ -32,7 +32,7 @@ module Workbaskets
     end
 
     def original_certificate
-      @original_certificate ||= Footnote.where(
+      @original_certificate ||= Certificate.where(
         certificate_code: original_certificate_code,
         certificate_type_code: original_certificate_type_code
       ).first

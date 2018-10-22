@@ -1,12 +1,14 @@
 module WorkbasketForms
   class EditCertificateForm
+
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
     attr_accessor :original_certificate,
                   :reason_for_changes,
-                  :description,
                   :operation_date,
+                  :description,
+                  :description_validity_start_date,
                   :validity_start_date,
                   :validity_end_date
 
