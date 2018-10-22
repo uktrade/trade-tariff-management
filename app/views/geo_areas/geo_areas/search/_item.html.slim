@@ -1,8 +1,10 @@
 tr class="#{'workbasket-record-locked' if item.locked?}"
   td
-    = item.geographical_area_id
+    = link_to new_edit_geographical_area_url(geographical_area_sid: item.geographical_area_sid, geographical_area_id: item.geographical_area_id) do
+      = item.geographical_area_id
   td
-    = item.description
+    = link_to new_edit_geographical_area_url(geographical_area_sid: item.geographical_area_sid, geographical_area_id: item.geographical_area_id) do
+      = item.description
   td
     = item.type
   td

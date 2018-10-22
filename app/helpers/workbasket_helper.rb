@@ -31,7 +31,7 @@ module WorkbasketHelper
     end
   end
 
-  def edit_geographical_area_header
+  def edit_geographical_area_section_header
     case current_step
     when "main"
       "Edit geographical area"

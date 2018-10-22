@@ -27,8 +27,9 @@ module Workbaskets
           res[:validity_end_date] = original_geographical_area.validity_end_date.strftime("%d/%m/%Y")
         end
 
-        if original_geographical_area.parent_geographical_area_group_id.present?
-          res[:parent_geographical_area_group_id] = original_geographical_area.parent_geographical_area_group_id
+        if original_geographical_area.parent_geographical_area_group_sid.present?
+          res[:parent_geographical_area_group_id] = original_geographical_area.parent_geographical_area
+                                                                              .try(:description)
         end
       end
 
