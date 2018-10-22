@@ -1,4 +1,16 @@
 $(document).ready(function() {
+  $(document).on('change', '[name="certificate[certificate_type_code]"]', function(){
+    if ($('.js-select-certificate-type .selectize-control .selectize-dropdown-content .selection.selected').length) {
+      $('.js-certificate-type-valid-hint').removeClass('hidden');
+    } else {
+      $('.js-certificate-type-valid-hint').addClass('hidden');
+    }
+  });
+
+  $(document).on('click', '.js-select-certificate-type .clear-selection', function(){
+    $('.js-certificate-type-valid-hint').addClass('hidden');
+  });
+
   var form = document.querySelector(".js-search-certificates-section");
 
   if (!form) {
