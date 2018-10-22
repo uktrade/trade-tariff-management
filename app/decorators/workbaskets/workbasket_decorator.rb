@@ -25,6 +25,10 @@ module Workbaskets
         "Create Footnote"
       when "create_certificate"
         "Create Certificate"
+      when "edit_footnote"
+        "Edit footnote"
+      when "edit_certificate"
+        "Edit Certificate"
       end
     end
 
