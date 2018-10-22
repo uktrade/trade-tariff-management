@@ -6,9 +6,8 @@ module Quotas
     ]
 
     expose(:workbasket_item) do
-      workbasket_items.detect do |item|
-        params[:measure_sid].in?([item.record_id.to_s, item.row_id])
-      end
+      workbasket_items.where(row_id: params[:row_id])
+          .first
     end
 
     expose(:candidates_to_remove) do
