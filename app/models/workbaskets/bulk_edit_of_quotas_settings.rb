@@ -48,7 +48,13 @@ module Workbaskets
     end
 
     def quota_definition
-      QuotaDefinition.find(quota_definition_sid: initial_quota_sid)
+      @quota_definition ||= QuotaDefinition.find(quota_definition_sid: initial_quota_sid)
+    end
+
+    def quota_definition_suspended?(date = Date.today)
+      quota_definition.last_suspension_period.present? &&
+        (quota_definition.last_suspension_period.suspension_end_date.blank? ||
+          quota_definition.last_suspension_period.suspension_end_date < date)
     end
 
     def track_current_page_loaded!(current_page)

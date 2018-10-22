@@ -16,10 +16,6 @@ script
   = render "search_form"
 
   .search__results
-    h4.heading-medium
-      | Search results
-
-
     - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'suspend_quota'
       .confirmation-message
         button.close
@@ -53,6 +49,9 @@ script
     - ops[:search_code] = params[:search_code] if params[:search_code].present?
 
     - if quotas_search.present?
+      h4.heading-medium
+        | Search results
+
       div v-if="!isLoading"
         = simple_form_for :search, url: quotas_bulks_url(ops), method: :post do |f|
           = content_tag :input, nil, { type: "hidden", "name" => "quota_sids[]", ":value" => "selectedItem" }
