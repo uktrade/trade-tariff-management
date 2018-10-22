@@ -71,22 +71,8 @@ module Workbaskets
       workbasket_container.collection
     end
 
-    expose(:search_ops) do
-      {
-        measure_sids: ::MeasureService::FetchMeasureSids.new(params).ids
-      }
-    end
-
     expose(:bulk_measures_collection) do
       JSON.parse(request.body.read)["bulk_measures_collection"]
-    end
-
-    expose(:bulk_saver) do
-      ::Measures::BulkSaver.new(
-        current_user,
-        workbasket,
-        bulk_measures_collection
-      )
     end
 
     private
