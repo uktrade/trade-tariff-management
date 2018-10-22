@@ -70,7 +70,7 @@ window.BulkEditOfQuotaMeasuresSaveActions =
                           .addClass('has-validation-errors')
 
   getValidationErrors: ->
-    $(document).on 'click', '.has-validation-errors', ->
+    $(document).on 'click', '.bulk-edit-quota-measures .has-validation-errors', ->
       row_id = $(this).closest(".table__row")
                            .attr("data-record-sid")
 
