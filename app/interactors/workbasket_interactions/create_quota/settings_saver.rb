@@ -31,7 +31,9 @@ module WorkbasketInteractions
           end
 
           @errors[:parent_quota] = parent_errors if parent_errors.present?
-          @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
+          if current_step == 'conditions_footnotes'
+            @errors[:sub_quotas] = sub_quota_saver.errors unless sub_quota_saver.valid?
+          end
         end
 
         @errors.blank?

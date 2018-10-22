@@ -22,6 +22,14 @@ module Quotas
       }
     end
 
+    expose(:main_step_settings) do
+      {
+        'operation_date': params[:validity_start_date],
+        'regulation_id': params[:regulation_id],
+        'regulation_role': params[:regulation_role]
+      }
+    end
+
     expose(:workbasket_settings) do
       workbasket.settings
     end
@@ -191,7 +199,7 @@ module Quotas
     end
 
     expose(:saver) do
-      ::WorkbasketInteractions::EditOfQuota::SettingsSaver.new(
+      ::WorkbasketInteractions::EditQuota::SettingsSaver.new(
           workbasket,
           current_step,
           saver_mode,
@@ -232,7 +240,7 @@ module Quotas
 
       if workbasket.save
         quota_sid = params[:quota_sids].first
-        quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(quota_sid)
+        quota_settings = ::WorkbasketInteractions::EditQuota::SettingsExtractor.new(quota_sid)
         workbasket_settings.update(
             initial_search_results_code: params[:search_code],
             initial_quota_sid: quota_sid,
@@ -273,6 +281,7 @@ module Quotas
 
     def persist_work_with_selected
       workbasket_settings.set_settings_for!("configure", configure_step_settings)
+      workbasket_settings.set_settings_for!("main", workbasket_settings.main_step_settings.merge(main_step_settings))
       workbasket_settings.set_workbasket_system_data!
 
       if workbasket_settings.editable_workbasket?
@@ -291,7 +300,7 @@ module Quotas
 
     def persist_configure_cloned
       workbasket.update(title: params['workbasket_name'])
-      quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(workbasket_settings.initial_quota_sid, params[:exclusions])
+      quota_settings = ::WorkbasketInteractions::EditQuota::SettingsExtractor.new(workbasket_settings.initial_quota_sid, params[:exclusions])
       workbasket_settings.update(
           main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
           configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,

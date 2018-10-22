@@ -13,7 +13,7 @@ module Quotas
     end
 
     def valid?
-      workbasket_settings.main_step_settings['start_date'].present?
+      workbasket_settings.configure_step_settings['start_date'].present?
     end
 
     def persist!
@@ -50,7 +50,7 @@ module Quotas
     private
 
     def operation_date
-      workbasket_settings.main_step_settings['start_date'].try(:to_date)
+      workbasket_settings.configure_step_settings['start_date'].try(:to_date)
     end
 
     def system_ops
