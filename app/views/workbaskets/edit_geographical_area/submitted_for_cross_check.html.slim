@@ -1,0 +1,27 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Geographical area submitted
+
+  h3.heading-medium
+    | The edited geographical area of type
+    =<> "'#{geographical_area.decorate.geographical_area_type_description}'"
+    | and ID
+    =<> "'#{geographical_area.decorate.code}'"
+    | has been submitted for cross-check.
+
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  li
+    a href="#"
+      | Withdraw submission / edit geographical area (not implemented)
+  li
+    = link_to "View this geographical area", read_only_section_url
+  li
+    = link_to "Edit another geographical area", search_geographical_areas_url
+  li
+    = link_to "Return to main menu", root_url
+br
+br
