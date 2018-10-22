@@ -4,6 +4,7 @@ module WorkbasketValueObjects
 
       SIMPLE_OPS = %w(
         description
+        parent_geographical_area_group_id
       )
 
       attr_accessor :settings
@@ -16,6 +17,17 @@ module WorkbasketValueObjects
         define_method(option_name) do
           settings[option_name]
         end
+      end
+
+      def parent_geographical_area_group
+        GeographicalArea.actual
+                        .groups
+                        .where(geographical_area_id: parent_geographical_area_group_id)
+                        .first
+      end
+
+      def parent_geographical_area_group_sid
+        parent_geographical_area_group.geographical_area_sid
       end
 
       def validity_start_date
