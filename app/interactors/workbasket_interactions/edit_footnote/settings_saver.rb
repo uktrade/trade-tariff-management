@@ -136,6 +136,16 @@ module WorkbasketInteractions
             @conformance_errors.merge!(get_conformance_errors(footnote_description))
           end
 
+          if description_validity_start_date.present?
+            unless next_footnote_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_footnote_description_period))
+            end
+
+            unless next_footnote_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_footnote_description))
+            end
+          end
+
           if commodity_codes_candidates.present?
             commodity_codes_candidates.map do |item|
               unless item.conformant?

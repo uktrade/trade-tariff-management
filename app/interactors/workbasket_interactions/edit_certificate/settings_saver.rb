@@ -123,6 +123,16 @@ module WorkbasketInteractions
             @conformance_errors.merge!(get_conformance_errors(certificate_description))
           end
 
+          if description_validity_start_date.present?
+            unless next_certificate_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_certificate_description_period))
+            end
+
+            unless next_certificate_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_certificate_description))
+            end
+          end
+
           if conformance_errors.present?
             @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
           end
