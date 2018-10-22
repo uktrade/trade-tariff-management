@@ -8,10 +8,6 @@ class CertificateDecorator < ApplicationDecorator
     object.certificate_code
   end
 
-  def description
-    object.description
-  end
-
   def start_date
     to_date(object.validity_start_date)
   end

@@ -3,6 +3,8 @@
 module Workbaskets
   class CreateCertificateController < Workbaskets::BaseController
 
+    skip_around_action :configure_time_machine, only: [:submitted_for_cross_check]
+
     expose(:sub_klass) { "CreateCertificate" }
     expose(:settings_type) { :create_certificate }
 

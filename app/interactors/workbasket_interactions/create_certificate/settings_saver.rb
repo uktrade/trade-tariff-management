@@ -127,7 +127,6 @@ module WorkbasketInteractions
           certificate.certificate_code = certificate_code
 
           assign_system_ops!(certificate)
-          set_primary_key!(certificate)
 
           certificate.save if persist_mode?
         end
@@ -139,7 +138,7 @@ module WorkbasketInteractions
           )
 
           certificate_description_period.certificate_code = certificate.certificate_code
-          certificate_description_period.certificate_type_code = certificate_type_code
+          certificate_description_period.certificate_type_code = certificate.certificate_type_code
 
           assign_system_ops!(certificate_description_period)
           set_primary_key!(certificate_description_period)
@@ -149,16 +148,15 @@ module WorkbasketInteractions
 
         def add_certificate_description!
           @certificate_description = CertificateDescription.new(
-            description: description
+            description: description,
+            language_id: "EN"
           )
 
           certificate_description.certificate_code = certificate.certificate_code
-          certificate_description.certificate_type_code = certificate_type_code
+          certificate_description.certificate_type_code = certificate.certificate_type_code
+          certificate_description.certificate_description_period_sid = certificate_description_period.certificate_description_period_sid
 
           assign_system_ops!(certificate_description)
-          set_primary_key!(certificate_description)
-
-          certificate_description.certificate_description_period_sid = certificate_description_period.certificate_description_period_sid
 
           certificate_description.save if persist_mode?
         end
