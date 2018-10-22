@@ -1060,6 +1060,7 @@ describe Measure do
               This rule is not applicable for Meursing additional codes." do
       let!(:measure_type) { create :measure_type }
       let!(:goods_nomenclature) { create(:goods_nomenclature) }
+      let!(:geographical_area) { create :geographical_area }
       let!(:additional_code_type) { create(:additional_code_type) }
       let!(:additional_code) {
         create(
@@ -1150,30 +1151,33 @@ describe Measure do
         expect(measure2).to be_conformant
       end
 
-      #
-      # FIXME
-      #
-      # it "should not run validation successfully if measure for such criteria is already present" do
-      #   measure = create(
-      #     :measure,
-      #     goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-      #     additional_code_sid: additional_code.additional_code_sid,
-      #     additional_code_type_id: additional_code_type.additional_code_type_id,
-      #     validity_start_date: Date.yesterday
-      #   )
+      it "should fail validation if measure for such criteria is already present" do
+        _measure = create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+          validity_start_date: Date.yesterday
+        )
 
-      #   measure2 = create(
-      #     :measure,
-      #     goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-      #     additional_code_sid: additional_code.additional_code_sid,
-      #     additional_code_type_id: additional_code_type.additional_code_type_id,
-      #     validity_start_date: Date.yesterday
-      #   )
+        measure2 = create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+          validity_start_date: Date.yesterday
+        )
 
-      #   expect(measure2.additional_code).to_not be(nil)
-      #   expect(measure2).to_not be_conformant
-      #   expect(measure2.conformance_errors).to have_key(:ME32)
-      # end
+        expect(measure2.additional_code).to_not be(nil)
+        expect(measure2).to_not be_conformant
+        expect(measure2.conformance_errors).to have_key(:ME32)
+      end
 
       #
       # FIXME
