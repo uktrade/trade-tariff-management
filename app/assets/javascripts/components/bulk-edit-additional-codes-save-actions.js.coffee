@@ -66,6 +66,9 @@ window.BulkEditAdditionalCodesSaveActions =
       measure_parent_div = $("[data-record-sid='" + row_id + "']")
 
       $.each errored_columns, (index, errored_field_name) ->
+        if errored_field_name is "additional_code_sid"
+          errored_field_name = "type_id"
+
         measure_parent_div.find("." + errored_field_name + "-column")
                           .addClass('has-validation-errors')
 
