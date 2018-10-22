@@ -17,12 +17,18 @@ module Workbaskets
 
       if res.blank?
         res = {
+          geographical_code: original_geographical_area.geographical_code,
+          geographical_area_id: original_geographical_area.geographical_area_id,
           description: original_geographical_area.description,
           validity_start_date: original_geographical_area.validity_start_date.strftime("%d/%m/%Y")
         }
 
         if original_geographical_area.validity_end_date.present?
           res[:validity_end_date] = original_geographical_area.validity_end_date.strftime("%d/%m/%Y")
+        end
+
+        if original_geographical_area.parent_geographical_area_group_id.present?
+          res[:parent_geographical_area_group_id] = original_geographical_area.parent_geographical_area_group_id
         end
       end
 
