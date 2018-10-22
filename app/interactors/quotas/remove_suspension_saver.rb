@@ -25,6 +25,7 @@ module Quotas
         ).assign!
         suspension_period.save
 
+        QuotaUnsuspensionEvent.unrestrict_primary_key
         record = QuotaUnsuspensionEvent.new({
                                                quota_definition_sid: workbasket_settings.initial_quota_sid,
                                                occurrence_timestamp: operation_date,

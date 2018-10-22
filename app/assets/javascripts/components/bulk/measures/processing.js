@@ -72,6 +72,8 @@ window.BulkEditing.Measures.Processing = {
       return measure;
     }
 
+    measure.measure_sid += '';
+
     measure.row_id = makeBigNumber();
 
     measure.original_values = {

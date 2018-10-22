@@ -54,6 +54,8 @@ Vue.component("bulk-edit-records", {
             record.changes = [];
           }
 
+          record[self.primaryKey] += '';
+
           self.selectedRecords.push(record[self.primaryKey]);
 
           return record;
@@ -166,6 +168,8 @@ Vue.component("bulk-edit-records", {
           }
 
           self.preprocessRecord(record);
+
+          record[pk] += '';
 
           self.selectedRecords.push(record[pk] + '');
 
