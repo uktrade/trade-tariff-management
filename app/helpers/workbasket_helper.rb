@@ -272,7 +272,7 @@ module WorkbasketHelper
     when :create_measures
       create_measure_url(workbasket.id)
     when :bulk_edit_of_measures
-      measures_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
+      bulk_edit_of_measure_url(workbasket.id, search_code: workbasket.settings.search_code)
     when :create_quota, :clone_quota
       create_quotum_url(workbasket.id)
     when :create_regulation
