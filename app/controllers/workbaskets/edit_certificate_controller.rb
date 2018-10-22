@@ -38,8 +38,8 @@ module Workbaskets
       )
 
       workbasket_settings.update(
-        original_certificate_type_id: params[:certificate_type_id],
-        original_certificate_id: params[:certificate_id]
+        original_certificate_type_code: params[:certificate_type_code],
+        original_certificate_code: params[:certificate_code]
       )
 
       redirect_to initial_step_url
