@@ -1124,7 +1124,7 @@ describe Measure do
       end
 
       it "should run validation successfully if measure respect time machine w.r.t validity start date" do
-        measure1 = create(
+        _measure = create(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
