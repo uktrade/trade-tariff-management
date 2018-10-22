@@ -52,7 +52,7 @@ module Measures
     def success_response
       {
         number_of_updated_measures: collection_ops.count,
-        collection_sids: collection_sids,
+        collection_row_ids: collection_row_ids,
         success: :ok
       }
     end
@@ -93,9 +93,9 @@ module Measures
         end
       end
 
-      def collection_sids
+      def collection_row_ids
         collection_ops.map do |i|
-          i['measure_sid'].to_s
+          i['row_id'].to_s
         end
       end
 
