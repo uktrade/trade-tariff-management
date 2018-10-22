@@ -6,6 +6,15 @@ class AllAdditionalCode < Sequel::Model
 
   set_primary_key  [:additional_code_sid]
 
+  one_to_one :additional_code_type, key: :additional_code_type_id, primary_key: :additional_code_type_id
+
+  many_to_many :additional_code_descriptions, join_table: :additional_code_description_periods,
+               left_key: :additional_code_sid,
+               right_key: [:additional_code_description_period_sid,
+                           :additional_code_sid] do |ds|
+    ds.with_actual(AdditionalCodeDescriptionPeriod)
+  end
+
   dataset_module do
     def q_search(filter_ops)
       scope = actual
@@ -52,6 +61,12 @@ class AllAdditionalCode < Sequel::Model
     include ::AdditionalCodes::SearchFilters::FindAdditionalCodesCollection
   end
 
+  def additional_code_description
+    additional_code_descriptions(reload: true).first if additional_code_type.non_meursing?
+  end
+
+  delegate :description, :formatted_description, to: :additional_code_description, allow_nil: true
+
   def code
     "#{additional_code_type_id}#{additional_code}"
   end
@@ -87,6 +102,7 @@ class AllAdditionalCode < Sequel::Model
         validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
         operation_date: operation_date,
         workbasket: workbasket.try(:to_json),
+        additional_code_description: additional_code_description.try(:to_json),
         status: status_title,
         sent_to_cds: sent_to_cds?
     }
