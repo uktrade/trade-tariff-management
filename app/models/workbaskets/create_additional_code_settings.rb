@@ -22,7 +22,7 @@ module Workbaskets
 
     def additional_codes
       collection.select do |i|
-        i.class.name == 'AdditionalCode'
+        i.class.name.in?(%w(AdditionalCode MeursingAdditionalCode))
       end
     end
 
