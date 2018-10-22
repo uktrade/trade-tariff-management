@@ -71,6 +71,7 @@ module Measures
             measure_params[:measure_sid].to_s
           )
           item.new_data = measure_params.to_json
+          item.row_id = measure_params[:row_id].to_s
 
           if item.deleted?
             item.validation_errors = [].to_json

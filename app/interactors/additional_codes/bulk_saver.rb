@@ -61,6 +61,7 @@ module AdditionalCodes
             additional_code_params[:additional_code_sid].to_s
           )
           item.new_data = additional_code_params.to_json
+          item.row_id = measure_params[:row_id].to_s
 
           if item.deleted?
             item.validation_errors = [].to_json
@@ -70,7 +71,7 @@ module AdditionalCodes
 
             if errors.present?
               @errors_collection[
-                additional_code_params[:additional_code_sid].to_s
+                additional_code_params[:row_id].to_s
               ] = errors
               item.validation_errors = errors.to_json
             end
