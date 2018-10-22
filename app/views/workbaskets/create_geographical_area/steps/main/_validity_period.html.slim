@@ -1,9 +1,9 @@
 fieldset
-  h3.heading-medium
-    | When is the area valid from?
-
   form-group :errors="errors" error-key="validity_start_date"
     template slot-scope="slotProps"
+      h3.heading-medium
+        | When is the area valid from?
+
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}
@@ -14,11 +14,11 @@ fieldset
           = content_tag "date-select", "", ":value.sync" => "geographical_area.validity_start_date"
 
 fieldset
-  h3.heading-medium
-    | When is the area valid until?
-
   form-group :errors="errors" error-key="validity_end_date"
     template slot-scope="slotProps"
+      h3.heading-medium
+        | When is the area valid until?
+
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}
