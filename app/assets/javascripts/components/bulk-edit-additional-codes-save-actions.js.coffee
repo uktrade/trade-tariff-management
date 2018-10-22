@@ -54,16 +54,16 @@ window.BulkEditAdditionalCodesSaveActions =
     return false
 
   cleanUpErrorBlocks: (response) ->
-    $.each response.collection_sids, (index, additional_code_sid) ->
-      measure_parent_div = $("[data-record-sid='" + additional_code_sid + "']")
+    $.each response.collection_sids, (index, row_id) ->
+      measure_parent_div = $("[data-record-sid='" + row_id + "']")
       measure_parent_div.find(".table__column")
                         .removeClass('has-validation-errors')
 
   handleErrors: (response) ->
     errored_measures = response.responseJSON["additional_codes_with_errors"]
 
-    $.each errored_measures, (additional_code_sid, errored_columns) ->
-      measure_parent_div = $("[data-record-sid='" + additional_code_sid + "']")
+    $.each errored_measures, (row_id, errored_columns) ->
+      measure_parent_div = $("[data-record-sid='" + row_id + "']")
 
       $.each errored_columns, (index, errored_field_name) ->
         measure_parent_div.find("." + errored_field_name + "-column")
@@ -71,7 +71,7 @@ window.BulkEditAdditionalCodesSaveActions =
 
   getValidationErrors: ->
     $(document).on 'click', '.has-validation-errors', ->
-      additional_code_sid = $(this).closest(".table__row")
+      row_id = $(this).closest(".table__row")
                            .attr("data-record-sid")
 
       type = $(this).attr("class")
@@ -80,7 +80,7 @@ window.BulkEditAdditionalCodesSaveActions =
 
       $.ajax
         url: '/additional_codes/bulks/' + window.__workbasket_id.toString() + '/bulk_items/validation_details.js'
-        data: { additional_code_sid: additional_code_sid, type: type }
+        data: { row_id: row_id, type: type }
         type: 'GET'
         contentType: 'application/json'
 

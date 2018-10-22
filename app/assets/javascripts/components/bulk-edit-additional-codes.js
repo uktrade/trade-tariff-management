@@ -38,12 +38,14 @@ $(document).ready(function() {
     },
     methods: {
       recordTableProcessing: function(record) {
-        record.additional_code_sid = record.additional_code_sid + '';
-
         return record;
       },
-      preprocessRecord: function() {
+      preprocessRecord: function(record) {
+        record.additional_code_sid = record.additional_code_sid + '';
 
+        record.row_id = makeBigNumber();
+
+        return record;
       }
     }
   });
