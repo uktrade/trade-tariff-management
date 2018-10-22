@@ -9,7 +9,7 @@ window.BulkEditOfQuotaMeasuresSaveActions =
       top_limit = window.__sb_total_count
       final_batch = true
 
-    measures_collection = JSON.parse(JSON.stringify(window.window.__sb_collection))
+    measures_collection = JSON.parse(JSON.stringify(window.__sb_collection))
 
     data = {
       mode: mode,
@@ -54,24 +54,24 @@ window.BulkEditOfQuotaMeasuresSaveActions =
     return false
 
   cleanUpErrorBlocks: (response) ->
-    $.each response.collection_sids, (index, measure_sid) ->
-      measure_parent_div = $("[data-record-sid='" + measure_sid + "']")
+    $.each response.collection_row_ids, (index, row_id) ->
+      measure_parent_div = $("[data-record-sid='" + row_id + "']")
       measure_parent_div.find(".table__column")
                         .removeClass('has-validation-errors')
 
   handleErrors: (response) ->
     errored_measures = response.responseJSON["measures_with_errors"]
 
-    $.each errored_measures, (measure_sid, errored_columns) ->
-      measure_parent_div = $("[data-record-sid='" + measure_sid + "']")
+    $.each errored_measures, (row_id, errored_columns) ->
+      measure_parent_div = $("[data-record-sid='" + row_id + "']")
 
       $.each errored_columns, (index, errored_field_name) ->
         measure_parent_div.find("." + errored_field_name + "-column")
                           .addClass('has-validation-errors')
 
   getValidationErrors: ->
-    $(document).on 'click', '.has-validation-errors', ->
-      measure_sid = $(this).closest(".table__row")
+    $(document).on 'click', '.bulk-edit-quota-measures .has-validation-errors', ->
+      row_id = $(this).closest(".table__row")
                            .attr("data-record-sid")
 
       type = $(this).attr("class")
@@ -80,7 +80,7 @@ window.BulkEditOfQuotaMeasuresSaveActions =
 
       $.ajax
         url: '/quotas/bulks/' + window.__workbasket_id.toString() + '/bulk_items/validation_details.js'
-        data: { measure_sid: measure_sid, type: type }
+        data: { row_id: row_id, type: type }
         type: 'GET'
         contentType: 'application/json'
 

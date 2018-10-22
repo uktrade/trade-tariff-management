@@ -42,7 +42,7 @@ module AdditionalCodes
     def success_response
       {
         number_of_updated_additional_codes: collection_ops.count,
-        collection_sids: collection_sids,
+        collection_row_ids: collection_row_ids,
         success: :ok
       }
     end
@@ -61,6 +61,7 @@ module AdditionalCodes
             additional_code_params[:additional_code_sid].to_s
           )
           item.new_data = additional_code_params.to_json
+          item.row_id = additional_code_params[:row_id].to_s
 
           if item.deleted?
             item.validation_errors = [].to_json
@@ -70,8 +71,8 @@ module AdditionalCodes
 
             if errors.present?
               @errors_collection[
-                additional_code_params[:additional_code_sid].to_s
-              ] = errors
+                additional_code_params[:row_id].to_s
+              ] = ['additional_code_sid']
               item.validation_errors = errors.to_json
             end
           end
@@ -80,9 +81,9 @@ module AdditionalCodes
         end
       end
 
-      def collection_sids
+      def collection_row_ids
         collection_ops.map do |i|
-          i['additional_code_sid'].to_s
+          i['row_id'].to_s
         end
       end
 
