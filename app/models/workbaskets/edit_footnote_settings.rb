@@ -67,8 +67,14 @@ module Workbaskets
     end
 
     def updated_footnote
-      collection_by_type(Footnote).detect do |item|
-        item.footnote_id != original_footnote.footnote_id
+      footnotes_list = collection_by_type(Footnote)
+
+      if footnotes_list.count > 1
+        footnotes_list.detect do |item|
+          item.footnote_id != original_footnote.footnote_id
+        end
+      else
+        footnotes_list.first
       end
     end
   end

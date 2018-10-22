@@ -39,8 +39,14 @@ module Workbaskets
     end
 
     def updated_certificate
-      collection_by_type(Footnote).detect do |item|
-        item.certificate_code != original_certificate.certificate_code
+      certs_list = collection_by_type(Certificate)
+
+      if certs_list.count > 1
+        certs_list.detect do |item|
+          item.oid != original_certificate.oid
+        end
+      else
+        certs_list.first
       end
     end
   end
