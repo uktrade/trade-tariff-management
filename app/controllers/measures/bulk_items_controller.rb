@@ -6,8 +6,9 @@ module Measures
     ]
 
     expose(:workbasket_item) do
-      workbasket_items.where(record_id: params[:measure_sid])
-                      .first
+      workbasket_items.detect do |item|
+        params[:measure_sid].in?([item.record_id.to_s, item.row_id])
+      end
     end
 
     expose(:candidates_to_remove) do

@@ -1,0 +1,89 @@
+<script type="text/x-template" id="clone-measures-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Clone selected measures
+    </template>
+
+    <info-message>
+      <p>
+        This action will create copies of the selected measures, which you will then be able to edit as needed. The original (source) measures will remain unchanged.
+      </p>
+
+      <p>
+        If you intend your copies to replace the source measures, you will need separately to end-date those measures - you should usually do that first, to avoid conformance errors, as you cannot have multiple identical measures on the system. You may prefer to edit the source measures directly rather than make copies, as the system will then automatically manage version control.
+      </p>
+    </info-message>
+
+    <p>
+      <strong>
+        Which attributes do you want to exclude from the copied measures?
+      </strong>
+    </p>
+
+    <p>
+      <span class="small-checkbox">
+        <input type="checkbox" id="clone-select-all" v-model="selectAll" />
+        <label for="clone-select-all">
+          Select all
+        </label>
+      </span>
+    </p>
+
+    <warning-message>
+      Note that you cannot have multiple identical measures. Nor can you create measures that are outside the quota’s existing validity periods (definitions) from here (to do that, you should edit the quota itself, or create a new quota using the same order number but covering a different time period). Cloning measures from here should only be used when you need to add commodity code or origins to the quota. You should therefore select at least one of Commodity code or Origin from the list below. You may optionally select any of the other attributes.
+    </warning-message>
+
+    <p>
+      <span class="small-checkbox">
+        <input type="checkbox" id="clone-commodity-code" v-model="excludeCommodityCode" :checked="excludeCommodityCode" />
+        <label for="clone-commodity-code">
+          Commodity code
+        </label>
+      </span>
+    </p>
+    <p>
+      <span class="small-checkbox">
+        <input type="checkbox" id="clone-origin" v-model="excludeOrigin" :checked="excludeOrigin" />
+        <label for="clone-origin">
+          Origin
+        </label>
+      </span>
+    </p>
+    <p>
+      <span class="small-checkbox">
+        <input type="checkbox" id="clone-duties" v-model="excludeDuties" :checked="excludeDuties" />
+        <label for="clone-duties">
+          Duties
+        </label>
+      </span>
+    </p>
+    <p>
+      <span class="small-checkbox">
+        <input type="checkbox" id="clone-conditions" v-model="excludeConditions" :checked="excludeConditions" />
+        <label for="clone-conditions">
+          Conditions
+        </label>
+      </span>
+    </p>
+    <p>
+      <span class="small-checkbox">
+        <input type="checkbox" id="clone-footnotes" v-model="excludeFootnotes" :checked="excludeFootnotes" />
+        <label for="clone-footnotes">
+          Footnotes
+        </label>
+      </span>
+    </p>
+
+    <div class="form-actions">
+      <button class="button" v-on:click.prevent="cloneMeasures" :disabled="allSame" v-if="!cloning">
+        Clone measures
+      </button>
+      <span class="loading-spinner-wrapper" v-if="cloning">
+        <%= render "measures/bulks/loading_spinner", message: "Cloning measures..." %>
+      </span>
+      <a href="#" class="secondary-button" v-on:click.prevent="onClose" :disabled="cloning">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>

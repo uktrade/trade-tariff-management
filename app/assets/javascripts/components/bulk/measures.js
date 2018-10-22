@@ -1,0 +1,1 @@
+window.BulkEditing.Measures = {};

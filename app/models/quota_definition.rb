@@ -64,6 +64,10 @@ class QuotaDefinition < Sequel::Model
     measure.measure_generating_regulation_id if measure.present?
   end
 
+  def reduction_indicator
+    measure.reduction_indicator if measure.present?
+  end
+
   def license
     if measure.present? && measure.measure_conditions.present?
       measure.measure_conditions.each do |condition|
@@ -140,7 +144,7 @@ class QuotaDefinition < Sequel::Model
         regulation_id: regulation_id,
         license: license || "-",
         validity_start_date: validity_start_date.try(:strftime, "%d %b %Y") || "-",
-        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "Never (repeats)",
         goods_nomenclature_item_ids: goods_nomenclature_item_ids.join(', '),
         additional_code_ids: additional_code_ids.join(', '),
         origin: quota_origin,

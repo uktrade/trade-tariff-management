@@ -8,6 +8,8 @@ module Workbaskets
         Footnote
         FootnoteDescriptionPeriod
         FootnoteDescription
+        FootnoteAssociationMeasure
+        FootnoteAssociationGoodsNomenclature
       )
     end
 

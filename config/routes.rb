@@ -89,6 +89,16 @@ Rails.application.routes.draw do
       member do
         get '/work_with_selected', to: "bulks#work_with_selected"
         post '/work_with_selected', to: "bulks#persist_work_with_selected"
+        get '/configure_cloned', to: "bulks#configure_cloned"
+        post '/configure_cloned', to: "bulks#persist_configure_cloned"
+        get :submitted_for_cross_check
+
+        resources :bulk_items, only: [] do
+          collection do
+            get :validation_details
+            post :remove_items
+          end
+        end
       end
     end
   end
@@ -197,6 +207,22 @@ Rails.application.routes.draw do
     end
 
     resources :create_footnote, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :edit_footnote, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :edit_certificate, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
         get :move_to_editing_mode

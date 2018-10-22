@@ -19,6 +19,16 @@ module WorkbasketValueObjects
         end
       end
 
+      def commodity_codes
+        return [] if settings[:commodity_codes].blank?
+        parse_list_of_values(settings[:commodity_codes])
+      end
+
+      def measure_sids
+        return [] if settings[:measure_sids].blank?
+        parse_list_of_values(settings[:measure_sids])
+      end
+
       def validity_start_date
         to_date(:validity_start_date)
       end
@@ -50,6 +60,25 @@ module WorkbasketValueObjects
       def date_to_format(date)
         date.try(:to_date)
             .try(:strftime, "%d %B %Y")
+      end
+
+      def parse_list_of_values(list_of_ids)
+        # Split by linebreaks
+        linebreaks_separated_list = list_of_ids.split(/\n+/)
+
+        # Split by commas
+        comma_separated_list = linebreaks_separated_list.map do |item|
+          item.split(",")
+        end.flatten
+
+        # Split by whitespaces
+        white_space_separated_list = comma_separated_list.map do |item|
+          item.split(" ")
+        end.flatten
+
+        white_space_separated_list.map(&:squish)
+                                  .flatten
+                                  .reject { |i| i.blank? }.uniq
       end
     end
   end

@@ -44,9 +44,9 @@ module Measures
         res[:geographical_area_id] = ops["geographical_area"]["geographical_area_id"]
       end
 
-      res[:reduction_indicator] = existing_measure.reduction_indicator
-      res[:quota_ordernumber] = existing_measure.ordernumber
-      res[:export_refund_nomenclature_sid] = existing_measure.export_refund_nomenclature_sid
+      res[:reduction_indicator] = existing_measure&.reduction_indicator || ops["reduction_indicator"]
+      res[:quota_ordernumber] = existing_measure&.ordernumber || ops["order_number"]
+      res[:export_refund_nomenclature_sid] = existing_measure&.export_refund_nomenclature_sid || ops["export_refund_nomenclature_sid"]
 
       ::Measures::AttributesNormalizer.new(
         ActiveSupport::HashWithIndifferentAccess.new(res)

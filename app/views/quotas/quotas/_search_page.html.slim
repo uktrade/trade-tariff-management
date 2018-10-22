@@ -15,27 +15,58 @@ script
 .find-quotas
   = render "search_form"
 
-  - ops = {}
-  - ops[:search_code] = params[:search_code] if params[:search_code].present?
+  .search__results
+    - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'suspend_quota'
+      .confirmation-message
+        button.close
+        p
+          | You have requested that quota #{previous_workbasket.settings.quota_definition.quota_order_number_id},&nbsp;
+          | with workbasket name '#{previous_workbasket.title}', be suspended from #{previous_workbasket.operation_date.strftime('%d %b %Y')}
+          | #{((' to ' + previous_workbasket.settings.main_step_settings['suspension_date']) if previous_workbasket.settings.main_step_settings['suspension_date'].present?)}
+          | .&nbsp;
+          a href="#"
+            | Withdraw request...
 
-  - if quotas_search.present?
-    div v-if="!isLoading"
-      = simple_form_for :search, url: quotas_bulks_url(ops), method: :post do |f|
-        / = content_tag :input, nil, { type: "hidden", "name" => "quota_sids[]", "v-for" => "(sid, idx) in selectedQuotas", ":value" => "sid" }
-        / = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
-        p.clearfix
-         / = content_tag "button", "Work with selected quota", { class: "button", ":disabled" => "noSelectedQuota", type: :submit, style: "float: left" }
-         span.number-of-records-badge
-            = pluralize(search_results.total_count, 'quota', 'quotas')
-            =<> "found"
-      = render "quotas_table" if quotas_search.present?
+    - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'remove_suspension'
+      .confirmation-message
+        button.close
+        p
+          | You have requested that quota suspension on quota #{previous_workbasket.settings.quota_definition.quota_order_number_id},&nbsp;
+          | be removed on #{previous_workbasket.operation_date.strftime('%d %b %Y')}, with workbasket name '#{previous_workbasket.title}'.&nbsp;
+          a href="#"
+            | Withdraw request...
 
-    = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
-      h1 slot="title"
-        | Loading quotas
+    - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'stop_quota'
+      .confirmation-message
+        button.close
+        p
+          | A stop quota has been requested for quota#{(' ' + previous_workbasket.settings.quota_definition.quota_order_number_id) if previous_workbasket.settings.quota_definition.present?},&nbsp;
+          | with workbasket name '#{previous_workbasket.title}'.&nbsp;
+          a href="#"
+            | Withdraw request...
+
+    - ops = {}
+    - ops[:search_code] = params[:search_code] if params[:search_code].present?
+
+    - if quotas_search.present?
       h4.heading-medium
-        | Please wait while we fetch page {{pagination.page}}
-        br
-        = content_tag "loading-spinner", nil
+        | Search results
+
+      div v-if="!isLoading"
+        = simple_form_for :search, url: quotas_bulks_url(ops), method: :post do |f|
+          = content_tag :input, nil, { type: "hidden", "name" => "quota_sids[]", ":value" => "selectedItem" }
+          p
+            = content_tag "button", "Work with selected quota", { class: "button", ":disabled" => "noSelectedQuota", type: :submit }
+            | &nbsp
+            = content_tag "button", "Clone and edit selected quota", { class: "button", ":disabled" => "noSelectedQuota", type: :submit, name: "clone", value: "true" }
+        = render "quotas_table" if quotas_search.present?
+
+      = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
+        h1 slot="title"
+          | Loading quotas
+        h4.heading-medium
+          | Please wait while we fetch page {{pagination.page}}
+          br
+          = content_tag "loading-spinner", nil
 
 = render "shared/vue_templates/records_grid"

@@ -9,7 +9,7 @@ window.BulkEditOfMeasuresSaveActions =
       top_limit = window.__sb_total_count
       final_batch = true
 
-    measures_collection = JSON.parse(JSON.stringify(window.__sb_measures_collection))
+    measures_collection = JSON.parse(JSON.stringify(window.__sb_collection))
 
     data = {
       mode: mode,
@@ -55,7 +55,7 @@ window.BulkEditOfMeasuresSaveActions =
 
   cleanUpErrorBlocks: (response) ->
     $.each response.collection_sids, (index, measure_sid) ->
-      measure_parent_div = $("[data-measure-sid='" + measure_sid + "']")
+      measure_parent_div = $("[data-record-sid='" + measure_sid + "']")
       measure_parent_div.find(".table__column")
                         .removeClass('has-validation-errors')
 
@@ -63,7 +63,7 @@ window.BulkEditOfMeasuresSaveActions =
     errored_measures = response.responseJSON["measures_with_errors"]
 
     $.each errored_measures, (measure_sid, errored_columns) ->
-      measure_parent_div = $("[data-measure-sid='" + measure_sid + "']")
+      measure_parent_div = $("[data-record-sid='" + measure_sid + "']")
 
       $.each errored_columns, (index, errored_field_name) ->
         measure_parent_div.find("." + errored_field_name + "-column")
@@ -72,7 +72,7 @@ window.BulkEditOfMeasuresSaveActions =
   getValidationErrors: ->
     $(document).on 'click', '.has-validation-errors', ->
       measure_sid = $(this).closest(".table__row")
-                           .attr("data-measure-sid")
+                           .attr("data-record-sid")
 
       type = $(this).attr("class")
                     .replace("table__column", "")
@@ -87,15 +87,15 @@ window.BulkEditOfMeasuresSaveActions =
       return false
 
   toogleSaveSpinner: ->
-    mode = window.__save_bulk_edit_of_measures_mode
+    mode = window.__save_bulk_edit_mode
     BulkEditOfMeasuresSaveActions.disable_other_buttons()
 
     if mode == "save_progress"
-      link = $(".js-bulk-edit-of-measures-save-progress")
-      spinner = $(".js-bulk-edit-of-measures-save-progress-spinner")
+      link = $(".js-bulk-edit-of-records-save-progress")
+      spinner = $(".js-bulk-edit-of-records-save-progress-spinner")
     else
-      link = $(".js-bulk-edit-of-measures-submit-for-cross-check")
-      spinner = $(".js-bulk-edit-of-measures-submit-for-cross-check-spinner")
+      link = $(".js-bulk-edit-of-records-submit-for-cross-check")
+      spinner = $(".js-bulk-edit-of-records-submit-for-cross-check-spinner")
 
     if link.hasClass('hidden')
       spinner.addClass('hidden')
@@ -107,11 +107,11 @@ window.BulkEditOfMeasuresSaveActions =
       spinner.removeClass('hidden')
 
   disable_other_buttons: ->
-    save_link = $(".js-bulk-edit-of-measures-save-progress")
-    submit_link = $(".js-bulk-edit-of-measures-submit-for-cross-check")
-    exit_link = $(".js-bulk-edit-of-measures-exit")
+    save_link = $(".js-bulk-edit-of-records-save-progress")
+    submit_link = $(".js-bulk-edit-of-records-submit-for-cross-check")
+    exit_link = $(".js-bulk-edit-of-records-exit")
 
-    mode = window.__save_bulk_edit_of_measures_mode
+    mode = window.__save_bulk_edit_mode
 
     if mode == "save_progress"
       submit_link.addClass('disabled')
@@ -121,9 +121,9 @@ window.BulkEditOfMeasuresSaveActions =
     exit_link.addClass('disabled')
 
   unlockButtons: ->
-    $(".js-bulk-edit-of-measures-save-progress").removeClass('disabled')
-    $(".js-bulk-edit-of-measures-submit-for-cross-check").removeClass('disabled')
-    $(".js-bulk-edit-of-measures-exit").removeClass('disabled')
+    $(".js-bulk-edit-of-records-save-progress").removeClass('disabled')
+    $(".js-bulk-edit-of-records-submit-for-cross-check").removeClass('disabled')
+    $(".js-bulk-edit-of-records-exit").removeClass('disabled')
 
   showSummaryPopup: ->
     modal_id = "bem-save-progress-summary"
@@ -132,7 +132,7 @@ window.BulkEditOfMeasuresSaveActions =
     if $(".has-validation-errors").length > 0
       content = "Some measures have conformance errors, please review table cells with highlighted in red"
 
-    if window.__save_bulk_edit_of_measures_mode == "save_group_for_cross_check"
+    if window.__save_bulk_edit_mode == "save_group_for_cross_check"
       if $(".has-validation-errors").length > 0
         modal_id = "bem-submit-summary-failed"
       else
@@ -143,7 +143,7 @@ window.BulkEditOfMeasuresSaveActions =
     content_container.html(content)
     MicroModal.show(modal_id)
 
-    window.__save_bulk_edit_of_measures_mode = null
+    window.__save_bulk_edit_mode = null
 
     return false
 

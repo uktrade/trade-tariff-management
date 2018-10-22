@@ -766,13 +766,15 @@ CREATE TABLE public.bulk_edit_of_quotas_settings (
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     main_step_validation_passed boolean DEFAULT false,
-    search_code text,
     initial_search_results_code text,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb,
-    quota_sids_jsonb jsonb DEFAULT '{}'::jsonb,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    initial_quota_sid integer,
+    quota_main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -812,7 +814,9 @@ CREATE TABLE public.certificate_description_periods_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -832,7 +836,9 @@ CREATE VIEW public.certificate_description_periods AS
     certificate_description_periods1.operation_date,
     certificate_description_periods1.status,
     certificate_description_periods1.workbasket_id,
-    certificate_description_periods1.workbasket_sequence_number
+    certificate_description_periods1.workbasket_sequence_number,
+    certificate_description_periods1.added_by_id,
+    certificate_description_periods1.added_at
    FROM public.certificate_description_periods_oplog certificate_description_periods1
   WHERE ((certificate_description_periods1.oid IN ( SELECT max(certificate_description_periods2.oid) AS max
            FROM public.certificate_description_periods_oplog certificate_description_periods2
@@ -875,7 +881,9 @@ CREATE TABLE public.certificate_descriptions_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -895,7 +903,9 @@ CREATE VIEW public.certificate_descriptions AS
     certificate_descriptions1.operation_date,
     certificate_descriptions1.status,
     certificate_descriptions1.workbasket_id,
-    certificate_descriptions1.workbasket_sequence_number
+    certificate_descriptions1.workbasket_sequence_number,
+    certificate_descriptions1.added_by_id,
+    certificate_descriptions1.added_at
    FROM public.certificate_descriptions_oplog certificate_descriptions1
   WHERE ((certificate_descriptions1.oid IN ( SELECT max(certificate_descriptions2.oid) AS max
            FROM public.certificate_descriptions_oplog certificate_descriptions2
@@ -1056,7 +1066,9 @@ CREATE TABLE public.certificates_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -1076,7 +1088,9 @@ CREATE VIEW public.certificates AS
     certificates1.operation_date,
     certificates1.status,
     certificates1.workbasket_id,
-    certificates1.workbasket_sequence_number
+    certificates1.workbasket_sequence_number,
+    certificates1.added_by_id,
+    certificates1.added_at
    FROM public.certificates_oplog certificates1
   WHERE ((certificates1.oid IN ( SELECT max(certificates2.oid) AS max
            FROM public.certificates_oplog certificates2
@@ -1572,6 +1586,39 @@ ALTER SEQUENCE public.create_additional_code_workbasket_settings_id_seq OWNED BY
 
 
 --
+-- Name: create_certificates_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_certificates_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_certificates_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_certificates_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_certificates_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_certificates_workbasket_settings_id_seq OWNED BY public.create_certificates_workbasket_settings.id;
+
+
+--
 -- Name: create_footnotes_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1691,7 +1738,9 @@ CREATE TABLE public.create_quota_workbasket_settings (
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
-    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb
+    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    initial_quota_sid integer,
+    initial_search_results_code text
 );
 
 
@@ -1907,6 +1956,76 @@ CREATE SEQUENCE public.duty_expressions_oid_seq
 --
 
 ALTER SEQUENCE public.duty_expressions_oid_seq OWNED BY public.duty_expressions_oplog.oid;
+
+
+--
+-- Name: edit_certificates_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_certificates_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    original_certificate_type_code text,
+    original_certificate_code text
+);
+
+
+--
+-- Name: edit_certificates_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_certificates_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_certificates_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_certificates_workbasket_settings_id_seq OWNED BY public.edit_certificates_workbasket_settings.id;
+
+
+--
+-- Name: edit_footnotes_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_footnotes_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    original_footnote_type_id text,
+    original_footnote_id text
+);
+
+
+--
+-- Name: edit_footnotes_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_footnotes_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_footnotes_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_footnotes_workbasket_settings_id_seq OWNED BY public.edit_footnotes_workbasket_settings.id;
 
 
 --
@@ -2407,7 +2526,9 @@ CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2429,7 +2550,9 @@ CREATE VIEW public.footnote_association_goods_nomenclatures AS
     footnote_association_goods_nomenclatures1.operation_date,
     footnote_association_goods_nomenclatures1.status,
     footnote_association_goods_nomenclatures1.workbasket_id,
-    footnote_association_goods_nomenclatures1.workbasket_sequence_number
+    footnote_association_goods_nomenclatures1.workbasket_sequence_number,
+    footnote_association_goods_nomenclatures1.added_by_id,
+    footnote_association_goods_nomenclatures1.added_at
    FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures1
   WHERE ((footnote_association_goods_nomenclatures1.oid IN ( SELECT max(footnote_association_goods_nomenclatures2.oid) AS max
            FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures2
@@ -6777,7 +6900,10 @@ CREATE TABLE public.quota_suspension_periods_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -6796,7 +6922,10 @@ CREATE VIEW public.quota_suspension_periods AS
     quota_suspension_periods1.operation_date,
     quota_suspension_periods1.status,
     quota_suspension_periods1.workbasket_id,
-    quota_suspension_periods1.workbasket_sequence_number
+    quota_suspension_periods1.workbasket_sequence_number,
+    quota_suspension_periods1.added_by_id,
+    quota_suspension_periods1.added_at,
+    quota_suspension_periods1."national"
    FROM public.quota_suspension_periods_oplog quota_suspension_periods1
   WHERE ((quota_suspension_periods1.oid IN ( SELECT max(quota_suspension_periods2.oid) AS max
            FROM public.quota_suspension_periods_oplog quota_suspension_periods2
@@ -6893,7 +7022,10 @@ CREATE TABLE public.quota_unsuspension_events_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -6910,7 +7042,10 @@ CREATE VIEW public.quota_unsuspension_events AS
     quota_unsuspension_events1.operation_date,
     quota_unsuspension_events1.status,
     quota_unsuspension_events1.workbasket_id,
-    quota_unsuspension_events1.workbasket_sequence_number
+    quota_unsuspension_events1.workbasket_sequence_number,
+    quota_unsuspension_events1.added_by_id,
+    quota_unsuspension_events1.added_at,
+    quota_unsuspension_events1."national"
    FROM public.quota_unsuspension_events_oplog quota_unsuspension_events1
   WHERE ((quota_unsuspension_events1.oid IN ( SELECT max(quota_unsuspension_events2.oid) AS max
            FROM public.quota_unsuspension_events_oplog quota_unsuspension_events2
@@ -7678,7 +7813,8 @@ CREATE TABLE public.workbasket_items (
     record_key text,
     new_data jsonb DEFAULT '{}'::jsonb,
     changed_values jsonb DEFAULT '{}'::jsonb,
-    validation_errors jsonb DEFAULT '{}'::jsonb
+    validation_errors jsonb DEFAULT '{}'::jsonb,
+    row_id text
 );
 
 
@@ -7968,6 +8104,13 @@ ALTER TABLE ONLY public.create_additional_code_workbasket_settings ALTER COLUMN 
 
 
 --
+-- Name: create_certificates_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_certificates_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_certificates_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: create_footnotes_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8021,6 +8164,20 @@ ALTER TABLE ONLY public.duty_expression_descriptions_oplog ALTER COLUMN oid SET 
 --
 
 ALTER TABLE ONLY public.duty_expressions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.duty_expressions_oid_seq'::regclass);
+
+
+--
+-- Name: edit_certificates_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_certificates_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_certificates_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: edit_footnotes_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_footnotes_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_footnotes_workbasket_settings_id_seq'::regclass);
 
 
 --
@@ -8872,6 +9029,14 @@ ALTER TABLE ONLY public.create_additional_code_workbasket_settings
 
 
 --
+-- Name: create_certificates_workbasket_settings create_certificates_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_certificates_workbasket_settings
+    ADD CONSTRAINT create_certificates_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: create_footnotes_workbasket_settings create_footnotes_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8941,6 +9106,22 @@ ALTER TABLE ONLY public.duty_expression_descriptions_oplog
 
 ALTER TABLE ONLY public.duty_expressions_oplog
     ADD CONSTRAINT duty_expressions_pkey PRIMARY KEY (oid);
+
+
+--
+-- Name: edit_certificates_workbasket_settings edit_certificates_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_certificates_workbasket_settings
+    ADD CONSTRAINT edit_certificates_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edit_footnotes_workbasket_settings edit_footnotes_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_footnotes_workbasket_settings
+    ADD CONSTRAINT edit_footnotes_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12263,3 +12444,15 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_oper
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181016175408_add_workbasket_related_columns_to_geo_areas_tables.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017095105_create_create_footnotes_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017141845_create_certificate_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017165251_add_workbasket_related_columns_to_certificate_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019151225_edit_footnotes_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019161518_add_original_fields_to_edit_footnote_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181021085816_add_workbasket_fields_to_footnote_associations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011092756_change_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_settings_to_edit_quota.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbasket_fileds_to_quota_relations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit_certificate_settings_table.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');

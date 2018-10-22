@@ -2,8 +2,8 @@
   <div class="records-table-wrapper">
     <div :class="classes">
       <div class="table__header">
-        <div class="table__column select-all-column" v-if="disableSelection !== true && disableSelectAll !== true">
-          <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" />
+        <div class="table__column select-all-column" v-if="disableSelection !== true">
+          <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" v-if="disableSelectAll !== true" />
         </div>
         <div v-for="column in enabledColumns" v-bind:class="'table__column ' + column.field + '-column'">
           <a v-on:click.prevent="selectSorting(column)" v-if="column.sortable">
@@ -20,13 +20,13 @@
       </div>
 
       <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item[primaryKey]" :data-record-sid="item[primaryKey]" v-for="(item, index) in sorted">
-        <div class="table__column select-all-column" v-if="disableSelection !== true">
+        <div class="table__column select-all-column" v-if="disableSelection !== true && singleSelection !== true">
           <input type="checkbox" name="records[]" :value="item[primaryKey]" :checked="checked[item[primaryKey]]" @change="sendCheckedTrigger" />
         </div>
         <div class="table__column select-all-column" v-if="singleSelection === true">
           <input type="radio" name="selected_record" :value="item[primaryKey]" :checked="selectedItem === item[primaryKey]" @change="sendCheckedTrigger" />
         </div>
-        <grid-column v-for="column in enabledColumns" :item="item" :column="column.field" :changeProp="column.changeProp"></grid-column>
+        <grid-column v-for="column in enabledColumns" :item="item" :column="column.field" :changeProp="column.changeProp" :primary-key="primaryKey"></grid-column>
       </div>
     </div>
   </div>

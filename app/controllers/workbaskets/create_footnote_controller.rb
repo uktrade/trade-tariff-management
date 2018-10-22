@@ -1,6 +1,8 @@
 module Workbaskets
   class CreateFootnoteController < Workbaskets::BaseController
 
+    skip_around_action :configure_time_machine, only: [:submitted_for_cross_check]
+
     expose(:sub_klass) { "CreateFootnote" }
     expose(:settings_type) { :create_footnote }
 

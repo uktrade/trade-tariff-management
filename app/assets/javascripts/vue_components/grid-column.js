@@ -1,16 +1,15 @@
 Vue.component("grid-column", {
   template: '<div v-html="content" :class="classObj"></div>',
-  data: function() {
-    return {
-
-    }
-  },
-  props: ["column", "item", "changeProp"],
+  props: ["column", "item", "changeProp", "primaryKey"],
   computed: {
     changed: function() {
       return this.changeProp && this.item.changes && this.item.changes.indexOf(this.changeProp) > -1;
     },
     content: function() {
+      if (this.column == this.primaryKey && this.item.clone === true) {
+        return "&nbsp;";
+      }
+
       return this.item[this.column];
     },
     classObj: function() {

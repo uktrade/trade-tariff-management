@@ -34,6 +34,12 @@ class Footnote < Sequel::Model
                                                            :footnote_id],
                                              key: [:footnote_type_id,
                                                    :footnote_id]
+
+  one_to_many :footnote_association_measures, primary_key: [:footnote_type_id,
+                                                            :footnote_id],
+                                              key: [:footnote_type_id,
+                                                    :footnote_id]
+
   many_to_many :measures, join_table: :footnote_association_measures,
                           left_key: [:footnote_type_id, :footnote_id],
                           right_key: [:measure_sid]

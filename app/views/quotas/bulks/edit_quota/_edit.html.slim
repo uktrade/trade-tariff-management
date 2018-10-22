@@ -1,0 +1,25 @@
+- cache [ "measure_form_js_variables", expires_in: 8.hours ] do
+  = render "workbaskets/shared/js_variables"
+
+script
+  == "window.__workbasket_id = #{workbasket.id};"
+  == "window.all_settings = #{workbasket_settings.main_step_settings.to_json};"
+  == "window.quota_settings = #{workbasket_settings.quota_settings.to_json};"
+
+= simple_form_for form, url: current_url(id: workbasket.id),
+                        html: { \
+                          class: "quota-form",
+                          method: :put, data: { \
+                            measure: form.measure.to_json,
+                            measure_condition_attributes: form.measure.measure_conditions.to_json \
+                          } \
+                        } do |f|
+
+  = render "workbaskets/create_quota/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/shared/errors_container", f: f
+
+  - if step_pointer.configure_quota? || step_pointer.conditions_footnotes?
+    = render "workbaskets/shared/custom_errors_block", f: f
+
+  = render "workbaskets/shared/action_links", f: f

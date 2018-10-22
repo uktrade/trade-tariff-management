@@ -99,7 +99,7 @@ class Certificate < Sequel::Model
     certificate_types(reload: true).first
   end
 
-  delegate :description, to: :certificate_description
+  delegate :description, to: :certificate_description, allow_nil: true
 
   def record_code
    "205".freeze

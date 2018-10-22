@@ -93,6 +93,8 @@ module Sequel
             reduction_indicator: self.reduction_indicator
           )
 
+          scope = scope.where("measure_sid != ? ", self.measure_sid) if self.measure_sid.present?
+
           scope = if self.validity_end_date.present?
                     scope.where(
                       "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL)) OR

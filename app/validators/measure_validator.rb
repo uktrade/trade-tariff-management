@@ -64,7 +64,9 @@ class MeasureValidator < TradeTariffBackend::Validator
     (record.ordernumber.blank? && record.measure_type.order_number_capture_code != 1))
   end
 
-  validation :ME12, 'If the additional code is specified then the additional code type must have a relationship with the measure type.', on: [:create, :update] do |record|
+  validation :ME12, 'If the additional code is specified then the additional code type must have a relationship with the measure type.',
+    on: [:create, :update],
+    extend_message: ->(record) { record.measure_sid.present? ? "{ measure_sid=>\"#{record.measure_sid}\" }" : nil } do |record|
     (record.additional_code_type.present? && AdditionalCodeTypeMeasureType.where(additional_code_type_id: record.additional_code_type_id,
                                                                                  measure_type_id: record.measure_type_id).any?) ||
      record.additional_code_type.blank?
@@ -190,7 +192,8 @@ class MeasureValidator < TradeTariffBackend::Validator
      additional code and reduction indicator. This rule is not applicable for Meursing additional
      codes.),
      on: [:create, :update],
-     if: ->(record) { (record.additional_code.present? && record.additional_code_type.present? && record.additional_code_type.non_meursing?) } do |record|
+     extend_message: ->(record) { record.measure_sid.present? ? "{ measure_sid=>\"#{record.measure_sid}\" }" : nil },
+     if: ->(record) { record.additional_code.present? && record.additional_code_type.present? && record.additional_code_type.non_meursing? } do |record|
        record.duplicates_by_attributes.count.zero?
      end
 

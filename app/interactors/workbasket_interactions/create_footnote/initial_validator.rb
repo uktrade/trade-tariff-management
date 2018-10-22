@@ -8,6 +8,8 @@ module WorkbasketInteractions
         validity_start_date
         validity_end_date
         operation_date
+        commodity_codes
+        measure_sids
       )
 
       VALIDITY_PERIOD_ERRORS_KEYS = [
@@ -19,7 +21,8 @@ module WorkbasketInteractions
                     :errors,
                     :errors_summary,
                     :start_date,
-                    :end_date
+                    :end_date,
+                    :attrs_parser
 
       def initialize(settings)
         @errors = {}
@@ -27,6 +30,10 @@ module WorkbasketInteractions
 
         @start_date = parse_date(:validity_start_date)
         @end_date = parse_date(:validity_end_date)
+
+        @attrs_parser = ::WorkbasketValueObjects::EditFootnote::AttributesParser.new(
+          settings
+        )
       end
 
       ALLOWED_OPS.map do |option_name|
@@ -40,6 +47,8 @@ module WorkbasketInteractions
         check_description!
         check_validity_period!
         check_operation_date!
+        check_commodity_codes!
+        check_measures!
 
         errors
       end
@@ -96,6 +105,39 @@ module WorkbasketInteractions
         def check_operation_date!
           if operation_date.blank?
             @errors[:operation_date] = errors_translator(:operation_date_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
+          end
+        end
+
+        def check_commodity_codes!
+          if commodity_codes.present?
+            list = attrs_parser.parse_list_of_values(commodity_codes)
+
+            if list.present?
+              db_list = GoodsNomenclature.where(goods_nomenclature_item_id: list)
+                                         .distinct(:goods_nomenclature_item_id)
+
+              if db_list.count < list.count
+                @errors[:commodity_codes] = errors_translator(:commodity_codes_not_recognised)
+                @errors_summary = errors_translator(:summary_invalid_fields)
+              end
+            end
+          end
+        end
+
+        def check_measures!
+          if measure_sids.present?
+            list = attrs_parser.parse_list_of_values(measure_sids)
+
+            if list.present?
+              db_list = Measure.where(measure_sid: list)
+                               .distinct(:measure_sid)
+
+              if db_list.count < list.count
+                @errors[:measure_sids] = errors_translator(:measures_not_recognised)
+                @errors_summary = errors_translator(:summary_invalid_fields)
+              end
+            end
           end
         end
 

@@ -1,0 +1,16 @@
+= simple_form_for form, url: edit_certificate_url(id: workbasket.id),
+                        html: { \
+                          class: "js-edit-certificate-form create-measures-v2", \
+                          method: :put \
+                        } do |f|
+
+  = render "workbaskets/edit_certificate/errors_summary"
+
+  - if workbasket.submitted?
+    = render "workbaskets/edit_certificate/steps/main/details"
+
+  = render "workbaskets/edit_certificate/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/edit_certificate/conformance_rules_container", f: f
+
+  = render "workbaskets/edit_certificate/action_links", f: f

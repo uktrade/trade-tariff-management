@@ -1,6 +1,7 @@
 class CertificateDescription < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: [:certificate_description_period_sid]
   plugin :time_machine

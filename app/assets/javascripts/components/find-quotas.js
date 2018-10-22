@@ -322,30 +322,10 @@ $(document).ready(function() {
         this.origin_exclusions.value.push({ value: '' });
       },
       onQuotasSelected: function(sid) {
-        if (this.selectionType !== "none") {
-          var index = this.selectedQuotas.indexOf(sid);
-
-          if (index === -1) {
-            return;
-          }
-
-          this.selectedQuotas.splice(index, 1);
-        } else {
-          this.selectedQuotas.push(sid);
-        }
+        this.selectedItem = sid;
       },
       onQuotasDeselected: function(sid) {
-        if (this.selectionType != "none") {
-          this.selectedQuotas.push(sid);
-        } else {
-          var index = this.selectedQuotas.indexOf(sid);
-
-          if (index === -1) {
-            return;
-          }
-
-          this.selectedQuotas.splice(index, 1);
-        }
+        console.log("fix before can remove this")
       },
       onPageChange: function(page) {
         var self = this;

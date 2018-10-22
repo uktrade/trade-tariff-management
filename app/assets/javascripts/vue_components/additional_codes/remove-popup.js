@@ -25,13 +25,13 @@ Vue.component("remove-additional-codes-popup", {
       this.removingRecords = true;
 
       if (this.selectedAllRecords) {
-        jqxhr = BulkRemoveAdditionalCodesActions.removeAllRecordsInWorkbasket();
+        jqxhr = BulkRemoveAdditionalCodesActions.removeAllItemsInWorkbasket();
         jqxhr.done(function(){
           self.allRecordsRemovedCb();
           $(".js-bulk-edit-of-records-exit")[0].click(); // click exit
         });
       } else {
-        jqxhr = BulkRemoveAdditionalCodesActions.removeRecords(this.records);
+        jqxhr = BulkRemoveAdditionalCodesActions.removeItems(this.records);
         jqxhr.done(function(){
           self.recordsRemovedCb(self.records);
           self.triggerClose();

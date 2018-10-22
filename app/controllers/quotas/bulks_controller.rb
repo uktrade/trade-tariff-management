@@ -1,11 +1,9 @@
 module Quotas
   class BulksController < Measures::BulksBaseController
 
-    include ::SearchCacheHelpers
-
-    expose(:separator) do
-      "_BEQ_"
-    end
+    before_action :require_to_be_workbasket_owner!, only: [
+        :update, :destroy
+    ]
 
     expose(:current_page) do
       params[:page]
@@ -13,12 +11,14 @@ module Quotas
 
     expose(:main_step_settings) do
       {
+        start_date: params[:validity_start_date],
+        workbasket_action: params[:workbasket_action],
         regulation: params[:regulation_id].blank? ? nil : ::BaseOrModificationRegulationSearch.new(params[:regulation_id]).result.first.try(:to_json),
         regulation_id: params[:regulation_id],
         regulation_role: params[:regulation_role],
-        start_date: params[:start_date],
         reason: params[:reason],
-        title: params[:title]
+        title: params[:workbasket_name],
+        suspension_date: params[:suspension_date]
       }
     end
 
@@ -29,7 +29,7 @@ module Quotas
     expose(:edit_url) do
       edit_quotas_bulk_url(
           workbasket.id,
-          search_code: workbasket_settings.search_code
+          search_code: workbasket_settings.initial_search_results_code
       )
     end
 
@@ -37,9 +37,35 @@ module Quotas
       params[:mode] == "save_group_for_cross_check"
     end
 
-    expose(:search_ops) do
+    expose(:final_saving_batch) do
+      params[:final_batch].to_s == "true"
+    end
+
+    expose(:workbasket_container) do
+      ::Measures::Workbasket::Items.new(
+          workbasket, cached_search_ops
+      ).prepare
+    end
+
+    expose(:cached_search_ops) do
+      if workbasket_settings.initial_items_populated.present?
+        {
+            measure_sids: workbasket_items.pluck(:record_id),
+            page: current_page
+        }
+      else
+        {
+            measure_sids: ::Measures::Search.new(measures_search_ops).measure_sids,
+            page: current_page
+        }
+      end
+    end
+
+    expose(:pagination_metadata) do
       {
-          quota_sids: ::QuotaService::FetchQuotaSids.new(params).ids
+          page: search_results.current_page,
+          total_count: search_results.total_count,
+          per_page: search_results.limit_value
       }
     end
 
@@ -51,25 +77,86 @@ module Quotas
       workbasket_container.collection
     end
 
-    expose(:workbasket_container) do
-      ::Quotas::Workbasket::Items.new(
-          workbasket, cached_search_ops
-      ).prepare
+    expose(:measures_search_ops) do
+      {
+          'order_number': {
+              'enabled': '1',
+              'operator': 'is',
+              'value': workbasket_settings.quota_definition.quota_order_number_id
+          },
+          'valid_to': {
+              'enabled': '1',
+              'operator': 'is_after_or_nil',
+              'value': workbasket.operation_date
+          }
+      }
+    end
+
+    expose(:edit_quota_ops) do
+      ops = params[:settings]
+      ops.send("permitted=", true) if ops.present?
+      ops = (ops || {}).to_h
+
+      ops
+    end
+
+    expose(:edit_quota_measures_ops) do
+      JSON.parse(request.body.read)["bulk_measures_collection"]
+    end
+
+    expose(:remove_suspension_ops) do
+      {}
+    end
+
+    expose(:stop_quota_ops) do
+      {}
+    end
+
+    expose(:suspend_quota_ops) do
+      {}
+    end
+
+    WORKBASKET_ACTION_SAVER = {
+        'edit_quota' => '::',
+        'edit_quota_measures' => '::Measures::BulkSaver',
+        'remove_suspension' => '::Quotas::RemoveSuspensionSaver',
+        'stop_quota' => '::Quotas::StopSaver',
+        'suspend_quota' => '::Quotas::SuspendSaver'
+    }
+
+    expose(:bulk_saver) do
+      WORKBASKET_ACTION_SAVER[workbasket_settings.workbasket_action].constantize.new(
+          current_user,
+          workbasket,
+          send("#{workbasket_settings.workbasket_action}_ops")
+      )
+    end
+
+    expose(:json_response) do
+      {
+          collection: json_collection,
+          total_pages: search_results.total_pages,
+          current_page: search_results.current_page,
+          has_more: !search_results.last_page?
+      }
     end
 
     def edit
-      if search_mode?
-        respond_to do |format|
-          format.json { render json: json_response }
-          format.html
-        end
-
-      else
-        redirect_to edit_url
+      respond_to do |format|
+        format.json { render json: json_response }
+        format.html
       end
     end
 
     def create
+      if params[:clone].present?
+        handle_clone_quota_request
+      else
+        handle_edit_quota_request
+      end
+    end
+
+    def handle_edit_quota_request
       self.workbasket = Workbaskets::Workbasket.new(
           status: :new_in_progress,
           type: :bulk_edit_of_quotas,
@@ -77,14 +164,18 @@ module Quotas
       )
 
       if workbasket.save
+        quota_sid = params[:quota_sids].first
+        quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(quota_sid)
         workbasket_settings.update(
             initial_search_results_code: params[:search_code],
-            search_code: search_code
+            initial_quota_sid: quota_sid,
+            quota_main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
+            configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
+            conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
         )
 
         redirect_to work_with_selected_quotas_bulk_url(
-                        workbasket.id,
-                        search_code: workbasket_settings.search_code
+                        workbasket.id
                     )
       else
         redirect_to quotas_url(
@@ -93,11 +184,80 @@ module Quotas
       end
     end
 
+    def handle_clone_quota_request
+      self.workbasket = Workbaskets::Workbasket.new(
+          status: :new_in_progress,
+          type: :clone_quota,
+          user: current_user
+      )
+      if workbasket.save
+
+        quota_sid = params[:quota_sids].first
+        workbasket_settings.update(
+            initial_search_results_code: params[:search_code],
+            initial_quota_sid: quota_sid
+        )
+
+        redirect_to configure_cloned_quotas_bulk_url(
+                        workbasket.id
+                    )
+      end
+    end
+
     def persist_work_with_selected
       workbasket_settings.set_settings_for!("main", main_step_settings)
       workbasket_settings.set_workbasket_system_data!
 
-      redirect_to edit_url
+      if workbasket_settings.editable_workbasket?
+        redirect_to edit_url
+      else
+        if bulk_saver.valid?
+          bulk_saver.persist!
+
+          redirect_to quotas_url(
+                          search_code: workbasket_settings.initial_search_results_code,
+                          previous_workbasket_id: workbasket.id
+                      )
+        end
+      end
+    end
+
+    def persist_configure_cloned
+      workbasket.update(title: params['workbasket_name'])
+      quota_settings = ::WorkbasketInteractions::EditOfQuota::SettingsExtractor.new(workbasket_settings.initial_quota_sid, params[:exclusions])
+      workbasket_settings.update(
+          main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
+          configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
+          conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
+      )
+      redirect_to edit_create_quotum_url(
+          workbasket.id,
+          step: :main
+      )
+    end
+
+    def update
+      if bulk_saver.valid?
+        if submit_group_for_cross_check && final_saving_batch
+          bulk_saver.persist!
+
+          render json: bulk_saver.success_response.merge(
+              redirect_url: submitted_for_cross_check_quotas_bulk_url(workbasket.id)
+          ), status: :ok
+        else
+          render json: bulk_saver.success_response,
+                 status: :ok
+        end
+      else
+        render json: bulk_saver.error_response,
+               status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      workbasket.destroy
+
+      render json: {}, head: :ok
     end
 
   end

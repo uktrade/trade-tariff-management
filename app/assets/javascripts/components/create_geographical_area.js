@@ -53,7 +53,9 @@ $(document).ready(function() {
 
           self.savedSuccessfully = false;
           WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-          self.errors = [];
+
+          self.errors = {};
+          self.conformanceErrors = {};
 
           $.ajax({
             url: window.save_url,

@@ -4,23 +4,24 @@ table {
   }
 }
 
+.records-table.measures,
 .measures-table {
   min-width: 1700px !important;
 }
 
-.additional-codes-table {
+.additional-codes-table,
+.records-table.additional-codes {
   min-width: 1200px !important;
 }
 
-.quotas-table {
+.quotas-table,
+.records-table.quotas {
   min-width: 1500px !important;
 }
 
 .records-table {
   .table__row {
     border-bottom: 1px solid $border-colour;
-    height: 45px;
-    overflow: hidden;
     display: flex;
 
     &.deleted {
@@ -41,9 +42,12 @@ table {
     max-width: 20px;
   }
 
+  .sid-column,
   .measure_sid-column {
     min-width: 80px;
     max-width: 80px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .regulation-column {

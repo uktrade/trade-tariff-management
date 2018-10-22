@@ -9,6 +9,8 @@ module Workbaskets
         "Bulk Edit of Measures"
       when "create_quota"
         "Create Quota"
+      when "clone_quota"
+        "Clone Quota"
       when "create_regulation"
         "Create Regulation"
       when "create_additional_code"
@@ -16,11 +18,13 @@ module Workbaskets
       when "bulk_edit_of_additional_codes"
         "Bulk Edit of Additional Codes"
       when "bulk_edit_of_quotas"
-        "Edit of Quota"
+        "Edit of Quota" + (object.settings.workbasket_action.present? ? " (#{object.settings.workbasket_action.gsub('_', ' ')})" : '')
       when "create_geographical_area"
         "Create Geographical Area"
       when "create_footnote"
         "Create Footnote"
+      when "create_certificate"
+        "Create Certificate"
       end
     end
 

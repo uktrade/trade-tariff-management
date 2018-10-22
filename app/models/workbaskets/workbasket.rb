@@ -5,13 +5,16 @@ module Workbaskets
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
+      :clone_quota,
       :create_regulation,
       :create_additional_code,
       :bulk_edit_of_additional_codes,
       :bulk_edit_of_quotas,
       :create_geographical_area,
       :create_footnote,
-      :create_certificate
+      :edit_footnote,
+      :create_certificate,
+      :edit_certificate
     ]
 
     STATUS_LIST = [
@@ -92,6 +95,7 @@ module Workbaskets
     CREATE_WORKBASKETS = %w(
       create_measures
       create_quota
+      clone_quota
       create_regulation
       create_geographical_area
       create_additional_code
@@ -101,6 +105,10 @@ module Workbaskets
 
     EDIT_WORKABSKETS = %w(
       bulk_edit_of_measures
+      bulk_edit_of_quotas
+      bulk_edit_of_additional_codes
+      edit_footnote
+      edit_certificate
     )
 
     one_to_many :events, key: :workbasket_id,
@@ -137,6 +145,12 @@ module Workbaskets
 
     one_to_one :create_certificate_settings, key: :workbasket_id,
                                                    class_name: "Workbaskets::CreateCertificateSettings"
+
+    one_to_one :edit_footnote_settings, key: :workbasket_id,
+                                        class_name: "Workbaskets::EditFootnoteSettings"
+
+    one_to_one :edit_certificate_settings, key: :workbasket_id,
+                                           class_name: "Workbaskets::EditCertificateSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -375,6 +389,7 @@ module Workbaskets
     end
 
     def move_status_to!(current_user, new_status, description=nil)
+      reload
       add_event!(current_user, new_status, description)
 
       self.status = new_status
@@ -401,7 +416,7 @@ module Workbaskets
         create_measures_settings
       when :bulk_edit_of_measures
         bulk_edit_of_measures_settings
-      when :create_quota
+      when :create_quota, :clone_quota
         create_quota_settings
       when :create_regulation
         create_regulation_settings
@@ -417,6 +432,10 @@ module Workbaskets
         create_footnote_settings
       when :create_certificate
         create_certificate_settings
+      when :edit_footnote
+        edit_footnote_settings
+      when :edit_certificate
+        edit_certificate_settings
       end
     end
 
@@ -518,6 +537,7 @@ module Workbaskets
           bulk_edit_of_measures
           create_measures
           create_quota
+          clone_quota
           create_regulation
           create_additional_code
           bulk_edit_of_additional_codes
@@ -525,6 +545,8 @@ module Workbaskets
           create_geographical_area
           create_footnote
           create_certificate
+          edit_footnote
+          edit_certificate
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -541,8 +563,10 @@ module Workbaskets
           ::Workbaskets::CreateMeasuresSettings
         when :bulk_edit_of_measures
           ::Workbaskets::BulkEditOfMeasuresSettings
-        when :create_quota
+        when :create_quota, :clone_quota
           ::Workbaskets::CreateQuotaSettings
+        when :bulk_edit_of_quotas
+          ::Workbaskets::BulkEditOfQuotasSettings
         when :create_regulation
           ::Workbaskets::CreateRegulationSettings
         when :create_additional_code
@@ -555,6 +579,10 @@ module Workbaskets
           ::Workbaskets::CreateFootnoteSettings
         when :create_certificate
           ::Workbaskets::CreateCertificateSettings
+        when :edit_footnote
+          ::Workbaskets::EditFootnoteSettings
+        when :edit_certificate
+          ::Workbaskets::EditCertificateSettings
         end
 
         settings = target_class.new(

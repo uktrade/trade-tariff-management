@@ -48,7 +48,12 @@ describe FootnoteAssociationMeasure do
         it "shoud not run validation succesfully" do
           footnote_association_measure.save
 
-          footnote_association_measure2 = footnote_association_measure.dup
+          footnote_association_measure2 = FootnoteAssociationMeasure.new()
+          footnote_association_measure2.measure_sid = footnote_association_measure.measure_sid
+
+          footnote_association_measure2.footnote_type_id = footnote_association_measure.footnote_type_id
+          footnote_association_measure2.footnote_id = footnote_association_measure.footnote_id
+
           expect(footnote_association_measure2).to_not be_conformant
           expect(footnote_association_measure2.conformance_errors).to have_key(:ME70)
         end
