@@ -94,6 +94,15 @@ module WorkbasketInteractions
 
         def check_if_nothing_changed!
           if nothing_changed?
+
+              p ""
+              p "*" * 100
+              p ""
+              p "NOTHING CHANGED!"
+              p ""
+              p "*" * 100
+              p ""
+
             @errors[:general] = "Nothing changed"
             @errors_summary = initial_validator.errors_translator(:nothing_changed)
           end
