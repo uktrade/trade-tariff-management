@@ -289,6 +289,7 @@ module Quotas
       else
         if bulk_saver.valid?
           bulk_saver.persist!
+          workbasket.move_status_to!(current_user, :awaiting_cross_check)
 
           redirect_to quotas_url(
                           search_code: workbasket_settings.initial_search_results_code,

@@ -27,7 +27,6 @@ module Quotas
           record, system_ops
       ).assign!
       record.save
-      workbasket.move_status_to!(current_admin, :awaiting_cross_check)
     end
 
     def success_response

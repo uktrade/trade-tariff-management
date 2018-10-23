@@ -20,23 +20,15 @@ module Quotas
     end
 
     def persist!
-      order_number = QuotaOrderNumber.where(quota_order_number_id: workbasket_settings.quota_definition.quota_order_number_id).first
-      if order_number.validity_start_date <= operation_date
-        if order_number.validity_end_date.blank? || order_number.validity_end_date > operation_date
-          order_number.validity_end_date = operation_date
-          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              order_number, system_ops.merge(operation: "U")
-          ).assign!
-          order_number.save
-        end
-      else
-        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            order_number, system_ops.merge(operation: "D")
-        ).assign!(false)
-        order_number.destroy
-      end
+      quota_definition_sids = QuotaDefinition.where(quota_order_number_id: workbasket_settings.quota_definition.quota_order_number_id).pluck(:quota_definition_sid).uniq
+      parent_definition_sids = QuotaAssociation.where(sub_quota_definition_sid: quota_definition_sids, relation_type: 'NM').pluck(:main_quota_definition_sid).uniq
+      sub_definition_sids = QuotaAssociation.where(main_quota_definition_sid: quota_definition_sids, relation_type: 'EQ').pluck(:sub_quota_definition_sid).uniq
 
-      QuotaDefinition.where(quota_order_number_id: workbasket_settings.quota_definition.quota_order_number_id).each do |definition|
+      definition_sids = (quota_definition_sids + parent_definition_sids + sub_definition_sids).uniq
+      quota_order_number_ids = []
+
+      QuotaDefinition.where(quota_definition_sid: definition_sids).each do |definition|
+        quota_order_number_ids << definition.quota_order_number_id
         if definition.validity_start_date <= operation_date
           if definition.validity_end_date.blank? || definition.validity_end_date > operation_date
             #end date current
@@ -63,7 +55,23 @@ module Quotas
           definition.destroy
         end
       end
-      workbasket.move_status_to!(current_admin, status) if status == 'awaiting_cross_check'
+
+      QuotaOrderNumber.where(quota_order_number_id: quota_order_number_ids.uniq).each do |order_number|
+        if order_number.validity_start_date <= operation_date
+          if order_number.validity_end_date.blank? || order_number.validity_end_date > operation_date
+            order_number.validity_end_date = operation_date
+            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+                order_number, system_ops.merge(operation: "U")
+            ).assign!
+            order_number.save
+          end
+        else
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+              order_number, system_ops.merge(operation: "D")
+          ).assign!(false)
+          order_number.destroy
+        end
+      end
     end
 
     def success_response
