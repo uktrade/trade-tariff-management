@@ -30,36 +30,38 @@ fieldset
               | A group
               span.form-hint.with_bigger_font-size Create a group when you want to reference multiple countries and/or regions together. A group must have four-character (letters and/or numbers) code.
 
-          .panel.panel-border-narrow.js-geographical-area-parent-group-select-block
-            label.form-label
-              | Optionally specify a parent for this group
-              span.form-hint
-                | You should almost never need to use this, but if you do, specify another group - you can enter
-                br
-                | either the parent's four-character code, or start typing its description, and select from the list.
+          - if original_geographical_area.geographical_code.to_s == '1'
+            .panel.panel-border-narrow.js-geographical-area-parent-group-select-block
+              label.form-label
+                | Optionally specify a parent for this group
+                span.form-hint
+                  | You should almost never need to use this, but if you do, specify another group - you can enter
+                  br
+                  | either the parent's four-character code, or start typing its description, and select from the list.
 
-              .alert.create-measures-message-block.edit-geo-area-type-block-alert class="alert--info"
-                svg.icon class="icon--info" version="1.1" viewbox=("0 0 24 28") xmlns="http://www.w3.org/2000/svg"
-                  path d=("M16 21.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-1.5v-8c0-0.281-0.219-0.5-0.5-0.5h-5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h1.5v5h-1.5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h7c0.281 0 0.5-0.219 0.5-0.5zM14 7.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-3c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h3c0.281 0 0.5-0.219 0.5-0.5zM24 14c0 6.625-5.375 12-12 12s-12-5.375-12-12 5.375-12 12-12 12 5.375 12 12z")
+                .alert.create-measures-message-block.edit-geo-area-type-block-alert class="alert--info"
+                  svg.icon class="icon--info" version="1.1" viewbox=("0 0 24 28") xmlns="http://www.w3.org/2000/svg"
+                    path d=("M16 21.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-1.5v-8c0-0.281-0.219-0.5-0.5-0.5h-5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h1.5v5h-1.5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h7c0.281 0 0.5-0.219 0.5-0.5zM14 7.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-3c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h3c0.281 0 0.5-0.219 0.5-0.5zM24 14c0 6.625-5.375 12-12 12s-12-5.375-12-12 5.375-12 12-12 12 5.375 12 12z")
 
-                p
-                  - if original_geographical_area.parent_geographical_area_group_sid.present? && original_geographical_area.parent_geographical_area.present?
-                    | This group's current parent is
-                    =<> "'#{original_geographical_area.parent_geographical_area.geographical_area_id}'"
-                    =< original_geographical_area.parent_geographical_area.description
-                    | .
-                  - else
-                    | This group does not currently have a parent.
+                  p
+                    - if original_geographical_area.parent_geographical_area_group_sid.present? && original_geographical_area.parent_geographical_area.present?
+                      | This group's current parent is
+                      =<> "'#{original_geographical_area.parent_geographical_area.geographical_area_id}'"
+                      =< original_geographical_area.parent_geographical_area.description
+                      | .
+                    - else
+                      | This group does not currently have a parent.
 
-            .find-items__row.without_border
-              .find-items__checkbox-column.col-md-12
-                .multiple-choice
-                  input#toggle-country-code name="search[code_country]" type="checkbox" value="0"
-                  label for="toggle-country-code"
-                    | Orphan this group (remove from current parent and do not add a new one)
+              - if original_geographical_area.parent_geographical_area_group_sid.present? && original_geographical_area.parent_geographical_area.present?
+                .find-items__row.without_border
+                  .find-items__checkbox-column.col-md-12
+                    .multiple-choice
+                      input#toggle-country-code name="search[code_country]" type="checkbox" value="0"
+                      label for="toggle-country-code"
+                        | Orphan this group (remove from current parent and do not add a new one)
 
-            .clearfix
+              .clearfix
 
-            .parent-group-target
-              .parent-group-select
-                = content_tag "custom-select", "", { ":options" => "groups_list" , "allow-clear" => true, "code-field" => "geographical_area_id", "label-field" => "description", "value-field" => "geographical_area_id", "v-model" => "geographical_area.parent_geographical_area_group_id", placeholder: "― select group ―", "name" => "geographical_area[parent_geographical_area_group_id]", "code-class-name" => "prefix--country" }
+              .parent-group-target
+                .parent-group-select
+                  = content_tag "custom-select", "", { ":options" => "groups_list" , "allow-clear" => true, "code-field" => "geographical_area_id", "label-field" => "description", "value-field" => "geographical_area_id", "v-model" => "geographical_area.parent_geographical_area_group_id", placeholder: "― select group ―", "name" => "geographical_area[parent_geographical_area_group_id]", "code-class-name" => "prefix--country" }
