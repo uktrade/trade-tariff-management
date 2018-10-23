@@ -5,6 +5,7 @@ module WorkbasketValueObjects
       SIMPLE_OPS = %w(
         description
         parent_geographical_area_group_id
+        remove_parent_group_association
       )
 
       attr_accessor :settings

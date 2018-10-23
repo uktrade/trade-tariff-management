@@ -11,6 +11,7 @@ module WorkbasketInteractions
         description_validity_start_date
         parent_geographical_area_group_id
         parent_geographical_area_group_sid
+        remove_parent_group_association
         validity_start_date
         validity_end_date
       )
@@ -218,6 +219,14 @@ module WorkbasketInteractions
 
           geographical_area.geographical_area_code = original_geographical_area.geographical_area_code
           geographical_area.geographical_area_type_code = original_geographical_area.geographical_area_type_code
+
+          if parent_geographical_area_group_id.present?
+            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
+          end
+
+          if remove_parent_group_association.present?
+            geographical_area.parent_geographical_area_group_sid = nil
+          end
 
           assign_system_ops!(geographical_area)
 
