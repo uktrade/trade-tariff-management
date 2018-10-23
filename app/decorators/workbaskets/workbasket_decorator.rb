@@ -29,6 +29,8 @@ module Workbaskets
         "Edit footnote"
       when "edit_certificate"
         "Edit Certificate"
+      when "edit_geographical_area"
+        "Edit Geographical Area"
       end
     end
 

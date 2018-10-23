@@ -3,10 +3,12 @@
     | Geographical area submitted
 
   h3.heading-medium
-    | The edited geographical area of type
-    =<> "'#{geographical_area.decorate.geographical_area_type_description}'"
-    | and ID
-    =<> "'#{geographical_area.decorate.code}'"
+    | The edited
+    =<> geographical_area.decorate.type
+    | with code
+    =<> "'#{geographical_area.geographical_area_id}'"
+    | and description
+    =<> "'#{geographical_area.description}'"
     | has been submitted for cross-check.
 
 br
