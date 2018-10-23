@@ -1,3 +1,8 @@
+script
+  == "window.save_url = '/#{settings_type}/#{workbasket.id}';"
+  == "window.current_step = '#{current_step}';"
+  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+
 = simple_form_for form, url: create_quotum_url(id: workbasket.id),
                         html: { \
                           class: "measure-form create-measures-v2",

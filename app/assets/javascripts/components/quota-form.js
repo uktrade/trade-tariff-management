@@ -509,6 +509,7 @@ $(document).ready(function() {
         }
 
         if (payload.conditions) {
+          console.log(payload.conditions);
           for (var k in payload.conditions) {
             if (!payload.conditions.hasOwnProperty(k)) {
               continue;

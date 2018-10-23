@@ -68,7 +68,7 @@ module WorkbasketHelper
   def edit_quota_section_header
     case current_step
     when "main"
-      "Edit of quota"
+      "Edit quota"
     when "configure_quota"
       "Configure the quota"
     when "conditions_footnotes"
