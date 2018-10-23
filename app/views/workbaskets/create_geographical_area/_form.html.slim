@@ -1,32 +1,16 @@
-script
-  == "window.__geographical_area_json = #{workbasket_settings.settings.to_json};"
-
-- cache [ "geographical-area_form_groups_json", expires_in: 8.hours ] do
-  script
-    == "window.__geographical_area_groups_json = #{GeographicalArea.actual.groups.map(&:to_json).to_json};"
-
 = simple_form_for form, url: create_geographical_area_url(id: workbasket.id),
                         html: { \
                           class: "geographical-area-form create-measures-v2", \
                           method: :put \
                         } do |f|
 
-  .error-summary role="alert" aria-labelledby="create-geographical-area-error-heading" tabindex="-1" v-cloak="" v-if="hasErrors"
-
-    h2.heading-medium.error-summary-heading#create-geographical-area-error-heading
-      | Error
-
-    p
-      | {{errorsSummary}}
-
-    p
-      | See individual fields for details.
+  = render "workbaskets/create_geographical_area/errors_summary"
 
   - if workbasket.submitted?
     = render "workbaskets/create_geographical_area/steps/main/details"
 
   = render "workbaskets/create_geographical_area/steps/#{params[:step].to_s}", f: f
   = render "workbaskets/shared/success_message", f: f
-  = render "workbaskets/shared/errors_container", f: f
+  = render "workbaskets/create_geographical_area/conformance_rules_container", f: f
 
   = render "workbaskets/create_geographical_area/action_links", f: f

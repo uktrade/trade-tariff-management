@@ -8,4 +8,54 @@ fieldset
     |  Added items will be shown in the list below. Click an item to change its join or leave date.
     br
 
-  = link_to "Add memberships", "#", class: "button js-geographical-area-manage-memberships"
+  button.button v-on:click.prevent="triggerAddMemberships" :disabled="!this.geographical_area.geographical_code"
+    | Add memberships
+
+  .bootstrap-row v-if="this.geographical_area.geographical_code"
+    .col-xs-12.col-sm-12.col-md-8.col-lg-7.col-xl-6
+      table.table
+        colgroup
+          col width="40"
+          col width="*"
+          col width="120"
+          col width="120"
+        thead
+          tr
+            th colspan="2"
+              a href="#" v-on:click.prevent="changeSorting('geographical_area_id')"
+                | {{isGroup ? "Members" : "Is a member of"}}
+                span v-if="'geographical_area_id' == sortBy"
+                  arrow-down v-if="sortDir === 'desc'"
+                  arrow-up v-if="sortDir === 'asc'"
+            th
+              a href="#" v-on:click.prevent="changeSorting('join_date')"
+                | Join date
+
+                span v-if="'join_date' == sortBy"
+                  arrow-down v-if="sortDir === 'desc'"
+                  arrow-up v-if="sortDir === 'asc'"
+            th
+              a href="#" v-on:click.prevent="changeSorting('leave_date')"
+                | Leave date
+
+                span v-if="'leave_date' == sortBy"
+                  arrow-down v-if="sortDir === 'desc'"
+                  arrow-up v-if="sortDir === 'asc'"
+        tbody
+          tr v-for="(membership, index) in sortedMemberships"
+            td
+              a href="#" role="button" v-on:click.prevent="editMembership(membership)"
+                | {{membership.geographical_area_id}}
+            td
+              a href="#" role="button" v-on:click.prevent="editMembership(membership)"
+                | {{membership.geographical_area.description}}
+            td
+              | {{membership.validity_start_date}}
+            td
+              | {{membership.validity_end_date}}
+
+  add-geo-areas-to-group-popup :validity-start-date="geographical_area.validity_start_date" :geographical-area="geographical_area" :on-close="closePopups" :open="true" v-if="addingMembers"
+
+  add-geo-areas-to-country-region-popup :validity-start-date="geographical_area.validity_start_date" :geographical-area="geographical_area" :on-close="closePopups" :open="true" v-if="addingToGroups"
+
+  edit-geographical-area-membership-popup :geographical-area="geographical_area" :membership="editingMembership" :on-close="closePopups" :open="true" v-if="editingMembership !== null"

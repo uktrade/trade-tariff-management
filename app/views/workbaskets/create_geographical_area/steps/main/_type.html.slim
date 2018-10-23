@@ -9,7 +9,40 @@ fieldset
           | {{slotProps.error}}
 
       .bootstrap-row
-        .controls
-          = content_tag "geographical-area-type", "", { kind: "country", ":geographical_area" => "types.country" }
-          = content_tag "geographical-area-type", "", { kind: "region", ":geographical_area" => "types.region" }
-          = content_tag "geographical-area-type", "", { kind: "group", ":geographical_area" => "types.group" }
+        .col-xs-12.col-sm-12.col-md-9.col-lg-6
+          .geographical-area-type
+            .multiple-choice
+              input type='radio' id="geographical_area_type_country" class="radio-inline-group" name="geographical_area[geographical_code]" :checked="geographical_area.geographical_code == 'country'" v-model="geographical_area.geographical_code" value="country"
+
+              label for="geographical_area_type_country"
+                | A country
+                span.form-hint
+                  | This will have two-letter ISO code. You can add countires to geographical area groups, but a country cannot itself be a group.
+          .geographical-area-type
+            .multiple-choice
+              input type='radio' id="geographical_area_type_region" class="radio-inline-group" name="geographical_area[geographical_code]" :checked="geographical_area.geographical_code == 'region'" v-model="geographical_area.geographical_code" value="region"
+
+              label for="geographical_area_type_region"
+                | A region
+                span.form-hint
+                  | Use this only in exceptional cases, to represent a geographical entity that is not a country. Functionally, a region is the same as a country.
+          .geographical-area-type
+            .multiple-choice
+              input type='radio' id="geographical_area_type_group" class="radio-inline-group" name="geographical_area[geographical_code]" :checked="geographical_area.geographical_code == 'group'" v-model="geographical_area.geographical_code" value="group"
+
+              label for="geographical_area_type_group"
+                | A group
+                span.form-hint
+                  | Create a group when you want to reference multiple countries and/or regions together. A group must have four-character (letters and/or numbers) code.
+            .panel.panel-border-narrow v-if="geographical_area.geographical_code == 'group'"
+              label.form-label
+                | Optionally specify a parent for this group
+
+                span.form-hint
+                  | You should almost never need to use this, but if you do, specify another group - you can enter
+                  br
+                  | either the parent's four-character code, or start typing its description, and select from the list.
+
+              .parent-group-target
+                .parent-group-select
+                  = content_tag "custom-select", "", { ":options" => "parentGroupsList" , "allow-clear" => true, "code-field" => "geographical_area_id", "label-field" => "description", "value-field" => "geographical_area_id", "v-model" => "geographical_area.parent_geographical_area_group_id", placeholder: "― select group ―", "name" => "geographical_area[parent_geographical_area_group_id]", "code-class-name" => "prefix--country" }
