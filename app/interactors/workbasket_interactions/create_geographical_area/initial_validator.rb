@@ -120,7 +120,7 @@ module WorkbasketInteractions
         end
 
         def errors_translator(key)
-          I18n.t(:create_geographical_area)[:errors][key]
+          I18n.t(:create_geographical_area)[key]
         end
 
         def squish_it(val)

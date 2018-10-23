@@ -24,6 +24,7 @@ module WorkbasketInteractions
                     :conformance_errors,
                     :errors_summary,
                     :attrs_parser,
+                    :initial_validator,
                     :geographical_area,
                     :geographical_area_description,
                     :geographical_area_description_period,
@@ -81,9 +82,12 @@ module WorkbasketInteractions
         end
 
         def check_initial_validation_rules!
-          @errors = ::WorkbasketInteractions::CreateGeographicalArea::InitialValidator.new(
+          @initial_validator = ::WorkbasketInteractions::CreateGeographicalArea::InitialValidator.new(
             settings_params
-          ).fetch_errors
+          )
+
+          @errors = initial_validator.fetch_errors
+          @errors_summary = initial_validator.errors_summary
         end
 
         def check_conformance_rules!
