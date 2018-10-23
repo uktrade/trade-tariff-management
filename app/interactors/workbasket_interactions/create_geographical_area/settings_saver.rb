@@ -123,7 +123,7 @@ module WorkbasketInteractions
         def add_geographical_area!
           @geographical_area = GeographicalArea.new(
             geographical_area_id: geographical_area_id,
-            geographical_code: geographical_code,
+            geographical_code: geo_code_number(geographical_code),
             validity_start_date: validity_start_date,
             validity_end_date: validity_end_date
           )
@@ -178,6 +178,17 @@ module WorkbasketInteractions
           @attrs_parser = ::WorkbasketValueObjects::CreateGeographicalArea::AttributesParser.new(
             settings_params
           )
+        end
+
+        def geo_code_number(geographical_code)
+          case geographical_code.to_s
+          when 'country'
+            '0'
+          when 'group'
+            '1'
+          when 'region'
+            '2'
+          end
         end
     end
   end
