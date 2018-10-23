@@ -65,6 +65,19 @@ module WorkbasketHelper
     end
   end
 
+  def edit_quota_section_header
+    case current_step
+    when "main"
+      "Edit of quota"
+    when "configure_quota"
+      "Configure the quota"
+    when "conditions_footnotes"
+      "Specify conditions and footnotes (optional)"
+    when "review_and_submit"
+      "Review and submit"
+    end
+  end
+
   def create_regulation_section_header
     case current_step
     when "main"

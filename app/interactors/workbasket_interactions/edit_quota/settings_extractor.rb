@@ -1,5 +1,5 @@
 module WorkbasketInteractions
-  module EditOfQuota
+  module EditQuota
     class SettingsExtractor
 
       attr_reader :quota_order_number,
@@ -29,6 +29,7 @@ module WorkbasketInteractions
             'quota_licence': quota_definition.license,
             'quota_is_licensed': quota_definition.license.present?.to_s,
             'regulation_id': 'regulation'.in?(exclusions) ? '' : quota_definition.regulation_id,
+            'regulation_role': 'regulation'.in?(exclusions) ? '' : quota_definition.regulation_role,
             'commodity_codes': 'commodity_codes'.in?(exclusions) ? '' : quota_definition.goods_nomenclature_item_ids.join(', '),
             'commodity_codes_exclusions': '',
             'measure_type_id': quota_definition.quota_type_id,

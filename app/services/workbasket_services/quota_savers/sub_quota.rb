@@ -27,9 +27,12 @@ module WorkbasketServices
           if item['order_number'].blank?
             @errors["sub_quota_order_number_#{index}"] = "\##{index.to_i + 1} - Order number can't be blank"
           else
-            record = QuotaOrderNumber.new(quota_order_number_id: item['order_number'])
+            params = base_params
+            base_params['quota_ordernumber'] = item['order_number']
+            saver = build_order_number!(params, false)
+            saver.generate_records!
             ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-                record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
+                saver.order_number, QuotaOrderNumberValidator, {}).errors.map do |key, error|
               @errors.merge!("#{key.join(',')}_#{index}": "\##{index.to_i + 1} - #{error.join('. ')}")
             end
           end
@@ -102,16 +105,16 @@ module WorkbasketServices
 
       def parse_commodity_codes(commodity_codes)
         if commodity_codes.present?
-          commodity_codes.split( /[\s|,]/ )
+          commodity_codes.split( /[\s|,]+/ )
               .map(&:strip)
-              .reject { |el| el.blank? }
+              .reject(&:blank?)
               .uniq
         end
       end
 
-      def build_order_number!(order_number_ops)
+      def build_order_number!(order_number_ops, persist = true)
         ::WorkbasketServices::QuotaSavers::OrderNumber.new(
-            settings_saver, order_number_ops, true
+            settings_saver, order_number_ops, persist
         )
       end
 
