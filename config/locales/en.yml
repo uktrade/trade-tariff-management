@@ -169,3 +169,4 @@ en:
     summary_minimal_required_fields: "The certificate could not be submitted because one or more required fields are missing."
     summary_invalid_fields: "The certificate could not be submitted because invalid data has been entered for one or more fields."
     summary_conformance_rules: "The certificate could not be submitted because there are conformance errors."
+    nothing_changed: "The certificate could not be submitted because you have to change at least of description or validity period!"
