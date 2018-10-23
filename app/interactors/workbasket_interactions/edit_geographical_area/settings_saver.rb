@@ -51,7 +51,7 @@ module WorkbasketInteractions
       end
 
       def save!
-        workbasket.title = original_geographical_area.title
+        workbasket.title = original_geographical_area.geographical_area_id
         workbasket.operation_date = (Date.strptime(operation_date, "%d/%m/%Y") rescue nil)
         workbasket.save
 
@@ -97,6 +97,15 @@ module WorkbasketInteractions
 
         def check_if_nothing_changed!
           if nothing_changed?
+
+            p ""
+            p "*" * 100
+            p ""
+            p " NOTHING CHANGED!"
+            p ""
+            p "*" * 100
+            p ""
+
             @errors[:general] = "Nothing changed"
             @errors_summary = initial_validator.errors_translator(:nothing_changed)
           end
@@ -113,11 +122,29 @@ module WorkbasketInteractions
           Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
 
             if it_is_just_description_changed?
+
+              p ""
+              p "*" * 100
+              p ""
+              p " JUST DESC CHANGED 1!"
+              p ""
+              p "*" * 100
+              p ""
+
               end_date_existing_geographical_area_desription_period!
               add_next_geographical_area_description_period!
               add_next_geographical_area_description!
 
             else
+
+              p ""
+              p "*" * 100
+              p ""
+              p " ALL CHANGED 1!"
+              p ""
+              p "*" * 100
+              p ""
+
               end_date_existing_geographical_area!
 
               add_geographical_area!
@@ -138,6 +165,15 @@ module WorkbasketInteractions
           @conformance_errors = {}
 
           if it_is_just_description_changed?
+
+            p ""
+            p "*" * 100
+            p ""
+            p " JUST DESC CHANGED 2!"
+            p ""
+            p "*" * 100
+            p ""
+
             unless next_geographical_area_description_period.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
             end
@@ -147,6 +183,15 @@ module WorkbasketInteractions
             end
 
           else
+
+            p ""
+            p "*" * 100
+            p ""
+            p " ALL CHANGED 2!"
+            p ""
+            p "*" * 100
+            p ""
+
             unless geographical_area.conformant?
               @conformance_errors.merge!(get_conformance_errors(geographical_area))
             end
