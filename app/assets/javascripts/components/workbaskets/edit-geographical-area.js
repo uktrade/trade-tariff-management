@@ -212,6 +212,12 @@ $(document).ready(function() {
           description_validity_start_date = '';
         }
 
+        if ($("input[name='geographical_area[remove_parent_group_association]']").prop('checked')) {
+          remove_parent_group_association = true;
+        } else {
+          remove_parent_group_association = '';
+        }
+
         return {
           reason_for_changes: this.geographical_area.reason_for_changes,
           description: this.geographical_area.description,
@@ -220,7 +226,7 @@ $(document).ready(function() {
           parent_geographical_area_group_id: $("select[name='geographical_area[parent_geographical_area_group_id]']").val(),
           validity_start_date: this.geographical_area.validity_start_date,
           validity_end_date: this.geographical_area.validity_end_date,
-          remove_parent_group_association: $("input[name='geographical_area[remove_parent_group_association]']").val()
+          remove_parent_group_association: remove_parent_group_association
         };
       }
     }
