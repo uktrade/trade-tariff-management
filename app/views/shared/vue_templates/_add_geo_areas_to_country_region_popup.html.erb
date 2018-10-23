@@ -1,0 +1,85 @@
+<script type="text/x-template" id="add-geo-areas-to-country-region-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+    <template slot="title">
+      Add this {{geographicalArea.geographical_code}} to geographical area group(s)
+    </template>
+
+    <div class="error-summary" role="alert" aria-labelledby="memberships-popup-error-heading" tabindex="-1" v-cloak v-if="!valid">
+
+      <h2 class="heading-medium error-summary-heading" id="memberships-popup-error-heading">
+        Error
+      </h2>
+
+      <p>
+        {{errorSummary}}
+      </p>
+
+      <p>
+        See individual fields for details.
+      </p>
+    </div>
+
+    <info-message>
+      You can add this {{geographicalArea.geographical_code}} to one or more area groups here. It will automatically be added to the parents/ancestors of each group you specify here, so you do not need to do that manually.
+    </info-message>
+
+    <form-group :errors="errors" error-key="memberships">
+      <template slot-scope="slotProps">
+        <label class="form-label">
+          <span class="error-message" v-if="slotProps.hasError" v-cloak>
+            {{slotProps.error}}
+          </span>
+        </label>
+        <div class="bootstrap-row membership-row" v-for="(membership, index) in memberships">
+          <div class="col-sm-5">
+            <form-group :errors="errors" :error-key="'membership_area_id_' + index">
+              <template slot-scope="slotProps">
+                <label class="form-label" v-if="index === 0">
+                  Select a geographical area group
+                </label>
+                <custom-select :options="groupsList" allow-clear="true" code-field="geographical_area_id" label-field="description" value-field="geographical_area_id" v-model="membership.geographical_area_group_sid" placeholder="― select group ―" code-class-name="prefix--country"></custom-select>
+              </template>
+            </form-group>
+          </div>
+          <div class="col-md-3">
+            <form-group :errors="errors" :error-key="'membership_join_date_' + index">
+              <template slot-scope="slotProps">
+                <label class="form-label" v-if="index === 0">
+                  Join group on this date
+                </label>
+
+                <date-select :value.sync="membership.validity_start_date"></date-select>
+              </template>
+            </form-group>
+          </div>
+          <div class="col-md-4">
+            <form-group :errors="errors" :error-key="'membership_leave_date_' + index">
+              <template slot-scope="slotProps">
+                <label class="form-label" v-if="index === 0">
+                  Leave group on this date (optional)
+                </label>
+
+                <date-select :value.sync="membership.validity_end_date"></date-select>
+              </template>
+            </form-group>
+          </div>
+        </div>
+
+        <p>
+          <a href="#" v-on:click.prevent="addMembership">
+            Add to another geographical area group
+          </a>
+        </p>
+      </template>
+    </form-group>
+
+    <div class="form-actions">
+      <button class="button" @click.prevent="addMemberships" :disabled="processing">
+        Add memberships
+      </button>
+      <a class="secondary-button" href="#" @click.prevent="onClose">
+        Cancel
+      </a>
+    </div>
+  </pop-up>
+</script>
