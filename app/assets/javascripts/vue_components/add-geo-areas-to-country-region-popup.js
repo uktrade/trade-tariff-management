@@ -69,13 +69,15 @@ Vue.component("add-geo-areas-to-country-region-popup", {
           }
 
           var area = areas[k];
+          var start = moment(self.join_date, "DD/MM/YYYY", true);
+          var end = moment(self.leave_date, "DD/MM/YYYY", true);
 
           self.geographicalArea.memberships.push({
             geographical_area: area,
             geographical_area_id: area.geographical_area_id,
             geographical_area_group_sid: self.geographicalArea.geographical_area_id,
-            validity_start_date: self.join_date,
-            validity_end_date: self.leave_date
+            validity_start_date: start.isValid() ? start.format("DD MMMM YYYY") : null,
+            validity_end_date: end.isValid() ? end.format("DD MMMM YYYY") : null
           });
         }
 

@@ -3,17 +3,40 @@ Vue.component("edit-geographical-area-membership-popup", {
   props: ["membership", "geographicalArea", "onClose", "open"],
   data: function() {
     return {
-      delete: false,
+      toDelete: false,
       valid: true,
       errors: {},
+      errorSummary: "",
       join_date: null,
       leave_date: null,
       processing: false
     };
   },
+  mounted: function() {
+    var start = moment(this.membership.validity_start_date, ["DD MMM YYYY", "DD/MM/YYYY"], true);
+    var end = moment(this.membership.validity_end_date, ["DD MMM YYYY", "DD/MM/YYYY"], true);
+
+    if (this.membership.delete) {
+      this.toDelete = true;
+    }
+
+    if (start.isValid()) {
+      this.join_date = start.format("DD/MM/YYYY");
+    }
+
+    if (end.isValid()) {
+      this.leave_date = end.format("DD/MM/YYYY");
+    }
+  },
   computed: {
     disableJoinDate: function() {
-      console.log(this.geographicalArea);
+      return this.toDelete || this.geographicalArea.sent_to_cds;
+    },
+    disableLeaveDate: function() {
+      return this.toDelete;
+    },
+    isGroup: function() {
+      return this.geographicalArea.geographical_code === 'group';
     }
   },
   methods: {
@@ -24,12 +47,8 @@ Vue.component("edit-geographical-area-membership-popup", {
       this.errorSummary = "";
       this.valid = true;
 
-      if (this.delete) {
+      if (this.toDelete) {
         return resolve();
-      }
-
-      if (!this.valid) {
-        return reject();
       }
 
       if (moment(this.join_date, "DD/MM/YYYY", true).isValid() === false) {
@@ -56,20 +75,19 @@ Vue.component("edit-geographical-area-membership-popup", {
       this.processing = true;
 
       this.validate(function() {
-        for (var k in areas) {
-          if (!areas.hasOwnProperty(k)) {
-            continue;
-          }
-
-          var area = areas[k];
-
-          self.geographicalArea.geographical_area_memberships.push({
-            geographical_area: area,
-            geographical_area_id: area.geographical_area_id,
-            geographical_area_group_sid: self.geographicalArea.geographical_area_id,
-            validity_start_date: self.join_date,
-            validity_end_date: self.leave_date
-          });
+        var membership = self.membership;
+        
+        if (self.toDelete) {
+          self.membership.validity_start_date = null;
+          self.membership.validity_end_date = null;
+          self.membership.delete = true;
+        } else {
+          var start = moment(self.join_date, "DD/MM/YYYY", true);
+          var end = moment(self.leave_date, "DD/MM/YYYY", true);
+          
+          self.membership.delete = false;
+          self.membership.validity_start_date = start.isValid() ? start.format("DD MMMM YYYY") : null;
+          self.membership.validity_end_date = end.isValid() ? end.format("DD MMMM YYYY") : null;
         }
 
         self.onClose();
