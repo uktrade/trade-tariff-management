@@ -102,9 +102,9 @@ module WorkbasketServices
 
       def parse_commodity_codes(commodity_codes)
         if commodity_codes.present?
-          commodity_codes.split( /[\s|,]/ )
+          commodity_codes.split( /[\s|,]+/ )
               .map(&:strip)
-              .reject { |el| el.blank? }
+              .reject(&:blank?)
               .uniq
         end
       end

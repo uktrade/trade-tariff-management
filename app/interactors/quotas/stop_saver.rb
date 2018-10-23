@@ -3,31 +3,35 @@ module Quotas
 
     attr_accessor :current_admin,
                   :workbasket,
-                  :workbasket_settings
+                  :workbasket_settings,
+                  :status,
+                  :operation_date
 
     def initialize(current_admin, workbasket, settings_ops={})
       @current_admin = current_admin
       @workbasket = workbasket
       @workbasket_settings = workbasket.settings
+      @status = settings_ops[:status] || 'awaiting_cross_check'
+      @operation_date = settings_ops[:operation_date] || workbasket_settings.configure_step_settings['start_date'].try(:to_date)
     end
 
     def valid?
       workbasket_settings.configure_step_settings['start_date'].present?
     end
 
-    def persist!(next_status = 'awaiting_cross_check')
+    def persist!
       order_number = QuotaOrderNumber.where(quota_order_number_id: workbasket_settings.quota_definition.quota_order_number_id).first
       if order_number.validity_start_date <= operation_date
         if order_number.validity_end_date.blank? || order_number.validity_end_date > operation_date
           order_number.validity_end_date = operation_date
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              order_number, system_ops.merge({operation: "U", status: next_status})
+              order_number, system_ops.merge(operation: "U")
           ).assign!
           order_number.save
         end
       else
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            order_number, system_ops.merge({operation: "U", status: next_status})
+            order_number, system_ops.merge(operation: "D")
         ).assign!(false)
         order_number.destroy
       end
@@ -41,7 +45,7 @@ module Quotas
             end
             definition.validity_end_date = operation_date
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-                definition, system_ops.merge({operation: "U", status: next_status})
+                definition, system_ops.merge(operation: "U")
             ).assign!
             definition.save
           end
@@ -49,17 +53,17 @@ module Quotas
           #delete all in future
           definition.measures.each do |measure|
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-                measure, system_ops.merge({operation: "U", status: next_status})
+                measure, system_ops.merge(operation: "D")
             ).assign!(false)
             measure.destroy
           end
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              definition, system_ops.merge({operation: "U", status: next_status})
+              definition, system_ops.merge(operation: "D")
           ).assign!(false)
           definition.destroy
         end
       end
-      workbasket.move_status_to!(current_admin, :awaiting_cross_check)
+      workbasket.move_status_to!(current_admin, status) if status == 'awaiting_cross_check'
     end
 
     def success_response
@@ -72,15 +76,12 @@ module Quotas
 
     private
 
-    def operation_date
-      workbasket_settings.configure_step_settings['start_date'].try(:to_date)
-    end
-
     def system_ops
       {
           operation_date: operation_date,
           current_admin_id: current_admin.id,
-          workbasket_id: workbasket.id
+          workbasket_id: workbasket.id,
+          status: status
       }
     end
 

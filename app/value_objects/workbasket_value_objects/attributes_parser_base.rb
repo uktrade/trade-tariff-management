@@ -65,7 +65,10 @@ module WorkbasketValueObjects
 
     def commodity_codes_exclusions
       list = ops['commodity_codes_exclusions']
-      list.present? ? list.split( /\r?\n/ ).map(&:strip) : []
+      list.present? ? list.split( /[\s|,]+/ )
+                          .map(&:strip)
+                          .reject(&:blank?)
+                          .uniq : []
     end
 
     def candidates
