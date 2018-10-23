@@ -47,6 +47,7 @@ module WorkbasketInteractions
 
         @persist = true # For now it always true
         @errors = {}
+        @errors_summary = {}
         @conformance_errors = {}
       end
 
