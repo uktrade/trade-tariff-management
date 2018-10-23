@@ -14,6 +14,7 @@ module WorkbasketInteractions
 
       attr_accessor :settings,
                     :errors,
+                    :errors_summary,
                     :type,
                     :area_id,
                     :start_date,
@@ -51,6 +52,7 @@ module WorkbasketInteractions
         def check_type!
           if geographical_code.blank?
             @errors[:geographical_code] = errors_translator(:geographical_code)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
 
@@ -59,18 +61,22 @@ module WorkbasketInteractions
             if geographical_code.present?
               if type == "group" && area_id.match(/^[0-9A-Z]{4}$/).blank?
                 @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_group_code)
+                @errors_summary = errors_translator(:summary_invalid_fields)
               end
 
               if ["country", "region"].include?(type) && area_id.match(/^[A-Z]{2}$/).blank?
                 @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_country_code)
+                @errors_summary = errors_translator(:summary_invalid_fields)
               end
             end
 
             if GeographicalArea.where(geographical_area_id: area_id).present?
               @errors[:geographical_area_id] = errors_translator(:geographical_area_id_already_exist)
+              @errors_summary = errors_translator(:summary_invalid_fields)
             end
           else
             @errors[:geographical_area_id] = errors_translator(:geographical_area_id_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
 
@@ -80,7 +86,8 @@ module WorkbasketInteractions
               description.squish.split.size.zero?
             )
 
-            @errors[:description] = errors_translator(:description)
+            @errors[:description] = errors_translator(:description_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
 
@@ -88,10 +95,12 @@ module WorkbasketInteractions
           if start_date.present?
             if end_date.present? && start_date > end_date
               @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
+              @errors_summary = errors_translator(:summary_invalid_fields)
             end
 
           elsif @errors[:validity_start_date].blank?
             @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
 
           if start_date.present? &&
@@ -99,12 +108,14 @@ module WorkbasketInteractions
              end_date < start_date
 
             @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
+            @errors_summary = errors_translator(:summary_invalid_fields)
           end
         end
 
         def check_operation_date!
           if operation_date.blank?
             @errors[:operation_date] = errors_translator(:operation_date_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
 
