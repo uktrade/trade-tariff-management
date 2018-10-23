@@ -9,6 +9,7 @@ $(document).ready(function() {
     el: form,
     data: function() {
       var data = {
+        groups_list: window.__geographical_area_groups_json,
         savedSuccessfully: false,
         errors: {},
         conformanceErrors: {},
@@ -17,6 +18,19 @@ $(document).ready(function() {
 
       if (!$.isEmptyObject(window.__geographical_area_json)) {
         data.geographical_area = this.parseGeographicalAreaPayload(window.__geographical_area_json);
+
+        area_code = data.geographical_area.geographical_code;
+
+        if (area_code.length > 0) {
+          setTimeout(function setAreaCode() {
+            radion_button = $(".geographical-area-type .multiple-choice[data-type-value='" + area_code + "'] label");
+            radion_button.trigger('click');
+
+            setTimeout(function disableRadioButtons() {
+              $(".multiple-choice.disabled_area").addClass('disabled');
+            }, 300);
+          }, 300);
+        }
       } else {
         data.geographical_area = this.emptyGeographicalArea();
       }
@@ -165,6 +179,8 @@ $(document).ready(function() {
       },
       parseGeographicalAreaPayload: function(payload) {
         return {
+          geographical_code: payload.geographical_code,
+          geographical_area_id: payload.geographical_area_id,
           reason_for_changes: payload.reason_for_changes,
           operation_date: payload.operation_date,
           description: payload.description,
@@ -176,6 +192,8 @@ $(document).ready(function() {
       },
       emptyGeographicalArea: function() {
         return {
+          geographical_code: null,
+          geographical_area_id: null,
           reason_for_changes: null,
           operation_date: null,
           description: null,

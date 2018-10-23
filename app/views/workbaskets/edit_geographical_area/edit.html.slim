@@ -3,3 +3,7 @@
 script
   == "window.__original_geographical_area_description = '#{j(form.original_geographical_area_description)}';"
   == "window.__geographical_area_json = #{workbasket_settings.settings.to_json};"
+
+- cache [ "geographical-area_form_groups_json", expires_in: 8.hours ] do
+  script
+    == "window.__geographical_area_groups_json = #{GeographicalArea.actual.groups.map(&:to_json).to_json};"
