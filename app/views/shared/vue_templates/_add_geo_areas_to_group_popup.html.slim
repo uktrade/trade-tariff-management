@@ -1,0 +1,51 @@
+script type="text/x-template" id="add-geo-areas-to-group-popup-template"
+  pop-up :open="open" :on-close="triggerClose"
+    template slot="title" Add countries and/or regions to this geographical area group
+
+    .error-summary role="alert" aria-labelledby="memberships-popup-error-heading" tabindex="-1" v-cloak="" v-if="!valid"
+
+      h2.heading-medium.error-summary-heading#memberships-popup-error-heading
+        | Error
+
+      p
+        | {{errorSummary}}
+
+      p
+        | See individual fields for details.
+
+    info-message You can add countries and/or regions to this geographical area group here. If you earlier specified that this group has a parent, then the countries and regions you add here will also automatically be added to the parent and any ancestors it has.
+
+    form-group :errors="errors" error-key="codes"
+      template slot-scope="slotProps"
+        label.form-label
+          | Enter one or more ISO country/region codes, separated by comma, space or line break.
+
+          span.error-message v-if="slotProps.hasError" v-cloak=""
+            | {{slotProps.error}}
+
+        textarea.form-control rows="4" v-model="codes"
+
+    form-group :errors="errors" error-key="join_date"
+      template slot-scope="slotProps"
+        label.form-label
+          | Join group on this date
+
+          span.error-message v-if="slotProps.hasError" v-cloak=""
+            | {{slotProps.error}}
+
+        date-select :value.sync="join_date"
+
+    form-group :errors="errors" error-key="leave_date"
+      template slot-scope="slotProps"
+        label.form-label
+          | Leave group on this date (optional)
+
+          span.error-message v-if="slotProps.hasError" v-cloak=""
+            | {{slotProps.error}}
+
+        date-select :value.sync="leave_date"
+
+    .form-actions
+      button.button @click.prevent="addMemberships" :disabled="notEnoughInfo || processing"
+        | Add memberships
+      a.secondary-button href="#" @click.prevent="onClose" Cancel
