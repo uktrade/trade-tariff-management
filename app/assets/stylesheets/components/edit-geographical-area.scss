@@ -14,6 +14,15 @@
     margin-bottom: 15px;
   }
 
+  .alert.create-measures-message-block.edit-geo-area-type-block-alert {
+    margin-top: 20px;
+    height: 35px;
+
+    p {
+      padding-top: 5px;
+    }
+  }
+
   span.form-hint.hint_below_input {
     margin-top: 20px;
     margin-bottom: 0px;
@@ -45,9 +54,15 @@
     max-width: 140px;
   }
 
-  .multiple-choice {
+  .disabled_area {
     opacity: 0.5;
     pointer-events: none;
     cursor: default;
+  }
+
+  .js-geographical-area-parent-group-select-block {
+    span.form-hint {
+      margin-top: 10px;
+    }
   }
 }

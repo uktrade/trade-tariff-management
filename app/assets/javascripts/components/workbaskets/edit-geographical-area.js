@@ -9,6 +9,7 @@ $(document).ready(function() {
     el: form,
     data: function() {
       var data = {
+        groups_list: window.__geographical_area_groups_json,
         savedSuccessfully: false,
         errors: {},
         conformanceErrors: {},
