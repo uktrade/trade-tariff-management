@@ -223,11 +223,20 @@ module WorkbasketInteractions
 
         def end_date_existing_certificate!
           unless original_certificate.already_end_dated?
+
+            p ""
+            p "-" * 100
+            p ""
+            p "ENDDATING CURRENT CERTIFICATE"
+            p ""
+            p "-" * 100
+            p ""
+
             original_certificate.validity_end_date = validity_start_date
 
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
               original_certificate, system_ops.merge(operation: "U")
-            ).assign!
+            ).assign!(false)
 
             original_certificate.save
           end
@@ -242,7 +251,7 @@ module WorkbasketInteractions
 
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
               certificate_description_period, system_ops.merge(operation: "U")
-            ).assign!
+            ).assign!(false)
 
             certificate_description_period.save
           end

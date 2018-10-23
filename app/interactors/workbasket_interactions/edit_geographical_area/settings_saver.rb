@@ -145,7 +145,7 @@ module WorkbasketInteractions
 
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
               original_geographical_area, system_ops.merge(operation: "U")
-            ).assign!
+            ).assign!(false)
 
             original_geographical_area.save
           end
