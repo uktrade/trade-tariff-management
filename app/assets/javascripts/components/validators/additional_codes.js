@@ -91,7 +91,7 @@ AdditionalCodesValidator.prototype.validateLevelTwo = function() {
 
   var invalidCodes = any(this.data.additional_codes, function(code, index) {
     var incompleteCode = code.additional_code.trim().length == 0;
-    var incompleteDescription = code.description.trim().length == 0;
+    var incompleteDescription = code.description.trim().length == 0 && code.additional_code_type_id != "7";
     var incompleteType = !code.additional_code_type_id;
 
     // if all blank, ignore

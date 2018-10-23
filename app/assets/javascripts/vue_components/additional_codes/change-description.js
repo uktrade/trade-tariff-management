@@ -5,31 +5,44 @@ Vue.component("change-additional-codes-description-popup", {
       validityDate: moment().add(1, "days").format("DD/MM/YYYY"),
       description: "",
       sameDescription: false,
+      meursing: 0,
       latestStartDate: null,
       errors: [],
       errorSummary: [],
-      disableSubmit: false
+      disableSubmit: false,
+      additional_codes: []
     };
   },
   props: ["records", "onClose", "open"],
   mounted: function() {
     var self = this;
 
-    this.sameDescription = allValuesSame(this.records.map(function(record) {
+    this.additional_codes = this.records.filter(function(record) {
+      return record.type_id != "7";
+    });
+
+    this.meursing = this.records.length - this.additional_codes.length;
+
+    this.sameDescription = allValuesSame(this.additional_codes.map(function(record) {
       return record.description;
     }));
 
     if (this.sameDescription) {
-      this.description = this.records[0].description;
+      this.description = this.additional_codes[0] ? this.additional_codes[0].description : "";
     }
 
-    this.latestStartDate = this.records.map(function(record) {
-      return moment(record.additional_code_description.validity_start_date, "DD MMM YYYY", true);
-    }).filter(function(date) {
-      return date.isValid();
-    }).sort(function(a,b) {
-      return b.diff(a, "days");
-    })[0].format("DD MMM YYYY");
+
+    try {
+      this.latestStartDate = this.additional_codes.map(function(record) {
+        return moment(record.additional_code_description.validity_start_date, "DD MMM YYYY", true);
+      }).filter(function(date) {
+        return date.isValid();
+      }).sort(function(a,b) {
+        return b.diff(a, "days");
+      })[0].format("DD MMM YYYY");
+    } catch (e) {
+      this.latestStartDate = "";
+    }
   },
   methods: {
     clearErrors: function() {
@@ -81,7 +94,7 @@ Vue.component("change-additional-codes-description-popup", {
         return;
       }
 
-      this.records.forEach(function(record) {
+      this.additional_codes.forEach(function(record) {
         record.description = description;
         record.additional_code_description.description = description;
         record.additional_code_description.validity_start_date = validityDate;
@@ -97,7 +110,7 @@ Vue.component("change-additional-codes-description-popup", {
   },
   computed: {
     showMakeOpenEnded: function() {
-      return any(this.records, function(record) {
+      return any(this.additional_codes, function(record) {
         return record.validity_end_date && record.validity_end_date != "-";
       });
     }

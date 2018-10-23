@@ -1,0 +1,22 @@
+- commodity_codes_count = workbasket_settings.commodity_codes_covered.count
+- additional_codes_count = workbasket_settings.additional_codes_covered.count
+
+p
+  | You are about to update
+  =< pluralize(workbasket_items.count, "measure", "measures")
+  | , covering
+
+  - if commodity_codes_count > 0 && additional_codes_count > 0
+    =<> pluralize(commodity_codes_count, "commodity code", "commodity codes")
+    | and
+    =< pluralize(additional_codes_count, "additional code", "additional codes")
+
+  - elsif commodity_codes_count > 0
+    =< pluralize(commodity_codes_count, "commodity code", "commodity codes")
+
+  - elsif additional_codes_count > 0
+    =< pluralize(additional_codes_count, "additional code", "additional codes")
+
+  | .
+
+

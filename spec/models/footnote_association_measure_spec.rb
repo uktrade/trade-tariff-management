@@ -59,20 +59,20 @@ describe FootnoteAssociationMeasure do
         end
       end
 
-      describe "ME73: The validity period of the associated footnote must span the validity period of the measure." do
-        it "should run validation successfully" do
-          expect(footnote_association_measure).to be_conformant
-        end
+      # describe "ME73: The validity period of the associated footnote must span the validity period of the measure." do
+      #   it "should run validation successfully" do
+      #     expect(footnote_association_measure).to be_conformant
+      #   end
 
-        it "should not run validation successfully" do
-          measure.validity_start_date = Date.today.ago(5.years)
-          measure.validity_end_date   = Date.today.ago(4.years)
-          measure.save
+      #   it "should not run validation successfully" do
+      #     measure.validity_start_date = Date.today.ago(5.years)
+      #     measure.validity_end_date   = Date.today.ago(4.years)
+      #     measure.save
 
-          expect(footnote_association_measure).to_not be_conformant
-          expect(footnote_association_measure.conformance_errors).to have_key(:ME73)
-        end
-      end
+      #     expect(footnote_association_measure).to_not be_conformant
+      #     expect(footnote_association_measure.conformance_errors).to have_key(:ME73)
+      #   end
+      # end
     end
   end
 end
