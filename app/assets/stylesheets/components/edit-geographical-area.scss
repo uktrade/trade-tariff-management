@@ -56,8 +56,11 @@
 
   .disabled_area {
     opacity: 0.5;
-    pointer-events: none;
     cursor: default;
+
+    &.disabled {
+      pointer-events: none;
+    }
   }
 
   .js-geographical-area-parent-group-select-block {
