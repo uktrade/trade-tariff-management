@@ -274,6 +274,7 @@ module WorkbasketInteractions
           end
 
           assign_system_ops!(geographical_area)
+          set_primary_key!(geographical_area)
 
           geographical_area.save if persist_mode?
         end
@@ -304,7 +305,6 @@ module WorkbasketInteractions
           geographical_area_description.geographical_area_description_period_sid = geographical_area_description_period.geographical_area_description_period_sid
 
           assign_system_ops!(geographical_area_description)
-          set_primary_key!(geographical_area_description)
 
           geographical_area_description.save if persist_mode?
         end
