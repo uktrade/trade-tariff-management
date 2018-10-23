@@ -265,12 +265,12 @@ module WorkbasketInteractions
           geographical_area.geographical_code = original_geographical_area.geographical_code
           geographical_area.geographical_area_id = original_geographical_area.geographical_area_id
 
-          if parent_geographical_area_group_id.present?
-            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
-          end
-
           if remove_parent_group_association.present?
             geographical_area.parent_geographical_area_group_sid = nil
+          end
+
+          if parent_geographical_area_group_id.present?
+            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
           end
 
           assign_system_ops!(geographical_area)
