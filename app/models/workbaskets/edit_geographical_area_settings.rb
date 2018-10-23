@@ -65,7 +65,7 @@ module Workbaskets
         end
       else
         geographical_areas_list.first
-      end
+      end || original_geographical_area
     end
   end
 end

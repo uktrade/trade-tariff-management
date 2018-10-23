@@ -151,6 +151,7 @@ en:
     summary_minimal_required_fields: "The footnote could not be submitted because one or more required fields are missing."
     summary_invalid_fields: "The footnote could not be submitted because invalid data has been entered for one or more fields."
     summary_conformance_rules: "The footnote could not be submitted because there are conformance errors."
+    nothing_changed: "The footnote could not be submitted because you have to change change something!"
 
   edit_certificate:
     reason_for_changes_blank: "Reason cannot be left blank and must comprise at least one word."
@@ -170,3 +171,22 @@ en:
     summary_invalid_fields: "The certificate could not be submitted because invalid data has been entered for one or more fields."
     summary_conformance_rules: "The certificate could not be submitted because there are conformance errors."
     nothing_changed: "The certificate could not be submitted because you have to change at least of description or validity period!"
+
+  edit_geographical_area:
+    reason_for_changes_blank: "Reason cannot be left blank and must comprise at least one word."
+    operation_date_blank: "You must specify a date, and this date must be on or after the geographical area's valid-from date."
+    operation_date_is_before_start_date: "This date must be on or after the geographical area's valid-from date."
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    description_validity_start_date_blank: "You must specify a date."
+    description_validity_start_date_outside_range: "The date is outside the validity period of the geographical area."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Format is invalid."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    measures_not_recognised: "One or more of the entered IDs is not a recognised measure ID."
+    commodity_codes_not_recognised: "One or more of the entered codes is not a recognised goods commodity code."
+    summary_minimal_required_fields: "The geographical area could not be submitted because one or more required fields are missing."
+    summary_invalid_fields: "The geographical area could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The geographical area could not be submitted because there are conformance errors."
+    nothing_changed: "The geographical area could not be submitted because you have to change at least of description or validity period!"

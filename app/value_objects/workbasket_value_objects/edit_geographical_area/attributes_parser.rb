@@ -20,14 +20,16 @@ module WorkbasketValueObjects
       end
 
       def parent_geographical_area_group
-        GeographicalArea.actual
-                        .groups
-                        .where(geographical_area_id: parent_geographical_area_group_id)
-                        .first
+        if parent_geographical_area_group_id.present?
+          GeographicalArea.actual
+                          .groups
+                          .where(geographical_area_id: parent_geographical_area_group_id)
+                          .first
+        end
       end
 
       def parent_geographical_area_group_sid
-        parent_geographical_area_group.geographical_area_sid
+        parent_geographical_area_group.try(:geographical_area_sid)
       end
 
       def validity_start_date
