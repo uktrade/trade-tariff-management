@@ -41,7 +41,9 @@ $(document).ready(function() {
 
           self.savedSuccessfully = false;
           WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-          self.errors = [];
+
+          self.errors = {};
+          self.conformanceErrors = {};
 
           $.ajax({
             url: window.save_url,
@@ -56,8 +58,9 @@ $(document).ready(function() {
 
               if (response.redirect_url !== undefined) {
                 setTimeout(function tick() {
-                  window.location = resp.redirect_url;
+                  window.location = response.redirect_url;
                 }, 1000);
+
               } else {
                 WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
                 self.savedSuccessfully = true;
@@ -72,8 +75,11 @@ $(document).ready(function() {
                 return;
               }
 
-              self.errorsSummary = "All bad guys!";
-              self.errors = response.responseJSON.errors;
+              json_resp = response.responseJSON;
+
+              self.errorsSummary = json_resp.errors_summary;
+              self.errors = json_resp.errors;
+              self.conformanceErrors = json_resp.conformance_errors;
             }
           });
         });
