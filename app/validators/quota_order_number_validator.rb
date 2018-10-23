@@ -11,14 +11,14 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
   #   validates :uniqueness, of: [:quota_order_number_id]
   # end
 
-  validation :QON3, "Order number should start with '09' and can contain digits only. Could be 6 length only.", on: [:create, :update] do |record|
-    order_number_id = record.quota_order_number_id
+  # validation :QON3, "Order number should start with '09' and can contain digits only. Could be 6 length only.", on: [:create, :update] do |record|
+  #   order_number_id = record.quota_order_number_id
 
-    order_number_id.blank? || (
-      order_number_id.present? &&
-      (/^09(\d){4}\z/.match?(order_number_id))
-    )
-  end
+  #   order_number_id.blank? || (
+  #     order_number_id.present? &&
+  #     (/^09(\d){4}\z/.match?(order_number_id))
+  #   )
+  # end
 
   validation :ON1, 'Quota order number id + start date must be unique' do
     validates :uniqueness, of: [:quota_order_number_id, :validity_start_date]

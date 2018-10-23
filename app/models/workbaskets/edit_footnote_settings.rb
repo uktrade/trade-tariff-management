@@ -75,7 +75,7 @@ module Workbaskets
         end
       else
         footnotes_list.first
-      end
+      end || original_footnote
     end
   end
 end

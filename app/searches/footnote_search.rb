@@ -93,6 +93,7 @@ class FootnoteSearch
 
     def apply_list_of_ids_filter(list_name)
       parsed_list = parse_list_of_values(
+        list_name,
         public_send(list_name)
       )
 
@@ -109,7 +110,7 @@ class FootnoteSearch
       @relation = relation.before_or_equal(end_date.to_date.end_of_day)
     end
 
-    def parse_list_of_values(list_of_ids)
+    def parse_list_of_values(list_name, list_of_ids)
       # Split by linebreaks
       linebreaks_separated_list = list_of_ids.split(/\n+/)
 
@@ -123,8 +124,32 @@ class FootnoteSearch
         item.split(" ")
       end.flatten
 
-      white_space_separated_list.map(&:squish)
-                                .flatten
-                                .reject { |i| i.blank? }.uniq
+      res = white_space_separated_list.map(&:squish)
+                                      .flatten
+                                      .reject { |i| i.blank? }.uniq
+
+      if list_name == :measure_sids
+        #
+        # measure_sid field is integer and have limits on value
+        #
+        # integer    4 bytes    -2147483648 to +2147483647
+        #
+        # so if user will fill in 'Measures' filter with commodity code like:
+        #
+        # 3802900011
+        #
+        # then would be exception:
+        #
+        # PG::NumericValueOutOfRange: ERROR: value "3802900011" is out of range for type integer
+        #
+        # so, this is quick fix for that:
+        #
+
+        res = res.select do |i|
+          i.to_i >= -2147483648 && i.to_i <= 2147483647
+        end
+      end
+
+      res
     end
 end

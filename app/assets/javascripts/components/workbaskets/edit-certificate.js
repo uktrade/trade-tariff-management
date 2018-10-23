@@ -184,11 +184,17 @@ $(document).ready(function() {
         };
       },
       certificatePayLoad: function() {
+        if ($(".js-certificate-description-textarea").val() !== window.__original_certificate_description) {
+          description_validity_start_date = $(".js-description-validity-period-date").val();
+        } else {
+          description_validity_start_date = '';
+        }
+
         return {
           reason_for_changes: this.certificate.reason_for_changes,
           description: this.certificate.description,
           operation_date: $(".js-changes_take_effect_date_input").val(),
-          description_validity_start_date: $(".js-description-validity-period-date").val(),
+          description_validity_start_date: description_validity_start_date,
           validity_start_date: this.certificate.validity_start_date,
           validity_end_date: this.certificate.validity_end_date
         };

@@ -114,11 +114,11 @@ class Footnote < Sequel::Model
       def by_commodity_codes(commodity_codes)
         join_table(:inner,
           :footnote_association_goods_nomenclatures,
-          footnote_type_id: :footnote_type_id,
+          footnote_type: :footnote_type_id,
           footnote_id: :footnote_id
         ).where("
           footnote_association_goods_nomenclatures.goods_nomenclature_item_id IN ?",
-          list_of_measure_sids
+          commodity_codes
         )
       end
 
