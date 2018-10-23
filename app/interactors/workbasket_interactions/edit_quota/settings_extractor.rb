@@ -52,8 +52,8 @@ module WorkbasketInteractions
       def conditions_footnotes_step_settings
         {
             'sub_quotas': extract_sub_quotas_settings,
-            'footnotes': 'footnotes'.in?(exclusions) || quota_definition.measure.blank? ? [] : quota_definition.measure.to_json[:footnotes],
-            'conditions': 'conditions'.in?(exclusions) || quota_definition.measure.blank? ? [] : quota_definition.measure.to_json[:measure_conditions]
+            'footnotes': 'footnotes'.in?(exclusions) || quota_definition.measure.blank? ? [] : to_indexed_object(quota_definition.measure.to_json[:footnotes]),
+            'conditions': 'conditions'.in?(exclusions) || quota_definition.measure.blank? ? [] : to_indexed_object(quota_definition.measure.to_json[:measure_conditions])
         }
       end
 
@@ -166,6 +166,33 @@ module WorkbasketInteractions
         end
       end
 
+      begin :helper_methods
+        def to_indexed_object(subject)
+          if subject.kind_of?(Array)
+            array_to_indexed_object(subject)
+          elsif subject.kind_of?(Hash)
+            hash_to_indexed_object(subject)
+          else
+            subject
+          end
+        end
+
+        def hash_to_indexed_object(hash)
+          hash.map do |key, item|
+            {
+                "#{key}": to_indexed_object(item)
+            }
+          end.reduce(:merge)
+        end
+
+        def array_to_indexed_object(array)
+          array.map.with_index do |item, index|
+            {
+                "#{index}": to_indexed_object(item)
+            }
+          end.reduce(:merge)
+        end
+      end
     end
   end
 end
