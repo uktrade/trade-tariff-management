@@ -15,9 +15,6 @@ module Workbaskets
     def settings
       res = JSON.parse(main_step_settings_jsonb)
 
-      res[:geographical_code] = original_geographical_area.geographical_code
-      res[:geographical_area_id] = original_geographical_area.geographical_area_id
-
       if res.blank?
         res = {
           description: original_geographical_area.description,
@@ -33,6 +30,9 @@ module Workbaskets
                                                                               .try(:description)
         end
       end
+
+      res[:geographical_code] = original_geographical_area.geographical_code
+      res[:geographical_area_id] = original_geographical_area.geographical_area_id
 
       res
     end
