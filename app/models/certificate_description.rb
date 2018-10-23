@@ -9,6 +9,9 @@ class CertificateDescription < Sequel::Model
 
   set_primary_key [:certificate_description_period_sid]
 
+  one_to_one :certificate_description_period, key: :certificate_description_period_sid,
+                                              primary_key: :certificate_description_period_sid
+
   def to_s
     description
   end

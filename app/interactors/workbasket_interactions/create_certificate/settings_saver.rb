@@ -59,6 +59,9 @@ module WorkbasketInteractions
       def persist!
         @do_not_rollback_transactions = true
         validate!
+
+        workbasket.title = "#{settings_params[:certificate_type_code]} #{settings_params[:certificate_code]}"
+        workbasket.save
       end
 
       def success_ops

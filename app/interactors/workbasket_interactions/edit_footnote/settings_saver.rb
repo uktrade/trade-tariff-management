@@ -173,7 +173,7 @@ module WorkbasketInteractions
 
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
               original_footnote, system_ops.merge(operation: "U")
-            ).assign!
+            ).assign!(false)
 
             original_footnote.save
           end
@@ -260,7 +260,7 @@ module WorkbasketInteractions
             unless item.already_end_dated?
               ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
                 item, system_ops.merge(operation: "D")
-              ).assign!
+              ).assign!(false)
 
               item.save
             end

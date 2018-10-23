@@ -47,7 +47,7 @@ module Workbaskets
         end
       else
         certs_list.first
-      end
+      end || original_certificate
     end
   end
 end
