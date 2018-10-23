@@ -265,15 +265,16 @@ module WorkbasketInteractions
           geographical_area.geographical_code = original_geographical_area.geographical_code
           geographical_area.geographical_area_id = original_geographical_area.geographical_area_id
 
-          if parent_geographical_area_group_id.present?
-            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
-          end
-
           if remove_parent_group_association.present?
             geographical_area.parent_geographical_area_group_sid = nil
           end
 
+          if parent_geographical_area_group_id.present?
+            geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
+          end
+
           assign_system_ops!(geographical_area)
+          set_primary_key!(geographical_area)
 
           geographical_area.save if persist_mode?
         end
@@ -304,7 +305,6 @@ module WorkbasketInteractions
           geographical_area_description.geographical_area_description_period_sid = geographical_area_description_period.geographical_area_description_period_sid
 
           assign_system_ops!(geographical_area_description)
-          set_primary_key!(geographical_area_description)
 
           geographical_area_description.save if persist_mode?
         end
