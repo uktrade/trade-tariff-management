@@ -56,8 +56,8 @@ fieldset
                 .find-items__row.without_border
                   .find-items__checkbox-column.col-md-12
                     .multiple-choice
-                      input#toggle-country-code name="search[code_country]" type="checkbox" value="0"
-                      label for="toggle-country-code"
+                      input#remove_parent_group_association name="geographical_area[remove_parent_group_association]" type="checkbox" value="0" v-model="geographical_area.remove_parent_group_association"
+                      label for="remove_parent_group_association"
                         | Orphan this group (remove from current parent and do not add a new one)
 
               .clearfix

@@ -187,7 +187,8 @@ $(document).ready(function() {
           description_validity_start_date: payload.description_validity_start_date,
           parent_geographical_area_group_id: payload.parent_geographical_area_group_id,
           validity_start_date: payload.validity_start_date,
-          validity_end_date: payload.validity_end_date
+          validity_end_date: payload.validity_end_date,
+          remove_parent_group_association: payload.remove_parent_group_association
         };
       },
       emptyGeographicalArea: function() {
@@ -200,18 +201,26 @@ $(document).ready(function() {
           description_validity_start_date: null,
           parent_geographical_area_group_id: null,
           validity_start_date: null,
-          validity_end_date: null
+          validity_end_date: null,
+          remove_parent_group_association: null
         };
       },
       geographical_areaPayLoad: function() {
+        if ($(".js-geographical_area-description-textarea").val() !== window.__original_geographical_area_description) {
+          description_validity_start_date = $(".js-description-validity-period-date").val();
+        } else {
+          description_validity_start_date = '';
+        }
+
         return {
           reason_for_changes: this.geographical_area.reason_for_changes,
           description: this.geographical_area.description,
           operation_date: $(".js-changes_take_effect_date_input").val(),
-          description_validity_start_date: $(".js-description-validity-period-date").val(),
+          description_validity_start_date: description_validity_start_date,
           parent_geographical_area_group_id: $("select[name='geographical_area[parent_geographical_area_group_id]']").val(),
           validity_start_date: this.geographical_area.validity_start_date,
-          validity_end_date: this.geographical_area.validity_end_date
+          validity_end_date: this.geographical_area.validity_end_date,
+          remove_parent_group_association: $("input[name='geographical_area[remove_parent_group_association]']").val()
         };
       }
     }

@@ -17,8 +17,6 @@ module Workbaskets
 
       if res.blank?
         res = {
-          geographical_code: original_geographical_area.geographical_code,
-          geographical_area_id: original_geographical_area.geographical_area_id,
           description: original_geographical_area.description,
           validity_start_date: original_geographical_area.validity_start_date.strftime("%d/%m/%Y")
         }
@@ -32,6 +30,9 @@ module Workbaskets
                                                                               .try(:description)
         end
       end
+
+      res[:geographical_code] = original_geographical_area.geographical_code
+      res[:geographical_area_id] = original_geographical_area.geographical_area_id
 
       res
     end
@@ -65,7 +66,7 @@ module Workbaskets
         end
       else
         geographical_areas_list.first
-      end
+      end || original_geographical_area
     end
   end
 end

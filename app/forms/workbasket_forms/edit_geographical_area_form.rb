@@ -12,6 +12,7 @@ module WorkbasketForms
                   :description,
                   :description_validity_start_date,
                   :parent_geographical_area_group_id,
+                  :remove_parent_group_association,
                   :validity_start_date,
                   :validity_end_date
 
