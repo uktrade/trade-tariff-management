@@ -262,8 +262,8 @@ module WorkbasketInteractions
             validity_end_date: validity_end_date
           )
 
-          geographical_area.geographical_area_code = original_geographical_area.geographical_area_code
-          geographical_area.geographical_area_type_code = original_geographical_area.geographical_area_type_code
+          geographical_area.geographical_code = original_geographical_area.geographical_code
+          geographical_area.geographical_area_id = original_geographical_area.geographical_area_id
 
           if parent_geographical_area_group_id.present?
             geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
@@ -284,8 +284,8 @@ module WorkbasketInteractions
             validity_end_date: (description_validity_start_date || validity_end_date)
           )
 
-          geographical_area_description_period.geographical_area_code = geographical_area.geographical_area_code
-          geographical_area_description_period.geographical_area_type_code = geographical_area.geographical_area_type_code
+          geographical_area_description_period.geographical_area_id = geographical_area.geographical_area_id
+          geographical_area_description_period.geographical_area_sid = geographical_area.geographical_area_sid
 
           assign_system_ops!(geographical_area_description_period)
           set_primary_key!(geographical_area_description_period)
@@ -299,8 +299,8 @@ module WorkbasketInteractions
             language_id: "EN"
           )
 
-          geographical_area_description.geographical_area_code = geographical_area.geographical_area_code
-          geographical_area_description.geographical_area_type_code = geographical_area.geographical_area_type_code
+          geographical_area_description.geographical_area_id = geographical_area.geographical_area_id
+          geographical_area_description.geographical_area_sid = geographical_area.geographical_area_sid
           geographical_area_description.geographical_area_description_period_sid = geographical_area_description_period.geographical_area_description_period_sid
 
           assign_system_ops!(geographical_area_description)
@@ -315,8 +315,8 @@ module WorkbasketInteractions
             validity_end_date: validity_end_date
           )
 
-          next_geographical_area_description_period.geographical_area_code = original_geographical_area.geographical_area_code
-          next_geographical_area_description_period.geographical_area_type_code = original_geographical_area.geographical_area_type_code
+          next_geographical_area_description_period.geographical_area_id = original_geographical_area.geographical_area_id
+          next_geographical_area_description_period.geographical_area_sid = original_geographical_area.geographical_area_sid
 
           assign_system_ops!(next_geographical_area_description_period)
           set_primary_key!(next_geographical_area_description_period)
@@ -330,8 +330,8 @@ module WorkbasketInteractions
             language_id: "EN"
           )
 
-          next_geographical_area_description.geographical_area_code = original_geographical_area.geographical_area_code
-          next_geographical_area_description.geographical_area_type_code = original_geographical_area.geographical_area_type_code
+          next_geographical_area_description.geographical_area_id = original_geographical_area.geographical_area_id
+          next_geographical_area_description.geographical_area_sid = original_geographical_area.geographical_area_sid
           next_geographical_area_description.geographical_area_description_period_sid = next_geographical_area_description_period.geographical_area_description_period_sid
 
           assign_system_ops!(next_geographical_area_description)
