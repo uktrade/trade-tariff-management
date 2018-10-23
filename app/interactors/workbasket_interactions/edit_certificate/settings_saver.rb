@@ -258,8 +258,8 @@ module WorkbasketInteractions
             validity_end_date: validity_end_date
           )
 
-          next_certificate_description_period.certificate_code = original_certificate.certificate_code
-          next_certificate_description_period.certificate_type_code = original_certificate.certificate_type_code
+          next_certificate_description_period.certificate_code = (certificate || original_certificate).certificate_code
+          next_certificate_description_period.certificate_type_code = (certificate || original_certificate).certificate_type_code
 
           assign_system_ops!(next_certificate_description_period)
           set_primary_key!(next_certificate_description_period)
@@ -273,8 +273,8 @@ module WorkbasketInteractions
             language_id: "EN"
           )
 
-          next_certificate_description.certificate_code = original_certificate.certificate_code
-          next_certificate_description.certificate_type_code = original_certificate.certificate_type_code
+          next_certificate_description.certificate_code = (certificate || original_certificate).certificate_code
+          next_certificate_description.certificate_type_code = (certificate || original_certificate).certificate_type_code
           next_certificate_description.certificate_description_period_sid = next_certificate_description_period.certificate_description_period_sid
 
           assign_system_ops!(next_certificate_description)
