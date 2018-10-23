@@ -1,0 +1,52 @@
+fieldset
+  .form-group
+    h3.heading-medium What type of geographical area are you creating?
+    label.form-label
+      /!
+      span.form-hint This will be the name of the country or region, but for groups you should use something descriptive that will allow others to easily identify it.
+    .bootstrap-row
+      .controls
+        .geographical-area-type
+          .multiple-choice
+            input#geographical-area-type-country.radio-inline-group.js-geographical-area-type name="geographical_area[geographical_code]" type="radio" value="group" /
+            label.with_bigger_font-size for="geographical-area-type-country"
+              | A country
+              span.form-hint.with_bigger_font-size This will have two-letter ISO code. You can add countires to geographical area groups, but a country cannot itself be a group.
+            /!
+            /!
+          /!
+        .geographical-area-type
+          .multiple-choice
+            input#geographical-area-type-region.radio-inline-group.js-geographical-area-type name="geographical_area[geographical_code]" type="radio" value="group" /
+            /!
+            label.with_bigger_font-size for="geographical-area-type-region"
+              | A region
+              span.form-hint.with_bigger_font-size Use this only in exceptional cases, to represent a geographical entity that is not a country. Functionally, a region is the same as a country.
+            /!
+          /!
+        .geographical-area-type
+          .multiple-choice
+            input#geographical-area-type-group.radio-inline-group.js-geographical-area-type name="geographical_area[geographical_code]" type="radio" value="group" /
+            /!
+            /!
+            label.with_bigger_font-size for="geographical-area-type-group"
+              | A group
+              span.form-hint.with_bigger_font-size Create a group when you want to reference multiple countries and/or regions together. A group must have four-character (letters and/or numbers) code.
+          .panel.panel-border-narrow.js-geographical-area-parent-group-select-block
+            label.form-label
+              | Optionally specify a parent for this group
+              span.form-hint
+                | You should almost never need to use this, but if you do, specify another group - you can enter
+                br>/
+                | either the parent's four-character code, or start typing its description, and select from the list.
+            .parent-group-target
+              .parent-group-select
+                div
+                  select.allowClear.selectized name="geographical_area[parent_geographical_area_group_id]" style=("display: none;") tabindex="-1"
+                    option selected="selected" value=""
+                  .selectize-control.allowClear.single
+                    .selectize-input.items.allow-clear.not-full.has-options
+                      input autocomplete="off" data-lpignore="true" placeholder=("― select group ―") style=("width: 129px;") tabindex="" type="select-one" /
+                    .selectize-dropdown.single.allowClear style=("display: none;")
+                      .selectize-dropdown-content
+                    span.clear-selection style=("display: none") title=("Clear selection")  ×

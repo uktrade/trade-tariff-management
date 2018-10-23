@@ -165,6 +165,8 @@ $(document).ready(function() {
       },
       parseGeographicalAreaPayload: function(payload) {
         return {
+          geographical_code: payload.geographical_code,
+          geographical_area_id: payload.geographical_area_id,
           reason_for_changes: payload.reason_for_changes,
           operation_date: payload.operation_date,
           description: payload.description,
@@ -176,6 +178,8 @@ $(document).ready(function() {
       },
       emptyGeographicalArea: function() {
         return {
+          geographical_code: null,
+          geographical_area_id: null,
           reason_for_changes: null,
           operation_date: null,
           description: null,

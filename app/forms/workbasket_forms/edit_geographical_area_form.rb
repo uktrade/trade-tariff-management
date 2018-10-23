@@ -4,7 +4,9 @@ module WorkbasketForms
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
-    attr_accessor :original_geographical_area,
+    attr_accessor :geographical_code,
+                  :geographical_area_id,
+                  :original_geographical_area,
                   :reason_for_changes,
                   :operation_date,
                   :description,
