@@ -14,8 +14,6 @@ fieldset
               | A country
               span.form-hint.with_bigger_font-size This will have two-letter ISO code. You can add countires to geographical area groups, but a country cannot itself be a group.
 
-
-
         .geographical-area-type
           .multiple-choice.disabled_area
             input#geographical-area-type-region.radio-inline-group.js-geographical-area-type name="geographical_area[geographical_code]" type="radio" value="region"
@@ -23,7 +21,6 @@ fieldset
             label.with_bigger_font-size for="geographical-area-type-region"
               | A region
               span.form-hint.with_bigger_font-size Use this only in exceptional cases, to represent a geographical entity that is not a country. Functionally, a region is the same as a country.
-
 
         .geographical-area-type
           .multiple-choice.disabled_area
@@ -53,6 +50,15 @@ fieldset
                     | .
                   - else
                     | This group does not currently have a parent.
+
+            .find-items__row.without_border
+              .find-items__checkbox-column.col-md-12
+                .multiple-choice
+                  input#toggle-country-code name="search[code_country]" type="checkbox" value="0"
+                  label for="toggle-country-code"
+                    | Orphan this group (remove from current parent and do not add a new one)
+
+            .clearfix
 
             .parent-group-target
               .parent-group-select
