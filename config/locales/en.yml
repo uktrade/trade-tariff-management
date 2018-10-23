@@ -64,7 +64,7 @@ en:
       geographical_area_id_invalid_country_code: "Geographical area must be two-letter ISO code."
       geographical_area_id_invalid_group_code: "Geographical area must be four-character code."
       geographical_area_id_already_exist: "Geographical area must not already be in use."
-      description: "Description cannot be left blank and must comprise at least one word."
+      description_blank: "Description cannot be left blank and must comprise at least one word."
       validity_start_date_blank: "Valid from date must be specified."
       validity_start_date_wrong_format: "Format is invalid."
       validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
