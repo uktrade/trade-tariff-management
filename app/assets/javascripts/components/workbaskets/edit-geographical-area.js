@@ -18,6 +18,19 @@ $(document).ready(function() {
 
       if (!$.isEmptyObject(window.__geographical_area_json)) {
         data.geographical_area = this.parseGeographicalAreaPayload(window.__geographical_area_json);
+
+        area_code = data.geographical_area.geographical_code;
+
+        if (area_code.length > 0) {
+          setTimeout(function setAreaCode() {
+            radion_button = $(".geographical-area-type .multiple-choice[data-type-value='" + area_code + "'] label");
+            radion_button.trigger('click');
+
+            setTimeout(function disableRadioButtons() {
+              $(".multiple-choice.disabled_area").addClass('disabled');
+            }, 300);
+          }, 300);
+        }
       } else {
         data.geographical_area = this.emptyGeographicalArea();
       }
