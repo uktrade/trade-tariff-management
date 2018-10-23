@@ -94,15 +94,6 @@ module WorkbasketInteractions
 
         def check_if_nothing_changed!
           if nothing_changed?
-
-              p ""
-              p "*" * 100
-              p ""
-              p "NOTHING CHANGED!"
-              p ""
-              p "*" * 100
-              p ""
-
             @errors[:general] = "Nothing changed"
             @errors_summary = initial_validator.errors_translator(:nothing_changed)
           end
@@ -118,28 +109,11 @@ module WorkbasketInteractions
           Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
 
             if it_is_just_description_changed?
-
-              p ""
-              p "*" * 100
-              p ""
-              p "JUST DESCRIPTION CHANGED!"
-              p ""
-              p "*" * 100
-              p ""
-
               end_date_existing_certificate_desription_period!
               add_next_certificate_description_period!
               add_next_certificate_description!
 
             else
-              p ""
-              p "*" * 100
-              p ""
-              p "ALL CHANGED 2!"
-              p ""
-              p "*" * 100
-              p ""
-
               end_date_existing_certificate!
 
               add_certificate!
@@ -160,14 +134,6 @@ module WorkbasketInteractions
           @conformance_errors = {}
 
           if it_is_just_description_changed?
-              p ""
-              p "*" * 100
-              p ""
-              p "JUST DESCRIPTION CHANGED 2!"
-              p ""
-              p "*" * 100
-              p ""
-
             unless next_certificate_description_period.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_certificate_description_period))
             end
@@ -177,13 +143,6 @@ module WorkbasketInteractions
             end
 
           else
-              p ""
-              p "*" * 100
-              p ""
-              p "ALL CHANGED 2!"
-              p ""
-              p "*" * 100
-              p ""
 
             unless certificate.conformant?
               @conformance_errors.merge!(get_conformance_errors(certificate))
@@ -223,15 +182,6 @@ module WorkbasketInteractions
 
         def end_date_existing_certificate!
           unless original_certificate.already_end_dated?
-
-            p ""
-            p "-" * 100
-            p ""
-            p "ENDDATING CURRENT CERTIFICATE"
-            p ""
-            p "-" * 100
-            p ""
-
             original_certificate.validity_end_date = validity_start_date
 
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(

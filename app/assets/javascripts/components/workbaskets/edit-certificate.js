@@ -190,8 +190,6 @@ $(document).ready(function() {
           description_validity_start_date = '';
         }
 
-        console.log('description_validity_start_date: ' + description_validity_start_date);
-
         return {
           reason_for_changes: this.certificate.reason_for_changes,
           description: this.certificate.description,
