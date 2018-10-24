@@ -1,5 +1,6 @@
 module Api
   class XmlFilesController < ApiController
+    # timestamp format YYYY-MM-DD
     def index
       date = params[:date] || Date.yesterday.to_s
       files = XmlExport::File.where("issue_date::date >= ?", Date.parse(date)).to_a
