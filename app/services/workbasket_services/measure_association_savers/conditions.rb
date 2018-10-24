@@ -59,7 +59,8 @@ module WorkbasketServices
             condition_duty_amount: condition_ops[:duty_amount],
             certificate_type_code: condition_ops[:certificate_type_code],
             certificate_code: condition_ops[:certificate_code],
-            component_sequence_number: condition_ops[:component_sequence_number]
+            component_sequence_number: condition_ops[:component_sequence_number],
+            original_measure_condition_code: condition_ops[:original_measure_condition_code]
           }
         end
 
