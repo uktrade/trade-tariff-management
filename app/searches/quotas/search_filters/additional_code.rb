@@ -64,6 +64,7 @@ module Quotas
 EXISTS (SELECT 1 
           FROM measures 
          WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date
            AND measures.additional_code_id = ?)
           eos
         end
@@ -73,6 +74,7 @@ EXISTS (SELECT 1
 NOT EXISTS (SELECT 1 
               FROM measures 
              WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+               AND measures.validity_start_date = quota_definitions.validity_start_date
                AND measures.additional_code_id = ?)
           eos
         end
@@ -88,6 +90,7 @@ NOT #{specified_clause}
 EXISTS (SELECT 1 
           FROM measures 
          WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date
            AND NOT measures.additional_code_id IS NULL)
           eos
         end
@@ -97,6 +100,7 @@ EXISTS (SELECT 1
 EXISTS (SELECT 1 
           FROM measures 
          WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date
            AND measures.additional_code_id ILIKE ?)
           eos
         end
