@@ -1,2 +1,11 @@
 = render "workbaskets/shared/edit_base", subheader: link_to("(find and edit existing ones instead)", geo_areas_url)
-= render "shared/vue_templates/geographical_area_type"
+= render "shared/vue_templates/add_geo_areas_to_group_popup"
+= render "shared/vue_templates/add_geo_areas_to_country_region_popup"
+= render "shared/vue_templates/edit_geographical_area_membership_popup"
+
+script
+  == "window.__geographical_area_json = #{workbasket_settings.settings.to_json};"
+
+- cache [ "geographical-area_form_groups_json", expires_in: 8.hours ] do
+  script
+    == "window.__geographical_area_groups_json = #{GeographicalArea.actual.groups.map(&:to_json).to_json};"

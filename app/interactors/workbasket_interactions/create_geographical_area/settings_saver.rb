@@ -21,7 +21,10 @@ module WorkbasketInteractions
                     :workbasket,
                     :settings_params,
                     :errors,
+                    :conformance_errors,
+                    :errors_summary,
                     :attrs_parser,
+                    :initial_validator,
                     :geographical_area,
                     :geographical_area_description,
                     :geographical_area_description_period,
@@ -38,6 +41,9 @@ module WorkbasketInteractions
         clear_cached_sequence_number!
 
         @persist = true # For now it always true
+        @errors = {}
+        @errors_summary = {}
+        @conformance_errors = {}
       end
 
       def save!
@@ -76,9 +82,12 @@ module WorkbasketInteractions
         end
 
         def check_initial_validation_rules!
-          @errors = ::WorkbasketInteractions::CreateGeographicalArea::InitialValidator.new(
+          @initial_validator = ::WorkbasketInteractions::CreateGeographicalArea::InitialValidator.new(
             settings_params
-          ).fetch_errors
+          )
+
+          @errors = initial_validator.fetch_errors
+          @errors_summary = initial_validator.errors_summary
         end
 
         def check_conformance_rules!
@@ -86,13 +95,35 @@ module WorkbasketInteractions
             add_geographical_area!
             add_geographical_area_description_period!
             add_geographical_area_description!
+
+            parse_and_format_conformance_rules
+          end
+        end
+
+        def parse_and_format_conformance_rules
+          @conformance_errors = {}
+
+          unless geographical_area.conformant?
+            @conformance_errors.merge!(get_conformance_errors(geographical_area))
+          end
+
+          unless geographical_area_description_period.conformant?
+            @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
+          end
+
+          unless geographical_area_description.conformant?
+            @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
+          end
+
+          if conformance_errors.present?
+            @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
           end
         end
 
         def add_geographical_area!
           @geographical_area = GeographicalArea.new(
             geographical_area_id: geographical_area_id,
-            geographical_code: geographical_code,
+            geographical_code: geo_code_number(geographical_code),
             validity_start_date: validity_start_date,
             validity_end_date: validity_end_date
           )
@@ -147,6 +178,17 @@ module WorkbasketInteractions
           @attrs_parser = ::WorkbasketValueObjects::CreateGeographicalArea::AttributesParser.new(
             settings_params
           )
+        end
+
+        def geo_code_number(geographical_code)
+          case geographical_code.to_s
+          when 'country'
+            '0'
+          when 'group'
+            '1'
+          when 'region'
+            '2'
+          end
         end
     end
   end
