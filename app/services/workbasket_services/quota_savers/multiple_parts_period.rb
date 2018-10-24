@@ -26,8 +26,6 @@ module WorkbasketServices
         @end_point = balance_ops[:end_point]
       end
 
-      private
-
         def balance
           if section_ops["staged"] == "true"
             balance_ops["balance"]
