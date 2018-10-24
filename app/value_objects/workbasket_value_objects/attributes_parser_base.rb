@@ -29,7 +29,7 @@ module WorkbasketValueObjects
         measure_type_id: ops[:measure_type_id],
         reduction_indicator: ops[:reduction_indicator],
         geographical_area_id: variable_params[:geographical_area_id],
-        quota_ordernumber: ops[:quota_ordernumber],
+        quota_ordernumber: @quota_order_number || ops[:quota_ordernumber],
         goods_nomenclature_code: variable_params[:goods_nomenclature_code],
         additional_code: variable_params[:additional_code]
       }

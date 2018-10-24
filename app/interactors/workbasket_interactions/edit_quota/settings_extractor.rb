@@ -10,7 +10,7 @@ module WorkbasketInteractions
 
       def initialize(quota_definition_sid, exclusions = [])
         @quota_definition = QuotaDefinition.find(quota_definition_sid: quota_definition_sid)
-        @quota_order_number = quota_definition.quota_order_number
+        @quota_order_number = QuotaOrderNumber.find(quota_order_number_sid: quota_definition.quota_order_number_sid)
         @quota_definitions = QuotaDefinition.where(quota_order_number_sid: quota_order_number.quota_order_number_sid).all
         @quota_origins = QuotaOrderNumberOrigin.where(quota_order_number_sid: quota_order_number.quota_order_number_sid).all
         @exclusions = exclusions

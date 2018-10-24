@@ -85,6 +85,7 @@ module WorkbasketServices
             )
             add_measures_for_definition!(
                 parse_commodity_codes(ops[index.to_s]['commodity_codes']),
+                order_number.quota_order_number_id,
                 source_definition.validity_start_date,
                 source_definition.validity_end_date)
             quota_period_sids << definition.quota_definition_sid
@@ -130,11 +131,12 @@ module WorkbasketServices
         association.save
       end
 
-      def add_measures_for_definition!(goods_nomenclature_codes, start_point, end_point)
+      def add_measures_for_definition!(goods_nomenclature_codes, quota_order_number, start_point, end_point)
         Array.wrap(base_params['geographical_area_id']).each do |geographical_area_id|
           Array.wrap(goods_nomenclature_codes).each do |goods_nomenclature_code|
             attrs_parser.instance_variable_set(:@start_date, start_point)
             attrs_parser.instance_variable_set(:@end_date, end_point)
+            attrs_parser.instance_variable_set(:@quota_order_number, quota_order_number)
             if period_measure_components.present?
               attrs_parser.instance_variable_set(
                   :@measure_components,
@@ -145,6 +147,7 @@ module WorkbasketServices
                 geographical_area_id: geographical_area_id,
                 goods_nomenclature_code: goods_nomenclature_code,
             })
+            attrs_parser.instance_variable_set(:@quota_order_number, nil)
           end
         end
       end
@@ -168,7 +171,7 @@ module WorkbasketServices
       end
 
       def source(key)
-        @section_ops[key] == "true" ? @balance_ops : @section_ops
+        @section_ops[key] == "true" || @section_ops["type"] == "custom" ? @balance_ops : @section_ops
       end
 
     end
