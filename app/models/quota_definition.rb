@@ -24,8 +24,8 @@ class QuotaDefinition < Sequel::Model
 
   delegate :measure, to: :quota_order_number, allow_nil: true
 
-  one_to_many :measures, key: :ordernumber,
-                         primary_key: :quota_order_number_id
+  one_to_many :measures, key: [:ordernumber, :validity_start_date],
+                         primary_key: [:quota_order_number_id, :validity_start_date]
 
   one_to_one :measurement_unit, key: :measurement_unit_code,
                                 primary_key: :measurement_unit_code

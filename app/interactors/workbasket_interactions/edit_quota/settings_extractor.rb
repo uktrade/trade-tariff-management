@@ -132,9 +132,8 @@ module WorkbasketInteractions
       end
 
       def extract_duty_expressions(period)
-        measure = Measure.where(ordernumber: period.quota_order_number_id, validity_start_date: period.validity_start_date).first
-        if measure.present?
-          measure.measure_components.map.with_index do |component, index|
+        if period.measure.present?
+          period.measure.measure_components.map.with_index do |component, index|
             {
                 "#{index}": component.to_json
             }
