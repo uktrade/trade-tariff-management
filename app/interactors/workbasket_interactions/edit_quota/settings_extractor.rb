@@ -36,7 +36,7 @@ module WorkbasketInteractions
             'additional_codes': 'additional_codes'.in?(exclusions) ? '' : quota_definition.additional_code_ids.join(', '),
             'quota_description': quota_definition.description,
             'quota_ordernumber': 'order_number'.in?(exclusions) ? '' : quota_order_number.quota_order_number_id,
-            'maximum_precision': quota_definition.maximum_precision,
+            'quota_precision': quota_definition.maximum_precision,
             'reduction_indicator': quota_definition.reduction_indicator.to_s,
             'geographical_area_id': 'origin'.in?(exclusions) ? '' : extract_geographical_area_ids,
             'excluded_geographical_areas': 'origin'.in?(exclusions) ? '' : extract_excluded_geographical_area_ids,
