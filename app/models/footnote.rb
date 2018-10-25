@@ -115,10 +115,8 @@ class Footnote < Sequel::Model
         join_table(:inner,
           :footnote_association_goods_nomenclatures,
           footnote_type: :footnote_type_id,
-          footnote_id: :footnote_id
-        ).where("
-          footnote_association_goods_nomenclatures.goods_nomenclature_item_id IN ?",
-          commodity_codes
+          footnote_id: :footnote_id,
+          goods_nomenclature_item_id: commodity_codes
         )
       end
 
@@ -126,10 +124,8 @@ class Footnote < Sequel::Model
         join_table(:inner,
           :footnote_association_measures,
           footnote_type_id: :footnote_type_id,
-          footnote_id: :footnote_id
-        ).where("
-          footnote_association_measures.measure_sid IN ?",
-          list_of_measure_sids
+          footnote_id: :footnote_id,
+          measure_sid: list_of_measure_sids
         )
       end
 
