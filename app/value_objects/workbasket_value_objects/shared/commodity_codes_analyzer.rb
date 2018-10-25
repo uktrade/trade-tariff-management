@@ -89,9 +89,9 @@ module WorkbasketValueObjects
 
       def list_of_codes
           if commodity_codes.present?
-            commodity_codes.split( /\r?\n/ )
+            commodity_codes.split( /[\s|,]+/ )
                            .map(&:strip)
-                           .reject { |el| el.blank? }
+                           .reject(&:blank?)
                            .uniq
           end
         end

@@ -510,11 +510,33 @@ $(document).ready(function() {
 
         if (payload.conditions) {
           for (var k in payload.conditions) {
+
             if (!payload.conditions.hasOwnProperty(k)) {
               continue;
             }
 
             var condition = clone(payload.conditions[k]);
+
+            if (condition.certificate_code === undefined && condition.certificate) {
+              condition.certificate_code = condition.certificate.certificate_code;
+            }
+
+            if (condition.certificate_type_code === undefined && condition.certificate_type) {
+              condition.certificate_type_code = condition.certificate_type.certificate_type_code;
+            }
+
+            if (condition.action_code === undefined && condition.measure_action) {
+              condition.action_code = condition.measure_action.action_code;
+            }
+
+            if (condition.condition_code === undefined && condition.measure_condition_code) {
+              condition.condition_code = condition.measure_condition_code.condition_code;
+            }
+
+            if (condition.action_code === undefined && condition.measure_action) {
+              condition.action_code = condition.measure_action.action_code;
+            }
+
             condition.condition_code = ConditionsParser.getConditionCode(condition);
 
             if (condition.measure_condition_components) {
@@ -527,9 +549,25 @@ $(document).ready(function() {
 
                 var component = clone(condition.measure_condition_components[kk]);
 
-                if (component.duty_expression_id) {
-                  component.duty_expression_id = self.getDutyExpressionId(component);
+                console.log(component)
+
+                if (!component.duty_expression_id && component.duty_expression) {
+                  component.duty_expression_id = component.duty_expression.duty_expression_id;
                 }
+
+                if (!component.measurement_unit_code && component.measurement_unit) {
+                  component.measurement_unit_code = component.measurement_unit.measurement_unit_code;
+                }
+
+                if (!component.measurement_unit_qualifier_code && component.measurement_unit_qualifier) {
+                  component.measurement_unit_qualifier_code = component.measurement_unit_qualifier.measurement_unit_qualifier_code;
+                }
+
+                if (!component.monetary_unit_code && component.monetary_unit) {
+                  component.monetary_unit_code = component.monetary_unit.monetary_unit_code;
+                }
+
+                component.duty_expression_id = self.getDutyExpressionId(component);
 
                 mcc.push(component);
               }

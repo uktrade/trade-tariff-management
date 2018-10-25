@@ -85,7 +85,8 @@ module WorkbasketServices
             duty_amount: attrs[:duty_amount],
             monetary_unit_code: attrs[:monetary_unit_code],
             measurement_unit_code: attrs[:measurement_unit_code],
-            measurement_unit_qualifier_code: attrs[:measurement_unit_qualifier_code]
+            measurement_unit_qualifier_code: attrs[:measurement_unit_qualifier_code],
+            original_duty_expression_id: attrs[:original_duty_expression_id]
           }
         end
     end

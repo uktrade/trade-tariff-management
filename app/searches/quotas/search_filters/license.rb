@@ -35,6 +35,7 @@ EXISTS ( SELECT 1
            FROM measures,
                 measure_conditions
           WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+            AND measures.validity_start_date = quota_definitions.validity_start_date
             AND measure_conditions.measure_sid = measures.measure_sid
             AND measure_conditions.certificate_code = ?)
         eos
@@ -46,6 +47,7 @@ NOT EXISTS ( SELECT 1
                FROM measures,
                     measure_conditions
               WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                AND measures.validity_start_date = quota_definitions.validity_start_date
                 AND measure_conditions.measure_sid = measures.measure_sid
                 AND NOT measure_conditions.certificate_code IS NULL)
         eos

@@ -28,20 +28,12 @@ module WorkbasketServices
 
       def valid?
         if associate?
-
           record = QuotaOrderNumber.new(quota_order_number_id: ops['order_number'])
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
               record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
             @errors.merge!("#{key.join(',')}": error.join('. '))
           end
-
-
-          ops['balances'].each do |index, balance|
-            value = balance['balance']
-            @errors["quota_balance_#{index}"] = "\##{index.to_i + 1} - Opening balance can't be blank" if value.blank?
-          end
-
         end
         errors.blank?
       end
@@ -52,8 +44,9 @@ module WorkbasketServices
         @order_number = saver.order_number
       end
 
-      def add_period!(source_definition, index, start_date, end_date = nil)
+      def add_period!(source_definition, index, section_balance, start_date, end_date = nil)
         balance = ops['balances'][index]['balance']
+        balance = balance.blank? || balance.to_i == 0 ? section_balance : balance.to_i
         definition = QuotaDefinition.new(
             volume: balance,
             initial_volume: balance,

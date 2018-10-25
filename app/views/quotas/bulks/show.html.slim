@@ -26,8 +26,7 @@ script
 form.bulk-edit-measures.submitted-for-cross-check-view
   = render "table_top"
 
-  = content_tag "measures-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" } do
-    p Loading measures table...
+  = content_tag "records-grid", nil, { ":on-item-selected" => "onItemSelected", ":on-item-deselected" => "onItemDeselected", ":data" => "visibleMeasuresPage", ":columns" => "columns", ":selected-rows" => "selectedMeasures", "v-if" => "!isLoading", "selection-type" => "none", ":client-selection" => true, ":select-all-has-changed" => "selectAllHasChanged", ":disable-scroller" => "true", ":sort-by-changed" => "onSortByChange", ":sort-dir-changed" => "onSortDirChanged" }
 
   = content_tag "table-pagination", nil, { "v-if" => "!isLoading", ":page" => "currentPage", ":total" => "visibleCount", ":per-page" => "pagination.per_page", ":on-click" => "onPageChange" }
 
@@ -35,11 +34,11 @@ form.bulk-edit-measures.submitted-for-cross-check-view
     h1.heading-xlarge slot="title"
       | Loading measures
     h4.heading-medium slot-scope="slotProps"
-      | Please wait while we load and prepare measures for editing
+      | Please wait while we load the measures
       br
       | {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
       br
       = content_tag "loading-spinner", nil
 
   = render "measures/bulks/action_buttons"
-= render "shared/vue_templates/measures_grid"
+= render "shared/vue_templates/records_grid"
