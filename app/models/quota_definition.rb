@@ -22,10 +22,12 @@ class QuotaDefinition < Sequel::Model
   one_to_one :quota_order_number, key: :quota_order_number_id,
                                   primary_key: :quota_order_number_id
 
-  delegate :measure, to: :quota_order_number, allow_nil: true
+  one_to_many :measures, key: [:ordernumber, :validity_start_date],
+                         primary_key: [:quota_order_number_id, :validity_start_date]
 
-  one_to_many :measures, key: :ordernumber,
-                         primary_key: :quota_order_number_id
+  def measure
+    @measure ||= measures.first
+  end
 
   one_to_one :measurement_unit, key: :measurement_unit_code,
                                 primary_key: :measurement_unit_code
@@ -62,6 +64,10 @@ class QuotaDefinition < Sequel::Model
 
   def regulation_id
     measure.measure_generating_regulation_id if measure.present?
+  end
+
+  def regulation_role
+    measure.measure_generating_regulation_role if measure.present?
   end
 
   def reduction_indicator

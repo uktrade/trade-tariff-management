@@ -2,14 +2,14 @@ module WorkbasketServices
   module QuotaSavers
     class CustomPeriod < ::WorkbasketServices::QuotaSavers::BasePeriod
 
+      def balance
+        balance_ops["balance"].to_i
+      end
+
       private
 
         def source(key)
           balance_ops
-        end
-
-        def balance
-          balance_ops["balance"].to_i
         end
 
         def measurement_unit_code

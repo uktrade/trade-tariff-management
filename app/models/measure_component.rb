@@ -62,8 +62,11 @@ class MeasureComponent < Sequel::Model
     {
       original_duty_expression_id: original_duty_expression_id,
       duty_expression: duty_expression.try(:to_json),
+      measurement_unit_code: measurement_unit_code,
       measurement_unit: measurement_unit.try(:to_json),
+      monetary_unit_code: monetary_unit_code,
       monetary_unit: monetary_unit.try(:to_json),
+      measurement_unit_qualifier_code: measurement_unit_qualifier_code,
       measurement_unit_qualifier: measurement_unit_qualifier.try(:to_json),
       duty_amount: duty_amount
     }
