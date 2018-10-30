@@ -8,4 +8,4 @@ script
 
 - cache [ "geographical-area_form_groups_json", expires_in: 8.hours ] do
   script
-    == "window.__geographical_area_groups_json = #{GeographicalArea.actual.groups.map(&:to_json).to_json};"
+    == "window.__geographical_area_groups_json = #{GeographicalArea.actual_groups_collection_json};"

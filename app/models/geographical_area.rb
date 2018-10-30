@@ -43,9 +43,29 @@ class GeographicalArea < Sequel::Model
     ds.with_actual(GeographicalAreaMembership).order(Sequel.asc(:geographical_area_id))
   end
 
+  many_to_many :member_of_following_geographical_areas, class_name: 'GeographicalArea',
+                                                        join_table: :geographical_area_memberships,
+                                                        left_key: :geographical_area_sid,
+                                                        right_key: :geographical_area_group_sid,
+                                                        class: self do |ds|
+    ds.with_actual(GeographicalAreaMembership).order(Sequel.asc(:geographical_area_id))
+  end
+
   one_to_many :measures, key: :geographical_area_sid,
                          primary_key: :geographical_area_sid do |ds|
     ds.with_actual(Measure)
+  end
+
+  def group?
+    geographical_code == "1"
+  end
+
+  def country?
+    geographical_code == "0"
+  end
+
+  def region?
+    geographical_code == "2"
   end
 
   dataset_module do
@@ -194,12 +214,29 @@ class GeographicalArea < Sequel::Model
         end
       end
     end
+
+    def actual_groups_collection_json
+      TimeMachine.at(Date.current) do
+        GeographicalArea.actual
+                        .groups
+                        .map(&:to_json)
+                        .to_json
+      end
+    end
   end
 
   delegate :description, to: :geographical_area_description, allow_nil: true
 
   def geographical_area_description
     geographical_area_descriptions.first
+  end
+
+  def other_descriptions
+    geographical_area_descriptions.select do |item|
+      item.oid != geographical_area_description.oid
+    end.sort do |a, b|
+      b.validity_start_date.to_date <=> a.validity_start_date.to_date
+    end
   end
 
   def to_json

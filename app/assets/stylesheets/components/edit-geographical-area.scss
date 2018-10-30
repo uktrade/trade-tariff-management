@@ -69,3 +69,45 @@
     }
   }
 }
+
+.view-workbasket-geographical-area-details-container {
+  margin-bottom: 60px;
+  overflow: hidden;
+  font-size: 18px;
+
+  .bootstrap-row {
+    padding-top: 9px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #bfc1c3;
+
+    &.final_row {
+      border-bottom: none;
+    }
+
+    &.with-top-border {
+      border-top: 1px solid #bfc1c3;
+    }
+  }
+
+  .heading_column {
+    font-weight: bold;
+  }
+
+  .js-view-geographical-area-other-descriptions-block {
+    overflow: hidden;
+    border-left: 3px solid gray;
+    padding-left: 20px;
+    margin-bottom: 20px;
+  }
+
+  .js-workbasket-geographical-area-show-hide-descriptions {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 420px;
+  }
+
+  strong {
+    margin-bottom: 10px;
+  }
+}

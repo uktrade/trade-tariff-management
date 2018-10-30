@@ -1,5 +1,9 @@
 class GeographicalAreaDecorator < ApplicationDecorator
 
+  def title
+    "#{object.geographical_area_id} #{object.description}"
+  end
+
   def type
     case object.geographical_code.to_s
     when '0'
@@ -17,6 +21,22 @@ class GeographicalAreaDecorator < ApplicationDecorator
 
   def end_date
     to_date(object.validity_end_date)
+  end
+
+  def area
+    object.geographical_area_description
+  end
+
+  def current_description
+    area.try(:description)
+  end
+
+  def current_description_valid_from
+    to_date(area.try(:validity_start_date))
+  end
+
+  def current_description_valid_to
+    to_date(area.try(:validity_end_date))
   end
 
   def locked?

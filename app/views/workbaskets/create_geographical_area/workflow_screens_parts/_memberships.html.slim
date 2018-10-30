@@ -1,0 +1,23 @@
+- contained_areas = g_area.contained_geographical_areas
+- member_of_areas = g_area.member_of_following_geographical_areas
+
+.bootstrap-row.final_row class="#{'with-top-border' if g_area.other_descriptions.present?}"
+  .col-md-6.heading_column.pull-left
+    | Memberships
+  .col-md-6
+    - if contained_areas.blank? && member_of_areas.blank?
+      = "-"
+
+    - if g_area.group? && contained_areas.present?
+      strong
+        | This group contains following members:
+      - contained_areas.map do |area|
+        = area.decorate.title
+        br
+
+    - if member_of_areas.present?
+      strong
+        | Member of:
+      - member_of_areas.map do |area|
+        = area.decorate.title
+        br

@@ -155,7 +155,8 @@ module WorkbasketInteractions
         def add_geographical_area_description!
           @geographical_area_description = GeographicalAreaDescription.new(
             geographical_area_id: geographical_area_id,
-            description: description
+            description: description,
+            language_id: "EN"
           )
 
           assign_system_ops!(geographical_area_description)
