@@ -45,6 +45,10 @@ Vue.component("bulk-edit-records", {
   mounted: function() {
     var self = this;
 
+    if (this.pagination.total_count === 0) {
+      return;
+    }
+
     DB.getBulkRecords(self.search_code, function(row) {
       if (row === undefined) {
         self.loadRecords(1, self.loadNextPage.bind(self));
@@ -53,6 +57,8 @@ Vue.component("bulk-edit-records", {
           if (!record.changes) {
             record.changes = [];
           }
+
+          record.errors = [];
 
           record[self.primaryKey] += '';
 
@@ -65,6 +71,21 @@ Vue.component("bulk-edit-records", {
       }
 
       self.selectedAllRecords = true;
+    });
+
+    $(document).on("bulk:validated", function() {
+      var columns = self.bulkActions.errorColumns;
+      var errors = self.bulkActions.errors;
+
+      self.columns.forEach(function(col) {
+        if (columns.indexOf(col.field) > -1 && !col.enabled) {
+          col.enabled = true;
+        }
+      });
+
+      self.records.forEach(function(record) {
+        record.errors = errors[record.row_id] || [];
+      });
     });
   },
   computed: {
@@ -170,6 +191,8 @@ Vue.component("bulk-edit-records", {
           self.preprocessRecord(record);
 
           record[pk] += '';
+
+          record.errors = [];
 
           self.selectedRecords.push(record[pk] + '');
 

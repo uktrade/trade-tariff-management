@@ -2,22 +2,30 @@
   <div class="bulk-edit-records">
     <%= render "shared/bulks/table_top" %>
 
-    <records-grid :table-class="tableClass" :primary-key="primaryKey" :on-item-selected="onItemSelected" :on-item-deselected="onItemDeselected" :data="visibleRecordsPage" :columns="columns" :selected-rows="selectedRecords" v-if="!isLoading" selection-type="none" :client-selection="true" :on-select-all-changed="selectAllHasChanged" :disable-scroller="true" :sort-by-changed="onSortByChange" :sort-dir-changed="onSortDirChanged"></records-grid>
+    <div v-if="pagination.total_count > 0">
+      <records-grid :table-class="tableClass" :primary-key="primaryKey" :on-item-selected="onItemSelected" :on-item-deselected="onItemDeselected" :data="visibleRecordsPage" :columns="columns" :selected-rows="selectedRecords" v-if="!isLoading" selection-type="none" :client-selection="true" :on-select-all-changed="selectAllHasChanged" :disable-scroller="true" :sort-by-changed="onSortByChange" :sort-dir-changed="onSortDirChanged"></records-grid>
 
-    <table-pagination v-if="!isLoading" :page="currentPage" :total="visibleCount" :per-page="25" :on-click="onPageChange"></table-pagination>
+      <table-pagination v-if="!isLoading" :page="currentPage" :total="visibleCount" :per-page="25" :on-click="onPageChange"></table-pagination>
 
-    <loading-indicator v-if="isLoading" :metadata="pagination">
-      <h1 class="heading-xlarge" slot="title">
-        Loading {{thing}}
-      </h1>
-      <h4 class="heading-medium" slot-scope="slotProps">
-        Please wait while we load and prepare {{thing}} for editing
-        <br>
-        {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
-        <br>
-        <loading-spinner></loading-spinner>
-      </h4>
-    </loading-indicator>
+      <loading-indicator v-if="isLoading" :metadata="pagination">
+        <h1 class="heading-xlarge" slot="title">
+          Loading {{thing}}
+        </h1>
+        <h4 class="heading-medium" slot-scope="slotProps">
+          Please wait while we load and prepare {{thing}} for editing
+          <br>
+          {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
+          <br>
+          <loading-spinner></loading-spinner>
+        </h4>
+      </loading-indicator>
+    </div>
+
+    <div v-else>
+      <warning-message>
+        This workbasket contains no {{thing}} to edit.
+      </warning-message>
+    </div>
 
     <slot :selected-action="selectedAction" :selected-record-objects="selectedRecordObjects" :close-all-popups="closeAllPopups" :records-updated="recordsUpdated" :selected-all-records="selectedAllRecords" :records-removed="recordsRemoved" :all-records-removed="allRecordsRemoved" :records-deleted="recordsDeleted" :recordsCloned="recordsCloned"></slot>
 
