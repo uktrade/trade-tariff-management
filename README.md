@@ -8,7 +8,7 @@
 
   - Ruby
   - Postgresql
-  - Redis
+  - Redis (must be running for search)
 
 ### Setup
 
