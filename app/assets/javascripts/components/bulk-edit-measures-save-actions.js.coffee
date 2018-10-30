@@ -1,5 +1,6 @@
 window.BulkEditOfMeasuresSaveActions =
-
+  errors: {},
+  errorColumns: [],
   sendSaveRequest: (mode) ->
     bottom_limit = (window.__sb_current_batch - 1) * window.__sb_per_page
     top_limit = bottom_limit + window.__sb_per_page
@@ -54,6 +55,9 @@ window.BulkEditOfMeasuresSaveActions =
     return false
 
   cleanUpErrorBlocks: (response) ->
+    @errors = {}
+    @errorColumns = []
+
     $.each response.collection_row_ids, (index, row_id) ->
       measure_parent_div = $("[data-record-sid='" + row_id + "']")
       measure_parent_div.find(".table__column")
@@ -62,12 +66,11 @@ window.BulkEditOfMeasuresSaveActions =
   handleErrors: (response) ->
     errored_measures = response.responseJSON["measures_with_errors"]
 
-    $.each errored_measures, (row_id, errored_columns) ->
-      measure_parent_div = $("[data-record-sid='" + row_id + "']")
+    $.each errored_measures, (row_id, errored_columns) =>
+      @errors[row_id] = errored_columns
 
-      $.each errored_columns, (index, errored_field_name) ->
-        measure_parent_div.find("." + errored_field_name + "-column")
-                          .addClass('has-validation-errors')
+      $.each errored_columns, (index, errored_field_name) =>
+        @errorColumns.push(errored_field_name) if errored_field_name not in @errorColumns
 
   getValidationErrors: ->
     $(document).on 'click', '.bulk-edit-measures .has-validation-errors', ->
@@ -129,11 +132,15 @@ window.BulkEditOfMeasuresSaveActions =
     modal_id = "bem-save-progress-summary"
     content = "There are no conformance errors"
 
-    if $(".has-validation-errors").length > 0
+    $(document).trigger("bulk:validated");
+
+    hasErrors = !jQuery.isEmptyObject(@errors)
+
+    if hasErrors
       content = "Some measures have conformance errors, please review table cells with highlighted in red"
 
     if window.__save_bulk_edit_mode == "save_group_for_cross_check"
-      if $(".has-validation-errors").length > 0
+      if hasErrors
         modal_id = "bem-submit-summary-failed"
       else
         modal_id = "bem-submit-summary-success"

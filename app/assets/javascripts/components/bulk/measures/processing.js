@@ -44,6 +44,7 @@ window.BulkEditing.Measures.Processing = {
       clone: measure.clone,
       row_id: measure.row_id,
       measure_sid: measure.measure_sid,
+      errors: measure.errors,
       sid: measure.clone ? "&nbsp;" : measure.measure_sid,
       regulation: measure.regulation.formatted_id,
       justification_regulation: measure.justification_regulation ? measure.justification_regulation.formatted_id : "-",

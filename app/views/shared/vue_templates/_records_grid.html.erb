@@ -26,7 +26,7 @@
         <div class="table__column select-all-column" v-if="singleSelection === true">
           <input type="radio" name="selected_record" :value="item[primaryKey]" :checked="selectedItem === item[primaryKey]" @change="sendCheckedTrigger" />
         </div>
-        <grid-column v-for="column in enabledColumns" :item="item" :column="column.field" :changeProp="column.changeProp" :primary-key="primaryKey"></grid-column>
+        <grid-column v-for="column in enabledColumns" :item="item" :column="column.field" :changeProp="column.changeProp" :primary-key="primaryKey" :has-error="item.errors && item.errors.indexOf(column.field) > -1"></grid-column>
       </div>
     </div>
   </div>
