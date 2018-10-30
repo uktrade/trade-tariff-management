@@ -2,11 +2,9 @@ module WorkbasketScripts
   class SetPublishedStatusForImportedData
 
     class << self
-      include CustomLogger
-
       def run
         target_tables.map do |table_name|
-          log_it"[#{table_name}] ----------------- started"
+          log_it("[#{table_name}] ----------------- started")
 
           Sequel::Model.db.execute(
             update_sql(table_name)
@@ -14,7 +12,7 @@ module WorkbasketScripts
 
           sleep 5
 
-          log_it"[#{table_name}] ----------------- finished"
+          log_it("[#{table_name}] ----------------- finished")
         end
       end
 

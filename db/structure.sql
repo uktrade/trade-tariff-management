@@ -772,9 +772,14 @@ CREATE TABLE public.bulk_edit_of_quotas_settings (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     initial_quota_sid integer,
-    quota_main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
-    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb
+    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    configure_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    configure_quota_step_validation_passed boolean DEFAULT false,
+    conditions_footnotes_step_validation_passed boolean DEFAULT false,
+    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -12508,3 +12513,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164645_create_edit_geographical_areas_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_original_fields_to_edit_geographical_areas_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');

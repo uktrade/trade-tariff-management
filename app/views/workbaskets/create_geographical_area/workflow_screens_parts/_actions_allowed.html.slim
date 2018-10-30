@@ -1,0 +1,22 @@
+- if workbasket_view_show_actions_allowed?
+  .view-workbasket-actions-allowed
+    - if iam_workbasket_author? && workbasket.can_withdraw?
+      = link_to "Withdraw workbasket from workflow", "#", data: { target_url: withdraw_workbasket_from_workflow_create_geographical_area_url(workbasket.id) }, class: "button js-main-menu-show-withdraw-confirmation-link"
+      br
+
+    - if workbasket.ready_for_approval? && (iam_workbasket_author? || current_user.approver? || workbasket.cross_checker_is?(current_user))
+      = link_to "Submit for approval", submit_for_approval_workflow_transitions_url(workbasket.id), class: "button", method: :post
+      br
+
+    - if current_user.approver?
+      - if workbasket.ready_for_export?
+        = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true, class: "button js-schedule-export-to-cds"
+        br
+
+      - elsif workbasket.operation_date_can_be_rescheduled?
+        = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true, class: "button js-schedule-export-to-cds"
+        br
+
+= render "workbaskets/main_menu_parts/schedule_export_to_cds_popup"
+= render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "delete_confirmation_popup", title: "You are going to delete workbasket"
+= render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "withdraw_confirmation_popup", title: "You are going to withdraw workbasket"
