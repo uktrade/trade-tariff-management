@@ -19,7 +19,7 @@ h3.heading-medium
 ul class="list"
   - if iam_workbasket_author? && workbasket.can_withdraw?
     li
-      = link_to "Withdraw submission/edit measures", "#", data: { target_url: withdraw_workbasket_from_workflow_create_measure_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
+      = link_to "Withdraw submission/edit measures", "#", data: { target_url: withdraw_workbasket_from_workflow_create_geographical_area_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
 
   li
     = link_to "Create another geographical area", new_create_geographical_area_url

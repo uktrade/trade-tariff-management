@@ -82,9 +82,9 @@ module WorkbasketHelpers
     end
 
     def clean_up_temporary_data!
-      if measure_sids.present?
-        collection.map(&:destroy)
+      collection.map(&:destroy)
 
+      if measure_sids.present?
         self.measure_sids_jsonb = [].to_json
         self.quota_period_sids_jsonb = [].to_json if defined?(quota_period_sids_jsonb)
 
