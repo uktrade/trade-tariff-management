@@ -25,7 +25,7 @@ header
     h3.heading-medium Measures to be updated after cross-check
 
     .bulk-edit-measures.submitted-for-cross-check-view
-      bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
+      bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord" :read-only="true"
 
     = render "shared/vue_templates/bulk_edit_records"
 

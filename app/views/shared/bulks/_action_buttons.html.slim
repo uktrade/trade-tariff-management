@@ -1,15 +1,15 @@
 .bulk-edit-of-records-actions-block
   - if workbasket_is_editable?
-    .submit_group_for_cross_check_block
+    .submit_group_for_cross_check_block v-if="pagination.total_count > 0"
       = link_to "Submit changes for cross-check", "#", class: "button js-bulk-edit-of-records-submit-for-cross-check", "v-on:click.prevent" => "saveForCrossCheck"
 
       .js-bulk-edit-of-records-submit-for-cross-check-spinner.spinner_block.hidden
         = render "shared/bulks/loading_spinner", message: "Checking data..."
 
-    .save_progress_block
+    .save_progress_block v-if="pagination.total_count > 0"
       = link_to "Save progress", "#", class: "button js-bulk-edit-of-records-save-progress", "v-on:click.prevent" => "saveProgress"
 
       .js-bulk-edit-of-records-save-progress-spinner.spinner_block.hidden
         = render "shared/bulks/loading_spinner", message: "Saving..."
 
-  = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-bulk-edit-of-records-exit"
+  = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-bulk-edit-of-records-exit", "v-if" => "!readOnly"

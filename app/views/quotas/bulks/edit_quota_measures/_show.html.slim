@@ -1,0 +1,30 @@
+
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Find Quotas", quotas_url
+
+    li
+      = link_to "Back to search results", quotas_url(search_code: workbasket_settings.initial_search_results_code)
+
+h2.heading-large
+  | Submitted for Cross-Check
+
+= render "quotas/bulks/details"
+
+script
+  == "window.__workbasket_id = #{workbasket.id};"
+  == "window.__pagination_metadata = #{pagination_metadata.to_json};"
+  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+  == "window.current_step_settings = #{workbasket_settings.main_step_settings.to_json};"
+
+- cache [ "measure_form_js_variabless", expires_in: 8.hours ] do
+  = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
+
+.bulk-edit-measures
+  bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="quota measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord" :read-only="true"
+
+= render "shared/vue_templates/bulk_edit_records"
