@@ -101,13 +101,13 @@ module WorkbasketValueObjects
       def regulation
         regulation_id = ops[:regulation_id]
 
-        regulation = BaseRegulation.actual
-                                   .not_replaced_and_partially_replaced
+        regulation = BaseRegulation.not_replaced_and_partially_replaced
+                                   .actual_or_starts_in_future
                                    .where(base_regulation_id: regulation_id).first
 
         if regulation.blank?
-          regulation = ModificationRegulation.actual
-                                             .not_replaced_and_partially_replaced
+          regulation = ModificationRegulation.not_replaced_and_partially_replaced
+                                             .actual_or_starts_in_future
                                              .where(modification_regulation_id: regulation_id).first
         end
 

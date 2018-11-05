@@ -164,6 +164,17 @@ module Sequel
           end
         end
 
+        #
+        # This scope allows along with actual records
+        # fetch records with validity_start_date in future
+        #
+        def actual_or_starts_in_future
+          filter do |o|
+            o.>=(model.period_end_date_column, model.point_in_time) |
+            ({model.period_end_date_column => nil})
+          end
+        end
+
         # Use for extending datasets and associations, so that specified
         # klass would respect current time in TimeMachine.
         #

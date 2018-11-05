@@ -4,9 +4,6 @@ class GeographicalAreaSearch
     q
     start_date
     end_date
-    code_country
-    code_region
-    code_group
     code
   )
 
@@ -14,9 +11,6 @@ class GeographicalAreaSearch
                 :q,
                 :start_date,
                 :end_date,
-                :code_country,
-                :code_region,
-                :code_group,
                 :code,
                 :relation,
                 :page
@@ -36,6 +30,8 @@ class GeographicalAreaSearch
       send("apply_#{k}_filter")
     end
 
+    apply_code_filter
+
     if paginate
       relation.page(page)
     else
@@ -50,12 +46,10 @@ class GeographicalAreaSearch
     end
 
     def apply_code_filter
-      @relation = relation.by_code(codes)
+      if codes.present?
+        @relation = relation.by_code(codes)
+      end
     end
-
-    alias_method :apply_code_country_filter, :apply_code_filter
-    alias_method :apply_code_region_filter, :apply_code_filter
-    alias_method :apply_code_group_filter, :apply_code_filter
 
     def apply_start_date_filter
       @relation = relation.after_or_equal(start_date.to_date.beginning_of_day)
@@ -68,9 +62,9 @@ class GeographicalAreaSearch
     def codes
       codes_to_filter = []
 
-      codes_to_filter << '0' if code_country.present?
-      codes_to_filter << '1' if code_group.present?
-      codes_to_filter << '2' if code_region.present?
+      codes_to_filter << '0' if search_ops[:code_country].present?
+      codes_to_filter << '1' if search_ops[:code_group].present?
+      codes_to_filter << '2' if search_ops[:code_region].present?
 
       codes_to_filter
     end

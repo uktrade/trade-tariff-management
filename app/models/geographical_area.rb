@@ -129,6 +129,8 @@ class GeographicalArea < Sequel::Model
       end
 
       def keywords_search(keywords)
+        keywords = keywords.to_s.squish
+
         join_table(:inner,
           :geographical_area_descriptions,
           geographical_area_id: :geographical_area_id,

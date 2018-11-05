@@ -8,7 +8,7 @@ module FormApiHelpers
           q_rule = "#{keyword}%"
 
           scope = if %w(base_regulation_id modification_regulation_id).include?(primary_key.to_s)
-            actual.not_replaced_and_partially_replaced
+            not_replaced_and_partially_replaced.actual_or_starts_in_future
           else
             not_replaced_and_partially_replaced
           end

@@ -12,6 +12,12 @@ table.create-measures-details-table
 
     tr
       td.heading_column
+        | Maximum precision
+      td
+        = attributes_parser.quota_precision
+
+    tr
+      td.heading_column
         | Type
       td
         = "#{first_measure.measure_type_id} #{attributes_parser.measure_type}"
