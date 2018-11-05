@@ -232,6 +232,25 @@ class Footnote < Sequel::Model
     meursing_headings.count
   end
 
+  def commodity_codes
+    prepare_collection(goods_nomenclatures, :goods_nomenclature_item_id)
+  end
+
+  def measure_sids
+    prepare_collection(measures, :measure_sid)
+  end
+
+  def prepare_collection(list, data_field_name)
+    return [] if list.blank?
+
+    list.map do |item|
+      item.public_send(data_field_name)
+    end.reject do |i|
+      i.blank?
+    end.uniq
+       .map(&:to_s)
+  end
+
   class << self
     def max_per_page
       10

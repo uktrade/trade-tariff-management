@@ -26,33 +26,14 @@ module Workbaskets
           res[:validity_end_date] = original_footnote.validity_end_date.strftime("%d/%m/%Y")
         end
 
-        commodity_list = original_footnote.goods_nomenclatures
-        if commodity_list.present?
-          res[:commodity_codes] = prepare_collection(
-            commodity_list,
-            :goods_nomenclature_item_id
-          )
-        end
+        commodity_list = original_footnote.commodity_codes
+        res[:commodity_codes] = commodity_list.join(', ') if commodity_list.present?
 
-        measures_list = original_footnote.measures
-        if measures_list.present?
-          res[:measure_sids] = prepare_collection(
-            measures_list,
-            :measure_sid
-          )
-        end
+        measures_list = original_footnote.measure_sids
+        res[:measure_sids] = measures_list.join(', ') if measures_list.present?
       end
 
       res
-    end
-
-    def prepare_collection(list, data_field_name)
-      list.map do |item|
-        item.public_send(data_field_name)
-      end.reject do |i|
-        i.blank?
-      end.uniq
-         .join(', ')
     end
 
     def measure_sids_jsonb
