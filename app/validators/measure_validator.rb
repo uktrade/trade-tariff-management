@@ -102,15 +102,22 @@ class MeasureValidator < TradeTariffBackend::Validator
 
       attrs = {
         goods_nomenclature_item_id: record.goods_nomenclature_item_id,
+        goods_nomenclature_sid: record.goods_nomenclature_sid,
         measure_type_id: record.measure_type_id,
         geographical_area_sid: record.geographical_area_sid,
         ordernumber: record.ordernumber,
-        reduction_indicator: record.reduction_indicator
+        reduction_indicator: record.reduction_indicator,
+        additional_code_type_id: record.additional_code_type_id,
+        additional_code_id: record.additional_code_id
       }
 
       if record.modified?
         scope = Measure.where(attrs)
         scope = scope.where("measure_sid != ?", record.measure_sid) if record.measure_sid.present?
+
+        if record.updating_measure.present?
+          scope = scope.where("measure_sid != ?", record.updating_measure.measure_sid)
+        end
 
         scope = if record.validity_end_date.present?
                   scope.where(

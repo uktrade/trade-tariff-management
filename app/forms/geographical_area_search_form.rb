@@ -10,6 +10,13 @@ class GeographicalAreaSearchForm
     code_group
   )
 
+  ALLOWED_FILTERS = %w(
+    q
+    start_date
+    end_date
+    code
+  ) + CODE_KEYS
+
   ALLOWED_TYPE_VALUES = ["0", "1", "2"]
 
   attr_accessor :q,
@@ -35,7 +42,7 @@ class GeographicalAreaSearchForm
   validate :validate_date_range, if: "start_date.present? && end_date.present?"
 
   def initialize(params)
-    GeographicalAreaSearch::ALLOWED_FILTERS.map do |filter_name|
+    ALLOWED_FILTERS.map do |filter_name|
       instance_variable_set("@#{filter_name}", params[filter_name])
     end
   end
