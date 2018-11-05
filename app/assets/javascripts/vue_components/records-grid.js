@@ -207,6 +207,8 @@ Vue.component("records-grid", {
         setTimeout(function() {
           self.indirectSelectAll = false;
         }, 200);
+
+        return;
       }
 
       if (this.onItemSelected) {

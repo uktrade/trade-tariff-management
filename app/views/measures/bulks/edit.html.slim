@@ -27,7 +27,7 @@ script
   = render "workbaskets/shared/js_variables", form: ::WorkbasketForms::CreateMeasuresForm.new(Measure.new)
 
 .bulk-edit-measures
-  bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
+  bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord" :read-only="false"
     template slot-scope="slotProps"
       = content_tag "change-duties-popup", nil, {"v-if" => "slotProps.selectedAction == 'change_duties'", ":open" => "true", ":measures" => "slotProps.selectedRecordObjects", ":on-close" => "slotProps.closeAllPopups", "@measures-updated" => "slotProps.recordsUpdated"}
 
