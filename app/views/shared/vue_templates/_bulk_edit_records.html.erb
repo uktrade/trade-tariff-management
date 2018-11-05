@@ -11,16 +11,8 @@
         <h1 class="heading-xlarge" slot="title">
           Loading {{thing}}
         </h1>
-        <h4 class="heading-medium" slot-scope="slotProps" v-if="readOnly !== true">
+        <h4 class="heading-medium" slot-scope="slotProps">
           Please wait while we load and prepare {{thing}} for editing
-          <br>
-          {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
-          <br>
-          <loading-spinner></loading-spinner>
-        </h4>
-
-        <h4 class="heading-medium" slot-scope="slotProps" v-if="readOnly === true">
-          Please wait while we load {{thing}}
           <br>
           {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
           <br>
@@ -29,7 +21,7 @@
       </loading-indicator>
     </div>
 
-    <div  v-if="pagination.total_count == 0 && !this.readOnly">
+    <div v-else>
       <warning-message>
         This workbasket contains no {{thing}} to edit.
       </warning-message>
