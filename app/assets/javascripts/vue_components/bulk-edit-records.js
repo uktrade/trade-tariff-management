@@ -14,8 +14,7 @@ Vue.component("bulk-edit-records", {
     "columns",
     "actions",
     "recordTableProcessing",
-    "preprocessRecord",
-    "readOnly"
+    "preprocessRecord"
   ],
   data: function() {
     var data = {
@@ -37,13 +36,9 @@ Vue.component("bulk-edit-records", {
       sortDir: "desc"
     };
 
-    try {
-      var query = parseQueryString(window.location.search.substring(1));
+    var query = parseQueryString(window.location.search.substring(1));
 
-      data.search_code = query.search_code || ("workbasket_" + window.__workbasket_id);
-    } catch (e) {
-      data.search_code = "workbasket_" + window.__workbasket_id;
-    }
+    data.search_code = query.search_code;
 
     return data;
   },
@@ -179,8 +174,7 @@ Vue.component("bulk-edit-records", {
       var self = this;
       var pk = this.primaryKey;
 
-      var delimiter = window.location.href.indexOf('?') > -1 ? "&" : "?";
-      var url = window.location.href + delimiter + "page=" + page;
+      var url = window.location.href + "&page=" + page;
       var options = {
         type: "GET",
         url: url
