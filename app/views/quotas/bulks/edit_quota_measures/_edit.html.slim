@@ -15,7 +15,7 @@ h2.heading-large
   - else
     = workbasket_author? ? 'Edit quota measures' : 'Review quota measures'
 
-= render "shared/bulks/details"
+= render "quotas/bulks/details"
 
 script
   == "window.__workbasket_id = #{workbasket.id};"

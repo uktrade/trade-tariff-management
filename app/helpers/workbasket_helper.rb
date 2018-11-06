@@ -249,15 +249,43 @@ module WorkbasketHelper
 
     when :bulk_edit_of_quotas
 
-      if workbasket.settings.settings["start_date"].blank?
+      if workbasket.settings.configure_step_settings["start_date"].blank?
         work_with_selected_quotas_bulk_url(
             workbasket.id
         )
 
       else
-        edit_quotas_bulk_url(
-            workbasket.id
-        )
+        if workbasket.settings.edit_quota_workbasket?
+          if workbasket.settings.conditions_footnotes_step_validation_passed.present?
+            edit_quotas_bulk_url(
+                workbasket.id,
+                step: :review_and_submit
+            )
+
+          elsif workbasket.settings.configure_quota_step_validation_passed.present?
+            edit_quotas_bulk_url(
+                workbasket.id,
+                step: :conditions_footnotes
+            )
+
+          elsif workbasket.settings.main_step_validation_passed.present?
+            edit_quotas_bulk_url(
+                workbasket.id,
+                step: :configure_quota
+            )
+
+          else
+            edit_quotas_bulk_url(
+                workbasket.id,
+                step: :main
+            )
+          end
+        else
+          edit_quotas_bulk_url(
+              workbasket.id,
+              search_code: workbasket.settings.initial_search_results_code
+          )
+        end
       end
 
     when :create_geographical_area
@@ -308,7 +336,11 @@ module WorkbasketHelper
     when :bulk_edit_of_additional_codes
       additional_codes_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
     when :bulk_edit_of_quotas
-      quotas_bulk_url(workbasket.id)
+      if workbasket.settings.edit_quota_workbasket?
+        quotas_bulk_url(workbasket.id)
+      else
+        quotas_bulk_url(workbasket.id, search_code: workbasket.settings.initial_search_results_code)
+      end
     when :create_geographical_area
       create_geographical_area_url(workbasket.id)
     when :create_certificate

@@ -128,7 +128,7 @@ module WorkbasketInteractions
             validity_end_date: validity_end_date
           )
 
-          if parent_geographical_area_group_id.present?
+          if geographical_code == "group" && parent_geographical_area_group_id.present?
             geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
           end
 
@@ -179,6 +179,22 @@ module WorkbasketInteractions
           @attrs_parser = ::WorkbasketValueObjects::CreateGeographicalArea::AttributesParser.new(
             settings_params
           )
+        end
+
+        def get_conformance_errors(record)
+          res = {}
+
+          record.conformance_errors.map do |k, v|
+            message = if v.is_a?(Array)
+              v.flatten.join(' ')
+            else
+              v
+            end
+
+            res[k.to_s] = "<strong class='workbasket-conformance-error-code'>#{k.to_s}</strong>: #{message}".html_safe
+          end
+
+          res
         end
 
         def geo_code_number(geographical_code)

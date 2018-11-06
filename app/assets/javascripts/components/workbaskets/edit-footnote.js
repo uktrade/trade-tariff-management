@@ -188,11 +188,17 @@ $(document).ready(function() {
         };
       },
       footnotePayLoad: function() {
+        if ($(".js-footnote-description-textarea").val() !== window.__original_footnote_description) {
+          description_validity_start_date = $(".js-description-validity-period-date").val();
+        } else {
+          description_validity_start_date = '';
+        }
+
         return {
           reason_for_changes: this.footnote.reason_for_changes,
           description: this.footnote.description,
           operation_date: $(".js-changes_take_effect_date_input").val(),
-          description_validity_start_date: $(".js-description-validity-period-date").val(),
+          description_validity_start_date: description_validity_start_date,
           validity_start_date: this.footnote.validity_start_date,
           validity_end_date: this.footnote.validity_end_date,
           commodity_codes: this.footnote.commodity_codes,

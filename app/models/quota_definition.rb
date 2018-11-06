@@ -16,6 +16,8 @@ class QuotaDefinition < Sequel::Model
                                      primary_key: :quota_definition_sid
   one_to_many :quota_suspension_periods, key: :quota_definition_sid,
                                          primary_key: :quota_definition_sid
+  one_to_many :quota_unsuspension_events, key: :quota_definition_sid,
+                                         primary_key: :quota_definition_sid
   one_to_many :quota_blocking_periods, key: :quota_definition_sid,
                                        primary_key: :quota_definition_sid
 
@@ -38,7 +40,7 @@ class QuotaDefinition < Sequel::Model
   one_to_one :measurement_unit_qualifier, key: :measurement_unit_qualifier_code,
                                           primary_key: :measurement_unit_qualifier_code
 
-  def status
+  def event_status
     QuotaEvent.last_for(quota_definition_sid).status.presence || (critical_state? ? 'Critical' : 'Open')
   end
 
@@ -52,6 +54,10 @@ class QuotaDefinition < Sequel::Model
 
   def last_suspension_period
     @_last_suspension_period ||= quota_suspension_periods.last
+  end
+
+  def last_unsuspension_event
+    @_last_unsuspension_event ||= quota_unsuspension_events.last
   end
 
   def last_blocking_period
@@ -131,15 +137,25 @@ class QuotaDefinition < Sequel::Model
   end
 
   def status_title
-    if status.present?
+    if last_suspension_period.present? && last_suspension_period.status != :published
+      I18n.t(:measures)[:states][last_suspension_period.status.to_sym]
+    elsif status.present?
       I18n.t(:measures)[:states][status.to_sym]
     else
-      "Imported to TARIFF"
+      "Published"
     end
   end
 
   def sent_to_cds?
     status.blank? || status.to_s.in?(::Workbaskets::Workbasket::SENT_TO_CDS_STATES)
+  end
+
+  def locked?
+    (status.present? && status != :published) || (last_suspension_period.present? && last_suspension_period.status != :published)
+  end
+
+  def stopped?
+    (workbasket.present? && workbasket.type == :bulk_edit_of_quotas && workbasket.settings.workbasket_action == 'stop_quota')
   end
 
   def to_json(options = {})
@@ -155,6 +171,10 @@ class QuotaDefinition < Sequel::Model
         additional_code_ids: additional_code_ids.join(', '),
         origin: quota_origin,
         origin_exclusions: origin_exclusions&.join(', '),
+        stopped: stopped?,
+        locked: locked?,
+        last_suspension_period: last_suspension_period&.to_json,
+        last_unsuspension_event: last_unsuspension_event&.to_json,
         last_updated: (operation_date || added_at).try(:strftime, "%d %b %Y") || "-",
         status: status_title
     }

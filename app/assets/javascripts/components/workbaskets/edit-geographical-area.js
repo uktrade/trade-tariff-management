@@ -13,7 +13,13 @@ $(document).ready(function() {
         savedSuccessfully: false,
         errors: {},
         conformanceErrors: {},
-        errorsSummary: ""
+        errorsSummary: "",
+        addingMembers: false,
+        addingToGroups: false,
+        editingMembership: null,
+        sortBy: "geographical_area_id",
+        sortDir: "desc",
+        parentGroupsList: window.__geographical_area_groups_json
       };
 
       if (!$.isEmptyObject(window.__geographical_area_json)) {
@@ -91,7 +97,7 @@ $(document).ready(function() {
           data: {
             step: window.current_step,
             mode: submit_button.attr('name'),
-            settings: self.geographical_areaPayLoad()
+            settings: self.geographicalAreaPayLoad()
           },
           success: function(response) {
             WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
@@ -148,6 +154,56 @@ $(document).ready(function() {
       },
       hasConformanceErrors: function() {
         return Object.keys(this.conformanceErrors).length > 0;
+      },
+      isGroup: function() {
+        return this.geographical_area.geographical_code === 'group';
+      },
+      isRegion: function() {
+        return this.geographical_area.geographical_code === 'region';
+      },
+      isCountry: function() {
+        return this.geographical_area.geographical_code === 'country';
+      },
+      sortedMemberships: function() {
+        var memberships = this.geographical_area.geographical_area_memberships.slice(0);
+        var sortBy = this.sortBy;
+        var sortDir = this.sortDir;
+
+        memberships.sort(function(a, b) {
+          if (sortBy == "geographical_area_id") {
+            a = a[sortBy];
+            b = b[sortBy];
+
+            if (a == null || a == "-") {
+              return -1;
+            }
+
+            if (b == null || b == "-") {
+              return 1;
+            }
+
+            return ('' + a).localeCompare(b);
+          } else {
+            a = a[sortBy];
+            b = b[sortBy];
+
+            if (a == null || a == "-") {
+              return -1;
+            }
+
+            if (b == null || b == "-") {
+              return 1;
+            }
+
+            return moment(a, "DD MMM YYYY", true).diff(moment(b, "DD MMM YYYY", true), "days");
+          }
+        });
+
+        if (sortDir === "desc") {
+          memberships.reverse();
+        }
+
+        return memberships;
       }
     },
     watch: {
@@ -156,6 +212,30 @@ $(document).ready(function() {
           this.hideDescriptionValidityStartDateBlock();
         } else {
           this.showDescriptionValidityStartDateBlock();
+        }
+      },
+      "geographical_area.geographical_code": function(val, oldVal) {
+        this.geographical_area.geographical_area_memberships = [];
+
+        if (val == "country" || val == "region") {
+          var ergaOmnes = this.findGeographicalArea("1011");
+          var thirdCountries = this.findGeographicalArea("1008");
+
+          this.geographical_area.geographical_area_memberships.push({
+            geographical_area: ergaOmnes,
+            geographical_area_id: ergaOmnes.geographical_area_id,
+            geographical_area_group_sid: this.geographical_area.geographical_area_id,
+            validity_start_date: this.join_date,
+            validity_end_date: this.leave_date
+          });
+
+          this.geographical_area.geographical_area_memberships.push({
+            geographical_area: thirdCountries,
+            geographical_area_id: thirdCountries.geographical_area_id,
+            geographical_area_group_sid: this.geographical_area.geographical_area_id,
+            validity_start_date: this.join_date,
+            validity_end_date: this.leave_date
+          });
         }
       }
     },
@@ -188,7 +268,8 @@ $(document).ready(function() {
           parent_geographical_area_group_id: payload.parent_geographical_area_group_id,
           validity_start_date: payload.validity_start_date,
           validity_end_date: payload.validity_end_date,
-          remove_parent_group_association: payload.remove_parent_group_association
+          remove_parent_group_association: payload.remove_parent_group_association,
+          geographical_area_memberships: objectToArray(payload.geographical_area_memberships)
         };
       },
       emptyGeographicalArea: function() {
@@ -205,7 +286,7 @@ $(document).ready(function() {
           remove_parent_group_association: null
         };
       },
-      geographical_areaPayLoad: function() {
+      geographicalAreaPayLoad: function() {
         if ($(".js-geographical_area-description-textarea").val() !== window.__original_geographical_area_description) {
           description_validity_start_date = $(".js-description-validity-period-date").val();
         } else {
@@ -228,6 +309,43 @@ $(document).ready(function() {
           validity_end_date: this.geographical_area.validity_end_date,
           remove_parent_group_association: remove_parent_group_association
         };
+      },
+      triggerAddMemberships: function() {
+        if (this.isGroup) {
+          this.addingMembers = true;
+        } else {
+          this.addingToGroups = true;
+        }
+      },
+      closePopups: function() {
+        this.addingMembers = false;
+        this.addingToGroups = false;
+        this.editingMembership = null;
+      },
+      findGeographicalArea: function(code) {
+        var ids = window.__geographical_area_groups_json.map(function(m) {
+          return m.geographical_area_id;
+        });
+
+        var index = ids.indexOf(code);
+
+        if (index === -1) {
+          return;
+        }
+
+        return window.__geographical_area_groups_json[index];
+      },
+      changeSorting: function(field) {
+        if (field !== this.sortBy) {
+          this.sortDir = "desc";
+        } else {
+          this.sortDir = this.sortDir == "desc" ? "asc" : "desc";
+        }
+
+        this.sortBy = field;
+      },
+      editMembership: function(membership) {
+        this.editingMembership = membership;
       }
     }
   });

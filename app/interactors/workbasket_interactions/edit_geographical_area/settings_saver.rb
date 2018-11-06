@@ -270,7 +270,7 @@ module WorkbasketInteractions
             geographical_area.parent_geographical_area_group_sid = nil
           end
 
-          if parent_geographical_area_group_id.present?
+          if original_geographical_area.group? && parent_geographical_area_group_id.present?
             geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
           end
 
