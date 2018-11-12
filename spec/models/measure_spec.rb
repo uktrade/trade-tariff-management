@@ -772,12 +772,15 @@ describe Measure do
         measure2 = build(
           :measure,
           goods_nomenclature_item_id: measure.goods_nomenclature_item_id,
+          goods_nomenclature_sid: measure.goods_nomenclature_sid,
           additional_code_sid: additional_code.additional_code_sid,
           validity_start_date: measure.validity_start_date,
           measure_type_id: measure.measure_type_id,
           geographical_area_sid: measure.geographical_area_sid,
           ordernumber: measure.ordernumber,
-          reduction_indicator: measure.reduction_indicator
+          reduction_indicator: measure.reduction_indicator,
+          additional_code_type_id: measure.additional_code_type_id,
+          additional_code_id: measure.additional_code_id
         )
 
         expect(measure2.additional_code_sid).to_not be(nil)
@@ -800,12 +803,15 @@ describe Measure do
         measure2 = build(
           :measure,
           goods_nomenclature_item_id: measure.goods_nomenclature_item_id,
+          goods_nomenclature_sid: measure.goods_nomenclature_sid,
           additional_code_sid: nil,
           validity_start_date: measure.validity_start_date,
           measure_type_id: measure.measure_type_id,
           geographical_area_sid: measure.geographical_area_sid,
           ordernumber: measure.ordernumber,
-          reduction_indicator: measure.reduction_indicator
+          reduction_indicator: measure.reduction_indicator,
+          additional_code_type_id: measure.additional_code_type_id,
+          additional_code_id: measure.additional_code_id
         )
 
         expect(measure2.additional_code_sid).to be(nil)
