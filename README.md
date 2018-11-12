@@ -9,6 +9,7 @@
   - Ruby
   - Postgresql
   - Redis (must be running for search)
+  - Chrome (for integration specs)
 
 ### Setup
 

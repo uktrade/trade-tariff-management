@@ -122,4 +122,5 @@ group :test do
   gem 'capybara-selenium'
   gem 'selenium-webdriver'
   gem 'launchy'
+  gem "chromedriver-helper"
 end
