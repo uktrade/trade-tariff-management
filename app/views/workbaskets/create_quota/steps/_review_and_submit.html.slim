@@ -1,3 +1,6 @@
+- cache [ "measure_form_js_variables", expires_in: 8.hours ] do
+  = render "workbaskets/shared/js_variables"
+
 = simple_form_for form, url: create_quotum_url(id: workbasket.id),
                         html: { \
                           class: "measure-form create-measures-v2",
@@ -16,4 +19,3 @@
       h3.heading-medium
   - else
     = render "workbaskets/shared/action_links", f: f
-

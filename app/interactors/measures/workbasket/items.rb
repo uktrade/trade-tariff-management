@@ -2,6 +2,8 @@ module Measures
   module Workbasket
     class Items
 
+      PAGINATION_PER_PAGE = 300
+
       include ::CustomLogger
 
       attr_accessor :workbasket,
@@ -15,7 +17,9 @@ module Measures
         @workbasket = workbasket
         @workbasket_settings = workbasket.settings
         @search_ops = search_ops
-        @paginator = ::Measures::Workbasket::Paginator.new(search_ops)
+        @paginator = ::Measures::Workbasket::Paginator.new(
+          search_ops.merge(per_page: PAGINATION_PER_PAGE)
+        )
       end
 
       def prepare

@@ -22,10 +22,12 @@ class QuotaDefinition < Sequel::Model
   one_to_one :quota_order_number, key: :quota_order_number_id,
                                   primary_key: :quota_order_number_id
 
-  delegate :measure, to: :quota_order_number, allow_nil: true
+  one_to_many :measures, key: [:ordernumber, :validity_start_date],
+                         primary_key: [:quota_order_number_id, :validity_start_date]
 
-  one_to_many :measures, key: :ordernumber,
-                         primary_key: :quota_order_number_id
+  def measure
+    @measure ||= measures.first
+  end
 
   one_to_one :measurement_unit, key: :measurement_unit_code,
                                 primary_key: :measurement_unit_code
@@ -64,6 +66,14 @@ class QuotaDefinition < Sequel::Model
     measure.measure_generating_regulation_id if measure.present?
   end
 
+  def regulation_role
+    measure.measure_generating_regulation_role if measure.present?
+  end
+
+  def reduction_indicator
+    measure.reduction_indicator if measure.present?
+  end
+
   def license
     if measure.present? && measure.measure_conditions.present?
       measure.measure_conditions.each do |condition|
@@ -88,7 +98,7 @@ class QuotaDefinition < Sequel::Model
   def additional_code_ids
     if measures.present?
       measures.map do |measure|
-        measure.additional_code_id
+        "#{measure.additional_code_type_id}#{measure.additional_code_id}"
       end.select do |item|
         item.present?
       end.uniq
@@ -140,7 +150,7 @@ class QuotaDefinition < Sequel::Model
         regulation_id: regulation_id,
         license: license || "-",
         validity_start_date: validity_start_date.try(:strftime, "%d %b %Y") || "-",
-        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
+        validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "Never (repeats)",
         goods_nomenclature_item_ids: goods_nomenclature_item_ids.join(', '),
         additional_code_ids: additional_code_ids.join(', '),
         origin: quota_origin,

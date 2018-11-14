@@ -1,0 +1,214 @@
+<%= render "shared/breadcrumbs" do %>
+  <div class="breadcrumbs">
+    <ol>
+      <li>
+        <%= link_to "Main menu", root_url %>
+      </li>
+      <li>
+        <%= link_to "Find a quota", quotas_url %>
+      </li>
+      <li>
+        <%= link_to "Search results", quotas_url(search_code: workbasket_settings.initial_search_results_code) %>
+      </li>
+    </ol>
+  </div>
+<% end %>
+
+<div class="work-with-selected-quota">
+  <%= form_tag({}, { method: :post }) do %>
+    <h1 class="heading-xlarge">
+      Work with selected quota
+    </h1>
+
+    <div class="error-summary" role="alert" aria-labelledby="work-with-selected-quota-error-heading" tabindex="-1" v-cloak="" v-if="hasErrors">
+
+      <h2 class="heading-medium error-summary-heading" id="work-with-selected-quota-error-heading">
+        Error
+      </h2>
+
+      <p>
+        {{errorsSummary}}
+      </p>
+
+      <p>
+        See individual fields for details.
+      </p>
+    </div>
+
+    <form-group :errors="errors" error-key="validity_start_date">
+      <template slot-scope="slotProps">
+        <label for="date" class="form-label">
+          When should these changes take effect?
+          <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+            {{slotProps.error}}
+          </span>
+          <span class="form-hint">
+            The existing quota will remain in force as-is until this date.
+          </span>
+        </label>
+        <date-select :value.sync="validity_start_date"></date-select>
+        <input type="hidden" name="validity_start_date" v-model="validity_start_date" />
+      </template>
+    </form-group>
+
+    <form-group :errors="errors" error-key="action">
+      <template slot-scope="slotProps">
+        <label for="action" class="form-label">
+          What changes do you want to make?
+
+          <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+            {{slotProps.error}}
+          </span>
+        </label>
+
+        <div class="multiple-choice">
+          <input type='radio' id="action-edit-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="edit_quota">
+
+          <label for="action-edit-quota">
+            Edit the quota
+          </label>
+        </div>
+
+        <div class="multiple-choice">
+          <input type='radio' id="action-edit-quota-measures" class="radio-inline-group" name="workbasket_action" v-model="action" value="edit_quota_measures">
+
+          <label for="action-edit-quota-measures">
+            Edit the quota's measures
+          </label>
+        </div>
+
+        <% if !workbasket_settings.quota_definition_suspended? %>
+          <div class="multiple-choice">
+            <input type='radio' id="action-suspend-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="suspend_quota">
+
+            <label for="action-suspend-quota">
+              Suspend the quota
+            </label>
+          </div>
+
+          <form-group :errors="errors" classes="panel panel-border-narrow" error-key="suspension_date" v-if="suspendingQuota">
+            <template slot-scope="slotProps">
+              <label for="action" class="form-label">
+                Optionally, when should the suspension end?
+
+                <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+                  {{slotProps.error}}
+                </span>
+
+                <span class="form-hint">
+                  The quota will be suspended from the date you specified above. You can optionally specify an end-date now, or you can leave this open-ended and remove the suspension later if needed.
+                </span>
+              </label>
+
+              <date-select :value.sync="suspension_date"></date-select>
+              <input type="hidden" name="suspension_date" v-model="suspension_date" />
+            </template>
+          </form-group>
+        <% else %>
+          <div class="multiple-choice">
+            <input type='radio' id="action-remove-suspension" class="radio-inline-group" name="workbasket_action" v-model="action" value="remove_suspension">
+
+            <label for="action-remove-suspension">
+              Remove suspension
+            </label>
+          </div>
+        <% end %>
+
+        <div class="multiple-choice">
+          <input type='radio' id="action-stop-quota" class="radio-inline-group" name="workbasket_action" v-model="action" value="stop_quota">
+
+          <label for="action-stop-quota">
+            Stop the quota
+          </label>
+        </div>
+      </template>
+    </form-group>
+
+    <form-group :errors="errors" error-key="regulation">
+      <template slot-scope="slotProps">
+        <label for="regulation" class="form-label">
+          What regulation (if any) gives force to these changes?
+
+          <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+            {{slotProps.error}}
+          </span>
+
+          <span class="form-hint">
+            Start typing in the field to see available regulations.
+            <br>
+            If the regulation you need is not in the list, you can <%= link_to "add it from here", new_create_regulation_url, target: "_blank" %>.
+            <br>
+            If you're not sure of the regulation name or ID, you can <%= link_to "search here", regulations_url, target: "_blank" %>.
+          </span>
+        </label>
+        <div class="row">
+          <div class="col-md-8 col-lg-6">
+            <custom-select url="/regulations.json" label-field="description" value-field="regulation_id" placeholder="― start typing ―" min-length="2" v-model="regulation_id" date-sensitive="true" :scope-date="validity_start_date" :disabled="changesNotFromLegislation" :on-change="regulationSelected"></custom-select>
+            <input type="hidden" name="regulation_id" v-model="regulation_id" />
+            <input type="hidden" name="regulation_role" v-model="regulation_role" />
+          </div>
+        </div>
+      </template>
+    </form-group>
+
+    <div class="form-group">
+      <fieldset>
+        <div class="multiple-choice">
+          <input id="not-from-legislation" name="changes_not_from_legislation" type="checkbox" value="1" v-model="changesNotFromLegislation">
+          <label for="not-from-legislation">These changes do not come from legislation.</label>
+        </div>
+      </fieldset>
+    </div>
+
+    <form-group :errors="errors" error-key="reason">
+      <template slot-scope="slotProps">
+        <label for="reason" class="form-label">
+          What is the reason for these changes?
+          <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+            {{slotProps.error}}
+          </span>
+
+          <span class="form-hint">
+            Be as descriptive as you can, and keep in mind what you type here may become publicly visible. Please list the changes you intend to make.
+          </span>
+        </label>
+        <div class="row">
+          <div class="col-md-9 col-lg-7">
+            <textarea name="reason" id="reason" rows="4" class="form-control" v-model="reason"></textarea>
+          </div>
+        </div>
+      </template>
+    </form-group>
+
+    <form-group :errors="errors" error-key="workbasket_name">
+      <template slot-scope="slotProps">
+        <label for="workbasket_name" class="form-label">
+          What is the name of this workbasket?
+          <span class="error-message" v-if="slotProps.hasError" v-cloak="">
+            {{slotProps.error}}
+          </span>
+
+          <span class="form-hint">
+            This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
+          </span>
+        </label>
+        <div class="row">
+          <div class="col-md-9 col-lg-7">
+            <input type="text" name="workbasket_name" class="form-control" v-model="workbasket_name">
+          </div>
+        </div>
+      </template>
+    </form-group>
+
+    <br>
+
+    <div class="form-group" v-cloak>
+      <button type="submit" class="button" v-on:click="validate" :disabled="disableSubmit">
+        {{buttonText}}
+      </button>
+      <a href="/app/assets/stylesheets" class="secondary-button">
+        Cancel
+      </a>
+    </div>
+  <% end %>
+</div>

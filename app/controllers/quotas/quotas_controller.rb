@@ -36,6 +36,10 @@ module Quotas
       search_results.map(&:to_table_json)
     end
 
+    expose(:previous_workbasket) do
+      ::Workbaskets::Workbasket.find(id: params[:previous_workbasket_id]) if params[:previous_workbasket_id].present?
+    end
+
     def index
       respond_to do |format|
         format.json { render json: json_response }
@@ -45,9 +49,7 @@ module Quotas
 
     def search
       code = search_code
-      ::QuotaService::TrackQuotaSids.new(code).run
       redirect_to quotas_url(search_code: code)
     end
-
   end
 end

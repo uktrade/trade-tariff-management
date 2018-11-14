@@ -66,6 +66,10 @@ module Measures
         operator_search_where_clause("Footnotes", operator, footnotes_list)
       end
 
+      def operator_search_by_order_number(operator, order_number=nil)
+        is_or_is_not_search_query("ordernumber", operator,  order_number)
+      end
+
       private
 
       def operator_search_where_clause(klass_name, operator, value=nil)

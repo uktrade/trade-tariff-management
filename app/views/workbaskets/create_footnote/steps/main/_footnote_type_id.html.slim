@@ -1,0 +1,14 @@
+fieldset
+  form-group :errors="errors" error-key="footnote_type_id"
+    template slot-scope="slotProps"
+      h3.heading-medium
+        | What type of footnote is this?
+
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+
+      .bootstrap-row
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = content_tag "custom-select", "", { ":options" => "footnote_types_list" , "allow-clear" => true, "code-field" => "footnote_type_id", "label-field" => "description", "value-field" => "footnote_type_id", "v-model" => "footnote.footnote_type_id", placeholder: "― select footnote type ―", "name" => "footnote[footnote_type_id]", "code-class-name" => "prefix--country" }

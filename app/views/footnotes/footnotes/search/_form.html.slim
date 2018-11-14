@@ -1,0 +1,107 @@
+= simple_form_for search_form, as: :search,
+                               url: search_footnotes_url,
+                               method: :get,
+                               html: { class: "js-search-footnotes-form", "data-parsley-validate" => true } do |f|
+
+  .bootstrap-row
+    .col-lg-5.col-md-7.col-sm-10.col-xs-12
+      = render "footnotes/footnotes/search/errors_summary"
+
+      fieldset
+        form-group :errors="errors" error-key="general"
+          template slot-scope="slotProps"
+            label.form-label
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+
+            h3.heading-medium.sub_heading_block
+              | What is the footnote type?
+
+            label.form-label
+              span.form-hint
+                | You must make a selection here if entering an ID in the next field.
+
+            .bootstrap-row
+              .col-lg-8.col-md-10.col-sm-12.col-xs-12
+                = content_tag "custom-select", "", { ":options" => "footnote_types_list" , "allow-clear" => true, "code-field" => "footnote_type_id", "label-field" => "description", "value-field" => "footnote_type_id", "v-model" => "search.footnote_type_id", placeholder: "― select footnote type ―", "name" => "search[footnote_type_id]", "code-class-name" => "prefix--country" }
+
+            h3.heading-medium
+              | Enter a footnote ID or search string
+
+            label.form-label
+              span.form-hint
+                | This is usually mandatory but you can leave it blank if you are searching for associations below.
+
+            .bootstrap-row
+              .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                = f.input :q, label: false, input_html: { class: "form-control", "v-model" => "search.q" }
+
+            h3.heading-medium.sub_heading_block
+              | Optionally search for footnotes that have these associations
+
+            label.form-label
+              span.form-hint
+                | You can populate any or all of the following fields to find footnotes that are associated with ALL of the values you enter there in.
+
+            h3.heading-medium.sub_heading_block
+              | Goods classification codes
+
+            label.form-label
+              span.form-hint
+                | Enter one or more commodity codes, separated by comma, space or line break.
+
+            .bootstrap-row
+              .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                = f.input :commodity_codes, as: :text, label: false, input_html: { "v-model" => "search.commodity_codes", rows: 3 }
+
+            h3.heading-medium.sub_heading_block
+              | Measures
+
+            label.form-label
+              span.form-hint
+                | Enter one or more measure IDs, separated by comma, space or line break.
+
+            .bootstrap-row
+              .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                = f.input :measure_sids, as: :text, label: false, input_html: { "v-model" => "search.measure_sids", rows: 3 }
+
+      fieldset
+        form-group :errors="errors" error-key="start_date"
+          template slot-scope="slotProps"
+            h3.heading-medium.with_smaller_top_border
+              | Optionally search for footnotes that are valid from
+
+            label.form-label.search-footnotes-error-container
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+              span.form-hint
+
+              .bootstrap-row
+                .col-lg-5.col-md-7.col-sm-10.col-xs-12
+                  = f.input :start_date, label: false, input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.start_date" }
+
+      fieldset
+        form-group :errors="errors" error-key="end_date"
+          template slot-scope="slotProps"
+            h3.heading-medium.with_smaller_top_border
+              | Optionally search for footnotes that are valid until
+
+            label.form-label.search-footnotes-error-container
+              span.error-message v-if="slotProps.hasError" v-cloak=""
+                | {{slotProps.error}}
+              span.form-hint
+
+            .bootstrap-row
+              .col-lg-5.col-md-7.col-sm-10.col-xs-12
+                = f.input :end_date, label: false, input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.end_date" }
+
+      .bootstrap-row
+        .col-lg-5.col-md-7.col-sm-10.col-xs-12
+          .form-actions
+            .submit_group_for_cross_check_block
+              = link_to "Search", "#", name: "save_progress", class: "button js-validate-footnotes-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
+
+              .js-workbasket-base-continue-spinner.spinner_block.hidden
+                = render "measures/bulks/loading_spinner", message: "Loading..."
+
+            = link_to "Clear form", search_footnotes_url, class: 'secondary-button js-workbasket-base-exit-button'

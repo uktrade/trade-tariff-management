@@ -65,8 +65,11 @@ class MeasureConditionComponent < Sequel::Model
       original_duty_expression_id: original_duty_expression_id,
       duty_amount: duty_amount,
       duty_expression: duty_expression.to_json,
+      measurement_unit_code: measurement_unit_code,
       measurement_unit: measurement_unit.to_json,
+      monetary_unit_code: monetary_unit_code,
       monetary_unit: monetary_unit.to_json,
+      measurement_unit_qualifier_code: measurement_unit_qualifier_code,
       measurement_unit_qualifier: measurement_unit_qualifier.to_json,
     }
   end

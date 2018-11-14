@@ -29,7 +29,7 @@ module WorkbasketValueObjects
         measure_type_id: ops[:measure_type_id],
         reduction_indicator: ops[:reduction_indicator],
         geographical_area_id: variable_params[:geographical_area_id],
-        quota_ordernumber: ops[:quota_ordernumber],
+        quota_ordernumber: @quota_order_number || ops[:quota_ordernumber],
         goods_nomenclature_code: variable_params[:goods_nomenclature_code],
         additional_code: variable_params[:additional_code]
       }
@@ -65,7 +65,10 @@ module WorkbasketValueObjects
 
     def commodity_codes_exclusions
       list = ops['commodity_codes_exclusions']
-      list.present? ? list.split( /\r?\n/ ).map(&:strip) : []
+      list.present? ? list.split( /[\s|,]+/ )
+                          .map(&:strip)
+                          .reject(&:blank?)
+                          .uniq : []
     end
 
     def candidates
@@ -98,13 +101,13 @@ module WorkbasketValueObjects
       def regulation
         regulation_id = ops[:regulation_id]
 
-        regulation = BaseRegulation.actual
-                                   .not_replaced_and_partially_replaced
+        regulation = BaseRegulation.not_replaced_and_partially_replaced
+                                   .actual_or_starts_in_future
                                    .where(base_regulation_id: regulation_id).first
 
         if regulation.blank?
-          regulation = ModificationRegulation.actual
-                                             .not_replaced_and_partially_replaced
+          regulation = ModificationRegulation.not_replaced_and_partially_replaced
+                                             .actual_or_starts_in_future
                                              .where(modification_regulation_id: regulation_id).first
         end
 

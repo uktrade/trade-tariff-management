@@ -16,7 +16,7 @@ module WorkbasketInteractions
       end
 
       def persist!
-        end_date_existing_measure!
+        end_date_existing_measure! if existing_measure.present?
 
         unless workbasket_item.deleted?
           add_new_measure!
@@ -81,7 +81,7 @@ module WorkbasketInteractions
           )
           measure.validity_start_date = operation_date
           measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-          measure.original_measure_sid = existing_measure.measure_sid
+          measure.original_measure_sid = existing_measure&.measure_sid
 
           if measure.measure_type_id.present?
             measure_type = MeasureType.where(measure_type_id: measure.measure_type_id).first

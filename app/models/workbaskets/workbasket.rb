@@ -5,11 +5,17 @@ module Workbaskets
       :create_measures,
       :bulk_edit_of_measures,
       :create_quota,
+      :clone_quota,
       :create_regulation,
       :create_additional_code,
       :bulk_edit_of_additional_codes,
       :bulk_edit_of_quotas,
-      :create_geographical_area
+      :create_geographical_area,
+      :create_footnote,
+      :edit_footnote,
+      :create_certificate,
+      :edit_certificate,
+      :edit_geographical_area
     ]
 
     STATUS_LIST = [
@@ -90,13 +96,21 @@ module Workbaskets
     CREATE_WORKBASKETS = %w(
       create_measures
       create_quota
+      clone_quota
       create_regulation
       create_geographical_area
       create_additional_code
+      create_footnote
+      create_certificate
     )
 
     EDIT_WORKABSKETS = %w(
       bulk_edit_of_measures
+      bulk_edit_of_quotas
+      bulk_edit_of_additional_codes
+      edit_footnote
+      edit_certificate
+      edit_geographical_area
     )
 
     one_to_many :events, key: :workbasket_id,
@@ -128,6 +142,20 @@ module Workbaskets
 
     one_to_one :create_geographical_area_settings, key: :workbasket_id,
                                                    class_name: "Workbaskets::CreateGeographicalAreaSettings"
+    one_to_one :create_footnote_settings, key: :workbasket_id,
+                                          class_name: "Workbaskets::CreateFootnoteSettings"
+
+    one_to_one :create_certificate_settings, key: :workbasket_id,
+                                                   class_name: "Workbaskets::CreateCertificateSettings"
+
+    one_to_one :edit_footnote_settings, key: :workbasket_id,
+                                        class_name: "Workbaskets::EditFootnoteSettings"
+
+    one_to_one :edit_certificate_settings, key: :workbasket_id,
+                                           class_name: "Workbaskets::EditCertificateSettings"
+
+    one_to_one :edit_geographical_area_settings, key: :workbasket_id,
+                                                 class_name: "Workbaskets::EditGeographicalAreaSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -172,6 +200,10 @@ module Workbaskets
     dataset_module do
       def default_order
         reverse_order(:last_status_change_at)
+      end
+
+      def default_filter
+        where("title IS NOT NULL AND title != ''")
       end
 
       def custom_field_order(sort_by_field, sort_direction)
@@ -362,6 +394,7 @@ module Workbaskets
     end
 
     def move_status_to!(current_user, new_status, description=nil)
+      reload
       add_event!(current_user, new_status, description)
 
       self.status = new_status
@@ -388,7 +421,7 @@ module Workbaskets
         create_measures_settings
       when :bulk_edit_of_measures
         bulk_edit_of_measures_settings
-      when :create_quota
+      when :create_quota, :clone_quota
         create_quota_settings
       when :create_regulation
         create_regulation_settings
@@ -400,6 +433,16 @@ module Workbaskets
         bulk_edit_of_quotas_settings
       when :create_geographical_area
         create_geographical_area_settings
+      when :create_footnote
+        create_footnote_settings
+      when :create_certificate
+        create_certificate_settings
+      when :edit_footnote
+        edit_footnote_settings
+      when :edit_certificate
+        edit_certificate_settings
+      when :edit_geographical_area
+        edit_geographical_area_settings
       end
     end
 
@@ -501,11 +544,17 @@ module Workbaskets
           bulk_edit_of_measures
           create_measures
           create_quota
+          clone_quota
           create_regulation
           create_additional_code
           bulk_edit_of_additional_codes
           bulk_edit_of_quotas
           create_geographical_area
+          create_footnote
+          create_certificate
+          edit_footnote
+          edit_certificate
+          edit_geographical_area
         ).map do |type_name|
           by_type(type_name).map do |w|
             w.clean_up_workbasket!
@@ -522,8 +571,10 @@ module Workbaskets
           ::Workbaskets::CreateMeasuresSettings
         when :bulk_edit_of_measures
           ::Workbaskets::BulkEditOfMeasuresSettings
-        when :create_quota
+        when :create_quota, :clone_quota
           ::Workbaskets::CreateQuotaSettings
+        when :bulk_edit_of_quotas
+          ::Workbaskets::BulkEditOfQuotasSettings
         when :create_regulation
           ::Workbaskets::CreateRegulationSettings
         when :create_additional_code
@@ -532,6 +583,16 @@ module Workbaskets
           ::Workbaskets::BulkEditOfAdditionalCodesSettings
         when :create_geographical_area
           ::Workbaskets::CreateGeographicalAreaSettings
+        when :create_footnote
+          ::Workbaskets::CreateFootnoteSettings
+        when :create_certificate
+          ::Workbaskets::CreateCertificateSettings
+        when :edit_footnote
+          ::Workbaskets::EditFootnoteSettings
+        when :edit_certificate
+          ::Workbaskets::EditCertificateSettings
+        when :edit_geographical_area
+          ::Workbaskets::EditGeographicalAreaSettings
         end
 
         settings = target_class.new(

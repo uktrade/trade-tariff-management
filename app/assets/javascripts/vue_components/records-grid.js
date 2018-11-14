@@ -197,16 +197,18 @@ Vue.component("records-grid", {
     selectedRows: function(newVal, oldVal) {
       var self = this;
 
-      if (!this.onSelectAllChanged) {
+      if (this.clientSelection) {
         this.indirectSelectAll = true;
 
         this.selectAll = this.data.filter(function(row) {
-          return self.selectedRows.indexOf(row[self.primaryKey]) === -1;
+          return self.selectedRows.indexOf(row[self.primaryKey] + '') === -1;
         }).length === 0;
 
         setTimeout(function() {
           self.indirectSelectAll = false;
         }, 200);
+
+        return;
       }
 
       if (this.onItemSelected) {

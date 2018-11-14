@@ -43,9 +43,29 @@ class GeographicalArea < Sequel::Model
     ds.with_actual(GeographicalAreaMembership).order(Sequel.asc(:geographical_area_id))
   end
 
+  many_to_many :member_of_following_geographical_areas, class_name: 'GeographicalArea',
+                                                        join_table: :geographical_area_memberships,
+                                                        left_key: :geographical_area_sid,
+                                                        right_key: :geographical_area_group_sid,
+                                                        class: self do |ds|
+    ds.with_actual(GeographicalAreaMembership).order(Sequel.asc(:geographical_area_id))
+  end
+
   one_to_many :measures, key: :geographical_area_sid,
                          primary_key: :geographical_area_sid do |ds|
     ds.with_actual(Measure)
+  end
+
+  def group?
+    geographical_code == "1"
+  end
+
+  def country?
+    geographical_code == "0"
+  end
+
+  def region?
+    geographical_code == "2"
   end
 
   dataset_module do
@@ -69,9 +89,31 @@ class GeographicalArea < Sequel::Model
       exclude(geographical_area_id: GeographicalArea::ERGA_OMNES)
     end
 
+    def to_csv
+      headers = ["Code", "Description", "Type", "Start date", "End date"]
+
+      CSV.generate(headers: true) do |csv|
+        csv << headers
+
+        all.each do |geo_area|
+          geo_area = geo_area.decorate
+
+          csv << [
+            geo_area.geographical_area_id,
+            geo_area.description,
+            geo_area.type,
+            geo_area.start_date,
+            geo_area.end_date
+          ]
+        end
+      end
+    end
+
     begin :search_functionality
       def default_order
-        order(Sequel.asc(:geographical_areas__geographical_area_id))
+        distinct(:geographical_areas__geographical_area_id).order(
+          Sequel.asc(:geographical_areas__geographical_area_id)
+        )
       end
 
       def by_code(code)
@@ -84,6 +126,19 @@ class GeographicalArea < Sequel::Model
 
       def before_or_equal(end_date)
         where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
+      end
+
+      def keywords_search(keywords)
+        keywords = keywords.to_s.squish
+
+        join_table(:inner,
+          :geographical_area_descriptions,
+          geographical_area_id: :geographical_area_id,
+        ).where("
+          geographical_areas.geographical_area_id ilike ? OR
+          geographical_area_descriptions.description ilike ?",
+          "#{keywords}%", "%#{keywords}%"
+        )
       end
 
       def q_search(filter_ops={})
@@ -154,9 +209,20 @@ class GeographicalArea < Sequel::Model
 
         if filter_ops[:groups_only].present?
           groups.q_search(filter_ops)
+        elsif filter_ops[:countries_only].present?
+          countries.q_search(filter_ops)
         else
           q_search(filter_ops)
         end
+      end
+    end
+
+    def actual_groups_collection_json
+      TimeMachine.at(Date.current) do
+        GeographicalArea.actual
+                        .groups
+                        .map(&:to_json)
+                        .to_json
       end
     end
   end
@@ -167,11 +233,21 @@ class GeographicalArea < Sequel::Model
     geographical_area_descriptions.first
   end
 
+  def other_descriptions
+    geographical_area_descriptions.select do |item|
+      item.oid != geographical_area_description.oid
+    end.sort do |a, b|
+      b.validity_start_date.to_date <=> a.validity_start_date.to_date
+    end
+  end
+
   def to_json
     {
       geographical_area_id: geographical_area_id,
       description: description || '',
-      is_country: is_country?
+      is_country: is_country?,
+      validity_start_date: validity_start_date,
+      validity_end_date: validity_end_date
     }
   end
 

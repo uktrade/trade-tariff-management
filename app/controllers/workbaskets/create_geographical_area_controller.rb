@@ -1,6 +1,8 @@
 module Workbaskets
   class CreateGeographicalAreaController < Workbaskets::BaseController
 
+    skip_around_action :configure_time_machine, only: [:submitted_for_cross_check]
+
     expose(:sub_klass) { "CreateGeographicalArea" }
     expose(:settings_type) { :create_geographical_area }
 
@@ -31,13 +33,26 @@ module Workbaskets
       saver.save!
 
       if saver.valid?
-        handle_success_saving!
+        workbasket_settings.track_step_validations_status!(current_step, true)
+
+        if submit_for_cross_check_mode?
+          saver.persist!
+          submit_for_cross_check.run!
+
+          render json: { redirect_url: submitted_url },
+                 status: :ok
+        else
+          render json: saver.success_ops,
+                       status: :ok
+        end
       else
         workbasket_settings.track_step_validations_status!(current_step, false)
 
         render json: {
           step: current_step,
-          errors: saver.errors
+          errors: saver.errors,
+          errors_summary: saver.errors_summary,
+          conformance_errors: saver.conformance_errors
         }, status: :unprocessable_entity
       end
     end
@@ -78,8 +93,8 @@ module Workbaskets
         true
       end
 
-      def workbasket_data_can_be_persisted?
-        true
+      def submit_for_cross_check_mode?
+        params[:mode] == "submit_for_cross_check"
       end
   end
 end

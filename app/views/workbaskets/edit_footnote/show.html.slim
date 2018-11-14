@@ -1,0 +1,27 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Footnote submitted
+
+  h3.heading-medium
+    | The edited footnote of type
+    =<> "'#{footnote.decorate.footnote_type_description}'"
+    | and ID
+    =<> "'#{footnote.footnote_id}'"
+    | has been submitted for cross-check.
+
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  li
+    a href="#"
+      | Withdraw submission / edit footnote (not implemented)
+  li
+    = link_to "View this footnote", read_only_section_url
+  li
+    = link_to "Edit another footnote", search_footnotes_url
+  li
+    = link_to "Return to main menu", root_url
+br
+br

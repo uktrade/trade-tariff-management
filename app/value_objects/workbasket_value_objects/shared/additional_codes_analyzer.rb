@@ -33,17 +33,17 @@ module WorkbasketValueObjects
 
         def list_of_codes
           if additional_codes.present?
-            additional_codes.split(",")
-                            .map(&:strip)
-                            .reject { |el| el.blank? }
-                            .uniq
+            additional_codes.split( /[\s|,]+/ )
+                .map(&:strip)
+                .reject(&:blank?)
+                .uniq
           end
         end
 
         def fetch_additional_codes
           TimeMachine.at(start_date) do
             @additional_codes_detected = list_of_codes.map do |code|
-              AdditionalCode.by_code(code)
+              AllAdditionalCode.by_code(code)
             end.reject { |el| el.blank? }.map(&:code)
           end
           @additional_codes_detected

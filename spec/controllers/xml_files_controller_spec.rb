@@ -30,13 +30,11 @@ describe Api::XmlFilesController do
   end
 
   describe "GET #show" do
-    before do
-      create(:xml_export_file)
-    end
+    let!(:xml_export_file) { create(:xml_export_file) }
 
     context "when file does not exist" do
       it "responses with 404" do
-        get :show, params: { date: Date.today }
+        get :show, params: { timestamp: Time.now.strftime("%Y%m%dT%H%M%S") }
 
         expect(response.status).to eq(404)
       end
@@ -47,7 +45,7 @@ describe Api::XmlFilesController do
         xml = double("Xml", url: "http://example.com")
         allow_any_instance_of(XmlExport::File).to receive(:xml).and_return(xml)
 
-        get :show, params: { date: 2.days.ago }
+        get :show, params: { timestamp: xml_export_file.issue_date.strftime("%Y%m%dT%H%M%S") }
 
         expect(response.status).to eq(302)
         expect(response).to redirect_to(xml.url)

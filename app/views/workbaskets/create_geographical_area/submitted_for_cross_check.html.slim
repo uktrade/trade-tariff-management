@@ -17,14 +17,15 @@ h3.heading-medium
   | Next steps
 
 ul class="list"
-  li
-    a href="#"
-      | Withdraw submission / edit geographical area (not implemented)
-  li
-    = link_to "View this geographical area", read_only_section_url
+  - if iam_workbasket_author? && workbasket.can_withdraw?
+    li
+      = link_to "Withdraw submission/edit measures", "#", data: { target_url: withdraw_workbasket_from_workflow_create_geographical_area_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
+
   li
     = link_to "Create another geographical area", new_create_geographical_area_url
   li
     = link_to "Return to main menu", root_url
 br
 br
+
+= render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "withdraw_confirmation_popup", title: "You are going to withdraw workbasket"

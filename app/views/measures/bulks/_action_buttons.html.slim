@@ -1,7 +1,7 @@
 .bulk-edit-of-measures-actions-block
   - if workbasket_is_editable?
     .submit_group_for_cross_check_block
-      = link_to "Submit group for cross-check", "#", class: "secondary-button js-bulk-edit-of-measures-submit-for-cross-check", "v-on:click.prevent" => "saveForCrossCheck"
+      = link_to "Submit changes for cross-check", "#", class: "secondary-button js-bulk-edit-of-measures-submit-for-cross-check", "v-on:click.prevent" => "saveForCrossCheck"
 
       .js-bulk-edit-of-measures-submit-for-cross-check-spinner.spinner_block.hidden
         = render "measures/bulks/loading_spinner", message: "Checking data..."

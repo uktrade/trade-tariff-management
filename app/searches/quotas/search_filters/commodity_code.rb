@@ -68,6 +68,7 @@ module Quotas
 EXISTS (SELECT 1 
           FROM measures 
          WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date
            AND regexp_replace(measures.goods_nomenclature_item_id, ?, '_', 'g') LIKE ?)
         eos
       end
@@ -77,6 +78,7 @@ EXISTS (SELECT 1
 EXISTS (SELECT 1 
           FROM measures 
          WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date
            AND measures.goods_nomenclature_item_id = ?)
         eos
       end
@@ -86,11 +88,13 @@ EXISTS (SELECT 1
 (
 EXISTS (SELECT 1 
           FROM measures 
-         WHERE measures.ordernumber = quota_definitions.quota_order_number_id)
+         WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date)
 AND
 NOT EXISTS (SELECT 1 
               FROM measures 
              WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+               AND measures.validity_start_date = quota_definitions.validity_start_date
                AND measures.goods_nomenclature_item_id = ?)
 )
         eos
@@ -100,7 +104,8 @@ NOT EXISTS (SELECT 1
         <<-eos
 NOT EXISTS (SELECT 1 
               FROM measures 
-             WHERE measures.ordernumber = quota_definitions.quota_order_number_id)
+             WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date)
         eos
       end
 
@@ -108,7 +113,8 @@ NOT EXISTS (SELECT 1
         <<-eos
 EXISTS (SELECT 1 
           FROM measures 
-         WHERE measures.ordernumber = quota_definitions.quota_order_number_id)
+         WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date)
         eos
       end
 
@@ -117,6 +123,7 @@ EXISTS (SELECT 1
 EXISTS (SELECT 1 
           FROM measures 
          WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+           AND measures.validity_start_date = quota_definitions.validity_start_date
            AND measures.goods_nomenclature_item_id ILIKE ?)
         eos
       end

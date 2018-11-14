@@ -52,7 +52,7 @@ module Measures
     def success_response
       {
         number_of_updated_measures: collection_ops.count,
-        collection_sids: collection_sids,
+        collection_row_ids: collection_row_ids,
         success: :ok
       }
     end
@@ -71,6 +71,7 @@ module Measures
             measure_params[:measure_sid].to_s
           )
           item.new_data = measure_params.to_json
+          item.row_id = measure_params[:row_id].to_s
 
           if item.deleted?
             item.validation_errors = [].to_json
@@ -81,10 +82,10 @@ module Measures
             if errors.present?
               errored_columns = Measures::BulkErroredColumnsDetector.new(errors).errored_columns
               @errors_collection[
-                measure_params[:measure_sid].to_s
+                measure_params[:row_id].to_s
               ] = errored_columns
 
-              item.validation_errors = errored_columns.to_json
+              item.validation_errors = errors.to_json
             end
           end
 
@@ -92,9 +93,9 @@ module Measures
         end
       end
 
-      def collection_sids
+      def collection_row_ids
         collection_ops.map do |i|
-          i['measure_sid'].to_s
+          i['row_id'].to_s
         end
       end
 

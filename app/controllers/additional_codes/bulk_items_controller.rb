@@ -6,8 +6,8 @@ module AdditionalCodes
     ]
 
     expose(:workbasket_item) do
-      workbasket_items.where(record_id: params[:additional_code_sid])
-                      .first
+      workbasket_items.where(row_id: params[:row_id])
+          .first
     end
 
     expose(:candidates_to_remove) do

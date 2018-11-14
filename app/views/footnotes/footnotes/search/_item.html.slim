@@ -1,0 +1,15 @@
+tr class="#{'workbasket-record-locked' if item.locked?}"
+  td
+    = item.footnote_type_description
+  td
+    = item.footnote_id
+  td
+    = link_to new_edit_footnote_url(footnote_type_id: item.footnote_type_id, footnote_id: item.footnote_id) do
+      p.ellipsis_max_height_container
+        = item.description
+  td
+    = item.associated_records_count
+  td
+    = item.start_date
+  td
+    = item.end_date

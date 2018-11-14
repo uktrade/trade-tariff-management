@@ -12,7 +12,7 @@
 h2.heading-large
   | Find and edit additional codes
   small
-    = link_to "(add new ones instead)", new_create_additional_code_url
+    = link_to "(add a new one instead)", new_create_additional_code_url
 
 script
   == "window.__search_params = #{full_search_params.to_json};"
@@ -29,8 +29,11 @@ script
       = simple_form_for :search, url: additional_codes_bulks_url(ops), method: :post do |f|
         = content_tag :input, nil, { type: "hidden", "name" => "item_sids[]", "v-for" => "(sid, idx) in selectedItems", ":value" => "sid" }
         = content_tag :input, nil, { type: "hidden", "name" => "selection_type", ":value" => "selectionType" }
-        p
-          = content_tag "button", "Work with selected codes", { class: "button", ":disabled" => "noSelectedItems", type: :submit }
+        p.clearfix
+          = content_tag "button", "Work with selected codes", { class: "button", ":disabled" => "noSelectedItems", type: :submit, style: "float: left" }
+          span.number-of-records-badge
+            = pluralize(search_results.total_count, 'additional code', 'additional codes')
+            =<> "found"
       = render "items_table" if additional_codes_search.present?
 
     = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do

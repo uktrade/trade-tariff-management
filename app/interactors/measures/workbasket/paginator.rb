@@ -39,7 +39,7 @@ module Measures
       private
 
         def per_page
-          @per_page ||= Kaminari.config.default_per_page
+          @per_page ||= search_ops[:per_page] || Kaminari.config.default_per_page
         end
 
         def total_pages

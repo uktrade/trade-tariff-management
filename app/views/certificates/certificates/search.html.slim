@@ -1,0 +1,35 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li aria-current="page"
+      | Find and edit certificates
+
+header
+  h1.heading-large
+    | Find and edit certificates
+    small
+      = link_to "(add a new one instead)", new_create_certificate_url
+
+  .js-search-certificates-section
+    = render "certificates/certificates/search/form"
+
+    - if params[:search].present?
+      h3.heading-medium.search-results-heading
+        | Search results
+
+      - if search_results.present?
+        = render "certificates/certificates/search/results"
+
+  - if params[:search].present?
+    - if search_results.present?
+      .js-workbasket-find-certificates-results-pagination-block
+        = render "certificates/certificates/search/pagination"
+    - else
+      = render "certificates/certificates/search/nothing_found_block"
+
+script
+  == "window.__certificate_types_list_json = #{search_form.certificate_types_list.to_json};"
+  == "window.__search_certificates_settings_json = #{search_form.settings.to_json};"
+  == "window.__validate_search_settings_url = '#{validate_search_settings_certificates_url}';"

@@ -142,12 +142,16 @@ class MeasureCondition < Sequel::Model
   def to_json(options = {})
     {
       original_measure_condition_code: original_measure_condition_code,
+      action_code: action_code,
       measure_action: measure_action.to_json,
+      certificate_code: certificate_code,
       certificate: certificate.try(:to_json),
+      certificate_type_code: certificate_type_code,
       certificate_type: certificate_type.try(:to_json),
       measurement_unit: measurement_unit.try(:to_json),
       monetary_unit: monetary_unit.try(:to_json),
       measurement_unit_qualifier: measurement_unit_qualifier.try(:to_json),
+      condition_code: condition_code,
       measure_condition_code: measure_condition_code.try(:to_json),
       measure_condition_components: measure_condition_components.map(&:to_json),
       component_sequence_number: component_sequence_number

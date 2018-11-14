@@ -48,18 +48,19 @@ class GeographicalAreaValidator < TradeTariffBackend::Validator
   end
 
   validation :GA6, 'Loops in the parent relation between geographical areas and parent geographical area groups are not allowed. If a geographical area A is a parent geographical area group of B then B cannot be a parent geographical area group of A (loops can also exist on more than two levels, e.g. level 3; If A is a parent of B and B is a parent of C then C cannot be a parent of A).', on: [:create, :update] do |record|
+    has_error = false
     children_chain = []
     children_chain << record.geographical_area_sid if record.geographical_area_sid
     if parent = record.parent_geographical_area
-      while parent && !@has_error
+      while parent && !has_error
         if sid = parent.geographical_area_sid
-          @has_error ||= children_chain.include?(sid)
+          has_error ||= children_chain.include?(sid)
           children_chain << sid
         end
         parent = parent.parent_geographical_area
       end
     end
-    !@has_error
+    !has_error
   end
 end
 

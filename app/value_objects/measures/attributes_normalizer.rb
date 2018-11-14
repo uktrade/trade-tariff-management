@@ -57,7 +57,7 @@ module Measures
 
       def method_additional_code_values(additional_code)
         TimeMachine.at(measure_params[:start_date]) do
-          @additional_code = AdditionalCode.by_code(additional_code)
+          @additional_code = AllAdditionalCode.by_code(additional_code)
         end
         if @additional_code.present?
           {

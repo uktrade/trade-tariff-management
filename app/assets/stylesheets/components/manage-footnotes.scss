@@ -1,0 +1,24 @@
+.js-create-footnote-form, .js-search-footnotes-form {
+  h3.heading-medium.sub_heading_block, h3.heading-medium.with_smaller_top_border {
+    margin-top: 20px;
+  }
+}
+
+.js-search-footnotes-form {
+  .form-actions {
+    margin-top: 0px;
+  }
+
+  .search-results-download-link {
+    text-decoration: none;
+
+    img {
+      width: 40px;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+h3.heading-medium.search-results-heading {
+  margin-top: 0px;
+}

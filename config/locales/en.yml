@@ -55,24 +55,140 @@ en:
       commodity_codes_exclusions: "Exceptions: if one or more codes are entered here, Goods commodity codes field must not be empty; each exception code must be a child of one of the goods commodity codes above."
       commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please, double check params"
       no_any_quota_period: "Need to specify at least of one valid quota period. Period type, Start date, Length of period, Balance and Measurement Unit are required!"
+      maximum_precision_blank: "Maximum precision must be specified."
 
   create_geographical_area:
-    errors:
-      geographical_code: "Geographical area type must be specified."
-      geographical_area_id_blank: "Geographical area must be specified."
-      geographical_area_id_invalid_country_code: "Geographical area must be two-letter ISO code."
-      geographical_area_id_invalid_group_code: "Geographical area must be four-character code."
-      geographical_area_id_already_exist: "Geographical area must not already be in use."
-      description: "Description cannot be left blank and must comprise at least one word."
-      validity_start_date_blank: "Valid from date must be specified."
-      validity_start_date_wrong_format: "Format is invalid."
-      validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
-      validity_end_date_wrong_format: "Valid until date is optional, but if specified must be a complete date - day, month, and year must be specified."
-      validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
-      operation_date_blank: "Operation date must be specified."
+    geographical_code: "Geographical area type must be specified."
+    geographical_area_id_blank: "Geographical area must be specified."
+    geographical_area_id_invalid_country_code: "Geographical area must be two-letter ISO code."
+    geographical_area_id_invalid_group_code: "Geographical area must be four-character code."
+    geographical_area_id_already_exist: "Geographical area must not already be in use."
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Valid until date is optional, but if specified must be a complete date - day, month, and year must be specified."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    operation_date_blank: "Operation date must be specified."
+    summary_minimal_required_fields: "The geographical area could not be submitted because one or more required fields are missing."
+    summary_invalid_data: "The geographical area could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The geographical area not be submitted because there are conformance errors."
+
+  create_certificate:
+    certificate_type_code_blank: "Certificate type must be specified."
+    certificate_code_blank: "Certificate code must be specified."
+    certificate_code_in_use: "Certificate code is already in use for the selected certificate type."
+    certificate_code_max_limit: "Certificate code can not be more than three characters long"
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Format is invalid."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    operation_date_blank: "Operation date must be specified."
+    summary_minimal_required_fields: "The certificate could not be submitted because one or more required fields are missing."
+    summary_invalid_data: "The certificate could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The certificate not be submitted because there are conformance errors."
+
+  find_geographical_areas:
+    start_date_invalid: Start date is invalid.
+    end_date_invalid: End date is invalid.
+    start_date_higher_end_date: Start date should not be greater than end date.
+    search_string_blank: "You must enter geographical area code or search string here."
+    type_is_blank: "If you deselect all these options, there will not be search results to show."
+    minimum_required_filters: "Search count not run because you did not specify any search terms. You must specify at least a geographical area code or a search string."
+    general_errors: "See individual fields for details."
 
   workflow:
     errors:
       cross_check_mode_blank: "It is required to specify if you are going to confirm or reject changes in this workbasket."
       approve_mode_blank: "It is required to specify if you are going to approve or reject changes in this workbasket."
       reject_reasons_blank: "Please, provide your reasons and/or state the changes required."
+
+  find_certificates:
+    start_date_invalid: Start date is invalid.
+    end_date_invalid: End date is invalid.
+    start_date_higher_end_date: Start date should not be greater than end date.
+    minimum_required_filters: Search could not run because you did not specify any search terms. You must specify at least a certificate type or a search string
+    minimum_required_filters_short: You must complete one or both of these fields.
+    general_errors: See individual fields for details.
+
+  create_footnote:
+    footnote_type_id_blank: "Foonote type must be specified."
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Format is invalid."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    operation_date_blank: "Operation date must be specified."
+    measures_not_recognised: "One or more of the entered IDs is not a recognised measure ID."
+    commodity_codes_not_recognised: "One or more of the entered codes is not a recognised goods commodity code."
+    summary_minimal_required_fields: "The footnote could not be submitted because one or more required fields are missing."
+    summary_invalid_validity_period: "The footnote could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The footnote could not be submitted because there are conformance errors."
+
+  find_footnotes:
+    start_date_invalid: Start date is invalid.
+    end_date_invalid: End date is invalid.
+    start_date_higher_end_date: Start date should not be greater than end date.
+    minimum_required_filters: "Search could not run because you did not specify any search terms. You must specify at least a footnote type, a footnote ID or search string, or one or more associations."
+    minimum_required_filters_short: You must specify a value for at least one of these fields.
+    general_errors: "See individual fields for details."
+
+  edit_footnote:
+    reason_for_changes_blank: "Reason cannot be left blank and must comprise at least one word."
+    operation_date_blank: "You must specify a date, and this date must be on or after the footnote's valid-from date."
+    operation_date_is_before_start_date: "This date must be on or after the footnote's valid-from date."
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    description_validity_start_date_blank: "You must specify a date."
+    description_validity_start_date_outside_range: "The date is outside the validity period of the footnote."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Format is invalid."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    measures_not_recognised: "One or more of the entered IDs is not a recognised measure ID."
+    commodity_codes_not_recognised: "One or more of the entered codes is not a recognised goods commodity code."
+    summary_minimal_required_fields: "The footnote could not be submitted because one or more required fields are missing."
+    summary_invalid_fields: "The footnote could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The footnote could not be submitted because there are conformance errors."
+    nothing_changed: "The footnote could not be submitted because you have to change change something!"
+
+  edit_certificate:
+    reason_for_changes_blank: "Reason cannot be left blank and must comprise at least one word."
+    operation_date_blank: "You must specify a date, and this date must be on or after the certificate's valid-from date."
+    operation_date_is_before_start_date: "This date must be on or after the certificate's valid-from date."
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    description_validity_start_date_blank: "You must specify a date."
+    description_validity_start_date_outside_range: "The date is outside the validity period of the certificate."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Format is invalid."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    measures_not_recognised: "One or more of the entered IDs is not a recognised measure ID."
+    commodity_codes_not_recognised: "One or more of the entered codes is not a recognised goods commodity code."
+    summary_minimal_required_fields: "The certificate could not be submitted because one or more required fields are missing."
+    summary_invalid_fields: "The certificate could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The certificate could not be submitted because there are conformance errors."
+    nothing_changed: "The certificate could not be submitted because you have to change change something!"
+
+  edit_geographical_area:
+    reason_for_changes_blank: "Reason cannot be left blank and must comprise at least one word."
+    operation_date_blank: "You must specify a date, and this date must be on or after the geographical area's valid-from date."
+    operation_date_is_before_start_date: "This date must be on or after the geographical area's valid-from date."
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    description_validity_start_date_blank: "You must specify a date."
+    description_validity_start_date_outside_range: "The date is outside the validity period of the geographical area."
+    validity_start_date_blank: "Valid from date must be specified."
+    validity_start_date_wrong_format: "Format is invalid."
+    validity_start_date_later_than_until_date: "Valid from date cannot be later than until date."
+    validity_end_date_wrong_format: "Format is invalid."
+    validity_end_date_earlier_than_start_date: "Valid until date cannot be earlier than the valid from date."
+    measures_not_recognised: "One or more of the entered IDs is not a recognised measure ID."
+    commodity_codes_not_recognised: "One or more of the entered codes is not a recognised goods commodity code."
+    summary_minimal_required_fields: "The geographical area could not be submitted because one or more required fields are missing."
+    summary_invalid_fields: "The geographical area could not be submitted because invalid data has been entered for one or more fields."
+    summary_conformance_rules: "The geographical area could not be submitted because there are conformance errors."
+    nothing_changed: "The geographical area could not be submitted because you have to change change something!"

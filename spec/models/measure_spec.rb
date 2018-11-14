@@ -648,9 +648,12 @@ describe Measure do
 
     describe 'ME13' do
       context 'additional code type meursing and attributes missing' do
+        let(:additional_code_type) { create :additional_code_type, :meursing }
+        let(:meursing_additional_code) { create :meursing_additional_code }
         let(:measure) { create :measure, :with_related_additional_code_type,
-                                        additional_code_type_id: 3,
-                                        additional_code_id: '123',
+                                        additional_code_type_id: additional_code_type.additional_code_type_id,
+                                        additional_code_sid: meursing_additional_code.meursing_additional_code_sid,
+                                        additional_code_id: meursing_additional_code.additional_code,
                                         goods_nomenclature_item_id: nil,
                                         ordernumber: nil,
                                         reduction_indicator: nil }
@@ -661,9 +664,10 @@ describe Measure do
       end
 
       context 'additional code type meursing and attributes present' do
+        let(:additional_code_type) { create :additional_code_type, :meursing }
         let(:measure) { create :measure, :with_related_additional_code_type,
                                          :with_quota_order_number,
-                                        additional_code_type_id: 3,
+                                        additional_code_type_id: additional_code_type.additional_code_type_id,
                                         additional_code_id: '123',
                                         goods_nomenclature_item_id: '1234567890',
                                         ordernumber: '12345',
@@ -841,7 +845,7 @@ describe Measure do
 
       let!(:additional_code2) {
         create(
-          :additional_code,
+          :meursing_additional_code,
           validity_start_date: Date.yesterday,
         )
       }
@@ -863,7 +867,7 @@ describe Measure do
           measure_type_id: measure_type.measure_type_id,
           additional_code_type_id: additional_code_type.additional_code_type_id,
           additional_code_id: additional_code2.additional_code,
-          additional_code_sid: additional_code2.additional_code_sid,
+          additional_code_sid: additional_code2.meursing_additional_code_sid,
           validity_start_date: Date.yesterday,
         )
       }
@@ -1054,14 +1058,48 @@ describe Measure do
     describe "ME32: There may be no overlap in time with other measure occurrences with a goods code in the same nomenclature
               hierarchy which references the same measure type, geo area, order number, additional code and reduction indicator.
               This rule is not applicable for Meursing additional codes." do
+      let!(:measure_type) { create :measure_type }
       let!(:goods_nomenclature) { create(:goods_nomenclature) }
-      let!(:additional_code) { create(:additional_code, validity_start_date: Date.yesterday) }
+      let!(:geographical_area) { create :geographical_area }
+      let!(:additional_code_type) { create(:additional_code_type) }
+      let!(:additional_code) {
+        create(
+            :additional_code,
+            additional_code_sid: 1,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            validity_start_date: Date.yesterday)
+      }
+      let!(:additional_code_type_measure_type) {
+        create(
+            :additional_code_type_measure_type,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            measure_type_id: measure_type.measure_type_id,
+            validity_start_date: Date.yesterday,
+        )
+      }
+      let!(:meursing_additional_code_type) { create(:additional_code_type, :meursing) }
+      let!(:meursing_additional_code) {
+        create(
+            :meursing_additional_code,
+            meursing_additional_code_sid: 2,
+            validity_start_date: Date.yesterday)
+      }
+      let!(:meursing_additional_code_type_measure_type) {
+        create(
+            :additional_code_type_measure_type,
+            additional_code_type_id: meursing_additional_code_type.additional_code_type_id,
+            measure_type_id: measure_type.measure_type_id,
+            validity_start_date: Date.yesterday,
+        )
+      }
 
       it "should run validation successfully if there is no existing measure with such criteria" do
         measure = build(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          measure_type_id: measure_type.measure_type_id,
           validity_start_date: Date.yesterday
         )
 
@@ -1071,29 +1109,26 @@ describe Measure do
       end
 
       it "should run validation successfully if meursing additional code is present" do
-        create(
-          :meursing_additional_code,
-          additional_code: additional_code.additional_code,
-          validity_start_date: Date.yesterday
-        )
-
         measure = build(
           :measure,
-          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
-          additional_code_sid: additional_code.additional_code_sid,
+          goods_nomenclature_item_id: nil,
+          additional_code_sid: meursing_additional_code.meursing_additional_code_sid,
+          additional_code_id: meursing_additional_code.additional_code,
+          additional_code_type_id: meursing_additional_code_type.additional_code_type_id,
+          measure_type_id: measure_type.measure_type_id,
           validity_start_date: Date.yesterday
         )
 
-        expect(measure.additional_code).to_not be(nil)
-        expect(measure.additional_code.meursing_additional_code).to_not be(nil)
+        expect(measure.meursing_additional_code).to_not be(nil)
         expect(measure).to be_conformant
       end
 
       it "should run validation successfully if measure respect time machine w.r.t validity start date" do
-        measure1 = create(
+        _measure = create(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
           validity_start_date: 10.year.ago,
           validity_end_date: 2.year.ago
         )
@@ -1113,43 +1148,62 @@ describe Measure do
         measure2.justification_regulation_role =  1
 
         expect(measure2.additional_code).to_not be(nil)
-        expect(measure2.additional_code.meursing_additional_code).to be(nil)
         expect(measure2).to be_conformant
       end
 
-      it "should not run validation successfully if measure for such criteria is already present" do
-        measure = create(
+      it "should fail validation if measure for such criteria is already present" do
+        _measure = create(
           :measure,
+          measure_type_id: measure_type.measure_type_id,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
           validity_start_date: Date.yesterday
         )
 
         measure2 = create(
           :measure,
+          measure_type_id: measure_type.measure_type_id,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
           validity_start_date: Date.yesterday
         )
 
         expect(measure2.additional_code).to_not be(nil)
-        expect(measure2.additional_code.meursing_additional_code).to be(nil)
         expect(measure2).to_not be_conformant
         expect(measure2.conformance_errors).to have_key(:ME32)
       end
 
-      it "should not run validation successfully for test case 1" do
+      it "should fail validation for test case 1" do
         # Case 1: When validity start date of new measure is before
         # the existing measure's validity end date.
-        measure = create(
+        _measure = create(
           :measure,
+          measure_type_id: measure_type.measure_type_id,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
           validity_start_date: 1.year.ago,
           validity_end_date: Date.current + 1.month
         )
 
-        new_measure = measure.reload.dup
+        new_measure = build(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+        )
+
         new_measure.validity_start_date = Date.current
         new_measure.validity_end_date = nil
 
@@ -1157,26 +1211,38 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
 
-      it "should not run validation successfully for test Case 2" do
+      it "should fail validation for test Case 2" do
         # Case 2: When new measure's validity start date is before
         # existing measure's validity start date and existing measure is having
         # validity end date as nil and new measure's is also having validity end
         # date as nil.
 
-        measure = create(
+        _measure = create(
           :measure,
+          measure_type_id: measure_type.measure_type_id,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
           validity_start_date: 1.year.ago,
           validity_end_date: nil
         )
 
-        new_measure = measure.reload.dup
+        new_measure = build(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+        )
+
         new_measure.validity_start_date = Date.current
         new_measure.validity_end_date = nil
 
@@ -1184,25 +1250,37 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
 
-      it "should not run validation successfully for test case 3" do
+      it "should fail validation for test case 3" do
         # Case 3:  When existing measure's validity start date is after new
         # measure's validity start date and existing measure is having validity
         # end date as nil.
 
-        measure = create(
+        _measure = create(
           :measure,
+          measure_type_id: measure_type.measure_type_id,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
           validity_start_date: Date.current + 1.month,
           validity_end_date: nil
         )
 
-        new_measure = measure.reload.dup
+        new_measure = create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+        )
+
         new_measure.validity_start_date = Date.current
         new_measure.validity_end_date = Date.current + 2.months
 
@@ -1210,26 +1288,38 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
 
-      it "should not run validation successfully for test case 4" do
+      it "should fail validation for test case 4" do
         # Case 4: When one period is inside of another period.
         # When existing measure validity start date is after new measure's
         # validity start date and existing measure's validity end date
         # is before new measure's validity end date
 
-        measure = create(
+        _measure = create(
           :measure,
+          measure_type_id: measure_type.measure_type_id,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
           validity_start_date: Date.current + 1.month,
           validity_end_date: Date.current + 2.months
         )
 
-        new_measure = measure.reload.dup
+        new_measure = create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_id: additional_code.additional_code,
+        )
+
         new_measure.validity_start_date = Date.current
         new_measure.validity_end_date = Date.current + 5.months
 
@@ -1237,7 +1327,6 @@ describe Measure do
         new_measure.justification_regulation_role = 1
 
         expect(new_measure.additional_code).to_not be(nil)
-        expect(new_measure.additional_code.meursing_additional_code).to be(nil)
         expect(new_measure).to_not be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end

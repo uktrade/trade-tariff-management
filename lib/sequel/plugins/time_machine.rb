@@ -93,6 +93,8 @@ module Sequel
             reduction_indicator: self.reduction_indicator
           )
 
+          scope = scope.where("measure_sid != ? ", self.measure_sid) if self.measure_sid.present?
+
           scope = if self.validity_end_date.present?
                     scope.where(
                       "(validity_start_date <= ? AND (validity_end_date >= ? OR validity_end_date IS NULL)) OR
@@ -159,6 +161,17 @@ module Sequel
             filter{|o| o.<=(model.period_start_date_column, model.point_in_time) & (o.>=(model.period_end_date_column, model.point_in_time) | ({model.period_end_date_column => nil})) }
           else
             self
+          end
+        end
+
+        #
+        # This scope allows along with actual records
+        # fetch records with validity_start_date in future
+        #
+        def actual_or_starts_in_future
+          filter do |o|
+            o.>=(model.period_end_date_column, model.point_in_time) |
+            ({model.period_end_date_column => nil})
           end
         end
 

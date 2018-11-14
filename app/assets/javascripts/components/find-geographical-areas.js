@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var form = document.querySelector(".js-search-geographical-areas-form");
+  var form = document.querySelector(".js-search-geographical-areas-section");
 
   if (!form) {
     return;
@@ -24,46 +24,44 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
+      if (window.__search_geo_areas_no_search_mode !== undefined) {
+        $("input[type='checkbox']").click();
+      }
+
       $(document).on('click', ".js-validate-geographical-areas-search-form", function(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        submit_button = $(this);
-
-        WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-        self.errors = [];
-
-        console.log('------STARTING AJAX-----');
+        WorkbasketSubmitSpinnerSupport.showSpinnerAndLockSubmissionButtons($(this));
 
         $.ajax({
-          url: window.validate_search_settings_url,
+          url: window.__validate_search_settings_url,
           type: "GET",
           data: {
             search: self.geoAreaFormPayload()
           },
           success: function(response) {
-            console.log('------SUCCESS-----');
+            self.errors = [];
 
-            WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+            $(".js-search-geographical-areas-form").submit();
           },
           error: function(response) {
-            console.log('------ERRORS-----');
-
-            WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+            WorkbasketSubmitSpinnerSupport.hideSpinnerAndUnlockSubmissionButtons();
 
             if (response.status == 500) {
               alert("There was a server error which prevented the search to be performed. Please try again in a few moments.");
               return;
             }
 
-            self.errorsSummary = "All bad guys!";
-
-            console.dir(response.responseJSON.errors);
-
+            self.errorsSummary = response.responseJSON.errors.general_summary;
             self.errors = response.responseJSON.errors;
           }
         });
+
+        DatepickerRangeMonkeyPatch.fix('search[start_date]', 'search[end_date]');
       });
+
+      WorkbasketSearchResultsPaginationHelper.init();
     },
     computed: {
       hasErrors: function() {
@@ -94,8 +92,8 @@ $(document).ready(function() {
       geoAreaFormPayload: function() {
         return {
           q: this.search.q,
-          start_date: this.search.start_date,
-          end_date: this.search.end_date,
+          start_date: $('input[name=\'search[start_date]\']').val(),
+          end_date: $('input[name=\'search[end_date]\']').val(),
           code_country: this.search.code_country,
           code_region: this.search.code_region,
           code_group: this.search.code_group

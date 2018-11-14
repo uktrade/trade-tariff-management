@@ -9,8 +9,28 @@
 header
   h1.heading-large
     | Find and edit geographical areas
+    small
+      = link_to "(add a new one instead)", new_create_geographical_area_url
 
-  = render "geo_areas/geo_areas/search/form"
-  = render "geo_areas/geo_areas/search/results"
+  .js-search-geographical-areas-section
+    = render "geo_areas/geo_areas/search/form"
 
-= paginate search_results
+    - if params[:search].present?
+      h3.heading-medium.search-results-heading
+        | Search results
+
+      - if search_results.present?
+        = render "geo_areas/geo_areas/search/results"
+
+  - if params[:search].present?
+    - if search_results.present?
+      .js-workbasket-find-geo-areas-results-pagination-block
+        = render "geo_areas/geo_areas/search/pagination"
+    - else
+      = render "geo_areas/geo_areas/search/nothing_found_block"
+
+script
+  - if params[:search].blank?
+    == "window.__search_geo_areas_no_search_mode = true;"
+  == "window.__search_geo_areas_settings_json = #{search_form.settings.to_json};"
+  == "window.__validate_search_settings_url = '#{validate_search_settings_geo_areas_url}';"

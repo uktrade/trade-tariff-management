@@ -21,6 +21,7 @@ module WorkbasketInteractions
       footnotes
       excluded_geographical_areas
       quota_periods
+      quota_precision
     )
 
     ASSOCIATION_LIST = %w(
@@ -70,7 +71,7 @@ module WorkbasketInteractions
 
     def save!
       if step_pointer.main_step?
-        workbasket.title = workbasket_name
+        workbasket.title = workbasket_name if workbasket.title.blank?
         workbasket.operation_date = operation_date.try(:to_date)
         workbasket.save
       end
@@ -170,11 +171,14 @@ module WorkbasketInteractions
           @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
         end
 
-        if self.class::WORKBASKET_TYPE == "CreateQuota" &&
-           step_pointer.configure_quota? &&
-           quota_periods.blank?
+        if self.class::WORKBASKET_TYPE == "CreateQuota" && step_pointer.configure_quota?
+          if quota_periods.blank?
+            general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
+          end
 
-          general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
+          if quota_precision.blank?
+            general_errors[:maximum_precision] = errors_translator(:maximum_precision_blank)
+          end
         end
 
         if general_errors.present?

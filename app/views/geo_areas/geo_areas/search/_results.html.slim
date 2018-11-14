@@ -1,17 +1,6 @@
 - if search_results.present?
-  table.table.regulations-table
-    thead
-      tr
-        th width="30%"
-          | Code
-        th
-          | Description
-        th
-          | &nbsp;
-    tbody
-      - search_results.each do |item|
-        tr
-          td
-            = item.geographical_area_id
-          td
-            = item.description
+  / = render "geo_areas/geo_areas/search/download_link"
+
+  .js-workbasket-find-geo-areas-results-container
+    = render "geo_areas/geo_areas/search/table"
+

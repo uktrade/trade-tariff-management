@@ -1,0 +1,39 @@
+- details = workbasket_settings.main_step_settings
+
+br
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Workbasket name
+      td
+        = workbasket.title
+
+    tr
+      td.heading_column
+        | Operation date
+      td
+        = workbasket.operation_date.try(:strftime, "%d %B %Y")
+
+    tr
+      td.heading_column
+        | Reason for these changes
+      td
+        = details['reason']
+
+    - if details['regulation_id'].present?
+      tr
+        td.heading_column
+          | Regulation gives force to these changes
+        td
+          = details['regulation_id']
+    - else
+      tr
+        td.heading_column
+          | These changes do not come from legislation.
+        td
+          |
+
+br
+br

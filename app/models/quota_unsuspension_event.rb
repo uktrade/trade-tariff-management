@@ -1,6 +1,7 @@
 class QuotaUnsuspensionEvent < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: :quota_definition_sid
   plugin :conformance_validator

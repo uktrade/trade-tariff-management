@@ -21,28 +21,29 @@
   .bootstrap-row
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
-        a.disabled
-          | Find and edit geographical areas
-        / = link_to "Find and edit geographical areas", geo_areas_url
+        = link_to "Find and edit geographical areas", geo_areas_url
+
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
-        a.disabled
-          | Create a new geographical area
-        / = link_to "Create a new geographical area", new_create_geographical_area_url
+        = link_to "Create a new geographical area", new_create_geographical_area_url
+
   .bootstrap-row
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
-        a.disabled
-          | Find and edit certificates, licences, documents
+        = link_to "Find and edit certificates, licences, documents", search_certificates_url
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
-        a.disabled
-          | Create a certificate, licence, or document
+        = link_to "Create a certificate, licence, or document", new_create_certificate_url
+
   .bootstrap-row
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
-        a.disabled
-          | Manage footnotes
+        = link_to "Find and edit footnotes", search_footnotes_url
+
+    .col-xs-12.col-sm-12.col-md-4.col-lg-3
+      p
+        = link_to "Create a new footnote", new_create_footnote_url
+
   .bootstrap-row
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p

@@ -18,8 +18,8 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-    get "/v1/taricdelta(/:date)", to: "xml_files#index"
-    get "/v1/taricfile/:date",    to: "xml_files#show"
+    get "/v1/taricdelta(/:date)",   to: "xml_files#index"
+    get "/v1/taricfile/:timestamp", to: "xml_files#show"
   end
 
   resources :goods_nomenclatures, only: [:index]
@@ -57,13 +57,23 @@ Rails.application.routes.draw do
   end
 
   scope module: :certificates do
-    resources :certificates, only: [:index]
+    resources :certificates, only: [:index] do
+      collection do
+        get :search
+        get :validate_search_settings
+      end
+    end
     resources :certificate_types, only: [:index]
   end
 
   scope module: :footnotes do
     resources :footnote_types, only: [:index]
-    resources :footnotes, only: [:index]
+    resources :footnotes, only: [:new, :index] do
+      collection do
+        get :search
+        get :validate_search_settings
+      end
+    end
   end
 
   scope module: :quotas do
@@ -79,6 +89,16 @@ Rails.application.routes.draw do
       member do
         get '/work_with_selected', to: "bulks#work_with_selected"
         post '/work_with_selected', to: "bulks#persist_work_with_selected"
+        get '/configure_cloned', to: "bulks#configure_cloned"
+        post '/configure_cloned', to: "bulks#persist_configure_cloned"
+        get :submitted_for_cross_check
+
+        resources :bulk_items, only: [] do
+          collection do
+            get :validation_details
+            post :remove_items
+          end
+        end
       end
     end
   end
@@ -100,7 +120,11 @@ Rails.application.routes.draw do
     resources :measurement_units, only: [:index]
     resources :measurement_unit_qualifiers, only: [:index]
     resources :monetary_units, only: [:index]
-    resources :geographical_areas, only: [:index]
+    resources :geographical_areas, only: [:index] do
+      collection do
+        get :check_multiple
+      end
+    end
   end
 
   namespace :measures do
@@ -108,7 +132,6 @@ Rails.application.routes.draw do
       member do
         get '/work_with_selected_measures', to: "bulks#work_with_selected_measures"
         post '/work_with_selected_measures', to: "bulks#persist_work_with_selected_measures"
-        get :submitted_for_cross_check
 
         resources :bulk_items, only: [] do
           collection do
@@ -162,6 +185,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :create_certificate, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
     resources :create_measures, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
@@ -170,7 +201,47 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :bulk_edit_of_measures, only: [:show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
     resources :create_quota, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :create_footnote, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :edit_footnote, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :edit_certificate, only: [:new, :show, :edit, :update, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :edit_geographical_area, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
         get :move_to_editing_mode

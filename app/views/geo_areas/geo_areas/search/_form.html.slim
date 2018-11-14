@@ -1,7 +1,3 @@
-script
-  == "window.validate_search_settings_url = '#{validate_search_settings_geo_areas_url}';"
-  == "window.__search_geo_areas_settings_json = #{search_form.settings.to_json};"
-
 = simple_form_for search_form, as: :search,
                                url: geo_areas_url,
                                method: :get,
@@ -15,7 +11,7 @@ script
         form-group :errors="errors" error-key="q"
           template slot-scope="slotProps"
             h3.heading-medium
-              | Enter a geographical area code or serach string
+              | Enter a geographical area code or search string
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -24,13 +20,13 @@ script
 
             .bootstrap-row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                input.form-control v-model="search.q"
+                input.form-control name="search[q]" v-model="search.q"
 
       fieldset
         form-group :errors="errors" error-key="start_date"
           template slot-scope="slotProps"
             h3.heading-medium
-              | Select date from
+              | Optionally search for geographical areas that are valid from
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -44,8 +40,8 @@ script
       fieldset
         form-group :errors="errors" error-key="end_date"
           template slot-scope="slotProps"
-            h3.heading-medium
-              | Select date to
+            h3.heading-medium.with_smaller_top_border
+              | Optionally search for geographical areas that are valid until
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -59,8 +55,8 @@ script
       fieldset
         form-group :errors="errors" error-key="code"
           template slot-scope="slotProps"
-            h3.heading-medium
-             | Filter by geographical area type
+            h3.heading-medium.with_smaller_top_border
+             | Optionally filter results by geographical area type
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -97,6 +93,6 @@ script
               = link_to "Search", "#", name: "save_progress", class: "button js-validate-geographical-areas-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
 
               .js-workbasket-base-continue-spinner.spinner_block.hidden
-                = render "measures/bulks/loading_spinner", message: "Checking form settings..."
+                = render "measures/bulks/loading_spinner", message: "Loading..."
 
             = link_to "Clear form", geo_areas_url, class: 'secondary-button js-workbasket-base-exit-button'

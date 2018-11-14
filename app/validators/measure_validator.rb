@@ -64,7 +64,9 @@ class MeasureValidator < TradeTariffBackend::Validator
     (record.ordernumber.blank? && record.measure_type.order_number_capture_code != 1))
   end
 
-  validation :ME12, 'If the additional code is specified then the additional code type must have a relationship with the measure type.', on: [:create, :update] do |record|
+  validation :ME12, 'If the additional code is specified then the additional code type must have a relationship with the measure type.',
+    on: [:create, :update],
+    extend_message: ->(record) { record.measure_sid.present? ? "{ measure_sid=>\"#{record.measure_sid}\" }" : nil } do |record|
     (record.additional_code_type.present? && AdditionalCodeTypeMeasureType.where(additional_code_type_id: record.additional_code_type_id,
                                                                                  measure_type_id: record.measure_type_id).any?) ||
      record.additional_code_type.blank?
@@ -75,7 +77,8 @@ class MeasureValidator < TradeTariffBackend::Validator
      record.additional_code_type.meursing? &&
      record.meursing_additional_code.present? &&
      record.goods_nomenclature_item_id.blank? &&
-     record.ordernumber.blank?) ||
+     record.ordernumber.blank? &&
+     record.reduction_indicator.blank?) ||
      (record.additional_code_type.present? && !record.additional_code_type.meursing?) ||
      record.additional_code_type.blank?
   end
@@ -99,15 +102,22 @@ class MeasureValidator < TradeTariffBackend::Validator
 
       attrs = {
         goods_nomenclature_item_id: record.goods_nomenclature_item_id,
+        goods_nomenclature_sid: record.goods_nomenclature_sid,
         measure_type_id: record.measure_type_id,
         geographical_area_sid: record.geographical_area_sid,
         ordernumber: record.ordernumber,
-        reduction_indicator: record.reduction_indicator
+        reduction_indicator: record.reduction_indicator,
+        additional_code_type_id: record.additional_code_type_id,
+        additional_code_id: record.additional_code_id
       }
 
       if record.modified?
         scope = Measure.where(attrs)
         scope = scope.where("measure_sid != ?", record.measure_sid) if record.measure_sid.present?
+
+        if record.updating_measure.present?
+          scope = scope.where("measure_sid != ?", record.updating_measure.measure_sid)
+        end
 
         scope = if record.validity_end_date.present?
                   scope.where(
@@ -131,17 +141,16 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
     on: [:create, :update],
-    if: -> (record) { record.additional_code_type.present? && record.additional_code.present? } do |record|
-      record.additional_code_type.non_meursing? && (record.additional_code.additional_code_type_id == record.additional_code_type_id)
+    if: -> (record) { record.additional_code_type.present? && record.additional_code_type.non_meursing? } do |record|
+      record.additional_code.present?
     end
 
   validation :ME19,
     %Q(If the additional code type has as application 'ERN' then the goods code must be specified
     but the order number is blocked for input.),
     on: [:create, :update],
-    if: ->(record) { record.additional_code_type.present? } do |record|
-      record.additional_code_type.application_code.in?("0") &&
-        record.goods_nomenclature_item_id.present? && record.ordernumber.blank?
+    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code.in?("0") } do |record|
+      record.goods_nomenclature_item_id.present? && record.ordernumber.blank?
     end
 
   validation :ME21,
@@ -190,7 +199,8 @@ class MeasureValidator < TradeTariffBackend::Validator
      additional code and reduction indicator. This rule is not applicable for Meursing additional
      codes.),
      on: [:create, :update],
-     if: ->(record) { (record.additional_code.present? && record.additional_code.meursing_additional_code.nil?) } do |record|
+     extend_message: ->(record) { record.measure_sid.present? ? "{ measure_sid=>\"#{record.measure_sid}\" }" : nil },
+     if: ->(record) { record.additional_code.present? && record.additional_code_type.present? && record.additional_code_type.non_meursing? } do |record|
        record.duplicates_by_attributes.count.zero?
      end
 
@@ -370,8 +380,11 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME113, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the additional code must exist as an Export Refund for Processed Agricultural Goods additional code.",
     on: [:create, :update],
-    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code.in?("4") } do |record|
-      record.additional_code_id.present? && (record.additional_code.additional_code_type_id == additional_code_type.additional_code_type_id)
+    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code == "4" } do |record|
+      record.additional_code.present? &&
+      AdditionalCodeType.export_refund_for_processed_agricultural_goods_type_ids.include?(
+        record.additional_code.additional_code_type_id
+      )
     end
 
   validation :ME115, 'The validity period of the referenced additional code must span the validity period of the measure', on: [:create, :update] do

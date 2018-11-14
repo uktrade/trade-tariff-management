@@ -1,0 +1,26 @@
+script type="text/x-template" id="force-delete-measures-popup-template"
+  pop-up :open="open" :on-close="triggerClose"
+    template slot="title" Force delete measures
+
+    warning-message v-if="measures.length > 1"
+      ' You are about to permanently delete {{measures.length}} measures.
+
+    info-message v-if="measures.length > 1"
+      | Once this delete request is approved, the selected measures will be permanently deleted from both TAP and CDS - it will be as though they never existed. Use this action with care! Are you sure you didn’t mean to end-date the measures? (If so, you should cancel this operation and instead use the ‘Delete / immediately end-date…’ option.
+
+    info-message v-if="measures.length == 1"
+      | Once this delete request is approved, the selected measure will be permanently deleted from both TAP and CDS - it will be as though they never existed. Use this action with care! Are you sure you didn’t mean to end-date the measure? (If so, you should cancel this operation and instead use the ‘Delete / immediately end-date…’ option.
+
+    p v-if="measures.length > 1"
+      strong
+        | Are you sure you want to permanently delete {{measures.length}} measures from both TAP and CDS?
+
+    p v-if="measures.length == 1"
+      strong
+        | Are you sure you want to permanently delete {{measures.length}} measure from both TAP and CDS?
+
+    .form-actions
+      button.button @click.prevent="confirmForceDelete"
+        | Yes - delete measures
+      a.secondary-button href="#" v-on:click.prevent="onClose"
+        | No - cancel

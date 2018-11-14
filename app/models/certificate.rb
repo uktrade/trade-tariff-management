@@ -1,6 +1,7 @@
 class Certificate < Sequel::Model
 
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: [:certificate_code, :certificate_type_code]
   plugin :time_machine
@@ -41,6 +42,48 @@ class Certificate < Sequel::Model
 
       scope.order(Sequel.asc(:certificates__certificate_code))
     end
+
+    begin :find_ceritificates_search_filters
+      def default_order
+        distinct(
+          :certificates__certificate_type_code,
+          :certificates__certificate_code
+        ).order(
+          Sequel.asc(:certificates__certificate_type_code),
+          Sequel.asc(:certificates__certificate_code)
+        )
+      end
+
+      def keywords_search(keyword)
+        join_table(
+          :inner,
+          :certificate_descriptions,
+          certificate_type_code: :certificate_type_code,
+          certificate_code: :certificate_code
+        ).where(
+          "certificates.certificate_code ilike ? OR certificate_descriptions.description ilike ?",
+          "#{keyword}%", "%#{keyword}%"
+        )
+      end
+
+      def by_certificate_type_code(certificate_type_code)
+        where("certificates.certificate_type_code = ?", certificate_type_code)
+      end
+
+      def by_certificate_code(certificate_code)
+        where("certificates.certificate_code = ? ", certificate_code)
+      end
+
+      def after_or_equal(start_date)
+        where("certificates.validity_start_date >= ?", start_date)
+      end
+
+      def before_or_equal(end_date)
+        where(
+          "certificates.validity_end_date IS NOT NULL AND certificates.validity_end_date <= ?", end_date
+        )
+      end
+    end
   end
 
   def certificate_description
@@ -56,7 +99,7 @@ class Certificate < Sequel::Model
     certificate_types(reload: true).first
   end
 
-  delegate :description, to: :certificate_description
+  delegate :description, to: :certificate_description, allow_nil: true
 
   def record_code
    "205".freeze
@@ -75,5 +118,23 @@ class Certificate < Sequel::Model
 
   def to_json(options = {})
     json_mapping
+  end
+
+  def decorate
+    CertificateDecorator.decorate(self)
+  end
+
+  class << self
+    def max_per_page
+      10
+    end
+
+    def default_per_page
+      10
+    end
+
+    def max_pages
+      999
+    end
   end
 end

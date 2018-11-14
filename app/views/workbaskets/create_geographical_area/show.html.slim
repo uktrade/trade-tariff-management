@@ -1,1 +1,24 @@
-= render "workbaskets/shared/show_base"
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Geographical areas", geo_areas_url
+
+    li aria-current="page"
+      | View geographical area
+
+header
+  h1.heading-large
+    | View geographical area
+
+  .view-workbasket-container
+    = render "workbaskets/create_geographical_area/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/create_geographical_area/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/create_geographical_area/workflow_screens_parts/workbasket_details"
+
+    - if iam_workbasket_author? && workbasket_rejected?
+      = link_to "Edit geographical area", move_to_editing_mode_create_geographical_area_url(workbasket.id), class: "secondary-button view-workbasket-edit-measures-link"
+
+    = render "workbaskets/create_geographical_area/workflow_screens_parts/area_details"

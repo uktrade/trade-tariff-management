@@ -41,7 +41,7 @@ Vue.component("foot-note", {
       });
     },
     useSuggestion: function(suggestion) {
-      this.lastSuggestionUsed  = suggestion;
+      this.lastSuggestionUsed = suggestion;
       this.footnote.description = suggestion.description;
       this.footnote.footnote_id = suggestion.footnote_id;
       this.suggestions.splice(0, 999);
@@ -49,6 +49,9 @@ Vue.component("foot-note", {
   },
   watch: {
     "footnote.description": function(newVal, oldVal) {
+      if (newVal === "") {
+        this.footnote.footnote_id = null;
+      }
       if (this.lastSuggestionUsed && newVal === this.lastSuggestionUsed.description) {
         return;
       }

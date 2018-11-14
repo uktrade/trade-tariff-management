@@ -2,11 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.14
--- Dumped by pg_dump version 9.5.14
+-- Dumped from database version 9.6.9
+-- Dumped by pg_dump version 9.6.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -26,6 +27,49 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+--
+-- Name: reassign_owned(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
+    LANGUAGE plpgsql
+    AS $$
+	begin
+		-- do not execute if member of rds_superuser
+		IF EXISTS (select 1 from pg_catalog.pg_roles where rolname = 'rds_superuser')
+		AND pg_has_role(current_user, 'rds_superuser', 'member') THEN
+			RETURN;
+		END IF;
+
+		-- do not execute if not member of manager role
+		IF NOT pg_has_role(current_user, 'rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager', 'member') THEN
+			RETURN;
+		END IF;
+
+		-- do not execute if superuser
+		IF EXISTS (SELECT 1 FROM pg_user WHERE usename = current_user and usesuper = true) THEN
+			RETURN;
+		END IF;
+
+		EXECUTE 'reassign owned by "' || current_user || '" to "rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager"';
+	end
+	$$;
 
 
 SET default_tablespace = '';
@@ -421,6 +465,91 @@ ALTER SEQUENCE public.additional_codes_oid_seq OWNED BY public.additional_codes_
 
 
 --
+-- Name: meursing_additional_codes_oplog; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.meursing_additional_codes_oplog (
+    meursing_additional_code_sid integer,
+    additional_code character varying(3),
+    validity_start_date timestamp without time zone,
+    created_at timestamp without time zone,
+    validity_end_date timestamp without time zone,
+    oid integer NOT NULL,
+    operation character varying(1) DEFAULT 'C'::character varying,
+    operation_date timestamp without time zone,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
+);
+
+
+--
+-- Name: meursing_additional_codes; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.meursing_additional_codes AS
+ SELECT meursing_additional_codes1.meursing_additional_code_sid,
+    meursing_additional_codes1.additional_code,
+    meursing_additional_codes1.validity_start_date,
+    meursing_additional_codes1.validity_end_date,
+    meursing_additional_codes1.oid,
+    meursing_additional_codes1.operation,
+    meursing_additional_codes1.operation_date,
+    meursing_additional_codes1.status,
+    meursing_additional_codes1.workbasket_id,
+    meursing_additional_codes1.workbasket_sequence_number,
+    meursing_additional_codes1.added_by_id,
+    meursing_additional_codes1.added_at,
+    meursing_additional_codes1."national"
+   FROM public.meursing_additional_codes_oplog meursing_additional_codes1
+  WHERE ((meursing_additional_codes1.oid IN ( SELECT max(meursing_additional_codes2.oid) AS max
+           FROM public.meursing_additional_codes_oplog meursing_additional_codes2
+          WHERE (meursing_additional_codes1.meursing_additional_code_sid = meursing_additional_codes2.meursing_additional_code_sid))) AND ((meursing_additional_codes1.operation)::text <> 'D'::text));
+
+
+--
+-- Name: all_additional_codes; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.all_additional_codes AS
+ SELECT meursing_additional_codes.meursing_additional_code_sid AS additional_code_sid,
+    '7'::character varying AS additional_code_type_id,
+    meursing_additional_codes.additional_code,
+    NULL::text AS description,
+    NULL::character varying AS language_id,
+    meursing_additional_codes.validity_start_date,
+    meursing_additional_codes.validity_end_date,
+    meursing_additional_codes.operation_date,
+    meursing_additional_codes.status,
+    meursing_additional_codes.workbasket_id,
+    meursing_additional_codes.added_by_id,
+    meursing_additional_codes.added_at,
+    meursing_additional_codes."national"
+   FROM public.meursing_additional_codes
+UNION
+ SELECT additional_codes.additional_code_sid,
+    additional_codes.additional_code_type_id,
+    additional_codes.additional_code,
+    additional_code_descriptions.description,
+    additional_code_descriptions.language_id,
+    additional_codes.validity_start_date,
+    additional_codes.validity_end_date,
+    additional_codes.operation_date,
+    additional_codes.status,
+    additional_codes.workbasket_id,
+    additional_codes.added_by_id,
+    additional_codes.added_at,
+    additional_codes."national"
+   FROM public.additional_codes,
+    public.additional_code_description_periods,
+    public.additional_code_descriptions
+  WHERE ((additional_code_description_periods.additional_code_sid = additional_codes.additional_code_sid) AND ((additional_code_description_periods.additional_code_type_id)::text = (additional_codes.additional_code_type_id)::text) AND ((additional_code_description_periods.additional_code)::text = (additional_codes.additional_code)::text) AND (additional_code_descriptions.additional_code_description_period_sid = additional_code_description_periods.additional_code_description_period_sid));
+
+
+--
 -- Name: audits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -603,6 +732,7 @@ CREATE TABLE public.bulk_edit_of_measures_settings (
     measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
     search_code text,
     initial_search_results_code text,
+    all_batched_loaded boolean DEFAULT false,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb
 );
@@ -636,13 +766,20 @@ CREATE TABLE public.bulk_edit_of_quotas_settings (
     workbasket_id integer,
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     main_step_validation_passed boolean DEFAULT false,
-    search_code text,
     initial_search_results_code text,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb,
-    quota_sids_jsonb jsonb DEFAULT '{}'::jsonb,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    initial_quota_sid integer,
+    configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    configure_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    configure_quota_step_validation_passed boolean DEFAULT false,
+    conditions_footnotes_step_validation_passed boolean DEFAULT false,
+    measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -682,7 +819,9 @@ CREATE TABLE public.certificate_description_periods_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -702,7 +841,9 @@ CREATE VIEW public.certificate_description_periods AS
     certificate_description_periods1.operation_date,
     certificate_description_periods1.status,
     certificate_description_periods1.workbasket_id,
-    certificate_description_periods1.workbasket_sequence_number
+    certificate_description_periods1.workbasket_sequence_number,
+    certificate_description_periods1.added_by_id,
+    certificate_description_periods1.added_at
    FROM public.certificate_description_periods_oplog certificate_description_periods1
   WHERE ((certificate_description_periods1.oid IN ( SELECT max(certificate_description_periods2.oid) AS max
            FROM public.certificate_description_periods_oplog certificate_description_periods2
@@ -745,7 +886,9 @@ CREATE TABLE public.certificate_descriptions_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -765,7 +908,9 @@ CREATE VIEW public.certificate_descriptions AS
     certificate_descriptions1.operation_date,
     certificate_descriptions1.status,
     certificate_descriptions1.workbasket_id,
-    certificate_descriptions1.workbasket_sequence_number
+    certificate_descriptions1.workbasket_sequence_number,
+    certificate_descriptions1.added_by_id,
+    certificate_descriptions1.added_at
    FROM public.certificate_descriptions_oplog certificate_descriptions1
   WHERE ((certificate_descriptions1.oid IN ( SELECT max(certificate_descriptions2.oid) AS max
            FROM public.certificate_descriptions_oplog certificate_descriptions2
@@ -926,7 +1071,9 @@ CREATE TABLE public.certificates_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -946,7 +1093,9 @@ CREATE VIEW public.certificates AS
     certificates1.operation_date,
     certificates1.status,
     certificates1.workbasket_id,
-    certificates1.workbasket_sequence_number
+    certificates1.workbasket_sequence_number,
+    certificates1.added_by_id,
+    certificates1.added_at
    FROM public.certificates_oplog certificates1
   WHERE ((certificates1.oid IN ( SELECT max(certificates2.oid) AS max
            FROM public.certificates_oplog certificates2
@@ -1442,6 +1591,72 @@ ALTER SEQUENCE public.create_additional_code_workbasket_settings_id_seq OWNED BY
 
 
 --
+-- Name: create_certificates_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_certificates_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_certificates_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_certificates_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_certificates_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_certificates_workbasket_settings_id_seq OWNED BY public.create_certificates_workbasket_settings.id;
+
+
+--
+-- Name: create_footnotes_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_footnotes_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_footnotes_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_footnotes_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_footnotes_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_footnotes_workbasket_settings_id_seq OWNED BY public.create_footnotes_workbasket_settings.id;
+
+
+--
 -- Name: create_geographical_area_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1528,7 +1743,9 @@ CREATE TABLE public.create_quota_workbasket_settings (
     main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     configure_quota_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
     conditions_footnotes_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
-    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb
+    parent_quota_period_sids_jsonb jsonb DEFAULT '{}'::jsonb,
+    initial_quota_sid integer,
+    initial_search_results_code text
 );
 
 
@@ -1744,6 +1961,111 @@ CREATE SEQUENCE public.duty_expressions_oid_seq
 --
 
 ALTER SEQUENCE public.duty_expressions_oid_seq OWNED BY public.duty_expressions_oplog.oid;
+
+
+--
+-- Name: edit_certificates_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_certificates_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    original_certificate_type_code text,
+    original_certificate_code text
+);
+
+
+--
+-- Name: edit_certificates_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_certificates_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_certificates_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_certificates_workbasket_settings_id_seq OWNED BY public.edit_certificates_workbasket_settings.id;
+
+
+--
+-- Name: edit_footnotes_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_footnotes_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    original_footnote_type_id text,
+    original_footnote_id text
+);
+
+
+--
+-- Name: edit_footnotes_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_footnotes_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_footnotes_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_footnotes_workbasket_settings_id_seq OWNED BY public.edit_footnotes_workbasket_settings.id;
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_geographical_areas_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_step_settings_jsonb jsonb DEFAULT '{}'::jsonb,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    original_geographical_area_sid text,
+    original_geographical_area_id text
+);
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_geographical_areas_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_geographical_areas_workbasket_settings_id_seq OWNED BY public.edit_geographical_areas_workbasket_settings.id;
 
 
 --
@@ -2244,7 +2566,9 @@ CREATE TABLE public.footnote_association_goods_nomenclatures_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2266,7 +2590,9 @@ CREATE VIEW public.footnote_association_goods_nomenclatures AS
     footnote_association_goods_nomenclatures1.operation_date,
     footnote_association_goods_nomenclatures1.status,
     footnote_association_goods_nomenclatures1.workbasket_id,
-    footnote_association_goods_nomenclatures1.workbasket_sequence_number
+    footnote_association_goods_nomenclatures1.workbasket_sequence_number,
+    footnote_association_goods_nomenclatures1.added_by_id,
+    footnote_association_goods_nomenclatures1.added_at
    FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures1
   WHERE ((footnote_association_goods_nomenclatures1.oid IN ( SELECT max(footnote_association_goods_nomenclatures2.oid) AS max
            FROM public.footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures2
@@ -2902,7 +3228,9 @@ CREATE TABLE public.geographical_area_description_periods_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2922,7 +3250,9 @@ CREATE VIEW public.geographical_area_description_periods AS
     geographical_area_description_periods1.operation_date,
     geographical_area_description_periods1.status,
     geographical_area_description_periods1.workbasket_id,
-    geographical_area_description_periods1.workbasket_sequence_number
+    geographical_area_description_periods1.workbasket_sequence_number,
+    geographical_area_description_periods1.added_by_id,
+    geographical_area_description_periods1.added_at
    FROM public.geographical_area_description_periods_oplog geographical_area_description_periods1
   WHERE ((geographical_area_description_periods1.oid IN ( SELECT max(geographical_area_description_periods2.oid) AS max
            FROM public.geographical_area_description_periods_oplog geographical_area_description_periods2
@@ -2965,7 +3295,9 @@ CREATE TABLE public.geographical_area_descriptions_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -2985,7 +3317,9 @@ CREATE VIEW public.geographical_area_descriptions AS
     geographical_area_descriptions1.operation_date,
     geographical_area_descriptions1.status,
     geographical_area_descriptions1.workbasket_id,
-    geographical_area_descriptions1.workbasket_sequence_number
+    geographical_area_descriptions1.workbasket_sequence_number,
+    geographical_area_descriptions1.added_by_id,
+    geographical_area_descriptions1.added_at
    FROM public.geographical_area_descriptions_oplog geographical_area_descriptions1
   WHERE ((geographical_area_descriptions1.oid IN ( SELECT max(geographical_area_descriptions2.oid) AS max
            FROM public.geographical_area_descriptions_oplog geographical_area_descriptions2
@@ -3027,7 +3361,9 @@ CREATE TABLE public.geographical_area_memberships_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -3046,7 +3382,9 @@ CREATE VIEW public.geographical_area_memberships AS
     geographical_area_memberships1.operation_date,
     geographical_area_memberships1.status,
     geographical_area_memberships1.workbasket_id,
-    geographical_area_memberships1.workbasket_sequence_number
+    geographical_area_memberships1.workbasket_sequence_number,
+    geographical_area_memberships1.added_by_id,
+    geographical_area_memberships1.added_at
    FROM public.geographical_area_memberships_oplog geographical_area_memberships1
   WHERE ((geographical_area_memberships1.oid IN ( SELECT max(geographical_area_memberships2.oid) AS max
            FROM public.geographical_area_memberships_oplog geographical_area_memberships2
@@ -3090,7 +3428,9 @@ CREATE TABLE public.geographical_areas_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone
 );
 
 
@@ -3111,7 +3451,9 @@ CREATE VIEW public.geographical_areas AS
     geographical_areas1.operation_date,
     geographical_areas1.status,
     geographical_areas1.workbasket_id,
-    geographical_areas1.workbasket_sequence_number
+    geographical_areas1.workbasket_sequence_number,
+    geographical_areas1.added_by_id,
+    geographical_areas1.added_at
    FROM public.geographical_areas_oplog geographical_areas1
   WHERE ((geographical_areas1.oid IN ( SELECT max(geographical_areas2.oid) AS max
            FROM public.geographical_areas_oplog geographical_areas2
@@ -5022,52 +5364,6 @@ ALTER SEQUENCE public.measures_oid_seq OWNED BY public.measures_oplog.oid;
 
 
 --
--- Name: meursing_additional_codes_oplog; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.meursing_additional_codes_oplog (
-    meursing_additional_code_sid integer,
-    additional_code character varying(3),
-    validity_start_date timestamp without time zone,
-    created_at timestamp without time zone,
-    validity_end_date timestamp without time zone,
-    oid integer NOT NULL,
-    operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date timestamp without time zone,
-    status text,
-    workbasket_id integer,
-    workbasket_sequence_number integer,
-    added_by_id integer,
-    added_at timestamp without time zone,
-    "national" boolean
-);
-
-
---
--- Name: meursing_additional_codes; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.meursing_additional_codes AS
- SELECT meursing_additional_codes1.meursing_additional_code_sid,
-    meursing_additional_codes1.additional_code,
-    meursing_additional_codes1.validity_start_date,
-    meursing_additional_codes1.validity_end_date,
-    meursing_additional_codes1.oid,
-    meursing_additional_codes1.operation,
-    meursing_additional_codes1.operation_date,
-    meursing_additional_codes1.status,
-    meursing_additional_codes1.workbasket_id,
-    meursing_additional_codes1.workbasket_sequence_number,
-    meursing_additional_codes1.added_by_id,
-    meursing_additional_codes1.added_at,
-    meursing_additional_codes1."national"
-   FROM public.meursing_additional_codes_oplog meursing_additional_codes1
-  WHERE ((meursing_additional_codes1.oid IN ( SELECT max(meursing_additional_codes2.oid) AS max
-           FROM public.meursing_additional_codes_oplog meursing_additional_codes2
-          WHERE (meursing_additional_codes1.meursing_additional_code_sid = meursing_additional_codes2.meursing_additional_code_sid))) AND ((meursing_additional_codes1.operation)::text <> 'D'::text));
-
-
---
 -- Name: meursing_additional_codes_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -6644,7 +6940,10 @@ CREATE TABLE public.quota_suspension_periods_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -6663,7 +6962,10 @@ CREATE VIEW public.quota_suspension_periods AS
     quota_suspension_periods1.operation_date,
     quota_suspension_periods1.status,
     quota_suspension_periods1.workbasket_id,
-    quota_suspension_periods1.workbasket_sequence_number
+    quota_suspension_periods1.workbasket_sequence_number,
+    quota_suspension_periods1.added_by_id,
+    quota_suspension_periods1.added_at,
+    quota_suspension_periods1."national"
    FROM public.quota_suspension_periods_oplog quota_suspension_periods1
   WHERE ((quota_suspension_periods1.oid IN ( SELECT max(quota_suspension_periods2.oid) AS max
            FROM public.quota_suspension_periods_oplog quota_suspension_periods2
@@ -6760,7 +7062,10 @@ CREATE TABLE public.quota_unsuspension_events_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -6777,7 +7082,10 @@ CREATE VIEW public.quota_unsuspension_events AS
     quota_unsuspension_events1.operation_date,
     quota_unsuspension_events1.status,
     quota_unsuspension_events1.workbasket_id,
-    quota_unsuspension_events1.workbasket_sequence_number
+    quota_unsuspension_events1.workbasket_sequence_number,
+    quota_unsuspension_events1.added_by_id,
+    quota_unsuspension_events1.added_at,
+    quota_unsuspension_events1."national"
    FROM public.quota_unsuspension_events_oplog quota_unsuspension_events1
   WHERE ((quota_unsuspension_events1.oid IN ( SELECT max(quota_unsuspension_events2.oid) AS max
            FROM public.quota_unsuspension_events_oplog quota_unsuspension_events2
@@ -7355,7 +7663,7 @@ CREATE TABLE public.sections (
     numeral character varying(255),
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone
 );
 
 
@@ -7545,7 +7853,8 @@ CREATE TABLE public.workbasket_items (
     record_key text,
     new_data jsonb DEFAULT '{}'::jsonb,
     changed_values jsonb DEFAULT '{}'::jsonb,
-    validation_errors jsonb DEFAULT '{}'::jsonb
+    validation_errors jsonb DEFAULT '{}'::jsonb,
+    row_id text
 );
 
 
@@ -7681,882 +7990,917 @@ ALTER SEQUENCE public.xml_export_files_id_seq OWNED BY public.xml_export_files.i
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: additional_code_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_description_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: additional_code_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: additional_code_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_type_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: additional_code_type_measure_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_type_measure_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_type_measure_types_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: additional_code_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_code_types_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: additional_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.additional_codes_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: audits id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.audits ALTER COLUMN id SET DEFAULT nextval('public.audits_id_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: base_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.base_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.base_regulations_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: bulk_edit_of_additional_codes_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_additional_codes_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: bulk_edit_of_measures_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bulk_edit_of_measures_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_measures_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: bulk_edit_of_quotas_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bulk_edit_of_quotas_settings ALTER COLUMN id SET DEFAULT nextval('public.bulk_edit_of_quotas_settings_id_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: certificate_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_description_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: certificate_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: certificate_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_type_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: certificate_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificate_types_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: certificates_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificates_oplog ALTER COLUMN oid SET DEFAULT nextval('public.certificates_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: chapter_notes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chapter_notes ALTER COLUMN id SET DEFAULT nextval('public.chapter_notes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: chief_duty_expression id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chief_duty_expression ALTER COLUMN id SET DEFAULT nextval('public.chief_duty_expression_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: chief_measure_type_footnote id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chief_measure_type_footnote ALTER COLUMN id SET DEFAULT nextval('public.chief_measure_type_footnote_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: chief_measurement_unit id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chief_measurement_unit ALTER COLUMN id SET DEFAULT nextval('public.chief_measurement_unit_id_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: complete_abrogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.complete_abrogation_regulations_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: create_additional_code_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_additional_code_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_additional_code_workbasket_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: create_certificates_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_certificates_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_certificates_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: create_footnotes_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_footnotes_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_footnotes_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: create_geographical_area_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_geographical_area_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_geographical_area_workbasket_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: create_measures_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_measures_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_measures_workbasket_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: create_quota_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_quota_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_quota_workbasket_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: create_regulation_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_regulation_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_regulation_workbasket_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: db_rollbacks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.db_rollbacks ALTER COLUMN id SET DEFAULT nextval('public.db_rollbacks_id_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: duty_expression_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.duty_expression_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.duty_expression_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: duty_expressions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.duty_expressions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.duty_expressions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: edit_certificates_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_certificates_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_certificates_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: edit_footnotes_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_footnotes_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_footnotes_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_geographical_areas_workbasket_settings_id_seq'::regclass);
+
+
+--
+-- Name: explicit_abrogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.explicit_abrogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.explicit_abrogation_regulations_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: export_refund_nomenclature_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclature_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclature_description_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: export_refund_nomenclature_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclature_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclature_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: export_refund_nomenclature_indents_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclature_indents_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclature_indents_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: export_refund_nomenclatures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.export_refund_nomenclatures_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_association_additional_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_additional_codes_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_association_erns_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_erns_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_erns_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_association_goods_nomenclatures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_goods_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_goods_nomenclatures_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_association_measures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_measures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_measures_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_association_meursing_headings_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_meursing_headings_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_association_meursing_headings_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_description_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_type_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnote_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnote_types_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: footnotes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnotes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.footnotes_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: fts_regulation_actions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fts_regulation_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.fts_regulation_actions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: full_temporary_stop_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.full_temporary_stop_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.full_temporary_stop_regulations_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: geographical_area_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_area_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_area_description_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: geographical_area_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_area_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_area_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: geographical_area_memberships_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_area_memberships_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_area_memberships_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: geographical_areas_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_areas_oplog ALTER COLUMN oid SET DEFAULT nextval('public.geographical_areas_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclature_description_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_description_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_description_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclature_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclature_group_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_group_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_group_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclature_groups_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_groups_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_groups_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclature_indents_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_indents_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_indents_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclature_origins_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_origins_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_origins_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclature_successors_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_successors_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclature_successors_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: goods_nomenclatures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclatures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.goods_nomenclatures_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: language_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.language_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.language_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: languages_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.languages_oplog ALTER COLUMN oid SET DEFAULT nextval('public.languages_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_action_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_action_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_action_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_actions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_actions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_components_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_components_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_components_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_condition_code_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_condition_code_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_condition_code_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_condition_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_condition_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_condition_codes_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_condition_components_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_condition_components_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_condition_components_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_conditions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_conditions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_conditions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_excluded_geographical_areas_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_excluded_geographical_areas_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_partial_temporary_stops_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_partial_temporary_stops_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_partial_temporary_stops_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_type_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_type_series_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_type_series_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_type_series_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_type_series_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_type_series_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_type_series_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measure_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measure_types_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measurement_unit_abbreviations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_abbreviations ALTER COLUMN id SET DEFAULT nextval('public.measurement_unit_abbreviations_id_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measurement_unit_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_unit_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measurement_unit_qualifier_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_qualifier_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_unit_qualifier_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measurement_unit_qualifiers_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_qualifiers_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_unit_qualifiers_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measurement_units_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_units_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurement_units_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measurements_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurements_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measurements_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: measures_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measures_oplog ALTER COLUMN oid SET DEFAULT nextval('public.measures_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: meursing_additional_codes_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_additional_codes_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_additional_codes_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: meursing_heading_texts_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_heading_texts_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_heading_texts_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: meursing_headings_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_headings_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_headings_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: meursing_subheadings_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_subheadings_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_subheadings_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: meursing_table_cell_components_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_table_cell_components_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_table_cell_components_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: meursing_table_plans_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_table_plans_oplog ALTER COLUMN oid SET DEFAULT nextval('public.meursing_table_plans_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: modification_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.modification_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.modification_regulations_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: monetary_exchange_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_exchange_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_exchange_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: monetary_exchange_rates_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_exchange_rates_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_exchange_rates_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: monetary_unit_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_unit_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_unit_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: monetary_units_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_units_oplog ALTER COLUMN oid SET DEFAULT nextval('public.monetary_units_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: nomenclature_group_memberships_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.nomenclature_group_memberships_oplog ALTER COLUMN oid SET DEFAULT nextval('public.nomenclature_group_memberships_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: prorogation_regulation_actions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.prorogation_regulation_actions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.prorogation_regulation_actions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: prorogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.prorogation_regulations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.prorogation_regulations_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: publication_sigles_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.publication_sigles_oplog ALTER COLUMN oid SET DEFAULT nextval('public.publication_sigles_oplog_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_associations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_associations_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_associations_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_balance_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_balance_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_balance_events_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_blocking_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_blocking_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_blocking_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_critical_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_critical_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_critical_events_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_definitions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_definitions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_definitions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_exhaustion_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_exhaustion_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_exhaustion_events_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_order_number_origin_exclusions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_order_number_origin_exclusions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_order_number_origin_exclusions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_order_number_origins_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_order_number_origins_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_order_number_origins_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_order_numbers_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_order_numbers_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_order_numbers_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_reopening_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_reopening_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_reopening_events_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_suspension_periods_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_suspension_periods_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_suspension_periods_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_unblocking_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_unblocking_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_unblocking_events_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quota_unsuspension_events_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_unsuspension_events_oplog ALTER COLUMN oid SET DEFAULT nextval('public.quota_unsuspension_events_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: regulation_documents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_documents ALTER COLUMN id SET DEFAULT nextval('public.regulation_documents_id_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: regulation_group_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_group_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_group_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: regulation_groups_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_groups_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_groups_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: regulation_replacements_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_replacements_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_replacements_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: regulation_role_type_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_role_type_descriptions_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_role_type_descriptions_oid_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: regulation_role_types_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_role_types_oplog ALTER COLUMN oid SET DEFAULT nextval('public.regulation_role_types_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: rollbacks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.rollbacks ALTER COLUMN id SET DEFAULT nextval('public.rollbacks_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: search_references id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.search_references ALTER COLUMN id SET DEFAULT nextval('public.search_references_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: section_notes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.section_notes ALTER COLUMN id SET DEFAULT nextval('public.section_notes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: sections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sections ALTER COLUMN id SET DEFAULT nextval('public.sections_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: tariff_update_conformance_errors id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tariff_update_conformance_errors ALTER COLUMN id SET DEFAULT nextval('public.tariff_update_conformance_errors_id_seq'::regclass);
 
 
 --
--- Name: oid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: transmission_comments_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.transmission_comments_oplog ALTER COLUMN oid SET DEFAULT nextval('public.transmission_comments_oid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: workbasket_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.workbasket_items ALTER COLUMN id SET DEFAULT nextval('public.workbasket_items_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: workbaskets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.workbaskets ALTER COLUMN id SET DEFAULT nextval('public.workbaskets_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: workbaskets_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.workbaskets_events ALTER COLUMN id SET DEFAULT nextval('public.workbaskets_events_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: xml_export_files id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.xml_export_files ALTER COLUMN id SET DEFAULT nextval('public.xml_export_files_id_seq'::regclass);
 
 
 --
--- Name: additional_code_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: additional_code_description_periods_oplog additional_code_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_description_periods_oplog
@@ -8564,7 +8908,7 @@ ALTER TABLE ONLY public.additional_code_description_periods_oplog
 
 
 --
--- Name: additional_code_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: additional_code_descriptions_oplog additional_code_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_descriptions_oplog
@@ -8572,7 +8916,7 @@ ALTER TABLE ONLY public.additional_code_descriptions_oplog
 
 
 --
--- Name: additional_code_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: additional_code_type_descriptions_oplog additional_code_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_type_descriptions_oplog
@@ -8580,7 +8924,7 @@ ALTER TABLE ONLY public.additional_code_type_descriptions_oplog
 
 
 --
--- Name: additional_code_type_measure_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: additional_code_type_measure_types_oplog additional_code_type_measure_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_type_measure_types_oplog
@@ -8588,7 +8932,7 @@ ALTER TABLE ONLY public.additional_code_type_measure_types_oplog
 
 
 --
--- Name: additional_code_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: additional_code_types_oplog additional_code_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_code_types_oplog
@@ -8596,7 +8940,7 @@ ALTER TABLE ONLY public.additional_code_types_oplog
 
 
 --
--- Name: additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: additional_codes_oplog additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.additional_codes_oplog
@@ -8604,7 +8948,7 @@ ALTER TABLE ONLY public.additional_codes_oplog
 
 
 --
--- Name: audits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: audits audits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.audits
@@ -8612,7 +8956,7 @@ ALTER TABLE ONLY public.audits
 
 
 --
--- Name: base_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: base_regulations_oplog base_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.base_regulations_oplog
@@ -8620,7 +8964,7 @@ ALTER TABLE ONLY public.base_regulations_oplog
 
 
 --
--- Name: bulk_edit_of_additional_codes_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: bulk_edit_of_additional_codes_settings bulk_edit_of_additional_codes_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings
@@ -8628,7 +8972,7 @@ ALTER TABLE ONLY public.bulk_edit_of_additional_codes_settings
 
 
 --
--- Name: bulk_edit_of_measures_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: bulk_edit_of_measures_settings bulk_edit_of_measures_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bulk_edit_of_measures_settings
@@ -8636,7 +8980,7 @@ ALTER TABLE ONLY public.bulk_edit_of_measures_settings
 
 
 --
--- Name: bulk_edit_of_quotas_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: bulk_edit_of_quotas_settings bulk_edit_of_quotas_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bulk_edit_of_quotas_settings
@@ -8644,7 +8988,7 @@ ALTER TABLE ONLY public.bulk_edit_of_quotas_settings
 
 
 --
--- Name: certificate_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: certificate_description_periods_oplog certificate_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_description_periods_oplog
@@ -8652,7 +8996,7 @@ ALTER TABLE ONLY public.certificate_description_periods_oplog
 
 
 --
--- Name: certificate_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: certificate_descriptions_oplog certificate_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_descriptions_oplog
@@ -8660,7 +9004,7 @@ ALTER TABLE ONLY public.certificate_descriptions_oplog
 
 
 --
--- Name: certificate_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: certificate_type_descriptions_oplog certificate_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_type_descriptions_oplog
@@ -8668,7 +9012,7 @@ ALTER TABLE ONLY public.certificate_type_descriptions_oplog
 
 
 --
--- Name: certificate_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: certificate_types_oplog certificate_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificate_types_oplog
@@ -8676,7 +9020,7 @@ ALTER TABLE ONLY public.certificate_types_oplog
 
 
 --
--- Name: certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: certificates_oplog certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificates_oplog
@@ -8684,7 +9028,7 @@ ALTER TABLE ONLY public.certificates_oplog
 
 
 --
--- Name: chapter_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: chapter_notes chapter_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chapter_notes
@@ -8692,7 +9036,7 @@ ALTER TABLE ONLY public.chapter_notes
 
 
 --
--- Name: chief_duty_expression_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: chief_duty_expression chief_duty_expression_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chief_duty_expression
@@ -8700,7 +9044,7 @@ ALTER TABLE ONLY public.chief_duty_expression
 
 
 --
--- Name: chief_measure_type_footnote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: chief_measure_type_footnote chief_measure_type_footnote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chief_measure_type_footnote
@@ -8708,7 +9052,7 @@ ALTER TABLE ONLY public.chief_measure_type_footnote
 
 
 --
--- Name: chief_measurement_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: chief_measurement_unit chief_measurement_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.chief_measurement_unit
@@ -8716,7 +9060,7 @@ ALTER TABLE ONLY public.chief_measurement_unit
 
 
 --
--- Name: complete_abrogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: complete_abrogation_regulations_oplog complete_abrogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
@@ -8724,7 +9068,7 @@ ALTER TABLE ONLY public.complete_abrogation_regulations_oplog
 
 
 --
--- Name: create_additional_code_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: create_additional_code_workbasket_settings create_additional_code_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_additional_code_workbasket_settings
@@ -8732,7 +9076,23 @@ ALTER TABLE ONLY public.create_additional_code_workbasket_settings
 
 
 --
--- Name: create_geographical_area_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: create_certificates_workbasket_settings create_certificates_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_certificates_workbasket_settings
+    ADD CONSTRAINT create_certificates_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_footnotes_workbasket_settings create_footnotes_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_footnotes_workbasket_settings
+    ADD CONSTRAINT create_footnotes_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_geographical_area_workbasket_settings create_geographical_area_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_geographical_area_workbasket_settings
@@ -8740,7 +9100,7 @@ ALTER TABLE ONLY public.create_geographical_area_workbasket_settings
 
 
 --
--- Name: create_measures_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: create_measures_workbasket_settings create_measures_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_measures_workbasket_settings
@@ -8748,7 +9108,7 @@ ALTER TABLE ONLY public.create_measures_workbasket_settings
 
 
 --
--- Name: create_quota_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: create_quota_workbasket_settings create_quota_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_quota_workbasket_settings
@@ -8756,7 +9116,7 @@ ALTER TABLE ONLY public.create_quota_workbasket_settings
 
 
 --
--- Name: create_regulation_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: create_regulation_workbasket_settings create_regulation_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.create_regulation_workbasket_settings
@@ -8764,7 +9124,7 @@ ALTER TABLE ONLY public.create_regulation_workbasket_settings
 
 
 --
--- Name: data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: data_migrations data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_migrations
@@ -8772,7 +9132,7 @@ ALTER TABLE ONLY public.data_migrations
 
 
 --
--- Name: db_rollbacks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: db_rollbacks db_rollbacks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.db_rollbacks
@@ -8780,7 +9140,7 @@ ALTER TABLE ONLY public.db_rollbacks
 
 
 --
--- Name: duty_expression_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: duty_expression_descriptions_oplog duty_expression_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.duty_expression_descriptions_oplog
@@ -8788,7 +9148,7 @@ ALTER TABLE ONLY public.duty_expression_descriptions_oplog
 
 
 --
--- Name: duty_expressions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: duty_expressions_oplog duty_expressions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.duty_expressions_oplog
@@ -8796,7 +9156,31 @@ ALTER TABLE ONLY public.duty_expressions_oplog
 
 
 --
--- Name: explicit_abrogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: edit_certificates_workbasket_settings edit_certificates_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_certificates_workbasket_settings
+    ADD CONSTRAINT edit_certificates_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edit_footnotes_workbasket_settings edit_footnotes_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_footnotes_workbasket_settings
+    ADD CONSTRAINT edit_footnotes_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edit_geographical_areas_workbasket_settings edit_geographical_areas_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings
+    ADD CONSTRAINT edit_geographical_areas_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: explicit_abrogation_regulations_oplog explicit_abrogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.explicit_abrogation_regulations_oplog
@@ -8804,7 +9188,7 @@ ALTER TABLE ONLY public.explicit_abrogation_regulations_oplog
 
 
 --
--- Name: export_refund_nomenclature_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: export_refund_nomenclature_description_periods_oplog export_refund_nomenclature_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclature_description_periods_oplog
@@ -8812,7 +9196,7 @@ ALTER TABLE ONLY public.export_refund_nomenclature_description_periods_oplog
 
 
 --
--- Name: export_refund_nomenclature_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: export_refund_nomenclature_descriptions_oplog export_refund_nomenclature_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclature_descriptions_oplog
@@ -8820,7 +9204,7 @@ ALTER TABLE ONLY public.export_refund_nomenclature_descriptions_oplog
 
 
 --
--- Name: export_refund_nomenclature_indents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: export_refund_nomenclature_indents_oplog export_refund_nomenclature_indents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclature_indents_oplog
@@ -8828,7 +9212,7 @@ ALTER TABLE ONLY public.export_refund_nomenclature_indents_oplog
 
 
 --
--- Name: export_refund_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: export_refund_nomenclatures_oplog export_refund_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.export_refund_nomenclatures_oplog
@@ -8836,7 +9220,7 @@ ALTER TABLE ONLY public.export_refund_nomenclatures_oplog
 
 
 --
--- Name: footnote_association_additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_association_additional_codes_oplog footnote_association_additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_additional_codes_oplog
@@ -8844,7 +9228,7 @@ ALTER TABLE ONLY public.footnote_association_additional_codes_oplog
 
 
 --
--- Name: footnote_association_erns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_association_erns_oplog footnote_association_erns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_erns_oplog
@@ -8852,7 +9236,7 @@ ALTER TABLE ONLY public.footnote_association_erns_oplog
 
 
 --
--- Name: footnote_association_goods_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_association_goods_nomenclatures_oplog footnote_association_goods_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_goods_nomenclatures_oplog
@@ -8860,7 +9244,7 @@ ALTER TABLE ONLY public.footnote_association_goods_nomenclatures_oplog
 
 
 --
--- Name: footnote_association_measures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_association_measures_oplog footnote_association_measures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_measures_oplog
@@ -8868,7 +9252,7 @@ ALTER TABLE ONLY public.footnote_association_measures_oplog
 
 
 --
--- Name: footnote_association_meursing_headings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_association_meursing_headings_oplog footnote_association_meursing_headings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_association_meursing_headings_oplog
@@ -8876,7 +9260,7 @@ ALTER TABLE ONLY public.footnote_association_meursing_headings_oplog
 
 
 --
--- Name: footnote_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_description_periods_oplog footnote_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_description_periods_oplog
@@ -8884,7 +9268,7 @@ ALTER TABLE ONLY public.footnote_description_periods_oplog
 
 
 --
--- Name: footnote_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_descriptions_oplog footnote_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_descriptions_oplog
@@ -8892,7 +9276,7 @@ ALTER TABLE ONLY public.footnote_descriptions_oplog
 
 
 --
--- Name: footnote_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_type_descriptions_oplog footnote_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_type_descriptions_oplog
@@ -8900,7 +9284,7 @@ ALTER TABLE ONLY public.footnote_type_descriptions_oplog
 
 
 --
--- Name: footnote_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnote_types_oplog footnote_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnote_types_oplog
@@ -8908,7 +9292,7 @@ ALTER TABLE ONLY public.footnote_types_oplog
 
 
 --
--- Name: footnotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: footnotes_oplog footnotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.footnotes_oplog
@@ -8916,7 +9300,7 @@ ALTER TABLE ONLY public.footnotes_oplog
 
 
 --
--- Name: fts_regulation_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: fts_regulation_actions_oplog fts_regulation_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fts_regulation_actions_oplog
@@ -8924,7 +9308,7 @@ ALTER TABLE ONLY public.fts_regulation_actions_oplog
 
 
 --
--- Name: full_temporary_stop_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: full_temporary_stop_regulations_oplog full_temporary_stop_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.full_temporary_stop_regulations_oplog
@@ -8932,7 +9316,7 @@ ALTER TABLE ONLY public.full_temporary_stop_regulations_oplog
 
 
 --
--- Name: geographical_area_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: geographical_area_description_periods_oplog geographical_area_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_area_description_periods_oplog
@@ -8940,7 +9324,7 @@ ALTER TABLE ONLY public.geographical_area_description_periods_oplog
 
 
 --
--- Name: geographical_area_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: geographical_area_descriptions_oplog geographical_area_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_area_descriptions_oplog
@@ -8948,7 +9332,7 @@ ALTER TABLE ONLY public.geographical_area_descriptions_oplog
 
 
 --
--- Name: geographical_area_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: geographical_area_memberships_oplog geographical_area_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_area_memberships_oplog
@@ -8956,7 +9340,7 @@ ALTER TABLE ONLY public.geographical_area_memberships_oplog
 
 
 --
--- Name: geographical_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: geographical_areas_oplog geographical_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geographical_areas_oplog
@@ -8964,7 +9348,7 @@ ALTER TABLE ONLY public.geographical_areas_oplog
 
 
 --
--- Name: goods_nomenclature_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_description_periods_oplog
@@ -8972,7 +9356,7 @@ ALTER TABLE ONLY public.goods_nomenclature_description_periods_oplog
 
 
 --
--- Name: goods_nomenclature_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_descriptions_oplog
@@ -8980,7 +9364,7 @@ ALTER TABLE ONLY public.goods_nomenclature_descriptions_oplog
 
 
 --
--- Name: goods_nomenclature_group_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclature_group_descriptions_oplog goods_nomenclature_group_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_group_descriptions_oplog
@@ -8988,7 +9372,7 @@ ALTER TABLE ONLY public.goods_nomenclature_group_descriptions_oplog
 
 
 --
--- Name: goods_nomenclature_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclature_groups_oplog goods_nomenclature_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_groups_oplog
@@ -8996,7 +9380,7 @@ ALTER TABLE ONLY public.goods_nomenclature_groups_oplog
 
 
 --
--- Name: goods_nomenclature_indents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclature_indents_oplog goods_nomenclature_indents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_indents_oplog
@@ -9004,7 +9388,7 @@ ALTER TABLE ONLY public.goods_nomenclature_indents_oplog
 
 
 --
--- Name: goods_nomenclature_origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclature_origins_oplog goods_nomenclature_origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_origins_oplog
@@ -9012,7 +9396,7 @@ ALTER TABLE ONLY public.goods_nomenclature_origins_oplog
 
 
 --
--- Name: goods_nomenclature_successors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclature_successors_oplog goods_nomenclature_successors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclature_successors_oplog
@@ -9020,7 +9404,7 @@ ALTER TABLE ONLY public.goods_nomenclature_successors_oplog
 
 
 --
--- Name: goods_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: goods_nomenclatures_oplog goods_nomenclatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.goods_nomenclatures_oplog
@@ -9028,7 +9412,7 @@ ALTER TABLE ONLY public.goods_nomenclatures_oplog
 
 
 --
--- Name: language_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: language_descriptions_oplog language_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.language_descriptions_oplog
@@ -9036,7 +9420,7 @@ ALTER TABLE ONLY public.language_descriptions_oplog
 
 
 --
--- Name: languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: languages_oplog languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.languages_oplog
@@ -9044,7 +9428,7 @@ ALTER TABLE ONLY public.languages_oplog
 
 
 --
--- Name: measure_action_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_action_descriptions_oplog measure_action_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_action_descriptions_oplog
@@ -9052,7 +9436,7 @@ ALTER TABLE ONLY public.measure_action_descriptions_oplog
 
 
 --
--- Name: measure_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_actions_oplog measure_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_actions_oplog
@@ -9060,7 +9444,7 @@ ALTER TABLE ONLY public.measure_actions_oplog
 
 
 --
--- Name: measure_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_components_oplog measure_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_components_oplog
@@ -9068,7 +9452,7 @@ ALTER TABLE ONLY public.measure_components_oplog
 
 
 --
--- Name: measure_condition_code_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_condition_code_descriptions_oplog measure_condition_code_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_condition_code_descriptions_oplog
@@ -9076,7 +9460,7 @@ ALTER TABLE ONLY public.measure_condition_code_descriptions_oplog
 
 
 --
--- Name: measure_condition_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_condition_codes_oplog measure_condition_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_condition_codes_oplog
@@ -9084,7 +9468,7 @@ ALTER TABLE ONLY public.measure_condition_codes_oplog
 
 
 --
--- Name: measure_condition_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_condition_components_oplog measure_condition_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_condition_components_oplog
@@ -9092,7 +9476,7 @@ ALTER TABLE ONLY public.measure_condition_components_oplog
 
 
 --
--- Name: measure_conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_conditions_oplog measure_conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_conditions_oplog
@@ -9100,7 +9484,7 @@ ALTER TABLE ONLY public.measure_conditions_oplog
 
 
 --
--- Name: measure_excluded_geographical_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_excluded_geographical_areas_oplog measure_excluded_geographical_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog
@@ -9108,7 +9492,7 @@ ALTER TABLE ONLY public.measure_excluded_geographical_areas_oplog
 
 
 --
--- Name: measure_partial_temporary_stops_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_partial_temporary_stops_oplog measure_partial_temporary_stops_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_partial_temporary_stops_oplog
@@ -9116,7 +9500,7 @@ ALTER TABLE ONLY public.measure_partial_temporary_stops_oplog
 
 
 --
--- Name: measure_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_type_descriptions_oplog measure_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_type_descriptions_oplog
@@ -9124,7 +9508,7 @@ ALTER TABLE ONLY public.measure_type_descriptions_oplog
 
 
 --
--- Name: measure_type_series_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_type_series_descriptions_oplog measure_type_series_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_type_series_descriptions_oplog
@@ -9132,7 +9516,7 @@ ALTER TABLE ONLY public.measure_type_series_descriptions_oplog
 
 
 --
--- Name: measure_type_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_type_series_oplog measure_type_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_type_series_oplog
@@ -9140,7 +9524,7 @@ ALTER TABLE ONLY public.measure_type_series_oplog
 
 
 --
--- Name: measure_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measure_types_oplog measure_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measure_types_oplog
@@ -9148,7 +9532,7 @@ ALTER TABLE ONLY public.measure_types_oplog
 
 
 --
--- Name: measurement_unit_abbreviations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measurement_unit_abbreviations measurement_unit_abbreviations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_abbreviations
@@ -9156,7 +9540,7 @@ ALTER TABLE ONLY public.measurement_unit_abbreviations
 
 
 --
--- Name: measurement_unit_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measurement_unit_descriptions_oplog measurement_unit_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_descriptions_oplog
@@ -9164,7 +9548,7 @@ ALTER TABLE ONLY public.measurement_unit_descriptions_oplog
 
 
 --
--- Name: measurement_unit_qualifier_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measurement_unit_qualifier_descriptions_oplog measurement_unit_qualifier_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_qualifier_descriptions_oplog
@@ -9172,7 +9556,7 @@ ALTER TABLE ONLY public.measurement_unit_qualifier_descriptions_oplog
 
 
 --
--- Name: measurement_unit_qualifiers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measurement_unit_qualifiers_oplog measurement_unit_qualifiers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_unit_qualifiers_oplog
@@ -9180,7 +9564,7 @@ ALTER TABLE ONLY public.measurement_unit_qualifiers_oplog
 
 
 --
--- Name: measurement_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measurement_units_oplog measurement_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurement_units_oplog
@@ -9188,7 +9572,7 @@ ALTER TABLE ONLY public.measurement_units_oplog
 
 
 --
--- Name: measurements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measurements_oplog measurements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measurements_oplog
@@ -9196,7 +9580,7 @@ ALTER TABLE ONLY public.measurements_oplog
 
 
 --
--- Name: measures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: measures_oplog measures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.measures_oplog
@@ -9204,7 +9588,7 @@ ALTER TABLE ONLY public.measures_oplog
 
 
 --
--- Name: meursing_additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meursing_additional_codes_oplog meursing_additional_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_additional_codes_oplog
@@ -9212,7 +9596,7 @@ ALTER TABLE ONLY public.meursing_additional_codes_oplog
 
 
 --
--- Name: meursing_heading_texts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meursing_heading_texts_oplog meursing_heading_texts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_heading_texts_oplog
@@ -9220,7 +9604,7 @@ ALTER TABLE ONLY public.meursing_heading_texts_oplog
 
 
 --
--- Name: meursing_headings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meursing_headings_oplog meursing_headings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_headings_oplog
@@ -9228,7 +9612,7 @@ ALTER TABLE ONLY public.meursing_headings_oplog
 
 
 --
--- Name: meursing_subheadings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meursing_subheadings_oplog meursing_subheadings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_subheadings_oplog
@@ -9236,7 +9620,7 @@ ALTER TABLE ONLY public.meursing_subheadings_oplog
 
 
 --
--- Name: meursing_table_cell_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meursing_table_cell_components_oplog meursing_table_cell_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_table_cell_components_oplog
@@ -9244,7 +9628,7 @@ ALTER TABLE ONLY public.meursing_table_cell_components_oplog
 
 
 --
--- Name: meursing_table_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meursing_table_plans_oplog meursing_table_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.meursing_table_plans_oplog
@@ -9252,7 +9636,7 @@ ALTER TABLE ONLY public.meursing_table_plans_oplog
 
 
 --
--- Name: modification_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: modification_regulations_oplog modification_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.modification_regulations_oplog
@@ -9260,7 +9644,7 @@ ALTER TABLE ONLY public.modification_regulations_oplog
 
 
 --
--- Name: monetary_exchange_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: monetary_exchange_periods_oplog monetary_exchange_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_exchange_periods_oplog
@@ -9268,7 +9652,7 @@ ALTER TABLE ONLY public.monetary_exchange_periods_oplog
 
 
 --
--- Name: monetary_exchange_rates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: monetary_exchange_rates_oplog monetary_exchange_rates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_exchange_rates_oplog
@@ -9276,7 +9660,7 @@ ALTER TABLE ONLY public.monetary_exchange_rates_oplog
 
 
 --
--- Name: monetary_unit_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: monetary_unit_descriptions_oplog monetary_unit_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_unit_descriptions_oplog
@@ -9284,7 +9668,7 @@ ALTER TABLE ONLY public.monetary_unit_descriptions_oplog
 
 
 --
--- Name: monetary_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: monetary_units_oplog monetary_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.monetary_units_oplog
@@ -9292,7 +9676,7 @@ ALTER TABLE ONLY public.monetary_units_oplog
 
 
 --
--- Name: nomenclature_group_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: nomenclature_group_memberships_oplog nomenclature_group_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.nomenclature_group_memberships_oplog
@@ -9300,7 +9684,7 @@ ALTER TABLE ONLY public.nomenclature_group_memberships_oplog
 
 
 --
--- Name: prorogation_regulation_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: prorogation_regulation_actions_oplog prorogation_regulation_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.prorogation_regulation_actions_oplog
@@ -9308,7 +9692,7 @@ ALTER TABLE ONLY public.prorogation_regulation_actions_oplog
 
 
 --
--- Name: prorogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: prorogation_regulations_oplog prorogation_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.prorogation_regulations_oplog
@@ -9316,7 +9700,7 @@ ALTER TABLE ONLY public.prorogation_regulations_oplog
 
 
 --
--- Name: publication_sigles_oplog_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: publication_sigles_oplog publication_sigles_oplog_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.publication_sigles_oplog
@@ -9324,7 +9708,7 @@ ALTER TABLE ONLY public.publication_sigles_oplog
 
 
 --
--- Name: quota_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_associations_oplog quota_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_associations_oplog
@@ -9332,7 +9716,7 @@ ALTER TABLE ONLY public.quota_associations_oplog
 
 
 --
--- Name: quota_balance_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_balance_events_oplog quota_balance_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_balance_events_oplog
@@ -9340,7 +9724,7 @@ ALTER TABLE ONLY public.quota_balance_events_oplog
 
 
 --
--- Name: quota_blocking_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_blocking_periods_oplog quota_blocking_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_blocking_periods_oplog
@@ -9348,7 +9732,7 @@ ALTER TABLE ONLY public.quota_blocking_periods_oplog
 
 
 --
--- Name: quota_critical_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_critical_events_oplog quota_critical_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_critical_events_oplog
@@ -9356,7 +9740,7 @@ ALTER TABLE ONLY public.quota_critical_events_oplog
 
 
 --
--- Name: quota_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_definitions_oplog quota_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_definitions_oplog
@@ -9364,7 +9748,7 @@ ALTER TABLE ONLY public.quota_definitions_oplog
 
 
 --
--- Name: quota_exhaustion_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_exhaustion_events_oplog quota_exhaustion_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_exhaustion_events_oplog
@@ -9372,7 +9756,7 @@ ALTER TABLE ONLY public.quota_exhaustion_events_oplog
 
 
 --
--- Name: quota_order_number_origin_exclusions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_order_number_origin_exclusions_oplog quota_order_number_origin_exclusions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_order_number_origin_exclusions_oplog
@@ -9380,7 +9764,7 @@ ALTER TABLE ONLY public.quota_order_number_origin_exclusions_oplog
 
 
 --
--- Name: quota_order_number_origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_order_number_origins_oplog quota_order_number_origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_order_number_origins_oplog
@@ -9388,7 +9772,7 @@ ALTER TABLE ONLY public.quota_order_number_origins_oplog
 
 
 --
--- Name: quota_order_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_order_numbers_oplog quota_order_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_order_numbers_oplog
@@ -9396,7 +9780,7 @@ ALTER TABLE ONLY public.quota_order_numbers_oplog
 
 
 --
--- Name: quota_reopening_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_reopening_events_oplog quota_reopening_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_reopening_events_oplog
@@ -9404,7 +9788,7 @@ ALTER TABLE ONLY public.quota_reopening_events_oplog
 
 
 --
--- Name: quota_suspension_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_suspension_periods_oplog quota_suspension_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_suspension_periods_oplog
@@ -9412,7 +9796,7 @@ ALTER TABLE ONLY public.quota_suspension_periods_oplog
 
 
 --
--- Name: quota_unblocking_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_unblocking_events_oplog quota_unblocking_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_unblocking_events_oplog
@@ -9420,7 +9804,7 @@ ALTER TABLE ONLY public.quota_unblocking_events_oplog
 
 
 --
--- Name: quota_unsuspension_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quota_unsuspension_events_oplog quota_unsuspension_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.quota_unsuspension_events_oplog
@@ -9428,7 +9812,7 @@ ALTER TABLE ONLY public.quota_unsuspension_events_oplog
 
 
 --
--- Name: regulation_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: regulation_documents regulation_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_documents
@@ -9436,7 +9820,7 @@ ALTER TABLE ONLY public.regulation_documents
 
 
 --
--- Name: regulation_group_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: regulation_group_descriptions_oplog regulation_group_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_group_descriptions_oplog
@@ -9444,7 +9828,7 @@ ALTER TABLE ONLY public.regulation_group_descriptions_oplog
 
 
 --
--- Name: regulation_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: regulation_groups_oplog regulation_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_groups_oplog
@@ -9452,7 +9836,7 @@ ALTER TABLE ONLY public.regulation_groups_oplog
 
 
 --
--- Name: regulation_replacements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: regulation_replacements_oplog regulation_replacements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_replacements_oplog
@@ -9460,7 +9844,7 @@ ALTER TABLE ONLY public.regulation_replacements_oplog
 
 
 --
--- Name: regulation_role_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: regulation_role_type_descriptions_oplog regulation_role_type_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_role_type_descriptions_oplog
@@ -9468,7 +9852,7 @@ ALTER TABLE ONLY public.regulation_role_type_descriptions_oplog
 
 
 --
--- Name: regulation_role_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: regulation_role_types_oplog regulation_role_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.regulation_role_types_oplog
@@ -9476,7 +9860,7 @@ ALTER TABLE ONLY public.regulation_role_types_oplog
 
 
 --
--- Name: rollbacks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: rollbacks rollbacks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.rollbacks
@@ -9484,7 +9868,7 @@ ALTER TABLE ONLY public.rollbacks
 
 
 --
--- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.schema_migrations
@@ -9492,7 +9876,7 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: search_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: search_references search_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.search_references
@@ -9500,7 +9884,7 @@ ALTER TABLE ONLY public.search_references
 
 
 --
--- Name: section_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: section_notes section_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.section_notes
@@ -9508,7 +9892,7 @@ ALTER TABLE ONLY public.section_notes
 
 
 --
--- Name: sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: sections sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sections
@@ -9516,7 +9900,7 @@ ALTER TABLE ONLY public.sections
 
 
 --
--- Name: tariff_update_conformance_errors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tariff_update_conformance_errors tariff_update_conformance_errors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tariff_update_conformance_errors
@@ -9524,7 +9908,7 @@ ALTER TABLE ONLY public.tariff_update_conformance_errors
 
 
 --
--- Name: tariff_updates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tariff_updates tariff_updates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tariff_updates
@@ -9532,7 +9916,7 @@ ALTER TABLE ONLY public.tariff_updates
 
 
 --
--- Name: transmission_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: transmission_comments_oplog transmission_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.transmission_comments_oplog
@@ -9540,7 +9924,7 @@ ALTER TABLE ONLY public.transmission_comments_oplog
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
@@ -9548,7 +9932,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: workbasket_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: workbasket_items workbasket_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.workbasket_items
@@ -9556,7 +9940,7 @@ ALTER TABLE ONLY public.workbasket_items
 
 
 --
--- Name: workbaskets_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: workbaskets_events workbaskets_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.workbaskets_events
@@ -9564,7 +9948,7 @@ ALTER TABLE ONLY public.workbaskets_events
 
 
 --
--- Name: workbaskets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: workbaskets workbaskets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.workbaskets
@@ -9572,7 +9956,7 @@ ALTER TABLE ONLY public.workbaskets
 
 
 --
--- Name: xml_export_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: xml_export_files xml_export_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.xml_export_files
@@ -11932,6 +12316,14 @@ CREATE INDEX user_id ON public.rollbacks USING btree (user_id);
 
 
 --
+-- Name: reassign_owned; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
+   EXECUTE PROCEDURE public.reassign_owned();
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -11988,29 +12380,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20130220094325_add_index_f
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221132447_make_effective_end_dates_timestamps.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221140444_change_export_refund_nomenclature_indent_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130417135357_add_users_table.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130809075350_change_chapter_note_foreign_key_type.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130916082304_add_foreign_keys_to_search_references.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20131113142525_add_search_references_polymorphic_association.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140410213345_create_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140424105255_add_columns_to_tariff_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140526161142_add_error_column_to_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140527124014_change_column_in_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140715224356_create_measurement_unit_abbreviations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140721090137_add_organisation_slug_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140722151202_add_error_backtrace_to_tariff_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140731161233_create_tariff_update_conformance_errors.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150114110937_quota_critical_events_oplog_primary_key.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150406165721_add_disabled_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150507133620_add_organisation_content_id_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20151214224024_add_model_views_reloaded.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20151214230831_quota_critical_events_view_reloaded.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20161209195324_alter_footnotes_foonote_id_lenght.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audits.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
@@ -12057,6 +12426,29 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130809075350_change_chapter_note_foreign_key_type.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130916082304_add_foreign_keys_to_search_references.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20131113142525_add_search_references_polymorphic_association.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140410213345_create_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140424105255_add_columns_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140526161142_add_error_column_to_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140527124014_change_column_in_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140715224356_create_measurement_unit_abbreviations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140721090137_add_organisation_slug_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140722151202_add_error_backtrace_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140731161233_create_tariff_update_conformance_errors.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150114110937_quota_critical_events_oplog_primary_key.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150406165721_add_disabled_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150507133620_add_organisation_content_id_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214224024_add_model_views_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214230831_quota_critical_events_view_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20161209195324_alter_footnotes_foonote_id_lenght.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audits.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180702142649_add_search_code_to_workbaskets.rb');
@@ -12070,7 +12462,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_vali
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure_sids_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180722185024_add_workbasket_attributes_to_db_tables.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726104556_add_workbasket_attrs_to_measure_excluded_geographical_areas.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726140522_update_xml_exportable_data_with_workbasket_fields.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727172730_create_create_quota_workbasket_settings.rb');
@@ -12090,17 +12481,36 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approver_user_to_users.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflow_fields_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011184220_add_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011190000_add_more_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012181311_rollback_duty_expression_indexes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012184040_add_updated_at_to_sections.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnote_id_characters_limit_in_associations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181016175408_add_workbasket_related_columns_to_geo_areas_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017095105_create_create_footnotes_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017141845_create_certificate_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017165251_add_workbasket_related_columns_to_certificate_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019151225_edit_footnotes_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019161518_add_original_fields_to_edit_footnote_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181021085816_add_workbasket_fields_to_footnote_associations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011092756_change_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_settings_to_edit_quota.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbasket_fileds_to_quota_relations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit_certificate_settings_table.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164645_create_edit_geographical_areas_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_original_fields_to_edit_geographical_areas_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');

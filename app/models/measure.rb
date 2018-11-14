@@ -67,8 +67,8 @@ class Measure < Sequel::Model
     ds.with_actual(AdditionalCode)
   end
 
-  one_to_one :meursing_additional_code, key: :additional_code,
-                                        primary_key: :additional_code_id do |ds|
+  one_to_one :meursing_additional_code, key: :meursing_additional_code_sid,
+                                        primary_key: :additional_code_sid do |ds|
     ds.with_actual(MeursingAdditionalCode)
   end
 
@@ -183,6 +183,10 @@ class Measure < Sequel::Model
   end
 
   dataset_module do
+    def by_measure_sid(m_sid)
+      where(measure_sid: m_sid)
+    end
+
     def without_status
       where("status IS NULL")
     end
@@ -618,6 +622,7 @@ class Measure < Sequel::Model
       regulation: generating_regulation_code,
       justification_regulation: (generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?),
       measure_type_id: measure_type_id,
+      order_number: ordernumber,
       validity_start_date: validity_start_date.strftime("%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       goods_nomenclature_id: goods_nomenclature_item_id,
@@ -669,6 +674,7 @@ class Measure < Sequel::Model
       regulation: generating_regulation.to_json,
       justification_regulation: (justification_regulation.to_json if justification_regulation.present?),
       measure_type: measure_type.to_json,
+      order_number: ordernumber,
       validity_start_date: validity_start_date.try(:strftime, "%d %b %Y"),
       validity_end_date: validity_end_date.try(:strftime, "%d %b %Y") || "-",
       goods_nomenclature: goods_nomenclature.try(:to_json),

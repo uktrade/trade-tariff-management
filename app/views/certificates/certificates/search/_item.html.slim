@@ -1,0 +1,13 @@
+tr class="#{'workbasket-record-locked' if item.locked?}"
+  td
+    = item.certificate_type_description
+  td
+    = item.certificate_code
+  td
+    = link_to new_edit_certificate_url(certificate_type_code: item.certificate_type_code, certificate_code: item.certificate_code) do
+      p.ellipsis_max_height_container
+        = item.description
+  td
+    = item.start_date
+  td
+    = item.end_date

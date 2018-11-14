@@ -1,0 +1,31 @@
+fieldset
+  h3.heading-medium
+    | When is the certiticate valid from?
+
+  form-group :errors="errors" error-key="validity_start_date"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+
+      .bootstrap-row
+        .col-md-6
+          = content_tag "date-select", "", ":value.sync" => "certificate.validity_start_date"
+
+fieldset
+  h3.heading-medium
+    | When is the certiticate valid until?
+
+  form-group :errors="errors" error-key="validity_end_date"
+    template slot-scope="slotProps"
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | This is optional and should usually be left unset (open-ended) unless you know the certiticate is only needed for a limited time.
+
+      .bootstrap-row
+        .col-md-6
+          = content_tag "date-select", "", ":value.sync" => "certificate.validity_end_date"
+

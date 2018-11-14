@@ -1,0 +1,8 @@
+= render "workbaskets/shared/edit_base", subheader: link_to("(find and edit existing ones instead)", search_footnotes_url)
+
+script
+  == "window.__footnote_json = #{workbasket_settings.settings.to_json};"
+  == "window.__footnote_types_list_json = #{form.footnote_types_list.to_json};"
+  == "window.__goods_and_measures_footnote_type_ids_json = #{form.goods_and_measures_footnote_type_ids.to_json};"
+  == "window.__goods_footnote_type_ids_json = #{form.goods_footnote_type_ids.to_json};"
+  == "window.__measures_footnote_type_ids_json = #{form.measures_footnote_type_ids.to_json};"

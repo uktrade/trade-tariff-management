@@ -65,4 +65,10 @@ class AdditionalCodeType < Sequel::Model
       description: description
     }
   end
+
+  class << self
+    def export_refund_for_processed_agricultural_goods_type_ids
+      where(application_code: "4").pluck(:additional_code_type_id)
+    end
+  end
 end

@@ -9,7 +9,7 @@ module AdditionalCodes
     end
 
     expose(:additional_code) do
-      AdditionalCode.by_code(params[:code])
+      AllAdditionalCode.by_code(params[:code])
     end
 
     expose(:search_ops) do
@@ -55,7 +55,7 @@ module AdditionalCodes
     end
 
     def collection
-      AdditionalCode.q_search(params)
+      AllAdditionalCode.q_search(params)
     end
 
     def preview

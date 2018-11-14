@@ -3,6 +3,7 @@ module WorkbasketServices
     class ParentQuota
 
       attr_accessor :settings_saver,
+                    :all_settings,
                     :ops,
                     :base_params,
                     :sub_quota,
@@ -12,6 +13,8 @@ module WorkbasketServices
       def initialize(settings_saver, parent_quota_ops, base_params, sub_quota)
         @errors = {}
         @settings_saver = settings_saver
+        @all_settings = settings_saver.settings
+                                      .settings
         @ops = parent_quota_ops
         @base_params = base_params
         @base_params['quota_ordernumber'] = parent_quota_ops['order_number']
@@ -25,20 +28,12 @@ module WorkbasketServices
 
       def valid?
         if associate?
-
           record = QuotaOrderNumber.new(quota_order_number_id: ops['order_number'])
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
               record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
             @errors.merge!("#{key.join(',')}": error.join('. '))
           end
-
-
-          ops['balances'].each do |index, balance|
-            value = balance['balance']
-            @errors["quota_balance_#{index}"] = "\##{index.to_i + 1} - Opening balance can't be blank" if value.blank?
-          end
-
         end
         errors.blank?
       end
@@ -49,8 +44,9 @@ module WorkbasketServices
         @order_number = saver.order_number
       end
 
-      def add_period!(source_definition, index, start_date, end_date = nil)
+      def add_period!(source_definition, index, section_balance, start_date, end_date = nil)
         balance = ops['balances'][index]['balance']
+        balance = balance.blank? || balance.to_i == 0 ? section_balance : balance.to_i
         definition = QuotaDefinition.new(
             volume: balance,
             initial_volume: balance,
@@ -63,7 +59,8 @@ module WorkbasketServices
             quota_order_number_sid: order_number.quota_order_number_sid,
             measurement_unit_code: source_definition.measurement_unit_code,
             measurement_unit_qualifier_code: source_definition.measurement_unit_qualifier_code,
-            workbasket_type_of_quota: source_definition.workbasket_type_of_quota
+            workbasket_type_of_quota: source_definition.workbasket_type_of_quota,
+            maximum_precision: all_settings["quota_precision"]
         )
         ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(definition).assign!
         settings_saver.assign_system_ops!(definition)

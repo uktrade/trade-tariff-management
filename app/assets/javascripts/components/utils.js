@@ -76,7 +76,12 @@ function retryAjax(options, retries, time, success, error) {
 }
 
 function makeRandomString() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);;
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+function makeBigNumber() {
+  // temporary ids should start high to avoid clashes
+  return "9" + Math.random().toString().slice(2,10);
 }
 
 function getSearchParam(param) {
@@ -102,4 +107,11 @@ function allValuesSame(arr) {
   }
 
   return true;
+}
+
+function lockBackHistory() {
+  history.pushState(null, null, location.href);
+  window.onpopstate = function () {
+    history.go(1);
+  };
 }

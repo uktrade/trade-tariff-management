@@ -1,0 +1,39 @@
+/* */
+/* Mltiline truncation with ellipsis */
+/* */
+/* Based on tutorial http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/ */
+/* SOURCE https://codepen.io/natonischuk/pen/QbGWBa */
+
+/* mixin for multiline */
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
+  overflow: hidden;
+  position: relative;
+  line-height: $lineHeight;
+  max-height: $lineHeight * $lineCount;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em;
+
+  &:before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: $bgColor;
+  }
+}
+
+p.ellipsis_max_height_container {
+  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 4, $bgColor: white);
+  margin-right: 10px;
+  margin-bottom: 5px;
+}

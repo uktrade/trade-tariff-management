@@ -21,7 +21,7 @@ class AdditionalCodeTypeValidator < TradeTariffBackend::Validator
   end
 
   validation :CT6, 'The additional code type cannot be deleted if it is related with a non-Meursing additional code.', on: [:destroy] do |record|
-    record.additional_codes.select{|adco| adco.meursing_additional_code.blank? }.none?
+    record.meursing? || record.additional_codes.none?
   end
 
   validation :CT7, 'The additional code type cannot be deleted if it is related with a Meursing Table plan.', on: [:destroy] do |record|

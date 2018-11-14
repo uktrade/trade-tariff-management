@@ -1,0 +1,15 @@
+fieldset
+  form-group.without_bottom_margin :errors="errors" error-key="description"
+    template slot-scope="slotProps"
+      h3.heading-medium
+        | What is the footnote description?
+
+      label.form-label
+        span.error-message v-if="slotProps.hasError" v-cloak=""
+          | {{slotProps.error}}
+        span.form-hint
+          | Description cannot be left blank and must comprise at least one word.
+
+      .bootstrap-row
+        .col-lg-6.col-md-8.col-sm-12.col-xs-12
+          = f.input :description, as: :text, label: false, input_html: { "v-model" => "footnote.description", rows: 5 }

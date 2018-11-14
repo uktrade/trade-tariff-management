@@ -44,5 +44,27 @@ module Workbaskets
         i.record_id.to_s == target_id
       end
     end
+
+    def workbasket_items
+      @workbasket_items ||= workbasket.items
+    end
+
+    def commodity_codes_covered
+      @commodity_codes_covered ||= workbasket_items.select do |i|
+        i.hash_data["goods_nomenclature"].present? &&
+        i.hash_data["goods_nomenclature"]["goods_nomenclature_item_id"].present?
+      end.map do |i|
+        i.hash_data["goods_nomenclature"]["goods_nomenclature_item_id"]
+      end.uniq
+    end
+
+    def additional_codes_covered
+      @additional_codes_covered ||= workbasket_items.select do |i|
+        i.hash_data["additional_code"].present? &&
+        i.hash_data["additional_code"]["additional_code"].present?
+      end.map do |i|
+        i.hash_data["additional_code"]["additional_code"]
+      end.uniq
+    end
   end
 end

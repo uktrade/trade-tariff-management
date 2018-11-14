@@ -6,8 +6,8 @@ module Quotas
 
       def by_start_date_and_quota_definition_sid_reverse
         order(
-            Sequel.desc(:quota_definitions__validity_start_date),
-            Sequel.desc(:quota_definitions__quota_definition_sid)
+            Sequel.desc(:quota_definitions__quota_order_number_id),
+            Sequel.desc(:quota_definitions__validity_start_date)
         )
       end
 
