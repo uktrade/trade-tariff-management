@@ -1,11 +1,4 @@
 GIT
-  remote: git@github.com:bitzesty/simplecov-rcov.git
-  revision: 5761838cf0357e560d1dfe5669d945f9c0cb22d0
-  specs:
-    simplecov-rcov (0.2.3)
-      simplecov (>= 0.4.1)
-
-GIT
   remote: https://github.com/alphagov/govuk_frontend_toolkit_gem.git
   revision: f1101c49bd922f296704d597e565e9c73de0fa31
   submodules: true
@@ -13,6 +6,13 @@ GIT
     govuk_frontend_toolkit (8.1.0)
       railties (>= 3.1.0)
       sass (>= 3.2.0)
+
+GIT
+  remote: https://github.com/bitzesty/simplecov-rcov.git
+  revision: 5761838cf0357e560d1dfe5669d945f9c0cb22d0
+  specs:
+    simplecov-rcov (0.2.3)
+      simplecov (>= 0.4.1)
 
 GIT
   remote: https://github.com/mtunjic/forgery.git
