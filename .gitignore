@@ -15,6 +15,7 @@ data/*.xml
 
 # Environment files
 .env
+.env.*.local
 
 # Cloud Foundry manifest files
 *_manifest.yml
