@@ -20,8 +20,7 @@ module XmlGeneration
     end
 
     expose(:additional_params) do
-      puts "params call #{params[:workbasket]}"
-      {workbasket: params[:workbasket] == 'on'}
+      { workbasket: params[:workbasket] == 'on' }
     end
   end
 end
