@@ -7,7 +7,7 @@ elsif ENV['VCAP_SERVICES'].present?
     s["name"] == ENV["REDIS_INSTANCE_NAME"]
   end[0]["credentials"]["uri"]
 else
-  ""
+  raise "Please specify REDIS_URL or a Redis URI via VCAP_SERVICES for Sidekiq"
 end
 
 redis_config = { url: redis_url }

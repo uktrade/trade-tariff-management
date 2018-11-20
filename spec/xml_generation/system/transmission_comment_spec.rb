@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "TransmissionComment XML generation" do
 
   let(:db_record) do
-    create(:transmission_comment, :xml)
+    create(:transmission_comment)
   end
 
   let(:data_namespace) do

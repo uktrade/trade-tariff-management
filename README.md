@@ -9,6 +9,7 @@
   - Ruby
   - Postgresql
   - Redis (must be running for search)
+  - Chrome (for integration specs)
 
 ### Setup
 
@@ -31,6 +32,21 @@
 1. RAILS_ENV=test bundle exec rake db:drop db:create db:structure:load
 
 2. RAILS_ENV=test bundle exec rspec spec/
+
+### CI
+
+CI for this project is provided by GitLab CI.
+
+If you'd like to update the CI configuration you can test changes locally using
+the GitLab Runner (to avoid having to continually push changes then adjust):
+
+1. Install [Docker](https://docs.docker.com/install/)
+  - `brew cask install docker` on MacOS
+1. Install [GitLab Runner](https://docs.gitlab.com/runner/install/index.html)
+  - `brew install gitlab-runner` on MacOS
+1. Run `gitlab-runner exec docker test`
+  - N.B. Any changes aside from edits to `.gitlab-ci.yml` need to be committed
+    to take effect
 
 ## Deployment
 

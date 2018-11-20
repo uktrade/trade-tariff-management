@@ -3,6 +3,8 @@ namespace :cf do
   task :on_first_instance do
     instance_index = if ENV['VCAP_APPLICATION'] && JSON.parse(ENV['VCAP_APPLICATION'])
                        JSON.parse(ENV['VCAP_APPLICATION'])['instance_index']
+                     else
+                       0
                      end
     exit(0) unless instance_index.zero?
   end

@@ -3,10 +3,7 @@ FactoryGirl.define do
 
   factory :transmission_comment do
     comment_sid    { generate(:comment_sid) }
+    language_id    { "EN" }
     comment_text   { Forgery(:lorem_ipsum).sentence }
-
-    trait :xml do
-      language_id  { "EN" }
-    end
   end
 end

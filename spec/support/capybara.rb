@@ -16,3 +16,4 @@ end
 
 Capybara.javascript_driver = :headless_chrome
 Capybara.default_max_wait_time = 10
+Capybara.server = :puma, { Silent: !ENV.key?("DEBUG") }
