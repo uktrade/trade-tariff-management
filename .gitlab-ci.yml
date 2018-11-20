@@ -23,4 +23,4 @@ test:
   - bundle install --path vendor/bundler --jobs=4 --retry=3
   - bundle exec rake db:drop db:setup
   - bundle exec rake assets:precompile
-  - bundle exec rspec
+  - bundle exec rake
