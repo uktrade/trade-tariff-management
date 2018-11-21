@@ -4,9 +4,7 @@ namespace :factory_girl do
     if Rails.env.test?
       print "Linting factories..."
 
-      require "factory_girl_rails"
-      # TODO: Remove patching of Sequel
-      require_relative "../../spec/support/sequel"
+      require_relative "../../spec/support/factory_girl"
 
       DatabaseCleaner.clean_with(:truncation)
       DatabaseCleaner.cleaning do
