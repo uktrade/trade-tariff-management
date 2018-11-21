@@ -100,7 +100,7 @@ group :development do
 end
 
 group :development, :test do
-  gem "dotenv-rails", ">= 2.1.1"
+  gem "dotenv-rails"
   gem "pry-byebug"
   gem "pry-rails"
   gem 'fileutils'
@@ -119,7 +119,6 @@ group :test do
   gem 'codeclimate-test-reporter', require: nil
   gem "rspec_junit_formatter"
   gem 'capybara'
-  gem 'capybara-selenium'
   gem 'selenium-webdriver'
   gem 'launchy'
   gem "chromedriver-helper"
