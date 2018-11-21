@@ -2,7 +2,8 @@ fieldset
   form-group :errors="errors" error-key="geographical_area_id"
     template slot-scope="slotProps"
       h3.heading-medium
-        | What code will identify this area?
+        label for="geographical_area_id"
+         | What code will identify this area?
 
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -14,4 +15,4 @@ fieldset
 
       .bootstrap-row
         .col-xs-2.col-md-2.col-lg-2
-          input.form-control maxlength="4" v-model="geographical_area.geographical_area_id"
+          input#geographical_area_id.form-control maxlength="4" v-model="geographical_area.geographical_area_id"

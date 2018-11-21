@@ -2,7 +2,8 @@ fieldset
   form-group :errors="errors" error-key="operation_date"
     template slot-scope="slotProps"
       h3.heading-medium
-        | Specify the operation date
+        label for="geographical_area_operation_date"
+          | Specify the operation date
 
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -11,4 +12,6 @@ fieldset
 
       .bootstrap-row
         .col-md-12
-          = content_tag "date-select", "", ":value.sync" => "geographical_area.operation_date"
+          = content_tag "date-select", "",
+          { ":value.sync" => "geographical_area.operation_date",
+            id: "geographical_area_operation_date" }
