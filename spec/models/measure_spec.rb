@@ -1073,7 +1073,7 @@ describe Measure do
       let!(:additional_code_type_measure_type) {
         create(
             :additional_code_type_measure_type,
-            additional_code_type_id: additional_code_type.additional_code_type_id,
+            additional_code_type: additional_code_type,
             measure_type_id: measure_type.measure_type_id,
             validity_start_date: Date.yesterday,
         )
@@ -1099,7 +1099,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           measure_type_id: measure_type.measure_type_id,
           validity_start_date: Date.yesterday
         )
@@ -1129,7 +1129,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           validity_start_date: 10.year.ago,
           validity_end_date: 2.year.ago
         )
@@ -1159,7 +1159,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.yesterday
         )
@@ -1170,7 +1170,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.yesterday
         )
@@ -1189,7 +1189,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: 1.year.ago,
           validity_end_date: Date.current + 1.month
@@ -1201,7 +1201,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
@@ -1228,7 +1228,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: 1.year.ago,
           validity_end_date: nil
@@ -1240,7 +1240,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
@@ -1266,7 +1266,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.current + 1.month,
           validity_end_date: nil
@@ -1278,7 +1278,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
@@ -1305,7 +1305,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.current + 1.month,
           validity_end_date: Date.current + 2.months
@@ -1317,7 +1317,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
