@@ -2,11 +2,15 @@ require 'rails_helper'
 require 'chief_transformer'
 
 describe "CHIEF: VAT and Excises" do
-  before(:all) {
+  before(:all) do
     preload_standing_data
+  end
+
+  before(:each) do
     create :base_regulation, base_regulation_id: 'IYY99990',
                              validity_start_date: Date.new(1971,12,31)
-  }
+  end
+
   after(:all)  { clear_standing_data }
 
   # VAT/EXCISE measure types

@@ -32,6 +32,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="<%= asset_path "opengraph-image.png" %>">
 
+    <%- if ENV["SENTRY_DSN"].present? %>
+      <%= javascript_include_tag "sentry" %>
+
+      <script>
+        Sentry.init({ dsn: '<%= ENV.fetch("SENTRY_DSN") %>' });
+      </script>
+    <% end %>
+
     <%= yield :head %>
   </head>
 

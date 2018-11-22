@@ -14,7 +14,8 @@ SimpleCov.add_filter "vendor"
 if ENV.key?("CODECLIMATE_REPO_TOKEN")
   SimpleCov.formatters = []
   SimpleCov.start CodeClimate::TestReporter.configuration.profile
-elseif ENV.key?("ENABLE_COVERAGE")
+elsif ENV.key?("ENABLE_COVERAGE")
+  puts "Code coverage enabled"
   SimpleCov.start "rails"
 end
 
