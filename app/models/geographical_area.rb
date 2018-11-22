@@ -4,8 +4,17 @@ class GeographicalArea < Sequel::Model
   include ::WorkbasketHelpers::Association
   include OwnValidityPeriod
 
-  COUNTRIES_CODES = ['0', '2'].freeze
-  ERGA_OMNES = '1011'
+  GEOGRAPHICAL_COUNTRY_CODE = "0".freeze
+  GEOGRAPHICAL_GROUP_CODE = "1".freeze
+  GEOGRAPHICAL_REGION_CODE = "2".freeze
+
+  COUNTRIES_CODES = [
+    GEOGRAPHICAL_COUNTRY_CODE,
+    GEOGRAPHICAL_REGION_CODE,
+  ].freeze
+
+  ERGA_OMNES = "1011".freeze
+  THIRD_COUNTRIES = "1008".freeze
 
   plugin :time_machine
   plugin :oplog, primary_key: :geographical_area_sid
@@ -57,15 +66,15 @@ class GeographicalArea < Sequel::Model
   end
 
   def group?
-    geographical_code == "1"
+    geographical_code == GEOGRAPHICAL_GROUP_CODE
   end
 
   def country?
-    geographical_code == "0"
+    geographical_code == GEOGRAPHICAL_COUNTRY_CODE
   end
 
   def region?
-    geographical_code == "2"
+    geographical_code == GEOGRAPHICAL_REGION_CODE
   end
 
   dataset_module do
