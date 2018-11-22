@@ -13,11 +13,21 @@ FactoryGirl.define do
     end
 
     trait :erga_omnes do
+      group
       geographical_area_id { "1011" }
+    end
+
+    trait :third_countries do
+      group
+      geographical_area_id { "1008" }
     end
 
     trait :country do
       geographical_code { "0" }
+    end
+
+    trait :group do
+      geographical_code { "1" }
     end
 
     after(:build) { |geographical_area, evaluator|

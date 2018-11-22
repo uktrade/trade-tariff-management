@@ -11,80 +11,67 @@ Vue.component("add-geo-areas-to-country-region-popup", {
     };
   },
   mounted: function() {
-    if (this.geographicalArea.geographical_area_memberships.length > 0) {
-      this.memberships = this.geographicalArea.geographical_area_memberships.map(function(m) {
-        return clone(m);
-      });
-    } else {
-      this.addMembership();
-    }
+    this.addMembership();
   },
   methods: {
     addMembership: function() {
       var start_date = moment(this.geographicalArea.validity_start_date, "DD/MM/YYYY", true);
 
       this.memberships.push({
-        geographical_area: this.geographicalArea,
-        geographical_area_id: this.geographicalArea.geographical_area_id,
+        geographical_area: null,
+        geographical_area_id: null,
         validity_start_date: start_date.isValid() ? this.geographicalArea.validity_start_date : null,
         validity_end_date: null,
         geographical_area_group_sid: null
       });
     },
-    validate: function(resolve, reject) {
+    membershipAreaSelected: function(membershipIndex, selectedArea) {
+      var membership = this.memberships[membershipIndex];
+      membership.geographical_area = selectedArea;
+      membership.geographical_area_id = selectedArea.geographical_area_id;
+    },
+    validate: function() {
       var self = this;
 
-      this.errors = {};
-      this.errorSummary = "";
-      this.valid = true;
+      self.errors = [];
+      self.errorSummary = "";
+      self.valid = true;
 
-      var codesArray = this.codesArray;
+      this.memberships.forEach(function(membership) {
+        if (membership.validity_start_date === null) {
+          self.valid = false;
+          self.errorSummary = "Memberships could not be added because one or more joining dates are missing.";
+        }
 
-      if (this.codes.trim().length === 0) {
-        this.errors.codes = "One or more codes must be entered."
-        this.valid = false;
-        this.errorSummary = "Memberships could not be added because one or more required fields are missing.";
-      }
+        if (membership.geographical_area === null) {
+          self.valid = false;
+          self.errorSummary = "Memberships could not be added because one or more area groups are missing.";
+        }
+      });
 
-      if (!this.join_date) {
-        this.errors.join_date = "A date must be entered here";
-        this.valid = false;
-        this.errorSummary = "Memberships could not be added because one or more required fields are missing.";
-      }
-
-      if (!this.valid) {
-        return reject();
-      }
+      return self.valid;
     },
     addMemberships: function() {
       var self = this;
-      var components = this.measureComponents;
 
       this.processing = true;
 
-      this.validate(function(areas) {
-        for (var k in areas) {
-          if (!areas.hasOwnProperty(k)) {
-            continue;
-          }
+      if (!this.validate()) {
+        this.processing = false;
+        return;
+      }
 
-          var area = areas[k];
-          var start = moment(self.join_date, "DD/MM/YYYY", true);
-          var end = moment(self.leave_date, "DD/MM/YYYY", true);
-
-          self.geographicalArea.memberships.push({
-            geographical_area: area,
-            geographical_area_id: area.geographical_area_id,
-            geographical_area_group_sid: self.geographicalArea.geographical_area_id,
-            validity_start_date: start.isValid() ? start.format("DD MMMM YYYY") : null,
-            validity_end_date: end.isValid() ? end.format("DD MMMM YYYY") : null
-          });
-        }
-
-        self.onClose();
-      }, function() {
-        self.processing = false;
+      var currentMembershipIds = self.geographicalArea.geographical_area_memberships.map(function(currentMembership) {
+        return currentMembership.geographical_area_id;
       });
+
+      this.memberships.forEach(function(membership) {
+        if(!currentMembershipIds.includes(membership.geographical_area_id)) {
+          self.geographicalArea.geographical_area_memberships.push(membership);
+        }
+      });
+
+      this.onClose();
     },
     triggerClose: function() {
       this.onClose();
