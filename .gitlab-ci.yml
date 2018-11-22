@@ -1,6 +1,10 @@
-image: circleci/ruby:2.5-node-browsers
+stages:
+  - test
 
 test:
+  image: circleci/ruby:2.5-node-browsers
+  stage: test
+
   # Ideally service versions should be kept in sync with production
   services:
     - postgres:9.5
@@ -24,3 +28,20 @@ test:
   - bundle exec rake db:drop db:setup
   - bundle exec rake assets:precompile
   - bundle exec rake
+
+lint:
+  image: circleci/ruby:2.5-node
+  stage: test
+
+  cache:
+    key: ${CI_JOB_NAME}-v1
+    paths:
+    - node_modules/
+
+  variables:
+    RAILS_ENV: test
+    NODE_ENV: test
+
+  script:
+    - npm install
+    - bin/lint_recent_js
