@@ -385,4 +385,45 @@ describe GeographicalArea do
       end
     end
   end
+
+  describe "types of areas" do
+    let(:country) do
+      build :geographical_area,
+            geographical_code: GeographicalArea::GEOGRAPHICAL_COUNTRY_CODE
+    end
+
+    let(:group) do
+      build :geographical_area,
+            geographical_code: GeographicalArea::GEOGRAPHICAL_GROUP_CODE
+    end
+
+    let(:region) do
+      build :geographical_area,
+            geographical_code: GeographicalArea::GEOGRAPHICAL_REGION_CODE
+    end
+
+    describe "#group?" do
+      it "determines the type from the geographical code" do
+        expect(country).to_not be_group
+        expect(group).to be_group
+        expect(region).to_not be_group
+      end
+    end
+
+    describe "#country?" do
+      it "determines the type from the geographical code" do
+        expect(country).to be_country
+        expect(group).to_not be_country
+        expect(region).to_not be_country
+      end
+    end
+
+    describe "#region?" do
+      it "determines the type from the geographical code" do
+        expect(country).to_not be_region
+        expect(group).to_not be_region
+        expect(region).to be_region
+      end
+    end
+  end
 end
