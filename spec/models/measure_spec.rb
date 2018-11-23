@@ -732,11 +732,14 @@ describe Measure do
 
     describe "ME16: Integrating a measure with an additional code when an equivalent or
               overlapping measures without additional code already exists and vice-versa,
-              should be forbidden." do
+              should be forbidden.", :pending do
       let!(:goods_nomenclature) { create(:goods_nomenclature) }
       let!(:additional_code) { create(:additional_code, validity_start_date: Date.yesterday) }
 
       it "should run validation successfully if there is no existing measure for additional code and vice versa" do
+        pending("Rule commented out in c40a8679")
+        fail
+
         measure = build(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
@@ -1751,7 +1754,7 @@ describe Measure do
       end
     end
 
-    describe "ME119" do
+    describe "ME119", :pending do
       describe "with quota number origin" do
         it "valid" do
           validity_start_date = Date.new(2008,1,1)
@@ -1771,6 +1774,9 @@ describe Measure do
           )
 
           expect(measure).to be_conformant
+
+          pending("Rule commented out in c40a8679")
+          fail
         end
 
         it "invalid" do
