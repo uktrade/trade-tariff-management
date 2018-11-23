@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :response, class: TariffSynchronizer::Response do
+    skip_create
+
     response_code { [200, 404, 403].sample }
     content { Forgery(:basic).text }
 

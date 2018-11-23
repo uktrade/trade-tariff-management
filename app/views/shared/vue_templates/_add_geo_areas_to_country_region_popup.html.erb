@@ -37,7 +37,7 @@
                 <label class="form-label" v-if="index === 0">
                   Select a geographical area group
                 </label>
-                <custom-select :options="groupsList" allow-clear="true" code-field="geographical_area_id" label-field="description" value-field="geographical_area_id" v-model="membership.geographical_area_group_sid" placeholder="― select group ―" code-class-name="prefix--country"></custom-select>
+                <custom-select :options="groupsList" allow-clear="true" code-field="geographical_area_id" label-field="description" value-field="geographical_area_id" v-model="membership.geographical_area_group_sid" :on-change="membershipAreaSelected.bind(null, index)" placeholder="― select group ―" code-class-name="prefix--country"></custom-select>
               </template>
             </form-group>
           </div>

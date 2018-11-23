@@ -47,6 +47,10 @@ module WorkbasketInteractions
         errors
       end
 
+      def errors_translator(key)
+        I18n.t(:create_geographical_area)[key]
+      end
+
       private
 
         def check_type!
@@ -117,10 +121,6 @@ module WorkbasketInteractions
             @errors[:operation_date] = errors_translator(:operation_date_blank)
             @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
-        end
-
-        def errors_translator(key)
-          I18n.t(:create_geographical_area)[key]
         end
 
         def squish_it(val)

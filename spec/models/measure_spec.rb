@@ -772,12 +772,15 @@ describe Measure do
         measure2 = build(
           :measure,
           goods_nomenclature_item_id: measure.goods_nomenclature_item_id,
+          goods_nomenclature_sid: measure.goods_nomenclature_sid,
           additional_code_sid: additional_code.additional_code_sid,
           validity_start_date: measure.validity_start_date,
           measure_type_id: measure.measure_type_id,
           geographical_area_sid: measure.geographical_area_sid,
           ordernumber: measure.ordernumber,
-          reduction_indicator: measure.reduction_indicator
+          reduction_indicator: measure.reduction_indicator,
+          additional_code_type_id: measure.additional_code_type_id,
+          additional_code_id: measure.additional_code_id
         )
 
         expect(measure2.additional_code_sid).to_not be(nil)
@@ -800,12 +803,15 @@ describe Measure do
         measure2 = build(
           :measure,
           goods_nomenclature_item_id: measure.goods_nomenclature_item_id,
+          goods_nomenclature_sid: measure.goods_nomenclature_sid,
           additional_code_sid: nil,
           validity_start_date: measure.validity_start_date,
           measure_type_id: measure.measure_type_id,
           geographical_area_sid: measure.geographical_area_sid,
           ordernumber: measure.ordernumber,
-          reduction_indicator: measure.reduction_indicator
+          reduction_indicator: measure.reduction_indicator,
+          additional_code_type_id: measure.additional_code_type_id,
+          additional_code_id: measure.additional_code_id
         )
 
         expect(measure2.additional_code_sid).to be(nil)
@@ -843,43 +849,38 @@ describe Measure do
         )
       }
 
-      let!(:additional_code2) {
-        create(
-          :meursing_additional_code,
-          validity_start_date: Date.yesterday,
-        )
-      }
-
-      let(:measure) {
-        build(
-          :measure,
-          measure_type_id: measure_type.measure_type_id,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
-          additional_code_id: additional_code.additional_code,
-          additional_code_sid: additional_code.additional_code_sid,
-          validity_start_date: Date.yesterday,
-        )
-      }
-
-      let(:measure2) {
-        build(
-          :measure,
-          measure_type_id: measure_type.measure_type_id,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
-          additional_code_id: additional_code2.additional_code,
-          additional_code_sid: additional_code2.meursing_additional_code_sid,
-          validity_start_date: Date.yesterday,
-        )
-      }
-
       context "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code." do
+        let(:measure) {
+          build(
+            :measure,
+            measure_type_id: measure_type.measure_type_id,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            additional_code_id: additional_code.additional_code,
+            additional_code_sid: additional_code.additional_code_sid,
+            validity_start_date: Date.yesterday,
+          )
+        }
+
         it 'should be valid' do
           expect(measure).to be_conformant
         end
+      end
+
+      context "If the additional code type has an application 'non-Meursing' and the additional code doesn't exist" do
+        let(:measure) {
+          build(
+            :measure,
+            measure_type_id: measure_type.measure_type_id,
+            additional_code_type_id: additional_code_type.additional_code_type_id,
+            additional_code_id: nil,
+            additional_code_sid: nil,
+            validity_start_date: Date.yesterday,
+          )
+        }
 
         it 'should be invalid' do
-          expect(measure2).to_not be_conformant
-          expect(measure2.conformance_errors).to have_key(:ME17)
+          expect(measure).to_not be_conformant
+          expect(measure.conformance_errors).to have_key(:ME17)
         end
       end
     end

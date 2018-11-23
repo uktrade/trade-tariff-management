@@ -9,7 +9,7 @@ describe "Main XML generation" do
   end
 
   let(:transmission_comment) do
-    create(:transmission_comment, :xml)
+    create(:transmission_comment)
   end
 
   let(:measure) do

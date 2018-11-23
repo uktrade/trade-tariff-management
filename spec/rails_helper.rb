@@ -10,8 +10,14 @@ require "codeclimate-test-reporter"
 WebMock.disable_net_connect!(allow: "codeclimate.com", allow_localhost: true)
 
 SimpleCov.add_filter "vendor"
-SimpleCov.formatters = []
-SimpleCov.start CodeClimate::TestReporter.configuration.profile
+
+if ENV.key?("CODECLIMATE_REPO_TOKEN")
+  SimpleCov.formatters = []
+  SimpleCov.start CodeClimate::TestReporter.configuration.profile
+elsif ENV.key?("ENABLE_COVERAGE")
+  puts "Code coverage enabled"
+  SimpleCov.start "rails"
+end
 
 require File.expand_path("../../config/environment", __FILE__)
 

@@ -9,6 +9,7 @@ development:
 
 test:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
   database: tariff_management_test
 
 production:
