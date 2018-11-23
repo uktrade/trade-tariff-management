@@ -48,9 +48,6 @@ describe TariffSynchronizer::FileService do
 
   context "in production" do
     before do
-      string_inquirer = ActiveSupport::StringInquirer.new("production")
-      allow(Rails).to receive(:env).and_return(string_inquirer)
-
       aws_resource = instance_double("Aws::S3::Resource")
       @aws_bucket = instance_double("Aws::S3::Bucket")
       @aws_object = instance_double("Aws::S3::Object")
@@ -63,7 +60,7 @@ describe TariffSynchronizer::FileService do
         expect(@aws_bucket).to receive(:object).with("data/some-file.txt").and_return(@aws_object)
         expect(@aws_object).to receive(:put).with(body: "Hello World")
 
-        described_class.write_file("data/some-file.txt", "Hello World")
+        described_class.write_file("data/some-file.txt", "Hello World", use_s3: true)
       end
     end
 
@@ -72,7 +69,7 @@ describe TariffSynchronizer::FileService do
         expect(@aws_bucket).to receive(:object).with("data/some-file.txt").and_return(@aws_object)
         expect(@aws_object).to receive(:exists?)
 
-        described_class.file_exists?("data/some-file.txt")
+        described_class.file_exists?("data/some-file.txt", use_s3: true)
       end
     end
 
@@ -81,7 +78,7 @@ describe TariffSynchronizer::FileService do
         expect(@aws_bucket).to receive(:object).with("data/some-file.txt").and_return(@aws_object)
         expect(@aws_object).to receive(:size)
 
-        described_class.file_size("data/some-file.txt")
+        described_class.file_size("data/some-file.txt", use_s3: true)
       end
     end
 
@@ -93,7 +90,7 @@ describe TariffSynchronizer::FileService do
         expect(@aws_object).to receive(:get).and_return(aws_object_output)
         expect(aws_object_output).to receive(:body)
 
-        described_class.file_as_stringio(base_update)
+        described_class.file_as_stringio(base_update, use_s3: true)
       end
     end
   end
