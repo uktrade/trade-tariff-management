@@ -1,12 +1,13 @@
 FactoryGirl.define do
   sequence(:certificate_sid) { |n| n}
+  sequence(:certificate_type_code, LoopingSequence.lower_a_to_upper_z, &:value)
 
   factory :certificate do
     transient do
       description { Forgery(:basic).text }
     end
 
-    certificate_type_code { Forgery(:basic).text(exactly: 1) }
+    certificate_type_code { generate(:certificate_type_code) }
     certificate_code      { Forgery(:basic).text(exactly: 3) }
     validity_start_date   { Date.today.ago(2.years) }
     validity_end_date     { nil }
@@ -19,7 +20,7 @@ FactoryGirl.define do
 
   factory :certificate_description_period do
     certificate_description_period_sid { generate(:certificate_sid) }
-    certificate_type_code              { Forgery(:basic).text(exactly: 1) }
+    certificate_type_code              { generate(:certificate_type_code) }
     certificate_code                   { Forgery(:basic).text(exactly: 3) }
     validity_start_date                { Date.today.ago(2.years) }
     validity_end_date                  { nil }
@@ -36,7 +37,7 @@ FactoryGirl.define do
     end
 
     certificate_description_period_sid { generate(:certificate_sid) }
-    certificate_type_code              { Forgery(:basic).text(exactly: 1) }
+    certificate_type_code              { generate(:certificate_type_code) }
     certificate_code                   { Forgery(:basic).text(exactly: 3) }
     description                        { Forgery(:lorem_ipsum).sentence }
 
@@ -60,7 +61,7 @@ FactoryGirl.define do
       description { Forgery(:basic).text }
     end
 
-    certificate_type_code              { Forgery(:basic).text(exactly: 1) }
+    certificate_type_code              { generate(:certificate_type_code) }
     validity_start_date                { Date.today.ago(2.years) }
     validity_end_date                  { nil }
 
@@ -78,7 +79,7 @@ FactoryGirl.define do
   end
 
   factory :certificate_type_description do
-    certificate_type_code { Forgery(:basic).text(exactly: 1) }
+    certificate_type_code { generate(:certificate_type_code) }
     description           { Forgery(:basic).text }
 
     trait :xml do
