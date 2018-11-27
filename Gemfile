@@ -76,7 +76,6 @@ gem "sidekiq-scheduler", "~> 2.1.8"
 
 gem "plek", "~> 1.11"
 gem "gds-sso", "~> 13", ">= 12.1.0"
-gem "pundit", "0.3.0"
 
 # System gems
 gem "connection_pool", "~> 2.2"
