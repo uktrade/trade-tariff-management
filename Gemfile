@@ -36,7 +36,6 @@ gem "parsley-rails"
 
 # File uploads and AWS
 gem "shrine"
-gem "aws-sdk"
 gem "aws-sdk-rails"
 gem "aws-sdk-s3"
 gem "rubyzip", "~> 1.2.2"
