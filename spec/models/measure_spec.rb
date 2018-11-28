@@ -2193,3 +2193,36 @@ describe Measure do
     end
   end
 end
+
+describe Measure, "#set_searchable_data!" do
+  it "refreshes the searchable data without inserting oplog rows" do
+    measure = create(:measure, searchable_data: nil)
+
+    expect { measure.set_searchable_data! }.
+      to_not change{ oplog_count_for_measure(measure) }.from(1)
+  end
+
+  it "refreshes the searchable data without updating other columns" do
+    measure = create(:measure, searchable_data: nil, national: true)
+
+    expect(measure.searchable_data).to_not be_present
+    expect(measure.searchable_data_updated_at).to_not be_present
+
+    # Modify an attribute unrelated to searchable data
+    measure.national = false
+    measure.set_searchable_data!
+
+    measure_oplog =
+      Measure::Operation.where(measure_sid: measure.measure_sid).last
+
+    expect(measure_oplog.searchable_data).to be_present
+    expect(measure_oplog.searchable_data_updated_at).to be_present
+    expect(measure_oplog.national).to eq true
+  end
+
+  private
+
+  def oplog_count_for_measure(measure)
+    Measure::Operation.where(measure_sid: measure.measure_sid).count
+  end
+end
