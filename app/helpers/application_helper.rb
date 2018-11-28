@@ -25,4 +25,8 @@ module ApplicationHelper
 
     link_to title, options, {class: css_class}
   end
+
+  def application_version_identifier
+    ENV["GIT_COMMIT"]&.slice(0..6)
+  end
 end

@@ -41,5 +41,9 @@
   <%= render "shared/vue_templates/footnote" %>
 <% end %>
 
+<% content_for :footer_bottom do %>
+  <%= render "application/version_identifier" %>
+<% end %>
+
 <%= render "flashes" %>
 <%= render template: "layouts/govuk_template" %>
