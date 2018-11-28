@@ -82,7 +82,6 @@ gem "connection_pool", "~> 2.2"
 gem "newrelic_rpm"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
-gem "bootscale", "~> 0.5", require: false
 
 gem "ffi", "~> 1.9.24"
 

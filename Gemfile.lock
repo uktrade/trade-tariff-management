@@ -99,7 +99,6 @@ GEM
       aws-sdk-core (~> 3)
       aws-sigv4 (~> 1.0)
     aws-sigv4 (1.0.2)
-    bootscale (0.7.0)
     bootstrap-datepicker-rails (1.7.1.1)
       railties (>= 3.0)
     bootstrap-sass (3.3.7)
@@ -485,7 +484,6 @@ DEPENDENCIES
   ansi (~> 1.5)
   aws-sdk-rails
   aws-sdk-s3
-  bootscale (~> 0.5)
   bootstrap-datepicker-rails (~> 1.7.1.1)
   bootstrap-sass (~> 3.3.7)
   builder (~> 3.2)
