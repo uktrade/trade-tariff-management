@@ -13,7 +13,10 @@ module WorkbasketServices
           record.duty_expression_id = record_ops[:duty_expression_id]
 
           set_primary_key(record)
-          record.measure = measure
+
+          unless measure.exists?
+            record.measure = measure
+          end
         end
     end
   end

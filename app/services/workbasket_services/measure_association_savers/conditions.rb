@@ -49,7 +49,9 @@ module WorkbasketServices
           condition.measure_sid = measure.measure_sid
           set_primary_key(condition)
 
-          condition.measure = measure
+          unless measure.exists?
+            condition.measure = measure
+          end
         end
 
         def condition_attrs

@@ -98,7 +98,10 @@ module WorkbasketServices
           footnote_association_measure.measure_sid = measure.measure_sid
           footnote_association_measure.footnote_id = footnote.footnote_id
           footnote_association_measure.footnote_type_id = footnote_type_id
-          footnote_association_measure.measure = measure
+
+          unless measure.exists?
+            footnote_association_measure.measure = measure
+          end
         end
 
         def generate_footnote_description_period!
