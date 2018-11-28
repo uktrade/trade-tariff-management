@@ -111,6 +111,8 @@
             <a href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/"><%= content_for?(:crown_copyright_message) ? yield(:crown_copyright_message) : "© Crown copyright" %></a>
           </div>
         </div>
+
+        <%= yield :footer_bottom %>
       </div>
     </footer>
 
