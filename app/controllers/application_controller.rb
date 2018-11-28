@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  include Pundit
   include GDS::SSO::ControllerMethods
 
   protect_from_forgery
@@ -9,11 +8,6 @@ class ApplicationController < ActionController::Base
     authorise_user!('signin')
   end
   around_action :configure_time_machine
-
-  rescue_from Pundit::NotAuthorizedError do |e|
-    # Layout and view comes from GDS::SSO::ControllerMethods
-    render "authorisations/unauthorised", layout: "unauthorised", status: :forbidden, locals: { message: e.message }
-  end unless Rails.env.test?
 
   def current_page
     Integer(params[:page] || 1)

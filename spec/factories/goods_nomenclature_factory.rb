@@ -1,5 +1,7 @@
 FactoryGirl.define do
   sequence(:goods_nomenclature_sid) { |n| n}
+  sequence(:goods_nomenclature_group_id, LoopingSequence.lower_a_to_upper_z, &:value)
+  sequence(:goods_nomenclature_group_type, LoopingSequence.lower_a_to_upper_z, &:value)
 
   factory :goods_nomenclature do
     transient do
@@ -179,7 +181,7 @@ FactoryGirl.define do
   factory :goods_nomenclature_group do
     validity_start_date                  { Date.today.ago(3.years) }
     validity_end_date                    { nil }
-    goods_nomenclature_group_type        { Forgery(:basic).text(exactly: 1) }
+    goods_nomenclature_group_type        { generate(:goods_nomenclature_group_type) }
     goods_nomenclature_group_id          { Forgery(:basic).text(exactly: 2) }
     nomenclature_group_facility_code     { 0 }
 
@@ -189,8 +191,8 @@ FactoryGirl.define do
   end
 
   factory :goods_nomenclature_group_description do
-    goods_nomenclature_group_type  { Forgery(:basic).text(exactly: 1) }
-    goods_nomenclature_group_id    { Forgery(:basic).text(exactly: 1) }
+    goods_nomenclature_group_type  { generate(:goods_nomenclature_group_type) }
+    goods_nomenclature_group_id    { generate(:goods_nomenclature_group_id) }
     description                    { Forgery(:lorem_ipsum).sentence }
 
     trait :xml do
@@ -216,7 +218,7 @@ FactoryGirl.define do
 
   factory :nomenclature_group_membership do
     goods_nomenclature_sid         { generate(:sid) }
-    goods_nomenclature_group_type  { Forgery(:basic).text(exactly: 1) }
+    goods_nomenclature_group_type  { generate(:goods_nomenclature_group_type) }
     goods_nomenclature_group_id    { Forgery(:basic).text(exactly: 2) }
     goods_nomenclature_item_id     { Forgery(:basic).text(exactly: 2) }
     productline_suffix             { Forgery(:basic).text(exactly: 2) }

@@ -1,6 +1,11 @@
 Vue.component("add-geo-areas-to-country-region-popup", {
   template: "#add-geo-areas-to-country-region-popup-template",
-  props: ["geographicalArea", "validityStartDate", "onClose", "open"],
+  props: {
+    "geographicalArea": Object,
+    "validityStartDate": String,
+    "onClose": Function,
+    "open": Boolean
+  },
   data: function() {
     return {
       memberships: [],

@@ -49,11 +49,10 @@ class MeasureValidator < TradeTariffBackend::Validator
     )
   end
 
-  # FIXME: https://trello.com/c/COQPnHr2/602-dit-tq-128-edit-quota-measures-is-throwing-with-conformance-errors-needs-to-check-if-these-are-valid-me16-and-me119-6
-  # validation :ME8, 'The validity period of the goods code must span the validity period of the measure.',
-  #     on: [:create, :update] do
-  #   validates :validity_date_span, of: :goods_nomenclature, extend_message: true
-  # end
+  validation :ME8, 'The validity period of the goods code must span the validity period of the measure.',
+      on: [:create, :update] do
+    validates :validity_date_span, of: :goods_nomenclature, extend_message: true
+  end
 
   validation :ME9, 'If no additional code is specified then the goods code is mandatory.', on: [:create, :update] do |record|
     (record.additional_code_id.present?) || (record.additional_code_id.blank? && record.goods_nomenclature_item_id.present?)
@@ -438,7 +437,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       validates :validity_date_span, of: :order_number, extend_message: true
   end
 
-  # FIXME: https://trello.com/c/COQPnHr2/602-dit-tq-128-edit-quota-measures-is-throwing-with-conformance-errors-needs-to-check-if-these-are-valid-me16-and-me119-6
+  # FIXME: https://trello.com/c/COQPnHr2/602-dit-tq-128-edit-quota-measures-is-throwing-with-conformance-errors-needs-to-check-if-these-are-valid-me16-and-me119-6 
   # validation :ME119,
   #   %(When a quota order number is used in a measure then the validity period of the quota order number origin must
   #    span the validity period of the measure. This rule is only applicable for measures with start date after

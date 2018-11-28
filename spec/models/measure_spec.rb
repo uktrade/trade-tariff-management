@@ -589,10 +589,7 @@ describe Measure do
     # ME2 ME3
     it { is_expected.to validate_validity_date_span.of(:measure_type) }
     # ME6 ME8
-    it "The goods code must exist & The validity period of the goods code must span the validity period of the measure" do
-      pending
-      is_expected.to validate_validity_date_span.of(:goods_nomenclature)
-    end
+    it { is_expected.to validate_validity_date_span.of(:goods_nomenclature) }
     # ME25 If the measures end date is specified (implicitly or explicitly)
     # then the start date of the measure must be less than
     # or equal to the end date

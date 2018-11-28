@@ -1,6 +1,8 @@
 FactoryGirl.define do
+  sequence(:condition_code, LoopingSequence.lower_a_to_upper_z, &:value)
+
   factory :measure_condition_code do
-    condition_code { Forgery(:basic).text(exactly: 1) }
+    condition_code { generate(:condition_code) }
     validity_start_date { Date.today.ago(3.years) }
     validity_end_date   { nil }
 
@@ -10,7 +12,7 @@ FactoryGirl.define do
   end
 
   factory :measure_condition_code_description do
-    condition_code { Forgery(:basic).text(exactly: 1) }
+    condition_code { generate(:condition_code) }
     description    { Forgery(:basic).text }
 
     trait :xml do
