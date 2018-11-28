@@ -82,6 +82,7 @@ gem "connection_pool", "~> 2.2"
 gem "newrelic_rpm"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
+gem "bootsnap", require: false
 
 gem "ffi", "~> 1.9.24"
 
@@ -100,7 +101,6 @@ group :development, :test do
   gem "dotenv-rails"
   gem "pry-byebug"
   gem "pry-rails"
-  gem 'fileutils'
 end
 
 group :test do
