@@ -17,9 +17,11 @@ module Db
     private
 
       def fetch_relevant_data
-        @data = ::XmlGeneration::WorkbasketSearch.new(
-          record.date_filters
-        ).target_workbaskets
+        start_date = record.date_filters[:start_date].strftime("%Y-%m-%d")
+        end_date = record.date_filters[:end_date].strftime("%Y-%m-%d") if record.date_filters[:end_date].present?
+        @data = ::Workbaskets::Workbasket.by_date_range(
+          start_date, end_date
+        )
       end
 
       def delete_target_db_records!
