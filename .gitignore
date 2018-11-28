@@ -38,3 +38,6 @@ public/uploads/*
 dev_server/*
 beta_server/*
 
+node_modules/
+
+spec/examples.txt

@@ -732,11 +732,14 @@ describe Measure do
 
     describe "ME16: Integrating a measure with an additional code when an equivalent or
               overlapping measures without additional code already exists and vice-versa,
-              should be forbidden." do
+              should be forbidden.", :pending do
       let!(:goods_nomenclature) { create(:goods_nomenclature) }
       let!(:additional_code) { create(:additional_code, validity_start_date: Date.yesterday) }
 
       it "should run validation successfully if there is no existing measure for additional code and vice versa" do
+        pending("Rule commented out in c40a8679")
+        fail
+
         measure = build(
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
@@ -1073,7 +1076,7 @@ describe Measure do
       let!(:additional_code_type_measure_type) {
         create(
             :additional_code_type_measure_type,
-            additional_code_type_id: additional_code_type.additional_code_type_id,
+            additional_code_type: additional_code_type,
             measure_type_id: measure_type.measure_type_id,
             validity_start_date: Date.yesterday,
         )
@@ -1099,7 +1102,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           measure_type_id: measure_type.measure_type_id,
           validity_start_date: Date.yesterday
         )
@@ -1129,7 +1132,7 @@ describe Measure do
           :measure,
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           validity_start_date: 10.year.ago,
           validity_end_date: 2.year.ago
         )
@@ -1159,7 +1162,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.yesterday
         )
@@ -1170,7 +1173,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.yesterday
         )
@@ -1189,7 +1192,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: 1.year.ago,
           validity_end_date: Date.current + 1.month
@@ -1201,7 +1204,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
@@ -1228,7 +1231,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: 1.year.ago,
           validity_end_date: nil
@@ -1240,7 +1243,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
@@ -1266,7 +1269,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.current + 1.month,
           validity_end_date: nil
@@ -1278,7 +1281,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
@@ -1305,7 +1308,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
           validity_start_date: Date.current + 1.month,
           validity_end_date: Date.current + 2.months
@@ -1317,7 +1320,7 @@ describe Measure do
           goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
           geographical_area_sid: geographical_area.geographical_area_sid,
           additional_code_sid: additional_code.additional_code_sid,
-          additional_code_type_id: additional_code_type.additional_code_type_id,
+          additional_code_type: additional_code_type,
           additional_code_id: additional_code.additional_code,
         )
 
@@ -1751,7 +1754,7 @@ describe Measure do
       end
     end
 
-    describe "ME119" do
+    describe "ME119", :pending do
       describe "with quota number origin" do
         it "valid" do
           validity_start_date = Date.new(2008,1,1)
@@ -1771,6 +1774,9 @@ describe Measure do
           )
 
           expect(measure).to be_conformant
+
+          pending("Rule commented out in c40a8679")
+          fail
         end
 
         it "invalid" do

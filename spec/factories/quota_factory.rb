@@ -66,7 +66,7 @@ FactoryGirl.define do
     quota_order_number_id  { generate(:quota_order_number_id) }
     monetary_unit_code              { Forgery(:basic).text(exactly: 3) }
     measurement_unit_code           { Forgery(:basic).text(exactly: 3) }
-    measurement_unit_qualifier_code { Forgery(:basic).text(exactly: 1) }
+    measurement_unit_qualifier_code { generate(:measurement_unit_qualifier_code) }
 
     trait :actual do
       validity_start_date { Date.today.ago(3.years) }
@@ -83,7 +83,7 @@ FactoryGirl.define do
       critical_state                   { Forgery(:basic).text(exactly: 2) }
       critical_threshold               { Forgery(:basic).number }
       monetary_unit_code               { Forgery(:basic).text(exactly: 2) }
-      measurement_unit_qualifier_code  { Forgery(:basic).text(exactly: 1) }
+      measurement_unit_qualifier_code { generate(:measurement_unit_qualifier_code) }
       description                      { Forgery(:lorem_ipsum).sentence }
     end
   end

@@ -338,7 +338,8 @@ module Workbaskets
       end
 
       def can_withdraw?
-        awaiting_cross_check? || awaiting_approval?
+        status.to_sym.in?(STATES_WITH_ERROR) ||
+        status.to_sym.in?(APPROVER_SCOPE)
       end
 
       def cross_check_process_can_be_started?
