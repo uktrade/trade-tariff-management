@@ -13,8 +13,10 @@ Rails.application.routes.draw do
     resources :exports, only: [:index, :show, :create]
   end
 
-  namespace :db do
-    resources :rollbacks, only: [:index, :create]
+  unless TradeTariffBackend.production?
+    namespace :db do
+      resources :rollbacks, only: [:index, :create]
+    end
   end
 
   namespace :api do
