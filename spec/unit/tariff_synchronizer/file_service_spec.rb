@@ -53,7 +53,9 @@ describe TariffSynchronizer::FileService do
     before do
       aws_resource = instance_double("Aws::S3::Resource")
       expect(Aws::S3::Resource).to receive(:new).and_return(aws_resource)
-      expect(aws_resource).to receive(:bucket).with("trade-tariff-management").and_return(aws_bucket)
+
+      expect(aws_resource).to receive(:bucket).
+        with(expected_bucket_name).and_return(aws_bucket)
     end
 
     describe ".write_file" do
@@ -93,6 +95,12 @@ describe TariffSynchronizer::FileService do
 
         described_class.file_as_stringio(base_update, use_s3: true)
       end
+    end
+
+    private
+
+    def expected_bucket_name
+      ENV.fetch("AWS_BUCKET_NAME").presence || fail("Set AWS_BUCKET_NAME")
     end
   end
 end
