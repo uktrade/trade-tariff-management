@@ -4,7 +4,7 @@ describe TariffSynchronizer::FileService do
 
   let(:base_update) { create :base_update }
 
-  context "in development" do
+  context "with filesystem" do
     describe ".write_file" do
       it "Saves the file in the local filesystem" do
         FakeFS do
@@ -46,7 +46,7 @@ describe TariffSynchronizer::FileService do
     end
   end
 
-  context "in production" do
+  context "with S3" do
     let(:aws_bucket) { instance_double("Aws::S3::Bucket") }
     let(:aws_object) { instance_double("Aws::S3::Object") }
 
