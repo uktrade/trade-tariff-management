@@ -150,9 +150,11 @@ FactoryGirl.define do
       measure_type_description "EXCISE 111"
     end
 
-    after(:build) { |measure_type, evaluator|
-      FactoryGirl.create(:measure_type_series, measure_type_series_id: measure_type.measure_type_series_id)
-    }
+    after(:build) do |measure_type, evaluator|
+      if measure_type.measure_type_series.nil?
+        create(:measure_type_series, measure_type_series_id: measure_type.measure_type_series_id)
+      end
+    end
 
     after(:build) { |measure_type, evaluator|
       FactoryGirl.create(
