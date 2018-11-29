@@ -260,6 +260,14 @@ module Workbaskets
         end
       end
 
+      def first_operation_date
+        begin
+          exclude(operation_date: nil).order(:operation_date).limit(1).first!.operation_date
+        rescue Sequel::NoMatchingRow
+          nil
+        end
+      end
+
       def in_status(status_name)
         where(status: status_name)
       end
