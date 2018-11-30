@@ -46,30 +46,6 @@ RSpec.describe "adding measures", :js do
 
   private
 
-  # TODO: Extract into form helpers?
-  def input_date(label, date)
-    fill_in(label, with: date.strftime("%d/%m/%Y"))
-    close_datepicker
-  end
-
-  def close_datepicker
-    find("body").click
-  end
-
-  def search_for_value(type_value:, select_value:)
-    find(".selectize-control input").click.send_keys(type_value)
-    find(".selectize-dropdown-content .option", text: select_value).click
-  end
-
-  def select_dropdown_value(value)
-    find(".selectize-control").click
-    find(".selectize-dropdown-content .selection", text: value).click
-  end
-
-  def select_radio(label)
-    find("label", text: label).click
-  end
-
   def select_measure_type_series(measure_type_series)
     within(".workbasket_forms_create_measures_form_measure_type_series_id") do
       select_dropdown_value(measure_type_series.description)
