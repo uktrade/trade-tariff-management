@@ -51,7 +51,6 @@ RSpec.configure do |config|
   config.include RescueHelper
   config.include ChiefDataHelper
   config.include ActiveSupport::Testing::TimeHelpers
-  config.include CapybaraHelper, type: :feature
   config.include CapybaraFormHelper, type: :feature
   config.include Rails.application.routes.url_helpers
 

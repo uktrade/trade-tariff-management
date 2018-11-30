@@ -19,7 +19,7 @@ describe 'base regulation', js: true do
   let(:required_filed_values) do
     base_required_filed_values.
         concat([
-                   {name: 'Start date', value: validity_start_date.strftime("%d/%m/%Y"), type: :date},
+                   { name: 'Start date', value: validity_start_date, type: :date },
                    {name: 'Specify the regulation group', value: regulation_group.regulation_group_id, type: :select},
                ])
   end
@@ -27,8 +27,8 @@ describe 'base regulation', js: true do
   let(:filed_values) do
     required_filed_values.
         concat([
-                   {name: 'End date', value: validity_end_date.strftime("%d/%m/%Y"), type: :date},
-                   {name: 'Effective end date', value: effective_end_date.strftime("%d/%m/%Y"), type: :date},
+                   { name: 'End date', value: validity_end_date, type: :date },
+                   { name: 'Effective end date', value: effective_end_date, type: :date },
                ])
   end
 
