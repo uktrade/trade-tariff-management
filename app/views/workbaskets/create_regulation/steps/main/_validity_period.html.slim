@@ -34,7 +34,7 @@ div v-if="showValidityPeriod"
       { "v-bind:value.sync" => "regulation.effective_end_date",
         id: "effective_end_date" }
 
-  div v-if="showRegulationGroup"
+  fieldset v-if="showRegulationGroup"
     h3.heading-medium
       | Specify the regulation group
 
