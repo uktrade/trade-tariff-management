@@ -1,6 +1,7 @@
 fieldset
   h3.heading-medium
-    | When will these measures come into force?
+    label for="measure_validity_start_date"
+      | When will these measures come into force?
 
   .form-group
     label.form-label
@@ -9,7 +10,9 @@ fieldset
 
     .row
       .col-md-6
-        = content_tag "date-select", "", ":value.sync" => "measure.validity_start_date"
+        = content_tag "date-select", "",
+          { ":value.sync" => "measure.validity_start_date",
+            id: "measure_validity_start_date" }
 
 fieldset
   h3.heading-medium
