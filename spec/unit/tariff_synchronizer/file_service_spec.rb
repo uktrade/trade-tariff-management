@@ -4,7 +4,7 @@ describe TariffSynchronizer::FileService do
 
   let(:base_update) { create :base_update }
 
-  context "in development" do
+  context "with filesystem" do
     describe ".write_file" do
       it "Saves the file in the local filesystem" do
         FakeFS do
@@ -46,42 +46,42 @@ describe TariffSynchronizer::FileService do
     end
   end
 
-  context "in production" do
-    before do
-      string_inquirer = ActiveSupport::StringInquirer.new("production")
-      allow(Rails).to receive(:env).and_return(string_inquirer)
+  context "with S3" do
+    let(:aws_bucket) { instance_double("Aws::S3::Bucket") }
+    let(:aws_object) { instance_double("Aws::S3::Object") }
 
+    before do
       aws_resource = instance_double("Aws::S3::Resource")
-      @aws_bucket = instance_double("Aws::S3::Bucket")
-      @aws_object = instance_double("Aws::S3::Object")
       expect(Aws::S3::Resource).to receive(:new).and_return(aws_resource)
-      expect(aws_resource).to receive(:bucket).with("trade-tariff-management").and_return(@aws_bucket)
+
+      expect(aws_resource).to receive(:bucket).
+        with(expected_bucket_name).and_return(aws_bucket)
     end
 
     describe ".write_file" do
       it "Saves the file to a S3 bucket in if is the production environment" do
-        expect(@aws_bucket).to receive(:object).with("data/some-file.txt").and_return(@aws_object)
-        expect(@aws_object).to receive(:put).with(body: "Hello World")
+        expect(aws_bucket).to receive(:object).with("data/some-file.txt").and_return(aws_object)
+        expect(aws_object).to receive(:put).with(body: "Hello World")
 
-        described_class.write_file("data/some-file.txt", "Hello World")
+        described_class.write_file("data/some-file.txt", "Hello World", use_s3: true)
       end
     end
 
     describe ".file_exists?" do
       it "Saves the file to a S3 bucket in if is the production environment" do
-        expect(@aws_bucket).to receive(:object).with("data/some-file.txt").and_return(@aws_object)
-        expect(@aws_object).to receive(:exists?)
+        expect(aws_bucket).to receive(:object).with("data/some-file.txt").and_return(aws_object)
+        expect(aws_object).to receive(:exists?)
 
-        described_class.file_exists?("data/some-file.txt")
+        described_class.file_exists?("data/some-file.txt", use_s3: true)
       end
     end
 
     describe ".file_size" do
       it "returns the file size in the local filesystem" do
-        expect(@aws_bucket).to receive(:object).with("data/some-file.txt").and_return(@aws_object)
-        expect(@aws_object).to receive(:size)
+        expect(aws_bucket).to receive(:object).with("data/some-file.txt").and_return(aws_object)
+        expect(aws_object).to receive(:size)
 
-        described_class.file_size("data/some-file.txt")
+        described_class.file_size("data/some-file.txt", use_s3: true)
       end
     end
 
@@ -89,12 +89,18 @@ describe TariffSynchronizer::FileService do
       it "calls amazon s3 to get the object with the same file_path and returns a string io" do
         allow(base_update).to receive(:file_path).and_return("data/some-file.txt")
         aws_object_output = instance_double("Aws::S3::Types::GetObjectOutput")
-        expect(@aws_bucket).to receive(:object).with("data/some-file.txt").and_return(@aws_object)
-        expect(@aws_object).to receive(:get).and_return(aws_object_output)
+        expect(aws_bucket).to receive(:object).with("data/some-file.txt").and_return(aws_object)
+        expect(aws_object).to receive(:get).and_return(aws_object_output)
         expect(aws_object_output).to receive(:body)
 
-        described_class.file_as_stringio(base_update)
+        described_class.file_as_stringio(base_update, use_s3: true)
       end
+    end
+
+    private
+
+    def expected_bucket_name
+      ENV.fetch("AWS_BUCKET_NAME").presence || fail("Set AWS_BUCKET_NAME")
     end
   end
 end

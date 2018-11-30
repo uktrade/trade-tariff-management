@@ -383,7 +383,7 @@ class Measure < Sequel::Model
     self.searchable_data = ops.to_json
     self.searchable_data_updated_at = Time.now.utc
 
-    save
+    save(columns: [:searchable_data, :searchable_data_updated_at])
   end
 
   def_column_accessor :effective_end_date, :effective_start_date

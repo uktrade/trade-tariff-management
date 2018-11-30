@@ -46,6 +46,9 @@ module TradeTariffBackend
       ENV["GOVUK_APP_NAME"]
     end
 
+    # TODO: We need a better way to determine the application environment, as
+    # this way is quite brittle and requires hard coding arbitrary values.
+    #
     def production?
       ENV["GOVUK_APP_DOMAIN"] == "tariff-management-production.cloudapps.digital"
     end

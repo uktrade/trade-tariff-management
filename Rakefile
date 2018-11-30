@@ -6,13 +6,15 @@ require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
 
+task(:default).clear
+task(:spec).clear
+
 begin
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
 rescue LoadError
 end
 
-task(:default).clear
 task default: [
   "factory_girl:lint",
   :spec,
