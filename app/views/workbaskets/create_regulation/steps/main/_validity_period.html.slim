@@ -5,28 +5,34 @@ div v-if="showValidityPeriod"
   = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "regulation.validity_start_date" }
   = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "regulation.validity_end_date" }
   .form-group v-bind:class="{ 'form-group-error': errors.validity_start_date }"
-    label.form-label
+    label.form-label for="start_date"
       | Start date
     span.error-message v-if="errors.validity_start_date" v-html="errors.validity_start_date"
-    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_start_date"  }
+    = content_tag "date-select", "",
+      { "v-bind:value.sync" => "regulation.validity_start_date",
+        id: "start_date" }
 
   .form-group v-bind:class="{ 'form-group-error': errors.validity_end_date }"
-    label.form-label
+    label.form-label for="end_date"
       | End date
       span.form-hint
         | Optional - leave blank if the regulation will remain in force indefinitely.
     span.error-message v-if="errors.validity_end_date" v-html="errors.validity_end_date"
-    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_end_date"  }
+    = content_tag "date-select", "",
+      { "v-bind:value.sync" => "regulation.validity_end_date",
+        id: "end_date" }
 
   h3.heading-medium
     | Specify the effective end date
 
   = f.input :effective_end_date, as: :hidden, input_html: { "v-model" => "regulation.effective_end_date" }
   .form-group v-bind:class="{ 'form-group-error': errors.effective_end_date }"
-    label.form-label
+    label.form-label for="effective_end_date"
       | Effective end date
     span.error-message v-if="errors.effective_end_date" v-html="errors.effective_end_date"
-    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.effective_end_date"  }
+    = content_tag "date-select", "",
+      { "v-bind:value.sync" => "regulation.effective_end_date",
+        id: "effective_end_date" }
 
   div v-if="showRegulationGroup"
     h3.heading-medium

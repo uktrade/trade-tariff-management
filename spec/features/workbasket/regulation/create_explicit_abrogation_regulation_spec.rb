@@ -21,8 +21,8 @@ describe 'explicit abrogation regulation', js: true do
     base_required_filed_values.
         concat([
                    {name: 'Specify the base regulation', value: base_regulation.base_regulation_id, type: :select},
-                   {name: 'Published date', value: published_date.strftime("%d/%m/%Y"), type: :date},
-                   {name: 'Abrogation date', value: abrogation_date.strftime("%d/%m/%Y"), type: :date},
+                   { name: 'Published date', value: published_date, type: :date },
+                   { name: 'Abrogation date', value: abrogation_date, type: :date },
                ])
   end
 

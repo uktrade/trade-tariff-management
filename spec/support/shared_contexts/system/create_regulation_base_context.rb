@@ -84,7 +84,7 @@ shared_context 'create_regulation_base_context' do
         {name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text},
         # 'Replacement indicator', always filled
         {name: 'Information text', value: Forgery('lorem_ipsum').sentence, type: :text},
-        {name: 'Operation date', value: operation_date.strftime("%d/%m/%Y"), type: :date},
+        { name: 'Operation date', value: operation_date, type: :date },
     ]
   end
 
@@ -131,7 +131,7 @@ shared_context 'create_regulation_base_context' do
                 when :select
                   custom_select value[:value], from: value[:name]
                 when :date
-                  fill_date value[:name], with: value[:value]
+                  input_date(value[:name], value[:value])
               end
             end
 
@@ -161,7 +161,7 @@ shared_context 'create_regulation_base_context' do
                 when :select
                   custom_select value[:value], from: value[:name]
                 when :date
-                  fill_date value[:name], with: value[:value]
+                  input_date(value[:name], value[:value])
               end
             end
 

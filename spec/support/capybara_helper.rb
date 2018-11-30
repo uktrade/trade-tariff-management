@@ -12,12 +12,4 @@ if (select) {
 END_SCRIPT
     page.driver.execute_script(script)
   end
-
-  def fill_date(name, options = {})
-    script = <<~END_SCRIPT
-$( "label:contains('#{name}') ~ input" ).val('#{options[:with]}').trigger('change')
-    END_SCRIPT
-    page.driver.execute_script(script)
-  end
-
 end
