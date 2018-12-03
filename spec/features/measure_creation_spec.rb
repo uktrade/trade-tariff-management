@@ -33,7 +33,6 @@ RSpec.describe "adding measures", :js do
     fill_in("What is the name of this workbasket?", with: "creat-measure-wb")
     fill_in("Goods commodity codes", with: commodity.goods_nomenclature_item_id)
 
-    input_date("Operation date", Date.today)
     select_radio("Erga Omnes")
     click_on("Continue")
 
