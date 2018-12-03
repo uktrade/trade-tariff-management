@@ -156,14 +156,6 @@ module XmlGeneration
       record.subrecord_code
     end
 
-    def record_sequence_number
-      #
-      # TODO: Need to make sure if node_id and
-      #       record_sequence_number are same thing
-      #
-      node_id
-    end
-
     def update_type
       case record.operation
       when :create
