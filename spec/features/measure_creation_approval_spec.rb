@@ -12,6 +12,7 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
     click_on("Finish approval")
 
     expect(page).to have_content "Measures approved"
+    expect(workbasket.reload.operation_date&.to_date).to eq Date.current
   end
 
   it "allows a cross-checked Measure to be rejected" do

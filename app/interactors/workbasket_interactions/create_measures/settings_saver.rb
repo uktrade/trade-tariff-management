@@ -4,7 +4,6 @@ module WorkbasketInteractions
       WORKBASKET_TYPE = "CreateMeasures"
       REQUIRED_PARAMS = %w(
         start_date
-        operation_date
       )
 
       ATTRS_PARSER_METHODS = %w(
