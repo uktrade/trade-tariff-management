@@ -20,8 +20,11 @@ script type="text/x-template" id="approve-decision-template"
           id: "approve_export_date" }
 
     .panel.panel-border-narrow.hidden.js-approve-reject-details-block v-if="rejectTypeSelected"
-      label.form-label
+      label.form-label for="approve_reject_reasons"
         | Provide your reasons and/or state the changes required:
 
       .parent-group-target.col-xs-8.col-md-10.col-lg-12
-        textarea.form-control*{ "v-model" => "approve.reject_reasons", rows: 4, name: "approve[reject_reasons]" }
+        textarea.form-control*{ "v-model" => "approve.reject_reasons", \
+                                rows: 4, \
+                                name: "approve[reject_reasons]", \
+                                id: "approve_reject_reasons" }

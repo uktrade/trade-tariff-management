@@ -1,11 +1,9 @@
 require "rails_helper"
 
-RSpec.describe "approving a Create Measure workbasket", :js do
-  it "allows cross-checked Measures to be approved" do
+RSpec.describe "approval process for a Create Measure workbasket", :js do
+  it "allows a cross-checked Measure to be approved" do
     create(:user)
-    status = :awaiting_approval
-    workbasket = create(:workbasket, status: status, type: "create_measures")
-    create(:measure, status: status, workbasket_id: workbasket.id)
+    workbasket = workbasket_creating_measure(status: :awaiting_approval)
 
     visit new_approve_path(workbasket.id)
 
@@ -14,5 +12,26 @@ RSpec.describe "approving a Create Measure workbasket", :js do
     click_on("Finish approval")
 
     expect(page).to have_content "Measures approved"
+  end
+
+  it "allows a cross-checked Measure to be rejected" do
+    create(:user)
+    workbasket = workbasket_creating_measure(status: :awaiting_approval)
+
+    visit new_approve_path(workbasket.id)
+
+    select_radio("I am not happy with the measure")
+    fill_in("Provide your reasons", with: "Computer says no")
+    click_on("Finish approval")
+
+    expect(page).to have_content "Measures rejected"
+  end
+
+  private
+
+  def workbasket_creating_measure(status:)
+    workbasket = create(:workbasket, status: status, type: "create_measures")
+    create(:measure, status: status, workbasket_id: workbasket.id)
+    workbasket
   end
 end
