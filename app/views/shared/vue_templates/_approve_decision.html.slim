@@ -10,11 +10,14 @@ script type="text/x-template" id="approve-decision-template"
         | I am not happy with the measure(s).
 
     .panel.panel-border-narrow.hidden.js-approve-details-block v-if="approveTypeSelected"
-      label.form-label
-        | Sent to CDS with next export on or after.
+      label.form-label for="approve_export_date"
+        | Send to CDS with next export on or after.
 
       .parent-group-target
-        input.form-control.date-picker.js-approve-form-export-date-date-picker.date-picker-not_initialized*{ "v-model" => "approve.export_date", name: "approve[export_date]" }
+        input.form-control.date-picker.js-approve-form-export-date-date-picker.date-picker-not_initialized*{ \
+          "v-model" => "approve.export_date",
+          name: "approve[export_date]", \
+          id: "approve_export_date" }
 
     .panel.panel-border-narrow.hidden.js-approve-reject-details-block v-if="rejectTypeSelected"
       label.form-label
@@ -22,4 +25,3 @@ script type="text/x-template" id="approve-decision-template"
 
       .parent-group-target.col-xs-8.col-md-10.col-lg-12
         textarea.form-control*{ "v-model" => "approve.reject_reasons", rows: 4, name: "approve[reject_reasons]" }
-
