@@ -76,6 +76,12 @@ describe "Main XML generation" do
     transaction_node_expect_to_be_valid(xml_measure_transaction_node, "measure")
   end
 
+  it "increments the message ID" do
+    message_ids = xml_message_nodes.map { |node| node["env:app.message"]["id"] }
+
+    expect(message_ids).to eq ["1", "2", "3"]
+  end
+
   def transaction_node_expect_to_be_valid(message_node, data_node_name)
     transmission_node = message_node["oub:transmission"]
     record_node = transmission_node["oub:record"]

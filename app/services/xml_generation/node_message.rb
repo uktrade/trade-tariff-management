@@ -148,10 +148,6 @@ module XmlGeneration
       @record = record
     end
 
-    def node_id
-      1
-    end
-
     def record_code
       record.record_code
     end

@@ -5,8 +5,8 @@ xml.tag!("env:envelope", xmlns: "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
 
   self.transactions.map do |transaction|
     env.tag!("env:transaction", id: transaction.node_id) do |transaction_node|
-      transaction.messages.map do |message|
-        transaction_node.tag!("env:app.message", id: message.node_id) do |message_node|
+      transaction.messages.each do |message|
+        transaction_node.tag!("env:app.message", id: self.message_id) do |message_node|
           message_node.tag!("oub:transmission", "xmlns:oub" => "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
                                            "xmlns:env" => "urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0") do |transmission_node|
             transmission_node.tag!("oub:record") do |record|
