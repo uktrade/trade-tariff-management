@@ -30,5 +30,11 @@ module XmlGeneration
     expose(:default_end_date) do
       nil
     end
+
+    private
+
+    def persist_record(record)
+      record.save_with_envelope_id
+    end
   end
 end
