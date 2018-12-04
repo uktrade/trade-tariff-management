@@ -50,27 +50,9 @@ the GitLab Runner (to avoid having to continually push changes then adjust):
 
 ## Deployment
 
-We deploy to cloud foundry, so you need to have the CLI installed, and the following [cf plugin](https://docs.cloudfoundry.org/cf-cli/use-cli-plugins.html) installed:
-
-Download the plugin for your os:  https://github.com/contraband/autopilot/releases
-
-    chmod +x autopilot-(YOUR_OS)
-    cf install-plugin autopilot-(YOUR_OS)
-
-Set the following ENV variables:
-* CF_USER
-* CF_PASSWORD
-* CF_ORG
-* CF_SPACE
-* CF_APP
-* CF_APP_WORKER
-* HEALTHCHECK_URL
-* SLACK_CHANNEL
-* SLACK_WEBHOOK
-
-Then run
-
-    ./bin/deploy
+We deploy using the DIT CI Deployment pipeline to manage deployments:
+https://github.com/uktrade/ci-pipeline-config
+The Procfile specifies what will run on the PaaS https://github.com/uktrade/trade-tariff-management/blob/master/Procfile
 
 NB: In the newer Diego architecture from CloudFoundry, no-route skips creating and binding a route for the app, but does not specify which type of health check to perform. If your app does not listen on a port, for example the sidekiq worker, then it does not satisfy the port-based health check and Cloud Foundry marks it as crashed. To prevent this, disable the port-based health check with cf set-health-check APP_NAME none.
 
