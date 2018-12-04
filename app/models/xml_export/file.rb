@@ -29,12 +29,16 @@ module XmlExport
       (SELECT CONCAT (
         to_char(CURRENT_DATE, 'YY'),
         (
-          SELECT LPAD((COUNT(*) + 1)::TEXT, 4, '0')
+          SELECT LPAD((COUNT(*) + #{envelope_id_offset})::TEXT , 4, '0')
           FROM xml_export_files
           WHERE EXTRACT(year FROM issue_date) = date_part('year', CURRENT_DATE)
         )
       ))
       SQL
+    end
+
+    def envelope_id_offset
+      ENV.fetch("XML_ENVELOPE_ID_OFFSET_YEAR_#{Date.current.year}", 0)
     end
 
     class << self

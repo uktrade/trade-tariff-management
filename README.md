@@ -79,6 +79,12 @@ NB: In the newer Diego architecture from CloudFoundry, no-route skips creating a
 * When writing validators in `app/validators` please run the rake task
 `audit:verify` which runs the validator against existing data.
 
+### Environment variables
+
+- `XML_ENVELOPE_ID_OFFSET_YEAR_<YYYY>` - allows the XML envelope ID to be
+  started from a value other than one. This intended to allow the sequence to
+  follow-on from the ID reached by other system before cut-over.
+
 ## Contributing
 
 Please check out the [Contributing guide](https://github.com/bitzesty/trade-tariff-management/blob/master/CONTRIBUTING.md)
