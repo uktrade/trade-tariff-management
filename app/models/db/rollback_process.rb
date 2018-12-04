@@ -31,11 +31,12 @@ module Db
         # FIXME: At the moment we have an issue where workflow isn't complete and some records are not linked via
         # the workbasket items model, so they are not cleaned up by the clean_up_workbasket! method. Manually
         # deleting the records for now, will not work if the operation_date is blank.
+        start_date = record.date_filters[:start_date].strftime("%Y-%m-%d")
         Sequel::Model.db.transaction do
           Sequel::Model.subclasses.select { |model|
             model.plugins.include?(Sequel::Plugins::Oplog)
           }.each do |model|
-            model.operation_klass.where { operation_date >= record.date_filters[:start_date] }.delete
+            model.operation_klass.where { operation_date >= start_date }.delete
           end
         end
       end
