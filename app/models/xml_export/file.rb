@@ -13,7 +13,7 @@ module XmlExport
     def save_with_envelope_id(envelope_id: envelope_id_sql)
       self.class.db.transaction do
         save
-        self.class.where(id: id).update(envelope_id: Sequel.lit(envelope_id))
+        self.class.where(id: id).update(envelope_id: Sequel.lit(envelope_id.to_s))
         reload
       end
     end
@@ -26,19 +26,21 @@ module XmlExport
       # be reset, e.g. 190001, 200001, 210001
 
       <<~SQL
-      (SELECT CONCAT (
-        to_char(CURRENT_DATE, 'YY'),
         (
-          SELECT LPAD((COUNT(*) + #{envelope_id_offset})::TEXT , 4, '0')
-          FROM xml_export_files
-          WHERE EXTRACT(year FROM issue_date) = date_part('year', CURRENT_DATE)
+          SELECT GREATEST(
+            (SELECT MAX(envelope_id) FROM xml_export_files WHERE EXTRACT(year FROM issue_date) = date_part('year', CURRENT_DATE)) + 1,
+            (SELECT CONCAT(
+                to_char(CURRENT_DATE, 'YY'),
+                (SELECT LPAD('#{envelope_id_offset}', 4, '0'))
+              )
+            )::INTEGER
+          )
         )
-      ))
       SQL
     end
 
     def envelope_id_offset
-      ENV.fetch("XML_ENVELOPE_ID_OFFSET_YEAR_#{Date.current.year}", 0)
+      ENV.fetch("XML_ENVELOPE_ID_OFFSET_YEAR_#{Date.current.year}", 0).to_i + 1
     end
 
     class << self
