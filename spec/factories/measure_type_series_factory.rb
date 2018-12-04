@@ -10,6 +10,10 @@ FactoryGirl.define do
       measure_type_combination 0
       validity_end_date        { Date.today.ago(1.years) }
     end
+
+    trait :with_description do
+      measure_type_series_description
+    end
   end
 
   factory :measure_type_series_description do

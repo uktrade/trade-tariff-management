@@ -18,7 +18,7 @@ describe 'prorogation regulation', js: true do
   let(:required_filed_values) do
     base_required_filed_values.
         concat([
-                   {name: 'Published date', value: published_date.strftime("%d/%m/%Y"), type: :date},
+                 { name: 'Published date', value: published_date, type: :date },
                ])
   end
 

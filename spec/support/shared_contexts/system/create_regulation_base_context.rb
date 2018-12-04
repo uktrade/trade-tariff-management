@@ -78,13 +78,13 @@ shared_context 'create_regulation_base_context' do
 
   let(:base_required_filed_values) do
     [
-        {name: 'Prefix', value: %w(C D A I J R).sample, type: :select},
+        { name: 'Prefix', value: "Decision", type: :select },
         {name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text},
         {name: 'Regulation number', value: Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s, type: :text},
         {name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text},
         # 'Replacement indicator', always filled
         {name: 'Information text', value: Forgery('lorem_ipsum').sentence, type: :text},
-        {name: 'Operation date', value: operation_date.strftime("%d/%m/%Y"), type: :date},
+        { name: 'Operation date', value: operation_date, type: :date },
     ]
   end
 
@@ -106,7 +106,10 @@ shared_context 'create_regulation_base_context' do
       it 'should show validation errors' do
         visit_create_regulation
 
-        custom_select regulation_type, from: 'Specify the regulation type'
+        within(find("fieldset", text: "Specify the regulation type")) do
+          select_dropdown_value(regulation_type)
+        end
+
         click_on 'Create regulation'
 
         required_fields.each do |field|
@@ -123,17 +126,11 @@ shared_context 'create_regulation_base_context' do
           it 'should be okay' do
             visit_create_regulation
 
-            custom_select regulation_type, from: 'Specify the regulation type'
-            required_filed_values.each do |value|
-              case value[:type]
-                when :text
-                  fill_in value[:name], with: value[:value]
-                when :select
-                  custom_select value[:value], from: value[:name]
-                when :date
-                  fill_date value[:name], with: value[:value]
-              end
+            within(find("fieldset", text: "Specify the regulation type")) do
+              select_dropdown_value(regulation_type)
             end
+
+            fill_in_form(required_filed_values)
 
             click_on 'Create regulation'
             expect(page).to have_content('Review and submit')
@@ -153,17 +150,11 @@ shared_context 'create_regulation_base_context' do
           it 'should be okay' do
             visit_create_regulation
 
-            custom_select regulation_type, from: 'Specify the regulation type'
-            filed_values.each do |value|
-              case value[:type]
-                when :text
-                  fill_in value[:name], with: value[:value]
-                when :select
-                  custom_select value[:value], from: value[:name]
-                when :date
-                  fill_date value[:name], with: value[:value]
-              end
+            within(find("fieldset", text: "Specify the regulation type")) do
+              select_dropdown_value(regulation_type)
             end
+
+            fill_in_form(filed_values)
 
             click_on 'Create regulation'
             expect(page).to have_content('Review and submit')
@@ -178,4 +169,20 @@ shared_context 'create_regulation_base_context' do
 
   end
 
+  private
+
+  def fill_in_form(form_values)
+    form_values.each do |value|
+      case value[:type]
+        when :text
+          fill_in value[:name], with: value[:value]
+        when :select
+          within(first(".form-group, fieldset", text: value[:name])) do
+            select_dropdown_value(value[:value])
+          end
+        when :date
+          input_date(value[:name], value[:value])
+      end
+    end
+  end
 end

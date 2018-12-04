@@ -15,6 +15,10 @@ FactoryGirl.define do
       }
     end
 
+    trait :not_replaced do
+      replacement_indicator { 0 }
+    end
+
     trait :xml do
       published_date                       { Date.today.ago(3.years) }
       validity_end_date                    { Date.today.ago(1.years) }

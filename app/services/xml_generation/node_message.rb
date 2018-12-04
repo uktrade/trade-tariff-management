@@ -148,24 +148,12 @@ module XmlGeneration
       @record = record
     end
 
-    def node_id
-      1
-    end
-
     def record_code
       record.record_code
     end
 
     def subrecord_code
       record.subrecord_code
-    end
-
-    def record_sequence_number
-      #
-      # TODO: Need to make sure if node_id and
-      #       record_sequence_number are same thing
-      #
-      node_id
     end
 
     def update_type

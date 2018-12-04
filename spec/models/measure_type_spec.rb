@@ -46,12 +46,12 @@ describe MeasureType do
 
     describe "MT10" do
       let(:measure_type) do
-        create :measure_type,
+        build :measure_type,
+               measure_type_series: measure_type_series,
                validity_end_date: Date.today + 10.days
       end
       let(:measure_type_series) do
-        create :measure_type_series,
-               measure_type_series_id: measure_type.measure_type_series_id,
+        build :measure_type_series,
                validity_end_date: Date.today + 11.days
       end
 

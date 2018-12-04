@@ -3,7 +3,7 @@ fieldset.js-workbasket-check-code-parent-container
     = "Which goods will the #{record_type} apply to?"
 
   .form-group
-    label.form-label
+    label.form-label for="commodity_codes"
       span.create-measures-sub_header
         | Goods commodity codes
 
@@ -20,7 +20,7 @@ fieldset.js-workbasket-check-code-parent-container
 
     .row
       .col-xs-12.col-md-8.col-lg-6
-        textarea.form-control*{ "v-model" => "measure.commodity_codes", rows: 4 }
+        textarea.form-control*{ "v-model" => "measure.commodity_codes", rows: 4, id: "commodity_codes" }
 
     = render "workbaskets/shared/steps/main/check_a_commodity_code_description"
     = render "workbaskets/shared/steps/main/commodity_codes_exceptions", f: f
