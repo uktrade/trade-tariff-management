@@ -7966,7 +7966,8 @@ CREATE TABLE public.xml_export_files (
     zip_data text,
     meta_data text,
     workbasket boolean DEFAULT true,
-    validation_errors jsonb DEFAULT '{}'::jsonb
+    validation_errors jsonb DEFAULT '{}'::jsonb,
+    envelope_id integer
 );
 
 
@@ -12316,6 +12317,13 @@ CREATE INDEX user_id ON public.rollbacks USING btree (user_id);
 
 
 --
+-- Name: xml_export_files_envelope_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX xml_export_files_envelope_id_index ON public.xml_export_files USING btree (envelope_id);
+
+
+--
 -- Name: reassign_owned; Type: EVENT TRIGGER; Schema: -; Owner: -
 --
 
@@ -12514,3 +12522,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_origina
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164645_create_edit_geographical_areas_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_original_fields_to_edit_geographical_areas_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181204111717_add_envelope_id_to_xml_export_files.rb');
