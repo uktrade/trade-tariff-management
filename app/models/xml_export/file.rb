@@ -28,19 +28,27 @@ module XmlExport
       <<~SQL
         (
           SELECT GREATEST(
-            (SELECT MAX(envelope_id) FROM xml_export_files WHERE EXTRACT(year FROM issue_date) = date_part('year', CURRENT_DATE)) + 1,
-            (SELECT CONCAT(
-                to_char(CURRENT_DATE, 'YY'),
-                (SELECT LPAD('#{envelope_id_offset}', 4, '0'))
-              )
-            )::INTEGER
+            (
+              SELECT MAX(envelope_id)
+                     FROM xml_export_files
+                     WHERE EXTRACT(year FROM issue_date) = date_part('year', CURRENT_DATE)
+            ) + 1,
+            #{initial_envelope_id_for_current_year}
           )
         )
       SQL
     end
 
-    def envelope_id_offset
-      ENV.fetch("XML_ENVELOPE_ID_OFFSET_YEAR_#{Date.current.year}", 0).to_i + 1
+    def initial_envelope_id_for_current_year
+      next_id = envelope_id_offset_for_current_year + 1
+      padded_id = next_id.to_s.rjust(4, "0")
+      year_part = Date.current.strftime("%y")
+
+      "#{year_part}#{padded_id}"
+    end
+
+    def envelope_id_offset_for_current_year
+      ENV.fetch("XML_ENVELOPE_ID_OFFSET_YEAR_#{Date.current.year}", 0).to_i
     end
 
     class << self
