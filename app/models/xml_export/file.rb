@@ -10,6 +10,33 @@ module XmlExport
 
     serialize_attributes :yaml, :date_filters
 
+    def save_with_envelope_id(envelope_id: envelope_id_sql)
+      self.class.db.transaction do
+        save
+        self.class.where(id: id).update(envelope_id: Sequel.lit(envelope_id))
+        reload
+      end
+    end
+
+    private
+
+    def envelope_id_sql
+      # Format: YYxxxx (YY = current year, xxxx = number sequence this year)
+      # Every year, first working day of January, the sequence is expected to
+      # be reset, e.g. 190001, 200001, 210001
+
+      <<~SQL
+      (SELECT CONCAT (
+        to_char(CURRENT_DATE, 'YY'),
+        (
+          SELECT LPAD((COUNT(*) + 1)::TEXT, 4, '0')
+          FROM xml_export_files
+          WHERE EXTRACT(year FROM issue_date) = date_part('year', CURRENT_DATE)
+        )
+      ))
+      SQL
+    end
+
     class << self
       def max_per_page
         15
