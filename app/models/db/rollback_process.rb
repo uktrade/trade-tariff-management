@@ -29,8 +29,8 @@ module Db
           workbasket.clean_up_workbasket!
         end
         # FIXME: At the moment we have an issue where workflow isn't complete and some records are not linked via
-        # the workbasket items model, so they are not cleaned up by the clean_up_workbasket! method. Manually
-        # deleting the records for now, will not work if the operation_date is blank.
+        # the workbasket items model, so they are not cleaned up by the clean_up_workbasket! method.
+        # Manually deleting the records for now
         start_date = record.date_filters[:start_date].strftime("%Y-%m-%d")
         Sequel::Model.db.transaction do
           Sequel::Model.subclasses.select { |model|

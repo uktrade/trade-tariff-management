@@ -252,7 +252,7 @@ module Workbaskets
         if end_date.present?
           where(
             "operation_date >= ? AND operation_date <= ?", start_date, end_date
-          )
+          ).or(operation_date: nil)
         else
           where(
             "operation_date = ?", start_date
