@@ -1,7 +1,7 @@
 xml.instruct!(:xml, version: "1.0", encoding: "UTF-8")
 xml.tag!("env:envelope", xmlns: "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
                         "xmlns:env" => "urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0",
-                        id: self.node_id) do |env|
+                        id: envelope_id) do |env|
 
   self.transactions.map do |transaction|
     env.tag!("env:transaction", id: transaction.node_id) do |transaction_node|

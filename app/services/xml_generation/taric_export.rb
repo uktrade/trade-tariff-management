@@ -58,7 +58,13 @@ module XmlGeneration
       data = xml_generator_search.result
       @extract_database_date_time = Time.now.utc
 
-      @xml_data = renderer.render(data, xml: xml_builder) if data.present?
+      if data.present?
+        @xml_data = renderer.render(
+          data,
+          xml: xml_builder,
+          envelope_id: record.envelope_id,
+        )
+      end
     end
 
     def xml_generator_search

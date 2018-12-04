@@ -18,7 +18,11 @@ shared_context "xml_generation_base_context" do
   end
 
   let(:xml_body) do
-    xml_renderer.render(xml_node, xml: xml_builder)
+    xml_renderer.render(
+      xml_node,
+      xml: xml_builder,
+      envelope_id: "test-envelope-1234",
+    )
   end
 
   let(:hash_xml) do

@@ -12,10 +12,6 @@ module XmlGeneration
       @_record_sequence_number = 0
     end
 
-    def node_id
-      1
-    end
-
     def present?
       transactions.any?
     end
