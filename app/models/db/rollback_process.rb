@@ -36,7 +36,7 @@ module Db
           Sequel::Model.subclasses.select { |model|
             model.plugins.include?(Sequel::Plugins::Oplog)
           }.each do |model|
-            model.operation_klass.where { operation_date >= start_date }.delete
+            model.operation_klass.where { operation_date >= start_date }.or(operation_date: nil).delete
           end
         end
       end
