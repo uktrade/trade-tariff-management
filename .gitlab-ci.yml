@@ -11,7 +11,7 @@ test:
     - redis:3.2
 
   cache:
-    key: ${CI_JOB_NAME}-v1
+    key: ${CI_JOB_NAME}-v2
     paths:
     - vendor/bundler
 

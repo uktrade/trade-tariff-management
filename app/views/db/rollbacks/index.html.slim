@@ -10,7 +10,7 @@ h2.heading-large Rollbacks
 
 p Clear all data from the db from an operational date
 
-= render "shared/base_export/form"
+= render partial: "shared/base_export/form", locals: {show_workbasket_checkbox: false}
 
 - if collection.present?
   = render "table"

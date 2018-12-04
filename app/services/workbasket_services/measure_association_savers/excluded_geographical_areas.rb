@@ -14,7 +14,10 @@ module WorkbasketServices
           record.geographical_area_sid = area.geographical_area_sid
           set_primary_key(record)
 
-          record.measure = measure
+          unless measure.exists?
+            record.measure = measure
+          end
+
           record.geographical_area = area
         end
     end

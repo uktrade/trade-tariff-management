@@ -22,5 +22,13 @@ module XmlGeneration
     expose(:additional_params) do
       { workbasket: params[:workbasket] == 'on' }
     end
+
+    expose(:default_start_date) do
+      nil
+    end
+
+    expose(:default_end_date) do
+      nil
+    end
   end
 end

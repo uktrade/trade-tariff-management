@@ -52,24 +52,6 @@ RSpec.describe "adding geographical areas", :js do
 
   private
 
-  def select_radio(label)
-    find("label", text: label).click
-  end
-
-  def input_date(label, date)
-    fill_in(label, with: date.strftime("%d/%m/%Y"))
-    close_datepicker
-  end
-
-  def close_datepicker
-    find("body").click
-  end
-
-  def select_dropdown_value(value)
-    find(".selectize-control").click
-    find(".selectize-dropdown-content .selection", text: value).click
-  end
-
   def area_membership_codes
     memberships_table.all("tbody tr td:first-of-type").map(&:text)
   end

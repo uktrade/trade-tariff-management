@@ -8,6 +8,8 @@ module XmlGeneration
       @transactions = records.each_with_index.map do |record, index|
         ::XmlGeneration::NodeTransaction.new(index + 1, record)
       end
+      @_message_id = 0
+      @_record_sequence_number = 0
     end
 
     def node_id
@@ -16,6 +18,14 @@ module XmlGeneration
 
     def present?
       transactions.any?
+    end
+
+    def message_id
+      @_message_id = @_message_id.next
+    end
+
+    def record_sequence_number
+      @_record_sequence_number = @_record_sequence_number.next
     end
   end
 end

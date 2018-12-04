@@ -252,12 +252,16 @@ module Workbaskets
         if end_date.present?
           where(
             "operation_date >= ? AND operation_date <= ?", start_date, end_date
-          )
+          ).or(operation_date: nil)
         else
           where(
             "operation_date = ?", start_date
           )
         end
+      end
+
+      def first_operation_date
+        exclude(operation_date: nil).order(:operation_date).limit(1).first&.operation_date
       end
 
       def in_status(status_name)

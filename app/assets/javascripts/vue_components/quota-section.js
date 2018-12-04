@@ -204,9 +204,6 @@ Vue.component("quota-section", {
     omitCriticality: function() {
       return window.all_settings.quota_is_licensed == "true";
     },
-    showDuties: function() {
-      return window.all_settings.quota_is_licensed != "true";
-    },
     maxDate: function() {
       if (this.section.type != "custom") {
         return null;

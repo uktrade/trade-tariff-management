@@ -3,6 +3,14 @@
 <% content_for :homepage_url, root_path %>
 
 <% content_for :head do %>
+  <%- if ENV["SENTRY_DSN"].present? %>
+    <%= javascript_include_tag "sentry" %>
+
+    <script>
+      Sentry.init({ dsn: '<%= ENV.fetch("SENTRY_DSN") %>' });
+    </script>
+  <% end %>
+
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -39,6 +47,10 @@
   <%= render "shared/vue_templates/quota_section" %>
   <%= render "shared/vue_templates/opening_balances_manager" %>
   <%= render "shared/vue_templates/footnote" %>
+<% end %>
+
+<% content_for :footer_bottom do %>
+  <%= render "application/version_identifier" %>
 <% end %>
 
 <%= render "flashes" %>
