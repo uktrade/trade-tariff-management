@@ -58,6 +58,10 @@ module XmlGeneration
       data = xml_generator_search.result
       @extract_database_date_time = Time.now.utc
 
+      unless record.envelope_id.present?
+        raise "Cannot export Taric XML without an envelope_id (id=#{record.id})"
+      end
+
       if data.present?
         @xml_data = renderer.render(
           data,
