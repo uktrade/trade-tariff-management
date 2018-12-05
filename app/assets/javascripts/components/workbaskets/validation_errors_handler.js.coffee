@@ -3,7 +3,7 @@ window.WorkbasketBaseValidationErrorsHandler =
   handleErrorsResponse: (response, workbasket_form) ->
     WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
 
-    if response.responseJSON.step == "main"
+    if response.responseJSON && response.responseJSON.step == "main"
       WorkbasketBaseValidationErrorsHandler.setFormErrors(response, workbasket_form)
     else
       WorkbasketBaseValidationErrorsHandler.renderErrorsBlock(response, workbasket_form)
