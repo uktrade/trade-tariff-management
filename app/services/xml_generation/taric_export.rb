@@ -55,7 +55,7 @@ module XmlGeneration
 
     # data is a XmlGeneration::NodeEnvelope object
     def fetch_relevant_data_and_generate_xml
-      data = xml_generator_search.result
+      data = ::XmlGeneration::NodeEnvelope.new(result_groups)
       @extract_database_date_time = Time.now.utc
 
       unless record.envelope_id.present?
@@ -69,6 +69,10 @@ module XmlGeneration
           envelope_id: record.envelope_id,
         )
       end
+    end
+
+    def result_groups
+      ::XmlGeneration::TransactionGrouper.new.group(xml_generator_search.result)
     end
 
     def xml_generator_search
