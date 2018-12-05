@@ -39,6 +39,23 @@ RSpec.describe XmlGeneration::TaricExport do
       to eq xml_export_file.envelope_id.to_s
   end
 
+  context "envelope ID isn't set" do
+    it "stops generating the XML" do
+      create(
+        :measure,
+        status: :awaiting_cds_upload_create_new,
+        operation_date: operation_date,
+      )
+
+      xml_export_file.save
+      taric_export = described_class.new(xml_export_file)
+
+      expect(xml_export_file.envelope_id).to be_nil
+      expect{ taric_export.run }.
+        to raise_error %r{Cannot export Taric XML without an envelope_id}
+    end
+  end
+
   private
 
   def parsed_xml_for_export(xml_export_file)
