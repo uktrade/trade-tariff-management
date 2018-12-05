@@ -34,9 +34,9 @@ RSpec.describe XmlGeneration::TransactionGrouper do
       mid = instance_double(FootnoteType, record_code: "200", subrecord_code: "50")
       last = instance_double(FootnoteDescription, record_code: "200", subrecord_code: "90")
 
-      groups = subject.group([last, first, mid])
+      group = subject.group([last, first, mid]).first
 
-      expect(groups.first.map(&:subrecord_code)).to eq ["10", "50", "90"]
+      expect(group.map(&:subrecord_code)).to eq ["10", "50", "90"]
     end
   end
 end

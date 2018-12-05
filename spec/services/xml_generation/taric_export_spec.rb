@@ -54,11 +54,10 @@ RSpec.describe XmlGeneration::TaricExport do
 
       expect(transactions.count).to eq 2
 
-      expect(record_codes(transactions[0])).
-        to eq [footnote.record_code]
+      expect(transactions[0]).to have_record_codes [footnote.record_code]
 
-      expect(record_codes(transactions[1])).
-        to eq [measure.record_code, measure_2.record_code]
+      expect(transactions[1]).
+        to have_record_codes [measure.record_code, measure_2.record_code]
     end
   end
 
@@ -76,7 +75,10 @@ RSpec.describe XmlGeneration::TaricExport do
     xml.xpath("//transaction")
   end
 
-  def record_codes(xml)
-    xml.xpath(".//record.code").map(&:text)
+  RSpec::Matchers.define :have_record_codes do |expected|
+    match do |_actual|
+      @actual = @actual.xpath(".//record.code").map(&:text)
+      expect(@actual).to eq expected
+    end
   end
 end
