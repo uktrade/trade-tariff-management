@@ -17,12 +17,13 @@ test:
 
   variables:
     POSTGRES_DB: tariff_management_test
-    DATABASE_URL: postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB
-    REDIS_URL: redis://redis:6379
+    DATABASE_URL: postgresql://postgres:postgres@localhost:5432/$POSTGRES_DB
+    REDIS_URL: redis://localhost:6379
     RAILS_ENV: test
     GOVUK_APP_DOMAIN: test
 
   script:
+  - dockerize -wait tcp://localhost:5432 -timeout 1m
   - sudo apt-get update -qq && sudo apt-get install -y postgresql
   - bundle install --path vendor/bundler --jobs=4 --retry=3
   - bundle exec rake db:drop db:setup
