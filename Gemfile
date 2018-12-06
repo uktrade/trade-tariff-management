@@ -110,7 +110,6 @@ group :test do
   gem "forgery"
   gem "json_expressions", "~> 0.9.0"
   gem "simplecov", "~> 0.14.1"
-  gem "simplecov-rcov", git: 'https://github.com/bitzesty/simplecov-rcov.git' # monkey patch for ruby 2.5.0
   gem "webmock", "~> 3.0.1"
   gem "database_cleaner"
   gem 'codeclimate-test-reporter', require: nil

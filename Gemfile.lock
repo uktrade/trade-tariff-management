@@ -7,13 +7,6 @@ GIT
       railties (>= 3.1.0)
       sass (>= 3.2.0)
 
-GIT
-  remote: https://github.com/bitzesty/simplecov-rcov.git
-  revision: 5761838cf0357e560d1dfe5669d945f9c0cb22d0
-  specs:
-    simplecov-rcov (0.2.3)
-      simplecov (>= 0.4.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -544,7 +537,6 @@ DEPENDENCIES
   sidekiq-scheduler (~> 2.1.8)
   simple_form (~> 3.5)
   simplecov (~> 0.14.1)
-  simplecov-rcov!
   sinatra (~> 2.0.2)
   slim-rails
   tilt

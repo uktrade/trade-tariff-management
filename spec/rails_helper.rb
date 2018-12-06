@@ -4,7 +4,6 @@ require "spec_helper"
 
 require 'webmock/rspec'
 require 'simplecov'
-require 'simplecov-rcov'
 require "codeclimate-test-reporter"
 
 WebMock.disable_net_connect!(allow: "codeclimate.com", allow_localhost: true)
