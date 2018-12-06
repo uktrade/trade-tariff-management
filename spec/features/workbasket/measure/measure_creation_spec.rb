@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "adding measures", :js do
-  it "allows news measures to be created" do
+  it "allows news measures to be created and cross-checked" do
     create(:geographical_area, :erga_omnes)
     regulation = create(
       :base_regulation,
@@ -30,7 +30,8 @@ RSpec.describe "adding measures", :js do
     select_measure_type_series(measure_type_series)
     select_measure_type(measure_type)
 
-    fill_in("What is the name of this workbasket?", with: "creat-measure-wb")
+    workbasket_name = "create-measure-wb"
+    fill_in("What is the name of this workbasket?", with: workbasket_name)
     fill_in("Goods commodity codes", with: commodity.goods_nomenclature_item_id)
 
     select_radio("Erga Omnes")
@@ -41,6 +42,23 @@ RSpec.describe "adding measures", :js do
     click_on("Continue")
 
     expect(page).to have_content "Review and submit"
+
+    click_on("Submit for cross-check")
+
+    expect(page).to have_content "Measures submitted"
+
+    click_on("Return to main menu")
+
+    within(find("tr", text: workbasket_name)) do
+      click_on("Review for cross-check")
+    end
+
+    expect(page).to have_content "Cross-check and create measures"
+
+    select_radio("I confirm that I have checked the above details")
+    click_on("Finish cross-check")
+
+    expect(page).to have_content "Measures cross-checked"
   end
 
   private
