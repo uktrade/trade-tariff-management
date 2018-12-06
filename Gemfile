@@ -107,7 +107,7 @@ group :test do
   gem "rspec-rails", "~> 3.5.2"
   gem "factory_girl_rails", "~> 4.8.0", require: false
   gem "fakefs", "~> 0.11.0", require: "fakefs/safe"
-  gem "forgery", github: "mtunjic/forgery", branch: "master"
+  gem "forgery"
   gem "json_expressions", "~> 0.9.0"
   gem "simplecov", "~> 0.14.1"
   gem "simplecov-rcov", git: 'https://github.com/bitzesty/simplecov-rcov.git' # monkey patch for ruby 2.5.0
