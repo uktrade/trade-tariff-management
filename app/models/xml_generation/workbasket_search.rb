@@ -10,7 +10,7 @@ module XmlGeneration
     end
 
     def result
-      ::XmlGeneration::NodeEnvelope.new(data)
+      data
     end
 
     def target_workbaskets

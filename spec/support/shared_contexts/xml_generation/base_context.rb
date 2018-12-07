@@ -2,7 +2,7 @@ require 'rails_helper'
 
 shared_context "xml_generation_base_context" do
   let(:xml_node) do
-    ::XmlGeneration::NodeEnvelope.new(workbasket.settings.collection)
+    ::XmlGeneration::NodeEnvelope.new([workbasket.settings.collection])
   end
 
   let(:xml_builder) do
@@ -18,7 +18,15 @@ shared_context "xml_generation_base_context" do
   end
 
   let(:xml_body) do
-    xml_renderer.render(xml_node, xml: xml_builder)
+    xml_renderer.render(
+      xml_node,
+      xml: xml_builder,
+      envelope_id: "test-envelope-1234",
+    )
+  end
+
+  let(:parsed_xml) do
+    Nokogiri::XML(xml_body).remove_namespaces!
   end
 
   let(:hash_xml) do

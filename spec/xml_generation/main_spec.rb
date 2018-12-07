@@ -29,19 +29,19 @@ describe "Main XML generation" do
   end
 
   let(:xml_message_nodes) do
-    xml_envelope_node["env:transaction"]
+    xml_envelope_node["env:transaction"]["env:app.message"]
   end
 
   let(:xml_additional_code_transaction_node) do
-    xml_message_nodes[0]["env:app.message"]
+    xml_message_nodes[0]
   end
 
   let(:xml_transmission_comment_transaction_node) do
-    xml_message_nodes[1]["env:app.message"]
+    xml_message_nodes[1]
   end
 
   let(:xml_measure_transaction_node) do
-    xml_message_nodes[2]["env:app.message"]
+    xml_message_nodes[2]
   end
 
   let(:workbasket) do
@@ -77,20 +77,14 @@ describe "Main XML generation" do
   end
 
   it "increments the message ID within a given export" do
-    message_ids = xml_message_nodes.map { |node| node["env:app.message"]["id"] }
+    message_ids = parsed_xml.xpath("//app.message").map { |node| node["id"] }
 
     expect(message_ids).to eq ["1", "2", "3"]
   end
 
   it "increments record sequence ID within a given export" do
-    record_sequence_ids = xml_message_nodes.map do |node|
-      node.dig(
-        "env:app.message",
-        "oub:transmission",
-        "oub:record",
-        "oub:record.sequence.number",
-      )
-    end
+    record_sequence_ids =
+      parsed_xml.xpath("//record.sequence.number").map(&:text)
 
     expect(record_sequence_ids).to eq ["1", "2", "3"]
   end
