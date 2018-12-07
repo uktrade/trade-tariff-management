@@ -31,6 +31,50 @@ RSpec.describe XmlGeneration::TaricExport do
       to eq xml_export_file.envelope_id.to_s
   end
 
+  describe "attachments" do
+    it "attaches the XML data in multiple formats" do
+      create(:measure, :for_upload_today)
+
+      perform_taric_export(xml_export_file)
+
+      # It's unclear if all these formats are required
+      expect(xml_export_file.xml).to be_present
+      expect(xml_export_file.base_64).to be_present
+      expect(xml_export_file.zip).to be_present
+      expect(xml_export_file.meta).to be_present
+    end
+
+    describe "Base64 version" do
+      it "matches the XML once decoded" do
+        create(:measure, :for_upload_today)
+
+        perform_taric_export(xml_export_file)
+        decoded_xml = Base64.decode64(xml_export_file.base_64.read)
+
+        expect(decoded_xml).to eq xml_export_file.xml.read
+      end
+    end
+
+    describe "zip version" do
+      it "includes the XML file" do
+        create(:measure, :for_upload_today)
+
+        perform_taric_export(xml_export_file)
+
+        Zip::File.open_buffer(xml_export_file.zip.to_io) do |zip|
+          expect(zip.entries.count).to eq 1
+
+          entry = zip.entries.first
+
+          # The current implementation may be wrong - the filename is B64,
+          # but the content is the standard XML, not the Base64 XML.
+          expect(entry.name).to end_with "-EUFileSequence.B64"
+          expect(entry.get_input_stream.read).to eq xml_export_file.xml.read
+        end
+      end
+    end
+  end
+
   context "envelope ID isn't set" do
     it "stops generating the XML" do
       create(:measure, :for_upload_today)
@@ -64,11 +108,15 @@ RSpec.describe XmlGeneration::TaricExport do
   private
 
   def parsed_xml_for_export(xml_export_file)
+    taric_export = perform_taric_export(xml_export_file)
+    Nokogiri::XML(taric_export.xml_data).remove_namespaces!
+  end
+
+  def perform_taric_export(xml_export_file)
     xml_export_file.save_with_envelope_id
     taric_export = described_class.new(xml_export_file)
     taric_export.run
-
-    Nokogiri::XML(taric_export.xml_data).remove_namespaces!
+    taric_export
   end
 
   def extract_transactions(xml)
