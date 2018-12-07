@@ -4,9 +4,11 @@ module XmlGeneration
     attr_accessor :messages,
                   :id
 
-    def initialize(id, record)
+    def initialize(id, records)
       @id = id
-      @messages = Array.wrap(::XmlGeneration::NodeMessage.new(record))
+      @messages = records.map do |record|
+        ::XmlGeneration::NodeMessage.new(record)
+      end
     end
 
     def node_id

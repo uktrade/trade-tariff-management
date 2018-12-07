@@ -23,7 +23,7 @@ module BaseJobMixin
       }.merge(additional_params)
     )
 
-    if record.save
+    if persist_record(record)
       worker_klass.perform_async(record.id) unless Rails.env.test?
 
       redirect_to redirect_url,
@@ -35,6 +35,10 @@ module BaseJobMixin
   end
 
   private
+
+  def persist_record(record)
+    record.save
+  end
 
   def date_filters
     ops = {}
