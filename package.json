@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.bitzesty.com:clients/trade-tariff/trade-tariff-management.git"
+    "url": "git@github.com:uktrade/trade-tariff-management.git"
   },
   "author": "",
   "license": "UNLICENSED"
