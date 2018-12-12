@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Measure Form APIs: Additional code types", type: :request do
-
   include_context "form_apis_base_context"
 
   let(:measure_type_277) do
@@ -9,8 +8,7 @@ describe "Measure Form APIs: Additional code types", type: :request do
       measure_type_id: "277",
       measure_type_series_id: "A",
       validity_start_date: 1.year.ago,
-      measure_type_acronym: "TI1"
-    )
+      measure_type_acronym: "TI1")
   end
 
   let(:measure_type_488) do
@@ -18,36 +16,35 @@ describe "Measure Form APIs: Additional code types", type: :request do
       measure_type_id: "488",
       measure_type_series_id: "A",
       validity_start_date: 1.year.ago,
-      measure_type_acronym: "DTK"
-    )
+      measure_type_acronym: "DTK")
   end
 
   let(:actual_additional_code_type_1) do
     add_additional_code_type({
       additional_code_type_id: "Y",
-      validity_start_date: 1.year.ago},
+      validity_start_date: 1.year.ago
+ },
       measure_type_277,
-      "Anti-dumping/countervailing"
-    )
+      "Anti-dumping/countervailing")
   end
 
   let(:actual_additional_code_type_2) do
     add_additional_code_type({
       additional_code_type_id: "X",
-      validity_start_date: 1.year.ago},
+      validity_start_date: 1.year.ago
+ },
       measure_type_488,
-      "Reference prices fishery products"
-    )
+      "Reference prices fishery products")
   end
 
   let(:not_actual_additional_code_type_3) do
     add_additional_code_type({
       additional_code_type_id: "2",
       validity_start_date: 1.year.ago,
-      validity_end_date: 3.months.ago},
+      validity_end_date: 3.months.ago
+ },
       measure_type_488,
-      "Tariff preference"
-    )
+      "Tariff preference")
   end
 
   context "Index" do
@@ -95,33 +92,31 @@ describe "Measure Form APIs: Additional code types", type: :request do
 
   private
 
-    def add_additional_code_type(ops={}, measure_type, description)
-      ac_type = create(:additional_code_type, ops)
-      add_description(ac_type, description)
-      add_additional_code_type_measure_type(ac_type, measure_type)
+  def add_additional_code_type(ops = {}, measure_type, description)
+    ac_type = create(:additional_code_type, ops)
+    add_description(ac_type, description)
+    add_additional_code_type_measure_type(ac_type, measure_type)
 
-      ac_type
-    end
+    ac_type
+  end
 
-    def add_description(additional_code_type, description)
-      create(:additional_code_type_description,
-        additional_code_type_id: additional_code_type.additional_code_type_id,
-        description: description
-      )
-    end
+  def add_description(additional_code_type, description)
+    create(:additional_code_type_description,
+      additional_code_type_id: additional_code_type.additional_code_type_id,
+      description: description)
+  end
 
-    def add_additional_code_type_measure_type(additional_code_type, measure_type)
-      create(:additional_code_type_measure_type,
-        additional_code_type_id: additional_code_type.additional_code_type_id,
-        measure_type_id: measure_type.measure_type_id,
-        validity_start_date: additional_code_type.validity_start_date
-      )
-    end
+  def add_additional_code_type_measure_type(additional_code_type, measure_type)
+    create(:additional_code_type_measure_type,
+      additional_code_type_id: additional_code_type.additional_code_type_id,
+      measure_type_id: measure_type.measure_type_id,
+      validity_start_date: additional_code_type.validity_start_date)
+  end
 
-    def expecting_additional_code_type_in_result(position, additional_code_type)
-      expect(collection[position]["additional_code_type_id"]).to be_eql(
-        additional_code_type.additional_code_type_id
-      )
-      expect(collection[position]["description"]).to be_eql(additional_code_type.description)
-    end
+  def expecting_additional_code_type_in_result(position, additional_code_type)
+    expect(collection[position]["additional_code_type_id"]).to be_eql(
+      additional_code_type.additional_code_type_id
+    )
+    expect(collection[position]["description"]).to be_eql(additional_code_type.description)
+  end
 end

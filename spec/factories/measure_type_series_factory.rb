@@ -18,10 +18,10 @@ FactoryGirl.define do
 
   factory :measure_type_series_description do
     measure_type_series_id { generate(:measure_type_series_id) }
-    description    { Forgery(:basic).text }
+    description { Forgery(:basic).text }
 
     trait :xml do
-      language_id  { "EN" }
+      language_id { "EN" }
     end
   end
 end

@@ -1,7 +1,7 @@
 module TradeTariffBackend
   class DataMigrator
     module NullReporter
-      module_function
+    module_function
 
       def status(*)
         # noop

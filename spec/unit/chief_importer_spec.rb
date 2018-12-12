@@ -3,10 +3,9 @@ require "chief_importer"
 
 describe ChiefImporter do
   describe "#import" do
-    let(:chief_update) { create :chief_update, example_date: Date.new(2012,2,13)}
+    let(:chief_update) { create :chief_update, example_date: Date.new(2012, 2, 13) }
 
     context "when provided with valid chief file" do
-
       before do
         allow(chief_update).to receive(:file_path)
           .and_return("spec/fixtures/chief_samples/KBT009(12044).txt")

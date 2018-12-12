@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module Shared
     class CommodityCodesAnalyzer
-
       attr_accessor :start_date,
                     :commodity_codes,
                     :commodity_codes_exclusions,
@@ -9,7 +8,7 @@ module WorkbasketValueObjects
                     :commodity_codes_detected,
                     :exclusions_detected
 
-      def initialize(ops={})
+      def initialize(ops = {})
         @collection = nil
         @start_date = ops[:start_date].present? ? ops[:start_date].to_date : nil
         @commodity_codes = ops[:commodity_codes]
@@ -26,48 +25,47 @@ module WorkbasketValueObjects
         clean_array(exclusions_detected).join(', ')
       end
 
-      private
+    private
 
-        def setup_collection!
-          if list_of_codes.present?
-            if commodity_codes_exclusions.present?
-              # get excluded declarable commodity
-              @exclusions_detected = fetch_commodity_codes(commodity_codes_exclusions) || []
-              @commodity_codes_detected = []
+      def setup_collection!
+        if list_of_codes.present?
+          if commodity_codes_exclusions.present?
+            # get excluded declarable commodity
+            @exclusions_detected = fetch_commodity_codes(commodity_codes_exclusions) || []
+            @commodity_codes_detected = []
 
-              list_of_codes.each do |code|
-
-                if has_any_child_in?(code, commodity_codes_exclusions)
-                  #if code has excluded item within, deal with it
-                  if chapter?(code)
-                    #if code is chapter, handle all headings within
-                    handle_chapter_code(code)
-                  else
-                    #if code is not a chapter, get all declarable commodities
-                    current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
-                        new(start_date, code).
-                        codes
-                    #and add all declarable commodities without excluded
-                    @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
-                  end
-
+            list_of_codes.each do |code|
+              if has_any_child_in?(code, commodity_codes_exclusions)
+                #if code has excluded item within, deal with it
+                if chapter?(code)
+                  #if code is chapter, handle all headings within
+                  handle_chapter_code(code)
                 else
-                  #code has no excluded child within, we will add it to result
-                  @commodity_codes_detected = commodity_codes_detected + Array::wrap(code)
+                  #if code is not a chapter, get all declarable commodities
+                  current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
+                      new(start_date, code).
+                      codes
+                  #and add all declarable commodities without excluded
+                  @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
                 end
+
+              else
+                #code has no excluded child within, we will add it to result
+                @commodity_codes_detected = commodity_codes_detected + Array::wrap(code)
               end
-
-            else
-              #if has no excluded commodities, apply all codes without changes or expanding
-              @commodity_codes_detected = list_of_codes
             end
-            @collection = commodity_codes_detected
-          end
 
-          clean_array(collection).sort do |a, b|
-            a <=> b
+          else
+            #if has no excluded commodities, apply all codes without changes or expanding
+            @commodity_codes_detected = list_of_codes
           end
+          @collection = commodity_codes_detected
         end
+
+        clean_array(collection).sort do |a, b|
+          a <=> b
+        end
+      end
 
       def handle_chapter_code(code)
         chapter = Chapter.by_code(code).all.first
@@ -88,44 +86,44 @@ module WorkbasketValueObjects
       end
 
       def list_of_codes
-          if commodity_codes.present?
-            commodity_codes.split( /[\s|,]+/ )
-                           .map(&:strip)
-                           .reject(&:blank?)
-                           .uniq
-          end
+        if commodity_codes.present?
+          commodity_codes.split(/[\s|,]+/)
+                         .map(&:strip)
+                         .reject(&:blank?)
+                         .uniq
+        end
         end
 
-        def fetch_commodity_codes(codes_list)
-          res = codes_list.map do |code|
-            ::WorkbasketValueObjects::Shared::CommodityCodeParser.new(
-              start_date,
-              code
-            ).codes
-          end
-
-          clean_array(res)
+      def fetch_commodity_codes(codes_list)
+        res = codes_list.map do |code|
+          ::WorkbasketValueObjects::Shared::CommodityCodeParser.new(
+            start_date,
+            code
+          ).codes
         end
 
-        def clean_array(list)
-          (list || []).flatten
-                      .reject { |el| el.blank? }
-                      .uniq
-        end
+        clean_array(res)
+      end
 
-        def chapter?(code)
-          code.end_with? '00000000'
-        end
+      def clean_array(list)
+        (list || []).flatten
+                    .reject(&:blank?)
+                    .uniq
+      end
 
-        def parent_for?(parent_code, code)
-          code.gsub(/0(?=0*$)/, '').start_with? parent_code.gsub(/0(?=0*$)/, '')
-        end
+      def chapter?(code)
+        code.end_with? '00000000'
+      end
 
-        def has_any_child_in?(parent_code, list)
-          list.any? do |code|
-            parent_for?(parent_code, code)
-          end
+      def parent_for?(parent_code, code)
+        code.gsub(/0(?=0*$)/, '').start_with? parent_code.gsub(/0(?=0*$)/, '')
+      end
+
+      def has_any_child_in?(parent_code, list)
+        list.any? do |code|
+          parent_for?(parent_code, code)
         end
+      end
     end
   end
 end

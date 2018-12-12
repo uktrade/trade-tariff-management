@@ -95,7 +95,7 @@ describe QuotaOrderNumberOrigin do
 
     describe "ON12" do
       it "valid" do
-        bottom_date = Date.new(2007,12,31)
+        bottom_date = Date.new(2007, 12, 31)
         measure = create :measure,
                   ordernumber: generate(:quota_order_number_id),
                   validity_start_date: bottom_date - 1.day

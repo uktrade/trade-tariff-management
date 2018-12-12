@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MonetaryUnitDescription XML generation" do
-
   let(:db_record) do
     create(:monetary_unit_description, :xml)
   end
@@ -11,10 +10,10 @@ describe "MonetaryUnitDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :monetary_unit_code,
-      :language_id,
-      :description
+    %i[
+      monetary_unit_code
+      language_id
+      description
     ]
   end
 

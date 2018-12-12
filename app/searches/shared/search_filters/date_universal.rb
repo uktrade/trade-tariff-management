@@ -35,7 +35,6 @@
 module Shared
   module SearchFilters
     class DateUniversal
-
       include ::Shared::Methods::Date
 
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
@@ -46,18 +45,18 @@ module Shared
         is_after_or_nil
         is_before
         is_before_or_nil
-      )
+      ).freeze
 
       OPERATORS_ALLOW_NIL = %w(
         is_after_or_nil
         is_before_or_nil
-      )
+      ).freeze
 
       attr_accessor :field_name,
                     :operator,
                     :value
 
-      def initialize(field_name, operator, date=nil)
+      def initialize(field_name, operator, date = nil)
         @field_name = field_name
         @operator = operator
         @value = date.try(:to_date)
@@ -70,62 +69,62 @@ module Shared
         clause
       end
 
-      private
+    private
 
-        def required_options_are_blank?
-          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+      def required_options_are_blank?
+        OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
           value.blank?
-        end
+      end
 
-        def clause
-          case operator
-          when "on"
-            [ is_clause, value ]
-          when "is"
-            [ is_clause, value ]
-          when "is_not"
-            [ is_not_clause, value ]
-          when "before"
-            [ is_before_clause, value ]
-          when "is_before"
-            [ is_before_clause, value ]
-          when "is_before_or_nil"
-            [ is_before_or_nil_clause, value ]
-          when "after"
-            [ is_after_clause, value ]
-          when "is_after"
-            [ is_after_clause, value ]
-          when "is_after_or_nil"
-            [ is_after_or_nil_clause, value ]
-          when "is_not_specified"
-            is_not_specified_clause
-          when "is_not_unspecified"
-            is_not_unspecified_clause
-          end
+      def clause
+        case operator
+        when "on"
+          [is_clause, value]
+        when "is"
+          [is_clause, value]
+        when "is_not"
+          [is_not_clause, value]
+        when "before"
+          [is_before_clause, value]
+        when "is_before"
+          [is_before_clause, value]
+        when "is_before_or_nil"
+          [is_before_or_nil_clause, value]
+        when "after"
+          [is_after_clause, value]
+        when "is_after"
+          [is_after_clause, value]
+        when "is_after_or_nil"
+          [is_after_or_nil_clause, value]
+        when "is_not_specified"
+          is_not_specified_clause
+        when "is_not_unspecified"
+          is_not_unspecified_clause
         end
+      end
 
-        def is_not_specified_clause
-          "#{field_name} IS NULL"
-        end
+      def is_not_specified_clause
+        "#{field_name} IS NULL"
+      end
 
-        def is_not_unspecified_clause
-          "#{field_name} IS NOT NULL"
-        end
+      def is_not_unspecified_clause
+        "#{field_name} IS NOT NULL"
+      end
 
-        def is_before_clause
-          compare_sql("<")
-        end
+      def is_before_clause
+        compare_sql("<")
+      end
 
-        def is_after_clause
-          compare_sql(">")
-        end
+      def is_after_clause
+        compare_sql(">")
+      end
 
-        def compare_sql(compare_operator)
-          res = "#{field_name}::date #{compare_operator} ?"
-          res += " OR #{is_not_specified_clause}" if field_name == "validity_end_date" && OPERATORS_ALLOW_NIL.include?(operator)
+      def compare_sql(compare_operator)
+        res = "#{field_name}::date #{compare_operator} ?"
+        res += " OR #{is_not_specified_clause}" if field_name == "validity_end_date" && OPERATORS_ALLOW_NIL.include?(operator)
 
-          res
-        end
+        res
+      end
     end
   end
 end

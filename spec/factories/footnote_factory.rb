@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  sequence(:footnote_sid) { |n| n}
+  sequence(:footnote_sid) { |n| n }
 
   factory :footnote do
     transient do
@@ -13,7 +13,7 @@ FactoryGirl.define do
     validity_start_date     { Date.today.ago(2.years).localtime }
     validity_end_date       { nil }
 
-    after(:build) { |ftn, evaluator|
+    after(:build) { |ftn, _evaluator|
       FactoryGirl.create(:footnote_type, footnote_type_id: ftn.footnote_type_id,
                                          validity_start_date: ftn.validity_start_date - 1.day)
       ftn_desc_period = FactoryGirl.create(:footnote_description_period, footnote_type_id: ftn.footnote_type_id,
@@ -43,7 +43,7 @@ FactoryGirl.define do
     end
 
     trait :xml do
-      validity_end_date     { Date.today.ago(1.years) }
+      validity_end_date { Date.today.ago(1.years) }
     end
   end
 
@@ -55,7 +55,7 @@ FactoryGirl.define do
     validity_end_date               { nil }
 
     trait :xml do
-      validity_end_date             { Date.today.ago(1.years) }
+      validity_end_date { Date.today.ago(1.years) }
     end
   end
 
@@ -165,7 +165,7 @@ FactoryGirl.define do
     description                     { Forgery(:lorem_ipsum).sentence }
 
     trait :xml do
-      language_id                   { "EN" }
+      language_id { "EN" }
     end
   end
 end

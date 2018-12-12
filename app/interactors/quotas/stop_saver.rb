@@ -1,13 +1,12 @@
 module Quotas
   class StopSaver
-
     attr_accessor :current_admin,
                   :workbasket,
                   :workbasket_settings,
                   :status,
                   :operation_date
 
-    def initialize(current_admin, workbasket, settings_ops={})
+    def initialize(current_admin, workbasket, settings_ops = {})
       @current_admin = current_admin
       @workbasket = workbasket
       @workbasket_settings = workbasket.settings
@@ -37,7 +36,7 @@ module Quotas
             end
             definition.validity_end_date = operation_date
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-                definition, system_ops.merge(operation: "U")
+              definition, system_ops.merge(operation: "U")
             ).assign!
             definition.save
           end
@@ -45,12 +44,12 @@ module Quotas
           #delete all in future
           definition.measures.each do |measure|
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-                measure, system_ops.merge(operation: "D")
+              measure, system_ops.merge(operation: "D")
             ).assign!(false)
             measure.destroy
           end
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              definition, system_ops.merge(operation: "D")
+            definition, system_ops.merge(operation: "D")
           ).assign!(false)
           definition.destroy
         end
@@ -61,13 +60,13 @@ module Quotas
           if order_number.validity_end_date.blank? || order_number.validity_end_date > operation_date
             order_number.validity_end_date = operation_date
             ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-                order_number, system_ops.merge(operation: "U")
+              order_number, system_ops.merge(operation: "U")
             ).assign!
             order_number.save
           end
         else
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              order_number, system_ops.merge(operation: "D")
+            order_number, system_ops.merge(operation: "D")
           ).assign!(false)
           order_number.destroy
         end
@@ -82,7 +81,7 @@ module Quotas
       {}
     end
 
-    private
+  private
 
     def system_ops
       {
@@ -97,16 +96,15 @@ module Quotas
       measure.validity_end_date = operation_date
 
       measure.justification_regulation_id =
-          workbasket_settings.configure_step_settings['regulation_id'] || measure.measure_generating_regulation_id
+        workbasket_settings.configure_step_settings['regulation_id'] || measure.measure_generating_regulation_id
       measure.justification_regulation_role =
-          workbasket_settings.configure_step_settings['regulation_role'] || measure.measure_generating_regulation_role
+        workbasket_settings.configure_step_settings['regulation_role'] || measure.measure_generating_regulation_role
 
       ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-          measure, system_ops.merge(operation: "U")
+        measure, system_ops.merge(operation: "U")
       ).assign!
 
       measure.save
     end
-
   end
 end

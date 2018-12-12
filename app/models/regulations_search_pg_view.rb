@@ -1,5 +1,4 @@
-class RegulationsSearchPgView  < Sequel::Model(:regulations_search_pg_view)
-
+class RegulationsSearchPgView < Sequel::Model(:regulations_search_pg_view)
   dataset_module do
     def default
       where("start_date IS NOT NULL")

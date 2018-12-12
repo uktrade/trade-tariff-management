@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  sequence(:certificate_sid) { |n| n}
+  sequence(:certificate_sid) { |n| n }
   sequence(:certificate_type_code, LoopingSequence.lower_a_to_upper_z, &:value)
 
   factory :certificate do
@@ -26,7 +26,7 @@ FactoryGirl.define do
     validity_end_date                  { nil }
 
     trait :xml do
-      validity_end_date                   { Date.today.ago(1.years) }
+      validity_end_date { Date.today.ago(1.years) }
     end
   end
 
@@ -52,7 +52,7 @@ FactoryGirl.define do
     end
 
     trait :xml do
-      language_id                      { "EN" }
+      language_id { "EN" }
     end
   end
 
@@ -74,7 +74,7 @@ FactoryGirl.define do
     end
 
     trait :xml do
-      validity_end_date      { Date.today.ago(1.years) }
+      validity_end_date { Date.today.ago(1.years) }
     end
   end
 
@@ -83,7 +83,7 @@ FactoryGirl.define do
     description           { Forgery(:basic).text }
 
     trait :xml do
-      language_id         { "EN" }
+      language_id { "EN" }
     end
   end
 end

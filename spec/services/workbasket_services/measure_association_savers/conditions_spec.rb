@@ -12,7 +12,7 @@ RSpec.describe WorkbasketServices::MeasureAssociationSavers::Conditions do
       saver = described_class.new(measure, {}, condition_ops)
 
       expect { saver.valid? }.
-        to_not change{ oplog_count_for_measure(measure) }.from(1)
+        to_not change { oplog_count_for_measure(measure) }.from(1)
     end
 
     it "persists a new measure for reference integrity" do
@@ -25,7 +25,7 @@ RSpec.describe WorkbasketServices::MeasureAssociationSavers::Conditions do
       saver = described_class.new(measure, {}, condition_ops)
 
       expect { saver.valid? }.
-        to change{ oplog_count_for_measure(measure) }.from(0).to(1)
+        to change { oplog_count_for_measure(measure) }.from(0).to(1)
 
       expect(measure.exists?).to be true
     end

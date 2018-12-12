@@ -4,19 +4,27 @@ describe Chapter do
   describe 'associations' do
     describe 'headings' do
       let!(:chapter)  { create :chapter }
-      let!(:heading1) { create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}10000000",
+      let!(:heading1) {
+        create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}10000000",
                                          validity_start_date: 10.years.ago,
-                                         validity_end_date: nil }
-      let!(:heading2) { create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}20000000",
+                                         validity_end_date: nil
+      }
+      let!(:heading2) {
+        create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}20000000",
                                          validity_start_date: 2.years.ago,
-                                         validity_end_date: nil }
-      let!(:heading3) { create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}30000000",
+                                         validity_end_date: nil
+      }
+      let!(:heading3) {
+        create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}30000000",
                                          validity_start_date: 10.years.ago,
-                                         validity_end_date: 8.years.ago }
-      let!(:heading4) { create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}40000000",
+                                         validity_end_date: 8.years.ago
+      }
+      let!(:heading4) {
+        create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}40000000",
                                          validity_start_date: 10.years.ago,
-                                         validity_end_date: nil }
-      let!(:hidden_gono)  { create :hidden_goods_nomenclature, goods_nomenclature_item_id: heading4.goods_nomenclature_item_id }
+                                         validity_end_date: nil
+      }
+      let!(:hidden_gono) { create :hidden_goods_nomenclature, goods_nomenclature_item_id: heading4.goods_nomenclature_item_id }
 
       around(:each) do |example|
         TimeMachine.at(1.year.ago) do
@@ -110,7 +118,7 @@ describe Chapter do
           end
 
           context 'with associated Measure (through Commodity) changes' do
-            let!(:measure)   {
+            let!(:measure) {
               create :measure,
                      goods_nomenclature: commodity,
                      goods_nomenclature_item_id: commodity.goods_nomenclature_item_id,
@@ -143,7 +151,7 @@ describe Chapter do
   end
 
   describe '#to_param' do
-    let!(:chapter)  { create :chapter, goods_nomenclature_item_id: '1200000000' }
+    let!(:chapter) { create :chapter, goods_nomenclature_item_id: '1200000000' }
 
     it 'should return short_code' do
       expect(chapter.to_param).to eq(chapter.short_code)
@@ -152,12 +160,18 @@ describe Chapter do
 
   describe 'first & last heading' do
     let!(:chapter)  { create :chapter, goods_nomenclature_item_id: '1200000000' }
-    let!(:heading1) { create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}10000000",
-                             validity_end_date: nil }
-    let!(:heading2) { create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}20000000",
-                             validity_end_date: nil }
-    let!(:heading3) { create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}30000000",
-                             validity_end_date: nil }
+    let!(:heading1) {
+      create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}10000000",
+                             validity_end_date: nil
+    }
+    let!(:heading2) {
+      create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}20000000",
+                             validity_end_date: nil
+    }
+    let!(:heading3) {
+      create :heading, goods_nomenclature_item_id: "#{chapter.goods_nomenclature_item_id.first(2)}30000000",
+                             validity_end_date: nil
+    }
 
     describe '#first_heading' do
       it 'should return first heading ordered by goods_nomenclature_item_id' do
@@ -185,7 +199,7 @@ describe Chapter do
   end
 
   describe '#short_code' do
-    let!(:chapter)  { create :chapter, goods_nomenclature_item_id: '1200000000' }
+    let!(:chapter) { create :chapter, goods_nomenclature_item_id: '1200000000' }
 
     it 'should return first 2 chars of goods_nomenclature_item_id' do
       expect(chapter.short_code).to eq('12')
@@ -193,7 +207,7 @@ describe Chapter do
   end
 
   describe '#relevant_headings' do
-    let!(:chapter)  { create :chapter, goods_nomenclature_item_id: '1200000000' }
+    let!(:chapter) { create :chapter, goods_nomenclature_item_id: '1200000000' }
 
     it 'should include short_code' do
       expect(chapter.send(:relevant_headings)).to include(chapter.short_code)
@@ -209,7 +223,7 @@ describe Chapter do
   end
 
   describe '#relevant_commodities' do
-    let!(:chapter)  { create :chapter, goods_nomenclature_item_id: '1200000000' }
+    let!(:chapter) { create :chapter, goods_nomenclature_item_id: '1200000000' }
 
     it 'should include short_code' do
       expect(chapter.send(:relevant_commodities)).to include(chapter.short_code)

@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateCertificate
     class StepPointer < ::WorkbasketValueObjects::StepPointerBase
-
       def has_next_step?
         false
       end
@@ -25,4 +24,3 @@ module WorkbasketValueObjects
     end
   end
 end
-

@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateRegulationController < Workbaskets::BaseController
-
     expose(:sub_klass) { "CreateRegulation" }
     expose(:settings_type) { :create_regulation }
 
@@ -44,7 +43,7 @@ module Workbaskets
       head :ok
     end
 
-    private
+  private
 
     def check_if_action_is_permitted!
       true
@@ -53,6 +52,5 @@ module Workbaskets
     def workbasket_data_can_be_persisted?
       true
     end
-
   end
 end

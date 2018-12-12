@@ -32,7 +32,7 @@ describe User do
       it {
         expect {
           User.create!(attrs)
-        }.to change{ User.count }.by(1)
+        }.to change { User.count }.by(1)
       }
     end
 

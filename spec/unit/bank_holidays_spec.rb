@@ -28,7 +28,7 @@ describe BankHolidays do
     it 'should invoke weekends checker method' do
       expect(BankHolidays).to receive(:weekends).with(2)
       BankHolidays.last(2)
-      end
+    end
 
     it 'should invoke holidays checker method' do
       expect(BankHolidays).to receive(:holidays).with(2)

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "DutyExpressionDescription XML generation" do
-
   let(:db_record) do
     create(:duty_expression_description, :xml)
   end
@@ -11,10 +10,10 @@ describe "DutyExpressionDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :duty_expression_id,
-      :language_id,
-      :description
+    %i[
+      duty_expression_id
+      language_id
+      description
     ]
   end
 

@@ -1,5 +1,4 @@
 class MeasureTypeSeries < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   set_primary_key [:measure_type_series_id]
@@ -27,12 +26,10 @@ class MeasureTypeSeries < Sequel::Model
 
         scope = scope.join_table(:inner,
           :measure_type_series_descriptions,
-          measure_type_series_id: :measure_type_series_id
-        ).where("
+          measure_type_series_id: :measure_type_series_id).where("
           measure_type_series.measure_type_series_id ilike ? OR
           measure_type_series_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       scope.order(Sequel.asc(:measure_type_series__measure_type_series_id))
@@ -57,7 +54,7 @@ class MeasureTypeSeries < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     json_mapping
   end
 end

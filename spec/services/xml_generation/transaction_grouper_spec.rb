@@ -14,7 +14,7 @@ RSpec.describe XmlGeneration::TransactionGrouper do
       group.map(&:record_code)
     end
 
-    expect(record_codes_per_group).to contain_exactly ["420", "420"], ["200"]
+    expect(record_codes_per_group).to contain_exactly %w[420 420], %w[200]
   end
 
   it "orders groups by record code" do
@@ -24,8 +24,8 @@ RSpec.describe XmlGeneration::TransactionGrouper do
 
     groups = subject.group([measure, footnote, measure_2])
 
-    expect(groups.first.map(&:record_code)).to eq ["200"]
-    expect(groups.last.map(&:record_code)).to eq ["420", "420"]
+    expect(groups.first.map(&:record_code)).to eq %w[200]
+    expect(groups.last.map(&:record_code)).to eq %w[420 420]
   end
 
   describe "within each group" do
@@ -36,7 +36,7 @@ RSpec.describe XmlGeneration::TransactionGrouper do
 
       group = subject.group([last, first, mid]).first
 
-      expect(group.map(&:subrecord_code)).to eq ["10", "50", "90"]
+      expect(group.map(&:subrecord_code)).to eq %w[10 50 90]
     end
   end
 end

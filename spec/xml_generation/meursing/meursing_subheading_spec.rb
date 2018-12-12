@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeursingSubheading XML generation" do
-
   let(:db_record) do
     create(:meursing_subheading, :xml)
   end
@@ -11,14 +10,14 @@ describe "MeursingSubheading XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :meursing_table_plan_id,
-      :meursing_heading_number,
-      :row_column_code,
-      :subheading_sequence_number,
-      :validity_start_date,
-      :validity_end_date,
-      :description
+    %i[
+      meursing_table_plan_id
+      meursing_heading_number
+      row_column_code
+      subheading_sequence_number
+      validity_start_date
+      validity_end_date
+      description
     ]
   end
 

@@ -1,6 +1,5 @@
 module Db
   class RollbacksController < ApplicationController
-
     include ::BaseJobMixin
 
     expose(:record_name) do

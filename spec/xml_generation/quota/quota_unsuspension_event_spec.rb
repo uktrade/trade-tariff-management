@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "QuotaUnsuspensionEvent XML generation" do
-
   let(:db_record) do
     create(:quota_unsuspension_event)
   end
@@ -11,10 +10,10 @@ describe "QuotaUnsuspensionEvent XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :quota_definition_sid,
-      :occurrence_timestamp,
-      :unsuspension_date
+    %i[
+      quota_definition_sid
+      occurrence_timestamp
+      unsuspension_date
     ]
   end
 

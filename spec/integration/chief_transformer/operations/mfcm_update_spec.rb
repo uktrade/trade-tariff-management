@@ -4,7 +4,7 @@ describe ChiefTransformer::Processor::MfcmUpdate do
   before(:all) { preload_standing_data }
   after(:all)  { clear_standing_data }
 
-  let(:sample_operation_date) { Date.new(2013,8,5) }
+  let(:sample_operation_date) { Date.new(2013, 8, 5) }
 
   let(:chief_update) {
     create :chief_update, :applied, issue_date: sample_operation_date
@@ -21,14 +21,16 @@ describe ChiefTransformer::Processor::MfcmUpdate do
             measure_type_id: 'VTS'
         }
 
-        let!(:mfcm) { create(:mfcm, amend_indicator: "U",
+        let!(:mfcm) {
+          create(:mfcm, amend_indicator: "U",
                                     fe_tsmp: DateTime.parse("2002-11-15 11:00:00"),
                                     le_tsmp: DateTime.parse("2008-11-15 11:00:00"),
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     cmdty_code: "0101010100",
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
         before {
           ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process
@@ -62,14 +64,16 @@ describe ChiefTransformer::Processor::MfcmUpdate do
             measure_type_id: 'VTS'
         }
 
-        let!(:mfcm) { create(:mfcm, amend_indicator: "U",
+        let!(:mfcm) {
+          create(:mfcm, amend_indicator: "U",
                                     fe_tsmp: DateTime.parse("2002-11-15 11:00:00"),
                                     le_tsmp: DateTime.parse("2008-11-15 11:00:00"),
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     cmdty_code: "0101010100",
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
         before {
           ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process
@@ -102,22 +106,26 @@ describe ChiefTransformer::Processor::MfcmUpdate do
             measure_type_id: 'VTS'
         }
 
-        let!(:mfcm) { create(:mfcm, amend_indicator: "U",
+        let!(:mfcm) {
+          create(:mfcm, amend_indicator: "U",
                                     fe_tsmp: DateTime.parse("2008-11-15 11:00:00"),
                                     le_tsmp: nil,
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     cmdty_code: "0101010100",
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
-        let!(:tame) { create(:tame, amend_indicator: "U",
+        let!(:tame) {
+          create(:tame, amend_indicator: "U",
                                     fe_tsmp: DateTime.parse("2008-11-15 11:00:00"),
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     adval_rate: 15.000,
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
         let!(:geographical_area) { create :geographical_area, :fifteen_years, :erga_omnes }
 
@@ -151,27 +159,31 @@ describe ChiefTransformer::Processor::MfcmUpdate do
             measure_type_id: 'VTS'
         }
 
-        let!(:mfcm) { create(:mfcm, amend_indicator: "U",
+        let!(:mfcm) {
+          create(:mfcm, amend_indicator: "U",
                                     fe_tsmp: DateTime.parse("2008-11-15 11:00:00"),
                                     le_tsmp: nil,
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     cmdty_code: "0101010100",
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
-        let!(:tame) { create(:tame, amend_indicator: "U",
+        let!(:tame) {
+          create(:tame, amend_indicator: "U",
                                     fe_tsmp: DateTime.parse("2008-11-15 11:00:00"),
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     adval_rate: 15.000,
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
         let!(:geographical_area) { create :geographical_area, :fifteen_years, :erga_omnes }
 
         it 'does not create new measures' do
-          expect { ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process }.not_to change{Measure.count}
+          expect { ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process }.not_to change { Measure.count }
         end
       end
     end

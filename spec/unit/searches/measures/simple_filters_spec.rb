@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: simple filters" do
-
   include_context "measures_search_base_context"
 
   let(:adam) do

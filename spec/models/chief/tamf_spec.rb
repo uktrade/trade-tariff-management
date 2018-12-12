@@ -5,7 +5,7 @@ describe Chief::Tamf do
     describe 'measure_type_conds' do
       let!(:common) { attributes_for(:measure_type_cond) }
       let!(:tamf)   { create :tamf, msrgp_code: common[:measure_group_code], msr_type: common[:measure_type] }
-      let!(:measure_type_cond)  { create :measure_type_cond, common }
+      let!(:measure_type_cond) { create :measure_type_cond, common }
       let!(:measure_type_cond_irrelevant) { create :measure_type_cond }
 
       it 'associates correct Chief measure type conditions' do
@@ -45,10 +45,14 @@ describe Chief::Tamf do
   end
 
   describe '#measurement_unit' do
-    let!(:chief_measurement_unit1) { create :chief_measurement_unit, spfc_cmpd_uoq: '12',
-                                                                    spfc_uoq: '13' }
-    let!(:chief_measurement_unit2) { create :chief_measurement_unit, spfc_cmpd_uoq: nil,
-                                                                    spfc_uoq: '13' }
+    let!(:chief_measurement_unit1) {
+      create :chief_measurement_unit, spfc_cmpd_uoq: '12',
+                                                                    spfc_uoq: '13'
+    }
+    let!(:chief_measurement_unit2) {
+      create :chief_measurement_unit, spfc_cmpd_uoq: nil,
+                                                                    spfc_uoq: '13'
+    }
     let(:tamf) { build :tamf }
 
     context 'cmpd_uoq present' do

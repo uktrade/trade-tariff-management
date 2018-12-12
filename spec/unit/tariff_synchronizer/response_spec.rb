@@ -2,7 +2,6 @@ require "rails_helper"
 require "tariff_synchronizer"
 
 describe TariffSynchronizer::Response do
-
   describe "#terminated?" do
     it "Returns true if response_code is 200 or 404" do
       response = build(:response, response_code: 200)
@@ -46,7 +45,7 @@ describe TariffSynchronizer::Response do
       expect(response.state).to eq(:not_found)
     end
   end
-  
+
   describe '#successful?' do
     it 'should return true for 200 and content' do
       response = build(:response, response_code: 200, content: "xyz")

@@ -9,7 +9,7 @@ class RequirementDutyExpressionFormatter
       )
     end
 
-    def format(opts={})
+    def format(opts = {})
       duty_amount = opts[:duty_amount]
       monetary_unit = opts[:monetary_unit_abbreviation].presence || opts[:monetary_unit]
       measurement_unit = opts[:measurement_unit]

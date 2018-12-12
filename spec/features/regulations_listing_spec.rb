@@ -15,8 +15,7 @@ feature "Regulations listing" do
   let!(:regulation_role_type_description) do
     create(:regulation_role_type_description,
       regulation_role_type_id: 1,
-      description: "Base regulation"
-    )
+      description: "Base regulation")
   end
 
   let!(:base_regulation) do

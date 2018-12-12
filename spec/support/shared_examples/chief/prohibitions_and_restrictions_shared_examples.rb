@@ -42,7 +42,6 @@ shared_examples_for "P&R Daily Update TAME and TAMF Daily Scenario 1: Changed co
                                                     footnote_id: "006").any?
     ).to be_truthy
   end
-
 end
 
 shared_examples_for "P&R Daily Update TAME and TAMF Daily Scenario 2: Restriction removed outcome" do
@@ -84,21 +83,18 @@ shared_examples_for "P&R Daily Update TAME and TAMF Daily Scenario 3: Country gr
     m1 = Measure.where(goods_nomenclature_item_id: "2106909829",
                        geographical_area_sid: 103,
                        validity_start_date: DateTime.parse("2008-05-01 00:00:00")).take
-
   end
 
   it "should create a measure for cn" do
     m1 = Measure.where(goods_nomenclature_item_id: "2106909829",
                        geographical_area_sid: 439,
                        validity_start_date: DateTime.parse("2008-05-01 00:00:00")).take
-
   end
 
   it "should create a measure for iq" do
     m1 = Measure.where(goods_nomenclature_item_id: "2106909829",
                        geographical_area_sid: -2,
                        validity_start_date: DateTime.parse("2008-05-01 00:00:00")).take
-
   end
 end
 

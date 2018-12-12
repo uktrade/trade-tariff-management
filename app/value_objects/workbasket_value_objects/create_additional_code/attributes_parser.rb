@@ -1,13 +1,12 @@
 module WorkbasketValueObjects
   module CreateAdditionalCode
     class AttributesParser < WorkbasketValueObjects::AttributesParserBase
-
       SIMPLE_OPS = %w(
         workbasket_name
         validity_start_date
         validity_end_date
         additional_codes
-      )
+      ).freeze
 
       SIMPLE_OPS.map do |option_name|
         define_method(option_name) do
@@ -25,7 +24,7 @@ module WorkbasketValueObjects
                  ops
                else
                  ActiveSupport::HashWithIndifferentAccess.new(
-                     workbasket_settings.settings
+                   workbasket_settings.settings
                  )
                end
         @filtered_additional_codes = filter_additional_codes(ops['additional_codes']) || []
@@ -77,16 +76,15 @@ module WorkbasketValueObjects
         validity_start_date
       end
 
-      private
+    private
 
       def filter_additional_codes(ops)
         if ops.present?
-          ops.select do |key, item|
+          ops.select do |_key, item|
             item['additional_code_type_id'].present? || item['additional_code'].present? || item['description'].present?
           end
         end
       end
-
     end
   end
 end

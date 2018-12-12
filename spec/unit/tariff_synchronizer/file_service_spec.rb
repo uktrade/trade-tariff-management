@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe TariffSynchronizer::FileService do
-
   let(:base_update) { create :base_update }
 
   context "with filesystem" do

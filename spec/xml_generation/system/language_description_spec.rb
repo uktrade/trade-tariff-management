@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "LanguageDescription XML generation" do
-
   let(:db_record) do
     create(:language_description)
   end
@@ -11,10 +10,10 @@ describe "LanguageDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :language_code_id,
-      :language_id,
-      :description
+    %i[
+      language_code_id
+      language_id
+      description
     ]
   end
 

@@ -4,28 +4,30 @@ describe ChiefTransformer::Processor::TameDelete do
   before(:all) { preload_standing_data }
   after(:all)  { clear_standing_data }
 
-  let(:sample_operation_date) { Date.new(2013,8,5) }
+  let(:sample_operation_date) { Date.new(2013, 8, 5) }
 
   let(:chief_update) {
     create :chief_update, :applied, issue_date: sample_operation_date
   }
 
   describe '#process' do
-    let!(:tame) { create(:tame, amend_indicator: "X",
+    let!(:tame) {
+      create(:tame, amend_indicator: "X",
                                 fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                 tar_msr_no: '0101010100',
                                 msrgp_code: "VT",
                                 msr_type: "S",
                                 tty_code: "813",
                                 adval_rate: 15.000,
-                                origin: chief_update.filename) }
+                                origin: chief_update.filename)
+    }
 
     context 'has relevant, non-terminated national measures' do
       context 'associated to non open ended goods nomenclature' do
         context 'TAME first effective date greater than goods nomenclature validity end date' do
           let(:goods_nomenclature) {
             create :commodity,
-              goods_nomenclature_item_id: '0101010100' ,
+              goods_nomenclature_item_id: '0101010100',
               validity_start_date: DateTime.parse("2006-1-15 11:00:00"),
               validity_end_date: DateTime.parse("2007-12-15 11:00:00")
           }
@@ -65,7 +67,7 @@ describe ChiefTransformer::Processor::TameDelete do
         context 'TAME first effective date less than goods nomenclature validity end date' do
           let(:goods_nomenclature) {
             create :commodity,
-              goods_nomenclature_item_id: '0101010100' ,
+              goods_nomenclature_item_id: '0101010100',
               validity_start_date: DateTime.parse("2006-1-15 11:00:00"),
               validity_end_date: DateTime.parse("2010-12-15 11:00:00")
           }
@@ -136,14 +138,16 @@ describe ChiefTransformer::Processor::TameDelete do
     end
 
     context 'has relevant, terminated national measures' do
-      let!(:tame) { create(:tame, amend_indicator: "X",
+      let!(:tame) {
+        create(:tame, amend_indicator: "X",
                                   fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                   tar_msr_no: '0101010100',
                                   msrgp_code: "VT",
                                   msr_type: "S",
                                   tty_code: "813",
                                   adval_rate: 15.000,
-                                  origin: chief_update.filename) }
+                                  origin: chief_update.filename)
+      }
 
       let!(:measure) {
         create :measure, :national,

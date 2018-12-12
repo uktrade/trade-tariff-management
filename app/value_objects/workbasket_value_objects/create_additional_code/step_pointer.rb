@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateAdditionalCode
     class StepPointer < ::WorkbasketValueObjects::StepPointerBase
-
       def step_transitions
         {
         }
@@ -21,7 +20,6 @@ module WorkbasketValueObjects
         additional_codes
         )
       end
-
     end
   end
 end

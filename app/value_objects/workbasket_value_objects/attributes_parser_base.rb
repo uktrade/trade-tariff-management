@@ -1,19 +1,18 @@
 module WorkbasketValueObjects
   class AttributesParserBase
-
     attr_accessor :workbasket_settings,
                   :commodity_codes_analyzer,
                   :additional_codes_analyzer,
                   :step,
                   :ops
 
-    def initialize(workbasket_settings, step, ops=nil)
+    def initialize(workbasket_settings, step, ops = nil)
       @workbasket_settings = workbasket_settings
       @step = step
       @ops = if ops.present?
-        ops
-      else
-        ActiveSupport::HashWithIndifferentAccess.new(workbasket_settings.settings)
+               ops
+             else
+               ActiveSupport::HashWithIndifferentAccess.new(workbasket_settings.settings)
       end
 
       prepare_ops # Implemented in base class
@@ -60,12 +59,12 @@ module WorkbasketValueObjects
         ops[:excluded_geographical_areas].uniq
       else
         []
-      end.reject { |i| i.blank? }
+      end.reject(&:blank?)
     end
 
     def commodity_codes_exclusions
       list = ops['commodity_codes_exclusions']
-      list.present? ? list.split( /[\s|,]+/ )
+      list.present? ? list.split(/[\s|,]+/)
                           .map(&:strip)
                           .reject(&:blank?)
                           .uniq : []
@@ -98,99 +97,98 @@ module WorkbasketValueObjects
     end
 
     begin :decoration_methods
-      def regulation
-        regulation_id = ops[:regulation_id]
+          def regulation
+            regulation_id = ops[:regulation_id]
 
-        regulation = BaseRegulation.not_replaced_and_partially_replaced
-                                   .actual_or_starts_in_future
-                                   .where(base_regulation_id: regulation_id).first
+            regulation = BaseRegulation.not_replaced_and_partially_replaced
+                                       .actual_or_starts_in_future
+                                       .where(base_regulation_id: regulation_id).first
 
-        if regulation.blank?
-          regulation = ModificationRegulation.not_replaced_and_partially_replaced
-                                             .actual_or_starts_in_future
-                                             .where(modification_regulation_id: regulation_id).first
-        end
+            if regulation.blank?
+              regulation = ModificationRegulation.not_replaced_and_partially_replaced
+                                                 .actual_or_starts_in_future
+                                                 .where(modification_regulation_id: regulation_id).first
+            end
 
-        regulation.formatted_id
-      end
+            regulation.formatted_id
+          end
 
-      def operation_date_formatted
-        date_to_format(ops[:operation_date])
-      end
+          def operation_date_formatted
+            date_to_format(ops[:operation_date])
+          end
 
-      def start_date_formatted
-        date_to_format(ops[:start_date])
-      end
+          def start_date_formatted
+            date_to_format(ops[:start_date])
+          end
 
-      def end_date_formatted
-        ops[:end_date].present? ? date_to_format(ops[:end_date]) : "-"
-      end
+          def end_date_formatted
+            ops[:end_date].present? ? date_to_format(ops[:end_date]) : "-"
+          end
 
-      def measure_type
-        MeasureType.by_measure_type_id(ops[:measure_type_id])
-                   .first
-                   .description
-      end
+          def measure_type
+            MeasureType.by_measure_type_id(ops[:measure_type_id])
+                       .first
+                       .description
+          end
 
-      def commodity_codes_formatted
-        commodity_codes_analyzer.commodity_codes_formatted
-      end
+          def commodity_codes_formatted
+            commodity_codes_analyzer.commodity_codes_formatted
+          end
 
-      def exclusions_formatted
-        commodity_codes_analyzer.exclusions_formatted
-      end
+          def exclusions_formatted
+            commodity_codes_analyzer.exclusions_formatted
+          end
 
-      def additional_codes_formatted
-        additional_codes_analyzer.additional_codes_formatted
-      end
+          def additional_codes_formatted
+            additional_codes_analyzer.additional_codes_formatted
+          end
 
-      def origin
-        id = ops[:geographical_area_id]
-        desc = GeographicalArea.actual
-                               .where(geographical_area_id: id)
-                               .first
-                               .description
+          def origin
+            id = ops[:geographical_area_id]
+            desc = GeographicalArea.actual
+                                   .where(geographical_area_id: id)
+                                   .first
+                                   .description
 
-        "#{desc} (#{id})"
-      end
+            "#{desc} (#{id})"
+          end
 
-      def origin_exceptions
-        areas = ops[:excluded_geographical_areas]
-        areas.present? ? areas.join(", ") : "-"
-      end
+          def origin_exceptions
+            areas = ops[:excluded_geographical_areas]
+            areas.present? ? areas.join(", ") : "-"
+          end
 
-      def date_to_format(date)
-        date.try(:to_date)
-            .try(:strftime, "%d %B %Y")
-      end
-
+          def date_to_format(date)
+            date.try(:to_date)
+                .try(:strftime, "%d %B %Y")
+          end
     end
 
-    private
+  private
 
-      def setup_commodity_code_analyzer
-        @commodity_codes_analyzer = ::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.new(
-          start_date: ops[:start_date],
-          commodity_codes: commodity_codes || [],
-          commodity_codes_exclusions: commodity_codes_exclusions
-        )
-      end
+    def setup_commodity_code_analyzer
+      @commodity_codes_analyzer = ::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.new(
+        start_date: ops[:start_date],
+        commodity_codes: commodity_codes || [],
+        commodity_codes_exclusions: commodity_codes_exclusions
+      )
+    end
 
-      def setup_additional_code_analyzer
-        @additional_codes_analyzer = ::WorkbasketValueObjects::Shared::AdditionalCodesAnalyzer.new(
-          start_date: ops[:start_date],
-          additional_codes: additional_codes || []
-        )
-      end
+    def setup_additional_code_analyzer
+      @additional_codes_analyzer = ::WorkbasketValueObjects::Shared::AdditionalCodesAnalyzer.new(
+        start_date: ops[:start_date],
+        additional_codes: additional_codes || []
+      )
+    end
 
-      def prepare_collection(namespace, key_option)
-        if ops[namespace].present?
-          ops[namespace].select do |k, option|
-            option[key_option].present?
-          end
-        else
-          []
+    def prepare_collection(namespace, key_option)
+      if ops[namespace].present?
+        ops[namespace].select do |_k, option|
+          option[key_option].present?
         end
+      else
+        []
       end
+    end
   end
 end

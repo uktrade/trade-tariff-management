@@ -1,5 +1,4 @@
 class JobBaseDecorator < ApplicationDecorator
-
   def status
     case object.state
     when "P"

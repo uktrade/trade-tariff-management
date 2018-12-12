@@ -1,12 +1,11 @@
 module Measures
   class BulkErroredColumnsDetector
-
     MATCH_TABLE = {
-      regulation: [
-        :measure_generating_regulation_role,
-        :measure_generating_regulation_id,
-        :justification_regulation_role,
-        :justification_regulation_id
+      regulation: %i[
+        measure_generating_regulation_role
+        measure_generating_regulation_id
+        justification_regulation_role
+        justification_regulation_id
       ],
       measure_type_id: [
         :measure_type_id
@@ -17,20 +16,20 @@ module Measures
       validity_end_date: [
         :validity_end_date
       ],
-      goods_nomenclature: [
-        :goods_nomenclature_item_id,
-        :goods_nomenclature_sid
+      goods_nomenclature: %i[
+        goods_nomenclature_item_id
+        goods_nomenclature_sid
       ],
-      additional_code: [
-        :additional_code_sid,
-        :additional_code_type_id,
-        :additional_code_id
+      additional_code: %i[
+        additional_code_sid
+        additional_code_type_id
+        additional_code_id
       ],
-      geographical_area: [
-        :geographical_area_id,
-        :geographical_area_sid
+      geographical_area: %i[
+        geographical_area_id
+        geographical_area_sid
       ]
-    }
+    }.freeze
 
     attr_accessor :errors
 
@@ -49,21 +48,21 @@ module Measures
         end
       end.flatten
          .uniq
-         .reject { |el| el.blank? }
+         .reject(&:blank?)
     end
 
-    private
+  private
 
-      def detect_errored_column(key)
-        res = MATCH_TABLE.select do |k, v|
-          v.detect do |f_name|
-            f_name.to_s == key.to_s
-          end
-        end.keys
-           .first
-           .to_s
+    def detect_errored_column(key)
+      res = MATCH_TABLE.select do |_k, v|
+        v.detect do |f_name|
+          f_name.to_s == key.to_s
+        end
+      end.keys
+         .first
+         .to_s
 
-        res.present? ? res : "measure_sid"
-      end
+      res.present? ? res : "measure_sid"
+    end
   end
 end

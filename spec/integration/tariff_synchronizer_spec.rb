@@ -138,7 +138,7 @@ describe TariffSynchronizer do
     end
 
     context 'with date passed as string' do
-      let!(:older_update)  {
+      let!(:older_update) {
         create :taric_update, :applied, issue_date: 2.days.ago
       }
 

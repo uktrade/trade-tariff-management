@@ -27,11 +27,10 @@
 module Measures
   module SearchFilters
     class Footnotes < ::Shared::SearchFilters::CollectionFilterBase
-
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         are
         include
-      )
+      ).freeze
 
       attr_accessor :operator,
                     :footnotes_list
@@ -40,9 +39,9 @@ module Measures
         @operator = operator
 
         @footnotes_list = if footnotes_list.present?
-          filtered_hash_collection_params(footnotes_list)
-        else
-          []
+                            filtered_hash_collection_params(footnotes_list)
+                          else
+                            []
         end
       end
 
@@ -67,67 +66,67 @@ module Measures
         end
       end
 
-      private
+    private
 
-        def required_options_are_blank?
-          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+      def required_options_are_blank?
+        OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
           footnotes_list.size.zero?
-        end
+      end
 
-        def initial_filter_sql
-          "(searchable_data -> 'footnotes')::text <> '[]'::text"
-        end
+      def initial_filter_sql
+        "(searchable_data -> 'footnotes')::text <> '[]'::text"
+      end
 
-        def collection_sql_rules
-          footnotes_list.map do |ops|
-            q_rule = footnote_type_sql(ops)
+      def collection_sql_rules
+        footnotes_list.map do |ops|
+          q_rule = footnote_type_sql(ops)
 
-            f_id = footnote_id(ops)
-            q_rule += " AND #{footnote_id_sql(f_id)}" if f_id.present?
+          f_id = footnote_id(ops)
+          q_rule += " AND #{footnote_id_sql(f_id)}" if f_id.present?
 
-            "(#{q_rule})"
-          end.join(" AND ")
-        end
+          "(#{q_rule})"
+        end.join(" AND ")
+      end
 
-        def footnote_type_sql(ops)
-          <<-eos
+      def footnote_type_sql(ops)
+        <<-eos
             searchable_data @> '{"footnotes": [{"footnote_type_id": "#{footnote_type_id(ops)}"}]}'
-          eos
-        end
+        eos
+      end
 
-        def footnote_type_id(ops)
-          ops.keys[0].strip
-        end
+      def footnote_type_id(ops)
+        ops.keys[0].strip
+      end
 
-        def footnote_id_sql(f_id)
-          <<-eos
+      def footnote_id_sql(f_id)
+        <<-eos
             searchable_data @> '{"footnotes": [{"footnote_id": "#{f_id}"}]}'
-          eos
-        end
+        eos
+      end
 
-        def footnote_id(ops)
-          ops.values[0].strip
-        end
+      def footnote_id(ops)
+        ops.values[0].strip
+      end
 
-        def count_comparison_sql_rule
-          <<-eos
+      def count_comparison_sql_rule
+        <<-eos
             searchable_data #>> '{"footnotes_count"}' = '#{footnotes_list.count}'
-          eos
-        end
+        eos
+      end
 
-        def are_not_specified_sql_rule
-          <<-eos
+      def are_not_specified_sql_rule
+        <<-eos
             searchable_data #>> '{"footnotes"}' IS NULL OR
             (searchable_data -> 'footnotes')::text = '[]'::text
-          eos
-        end
+        eos
+      end
 
-        def are_not_unspecified_sql_rule
-          <<-eos
+      def are_not_unspecified_sql_rule
+        <<-eos
             searchable_data #>> '{"footnotes"}' IS NOT NULL AND
             (searchable_data -> 'footnotes')::text <> '[]'::text
-          eos
-        end
+        eos
+      end
     end
   end
 end

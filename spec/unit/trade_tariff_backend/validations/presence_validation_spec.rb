@@ -6,7 +6,7 @@ describe TradeTariffBackend::Validations::PresenceValidation do
 
     context 'all arguments are present on record' do
       let(:validation) {
-        described_class.new(:vld1, 'valid', validation_options: { of: [:a, :b] })
+        described_class.new(:vld1, 'valid', validation_options: { of: %i[a b] })
       }
 
       it 'returns true' do
@@ -18,7 +18,7 @@ describe TradeTariffBackend::Validations::PresenceValidation do
 
     context 'some arguments are present on record' do
       let(:validation) {
-        described_class.new(:vld1, 'valid', validation_options: { of: [:a, :b, :c] })
+        described_class.new(:vld1, 'valid', validation_options: { of: %i[a b c] })
       }
 
       it 'returns false' do

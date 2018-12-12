@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe ExportRefundNomenclatureIndent do
-  let(:erni)  { build :export_refund_nomenclature_indent }
+  let(:erni) { build :export_refund_nomenclature_indent }
 
   describe '#number_indents' do
     subject { erni.number_indents }

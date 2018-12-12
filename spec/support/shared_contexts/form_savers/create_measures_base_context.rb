@@ -1,7 +1,6 @@
 require "rails_helper"
 
 shared_context "create_measures_base_context" do
-
   include_context "form_savers_base_context"
 
   let(:base_regulation) do
@@ -9,16 +8,15 @@ shared_context "create_measures_base_context" do
       base_regulation_role: "1",
       base_regulation_id: "D9402622",
       validity_start_date: 1.year.ago,
-      replacement_indicator: 0
-    )
+      replacement_indicator: 0)
   end
 
   let(:measure_type_series) do
     add_measure_type_series({
       measure_type_series_id: "A",
-      validity_start_date: 1.year.ago},
-      "Importation and/or exportation prohibited"
-    )
+      validity_start_date: 1.year.ago
+ },
+      "Importation and/or exportation prohibited")
   end
 
   let(:measure_type) do
@@ -26,9 +24,9 @@ shared_context "create_measures_base_context" do
       measure_type_id: "277",
       measure_type_series_id: measure_type_series.measure_type_series_id,
       validity_start_date: 1.year.ago,
-      measure_type_acronym: "TI1"},
-      "Import prohibition"
-    )
+      measure_type_acronym: "TI1"
+ },
+      "Import prohibition")
   end
 
   let(:commodity_code) { "2833400000" }
@@ -44,8 +42,7 @@ shared_context "create_measures_base_context" do
     add_commodity_description(period,
       com.goods_nomenclature_sid,
       commodity_code,
-      "Peroxosulphates (persulphates)"
-    )
+      "Peroxosulphates (persulphates)")
 
     com
   end
@@ -53,26 +50,25 @@ shared_context "create_measures_base_context" do
   let(:additional_code_type) do
     add_additional_code_type({
       additional_code_type_id: "3",
-      validity_start_date: 1.year.ago},
+      validity_start_date: 1.year.ago
+ },
       measure_type,
-      "Prohibition/Restriction/Surveillance"
-    )
+      "Prohibition/Restriction/Surveillance")
   end
 
   let(:additional_code) do
     add_additional_code({
       additional_code: "060",
       additional_code_type_id: additional_code_type.additional_code_type_id,
-      validity_start_date: 1.year.ago},
-      "Alloy tool steel: if of tool steel as defined in Additional Note 1 (e) and (f) to Chapter 72 of the HTS (see Additional Notes (Taric) to Chapter 72): LQEX."
-    )
+      validity_start_date: 1.year.ago
+ },
+      "Alloy tool steel: if of tool steel as defined in Additional Note 1 (e) and (f) to Chapter 72 of the HTS (see Additional Notes (Taric) to Chapter 72): LQEX.")
   end
 
   let(:geographical_area) do
     create(:geographical_area,
       geographical_area_id: "1011",
-      validity_start_date: 1.year.ago
-    )
+      validity_start_date: 1.year.ago)
   end
 
   let(:duty_expression_01) do
@@ -80,13 +76,11 @@ shared_context "create_measures_base_context" do
       duty_expression_id: "01",
       duty_amount_applicability_code: 1,
       measurement_unit_applicability_code: 0,
-      monetary_unit_applicability_code: 0
-    )
+      monetary_unit_applicability_code: 0)
 
     create(:duty_expression_description,
       duty_expression_id: de.duty_expression_id,
-      description: "% or amount"
-    )
+      description: "% or amount")
 
     de
   end
@@ -96,52 +90,44 @@ shared_context "create_measures_base_context" do
       duty_expression_id: "04",
       duty_amount_applicability_code: 1,
       measurement_unit_applicability_code: 0,
-      monetary_unit_applicability_code: 0
-    )
+      monetary_unit_applicability_code: 0)
 
     create(:duty_expression_description,
       duty_expression_id: de.duty_expression_id,
-      description: "+ % or amount"
-    )
+      description: "+ % or amount")
 
     de
   end
 
   let(:monetary_unit) do
     mu = create(:monetary_unit,
-      monetary_unit_code: "EUR"
-    )
+      monetary_unit_code: "EUR")
 
     create(:monetary_unit_description,
       monetary_unit_code: mu.monetary_unit_code,
-      description: "EURO"
-    )
+      description: "EURO")
 
     mu
   end
 
   let(:measurement_unit) do
     mu = create(:measurement_unit,
-      measurement_unit_code: "DTN"
-    )
+      measurement_unit_code: "DTN")
 
     create(:measurement_unit_description,
       measurement_unit_code: mu.measurement_unit_code,
-      description: "Hectokilogram"
-    )
+      description: "Hectokilogram")
 
     mu
   end
 
   let(:measurement_unit_qualifier) do
     muq = create(:measurement_unit_qualifier,
-      measurement_unit_qualifier_code: "X"
-    )
+      measurement_unit_qualifier_code: "X")
 
     create(:measurement_unit_qualifier_description,
       measurement_unit_qualifier_code: muq.measurement_unit_qualifier_code,
-      description: "Hectolitre"
-    )
+      description: "Hectolitre")
 
     muq
   end
@@ -161,7 +147,7 @@ shared_context "create_measures_base_context" do
     }
   end
 
-  def add_measure_type_series(ops={}, description)
+  def add_measure_type_series(ops = {}, description)
     mts = create(:measure_type_series, ops)
 
     create(
@@ -173,7 +159,7 @@ shared_context "create_measures_base_context" do
     mts
   end
 
-  def add_measure_type(ops={}, description)
+  def add_measure_type(ops = {}, description)
     mt = create(:measure_type, ops)
     create(
       :measure_type_description,
@@ -189,8 +175,7 @@ shared_context "create_measures_base_context" do
       goods_nomenclature_sid: sid,
       goods_nomenclature_item_id: code,
       productline_suffix: "80",
-      validity_start_date: Date.today
-    )
+      validity_start_date: Date.today)
   end
 
   def add_commodity_description(period, sid, code, description)
@@ -200,11 +185,10 @@ shared_context "create_measures_base_context" do
       goods_nomenclature_sid: sid,
       goods_nomenclature_item_id: code,
       productline_suffix: "80",
-      description: description
-    )
+      description: description)
   end
 
-  def add_additional_code_type(ops={}, measure_type, description)
+  def add_additional_code_type(ops = {}, measure_type, description)
     ac_type = create(:additional_code_type, ops)
     add_additional_code_type_description(ac_type, description)
     add_additional_code_type_measure_type(ac_type, measure_type)
@@ -215,19 +199,17 @@ shared_context "create_measures_base_context" do
   def add_additional_code_type_description(additional_code_type, description)
     create(:additional_code_type_description,
       additional_code_type_id: additional_code_type.additional_code_type_id,
-      description: description
-    )
+      description: description)
   end
 
   def add_additional_code_type_measure_type(additional_code_type, measure_type)
     create(:additional_code_type_measure_type,
       additional_code_type_id: additional_code_type.additional_code_type_id,
       measure_type_id: measure_type.measure_type_id,
-      validity_start_date: additional_code_type.validity_start_date
-    )
+      validity_start_date: additional_code_type.validity_start_date)
   end
 
-  def add_additional_code(ops={}, description)
+  def add_additional_code(ops = {}, description)
     ft = create(:additional_code, ops)
     add_additional_code_description(ft, description)
 
@@ -242,14 +224,12 @@ shared_context "create_measures_base_context" do
     }
 
     period = create(:additional_code_description_period,
-      base_ops.merge(validity_start_date: additional_code.validity_start_date)
-    )
+      base_ops.merge(validity_start_date: additional_code.validity_start_date))
 
     create(:additional_code_description,
       base_ops.merge(
         description: description,
         additional_code_description_period_sid: period.additional_code_description_period_sid
-      )
-    )
+      ))
   end
 end

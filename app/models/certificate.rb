@@ -1,16 +1,15 @@
 class Certificate < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
 
-  plugin :oplog, primary_key: [:certificate_code, :certificate_type_code]
+  plugin :oplog, primary_key: %i[certificate_code certificate_type_code]
   plugin :time_machine
   plugin :conformance_validator
 
-  set_primary_key [:certificate_code, :certificate_type_code]
+  set_primary_key %i[certificate_code certificate_type_code]
 
   many_to_many :certificate_descriptions, join_table: :certificate_description_periods,
-                                          left_key: [:certificate_code, :certificate_type_code],
+                                          left_key: %i[certificate_code certificate_type_code],
                                           right_key: :certificate_description_period_sid do |ds|
     ds.with_actual(CertificateDescriptionPeriod)
       .order(Sequel.desc(:certificate_description_periods__validity_start_date))
@@ -26,12 +25,10 @@ class Certificate < Sequel::Model
         scope = scope.join_table(:inner,
           :certificate_descriptions,
           certificate_type_code: :certificate_type_code,
-          certificate_code: :certificate_code
-        ).where("
+          certificate_code: :certificate_code).where("
           certificates.certificate_code ilike ? OR
           certificate_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       if filter_ops[:certificate_type_code].present?
@@ -44,45 +41,45 @@ class Certificate < Sequel::Model
     end
 
     begin :find_ceritificates_search_filters
-      def default_order
-        distinct(
-          :certificates__certificate_type_code,
-          :certificates__certificate_code
-        ).order(
-          Sequel.asc(:certificates__certificate_type_code),
-          Sequel.asc(:certificates__certificate_code)
-        )
-      end
+          def default_order
+            distinct(
+              :certificates__certificate_type_code,
+              :certificates__certificate_code
+            ).order(
+              Sequel.asc(:certificates__certificate_type_code),
+              Sequel.asc(:certificates__certificate_code)
+            )
+          end
 
-      def keywords_search(keyword)
-        join_table(
-          :inner,
-          :certificate_descriptions,
-          certificate_type_code: :certificate_type_code,
-          certificate_code: :certificate_code
-        ).where(
-          "certificates.certificate_code ilike ? OR certificate_descriptions.description ilike ?",
-          "#{keyword}%", "%#{keyword}%"
-        )
-      end
+          def keywords_search(keyword)
+            join_table(
+              :inner,
+              :certificate_descriptions,
+              certificate_type_code: :certificate_type_code,
+              certificate_code: :certificate_code
+            ).where(
+              "certificates.certificate_code ilike ? OR certificate_descriptions.description ilike ?",
+              "#{keyword}%", "%#{keyword}%"
+            )
+          end
 
-      def by_certificate_type_code(certificate_type_code)
-        where("certificates.certificate_type_code = ?", certificate_type_code)
-      end
+          def by_certificate_type_code(certificate_type_code)
+            where("certificates.certificate_type_code = ?", certificate_type_code)
+          end
 
-      def by_certificate_code(certificate_code)
-        where("certificates.certificate_code = ? ", certificate_code)
-      end
+          def by_certificate_code(certificate_code)
+            where("certificates.certificate_code = ? ", certificate_code)
+          end
 
-      def after_or_equal(start_date)
-        where("certificates.validity_start_date >= ?", start_date)
-      end
+          def after_or_equal(start_date)
+            where("certificates.validity_start_date >= ?", start_date)
+          end
 
-      def before_or_equal(end_date)
-        where(
-          "certificates.validity_end_date IS NOT NULL AND certificates.validity_end_date <= ?", end_date
-        )
-      end
+          def before_or_equal(end_date)
+            where(
+              "certificates.validity_end_date IS NOT NULL AND certificates.validity_end_date <= ?", end_date
+            )
+          end
     end
   end
 
@@ -102,11 +99,11 @@ class Certificate < Sequel::Model
   delegate :description, to: :certificate_description, allow_nil: true
 
   def record_code
-   "205".freeze
+    "205".freeze
   end
 
   def subrecord_code
-   "00".freeze
+    "00".freeze
   end
 
   def json_mapping
@@ -116,7 +113,7 @@ class Certificate < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     json_mapping
   end
 

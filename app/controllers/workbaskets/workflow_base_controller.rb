@@ -1,6 +1,5 @@
 module Workbaskets
   class WorkflowBaseController < ApplicationController
-
     around_action :configure_time_machine
 
     expose(:workbasket) do

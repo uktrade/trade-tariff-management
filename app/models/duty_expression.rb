@@ -1,9 +1,8 @@
 class DutyExpression < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include OwnValidityPeriod
 
-  MEURSING_DUTY_EXPRESSION_IDS = %w[12 14 21 25 27 29]
+  MEURSING_DUTY_EXPRESSION_IDS = %w[12 14 21 25 27 29].freeze
 
   plugin :time_machine
   plugin :oplog, primary_key: :duty_expression_id
@@ -31,7 +30,7 @@ class DutyExpression < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       duty_expression_id: duty_expression_id,
       abbreviation: abbreviation,

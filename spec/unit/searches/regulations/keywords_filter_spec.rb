@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Regulations search: Keywords filter" do
-
   include_context "regulations_search_base_context"
 
   it "should filter" do

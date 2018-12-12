@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe ChiefTransformer::Processor::MfcmInsert do
-  let(:sample_operation_date) { Date.new(2013,8,5) }
+  let(:sample_operation_date) { Date.new(2013, 8, 5) }
 
   before(:all) { preload_standing_data }
   after(:all)  { clear_standing_data }
@@ -13,7 +13,7 @@ describe ChiefTransformer::Processor::MfcmInsert do
           create :chief_update, :applied, issue_date: sample_operation_date
         }
 
-        let!(:measure_type_coe) { create :measure_type, measure_type_id: 'COE', validity_start_date: Date.new(1972,1,1) }
+        let!(:measure_type_coe) { create :measure_type, measure_type_id: 'COE', validity_start_date: Date.new(1972, 1, 1) }
 
         let!(:iq) { create(:geographical_area, geographical_area_id: "IQ", geographical_area_sid: -2, validity_start_date: DateTime.parse("1975-07-18 00:00:00")) }
 
@@ -57,22 +57,26 @@ describe ChiefTransformer::Processor::MfcmInsert do
           create :chief_update, :applied, issue_date: sample_operation_date
         }
 
-        let!(:mfcm) { create(:mfcm, :with_goods_nomenclature,
+        let!(:mfcm) {
+          create(:mfcm, :with_goods_nomenclature,
                                     amend_indicator: "I",
                                     fe_tsmp: DateTime.parse("2007-11-15 11:00:00"),
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     cmdty_code: "0101010100",
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
-        let!(:tame) { create(:tame, amend_indicator: "I",
+        let!(:tame) {
+          create(:tame, amend_indicator: "I",
                                     fe_tsmp: DateTime.parse("2007-11-15 11:00:00"),
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     adval_rate: 15.000,
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
         let!(:geographical_area) { create :geographical_area, :fifteen_years, :erga_omnes }
 

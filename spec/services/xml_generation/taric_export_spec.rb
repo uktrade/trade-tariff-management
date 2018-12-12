@@ -83,7 +83,7 @@ RSpec.describe XmlGeneration::TaricExport do
       taric_export = described_class.new(xml_export_file)
 
       expect(xml_export_file.envelope_id).to be_nil
-      expect{ taric_export.run }.
+      expect { taric_export.run }.
         to raise_error %r{Cannot export Taric XML without an envelope_id}
     end
   end

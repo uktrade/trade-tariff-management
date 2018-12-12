@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateQuota
     class PeriodNextDateGenerator
-
       attr_accessor :mode,
                     :start_date,
                     :end_date
@@ -33,13 +32,13 @@ module WorkbasketValueObjects
         end
       end
 
-      private
+    private
 
-        def step_range_period(step_number)
-          step_range = position * step_number
-          @start_date = start_date + (step_range - step_number).months
-          @end_date = start_date + step_range.months
-        end
+      def step_range_period(step_number)
+        step_range = position * step_number
+        @start_date = start_date + (step_range - step_number).months
+        @end_date = start_date + step_range.months
+      end
     end
   end
 end

@@ -1,5 +1,4 @@
 class RegulationGroupDescription < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :regulation_group_id

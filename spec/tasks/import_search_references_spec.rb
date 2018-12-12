@@ -22,7 +22,7 @@ describe ImportSearchReferences do
   end
 
   describe '#run' do
-    let(:task)     { described_class.new(file_name) }
+    let(:task) { described_class.new(file_name) }
 
     context 'file contains entries for Chapters' do
       before {
@@ -54,7 +54,7 @@ describe ImportSearchReferences do
       }
 
       context 'heading is present' do
-        let!(:heading)  { create :heading, goods_nomenclature_item_id: "0102000000" }
+        let!(:heading) { create :heading, goods_nomenclature_item_id: "0102000000" }
 
         it 'creates SearchReference entries for Headings' do
           task.run

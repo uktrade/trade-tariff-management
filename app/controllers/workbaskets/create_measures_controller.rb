@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateMeasuresController < Workbaskets::BaseController
-
     expose(:sub_klass) { "CreateMeasures" }
     expose(:settings_type) { :create_measures }
 
@@ -26,20 +25,20 @@ module Workbaskets
       submitted_for_cross_check_create_measure_url(workbasket.id)
     end
 
-    private
+  private
 
-      def check_if_action_is_permitted!
-        if step_pointer.review_and_submit_step? &&
-           !workbasket_settings.validations_passed?(previous_step)
+    def check_if_action_is_permitted!
+      if step_pointer.review_and_submit_step? &&
+          !workbasket_settings.validations_passed?(previous_step)
 
-          redirect_to previous_step_url
-          return false
-        end
+        redirect_to previous_step_url
+        false
       end
+    end
 
-      def workbasket_data_can_be_persisted?
-        step_pointer.duties_conditions_footnotes? &&
+    def workbasket_data_can_be_persisted?
+      step_pointer.duties_conditions_footnotes? &&
         saver_mode == 'continue'
-      end
+    end
   end
 end

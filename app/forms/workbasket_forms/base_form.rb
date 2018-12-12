@@ -13,7 +13,7 @@ module WorkbasketForms
       validity_end_date
       measure_type_acronym
       description
-    )
+    ).freeze
 
     MEASURE_TYPE_SERIES_MAPPING = %w(
       oid
@@ -21,7 +21,7 @@ module WorkbasketForms
       validity_start_date
       validity_end_date
       description
-    )
+    ).freeze
 
     attr_accessor :measure,
                   :validity_start_date,
@@ -45,8 +45,8 @@ module WorkbasketForms
       @measure = measure
     end
 
-    def attributes=(attrs={})
-      attrs.each do |k,v|
+    def attributes=(attrs = {})
+      attrs.each do |k, v|
         self.public_send("#{k}=", v) if self.respond_to?("#{k}=")
       end
     end

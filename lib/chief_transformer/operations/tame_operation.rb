@@ -3,9 +3,9 @@ require 'chief_transformer/operations/operation'
 class ChiefTransformer
   class Processor
     class TameOperation < Operation
-      TAME_DUTY_EXPRESSION_ID = "01"
+      TAME_DUTY_EXPRESSION_ID = "01".freeze
 
-      private
+    private
 
       # Update all earlier measures and set their validity end date to fe_tsmp
       def end_measures_for(tame)
@@ -16,8 +16,8 @@ class ChiefTransformer
                .not_terminated
                .each do |measure|
 
-          end_date = if (measure.associated_to_non_open_ended_gono? &&
-                         record.fe_tsmp > measure.goods_nomenclature.validity_end_date)
+          end_date = if measure.associated_to_non_open_ended_gono? &&
+              record.fe_tsmp > measure.goods_nomenclature.validity_end_date
                        measure.goods_nomenclature.validity_end_date
                      else
                        record.fe_tsmp
@@ -59,22 +59,22 @@ class ChiefTransformer
                .eager(:measure_components)
                .all
                .each do |measure|
-                 if tame.has_tamfs?
-                   tame.tamfs.each do |tamf|
-                     build_tamf_measure_components(tame, measure, tamf.measure_components)
-                     build_excluded_geographical_areas(tame, measure, tamf.geographical_area)
-                   end
-                 else
-                  if tame_component = measure.measure_components
-                                             .detect{|c| c.duty_expression_id == TAME_DUTY_EXPRESSION_ID }
-                    tame_component.update duty_amount: tame.adval_rate,
-                                          operation_date: tame.operation_date
-                  end
-                end
+          if tame.has_tamfs?
+            tame.tamfs.each do |tamf|
+              build_tamf_measure_components(tame, measure, tamf.measure_components)
+              build_excluded_geographical_areas(tame, measure, tamf.geographical_area)
+            end
+          else
+            if tame_component = measure.measure_components
+                                       .detect { |c| c.duty_expression_id == TAME_DUTY_EXPRESSION_ID }
+              tame_component.update duty_amount: tame.adval_rate,
+                                    operation_date: tame.operation_date
+            end
+         end
         end
       end
 
-      private
+    private
 
       def build_tamf_measure_components(tame, measure, measure_components)
         measure.measure_components.each do |measure_component|

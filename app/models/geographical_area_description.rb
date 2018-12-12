@@ -1,14 +1,13 @@
 class GeographicalAreaDescription < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
 
   plugin :time_machine
-  plugin :oplog, primary_key: [:geographical_area_description_period_sid,
-                               :geographical_area_sid]
+  plugin :oplog, primary_key: %i[geographical_area_description_period_sid
+                                 geographical_area_sid]
   plugin :conformance_validator
 
-  set_primary_key [:geographical_area_description_period_sid, :geographical_area_sid]
+  set_primary_key %i[geographical_area_description_period_sid geographical_area_sid]
 
   one_to_one :geographical_area, key: :geographical_area_sid,
                                  primary_key: :geographical_area_sid

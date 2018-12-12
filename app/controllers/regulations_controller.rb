@@ -1,5 +1,4 @@
 class RegulationsController < ::BaseController
-
   expose(:json_list) do
     list = []
 
@@ -56,5 +55,4 @@ class RegulationsController < ::BaseController
       oid: params[:id]
     ).first
   end
-
 end

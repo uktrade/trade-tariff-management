@@ -1,5 +1,4 @@
 class GeographicalAreaDecorator < ApplicationDecorator
-
   def title
     "#{object.geographical_area_id} #{object.description}"
   end
@@ -43,9 +42,9 @@ class GeographicalAreaDecorator < ApplicationDecorator
     false # TODO
   end
 
-  private
+private
 
-    def to_date(value)
-      value.try(:strftime, "%d %B %Y") || '-'
-    end
+  def to_date(value)
+    value.try(:strftime, "%d %B %Y") || '-'
+  end
 end

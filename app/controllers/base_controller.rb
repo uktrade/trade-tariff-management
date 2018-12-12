@@ -1,5 +1,4 @@
 class BaseController < ApplicationController
-
   respond_to :json
 
   expose(:json_list) do
@@ -16,9 +15,9 @@ class BaseController < ApplicationController
     render json: json_list, status: :ok
   end
 
-  private
+private
 
-    def ilike?(str, q_rule)
-      !str.nil? && str.to_s.downcase.starts_with?(q_rule)
-    end
+  def ilike?(str, q_rule)
+    !str.nil? && str.to_s.downcase.starts_with?(q_rule)
+  end
 end

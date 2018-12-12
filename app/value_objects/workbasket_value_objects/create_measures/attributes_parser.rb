@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateMeasures
     class AttributesParser < WorkbasketValueObjects::AttributesParserBase
-
       SIMPLE_OPS = %w(
         start_date
         end_date
@@ -9,7 +8,7 @@ module WorkbasketValueObjects
         workbasket_name
         commodity_codes
         additional_codes
-      )
+      ).freeze
 
       SIMPLE_OPS.map do |option_name|
         define_method(option_name) do
@@ -17,13 +16,13 @@ module WorkbasketValueObjects
         end
       end
 
-      private
+    private
 
-        def prepare_ops
-          if step == "duties_conditions_footnotes"
-            @ops = ops.merge(workbasket_settings.main_step_settings)
-          end
+      def prepare_ops
+        if step == "duties_conditions_footnotes"
+          @ops = ops.merge(workbasket_settings.main_step_settings)
         end
+      end
     end
   end
 end

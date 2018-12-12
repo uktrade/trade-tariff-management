@@ -10,8 +10,10 @@ describe AdditionalCodeType do
     describe 'CT2' do
       context 'meursing table plan id present' do
         context 'application code is meursing table plan additional code type' do
-          let!(:additional_code_type) { build :additional_code_type, :with_meursing_table_plan,
-                                                                     :meursing }
+          let!(:additional_code_type) {
+            build :additional_code_type, :with_meursing_table_plan,
+                                                                     :meursing
+          }
 
           it 'should be valid' do
             expect(additional_code_type.conformant?).to be_truthy
@@ -19,8 +21,10 @@ describe AdditionalCodeType do
         end
 
         context 'application code is not meursing table plan additional code type' do
-          let!(:additional_code_type) { build :additional_code_type, :with_meursing_table_plan,
-                                                                     :adco }
+          let!(:additional_code_type) {
+            build :additional_code_type, :with_meursing_table_plan,
+                                                                     :adco
+          }
 
           it 'should not be valid' do
             expect(additional_code_type.conformant?).to be_falsy
@@ -39,8 +43,10 @@ describe AdditionalCodeType do
 
     describe 'CT3' do
       context 'meursing table plan exists' do
-        let!(:additional_code_type) { build :additional_code_type, :with_meursing_table_plan,
-                                                                   :meursing }
+        let!(:additional_code_type) {
+          build :additional_code_type, :with_meursing_table_plan,
+                                                                   :meursing
+        }
 
         it 'should be valid' do
           expect(additional_code_type).to be_valid
@@ -116,8 +122,10 @@ describe AdditionalCodeType do
     describe 'CT10' do
       let!(:measure_type)               { create :measure_type }
       let!(:additional_code_type)       { create :additional_code_type }
-      let!(:additional_code_type_measure_type) { create :additional_code_type_measure_type, measure_type_id: measure_type.measure_type_id,
-                                                                                            additional_code_type_id: additional_code_type.additional_code_type_id }
+      let!(:additional_code_type_measure_type) {
+        create :additional_code_type_measure_type, measure_type_id: measure_type.measure_type_id,
+                                                                                            additional_code_type_id: additional_code_type.additional_code_type_id
+      }
 
       before {
         additional_code_type.destroy

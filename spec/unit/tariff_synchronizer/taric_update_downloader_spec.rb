@@ -2,7 +2,7 @@ require "rails_helper"
 require "tariff_synchronizer/tariff_downloader"
 
 describe TariffSynchronizer::TaricUpdateDownloader do
-  let(:example_date) { Date.new(2010,1,1) }
+  let(:example_date) { Date.new(2010, 1, 1) }
 
   describe "#perform" do
     let(:generator) { TaricFileNameGenerator.new(example_date) }
@@ -25,7 +25,7 @@ describe TariffSynchronizer::TaricUpdateDownloader do
     context "Successful Response" do
       before do
         allow(TariffSynchronizer::TariffUpdatesRequester).to receive(:perform)
-          .with(generator.url).and_return(build :response, :success, content: "ABC.xml\nXYZ.xml")
+          .with(generator.url).and_return(build(:response, :success, content: "ABC.xml\nXYZ.xml"))
       end
 
       it "Calls TariffDownloader perform for each TARIC update file found" do

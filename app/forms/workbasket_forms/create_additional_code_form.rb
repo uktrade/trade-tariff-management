@@ -1,6 +1,5 @@
 module WorkbasketForms
   class CreateAdditionalCodeForm < ::WorkbasketForms::BaseForm
-
     def additional_code_types
       AdditionalCodeType.actual.order(:additional_code_type_id).all.map do |c|
         {
@@ -9,6 +8,5 @@ module WorkbasketForms
         }
       end
     end
-
   end
 end

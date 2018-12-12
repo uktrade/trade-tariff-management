@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateRegulationSettings < Sequel::Model(:create_regulation_workbasket_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -29,6 +28,5 @@ module Workbaskets
     def measure_sids_jsonb
       '{}'
     end
-
   end
 end

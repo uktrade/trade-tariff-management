@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateMeasures
     class StepPointer < ::WorkbasketValueObjects::StepPointerBase
-
       def step_transitions
         {
           main: :duties_conditions_footnotes,

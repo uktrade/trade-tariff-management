@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_context "measures_search_is_or_is_not_context" do
-
   include_context "measures_search_base_context"
 
   let(:is_not_context_number_of_measures) { 3 }

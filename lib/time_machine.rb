@@ -5,28 +5,30 @@ module TimeMachine
   THREAD_RELEVANT_KEY = :time_machine_relevant
 
   # Travel to specified date and time
-  def self.at(datetime, &block)
-      datetime = DateTime.current if datetime.blank?
-      datetime = begin
-                   DateTime.parse(datetime.to_s)
-                 rescue ArgumentError
-                   DateTime.current
-                  end
+  def self.at(datetime)
+    datetime = DateTime.current if datetime.blank?
+    datetime = begin
+                  DateTime.parse(datetime.to_s)
+               rescue ArgumentError
+                 DateTime.current
+                end
 
-      previous = Thread.current[THREAD_DATETIME_KEY]
-      raise ArgumentError, "requires a block" unless block_given?
-      Thread.current[THREAD_DATETIME_KEY] = datetime
-      yield
-    ensure
-      Thread.current[THREAD_DATETIME_KEY] = previous
+    previous = Thread.current[THREAD_DATETIME_KEY]
+    raise ArgumentError, "requires a block" unless block_given?
+
+    Thread.current[THREAD_DATETIME_KEY] = datetime
+    yield
+  ensure
+    Thread.current[THREAD_DATETIME_KEY] = previous
   end
 
   def self.now(&block)
     at(DateTime.current, &block)
   end
 
-  def self.with_relevant_validity_periods(&block)
+  def self.with_relevant_validity_periods
     raise ArgumentError, "requires a block" unless block_given?
+
     Thread.current[THREAD_RELEVANT_KEY] = true
     yield
   ensure

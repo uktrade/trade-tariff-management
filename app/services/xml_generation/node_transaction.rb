@@ -1,6 +1,5 @@
 module XmlGeneration
   class NodeTransaction
-
     attr_accessor :messages,
                   :id
 

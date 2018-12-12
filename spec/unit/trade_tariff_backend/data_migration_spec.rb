@@ -24,7 +24,7 @@ describe TradeTariffBackend::DataMigration do
       it 'sets a migration name' do
         expect(example_migration.name).to eq 'example name'
       end
-   end
+    end
 
     describe '.up' do
       let!(:example_migration) {

@@ -11,7 +11,7 @@ describe RingBuffer do
       }
 
       it 'pushes and keeps all elements' do
-        expect(ring_buffer.to_a).to eq ['foo', 'bar']
+        expect(ring_buffer.to_a).to eq %w[foo bar]
       end
     end
 
@@ -23,7 +23,7 @@ describe RingBuffer do
       }
 
       it 'pushes new element, popping out the first one (FIFO)' do
-        expect(ring_buffer.to_a).to eq ['bar', 'baz']
+        expect(ring_buffer.to_a).to eq %w[bar baz]
       end
     end
   end

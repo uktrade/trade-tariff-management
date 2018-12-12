@@ -2,7 +2,7 @@ require "rails_helper"
 require "tariff_synchronizer/tariff_downloader"
 
 describe TariffSynchronizer::TariffDownloader do
-  let(:example_date) { Date.new(2010,1,1) }
+  let(:example_date) { Date.new(2010, 1, 1) }
 
   describe "#perform" do
     context "a CHIEF file" do
@@ -13,7 +13,8 @@ describe TariffSynchronizer::TariffDownloader do
           generator.name,
           generator.url,
           example_date,
-          chief_update_klass)
+          chief_update_klass
+)
       end
 
       context "File already downloaded" do
@@ -64,7 +65,7 @@ describe TariffSynchronizer::TariffDownloader do
         context "Successful Response" do
           before do
             allow(TariffSynchronizer::TariffUpdatesRequester).to receive(:perform)
-              .with(generator.url).and_return(build :response, :success, content: "abc")
+              .with(generator.url).and_return(build(:response, :success, content: "abc"))
 
             # Let's assume 'abc' is a valid csv content
             allow(chief_update_klass).to receive(:validate_file!)
@@ -202,7 +203,6 @@ describe TariffSynchronizer::TariffDownloader do
             expect(email.encoded).to match /Received a blank file/
           end
         end
-
       end
     end
   end

@@ -1,10 +1,9 @@
 module WorkbasketValueObjects
   module EditFootnote
     class AttributesParser
-
       SIMPLE_OPS = %w(
         description
-      )
+      ).freeze
 
       attr_accessor :settings
 
@@ -20,11 +19,13 @@ module WorkbasketValueObjects
 
       def commodity_codes
         return [] if settings[:commodity_codes].blank?
+
         parse_list_of_values(settings[:commodity_codes])
       end
 
       def measure_sids
         return [] if settings[:measure_sids].blank?
+
         parse_list_of_values(settings[:measure_sids])
       end
 
@@ -85,7 +86,7 @@ module WorkbasketValueObjects
 
         white_space_separated_list.map(&:squish)
                                   .flatten
-                                  .reject { |i| i.blank? }.uniq
+                                  .reject(&:blank?).uniq
       end
     end
   end

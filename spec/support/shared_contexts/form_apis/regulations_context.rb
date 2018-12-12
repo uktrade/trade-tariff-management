@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_context "form_apis_regulations_base_context" do
-
   let(:actual_base_regulation_i9602220) do
     add_base_regulation("I9602220", "New classification 2005 (01/08/1996)")
   end
@@ -50,30 +49,30 @@ shared_context "form_apis_regulations_base_context" do
 
   private
 
-    def expecting_regulation_in_result(position, regulation)
-      expect(collection[position]["regulation_id"]).to be_eql(regulation.public_send(regulation.primary_key[0]))
-      expect(collection[position]["role"]).to be_eql(regulation.public_send(regulation.primary_key[1]))
-      expect(collection[position]["description"]).to be_eql(information_text(regulation))
-    end
+  def expecting_regulation_in_result(position, regulation)
+    expect(collection[position]["regulation_id"]).to be_eql(regulation.public_send(regulation.primary_key[0]))
+    expect(collection[position]["role"]).to be_eql(regulation.public_send(regulation.primary_key[1]))
+    expect(collection[position]["description"]).to be_eql(information_text(regulation))
+  end
 
-    def add_base_regulation(regulation_id, description, effective_end_date=nil)
-      create(:base_regulation, regulation_base_ops(description, effective_end_date).merge(
-        base_regulation_id: regulation_id
-      ))
-    end
+  def add_base_regulation(regulation_id, description, effective_end_date = nil)
+    create(:base_regulation, regulation_base_ops(description, effective_end_date).merge(
+                               base_regulation_id: regulation_id
+    ))
+  end
 
-    def add_modification_regulation(regulation_id, description, effective_end_date=nil)
-      create(:modification_regulation, regulation_base_ops(description, effective_end_date).merge(
-        modification_regulation_id: regulation_id
-      ))
-    end
+  def add_modification_regulation(regulation_id, description, effective_end_date = nil)
+    create(:modification_regulation, regulation_base_ops(description, effective_end_date).merge(
+                                       modification_regulation_id: regulation_id
+    ))
+  end
 
-    def regulation_base_ops(description, effective_end_date=nil)
-      {
-        replacement_indicator: 0,
-        information_text: description,
-        validity_start_date: 1.year.ago,
-        effective_end_date: effective_end_date
-      }
-    end
+  def regulation_base_ops(description, effective_end_date = nil)
+    {
+      replacement_indicator: 0,
+      information_text: description,
+      validity_start_date: 1.year.ago,
+      effective_end_date: effective_end_date
+    }
+  end
 end

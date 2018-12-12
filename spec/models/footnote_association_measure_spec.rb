@@ -35,7 +35,7 @@ describe FootnoteAssociationMeasure do
 
         it "shoud not run validation succesfully" do
           footnote_association_measure = FootnoteAssociationMeasure.new
-          footnote_association_measure.measure_sid = 00000
+          footnote_association_measure.measure_sid = 0o0000
           footnote_association_measure.footnote_type_id = "00"
           footnote_association_measure.footnote_id = "wrong"
 
@@ -48,7 +48,7 @@ describe FootnoteAssociationMeasure do
         it "shoud not run validation succesfully" do
           footnote_association_measure.save
 
-          footnote_association_measure2 = FootnoteAssociationMeasure.new()
+          footnote_association_measure2 = FootnoteAssociationMeasure.new
           footnote_association_measure2.measure_sid = footnote_association_measure.measure_sid
 
           footnote_association_measure2.footnote_type_id = footnote_association_measure.footnote_type_id

@@ -51,7 +51,7 @@ describe TradeTariffBackend::DataMigrator do
     }
 
     it 'applies all pending migrations' do
-      expect{ TradeTariffBackend::DataMigrator.migrate }.to change(TradeTariffBackend::DataMigration::LogEntry, :count).by(1)
+      expect { TradeTariffBackend::DataMigrator.migrate }.to change(TradeTariffBackend::DataMigration::LogEntry, :count).by(1)
     end
 
     it 'does not apply applied migrations' do
@@ -80,7 +80,7 @@ describe TradeTariffBackend::DataMigrator do
     end
 
     it 'rolls back last applied migration' do
-      expect{ TradeTariffBackend::DataMigrator.rollback }.to change(TradeTariffBackend::DataMigration::LogEntry, :count).by(-1)
+      expect { TradeTariffBackend::DataMigrator.rollback }.to change(TradeTariffBackend::DataMigration::LogEntry, :count).by(-1)
       expect(
         TradeTariffBackend::DataMigration::LogEntry.where(filename: other_applied_migration).last
       ).to be_nil

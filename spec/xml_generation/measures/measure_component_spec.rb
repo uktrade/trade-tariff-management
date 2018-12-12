@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasureComponent XML generation" do
-
   let(:db_record) do
     create(:measure_component)
   end
@@ -11,13 +10,13 @@ describe "MeasureComponent XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :measure_sid,
-      :duty_expression_id,
-      :duty_amount,
-      :monetary_unit_code,
-      :measurement_unit_code,
-      :measurement_unit_qualifier_code
+    %i[
+      measure_sid
+      duty_expression_id
+      duty_amount
+      monetary_unit_code
+      measurement_unit_code
+      measurement_unit_qualifier_code
     ]
   end
 

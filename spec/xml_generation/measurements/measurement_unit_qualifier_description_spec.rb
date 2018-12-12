@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasurementUnitQualifierDescription XML generation" do
-
   let(:db_record) do
     create(:measurement_unit_qualifier_description, :xml)
   end
@@ -11,10 +10,10 @@ describe "MeasurementUnitQualifierDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :measurement_unit_qualifier_code,
-      :language_id,
-      :description
+    %i[
+      measurement_unit_qualifier_code
+      language_id
+      description
     ]
   end
 

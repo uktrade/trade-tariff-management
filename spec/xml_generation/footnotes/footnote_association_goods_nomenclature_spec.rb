@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "FootnoteAssociationGoodsNomenclature XML generation" do
-
   let(:db_record) do
     create(:footnote_association_goods_nomenclature, :xml)
   end
@@ -11,14 +10,14 @@ describe "FootnoteAssociationGoodsNomenclature XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :goods_nomenclature_sid,
-      :footnote_type,
-      :footnote_id,
-      :goods_nomenclature_item_id,
-      :productline_suffix,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      goods_nomenclature_sid
+      footnote_type
+      footnote_id
+      goods_nomenclature_item_id
+      productline_suffix
+      validity_start_date
+      validity_end_date
     ]
   end
 

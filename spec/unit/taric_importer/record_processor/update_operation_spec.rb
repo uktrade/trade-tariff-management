@@ -1,9 +1,7 @@
 require "rails_helper"
 
 describe TaricImporter::RecordProcessor::UpdateOperation do
-
   describe "#call" do
-
   end
 
   describe "#to_oplog_operation" do

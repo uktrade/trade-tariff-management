@@ -15,7 +15,7 @@ shared_examples_for 'one to one to' do |associated_object, eager_load_associatio
       Hash[left_primary_key, send(left_primary_key)]
     end
   }
-  let!(:right_association)         {
+  let!(:right_association) {
     if right_primary_key.is_a?(Array)
       right_primary_key.inject({}) { |memo, key_name|
         memo.merge!(Hash[key_name, send(key_name)])

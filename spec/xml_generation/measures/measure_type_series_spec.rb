@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasureTypeSeries XML generation" do
-
   let(:db_record) do
     create(:measure_type_series, :xml)
   end
@@ -11,11 +10,11 @@ describe "MeasureTypeSeries XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :measure_type_series_id,
-      :measure_type_combination,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      measure_type_series_id
+      measure_type_combination
+      validity_start_date
+      validity_end_date
     ]
   end
 

@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateQuota
     class StepPointer < ::WorkbasketValueObjects::StepPointerBase
-
       def step_transitions
         {
           main: :configure_quota,
@@ -40,9 +39,9 @@ module WorkbasketValueObjects
       end
 
       def configure_quota_step_settings
-       %w(
-          quota_periods
-        )
+        %w(
+           quota_periods
+         )
       end
 
       def conditions_footnotes_step_settings

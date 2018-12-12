@@ -4,15 +4,15 @@ require 'taric_importer/transaction'
 
 describe TaricImporter::Transaction do
   let(:record) {
-    {"transaction_id"=>"31946",
-     "record_code"=>"130",
-     "subrecord_code"=>"05",
-     "record_sequence_number"=>"1",
-     "update_type"=>"3",
-     "language_description"=>
-      {"language_code_id"=>"FR",
-       "language_id"=>"EN",
-       "description"=>"French"}}
+    { "transaction_id" => "31946",
+     "record_code" => "130",
+     "subrecord_code" => "05",
+     "record_sequence_number" => "1",
+     "update_type" => "3",
+     "language_description" =>
+      { "language_code_id" => "FR",
+       "language_id" => "EN",
+       "description" => "French" } }
   }
   let(:transaction_date) { Date.current }
 

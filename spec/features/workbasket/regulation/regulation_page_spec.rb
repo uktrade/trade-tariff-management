@@ -1,9 +1,7 @@
 require 'rails_helper'
 
 describe 'create_regulation_page', js: true do
-
   context 'root_path' do
-
     include_context 'system_test_base_context'
 
     context 'click on Create regulation' do
@@ -15,11 +13,9 @@ describe 'create_regulation_page', js: true do
         expect(page).to have_content 'Specify the regulation type'
       end
     end
-
   end
 
   context 'regulation page' do
-
     include_context 'regulation_page_context'
 
     context 'empty page' do
@@ -31,7 +27,5 @@ describe 'create_regulation_page', js: true do
         end
       end
     end
-
   end
-
 end

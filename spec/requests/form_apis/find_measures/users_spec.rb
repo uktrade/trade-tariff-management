@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Find measures API: Users", type: :request do
-
   include_context "form_apis_base_context"
 
   let(:adam) do
@@ -46,8 +45,8 @@ describe "Find measures API: Users", type: :request do
 
   private
 
-    def expect_user(position, user)
-      expect(collection[position]["id"]).to be_eql(user.id)
-      expect(collection[position]["name"]).to be_eql(user.name)
-    end
+  def expect_user(position, user)
+    expect(collection[position]["id"]).to be_eql(user.id)
+    expect(collection[position]["name"]).to be_eql(user.name)
+  end
 end

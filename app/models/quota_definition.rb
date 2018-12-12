@@ -1,5 +1,4 @@
 class QuotaDefinition < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
 
@@ -22,8 +21,8 @@ class QuotaDefinition < Sequel::Model
   one_to_one :quota_order_number, key: :quota_order_number_id,
                                   primary_key: :quota_order_number_id
 
-  one_to_many :measures, key: [:ordernumber, :validity_start_date],
-                         primary_key: [:quota_order_number_id, :validity_start_date]
+  one_to_many :measures, key: %i[ordernumber validity_start_date],
+                         primary_key: %i[quota_order_number_id validity_start_date]
 
   def measure
     @measure ||= measures.first
@@ -47,7 +46,7 @@ class QuotaDefinition < Sequel::Model
   end
 
   def balance
-    (last_balance_event.present?) ? last_balance_event.new_balance : volume
+    last_balance_event.present? ? last_balance_event.new_balance : volume
   end
 
   def last_suspension_period
@@ -79,17 +78,13 @@ class QuotaDefinition < Sequel::Model
       measure.measure_conditions.each do |condition|
         return condition.certificate_code if condition.certificate_code.present?
       end
-      return nil
+      nil
     end
   end
 
   def goods_nomenclature_item_ids
     if measures.present?
-      measures.map do |measure|
-        measure.goods_nomenclature_item_id
-      end.select do |item|
-        item.present?
-      end.uniq
+      measures.map(&:goods_nomenclature_item_id).select(&:present?).uniq
     else
       []
     end
@@ -99,9 +94,7 @@ class QuotaDefinition < Sequel::Model
     if measures.present?
       measures.map do |measure|
         "#{measure.additional_code_type_id}#{measure.additional_code_id}"
-      end.select do |item|
-        item.present?
-      end.uniq
+      end.select(&:present?).uniq
     else
       []
     end
@@ -142,7 +135,7 @@ class QuotaDefinition < Sequel::Model
     status.blank? || status.to_s.in?(::Workbaskets::Workbasket::SENT_TO_CDS_STATES)
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
         quota_definition_sid: quota_definition_sid,
         quota_order_number_id: quota_order_number_id.gsub(/^09/, '09.'),
@@ -188,7 +181,7 @@ class QuotaDefinition < Sequel::Model
     end
   end
 
-  private
+private
 
   def critical_state?
     critical_state == 'Y'

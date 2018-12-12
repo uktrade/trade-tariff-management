@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Saving of Full Temporary Stop regulation" do
-
   include_context "regulation_saver_base_context"
 
   let(:regulation_role) { "8" }

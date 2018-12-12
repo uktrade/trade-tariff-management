@@ -22,7 +22,6 @@
 module Measures
   module SearchFilters
     class GroupName
-
       attr_accessor :operator,
                     :group_name
 
@@ -37,35 +36,35 @@ module Measures
         case operator
         when "is"
 
-          [ is_clause, group_name ]
+          [is_clause, group_name]
         when "starts_with", "contains"
 
-          [ equal_clause, equal_value ]
+          [equal_clause, equal_value]
         end
       end
 
-      private
+    private
 
-        def is_clause
-          <<-eos
-            searchable_data #>> '{"workbasket_name"}' = ?
-          eos
-        end
+      def is_clause
+        <<-eos
+          searchable_data #>> '{"workbasket_name"}' = ?
+        eos
+      end
 
-        def equal_clause
-          <<-eos
-            searchable_data #>> '{"workbasket_name"}' ilike ?
-          eos
-        end
+      def equal_clause
+        <<-eos
+          searchable_data #>> '{"workbasket_name"}' ilike ?
+        eos
+      end
 
-        def equal_value
-          case operator
-          when "starts_with"
-            "#{group_name}%"
-          when "contains"
-            "%#{group_name}%"
-          end
+      def equal_value
+        case operator
+        when "starts_with"
+          "#{group_name}%"
+        when "contains"
+          "%#{group_name}%"
         end
+      end
     end
   end
 end

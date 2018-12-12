@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_context "form_savers_base_context" do
-
   let(:user) do
     create(:user)
   end
@@ -20,16 +19,16 @@ shared_context "form_savers_base_context" do
 
   private
 
-    def value_by_type(value)
-      case value.class.name
-      when "Time", "DateTime", "Date"
-        date_to_s(value)
-      else
-        value
-      end
+  def value_by_type(value)
+    case value.class.name
+    when "Time", "DateTime", "Date"
+      date_to_s(value)
+    else
+      value
     end
+  end
 
-    def date_to_s(date)
-      date.strftime("%d/%m/%Y")
-    end
+  def date_to_s(date)
+    date.strftime("%d/%m/%Y")
+  end
 end

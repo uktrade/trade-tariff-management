@@ -18,9 +18,9 @@ class Chapter < GoodsNomenclature
 
   one_to_one :chapter_note, primary_key: :to_param
   one_to_many :search_references, key: :referenced_id, primary_key: :short_code, reciprocal: :referenced, conditions: { referenced_class: 'Chapter' },
-    adder: proc{ |search_reference| search_reference.update(referenced_id: short_code, referenced_class: 'Chapter') },
-    remover: proc{ |search_reference| search_reference.update(referenced_id: nil, referenced_class: nil)},
-    clearer: proc{ search_references_dataset.update(referenced_id: nil, referenced_class: nil) }
+    adder: proc { |search_reference| search_reference.update(referenced_id: short_code, referenced_class: 'Chapter') },
+    remover: proc { |search_reference| search_reference.update(referenced_id: nil, referenced_class: nil) },
+    clearer: proc { search_references_dataset.update(referenced_id: nil, referenced_class: nil) }
 
   dataset_module do
     def by_code(code = "")
@@ -46,11 +46,11 @@ class Chapter < GoodsNomenclature
   end
 
   def first_heading
-    headings.sort_by(&:goods_nomenclature_item_id).first || NullObject.new
+    headings.min_by(&:goods_nomenclature_item_id) || NullObject.new
   end
 
   def last_heading
-    headings.sort_by(&:goods_nomenclature_item_id).last || NullObject.new
+    headings.max_by(&:goods_nomenclature_item_id) || NullObject.new
   end
 
   def headings_from
@@ -77,13 +77,13 @@ class Chapter < GoodsNomenclature
      .tap! { |criteria|
        # if Chapter did not come from initial seed, filter by its
        # create/update date
-       criteria.where{ |o| o.>=(:operation_date, operation_date) } unless operation_date.blank?
-      }
+      criteria.where { |o| o.>=(:operation_date, operation_date) } unless operation_date.blank?
+    }
      .limit(TradeTariffBackend.change_count)
      .order(Sequel.desc(:operation_date, nulls: :last), Sequel.desc(:depth))
   end
 
-  private
+private
 
   def relevant_headings
     "#{short_code}__000000"

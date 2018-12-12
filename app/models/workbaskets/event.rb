@@ -1,10 +1,9 @@
 module Workbaskets
   class Event < Sequel::Model(:workbaskets_events)
-
     EXTRA_STATES = %w(
       cross_check_process_started
       approve_process_started
-    )
+    ).freeze
 
     plugin :timestamps
 

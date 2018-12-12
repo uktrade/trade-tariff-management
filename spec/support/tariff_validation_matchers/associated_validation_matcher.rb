@@ -31,14 +31,16 @@ class AssociatedValidationMatcher < TariffValidationMatcher
     "expected #{subject.class.name} to validate #{validation_type} #{associated_object} and ensure that #{ensurance_method} is truthy"
   end
 
-  private
+private
 
   def validate(reflections)
-    reflections.detect{|validation, opts|
-      validation == validation_type &&
-      ((condition.blank?) ? true : opts[:if] == condition) &&
-      ((ensurance_method.blank?) ? true : opts[:ensure] == ensurance_method)
-    } if reflections.present?
+    if reflections.present?
+      reflections.detect { |validation, opts|
+        validation == validation_type &&
+          (condition.blank? ? true : opts[:if] == condition) &&
+          (ensurance_method.blank? ? true : opts[:ensure] == ensurance_method)
+      }
+    end
   end
 end
 

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeursingTablePlan XML generation" do
-
   let(:db_record) do
     create(:meursing_table_plan, :xml)
   end
@@ -11,10 +10,10 @@ describe "MeursingTablePlan XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :meursing_table_plan_id,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      meursing_table_plan_id
+      validity_start_date
+      validity_end_date
     ]
   end
 

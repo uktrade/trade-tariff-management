@@ -1,22 +1,21 @@
 module Workbaskets
   class Workbasket < Sequel::Model
-
-    TYPES = [
-      :create_measures,
-      :bulk_edit_of_measures,
-      :create_quota,
-      :clone_quota,
-      :create_regulation,
-      :create_additional_code,
-      :bulk_edit_of_additional_codes,
-      :bulk_edit_of_quotas,
-      :create_geographical_area,
-      :create_footnote,
-      :edit_footnote,
-      :create_certificate,
-      :edit_certificate,
-      :edit_geographical_area
-    ]
+    TYPES = %i[
+      create_measures
+      bulk_edit_of_measures
+      create_quota
+      clone_quota
+      create_regulation
+      create_additional_code
+      bulk_edit_of_additional_codes
+      bulk_edit_of_quotas
+      create_geographical_area
+      create_footnote
+      edit_footnote
+      create_certificate
+      edit_certificate
+      edit_geographical_area
+    ].freeze
 
     STATUS_LIST = [
       :new_in_progress,                # New - in progress
@@ -69,29 +68,29 @@ module Workbaskets
       :cds_error                       # CDS error
                                        # Sent to CDS, but CDS returned an error
                                        #
-    ]
+    ].freeze
 
     EDITABLE_STATES = [
-      :new_in_progress,  # "New - in progress"
-      :editing          # "Editing"
-    ]
+      :new_in_progress, # "New - in progress"
+      :editing # "Editing"
+    ].freeze
 
-    SENT_TO_CDS_STATES = [
-      :sent_to_cds,
-      :sent_to_cds_delete,
-      :published
-    ]
+    SENT_TO_CDS_STATES = %i[
+      sent_to_cds
+      sent_to_cds_delete
+      published
+    ].freeze
 
-    STATES_WITH_ERROR = [
-      :cross_check_rejected,
-      :approval_rejected,
-      :cds_error
-    ]
+    STATES_WITH_ERROR = %i[
+      cross_check_rejected
+      approval_rejected
+      cds_error
+    ].freeze
 
-    APPROVER_SCOPE = [
-      :awaiting_cross_check,
-      :awaiting_approval
-    ]
+    APPROVER_SCOPE = %i[
+      awaiting_cross_check
+      awaiting_approval
+    ].freeze
 
     CREATE_WORKBASKETS = %w(
       create_measures
@@ -102,7 +101,7 @@ module Workbaskets
       create_additional_code
       create_footnote
       create_certificate
-    )
+    ).freeze
 
     EDIT_WORKABSKETS = %w(
       bulk_edit_of_measures
@@ -111,7 +110,7 @@ module Workbaskets
       edit_footnote
       edit_certificate
       edit_geographical_area
-    )
+    ).freeze
 
     one_to_many :events, key: :workbasket_id,
                          class_name: "Workbaskets::Event"
@@ -237,14 +236,13 @@ module Workbaskets
           type ilike ?",
           "#{keyword}%",
           underscored_keywords,
-          underscored_keywords
-        )
+          underscored_keywords)
       end
 
       def xml_export_collection(start_date, end_date)
         by_date_range(
           start_date, end_date
-        ).in_status(["awaiting_cds_upload_create_new", "awaiting_cds_upload_edit", "awaiting_cross_check"])
+        ).in_status(%w[awaiting_cds_upload_create_new awaiting_cds_upload_edit awaiting_cross_check])
          .order(:operation_date)
       end
 
@@ -282,14 +280,14 @@ module Workbaskets
     end
 
     begin :callbacks
-      def before_create
-        self.last_update_by_id = user_id
-        self.last_status_change_at = Time.zone.now
-      end
+          def before_create
+            self.last_update_by_id = user_id
+            self.last_status_change_at = Time.zone.now
+          end
 
-      def after_create
-        build_related_settings_table!
-      end
+          def after_create
+            build_related_settings_table!
+          end
     end
 
     def class_name
@@ -303,85 +301,85 @@ module Workbaskets
     end
 
     begin :workflow_related_helpers
-      def assign_cross_checker!(current_user)
-        add_event!(current_user, :cross_check_process_started)
+          def assign_cross_checker!(current_user)
+            add_event!(current_user, :cross_check_process_started)
 
-        self.cross_checker_id = current_user.id
-        save
-      end
+            self.cross_checker_id = current_user.id
+            save
+          end
 
-      def assign_approver!(current_user)
-        add_event!(current_user, :approve_process_started)
+          def assign_approver!(current_user)
+            add_event!(current_user, :approve_process_started)
 
-        self.approver_id = current_user.id
-        save
-      end
+            self.approver_id = current_user.id
+            save
+          end
 
-      def cross_checker_is?(current_user)
-        cross_checker_id.to_i == current_user.id
-      end
+          def cross_checker_is?(current_user)
+            cross_checker_id.to_i == current_user.id
+          end
 
-      def approver_is?(current_user)
-        approver_id.to_i == current_user.id
-      end
+          def approver_is?(current_user)
+            approver_id.to_i == current_user.id
+          end
 
-      def edit_type?
-        EDIT_WORKABSKETS.include?(type)
-      end
+          def edit_type?
+            EDIT_WORKABSKETS.include?(type)
+          end
 
-      def possible_approved_status
-        edit_type? ? "awaiting_cds_upload_edit" : "awaiting_cds_upload_create_new"
-      end
+          def possible_approved_status
+            edit_type? ? "awaiting_cds_upload_edit" : "awaiting_cds_upload_create_new"
+          end
 
-      def editable?
-        status.to_sym.in?(EDITABLE_STATES)
-      end
+          def editable?
+            status.to_sym.in?(EDITABLE_STATES)
+          end
 
-      def submitted?
-        !editable?
-      end
+          def submitted?
+            !editable?
+          end
 
-      def can_withdraw?
-        status.to_sym.in?(STATES_WITH_ERROR) ||
-        status.to_sym.in?(APPROVER_SCOPE)
-      end
+          def can_withdraw?
+            status.to_sym.in?(STATES_WITH_ERROR) ||
+              status.to_sym.in?(APPROVER_SCOPE)
+          end
 
-      def cross_check_process_can_be_started?
-        awaiting_cross_check? &&
-        cross_checker_id.blank?
-      end
+          def cross_check_process_can_be_started?
+            awaiting_cross_check? &&
+              cross_checker_id.blank?
+          end
 
-      def cross_check_process_can_not_be_started?
-        !cross_check_process_can_be_started?
-      end
+          def cross_check_process_can_not_be_started?
+            !cross_check_process_can_be_started?
+          end
 
-      def can_continue_cross_check?(current_user)
-        awaiting_cross_check? && cross_checker_is?(current_user)
-      end
+          def can_continue_cross_check?(current_user)
+            awaiting_cross_check? && cross_checker_is?(current_user)
+          end
 
-      def approve_process_can_be_started?
-        awaiting_approval? &&
-        approver_id.blank?
-      end
+          def approve_process_can_be_started?
+            awaiting_approval? &&
+              approver_id.blank?
+          end
 
-      def approve_process_can_not_be_started?
-        !approve_process_can_be_started?
-      end
+          def approve_process_can_not_be_started?
+            !approve_process_can_be_started?
+          end
 
-      def can_continue_approve?(current_user)
-        awaiting_approval? && approver_is?(current_user)
-      end
+          def can_continue_approve?(current_user)
+            awaiting_approval? && approver_is?(current_user)
+          end
 
-      def awaiting_cds_upload_new_or_edit_item?
-        awaiting_cds_upload_create_new? ||
-        awaiting_cds_upload_edit?
-      end
+          def awaiting_cds_upload_new_or_edit_item?
+            awaiting_cds_upload_create_new? ||
+              awaiting_cds_upload_edit?
+          end
 
-      def operation_date_can_be_rescheduled?
-        awaiting_cds_upload_new_or_edit_item? &&
-        operation_date.present? &&
-        operation_date > Date.today + 1.day
-      end
+          def operation_date_can_be_rescheduled?
+            awaiting_cds_upload_new_or_edit_item? &&
+              operation_date.present? &&
+              operation_date > Date.today + 1.day
+          end
     end
 
     def author_name
@@ -389,16 +387,14 @@ module Workbaskets
     end
 
     def ordered_events
-      events.sort do |a, b|
-        a.created_at <=> b.created_at
-      end
+      events.sort_by(&:created_at)
     end
 
     def submitted?
-      !status.to_sym.in? [:new_in_progress, :editing]
+      !status.to_sym.in? %i[new_in_progress editing]
     end
 
-    def move_status_to!(current_user, new_status, description=nil)
+    def move_status_to!(current_user, new_status, description = nil)
       reload
       add_event!(current_user, new_status, description)
 
@@ -409,7 +405,7 @@ module Workbaskets
       save
     end
 
-    def add_event!(current_user, new_status, description=nil)
+    def add_event!(current_user, new_status, description = nil)
       event = Workbaskets::Event.new(
         workbasket_id: self.id,
         user_id: current_user.id,
@@ -481,22 +477,22 @@ module Workbaskets
         puts "             Status: #{el.status}"
 
         custom_note = case el.class.name
-        when "Measure"
-          el.measure_sid
-        when "MeasureComponent"
-          el.formatted_duty_expression
-        when "MeasureCondition"
-          el.short_abbreviation
-        when "MeasureConditionComponent"
-          el.formatted_duty_expression
-        when "Footnote"
-          "#{el.footnote_type_id} - #{el.footnote_id}"
-        when "FootnoteDescription"
-          "#{el.description}"
-        when "FootnoteDescriptionPeriod"
-          "#{el.footnote_description_period_sid}"
-        when "FootnoteAssociationMeasure"
-          "footnote_type_id: #{el.footnote_type_id}, footnote_id: #{el.footnote_id}, measure_sid: #{el.measure_sid}"
+                      when "Measure"
+                        el.measure_sid
+                      when "MeasureComponent"
+                        el.formatted_duty_expression
+                      when "MeasureCondition"
+                        el.short_abbreviation
+                      when "MeasureConditionComponent"
+                        el.formatted_duty_expression
+                      when "Footnote"
+                        "#{el.footnote_type_id} - #{el.footnote_id}"
+                      when "FootnoteDescription"
+                        el.description.to_s
+                      when "FootnoteDescriptionPeriod"
+                        el.footnote_description_period_sid.to_s
+                      when "FootnoteAssociationMeasure"
+                        "footnote_type_id: #{el.footnote_type_id}, footnote_id: #{el.footnote_id}, measure_sid: #{el.measure_sid}"
         end
 
         puts "             #{custom_note}"
@@ -561,49 +557,47 @@ module Workbaskets
           edit_certificate
           edit_geographical_area
         ).map do |type_name|
-          by_type(type_name).map do |w|
-            w.clean_up_workbasket!
-          end
+          by_type(type_name).map(&:clean_up_workbasket!)
         end
       end
     end
 
-    private
+  private
 
-      def build_related_settings_table!
-        target_class = case type.to_sym
-        when :create_measures
-          ::Workbaskets::CreateMeasuresSettings
-        when :bulk_edit_of_measures
-          ::Workbaskets::BulkEditOfMeasuresSettings
-        when :create_quota, :clone_quota
-          ::Workbaskets::CreateQuotaSettings
-        when :bulk_edit_of_quotas
-          ::Workbaskets::BulkEditOfQuotasSettings
-        when :create_regulation
-          ::Workbaskets::CreateRegulationSettings
-        when :create_additional_code
-          ::Workbaskets::CreateAdditionalCodeSettings
-        when :bulk_edit_of_additional_codes
-          ::Workbaskets::BulkEditOfAdditionalCodesSettings
-        when :create_geographical_area
-          ::Workbaskets::CreateGeographicalAreaSettings
-        when :create_footnote
-          ::Workbaskets::CreateFootnoteSettings
-        when :create_certificate
-          ::Workbaskets::CreateCertificateSettings
-        when :edit_footnote
-          ::Workbaskets::EditFootnoteSettings
-        when :edit_certificate
-          ::Workbaskets::EditCertificateSettings
-        when :edit_geographical_area
-          ::Workbaskets::EditGeographicalAreaSettings
-        end
-
-        settings = target_class.new(
-          workbasket_id: id
-        )
-        settings.save if settings.present?
+    def build_related_settings_table!
+      target_class = case type.to_sym
+                     when :create_measures
+                       ::Workbaskets::CreateMeasuresSettings
+                     when :bulk_edit_of_measures
+                       ::Workbaskets::BulkEditOfMeasuresSettings
+                     when :create_quota, :clone_quota
+                       ::Workbaskets::CreateQuotaSettings
+                     when :bulk_edit_of_quotas
+                       ::Workbaskets::BulkEditOfQuotasSettings
+                     when :create_regulation
+                       ::Workbaskets::CreateRegulationSettings
+                     when :create_additional_code
+                       ::Workbaskets::CreateAdditionalCodeSettings
+                     when :bulk_edit_of_additional_codes
+                       ::Workbaskets::BulkEditOfAdditionalCodesSettings
+                     when :create_geographical_area
+                       ::Workbaskets::CreateGeographicalAreaSettings
+                     when :create_footnote
+                       ::Workbaskets::CreateFootnoteSettings
+                     when :create_certificate
+                       ::Workbaskets::CreateCertificateSettings
+                     when :edit_footnote
+                       ::Workbaskets::EditFootnoteSettings
+                     when :edit_certificate
+                       ::Workbaskets::EditCertificateSettings
+                     when :edit_geographical_area
+                       ::Workbaskets::EditGeographicalAreaSettings
       end
+
+      settings = target_class.new(
+        workbasket_id: id
+      )
+      settings.save if settings.present?
+    end
   end
 end

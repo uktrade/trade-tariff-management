@@ -54,7 +54,7 @@ describe MeasureCondition do
     describe 'measure condition components' do
       let!(:measure_condition)                { create :measure_condition }
       let!(:measure_condition_component1)     { create :measure_condition_component, measure_condition_sid: measure_condition.measure_condition_sid }
-      let!(:measure_condition_component2)     { create :measure_condition_component, measure_condition_sid: generate(:measure_condition_sid)  }
+      let!(:measure_condition_component2)     { create :measure_condition_component, measure_condition_sid: generate(:measure_condition_sid) }
 
       context 'direct loading' do
         it 'loads associated measure condition components' do
@@ -177,8 +177,10 @@ describe MeasureCondition do
   end
 
   describe '#condition' do
-    let(:measure_condition) { create :measure_condition, condition_code: '123',
-                                     component_sequence_number: 456}
+    let(:measure_condition) {
+      create :measure_condition, condition_code: '123',
+                                     component_sequence_number: 456
+    }
 
     it 'should contain condition_code' do
       expect(measure_condition.condition).to include(measure_condition.condition_code)
@@ -234,7 +236,7 @@ describe MeasureCondition do
     end
 
     describe "ME58: The same certificate can only be referenced once by the same measure and the same condition type." do
-      it { should validate_uniqueness.of [:measure_sid, :certificate_type_code, :certificate_code] }
+      it { should validate_uniqueness.of %i[measure_sid certificate_type_code certificate_code] }
     end
 
     describe "ME59: The referenced action code must exist." do

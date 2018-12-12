@@ -13,17 +13,25 @@ describe Heading do
 
   describe 'associations' do
     describe 'chapter' do
-      let!(:heading1)  { create :heading, validity_start_date: Date.new(1999,1,1),
-                                          validity_end_date: Date.new(2013,1,1) }
-      let!(:heading2)  { create :heading, goods_nomenclature_item_id: heading1.goods_nomenclature_item_id,
-                                          validity_start_date: Date.new(2005,1,1),
-                                          validity_end_date: Date.new(2013,1,1) }
-      let!(:chapter1) { create :chapter, goods_nomenclature_item_id: "#{heading1.goods_nomenclature_item_id.first(2)}00000000",
-                                         validity_start_date: Date.new(1991,1,1),
-                                         validity_end_date: Date.new(2002,1,1) }
-      let!(:chapter2) { create :chapter, goods_nomenclature_item_id: "#{heading1.goods_nomenclature_item_id.first(2)}00000000",
-                                         validity_start_date: Date.new(2002,1,1),
-                                         validity_end_date: Date.new(2014,1,1) }
+      let!(:heading1)  {
+        create :heading, validity_start_date: Date.new(1999, 1, 1),
+                                          validity_end_date: Date.new(2013, 1, 1)
+      }
+      let!(:heading2) {
+        create :heading, goods_nomenclature_item_id: heading1.goods_nomenclature_item_id,
+                                          validity_start_date: Date.new(2005, 1, 1),
+                                          validity_end_date: Date.new(2013, 1, 1)
+      }
+      let!(:chapter1) {
+        create :chapter, goods_nomenclature_item_id: "#{heading1.goods_nomenclature_item_id.first(2)}00000000",
+                                         validity_start_date: Date.new(1991, 1, 1),
+                                         validity_end_date: Date.new(2002, 1, 1)
+      }
+      let!(:chapter2) {
+        create :chapter, goods_nomenclature_item_id: "#{heading1.goods_nomenclature_item_id.first(2)}00000000",
+                                         validity_start_date: Date.new(2002, 1, 1),
+                                         validity_end_date: Date.new(2014, 1, 1)
+      }
 
       context 'fetching actual' do
         it 'fetches correct chapter' do
@@ -54,8 +62,10 @@ describe Heading do
     describe 'measures' do
       let(:measure_type) { create :measure_type, measure_type_id: MeasureType::EXCLUDED_TYPES.sample }
       let(:heading)      { create :heading, :with_indent }
-      let(:measure)      { create :measure, measure_type_id: measure_type.measure_type_id,
-                                            goods_nomenclature_sid: heading.goods_nomenclature_sid  }
+      let(:measure)      {
+        create :measure, measure_type_id: measure_type.measure_type_id,
+                                            goods_nomenclature_sid: heading.goods_nomenclature_sid
+      }
 
       it 'does not include measures for excluded measure types' do
         measure_type
@@ -69,15 +79,21 @@ describe Heading do
 
     describe 'commodities' do
       let!(:heading)    { create :heading }
-      let!(:commodity1) { create :commodity, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(4)}100000",
+      let!(:commodity1) {
+        create :commodity, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(4)}100000",
                                          validity_start_date: 10.years.ago,
-                                         validity_end_date: nil }
-      let!(:commodity2) { create :commodity, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(4)}200000",
+                                         validity_end_date: nil
+      }
+      let!(:commodity2) {
+        create :commodity, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(4)}200000",
                                          validity_start_date: 2.years.ago,
-                                         validity_end_date: nil }
-      let!(:commodity3) { create :commodity, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(4)}300000",
+                                         validity_end_date: nil
+      }
+      let!(:commodity3) {
+        create :commodity, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(4)}300000",
                                          validity_start_date: 10.years.ago,
-                                         validity_end_date: 8.years.ago }
+                                         validity_end_date: 8.years.ago
+      }
 
       around(:each) do |example|
         TimeMachine.at(1.year.ago) do
@@ -106,12 +122,16 @@ describe Heading do
 
     describe 'chapter' do
       let!(:heading)  { create :heading }
-      let!(:chapter1) { create :chapter, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(2)}00000000",
+      let!(:chapter1) {
+        create :chapter, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(2)}00000000",
                                          validity_start_date: 10.years.ago,
-                                         validity_end_date: nil }
-      let!(:chapter2) { create :chapter, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(2)}00000000",
+                                         validity_end_date: nil
+      }
+      let!(:chapter2) {
+        create :chapter, goods_nomenclature_item_id: "#{heading.goods_nomenclature_item_id.first(2)}00000000",
                                          validity_start_date: 10.years.ago,
-                                         validity_end_date: 8.years.ago }
+                                         validity_end_date: 8.years.ago
+      }
 
 
       around(:each) do |example|
@@ -131,16 +151,17 @@ describe Heading do
   end
 
   describe '#declarable' do
-
     context 'different points in time' do
       today = Date.today
       t1 = today.ago(2.years)
       t2 = today.ago(1.year)
       let!(:declarable_heading) { create :heading, :declarable, goods_nomenclature_item_id: "0102000000", validity_start_date: t1, validity_end_date: nil }
-      let!(:commodity) { create :commodity, goods_nomenclature_item_id: "0102000010",
+      let!(:commodity) {
+        create :commodity, goods_nomenclature_item_id: "0102000010",
                                                          producline_suffix: "80",
                                                          validity_start_date: t1,
-                                                         validity_end_date: t2 }
+                                                         validity_end_date: t2
+      }
 
       it 'returns true if there are no commodities under this heading that are valid during headings validity period' do
         TimeMachine.now {
@@ -162,10 +183,12 @@ describe Heading do
     context 'different commodity codes' do
       let!(:declarable_heading)     { create :heading, :declarable, goods_nomenclature_item_id: "0101000000" }
       let!(:non_declarable_heading) { create :heading, goods_nomenclature_item_id: "0102000000", producline_suffix: "10" }
-      let!(:commodity)              { create :commodity, goods_nomenclature_item_id: "0102000010",
+      let!(:commodity)              {
+        create :commodity, goods_nomenclature_item_id: "0102000010",
                                                          producline_suffix: "80",
                                                          validity_start_date: non_declarable_heading.validity_start_date,
-                                                         validity_end_date: non_declarable_heading.validity_end_date }
+                                                         validity_end_date: non_declarable_heading.validity_end_date
+      }
 
       it 'returns true if there are no commodities under this heading that are valid during headings validity period' do
         expect(
@@ -181,10 +204,14 @@ describe Heading do
     end
 
     context 'same commodity codes' do
-      let!(:heading1) { create :heading, goods_nomenclature_item_id: "0101000000",
-                                         producline_suffix: "10"}
-      let!(:heading2) { create :heading, goods_nomenclature_item_id: "0101000000",
-                                         producline_suffix: "80" }
+      let!(:heading1) {
+        create :heading, goods_nomenclature_item_id: "0101000000",
+                                         producline_suffix: "10"
+      }
+      let!(:heading2) {
+        create :heading, goods_nomenclature_item_id: "0101000000",
+                                         producline_suffix: "80"
+      }
 
       it 'returns true if there are no commodities under this heading that are valid during headings validity period' do
         expect(
@@ -244,7 +271,7 @@ describe Heading do
                  operation_date: Date.yesterday,
                  goods_nomenclature_item_id: "#{heading.short_code}000001"
         }
-        let!(:measure)   {
+        let!(:measure) {
           create :measure,
                  goods_nomenclature: commodity,
                  goods_nomenclature_item_id: commodity.goods_nomenclature_item_id,
@@ -264,7 +291,7 @@ describe Heading do
   end
 
   describe '#short_code' do
-    let!(:heading)  { create :heading, goods_nomenclature_item_id: '1234000000' }
+    let!(:heading) { create :heading, goods_nomenclature_item_id: '1234000000' }
 
     it 'should return first 4 chars of goods_nomenclature_item_id' do
       expect(heading.short_code).to eq('1234')

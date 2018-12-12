@@ -4,7 +4,7 @@ describe TradeTariffBackend::Validations::InclusionValidation do
   describe '#valid?' do
     let(:validation) {
       described_class.new(:vld1, 'valid', validation_options: { of: :attr,
-                                                         in: [:a, :b, :c] } )
+                                                         in: %i[a b c] })
     }
 
     context 'valid array to check upon provided' do
@@ -32,7 +32,7 @@ describe TradeTariffBackend::Validations::InclusionValidation do
     context 'no valid array to check upon provided' do
       let(:record) { double }
       let(:validation) {
-        described_class.new('valid', validation_options: { of: :attr} )
+        described_class.new('valid', validation_options: { of: :attr })
       }
 
       it 'raises ArgumentError' do
@@ -43,7 +43,7 @@ describe TradeTariffBackend::Validations::InclusionValidation do
     context 'no valid argument to check for povided' do
       let(:record) { double }
       let(:validation) {
-        described_class.new('valid', validation_options: { in: :attr} )
+        described_class.new('valid', validation_options: { in: :attr })
       }
 
       it 'raises ArgumentError' do

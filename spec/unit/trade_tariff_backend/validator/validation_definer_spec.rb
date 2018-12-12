@@ -48,9 +48,9 @@ describe TradeTariffBackend::Validator::ValidationDefiner do
   end
 
   describe '#validates' do
-    let(:validation) { described_class.new('validation', {}) { } }
+    let(:validation) { described_class.new('validation', {}) {} }
 
-    before { validation.validates(:validation_type, {a: :b}) }
+    before { validation.validates(:validation_type, a: :b) }
 
     it 'assigns validation type' do
       expect(validation.validation_type).to eq :validation_type

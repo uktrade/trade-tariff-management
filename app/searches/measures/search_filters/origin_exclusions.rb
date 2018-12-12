@@ -26,11 +26,10 @@
 module Measures
   module SearchFilters
     class OriginExclusions < ::Shared::SearchFilters::CollectionFilterBase
-
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         include
         do_not_include
-      )
+      ).freeze
 
       attr_accessor :operator,
                     :exclusions_list
@@ -39,9 +38,9 @@ module Measures
         @operator = operator
 
         @exclusions_list = if exclusions_list.present?
-          filtered_collection_params(exclusions_list)
-        else
-          []
+                             filtered_collection_params(exclusions_list)
+                           else
+                             []
         end
       end
 
@@ -63,49 +62,49 @@ module Measures
         end
       end
 
-      private
+    private
 
-        def required_options_are_blank?
-          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+      def required_options_are_blank?
+        OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
           exclusions_list.size.zero?
+      end
+
+      def initial_sql_rule
+        case operator
+        when "include"
+          are_not_unspecified_sql_rule
+        when "do_not_include"
+          are_not_specified_sql_rule
         end
+      end
 
-        def initial_sql_rule
-          case operator
-          when "include"
-            are_not_unspecified_sql_rule
-          when "do_not_include"
-            are_not_specified_sql_rule
-          end
-        end
+      def collection_sql_rules
+        prefix = operator == "do_not_include" ? "NOT" : ""
 
-        def collection_sql_rules
-          prefix = operator == "do_not_include" ? "NOT" : ""
-
-          exclusions_list.map do
-            <<-eos
+        exclusions_list.map do
+          <<-eos
               (searchable_data #>> '{"excluded_geographical_areas_names"}')::text #{prefix} ilike ?
-            eos
-          end.join(" AND ")
-        end
-
-        def collection_compare_values
-          exclusions_list.map do |origin_id|
-            "%_#{origin_id}_%"
-          end
-        end
-
-        def are_not_specified_sql_rule
-          <<-eos
-            searchable_data #>> '{"excluded_geographical_areas_names"}' IS NULL
           eos
-        end
+        end.join(" AND ")
+      end
 
-        def are_not_unspecified_sql_rule
-          <<-eos
-            searchable_data #>> '{"excluded_geographical_areas_names"}' IS NOT NULL
-          eos
+      def collection_compare_values
+        exclusions_list.map do |origin_id|
+          "%_#{origin_id}_%"
         end
+      end
+
+      def are_not_specified_sql_rule
+        <<-eos
+          searchable_data #>> '{"excluded_geographical_areas_names"}' IS NULL
+        eos
+      end
+
+      def are_not_unspecified_sql_rule
+        <<-eos
+          searchable_data #>> '{"excluded_geographical_areas_names"}' IS NOT NULL
+        eos
+      end
     end
   end
 end

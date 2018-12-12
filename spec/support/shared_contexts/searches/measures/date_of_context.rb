@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_context "measures_search_date_of_context" do
-
   before do
     set_date(a_measure, field_name, 3.days.ago)
     set_date(b_measure, field_name, 2.days.ago)
