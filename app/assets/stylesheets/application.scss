@@ -38,7 +38,8 @@
 // @import "bootstrap";
 @import 'bootstrap_overrides';
 @import 'selectize';
-@import 'vendors/*';
+@import 'selectize.bootstrap3';
+@import 'vue-virtual-scroller';
 @import "pikaday";
 @import "simple-grid";
 @import "variables";
