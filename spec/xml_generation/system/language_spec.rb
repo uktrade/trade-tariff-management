@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Language XML generation" do
-
   let(:db_record) do
     create(:language, :xml)
   end
@@ -11,10 +10,10 @@ describe "Language XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :language_id,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      language_id
+      validity_start_date
+      validity_end_date
     ]
   end
 

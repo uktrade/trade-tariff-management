@@ -102,8 +102,10 @@ describe ChiefTransformer::CandidateMeasure do
       let!(:excluded_country_code1) { create :country_code, country_cd: 'AB' }
       let!(:excluded_country_code2) { create :country_code, country_cd: 'DE' }
 
-      let!(:country_group) { create :country_group, chief_country_grp: country_code.chief_country_cd,
-                                                    country_exclusions: "#{excluded_country_code1.chief_country_cd},#{excluded_country_code2.chief_country_cd}" }
+      let!(:country_group) {
+        create :country_group, chief_country_grp: country_code.chief_country_cd,
+                                                    country_exclusions: "#{excluded_country_code1.chief_country_cd},#{excluded_country_code2.chief_country_cd}"
+      }
 
       let!(:geographical_area1) { create :geographical_area, geographical_area_id: excluded_country_code1.country_cd }
       let!(:geographical_area2) { create :geographical_area, geographical_area_id: excluded_country_code2.country_cd }
@@ -135,9 +137,11 @@ describe ChiefTransformer::CandidateMeasure do
     describe 'assigning validity start date' do
       context 'tamf start date is after the mfcm' do
         let(:mfcm) { create :mfcm, :with_tame, :with_tamf }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
                                                                              tame: mfcm.tame,
-                                                                             tamf: mfcm.tame.tamfs.first) }
+                                                                             tamf: mfcm.tame.tamfs.first)
+        }
         it "should use the tamf start date" do
           expect(candidate_measure.validity_start_date).to eq mfcm.tame.tamfs.first.fe_tsmp
         end
@@ -145,9 +149,11 @@ describe ChiefTransformer::CandidateMeasure do
 
       context 'tamf start date is before the mfcm' do
         let(:mfcm) { create :mfcm, :with_tame, :with_tamf_start_date_before }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
                                                                              tame: mfcm.tame,
-                                                                             tamf: mfcm.tame.tamfs.first) }
+                                                                             tamf: mfcm.tame.tamfs.first)
+        }
         it "should use the mfcm start date" do
           expect(candidate_measure.validity_start_date).to eq mfcm.fe_tsmp
         end
@@ -155,8 +161,10 @@ describe ChiefTransformer::CandidateMeasure do
 
       context 'tamf absent, tame start date is before the mfcm' do
         let(:mfcm) { create :mfcm, :with_tame_start_date_before }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
-                                                                         tame: mfcm.tame) }
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+                                                                         tame: mfcm.tame)
+        }
         it "should use the mfcm start date" do
           expect(candidate_measure.validity_start_date).to eq mfcm.fe_tsmp
         end
@@ -174,8 +182,10 @@ describe ChiefTransformer::CandidateMeasure do
     describe 'assigning validity end date' do
       context 'validity end date equal or less than start date' do
         let(:mfcm) { create :mfcm, fe_tsmp: DateTime.parse("2016-12-12"), le_tsmp: DateTime.parse("2016-12-12") }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
-                                                                             tame: mfcm.tame) }
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+                                                                             tame: mfcm.tame)
+        }
         it "should set end date to nil" do
           expect(candidate_measure.validity_end_date).to be_nil
         end
@@ -184,8 +194,10 @@ describe ChiefTransformer::CandidateMeasure do
 
       context 'tame end date is after the mfcm' do
         let(:mfcm) { create :mfcm, :with_tame_end_date_after }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
-                                                                         tame: mfcm.tame) }
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+                                                                         tame: mfcm.tame)
+        }
         it "should use the mfcm end date" do
           expect(candidate_measure.validity_end_date).to eq mfcm.le_tsmp
         end
@@ -193,8 +205,10 @@ describe ChiefTransformer::CandidateMeasure do
 
       context 'tame end date is before the mfcm' do
         let(:mfcm) { create :mfcm, :with_tame_end_date_before }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
-                                                                         tame: mfcm.tame) }
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+                                                                         tame: mfcm.tame)
+        }
         it "should use the tame end date" do
           expect(candidate_measure.validity_end_date).to eq mfcm.tame.le_tsmp
         end
@@ -243,22 +257,25 @@ describe ChiefTransformer::CandidateMeasure do
 
   describe 'building measure conditions' do
     let(:mfcm) { create :mfcm, :with_tamf_conditions }
-    subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+    subject(:candidate_measure) {
+      ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
                                                                          tame: mfcm.tame,
-                                                                         tamf: mfcm.tame.tamfs.first) }
+                                                                         tamf: mfcm.tame.tamfs.first)
+    }
     it "should build the measure conditions from a tamf" do
       expect(candidate_measure.candidate_associations[:measure_conditions]).to_not be_blank
       expect(candidate_measure.candidate_associations[:measure_conditions].first.component_sequence_number).to eq 2
     end
-
   end
 
   describe 'building measure components' do
     context 'building from tame' do
       let!(:chief_duty_expression) { create :chief_duty_expression }
       let(:mfcm) { create :mfcm, :with_tame_components }
-      subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
-                                                                         tame: mfcm.tame) }
+      subject(:candidate_measure) {
+        ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+                                                                         tame: mfcm.tame)
+      }
       it "should build the measure component from the tame" do
         expect(candidate_measure.candidate_associations[:measure_components]).to_not be_blank
         expect(candidate_measure.candidate_associations[:measure_components].first.duty_amount).to eq 20
@@ -267,15 +284,19 @@ describe ChiefTransformer::CandidateMeasure do
 
     context 'building from tamf' do
       context 'duty expression present' do
-        let!(:chief_duty_expression) { create :chief_duty_expression, adval1_rate: 0,
+        let!(:chief_duty_expression) {
+          create :chief_duty_expression, adval1_rate: 0,
                                                                       adval2_rate: 0,
                                                                       spfc1_rate: 1,
-                                                                      spfc2_rate: 0 }
+                                                                      spfc2_rate: 0
+        }
         let!(:chief_measurement_unit) { create :chief_measurement_unit }
         let(:mfcm) { create :mfcm, :with_tamf_components }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
                                                                              tame: mfcm.tame,
-                                                                             tamf: mfcm.tame.tamfs.first) }
+                                                                             tamf: mfcm.tame.tamfs.first)
+        }
 
         it "should build the measure component from the tamf" do
           expect(candidate_measure.candidate_associations[:measure_components]).to_not be_blank
@@ -283,19 +304,25 @@ describe ChiefTransformer::CandidateMeasure do
       end
 
       context 'duty expression blank' do
-        let!(:chief_duty_expression) { create :chief_duty_expression, adval1_rate: 1,
+        let!(:chief_duty_expression) {
+          create :chief_duty_expression, adval1_rate: 1,
                                                                       adval2_rate: 0,
                                                                       spfc1_rate: 0,
-                                                                      spfc2_rate: 0 }
+                                                                      spfc2_rate: 0
+        }
         let!(:chief_measurement_unit) { create :chief_measurement_unit }
-        let!(:mfcm)  { create :mfcm, :with_tame, msrgp_code: ChiefTransformer::CandidateMeasure::EXCISE_GROUP_CODES.sample }
-        let!(:tamf) { create :tamf, msrgp_code: mfcm.msrgp_code,
+        let!(:mfcm) { create :mfcm, :with_tame, msrgp_code: ChiefTransformer::CandidateMeasure::EXCISE_GROUP_CODES.sample }
+        let!(:tamf) {
+          create :tamf, msrgp_code: mfcm.msrgp_code,
                                    msr_type: mfcm.msr_type,
                                    tty_code: mfcm.tty_code,
-                                   fe_tsmp: mfcm.fe_tsmp }
-        subject(:candidate_measure) { ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
+                                   fe_tsmp: mfcm.fe_tsmp
+        }
+        subject(:candidate_measure) {
+          ChiefTransformer::CandidateMeasure.new(mfcm: mfcm,
                                                                              tame: mfcm.tame,
-                                                                             tamf: mfcm.tame.tamfs.first) }
+                                                                             tamf: mfcm.tame.tamfs.first)
+        }
 
         it 'picks duty expression that matches adval1_rate being present condition' do
           expect(candidate_measure.candidate_associations[:measure_components]).to_not be_blank

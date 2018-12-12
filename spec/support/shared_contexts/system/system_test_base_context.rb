@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_context 'system_test_base_context' do
-
   let!(:user) do
     create(:user)
   end
@@ -17,5 +16,4 @@ shared_context 'system_test_base_context' do
   let(:operation_date) do
     validity_start_date
   end
-
 end

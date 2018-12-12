@@ -22,7 +22,7 @@ describe ChiefTransformer::Logger do
           .and_raise(Sequel::ValidationFailed.new(measure))
 
         chief_transformer_logger do
-          expect{ ChiefTransformer.instance.invoke }.to raise_error(ChiefTransformer::TransformException)
+          expect { ChiefTransformer.instance.invoke }.to raise_error(ChiefTransformer::TransformException)
 
           expect(@logger.logged(:error).size).to eq 1
           expect(@logger.logged(:error).last).to match /Could not transform/i

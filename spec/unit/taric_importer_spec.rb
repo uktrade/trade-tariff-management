@@ -109,18 +109,18 @@ describe TaricImporter do
     end
 
     context "on an unexpected update operation type"
-      before do
-        ExplicitAbrogationRegulation.unrestrict_primary_key
-        allow(taric_update).to receive(:file_path)
-          .and_return("spec/fixtures/taric_samples/unknown_record.xml")
-      end
+    before do
+      ExplicitAbrogationRegulation.unrestrict_primary_key
+      allow(taric_update).to receive(:file_path)
+        .and_return("spec/fixtures/taric_samples/unknown_record.xml")
+    end
 
-      it "logs an error event" do
-        tariff_importer_logger do
-          importer = TaricImporter.new(taric_update)
-          expect { importer.import }.to raise_error TaricImporter::ImportException
-          expect(@logger.logged(:error).first).to include("Unexpected Taric operation type:")
-        end
+    it "logs an error event" do
+      tariff_importer_logger do
+        importer = TaricImporter.new(taric_update)
+        expect { importer.import }.to raise_error TaricImporter::ImportException
+        expect(@logger.logged(:error).first).to include("Unexpected Taric operation type:")
       end
+    end
   end
 end

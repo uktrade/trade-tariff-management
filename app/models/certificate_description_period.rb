@@ -1,5 +1,4 @@
 class CertificateDescriptionPeriod < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
 

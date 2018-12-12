@@ -1,5 +1,4 @@
 class GeographicalArea < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
   include OwnValidityPeriod
@@ -25,10 +24,10 @@ class GeographicalArea < Sequel::Model
   many_to_many :geographical_area_descriptions, join_table: :geographical_area_description_periods,
                                                 left_primary_key: :geographical_area_sid,
                                                 left_key: :geographical_area_sid,
-                                                right_key: [:geographical_area_description_period_sid,
-                                                            :geographical_area_sid],
-                                                right_primary_key: [:geographical_area_description_period_sid,
-                                                                    :geographical_area_sid] do |ds|
+                                                right_key: %i[geographical_area_description_period_sid
+                                                              geographical_area_sid],
+                                                right_primary_key: %i[geographical_area_description_period_sid
+                                                                      geographical_area_sid] do |ds|
     ds.with_actual(GeographicalAreaDescriptionPeriod)
       .order(Sequel.desc(:geographical_area_description_periods__validity_start_date))
   end
@@ -119,57 +118,53 @@ class GeographicalArea < Sequel::Model
     end
 
     begin :search_functionality
-      def default_order
-        distinct(:geographical_areas__geographical_area_id).order(
-          Sequel.asc(:geographical_areas__geographical_area_id)
-        )
-      end
+          def default_order
+            distinct(:geographical_areas__geographical_area_id).order(
+              Sequel.asc(:geographical_areas__geographical_area_id)
+            )
+          end
 
-      def by_code(code)
-        where(geographical_code: code)
-      end
+          def by_code(code)
+            where(geographical_code: code)
+          end
 
-      def after_or_equal(start_date)
-        where("validity_start_date >= ?", start_date)
-      end
+          def after_or_equal(start_date)
+            where("validity_start_date >= ?", start_date)
+          end
 
-      def before_or_equal(end_date)
-        where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
-      end
+          def before_or_equal(end_date)
+            where("validity_end_date IS NOT NULL AND validity_end_date <= ?", end_date)
+          end
 
-      def keywords_search(keywords)
-        keywords = keywords.to_s.squish
+          def keywords_search(keywords)
+            keywords = keywords.to_s.squish
 
-        join_table(:inner,
-          :geographical_area_descriptions,
-          geographical_area_id: :geographical_area_id,
-        ).where("
-          geographical_areas.geographical_area_id ilike ? OR
-          geographical_area_descriptions.description ilike ?",
-          "#{keywords}%", "%#{keywords}%"
-        )
-      end
+            join_table(:inner,
+              :geographical_area_descriptions,
+              geographical_area_id: :geographical_area_id,).where("
+              geographical_areas.geographical_area_id ilike ? OR
+              geographical_area_descriptions.description ilike ?",
+              "#{keywords}%", "%#{keywords}%")
+          end
 
-      def q_search(filter_ops={})
-        scope = actual
+          def q_search(filter_ops = {})
+            scope = actual
 
-        if filter_ops[:q].present?
-          q_rule = "#{filter_ops[:q]}%"
+            if filter_ops[:q].present?
+              q_rule = "#{filter_ops[:q]}%"
 
-          scope = scope.join_table(:inner,
-            :geographical_area_descriptions,
-            geographical_area_id: :geographical_area_id,
-          ).where("
-            geographical_areas.geographical_area_id ilike ? OR
-            geographical_area_descriptions.description ilike ?",
-            q_rule, q_rule
-          )
+              scope = scope.join_table(:inner,
+                :geographical_area_descriptions,
+                geographical_area_id: :geographical_area_id,).where("
+                geographical_areas.geographical_area_id ilike ? OR
+                geographical_area_descriptions.description ilike ?",
+                q_rule, q_rule)
 
-          scope.order(Sequel.asc(:geographical_area_descriptions__description))
-        else
-          scope.order(Sequel.asc(:geographical_areas__geographical_area_id))
-        end
-      end
+              scope.order(Sequel.asc(:geographical_area_descriptions__description))
+            else
+              scope.order(Sequel.asc(:geographical_areas__geographical_area_id))
+            end
+          end
     end
   end
 
@@ -191,7 +186,7 @@ class GeographicalArea < Sequel::Model
             .first
     end
 
-    def conditional_search(filter_ops={})
+    def conditional_search(filter_ops = {})
       group_id = filter_ops[:parent_id]
 
       if group_id.present?
@@ -243,8 +238,8 @@ class GeographicalArea < Sequel::Model
   end
 
   def other_descriptions
-    geographical_area_descriptions.select do |item|
-      item.oid != geographical_area_description.oid
+    geographical_area_descriptions.reject do |item|
+      item.oid == geographical_area_description.oid
     end.sort do |a, b|
       b.validity_start_date.to_date <=> a.validity_start_date.to_date
     end

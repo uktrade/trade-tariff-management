@@ -1,6 +1,5 @@
 module Workbaskets
   class WorkflowTransitionsController < Workbaskets::WorkflowBaseController
-
     # before_action :check_permissions!, only: [:submit_for_approval]
 
     def submit_for_approval
@@ -9,18 +8,18 @@ module Workbaskets
       redirect_to read_only_url
     end
 
-    private
+  private
 
-      def check_permissions!
-        unless (
-            current_user.author_of_workbasket?(workbasket) ||
-            current_user.approver? ||
-            workbasket.cross_checker_is?(current_user)
-          )
+    def check_permissions!
+      unless
+          current_user.author_of_workbasket?(workbasket) ||
+              current_user.approver? ||
+              workbasket.cross_checker_is?(current_user)
 
-          redirect_to read_only_url
-          return false
-        end
+
+        redirect_to read_only_url
+        false
       end
+    end
   end
 end

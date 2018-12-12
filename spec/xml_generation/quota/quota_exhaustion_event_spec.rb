@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "QuotaExhaustionEvent XML generation" do
-
   let(:db_record) do
     create(:quota_exhaustion_event)
   end
@@ -11,10 +10,10 @@ describe "QuotaExhaustionEvent XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :quota_definition_sid,
-      :occurrence_timestamp,
-      :exhaustion_date
+    %i[
+      quota_definition_sid
+      occurrence_timestamp
+      exhaustion_date
     ]
   end
 

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "PublicationSigle XML generation" do
-
   let(:db_record) do
     create(:publication_sigle, :xml)
   end
@@ -11,13 +10,13 @@ describe "PublicationSigle XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :code_type_id,
-      :code,
-      :publication_code,
-      :publication_sigle,
-      :validity_end_date,
-      :validity_start_date
+    %i[
+      code_type_id
+      code
+      publication_code
+      publication_sigle
+      validity_end_date
+      validity_start_date
     ]
   end
 

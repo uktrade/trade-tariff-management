@@ -1,7 +1,6 @@
 module AdditionalCodes
   module Workbasket
     class Paginator
-
       attr_accessor :search_ops,
                     :additional_code_sids
 
@@ -36,28 +35,29 @@ module AdditionalCodes
         additional_code_sids.size
       end
 
-      private
+    private
 
-        def per_page
-          @per_page ||= Kaminari.config.default_per_page
-        end
+      def per_page
+        @per_page ||= Kaminari.config.default_per_page
+      end
 
-        def total_pages
-          (total_count.to_f / per_page.to_f).ceil
-        end
+      def total_pages
+        (total_count.to_f / per_page.to_f).ceil
+      end
 
-        def has_more?
-          total_pages > current_page.to_i
-        end
+      def has_more?
+        total_pages > current_page.to_i
+      end
 
-        def offset
-          return 0 if current_page.to_i.zero?
-          (current_page.to_i - 1) * per_page
-        end
+      def offset
+        return 0 if current_page.to_i.zero?
 
-        def top_limit
-          offset + per_page - 1
-        end
+        (current_page.to_i - 1) * per_page
+      end
+
+      def top_limit
+        offset + per_page - 1
+      end
     end
   end
 end

@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'tariff_synchronizer/chief_file_name_generator'
 
 describe ChiefFileNameGenerator do
-  let(:example_date){ Date.new(2010,1,1) }
+  let(:example_date) { Date.new(2010, 1, 1) }
   let(:chief_file_name) { ChiefFileNameGenerator.new(example_date) }
 
   describe "#name" do

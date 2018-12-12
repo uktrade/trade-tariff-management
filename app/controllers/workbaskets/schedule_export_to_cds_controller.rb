@@ -1,6 +1,5 @@
 module Workbaskets
   class ScheduleExportToCdsController < Workbaskets::WorkflowBaseController
-
     expose(:export_date) do
       params[:export_date].try(:to_date)
     end

@@ -1,5 +1,4 @@
 class FootnoteDecorator < ApplicationDecorator
-
   def title
     "#{object.footnote_type_id} #{object.footnote_id}"
   end
@@ -20,9 +19,9 @@ class FootnoteDecorator < ApplicationDecorator
     false # TODO
   end
 
-  private
+private
 
-    def to_date(value)
-      value.try(:strftime, "%d %B %Y") || '-'
-    end
+  def to_date(value)
+    value.try(:strftime, "%d %B %Y") || '-'
+  end
 end

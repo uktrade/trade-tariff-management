@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_context "regulations_search_base_context" do
-
   let(:group_aaa) do
     create(:regulation_group, regulation_group_id: "AAA")
   end
@@ -16,8 +15,7 @@ shared_context "regulations_search_base_context" do
       base_regulation_id: "I1111111",
       information_text: "Base I1111111",
       regulation_group_id: group_aaa.regulation_group_id,
-      validity_start_date: 1.year.ago
-    )
+      validity_start_date: 1.year.ago)
   end
 
   let(:base_i2222222) do
@@ -27,8 +25,7 @@ shared_context "regulations_search_base_context" do
       information_text: "Base I2222222",
       regulation_group_id: group_bbb.regulation_group_id,
       validity_start_date: 1.year.ago,
-      effective_end_date: 1.year.from_now
-    )
+      effective_end_date: 1.year.from_now)
   end
 
   let(:provisional_anti_dumping_i3333333) do
@@ -39,8 +36,7 @@ shared_context "regulations_search_base_context" do
       regulation_group_id: group_aaa.regulation_group_id,
       antidumping_regulation_role: 1,
       related_antidumping_regulation_id: base_i1111111.base_regulation_id,
-      validity_start_date: 1.year.ago
-    )
+      validity_start_date: 1.year.ago)
   end
 
   let(:definitive_anti_dumping_i4444444) do
@@ -52,8 +48,7 @@ shared_context "regulations_search_base_context" do
       validity_start_date: 1.year.ago,
       effective_end_date: 1.year.from_now,
       antidumping_regulation_role: 1,
-      related_antidumping_regulation_id: base_i2222222.base_regulation_id
-    )
+      related_antidumping_regulation_id: base_i2222222.base_regulation_id)
   end
 
   let(:modification_r5555555) do
@@ -62,8 +57,7 @@ shared_context "regulations_search_base_context" do
       modification_regulation_id: "R5555555",
       information_text: "Modification R5555555",
       validity_start_date: 1.year.ago,
-      validity_end_date: 5.days.from_now
-    )
+      validity_end_date: 5.days.from_now)
   end
 
   let(:modification_r6666666) do
@@ -72,8 +66,7 @@ shared_context "regulations_search_base_context" do
       modification_regulation_id: "R6666666",
       information_text: "Modification R6666666",
       validity_start_date: 1.year.ago,
-      validity_end_date: 3.days.from_now
-    )
+      validity_end_date: 3.days.from_now)
   end
 
   let(:prorogation_r9999999) do
@@ -81,8 +74,7 @@ shared_context "regulations_search_base_context" do
       prorogation_regulation_role: 5,
       prorogation_regulation_id: "R9999999",
       information_text: "Prorogation R9999999",
-      published_date: 10.days.ago
-    )
+      published_date: 10.days.ago)
   end
 
   let(:complete_abrogation_r7777777) do
@@ -90,8 +82,7 @@ shared_context "regulations_search_base_context" do
       complete_abrogation_regulation_role: 6,
       complete_abrogation_regulation_id: "R7777777",
       information_text: "Complete abrogation R7777777",
-      published_date: 9.days.ago
-    )
+      published_date: 9.days.ago)
   end
 
   let(:explicit_abrogation_r8888888) do
@@ -99,8 +90,7 @@ shared_context "regulations_search_base_context" do
       explicit_abrogation_regulation_role: 7,
       explicit_abrogation_regulation_id: "R8888888",
       information_text: "Explicit abrogation R8888888",
-      published_date: 1.year.ago
-    )
+      published_date: 1.year.ago)
   end
 
   let(:full_temporary_stop_r9191919) do
@@ -108,8 +98,7 @@ shared_context "regulations_search_base_context" do
       full_temporary_stop_regulation_role: 8,
       full_temporary_stop_regulation_id: "R9191919",
       information_text: "Full temporary stop R9191919",
-      validity_start_date: 1.year.ago
-    )
+      validity_start_date: 1.year.ago)
   end
 
   before do
@@ -127,17 +116,15 @@ shared_context "regulations_search_base_context" do
 
   private
 
-    def search_results(search_ops)
-      ::RegulationsSearch.new(search_ops)
-                         .results
-                         .all
-                         .sort do |a, b|
-        a.start_date <=> b.start_date
-      end
-    end
+  def search_results(search_ops)
+    ::RegulationsSearch.new(search_ops)
+                       .results
+                       .all
+                       .sort_by(&:start_date)
+  end
 
-    def date_to_format(date_in_string)
-      date_in_string.to_date
-                    .strftime("%d/%m/%Y")
-    end
+  def date_to_format(date_in_string)
+    date_in_string.to_date
+                  .strftime("%d/%m/%Y")
+  end
 end

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe QuotaOrderNumber do
   describe 'validations' do
     describe "ON1" do
-      it { is_expected.to validate_uniqueness.of([:quota_order_number_id, :validity_start_date]) }
+      it { is_expected.to validate_uniqueness.of(%i[quota_order_number_id validity_start_date]) }
 
       it "invalid" do
         start_date = 3.years.ago
@@ -171,7 +171,7 @@ describe QuotaOrderNumber do
 
     describe "ON11" do
       it "valid" do
-        bottom_date = Date.new(2007,12,31)
+        bottom_date = Date.new(2007, 12, 31)
         measure = create :measure,
                   ordernumber: generate(:quota_order_number_id),
                   validity_start_date: bottom_date - 1.day

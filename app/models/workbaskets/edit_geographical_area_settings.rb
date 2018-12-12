@@ -1,6 +1,5 @@
 module Workbaskets
   class EditGeographicalAreaSettings < Sequel::Model(:edit_geographical_areas_workbasket_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -40,9 +39,7 @@ module Workbaskets
     def prepare_collection(list, data_field_name)
       list.map do |item|
         item.public_send(data_field_name)
-      end.reject do |i|
-        i.blank?
-      end.uniq
+      end.reject(&:blank?).uniq
          .join(', ')
     end
 

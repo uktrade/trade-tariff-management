@@ -1,6 +1,5 @@
 module XmlGeneration
   class ExportsController < ApplicationController
-
     include ::BaseJobMixin
 
     expose(:record_name) do
@@ -31,7 +30,7 @@ module XmlGeneration
       nil
     end
 
-    private
+  private
 
     def persist_record(record)
       record.save_with_envelope_id

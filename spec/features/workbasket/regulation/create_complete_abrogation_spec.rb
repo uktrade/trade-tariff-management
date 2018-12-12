@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'complete abrogation regulation', js: true do
-
   include_context 'create_regulation_base_context'
 
   let(:regulation_type) do
@@ -19,7 +18,7 @@ describe 'complete abrogation regulation', js: true do
   let(:required_filed_values) do
     base_required_filed_values.
         concat([
-                   {name: 'Specify the base regulation', value: base_regulation.base_regulation_id, type: :select},
+                   { name: 'Specify the base regulation', value: base_regulation.base_regulation_id, type: :select },
                    { name: 'Published date', value: published_date, type: :date },
                ])
   end
@@ -27,5 +26,4 @@ describe 'complete abrogation regulation', js: true do
   let(:filed_values) do
     required_filed_values
   end
-
 end

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "GeographicalAreaDescription XML generation" do
-
   let(:db_record) do
     create(:geographical_area_description, :xml)
   end
@@ -11,15 +10,14 @@ describe "GeographicalAreaDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :geographical_area_description_period_sid,
-      :language_id,
-      :geographical_area_sid,
-      :geographical_area_id,
-      :description
+    %i[
+      geographical_area_description_period_sid
+      language_id
+      geographical_area_sid
+      geographical_area_id
+      description
     ]
   end
 
   include_context "xml_generation_record_context"
 end
-

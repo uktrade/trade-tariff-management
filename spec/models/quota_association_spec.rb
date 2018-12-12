@@ -3,36 +3,36 @@ require 'rails_helper'
 describe QuotaAssociation do
   describe "validations" do
     describe "conformance rules" do
-        let!(:measurement_unit) { create(:measurement_unit) }
+      let!(:measurement_unit) { create(:measurement_unit) }
 
-        let!(:main_quota_definition) {
-          create(
-            :quota_definition,
-            critical_state: "N",
-            measurement_unit_code: measurement_unit.measurement_unit_code,
-            volume: 100000.0,
-            validity_start_date: Date.today,
-            validity_end_date: Date.today + 1.month,
-          )
-        }
+      let!(:main_quota_definition) {
+        create(
+          :quota_definition,
+          critical_state: "N",
+          measurement_unit_code: measurement_unit.measurement_unit_code,
+          volume: 100000.0,
+          validity_start_date: Date.today,
+          validity_end_date: Date.today + 1.month,
+        )
+      }
 
-        let!(:sub_quota_definition) {
-          create(
-            :quota_definition,
-            critical_state: "N",
-            measurement_unit_code: measurement_unit.measurement_unit_code,
-            volume: 80000.0,
-            validity_start_date: main_quota_definition.validity_start_date,
-            validity_end_date: main_quota_definition.validity_end_date,
-          )
-        }
+      let!(:sub_quota_definition) {
+        create(
+          :quota_definition,
+          critical_state: "N",
+          measurement_unit_code: measurement_unit.measurement_unit_code,
+          volume: 80000.0,
+          validity_start_date: main_quota_definition.validity_start_date,
+          validity_end_date: main_quota_definition.validity_end_date,
+        )
+      }
 
-        let(:quota_association) {
-          qa = QuotaAssociation.new
-          qa.main_quota_definition_sid = main_quota_definition.quota_definition_sid
-          qa.sub_quota_definition_sid = sub_quota_definition.quota_definition_sid
-          qa
-        }
+      let(:quota_association) {
+        qa = QuotaAssociation.new
+        qa.main_quota_definition_sid = main_quota_definition.quota_definition_sid
+        qa.sub_quota_definition_sid = sub_quota_definition.quota_definition_sid
+        qa
+      }
 
       describe "QA1: The association between two quota definitions must be unique." do
         it "should run validation sucessfully" do
@@ -57,8 +57,8 @@ describe QuotaAssociation do
         end
 
         it "should run validation sucessfully if sub quota validtion period is within the period of main quota definition" do
-          sub_quota_definition.validity_start_date =  main_quota_definition.validity_start_date + 1.day
-          sub_quota_definition.validity_end_date =  main_quota_definition.validity_end_date - 1.day
+          sub_quota_definition.validity_start_date = main_quota_definition.validity_start_date + 1.day
+          sub_quota_definition.validity_end_date = main_quota_definition.validity_end_date - 1.day
           sub_quota_definition.save
 
           qa = QuotaAssociation.new
@@ -71,7 +71,7 @@ describe QuotaAssociation do
           main_quota_definition.validity_end_date =  nil
           main_quota_definition.save
 
-          sub_quota_definition.validity_end_date =  main_quota_definition.validity_end_date
+          sub_quota_definition.validity_end_date = main_quota_definition.validity_end_date
           sub_quota_definition.save
 
           qa = QuotaAssociation.new
@@ -82,7 +82,7 @@ describe QuotaAssociation do
 
         it "should not run validation sucessfully sub quota validation period is not within the validation period of main quota" do
           sub_quota_definition.validity_start_date =  main_quota_definition.validity_start_date - 1.day
-          sub_quota_definition.validity_end_date =  main_quota_definition.validity_end_date + 1.day
+          sub_quota_definition.validity_end_date = main_quota_definition.validity_end_date + 1.day
           sub_quota_definition.save
 
           qa = QuotaAssociation.new
@@ -94,7 +94,7 @@ describe QuotaAssociation do
 
         it "should not run validation sucessfully sub quota validation period is not within the validation period of main quota" do
           sub_quota_definition.validity_start_date =  main_quota_definition.validity_start_date - 1.day
-          sub_quota_definition.validity_end_date =  main_quota_definition.validity_end_date + 1.day
+          sub_quota_definition.validity_end_date = main_quota_definition.validity_end_date + 1.day
           sub_quota_definition.save
 
           qa = QuotaAssociation.new

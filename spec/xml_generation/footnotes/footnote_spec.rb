@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Footnote XML generation" do
-
   let(:db_record) do
     create(:footnote, :xml)
   end
@@ -11,11 +10,11 @@ describe "Footnote XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :footnote_type_id,
-      :footnote_id,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      footnote_type_id
+      footnote_id
+      validity_start_date
+      validity_end_date
     ]
   end
 

@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateGeographicalAreaSettings < Sequel::Model(:create_geographical_area_workbasket_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models

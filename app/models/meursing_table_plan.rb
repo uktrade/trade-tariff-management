@@ -1,5 +1,4 @@
 class MeursingTablePlan < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :meursing_table_plan_id

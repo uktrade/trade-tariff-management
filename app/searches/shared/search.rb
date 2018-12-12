@@ -1,9 +1,8 @@
 module Shared
   module Search
-
     def apply_status_filter
       @relation = relation.operator_search_by_status(
-          *query_ops(status)
+        *query_ops(status)
       )
     end
 
@@ -19,19 +18,19 @@ module Shared
 
     def apply_date_of_filter
       @relation = relation.operator_search_by_date_of(
-          query_ops(date_of)
+        query_ops(date_of)
       )
     end
 
     def apply_valid_from_filter
       @relation = relation.operator_search_by_valid_from(
-          *query_ops(valid_from)
+        *query_ops(valid_from)
       )
     end
 
     def apply_valid_to_filter
       @relation = relation.operator_search_by_valid_to(
-          *query_ops(valid_to)
+        *query_ops(valid_to)
       )
     end
 
@@ -51,6 +50,5 @@ module Shared
     def just_value(ops)
       ops[:value]
     end
-
   end
 end

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'full temporary stop regulation', js: true do
-
   include_context 'create_regulation_base_context'
 
   let(:regulation_type) do
@@ -31,5 +30,4 @@ describe 'full temporary stop regulation', js: true do
                    { name: 'Effective end date', value: effective_end_date, type: :date },
                ])
   end
-
 end

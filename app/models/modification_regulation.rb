@@ -1,25 +1,24 @@
 class ModificationRegulation < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::FormApiHelpers::RegulationSearch
   include ::RegulationDocumentContext
   include ::WorkbasketHelpers::Association
 
-  plugin :oplog, primary_key: [:modification_regulation_id,
-                               :modification_regulation_role]
+  plugin :oplog, primary_key: %i[modification_regulation_id
+                                 modification_regulation_role]
   plugin :time_machine, period_start_column: :modification_regulations__validity_start_date,
                         period_end_column: :effective_end_date
   plugin :conformance_validator
 
-  set_primary_key [:modification_regulation_id, :modification_regulation_role]
+  set_primary_key %i[modification_regulation_id modification_regulation_role]
 
-  one_to_one :base_regulation, key: [:base_regulation_id, :base_regulation_role],
-                               primary_key: [:base_regulation_id, :base_regulation_role]
+  one_to_one :base_regulation, key: %i[base_regulation_id base_regulation_role],
+                               primary_key: %i[base_regulation_id base_regulation_role]
 
   one_to_many :fts_regulations,
               class_name: :FullTemporaryStopRegulation,
-              key: [ :full_temporary_stop_regulation_id,
-                     :full_temporary_stop_regulation_role ]
+              key: %i[full_temporary_stop_regulation_id
+                      full_temporary_stop_regulation_role]
 
   # TODO confirm this assumption
   # 0 not replaced
@@ -38,8 +37,8 @@ class ModificationRegulation < Sequel::Model
   end
 
   def formatted_id
-    year = Date.strptime(modification_regulation_id.slice(1,2), "%y").strftime("%Y");
-    number = modification_regulation_id.slice(3,4)
+    year = Date.strptime(modification_regulation_id.slice(1, 2), "%y").strftime("%Y");
+    number = modification_regulation_id.slice(3, 4)
 
     "#{year}/#{number}"
   end
@@ -48,7 +47,7 @@ class ModificationRegulation < Sequel::Model
     fts_regulations.last
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       formatted_id: formatted_id,
       modification_regulation_id: modification_regulation_id,

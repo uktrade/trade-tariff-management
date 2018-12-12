@@ -46,13 +46,14 @@ class ChiefImporter
         @end_entry = entry
       else # means it's ChangeEntry
         next unless entry.relevant?
+
         entry.origin = @chief_update.filename
         entry.process!
       end
     end
     ActiveSupport::Notifications.instrument("chief_imported.tariff_importer",
       filename: @chief_update.filename, count: record_count)
-  rescue => exception
+  rescue StandardError => exception
     ActiveSupport::Notifications.instrument("chief_failed.tariff_importer",
       filename: @chief_update.filename, exception: exception)
     raise ImportException.new(exception.message, exception)

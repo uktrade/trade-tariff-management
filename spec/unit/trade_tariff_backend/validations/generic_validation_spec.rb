@@ -4,7 +4,7 @@ describe TradeTariffBackend::Validations::GenericValidation do
   describe 'initialization' do
     context 'invalid operation provided' do
       it 'raises ArgumentError' do
-        expect { described_class.new(:vld1, 'description', on: [:delete, :wat]) { true } }.to raise_error ArgumentError
+        expect { described_class.new(:vld1, 'description', on: %i[delete wat]) { true } }.to raise_error ArgumentError
       end
     end
   end
@@ -63,9 +63,8 @@ describe TradeTariffBackend::Validations::GenericValidation do
 
   describe 'relevant_for?' do
     let(:validation) {
-      described_class.new(:vld1, 'description', {
-        if: ->(record) { record.criteria }
-      } ) { true }
+      described_class.new(:vld1, 'description',
+        if: ->(record) { record.criteria }) { true }
     }
 
     context 'relevant for the record' do

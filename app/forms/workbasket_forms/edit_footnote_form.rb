@@ -1,6 +1,5 @@
 module WorkbasketForms
   class EditFootnoteForm
-
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 

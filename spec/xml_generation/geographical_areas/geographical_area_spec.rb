@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "GeographicalArea XML generation" do
-
   let(:db_record) do
     create(:geographical_area, :xml)
   end
@@ -11,13 +10,13 @@ describe "GeographicalArea XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :geographical_area_sid,
-      :parent_geographical_area_group_sid,
-      :validity_start_date,
-      :validity_end_date,
-      :geographical_code,
-      :geographical_area_id
+    %i[
+      geographical_area_sid
+      parent_geographical_area_group_sid
+      validity_start_date
+      validity_end_date
+      geographical_code
+      geographical_area_id
     ]
   end
 

@@ -109,9 +109,7 @@ module WorkbasketHelper
       quarterly,
       monthly,
       custom
-    ].reject do |q|
-      q.blank?
-    end.to_sentence
+    ].reject(&:blank?).to_sentence
 
     "#{message} #{'period'.pluralize(workbasket_settings.quota_periods.count)}"
   end
@@ -195,11 +193,11 @@ module WorkbasketHelper
       else
         if workbasket.object.type.to_sym == :clone_quota && workbasket.title.blank?
           configure_cloned_quotas_bulk_url(
-              workbasket.id
+            workbasket.id
           )
         else
           edit_create_quotum_url(
-              workbasket.id,
+            workbasket.id,
               step: :main
           )
         end
@@ -236,13 +234,13 @@ module WorkbasketHelper
 
       if workbasket.settings.settings["title"].blank?
         work_with_selected_additional_codes_bulk_url(
-            workbasket.id,
+          workbasket.id,
             search_code: workbasket.settings.search_code
         )
 
       else
         edit_additional_codes_bulk_url(
-            workbasket.id,
+          workbasket.id,
             search_code: workbasket.settings.search_code
         )
       end
@@ -251,12 +249,12 @@ module WorkbasketHelper
 
       if workbasket.settings.settings["start_date"].blank?
         work_with_selected_quotas_bulk_url(
-            workbasket.id
+          workbasket.id
         )
 
       else
         edit_quotas_bulk_url(
-            workbasket.id
+          workbasket.id
         )
       end
 

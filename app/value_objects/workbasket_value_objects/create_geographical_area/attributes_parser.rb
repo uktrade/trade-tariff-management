@@ -1,13 +1,12 @@
 module WorkbasketValueObjects
   module CreateGeographicalArea
     class AttributesParser
-
       SIMPLE_OPS = %w(
         geographical_code
         geographical_area_id
         parent_geographical_area_group_id
         description
-      )
+      ).freeze
 
       attr_accessor :settings
 

@@ -4,7 +4,7 @@ describe TradeTariffBackend::Validator do
   let(:model) { double(operation: :create, conformance_errors: double(add: true)) }
   let(:generic_validator) {
     Class.new(TradeTariffBackend::Validator) {
-      validation :verify1, 'some validation' do |record|
+      validation :verify1, 'some validation' do |_record|
         true
       end
     }
@@ -35,7 +35,7 @@ describe TradeTariffBackend::Validator do
 
   describe '.validate' do
     before {
-      generic_validator.validation :vld1, 'failing validation' do |record|
+      generic_validator.validation :vld1, 'failing validation' do |_record|
         false
       end
 
@@ -58,7 +58,7 @@ describe TradeTariffBackend::Validator do
 
     context 'one of the validations wont pass' do
       before {
-        generic_validator.validation :vld1, 'failing validation' do |record|
+        generic_validator.validation :vld1, 'failing validation' do |_record|
           false
         end
 
@@ -79,11 +79,11 @@ describe TradeTariffBackend::Validator do
 
     let(:contextual_validator) {
       Class.new(TradeTariffBackend::Validator) {
-        validation :verify1, 'some validation', on: [:create, :update] do |record|
+        validation :verify1, 'some validation', on: %i[create update] do |_record|
           true
         end
 
-        validation :verify2, 'some validation', on: [:update] do |record|
+        validation :verify2, 'some validation', on: [:update] do |_record|
           false
         end
       }
@@ -112,13 +112,13 @@ describe TradeTariffBackend::Validator do
     context 'operatios do not match any validations' do
       let(:contextual_validator) {
         Class.new(TradeTariffBackend::Validator) {
-          validation :verify1, 'some validation', on: [:create, :update] do |record|
+          validation :verify1, 'some validation', on: %i[create update] do |_record|
             true
           end
         }
       }
 
-      before {  contextual_validator.new.validate_for_operations(model, :destroy) }
+      before { contextual_validator.new.validate_for_operations(model, :destroy) }
 
       it 'adds no errors to objects hash' do
         expect(model.conformance_errors).to_not have_received(:add)

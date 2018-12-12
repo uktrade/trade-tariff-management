@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateMeasuresSettings < Sequel::Model(:create_measures_workbasket_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -32,9 +31,7 @@ module Workbaskets
 
     def additional_codes_covered
       @additional_codes_covered ||= measures.where("additional_code_id IS NOT NULL AND additional_code_type_id IS NOT NULL")
-                                            .pluck(:additional_code_type_id, :additional_code_id).map do |m|
-        m.join
-      end.uniq
+                                            .pluck(:additional_code_type_id, :additional_code_id).map(&:join).uniq
     end
   end
 end

@@ -13,13 +13,12 @@ class ApplicationController < ActionController::Base
     Integer(params[:page] || 1)
   end
 
-  private
+private
 
   def actual_date
     Date.parse(params[:start_date].to_s)
-
-    rescue ArgumentError
-      Date.current
+  rescue ArgumentError
+    Date.current
   end
   helper_method :actual_date
 

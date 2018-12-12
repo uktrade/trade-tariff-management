@@ -1,12 +1,11 @@
 module WorkbasketValueObjects
   module EditGeographicalArea
     class AttributesParser
-
       SIMPLE_OPS = %w(
         description
         parent_geographical_area_group_id
         remove_parent_group_association
-      )
+      ).freeze
 
       attr_accessor :settings
 
@@ -72,4 +71,3 @@ module WorkbasketValueObjects
     end
   end
 end
-

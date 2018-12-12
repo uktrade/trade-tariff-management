@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateRegulation
     class StepPointer < ::WorkbasketValueObjects::StepPointerBase
-
       def step_transitions
         {
             main: :review_and_submit,
@@ -39,7 +38,6 @@ module WorkbasketValueObjects
             abrogation_date
         )
       end
-
     end
   end
 end

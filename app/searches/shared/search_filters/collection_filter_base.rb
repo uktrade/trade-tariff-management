@@ -1,12 +1,9 @@
 module Shared
   module SearchFilters
     class CollectionFilterBase
-
       def filtered_collection_params(list)
         list.map(&:strip)
-            .select do |item|
-          item.present?
-        end.uniq
+            .select(&:present?).uniq
       end
 
       def filtered_hash_collection_params(list)
@@ -18,7 +15,7 @@ module Shared
         # p "-" * 100
         # p ""
 
-        res = list.select do |v|
+        res = list.reject do |v|
           # p ""
           # p "-" * 100
           # p ""
@@ -27,9 +24,9 @@ module Shared
           # p "-" * 100
           # p ""
 
-          v.keys.first != "null"
+          v.keys.first == "null"
         end
-        
+
         # p ""
         # p "-" * 100
         # p ""

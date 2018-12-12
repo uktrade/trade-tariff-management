@@ -27,7 +27,6 @@ require 'tariff_synchronizer/response'
 #
 
 module TariffSynchronizer
-
   class FailedUpdatesError < StandardError; end
 
   autoload :ChiefUpdate,   'tariff_synchronizer/chief_update'
@@ -57,11 +56,11 @@ module TariffSynchronizer
 
   # Initial dump date + 1 day
   mattr_accessor :taric_initial_update_date
-  self.taric_initial_update_date = Date.new(2012,6,6)
+  self.taric_initial_update_date = Date.new(2012, 6, 6)
 
   # Initial dump date + 1 day
   mattr_accessor :chief_initial_update_date
-  self.chief_initial_update_date = Date.new(2012,6,30)
+  self.chief_initial_update_date = Date.new(2012, 6, 30)
 
   # Times to retry downloading update before giving up
   mattr_accessor :retry_count
@@ -116,7 +115,6 @@ module TariffSynchronizer
     # The sync task is run on multiple machines to avoid more than on process
     # running the apply task it is wrapped with a redis lock
     TradeTariffBackend.with_redis_lock do
-
       # Updates could be modifying primary keys so unrestricted it for all models.
       Sequel::Model.subclasses.each(&:unrestrict_primary_key)
 
@@ -136,14 +134,14 @@ module TariffSynchronizer
 
       applied_updates.flatten!
 
-      instrument("apply.tariff_synchronizer",
-        update_names: applied_updates.map(&:filename),
-        unconformant_records: unconformant_records
-      ) if applied_updates.any? && BaseUpdate.pending_or_failed.none?
+      if applied_updates.any? && BaseUpdate.pending_or_failed.none?
+        instrument("apply.tariff_synchronizer",
+          update_names: applied_updates.map(&:filename),
+          unconformant_records: unconformant_records)
+      end
     end
-
-    rescue RedisLock::LockTimeout
-      instrument "apply_lock_error.tariff_synchronizer"
+  rescue RedisLock::LockTimeout
+    instrument "apply_lock_error.tariff_synchronizer"
   end
 
   # Restore database to specific date in the past
@@ -153,7 +151,7 @@ module TariffSynchronizer
     TradeTariffBackend.with_redis_lock do
       date = Date.parse(rollback_date.to_s)
 
-      (date..Date.current).to_a.reverse.each do |date_for_rollback|
+      (date..Date.current).to_a.reverse_each do |date_for_rollback|
         Sequel::Model.db.transaction do
           oplog_based_models.each do |model|
             model.operation_klass.where { operation_date > date_for_rollback }.delete
@@ -209,17 +207,18 @@ module TariffSynchronizer
     send("#{update_type}_initial_update_date")
   end
 
-  private
+private
 
   def perform_update(update_type, day)
     updates = update_type.pending_at(day).to_a
-    updates.map{ |update| BaseUpdateImporter.perform(update) }
+    updates.map { |update| BaseUpdateImporter.perform(update) }
     updates
   end
 
   def date_range_since_last_pending_update
     last_pending_update = BaseUpdate.last_pending
     return [] if last_pending_update.blank?
+
     (last_pending_update.issue_date..update_to)
   end
 

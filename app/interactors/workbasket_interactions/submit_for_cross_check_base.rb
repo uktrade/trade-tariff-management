@@ -1,6 +1,5 @@
 module WorkbasketInteractions
   class SubmitForCrossCheckBase
-
     attr_accessor :current_admin,
                   :workbasket
 
@@ -14,15 +13,15 @@ module WorkbasketInteractions
       update_collection!
     end
 
-    private
+  private
 
-      def update_collection!
-        workbasket.settings
-                  .collection
-                  .map do |item|
+    def update_collection!
+      workbasket.settings
+                .collection
+                .map do |item|
 
-          item.move_status_to!(:awaiting_cross_check)
-        end
+        item.move_status_to!(:awaiting_cross_check)
       end
+    end
   end
 end

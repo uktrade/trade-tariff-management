@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe MeasureExcludedGeographicalArea do
   describe "Conformance rules" do
-
     before(:each) do
       @geographical_area_group = create(:geographical_area)
       @geographical_area = create(:geographical_area, geographical_code: "1")

@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: date_of filter" do
-
   include_context "measures_search_base_context"
 
   let(:search_key) { "date_of" }
@@ -76,10 +75,10 @@ describe "Measure search: date_of filter" do
 
   private
 
-    def set_date(measure, field_name, value)
-      measure.send("#{field_name}=", value)
-      measure.save
+  def set_date(measure, field_name, value)
+    measure.send("#{field_name}=", value)
+    measure.save
 
-      measure.reload
-    end
+    measure.reload
+  end
 end

@@ -1,5 +1,4 @@
 class MonetaryUnit < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include OwnValidityPeriod
 
@@ -23,12 +22,10 @@ class MonetaryUnit < Sequel::Model
 
         scope = scope.join_table(:inner,
           :monetary_unit_descriptions,
-          monetary_unit_code: :monetary_unit_code,
-        ).where("
+          monetary_unit_code: :monetary_unit_code,).where("
           monetary_units.monetary_unit_code ilike ? OR
           monetary_unit_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       scope.order(Sequel.asc(:monetary_units__monetary_unit_code))
@@ -55,7 +52,7 @@ class MonetaryUnit < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     json_mapping
   end
 end

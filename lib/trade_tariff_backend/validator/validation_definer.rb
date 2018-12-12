@@ -45,7 +45,7 @@ module TradeTariffBackend
         validation_class_for(validation_type).new(identifiers, description, options.merge!(validation_options: validation_options))
       end
 
-      private
+    private
 
       def validation_class_for(type)
         begin

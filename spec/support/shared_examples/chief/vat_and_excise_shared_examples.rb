@@ -369,8 +369,8 @@ shared_examples_for "Unsupported Scenario 3: Insert and update in same daily fil
 
   it 'creates measure for 0101010100 with duty rate of 15%' do
     expect(Measure.count).to eq 1
-    m = Measure.where({validity_start_date: DateTime.parse("2008-03-01 00:00:00"),
-                       goods_nomenclature_item_id: "0101010100"}).take
+    m = Measure.where(validity_start_date: DateTime.parse("2008-03-01 00:00:00"),
+                       goods_nomenclature_item_id: "0101010100").take
     expect(m.measure_components.first.duty_amount).to eq 15
   end
 end

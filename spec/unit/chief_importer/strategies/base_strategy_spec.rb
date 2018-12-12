@@ -4,7 +4,7 @@ require 'chief_importer'
 require 'chief_importer/strategies/base_strategy'
 
 describe ChiefImporter::Strategies::BaseStrategy do
-  let(:operations)     { ['X','U','I'] }
+  let(:operations)     { %w[X U I] }
   let(:timestamp)      { Time.now }
   let(:operation)      { operations.sample }
   let(:args)           { [timestamp, operation] }

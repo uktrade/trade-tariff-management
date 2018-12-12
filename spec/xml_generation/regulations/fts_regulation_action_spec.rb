@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "FtsRegulationAction XML generation" do
-
   let(:db_record) do
     create(:fts_regulation_action)
   end
@@ -11,11 +10,11 @@ describe "FtsRegulationAction XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :fts_regulation_role,
-      :fts_regulation_id,
-      :stopped_regulation_role,
-      :stopped_regulation_id
+    %i[
+      fts_regulation_role
+      fts_regulation_id
+      stopped_regulation_role
+      stopped_regulation_id
     ]
   end
 

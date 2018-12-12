@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "QuotaUnblockingEvent XML generation" do
-
   let(:db_record) do
     create(:quota_unblocking_event)
   end
@@ -11,10 +10,10 @@ describe "QuotaUnblockingEvent XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :quota_definition_sid,
-      :occurrence_timestamp,
-      :unblocking_date
+    %i[
+      quota_definition_sid
+      occurrence_timestamp
+      unblocking_date
     ]
   end
 

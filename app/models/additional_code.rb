@@ -1,5 +1,4 @@
 class AdditionalCode < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
   include OwnValidityPeriod
@@ -12,10 +11,10 @@ class AdditionalCode < Sequel::Model
 
   many_to_many :additional_code_descriptions, join_table: :additional_code_description_periods,
                                               left_key: :additional_code_sid,
-                                              right_key: [:additional_code_description_period_sid,
-                                                          :additional_code_sid] do |ds|
-                                                ds.with_actual(AdditionalCodeDescriptionPeriod)
-                                              end
+                                              right_key: %i[additional_code_description_period_sid
+                                                            additional_code_sid] do |ds|
+    ds.with_actual(AdditionalCodeDescriptionPeriod)
+  end
 
   dataset_module do
     def q_search(filter_ops)
@@ -27,12 +26,10 @@ class AdditionalCode < Sequel::Model
         scope = scope.join_table(:inner,
           :additional_code_descriptions,
           additional_code_type_id: :additional_code_type_id,
-          additional_code: :additional_code
-        ).where("
+          additional_code: :additional_code).where("
           additional_codes.additional_code ilike ? OR
           additional_code_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       if filter_ops[:additional_code_type_id].present?
@@ -44,12 +41,12 @@ class AdditionalCode < Sequel::Model
       scope.order(Sequel.asc(:additional_codes__additional_code))
     end
 
-    def by_code(code=nil)
+    def by_code(code = nil)
       full_code = code.to_s
                       .delete(" ")
                       .downcase
 
-      return nil unless (full_code.present? && full_code.size == 4)
+      return nil unless full_code.present? && full_code.size == 4
 
       additional_code_type_id = full_code[0]
       additional_code = full_code[1..-1]
@@ -105,7 +102,7 @@ class AdditionalCode < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       additional_code_sid: additional_code_sid,
       additional_code: additional_code,

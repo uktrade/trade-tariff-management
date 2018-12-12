@@ -3,32 +3,35 @@ module Chief
                                                            order_more(Sequel.asc(:msr_type)).
                                                            order_more(Sequel.asc(:tty_code)).
                                                            order_more(Sequel.asc(:fe_tsmp)))
-    set_primary_key [:msrgp_code,
-                     :msr_type,
-                     :tty_code,
-                     :tar_msr_no,
-                     :cngp_code,
-                     :cntry_disp,
-                     :cntry_orig,
-                     :fe_tsmp,
-                     :amend_indicator]
+    set_primary_key %i[msrgp_code
+                       msr_type
+                       tty_code
+                       tar_msr_no
+                       cngp_code
+                       cntry_disp
+                       cntry_orig
+                       fe_tsmp
+                       amend_indicator]
 
-    one_to_many :measure_type_conds, key: [:measure_group_code, :measure_type],
-                                     primary_key: [:msrgp_code, :msr_type],
+    one_to_many :measure_type_conds, key: %i[measure_group_code measure_type],
+                                     primary_key: %i[msrgp_code msr_type],
                                      class_name: 'Chief::MeasureTypeCond'
 
 
-    one_to_one :measure_type_adco, key: [:measure_group_code, :measure_type, :tax_type_code],
-                                   primary_key: [:msrgp_code, :msr_type, :tty_code],
+    one_to_one :measure_type_adco, key: %i[measure_group_code measure_type tax_type_code],
+                                   primary_key: %i[msrgp_code msr_type tty_code],
                                    class_name: 'Chief::MeasureTypeAdco'
 
-    one_to_one :duty_expression, key: [:adval1_rate, :adval2_rate, :spfc1_rate, :spfc2_rate],
-                                 primary_key: [:adval1_rate_key, :adval2_rate_key, :spfc1_rate_key, :spfc2_rate_key],
+    one_to_one :duty_expression, key: %i[adval1_rate adval2_rate spfc1_rate spfc2_rate],
+                                 primary_key: %i[adval1_rate_key adval2_rate_key spfc1_rate_key spfc2_rate_key],
                                  class_name: 'Chief::DutyExpression'
 
     def adval1_rate_key; adval1_rate.present?; end
+
     def adval2_rate_key; adval2_rate.present?; end
+
     def spfc1_rate_key; spfc1_rate.present?; end
+
     def spfc2_rate_key; spfc2_rate.present?; end
 
     dataset_module do
@@ -66,7 +69,7 @@ module Chief
     #
     # More info https://www.pivotaltracker.com/story/show/59551288
     def duty_type_components
-      if duty_type == '30' && tty_code.to_s.in?(['570', '551'])
+      if duty_type == '30' && tty_code.to_s.in?(%w[570 551])
         [
           MeasureComponent.new do |mc|
             mc.duty_amount = 0.0

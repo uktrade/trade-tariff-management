@@ -1,29 +1,25 @@
 require 'rails_helper'
 
 describe "Measure Form APIs: Quota order numbers", type: :request do
-
   include_context "form_apis_base_context"
 
   let(:actual_quota_order_number_1) do
     create(:quota_order_number,
       quota_order_number_id: "111111",
-      validity_start_date: 1.year.ago
-    )
+      validity_start_date: 1.year.ago)
   end
 
   let(:actual_quota_order_number_2) do
     create(:quota_order_number,
       quota_order_number_id: "222222",
-      validity_start_date: 1.year.ago
-    )
+      validity_start_date: 1.year.ago)
   end
 
   let(:not_actual_quota_order_number_3) do
     create(:quota_order_number,
       quota_order_number_id: "333333",
       validity_start_date: 1.year.ago,
-      validity_end_date: 3.months.ago
-    )
+      validity_end_date: 3.months.ago)
   end
 
   context "Index" do
@@ -57,9 +53,9 @@ describe "Measure Form APIs: Quota order numbers", type: :request do
 
   private
 
-    def expecting_quota_order_number_in_result(position, quota_order_number)
-      expect(collection[position]["quota_order_number_id"]).to be_eql(
-        quota_order_number.quota_order_number_id
-      )
-    end
+  def expecting_quota_order_number_in_result(position, quota_order_number)
+    expect(collection[position]["quota_order_number_id"]).to be_eql(
+      quota_order_number.quota_order_number_id
+    )
+  end
 end

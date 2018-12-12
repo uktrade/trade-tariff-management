@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "NomenclatureGroupMembership XML generation" do
-
   let(:db_record) do
     create(:nomenclature_group_membership, :xml)
   end
@@ -11,14 +10,14 @@ describe "NomenclatureGroupMembership XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :goods_nomenclature_sid,
-      :goods_nomenclature_group_type,
-      :goods_nomenclature_group_id,
-      :validity_start_date,
-      :validity_end_date,
-      :goods_nomenclature_item_id,
-      :productline_suffix
+    %i[
+      goods_nomenclature_sid
+      goods_nomenclature_group_type
+      goods_nomenclature_group_id
+      validity_start_date
+      validity_end_date
+      goods_nomenclature_item_id
+      productline_suffix
     ]
   end
 

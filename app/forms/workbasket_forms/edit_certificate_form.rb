@@ -1,6 +1,5 @@
 module WorkbasketForms
   class EditCertificateForm
-
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 

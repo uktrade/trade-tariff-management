@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "ExportRefundNomenclatureDescriptionPeriod XML generation" do
-
   let(:db_record) do
     create(:export_refund_nomenclature_description_period, :xml)
   end
@@ -11,14 +10,14 @@ describe "ExportRefundNomenclatureDescriptionPeriod XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :export_refund_nomenclature_description_period_sid,
-      :export_refund_nomenclature_sid,
-      :validity_start_date,
-      :goods_nomenclature_item_id,
-      :additional_code_type,
-      :export_refund_code,
-      :productline_suffix
+    %i[
+      export_refund_nomenclature_description_period_sid
+      export_refund_nomenclature_sid
+      validity_start_date
+      goods_nomenclature_item_id
+      additional_code_type
+      export_refund_code
+      productline_suffix
     ]
   end
 

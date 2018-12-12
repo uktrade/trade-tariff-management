@@ -1,25 +1,24 @@
 require 'rails_helper'
 
 describe "Measure Form APIs: Footnotes", type: :request do
-
   include_context "form_apis_base_context"
 
   let(:actual_footnote_wr) do
     add_footnote({
       footnote_id: "333",
       footnote_type_id: "WR",
-      validity_start_date: 1.year.ago},
-      "Wine reference footnote"
-    )
+      validity_start_date: 1.year.ago
+ },
+      "Wine reference footnote")
   end
 
   let(:actual_footnote_nc) do
     add_footnote({
       footnote_id: "444",
       footnote_type_id: "NC",
-      validity_start_date: 1.year.ago},
-      "Combined Nomenclature footnote"
-    )
+      validity_start_date: 1.year.ago
+ },
+      "Combined Nomenclature footnote")
   end
 
   let(:not_actual_footnote_c) do
@@ -27,9 +26,9 @@ describe "Measure Form APIs: Footnotes", type: :request do
       footnote_id: "555",
       footnote_type_id: "TM",
       validity_start_date: 1.year.ago,
-      validity_end_date: 3.months.ago},
-      "Taric Measure footnote"
-    )
+      validity_end_date: 3.months.ago
+ },
+      "Taric Measure footnote")
   end
 
   context "Index" do
@@ -86,26 +85,26 @@ describe "Measure Form APIs: Footnotes", type: :request do
 
   private
 
-    def add_footnote(ops={}, description)
-      ft = create(:footnote, ops)
-      add_description(ft, description)
+  def add_footnote(ops = {}, description)
+    ft = create(:footnote, ops)
+    add_description(ft, description)
 
-      ft
-    end
+    ft
+  end
 
-    def add_description(footnote, description)
-      desc_record = FootnoteDescription.actual.where(
-        footnote_type_id: footnote.footnote_type_id,
-        footnote_id: footnote.footnote_id
-      ).first
+  def add_description(footnote, description)
+    desc_record = FootnoteDescription.actual.where(
+      footnote_type_id: footnote.footnote_type_id,
+      footnote_id: footnote.footnote_id
+    ).first
 
-      desc_record.description = description
-      desc_record.save
-    end
+    desc_record.description = description
+    desc_record.save
+  end
 
-    def expecting_footnote_in_result(position, footnote)
-      expect(collection[position]["footnote_id"]).to be_eql(footnote.footnote_id)
-      expect(collection[position]["footnote_type_id"]).to be_eql(footnote.footnote_type_id)
-      expect(collection[position]["description"]).to be_eql(footnote.description)
-    end
+  def expecting_footnote_in_result(position, footnote)
+    expect(collection[position]["footnote_id"]).to be_eql(footnote.footnote_id)
+    expect(collection[position]["footnote_type_id"]).to be_eql(footnote.footnote_type_id)
+    expect(collection[position]["description"]).to be_eql(footnote.description)
+  end
 end

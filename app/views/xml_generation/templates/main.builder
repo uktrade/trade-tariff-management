@@ -10,23 +10,28 @@ xml.tag!("env:envelope", xmlns: "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
           message_node.tag!("oub:transmission", "xmlns:oub" => "urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0",
                                            "xmlns:env" => "urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0") do |transmission_node|
             transmission_node.tag!("oub:record") do |record|
-              record.tag!("oub:transaction.id") do record
+              record.tag!("oub:transaction.id") do
+                record
                 xml_data_item(record, transaction.node_id)
               end
 
-              record.tag!("oub:record.code") do record
+              record.tag!("oub:record.code") do
+                record
                 xml_data_item(record, message.record_code)
               end
 
-              record.tag!("oub:subrecord.code") do record
+              record.tag!("oub:subrecord.code") do
+                record
                 xml_data_item(record, message.subrecord_code)
               end
 
-              record.tag!("oub:record.sequence.number") do record
+              record.tag!("oub:record.sequence.number") do
+                record
                 xml_data_item(record, self.record_sequence_number)
               end
 
-              record.tag!("oub:update.type") do record
+              record.tag!("oub:update.type") do
+                record
                 xml_data_item(record, message.update_type)
               end
 

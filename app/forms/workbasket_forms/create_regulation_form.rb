@@ -1,6 +1,5 @@
 module WorkbasketForms
   class CreateRegulationForm < ::WorkbasketForms::BaseForm
-
     attr_accessor :role,
                   :base_regulation_role,
                   :antidumping_regulation_role,
@@ -17,7 +16,7 @@ module WorkbasketForms
 
     def regulation_roles
       roles = RegulationRoleTypeDescription.all.map do |role|
-        [ role.regulation_role_type_id, role.description ]
+        [role.regulation_role_type_id, role.description]
       end
       Hash[roles]
     end
@@ -40,6 +39,5 @@ module WorkbasketForms
         "2" => "Partially Replaced"
       }
     end
-
   end
 end

@@ -23,7 +23,7 @@ module WorkbasketHelpers
 
     def already_end_dated?
       validity_end_date.present? &&
-      validity_end_date <= Date.today.midnight
+        validity_end_date <= Date.today.midnight
     end
   end
 end

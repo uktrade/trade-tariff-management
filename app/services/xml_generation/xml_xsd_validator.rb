@@ -8,7 +8,6 @@ require "nokogiri"
 
 module XmlGeneration
   class XmlXsdValidator
-
     attr_reader :errors,
                 :sxd_schema,
                 :xml_content

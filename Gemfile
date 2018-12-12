@@ -94,6 +94,7 @@ group :development do
   gem "foreman"
   gem "letter_opener"
   gem "byebug"
+  gem "govuk-lint"
 end
 
 group :development, :test do

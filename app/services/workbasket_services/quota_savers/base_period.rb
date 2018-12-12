@@ -1,7 +1,6 @@
 module WorkbasketServices
   module QuotaSavers
     class BasePeriod < ::WorkbasketServices::Base
-
       attr_accessor :saver_class,
                     :attrs_parser,
                     :all_settings,
@@ -49,83 +48,83 @@ module WorkbasketServices
         end
       end
 
-      private
+    private
 
-        def description
-          all_settings['quota_description']
-        end
+      def description
+        all_settings['quota_description']
+      end
 
-        def source(key)
-          section_ops[key] == "true" ? balance_ops : section_ops
-        end
+      def source(key)
+        section_ops[key] == "true" ? balance_ops : section_ops
+      end
 
-        def critical
-          source("criticality_each_period")["critical"] == "true" ? "Y" : "N"
-        end
+      def critical
+        source("criticality_each_period")["critical"] == "true" ? "Y" : "N"
+      end
 
-        def critical_threshold
-          source("criticality_each_period")["criticality_threshold"].to_i
-        end
+      def critical_threshold
+        source("criticality_each_period")["criticality_threshold"].to_i
+      end
 
-        def duty_expression_list
-          source("duties_each_period")["duty_expressions"]
-        end
+      def duty_expression_list
+        source("duties_each_period")["duty_expressions"]
+      end
 
-        def measurement_unit_code
-          section_ops["measurement_unit_code"]
-        end
+      def measurement_unit_code
+        section_ops["measurement_unit_code"]
+      end
 
-        def measurement_unit_qualifier_code
-          section_ops["measurement_unit_qualifier_code"]
-        end
+      def measurement_unit_qualifier_code
+        section_ops["measurement_unit_qualifier_code"]
+      end
 
-        def definition_ops
-          {
-            volume: balance,
-            initial_volume: balance,
-            validity_start_date: start_point,
-            validity_end_date: end_point,
-            critical_state: critical,
-            critical_threshold: critical_threshold,
-            description: description,
-            quota_order_number_id: order_number.quota_order_number_id,
-            quota_order_number_sid: order_number.quota_order_number_sid,
-            measurement_unit_code: measurement_unit_code,
-            measurement_unit_qualifier_code: measurement_unit_qualifier_code,
-            workbasket_type_of_quota: section_ops['type'],
-            maximum_precision: all_settings["quota_precision"]
-          }
-        end
+      def definition_ops
+        {
+          volume: balance,
+          initial_volume: balance,
+          validity_start_date: start_point,
+          validity_end_date: end_point,
+          critical_state: critical,
+          critical_threshold: critical_threshold,
+          description: description,
+          quota_order_number_id: order_number.quota_order_number_id,
+          quota_order_number_sid: order_number.quota_order_number_sid,
+          measurement_unit_code: measurement_unit_code,
+          measurement_unit_qualifier_code: measurement_unit_qualifier_code,
+          workbasket_type_of_quota: section_ops['type'],
+          maximum_precision: all_settings["quota_precision"]
+        }
+      end
 
-        def add_measures_for_definition!
-          saver_class.candidates.map do |code|
-            attrs_parser.instance_variable_set(:@start_date, start_point)
-            attrs_parser.instance_variable_set(:@end_date, end_point)
+      def add_measures_for_definition!
+        saver_class.candidates.map do |code|
+          attrs_parser.instance_variable_set(:@start_date, start_point)
+          attrs_parser.instance_variable_set(:@end_date, end_point)
 
-            if period_measure_components.present?
-              attrs_parser.instance_variable_set(
-                :@measure_components,
-                period_measure_components
-              )
-            end
-
-            saver_class.send(:candidate_validation_errors, code)
-          end
-        end
-
-        def period_measure_components
-          measure_components = {}
-
-          duty_expression_list.select do |k, option|
-            option["duty_expression_id"].present?
-          end.map do |k, duty_expression_ops|
-            measure_components[k] = ActiveSupport::HashWithIndifferentAccess.new(
-              duty_expression_ops
+          if period_measure_components.present?
+            attrs_parser.instance_variable_set(
+              :@measure_components,
+              period_measure_components
             )
           end
 
-          measure_components
+          saver_class.send(:candidate_validation_errors, code)
         end
+      end
+
+      def period_measure_components
+        measure_components = {}
+
+        duty_expression_list.select do |_k, option|
+          option["duty_expression_id"].present?
+        end.map do |k, duty_expression_ops|
+          measure_components[k] = ActiveSupport::HashWithIndifferentAccess.new(
+            duty_expression_ops
+          )
+        end
+
+        measure_components
+      end
     end
   end
 end

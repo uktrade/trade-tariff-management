@@ -33,10 +33,11 @@ describe TariffSynchronizer::Logger, truncation: true do
   end
   describe "#rollback_lock_error" do
     before {
-       expect(TradeTariffBackend).to receive(
-        :with_redis_lock).and_raise(RedisLock::LockTimeout)
+      expect(TradeTariffBackend).to receive(
+        :with_redis_lock
+).and_raise(RedisLock::LockTimeout)
 
-       TariffSynchronizer.rollback(Date.today, true)
+      TariffSynchronizer.rollback(Date.today, true)
     }
 
     it 'logs a warn event' do
@@ -47,10 +48,11 @@ describe TariffSynchronizer::Logger, truncation: true do
 
   describe "#apply_lock_error" do
     before {
-       expect(TradeTariffBackend).to receive(
-        :with_redis_lock).and_raise(RedisLock::LockTimeout)
+      expect(TradeTariffBackend).to receive(
+        :with_redis_lock
+).and_raise(RedisLock::LockTimeout)
 
-       TariffSynchronizer.apply
+      TariffSynchronizer.apply
     }
 
     it 'logs a warn event' do

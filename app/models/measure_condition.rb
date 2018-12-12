@@ -1,5 +1,4 @@
 class MeasureCondition < Sequel::Model
-
   include Formatter
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
@@ -19,8 +18,8 @@ class MeasureCondition < Sequel::Model
     ds.with_actual(MeasureAction)
   end
 
-  one_to_one :certificate, key: [:certificate_type_code, :certificate_code],
-                           primary_key: [:certificate_type_code, :certificate_code] do |ds|
+  one_to_one :certificate, key: %i[certificate_type_code certificate_code],
+                           primary_key: %i[certificate_type_code certificate_code] do |ds|
     ds.with_actual(Certificate)
   end
 
@@ -75,9 +74,9 @@ class MeasureCondition < Sequel::Model
 
   def short_abbreviation
     res = if component_sequence_number.present?
-      [ "#{condition_code}#{component_sequence_number}" ]
-    else
-      [ condition_code ]
+            ["#{condition_code}#{component_sequence_number}"]
+          else
+            [condition_code]
     end
 
     cert_info = document_code.strip
@@ -102,13 +101,13 @@ class MeasureCondition < Sequel::Model
   end
 
   def requirement_duty_expression
-    RequirementDutyExpressionFormatter.format({
+    RequirementDutyExpressionFormatter.format(
       duty_amount: condition_duty_amount,
       monetary_unit: condition_monetary_unit_code,
       monetary_unit_abbreviation: monetary_unit_abbreviation,
       measurement_unit: measurement_unit_description,
       formatted_measurement_unit_qualifier: formatted_measurement_unit_qualifier
-    })
+    )
   end
 
   def action
@@ -139,7 +138,7 @@ class MeasureCondition < Sequel::Model
     "10".freeze
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       original_measure_condition_code: original_measure_condition_code,
       action_code: action_code,

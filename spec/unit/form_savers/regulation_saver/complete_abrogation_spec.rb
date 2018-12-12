@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Saving of Complete abrogation regulation" do
-
   include_context "regulation_saver_base_context"
   include_context "abrogation_general_regulation_context"
 

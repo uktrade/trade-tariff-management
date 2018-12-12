@@ -1,13 +1,13 @@
 FactoryGirl.define do
   factory :mfcm, class: Chief::Mfcm do
-    amend_indicator { ["I", "U", "X"].sample }
+    amend_indicator { %w[I U X].sample }
     fe_tsmp { DateTime.now.ago(10.years) }
     msrgp_code { ChiefTransformer::CandidateMeasure::RESTRICTION_GROUP_CODES.sample }
-    msr_type { (ChiefTransformer::CandidateMeasure::NATIONAL_MEASURE_TYPES - ['VTA','VTE', 'VTS', 'VTZ', 'EXA', 'EXB', 'EXC', 'EXD']).sample}
+    msr_type { (ChiefTransformer::CandidateMeasure::NATIONAL_MEASURE_TYPES - %w[VTA VTE VTS VTZ EXA EXB EXC EXD]).sample }
     tty_code { Forgery(:basic).text(exactly: 3) }
     le_tsmp  { nil }
     audit_tsmp { nil }
-    cmdty_code { 10.times.map{ Random.rand(9) }.join }
+    cmdty_code { 10.times.map { Random.rand(9) }.join }
 
     transient do
       measure_type_id { ChiefTransformer::CandidateMeasure::NATIONAL_MEASURE_TYPES.sample }
@@ -36,7 +36,7 @@ FactoryGirl.define do
 
     trait :with_vat_group do
       msrgp_code "VT"
-      msr_type { ['A','E','S','Z'].sample }
+      msr_type { %w[A E S Z].sample }
     end
 
     trait :with_non_vat_group do
@@ -44,7 +44,7 @@ FactoryGirl.define do
     end
 
     trait :with_geographical_area do
-      after(:create) { |mfcm|
+      after(:create) { |_mfcm|
         FactoryGirl.create :geographical_area, :fifteen_years,
                            geographical_area_id: "1011"
       }
@@ -109,11 +109,11 @@ FactoryGirl.define do
                                                tax_type_code: "591",
                                                measure_type_id: "",
                                                adtnl_cd_type_id: 'V')
-         FactoryGirl.create(:chief_duty_expression, duty_expression_id_adval1: Forgery(:basic).number,
-                                                    adval1_rate: tame.adval1_rate,
-                                                    adval2_rate: tame.adval2_rate,
-                                                    spfc1_rate: tame.spfc1_rate,
-                                                    spfc2_rate: tame.spfc2_rate)
+        FactoryGirl.create(:chief_duty_expression, duty_expression_id_adval1: Forgery(:basic).number,
+                                                   adval1_rate: tame.adval1_rate,
+                                                   adval2_rate: tame.adval2_rate,
+                                                   spfc1_rate: tame.spfc1_rate,
+                                                   spfc2_rate: tame.spfc2_rate)
       }
     end
 
@@ -216,20 +216,20 @@ FactoryGirl.define do
     end
 
     trait :with_chief_measure_type_mapping do
-      after(:create) { |mfcm, evaluator|
+      after(:create) { |_mfcm, evaluator|
         FactoryGirl.create(:chief_measure_type_footnote, measure_type_id: evaluator.measure_type_id)
       }
     end
   end
 
   factory :tame, class: Chief::Tame do
-    amend_indicator { ["I", "U", "X"].sample }
-    fe_tsmp { DateTime.now.ago(10.years)  }
+    amend_indicator { %w[I U X].sample }
+    fe_tsmp { DateTime.now.ago(10.years) }
     msrgp_code { Forgery(:basic).text(exactly: 2) }
     msr_type { Forgery(:basic).text(exactly: 3) }
     tty_code { Forgery(:basic).text(exactly: 3) }
     adval_rate { nil }
-    le_tsmp  { nil }
+    le_tsmp { nil }
     audit_tsmp { nil }
 
     trait :prohibition do
@@ -246,8 +246,8 @@ FactoryGirl.define do
   end
 
   factory :tamf, class: Chief::Tamf do
-    amend_indicator { ["I", "U", "X"].sample }
-    fe_tsmp { DateTime.now.ago(10.years)  }
+    amend_indicator { %w[I U X].sample }
+    fe_tsmp { DateTime.now.ago(10.years) }
     msrgp_code { Forgery(:basic).text(exactly: 2) }
     msr_type { Forgery(:basic).text(exactly: 3) }
     tty_code { Forgery(:basic).text(exactly: 3) }
@@ -297,7 +297,7 @@ FactoryGirl.define do
     country_grp_region { Forgery(:basic).text(exactly: 4).upcase } # TARIC code
 
     trait :with_exclusions do
-      country_exclusions { "#{Forgery(:basic).text(exactly: 2).upcase },#{Forgery(:basic).text(exactly: 2).upcase }" }
+      country_exclusions { "#{Forgery(:basic).text(exactly: 2).upcase},#{Forgery(:basic).text(exactly: 2).upcase}" }
     end
   end
 
@@ -331,9 +331,9 @@ FactoryGirl.define do
   factory :comm, class: Chief::Comm do
     fe_tsmp { Date.today.ago(2.years) }
     le_tsmp { nil }
-    cmdty_code    { 10.times.map{ Random.rand(9) }.join }
-    uoq_code_cdu2 { 3.times.map{ Random.rand(9) }.join }
-    uoq_code_cdu3 { 3.times.map{ Random.rand(9) }.join }
+    cmdty_code    { 10.times.map { Random.rand(9) }.join }
+    uoq_code_cdu2 { 3.times.map { Random.rand(9) }.join }
+    uoq_code_cdu3 { 3.times.map { Random.rand(9) }.join }
   end
 
   factory :tbl9, class: Chief::Tbl9 do

@@ -1,12 +1,11 @@
 module WorkbasketValueObjects
   module CreateCertificate
     class AttributesParser
-
       SIMPLE_OPS = %w(
         certificate_type_code
         certificate_code
         description
-      )
+      ).freeze
 
       attr_accessor :settings
 
@@ -55,4 +54,3 @@ module WorkbasketValueObjects
     end
   end
 end
-

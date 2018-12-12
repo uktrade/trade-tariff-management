@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'prorogation regulation', js: true do
-
   include_context 'create_regulation_base_context'
 
   let(:regulation_type) do
@@ -25,5 +24,4 @@ describe 'prorogation regulation', js: true do
   let(:filed_values) do
     required_filed_values
   end
-
 end

@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: regulation filter" do
-
   include_context "measures_search_base_context"
 
   let(:search_key) { "regulation" }
@@ -22,8 +21,7 @@ describe "Measure search: regulation filter" do
     set_searchable_jsonb_data!(
       create(:measure,
         measure_generating_regulation_id: "R1715780",
-        justification_regulation_id: "R5555555"
-      )
+        justification_regulation_id: "R5555555")
     )
   end
 
@@ -116,10 +114,10 @@ describe "Measure search: regulation filter" do
 
   private
 
-    def set_searchable_jsonb_data!(m)
-      m.set_searchable_data!
-      m.save
+  def set_searchable_jsonb_data!(m)
+    m.set_searchable_data!
+    m.save
 
-      m.reload
-    end
+    m.reload
+  end
 end

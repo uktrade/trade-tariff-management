@@ -1,6 +1,5 @@
 module Workbaskets
   class EditFootnoteSettings < Sequel::Model(:edit_footnotes_workbasket_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models

@@ -1,10 +1,14 @@
 require 'rails_helper'
 
 describe TimeMachine do
-  let!(:commodity1) { create :commodity, validity_start_date: Time.now.ago(1.day),
-                                         validity_end_date: Time.now.in(1.day)  }
-  let!(:commodity2) { create :commodity, validity_start_date: Time.now.ago(20.days),
-                                         validity_end_date: Time.now.ago(10.days) }
+  let!(:commodity1) {
+    create :commodity, validity_start_date: Time.now.ago(1.day),
+                                         validity_end_date: Time.now.in(1.day)
+  }
+  let!(:commodity2) {
+    create :commodity, validity_start_date: Time.now.ago(20.days),
+                                         validity_end_date: Time.now.ago(10.days)
+  }
 
   describe '.at' do
     it 'sets date to current date if argument is blank' do

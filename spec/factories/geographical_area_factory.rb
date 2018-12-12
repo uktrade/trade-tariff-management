@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  sequence(:geographical_area_sid) { |n| n}
-  sequence(:geographical_area_id)  { |n| n}
+  sequence(:geographical_area_sid) { |n| n }
+  sequence(:geographical_area_id)  { |n| n }
 
   factory :geographical_area do
     geographical_area_sid { generate(:geographical_area_sid) }
@@ -30,7 +30,7 @@ FactoryGirl.define do
       geographical_code { GeographicalArea::GEOGRAPHICAL_GROUP_CODE.dup }
     end
 
-    after(:build) { |geographical_area, evaluator|
+    after(:build) { |geographical_area, _evaluator|
       FactoryGirl.create(:geographical_area_description, :with_period,
                                                          geographical_area_id: geographical_area.geographical_area_id,
                                                          geographical_area_sid: geographical_area.geographical_area_sid,
@@ -83,7 +83,7 @@ FactoryGirl.define do
     end
 
     trait :xml do
-      language_id                               { "EN" }
+      language_id { "EN" }
     end
   end
 
@@ -94,7 +94,7 @@ FactoryGirl.define do
     validity_end_date                        { nil }
 
     trait :xml do
-      validity_end_date                      { Date.today.ago(1.years) }
+      validity_end_date { Date.today.ago(1.years) }
     end
   end
 end

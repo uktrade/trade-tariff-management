@@ -34,13 +34,12 @@ describe MeasureConditionComponent do
     let!(:measurement_unit) { create :measurement_unit }
     let!(:measurement_unit_qualifier) { create :measurement_unit_qualifier }
 
-    let!(:duty_expression)   do
+    let!(:duty_expression) do
       create(:duty_expression,
              duty_expression_id: "01",
              duty_amount_applicability_code: 1,
              monetary_unit_applicability_code: 1,
-             measurement_unit_applicability_code: 1
-            )
+             measurement_unit_applicability_code: 1)
     end
 
     let!(:duty_expression_description) { create :duty_expression_description, duty_expression_id: duty_expression.duty_expression_id }
@@ -178,7 +177,7 @@ describe MeasureConditionComponent do
         )
       end
 
-      let!(:duty_expression3)   do
+      let!(:duty_expression3) do
         create(
           :duty_expression,
           duty_expression_id: duty_expression_id3,
@@ -216,7 +215,7 @@ describe MeasureConditionComponent do
     end
 
     # "ME108: The same duty expression can only be used once within condition components of the same condition of the same measure. (i.e. it can be re-used in other conditions, no matter what condition type, of the same measure)"
-    it { should validate_uniqueness.of [:measure_condition_sid, :duty_expression_id] }
+    it { should validate_uniqueness.of %i[measure_condition_sid duty_expression_id] }
 
     describe "Flag 'amount' on duty expression is mandatory" do
       it "ME109: If the flag 'amount' on duty expression is 'mandatory' then an amount must be specified. If the flag is set to 'not permitted' then no amount may be entered." do
@@ -292,6 +291,5 @@ describe MeasureConditionComponent do
         expect(measure_condition_component.conformance_errors).to have_key(:ME111)
       end
     end
-
   end
 end

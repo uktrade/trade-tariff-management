@@ -1,7 +1,7 @@
 module TradeTariffBackend
   module Validations
     class GenericValidation
-      DEFAULT_OPERATIONS = [:create, :update, :destroy]
+      DEFAULT_OPERATIONS = %i[create update destroy].freeze
 
       attr_reader :identifiers, :description,
                   :options, :operations, :validation_block,
@@ -37,8 +37,8 @@ module TradeTariffBackend
 
       def relevant_for?(record)
         !options.has_key?(:if) ||
-         (options[:if].is_a?(Proc) &&
-          options[:if].call(record))
+          (options[:if].is_a?(Proc) &&
+           options[:if].call(record))
       end
 
       def to_s

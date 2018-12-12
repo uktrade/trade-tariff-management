@@ -1,6 +1,5 @@
 module AdditionalCodes
   class Search
-
     include ::Shared::Search
 
     ALLOWED_FILTERS = %w(
@@ -14,23 +13,23 @@ module AdditionalCodes
       author
       date_of
       last_updated_by
-    )
+    ).freeze
 
-    attr_reader *([:relation, :search_ops, :page] + ALLOWED_FILTERS)
+    attr_reader *(%i[relation search_ops page] + ALLOWED_FILTERS)
 
     def initialize(search_ops)
       @search_ops = search_ops
       @page = search_ops[:page] || 1
     end
 
-    def results(paginated_query=true)
+    def results(paginated_query = true)
       @relation = AllAdditionalCode.by_start_date_and_additional_code_sid_reverse
       @relation = relation.page(page) if paginated_query
       search_ops.select do |k, v|
         ALLOWED_FILTERS.include?(k.to_s) &&
-            v.present? &&
-            v[:enabled].present?
-      end.each do |k, v|
+          v.present? &&
+          v[:enabled].present?
+      end.each do |k, _v|
         instance_variable_set("@#{k}", search_ops[k])
         send("apply_#{k}_filter")
       end
@@ -54,31 +53,30 @@ module AdditionalCodes
       results(false).pluck(:additional_code_sid)
     end
 
-    private
+  private
 
     def apply_type_filter
       @relation = relation.operator_search_by_additional_code_type(
-          *query_ops(type)
+        *query_ops(type)
       )
     end
 
     def apply_code_filter
       @relation = relation.operator_search_by_code(
-          *query_ops(code)
+        *query_ops(code)
       )
     end
 
     def apply_workbasket_name_filter
       @relation = relation.operator_search_by_workbasket_name(
-          *query_ops(workbasket_name)
+        *query_ops(workbasket_name)
       )
     end
 
     def apply_description_filter
       @relation = relation.operator_search_by_description(
-          *query_ops(description)
+        *query_ops(description)
       )
     end
-
   end
 end

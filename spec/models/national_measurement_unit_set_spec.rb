@@ -5,9 +5,11 @@ describe NationalMeasurementUnitSet do
     let(:tbl1) { create :tbl9, :unoq }
     let(:tbl2) { create :tbl9, :unoq }
     let(:tbl3) { create :tbl9, :unoq }
-    let(:comm) { create :comm, uoq_code_cdu1: tbl1.tbl_code,
+    let(:comm) {
+      create :comm, uoq_code_cdu1: tbl1.tbl_code,
                                uoq_code_cdu2: tbl2.tbl_code,
-                               uoq_code_cdu3: tbl3.tbl_code }
+                               uoq_code_cdu3: tbl3.tbl_code
+    }
 
     let(:nmus) { NationalMeasurementUnitSet.where(cmdty_code: comm.cmdty_code).first }
 
@@ -16,7 +18,7 @@ describe NationalMeasurementUnitSet do
     end
 
     it 'should include national measurement units' do
-      expect(nmus.national_measurement_unit_set_units.all?{ |nmusu| nmusu.is_a?(NationalMeasurementUnit) }).to be_truthy
+      expect(nmus.national_measurement_unit_set_units.all? { |nmusu| nmusu.is_a?(NationalMeasurementUnit) }).to be_truthy
     end
 
     it 'should set first national measurement unit code/description to comm uoq_code_cdu1' do

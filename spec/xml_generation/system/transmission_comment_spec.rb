@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "TransmissionComment XML generation" do
-
   let(:db_record) do
     create(:transmission_comment)
   end
@@ -11,10 +10,10 @@ describe "TransmissionComment XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :comment_sid,
-      :language_id,
-      :comment_text
+    %i[
+      comment_sid
+      language_id
+      comment_text
     ]
   end
 

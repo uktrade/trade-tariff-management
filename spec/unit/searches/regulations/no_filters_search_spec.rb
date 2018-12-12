@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Regulations search: No filters" do
-
   include_context "regulations_search_base_context"
 
   it "should filter" do

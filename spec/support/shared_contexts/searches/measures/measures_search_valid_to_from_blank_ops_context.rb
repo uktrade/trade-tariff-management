@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_context "measures_search_valid_to_from_blank_ops_context" do
-
   describe "Invalid Search" do
     it "should not filter if value option is blank" do
       res = search_results(

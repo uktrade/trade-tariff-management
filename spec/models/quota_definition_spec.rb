@@ -149,7 +149,7 @@ describe QuotaDefinition do
         it "should not pass validation" do
           quota_order_number = quota_definition.quota_order_number
           quota_order_number.validity_start_date = quota_definition.validity_start_date - 5.years
-          quota_order_number.validity_end_date =  quota_definition.validity_start_date - 4.years
+          quota_order_number.validity_end_date = quota_definition.validity_start_date - 4.years
           quota_order_number.save
 
           expect(quota_definition).to_not be_conformant
@@ -158,7 +158,6 @@ describe QuotaDefinition do
       end
 
       describe %(QD8: The validity period of the monetary unit code must span the validity period of the quota definition.) do
-
         it "should pass validation" do
           expect(quota_definition).to be_conformant
           expect(quota_definition.conformance_errors).to be_empty
@@ -167,7 +166,7 @@ describe QuotaDefinition do
         it "should not pass validation" do
           monetary_unit = quota_definition.monetary_unit
           monetary_unit.validity_start_date = quota_definition.validity_start_date - 5.years
-          monetary_unit.validity_end_date =  quota_definition.validity_start_date - 4.years
+          monetary_unit.validity_end_date = quota_definition.validity_start_date - 4.years
           monetary_unit.save
 
           expect(quota_definition).to_not be_conformant
@@ -204,7 +203,7 @@ describe QuotaDefinition do
         it "should not pass validation" do
           measurement_unit = quota_definition.measurement_unit
           measurement_unit.validity_start_date = quota_definition.validity_start_date - 5.years
-          measurement_unit.validity_end_date =  quota_definition.validity_start_date - 4.years
+          measurement_unit.validity_end_date = quota_definition.validity_start_date - 4.years
           measurement_unit.save
 
           expect(quota_definition).to_not be_conformant
@@ -221,7 +220,7 @@ describe QuotaDefinition do
         it "should not pass validation" do
           measurement_unit_qualifier = quota_definition.measurement_unit_qualifier
           measurement_unit_qualifier.validity_start_date = quota_definition.validity_start_date - 5.years
-          measurement_unit_qualifier.validity_end_date =  quota_definition.validity_start_date - 4.years
+          measurement_unit_qualifier.validity_end_date = quota_definition.validity_start_date - 4.years
           measurement_unit_qualifier.save
 
           expect(quota_definition).to_not be_conformant

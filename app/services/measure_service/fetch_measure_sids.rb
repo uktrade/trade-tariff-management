@@ -1,11 +1,10 @@
 module MeasureService
   class FetchMeasureSids
-
     attr_accessor :search_code,
                   :selection_type,
                   :measure_sids
 
-    def initialize(params={})
+    def initialize(params = {})
       @search_code = params[:search_code].gsub(
         "_SM_", ::MeasureService::TrackMeasureSids::CACHE_KEY_SEPARATOR
       )
@@ -30,10 +29,10 @@ module MeasureService
       end
     end
 
-    private
+  private
 
-      def all_measure_sids
-        Rails.cache.read(search_code)
-      end
+    def all_measure_sids
+      Rails.cache.read(search_code)
+    end
   end
 end

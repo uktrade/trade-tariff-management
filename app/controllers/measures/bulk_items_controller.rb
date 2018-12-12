@@ -1,6 +1,5 @@
 module Measures
   class BulkItemsController < Measures::BulksBaseController
-
     before_action :require_to_be_workbasket_owner!, only: [
       :remove_items
     ]

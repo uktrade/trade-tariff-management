@@ -1,5 +1,4 @@
 class GeographicalAreaSearchForm
-
   extend ActiveModel::Naming
   include ActiveModel::Conversion
   include ActiveModel::Validations
@@ -8,7 +7,7 @@ class GeographicalAreaSearchForm
     code_country
     code_region
     code_group
-  )
+  ).freeze
 
   ALLOWED_FILTERS = %w(
     q
@@ -17,7 +16,7 @@ class GeographicalAreaSearchForm
     code
   ) + CODE_KEYS
 
-  ALLOWED_TYPE_VALUES = ["0", "1", "2"]
+  ALLOWED_TYPE_VALUES = %w[0 1 2].freeze
 
   attr_accessor :q,
                 :start_date,
@@ -76,12 +75,12 @@ class GeographicalAreaSearchForm
     res
   end
 
-  private
+private
 
   def country_region_and_group_are_blank?
     code_filter_value(code_country).blank? &&
-    code_filter_value(code_region).blank? &&
-    code_filter_value(code_group).blank?
+      code_filter_value(code_region).blank? &&
+      code_filter_value(code_group).blank?
   end
 
   def validate_start_date
@@ -122,9 +121,9 @@ class GeographicalAreaSearchForm
     parsing_code = code_val.to_s
 
     parsing_code.present? &&
-    (
-      parsing_code == 'true' ||
-      ALLOWED_TYPE_VALUES.include?(parsing_code)
-    )
+      (
+        parsing_code == 'true' ||
+        ALLOWED_TYPE_VALUES.include?(parsing_code)
+      )
   end
 end

@@ -1,6 +1,5 @@
 module WorkbasketScripts
   class SetPublishedStatusForImportedData
-
     class << self
       def run
         target_tables.map do |table_name|
@@ -16,7 +15,7 @@ module WorkbasketScripts
         end
       end
 
-      private
+    private
 
       def target_tables
         Sequel::Model.db.fetch(target_tables_sql).all.map do |el|

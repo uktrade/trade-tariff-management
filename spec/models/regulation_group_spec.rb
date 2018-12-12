@@ -9,7 +9,7 @@ describe RegulationGroup do
 
     describe 'RG2' do
       let!(:regulation_group) { create :regulation_group }
-      let!(:base_regulation)  { create :base_regulation, regulation_group_id: regulation_group.regulation_group_id}
+      let!(:base_regulation)  { create :base_regulation, regulation_group_id: regulation_group.regulation_group_id }
 
       before {
         regulation_group.destroy

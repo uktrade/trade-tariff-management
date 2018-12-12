@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "GoodsNomenclatureOrigin XML generation" do
-
   let(:db_record) do
     create(:goods_nomenclature_origin)
   end
@@ -11,12 +10,12 @@ describe "GoodsNomenclatureOrigin XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :goods_nomenclature_sid,
-      :derived_goods_nomenclature_item_id,
-      :derived_productline_suffix,
-      :goods_nomenclature_item_id,
-      :productline_suffix
+    %i[
+      goods_nomenclature_sid
+      derived_goods_nomenclature_item_id
+      derived_productline_suffix
+      goods_nomenclature_item_id
+      productline_suffix
     ]
   end
 

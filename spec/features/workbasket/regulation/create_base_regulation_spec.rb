@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'base regulation', js: true do
-
   include_context 'create_regulation_base_context'
 
   let(:regulation_type) do
@@ -20,7 +19,7 @@ describe 'base regulation', js: true do
     base_required_filed_values.
         concat([
                    { name: 'Start date', value: validity_start_date, type: :date },
-                   {name: 'Specify the regulation group', value: regulation_group.regulation_group_id, type: :select},
+                   { name: 'Specify the regulation group', value: regulation_group.regulation_group_id, type: :select },
                ])
   end
 
@@ -31,5 +30,4 @@ describe 'base regulation', js: true do
                    { name: 'Effective end date', value: effective_end_date, type: :date },
                ])
   end
-
 end

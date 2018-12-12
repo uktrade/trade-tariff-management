@@ -1,7 +1,6 @@
 module WorkbasketInteractions
   module EditQuota
     class SettingsExtractor
-
       attr_reader :quota_order_number,
                   :quota_definition,
                   :quota_definitions,
@@ -57,7 +56,7 @@ module WorkbasketInteractions
         }
       end
 
-      private
+    private
 
       def extract_sub_quotas_settings
         quota_associations = QuotaAssociation.where(main_quota_definition_sid: quota_definition.quota_definition_sid, relation_type: 'EQ')
@@ -144,12 +143,8 @@ module WorkbasketInteractions
       def extract_excluded_geographical_area_ids
         if quota_origins.present?
           quota_order_number_origin_sid = quota_origins.first.quota_order_number_origin_sid
-          area_ids = QuotaOrderNumberOriginExclusion.where(quota_order_number_origin_sid: quota_order_number_origin_sid).map do |e|
-            e.excluded_geographical_area_sid
-          end
-          GeographicalArea.where(geographical_area_sid: area_ids).map do |area|
-            area.geographical_area_id
-          end.uniq
+          area_ids = QuotaOrderNumberOriginExclusion.where(quota_order_number_origin_sid: quota_order_number_origin_sid).map(&:excluded_geographical_area_sid)
+          GeographicalArea.where(geographical_area_sid: area_ids).map(&:geographical_area_id).uniq
         else
           ['']
         end
@@ -159,38 +154,36 @@ module WorkbasketInteractions
         if quota_origins.size == 1
           quota_origins.first.geographical_area_id
         else
-          quota_origins.map do |area|
-            area.geographical_area_id
-          end.uniq
+          quota_origins.map(&:geographical_area_id).uniq
         end
       end
 
       begin :helper_methods
-        def to_indexed_object(subject)
-          if subject.kind_of?(Array)
-            array_to_indexed_object(subject)
-          elsif subject.kind_of?(Hash)
-            hash_to_indexed_object(subject)
-          else
-            subject
-          end
-        end
+            def to_indexed_object(subject)
+              if subject.is_a?(Array)
+                array_to_indexed_object(subject)
+              elsif subject.is_a?(Hash)
+                hash_to_indexed_object(subject)
+              else
+                subject
+              end
+            end
 
-        def hash_to_indexed_object(hash)
-          hash.map do |key, item|
-            {
-                "#{key}": to_indexed_object(item)
-            }
-          end.reduce(:merge)
-        end
+            def hash_to_indexed_object(hash)
+              hash.map do |key, item|
+                {
+                    "#{key}": to_indexed_object(item)
+                }
+              end.reduce(:merge)
+            end
 
-        def array_to_indexed_object(array)
-          array.map.with_index do |item, index|
-            {
-                "#{index}": to_indexed_object(item)
-            }
-          end.reduce(:merge)
-        end
+            def array_to_indexed_object(array)
+              array.map.with_index do |item, index|
+                {
+                    "#{index}": to_indexed_object(item)
+                }
+              end.reduce(:merge)
+            end
       end
     end
   end

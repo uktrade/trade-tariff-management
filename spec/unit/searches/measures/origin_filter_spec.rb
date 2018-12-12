@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: origin filter" do
-
   include_context "measures_search_is_or_is_not_context"
 
   let(:search_key) { "origin" }

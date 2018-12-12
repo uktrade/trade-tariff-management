@@ -1,5 +1,4 @@
 class MeasureConditionCode < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :time_machine
@@ -22,12 +21,10 @@ class MeasureConditionCode < Sequel::Model
 
         scope = scope.join_table(:inner,
           :measure_condition_code_descriptions,
-          condition_code: :condition_code,
-        ).where("
+          condition_code: :condition_code,).where("
           measure_condition_codes.condition_code ilike ? OR
           measure_condition_code_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       scope.order(Sequel.asc(:measure_condition_codes__condition_code))
@@ -50,7 +47,7 @@ class MeasureConditionCode < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     json_mapping
   end
 end

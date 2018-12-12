@@ -4,7 +4,7 @@ require 'tariff_synchronizer'
 describe TariffSynchronizer::ChiefUpdate do
   it_behaves_like 'Base Update'
 
-  let(:example_date) { Date.new(2010,1,1) }
+  let(:example_date) { Date.new(2010, 1, 1) }
   let(:chief_file) { ChiefFileNameGenerator.new(example_date) }
 
   describe '.download' do
@@ -18,14 +18,12 @@ describe TariffSynchronizer::ChiefUpdate do
   end
 
   describe "#import!" do
-
-    let(:chief_update) { create :chief_update}
+    let(:chief_update) { create :chief_update }
 
     before do
       # stub the file_path method to return a valid path of a real file.
       allow(chief_update).to receive(:file_path)
                               .and_return("spec/fixtures/chief_samples/KBT009(12044).txt")
-
     end
 
     it "Calls the ChiefImporter import method and send instance as argument" do

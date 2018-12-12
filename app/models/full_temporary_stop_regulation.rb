@@ -1,21 +1,20 @@
 class FullTemporaryStopRegulation < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::RegulationDocumentContext
   include ::WorkbasketHelpers::Association
 
   plugin :time_machine
-  plugin :oplog, primary_key: [:full_temporary_stop_regulation_id,
-                               :full_temporary_stop_regulation_role]
+  plugin :oplog, primary_key: %i[full_temporary_stop_regulation_id
+                                 full_temporary_stop_regulation_role]
   plugin :conformance_validator
 
-  set_primary_key [:full_temporary_stop_regulation_id, :full_temporary_stop_regulation_role]
+  set_primary_key %i[full_temporary_stop_regulation_id full_temporary_stop_regulation_role]
 
-  one_to_one :complete_abrogation_regulation, key: [:complete_abrogation_regulation_id,
-                                                    :complete_abrogation_regulation_role]
+  one_to_one :complete_abrogation_regulation, key: %i[complete_abrogation_regulation_id
+                                                      complete_abrogation_regulation_role]
   one_to_one :explicit_abrogation_regulation,
-             key: [ :explicit_abrogation_regulation_id,
-                    :explicit_abrogation_regulation_role ]
+             key: %i[explicit_abrogation_regulation_id
+                     explicit_abrogation_regulation_role]
 
   def regulation_id
     full_temporary_stop_regulation_id

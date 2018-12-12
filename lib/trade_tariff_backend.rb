@@ -21,7 +21,7 @@ module TradeTariffBackend
     end
 
     def log_formatter
-      Proc.new {|severity, time, progname, msg| "#{time.strftime('%Y-%m-%dT%H:%M:%S.%L %z')} #{sprintf('%5s', severity)} #{msg}\n" }
+      Proc.new { |severity, time, _progname, msg| "#{time.strftime('%Y-%m-%dT%H:%M:%S.%L %z')} #{sprintf('%5s', severity)} #{msg}\n" }
     end
 
     # Email of the user who receives all info/error notifications

@@ -8,17 +8,17 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
 
   before(:each) do
     create :base_regulation, base_regulation_id: 'IYY99990',
-                             validity_start_date: Date.new(1971,12,31)
+                             validity_start_date: Date.new(1971, 12, 31)
   end
 
-  after(:all)  { clear_standing_data }
+  after(:all) { clear_standing_data }
 
   # Create Measure types used in transformations, so that validations would pass.
   # Faster than loading static_national_data.sql
-  let!(:measure_type_qrc) { create :measure_type, measure_type_id: 'QRC', validity_start_date: Date.new(1972,1,1) }
-  let!(:measure_type_att) { create :measure_type, measure_type_id: 'ATT', validity_start_date: Date.new(1972,1,1) }
-  let!(:measure_type_cvd) { create :measure_type, measure_type_id: 'CVD', validity_start_date: Date.new(1972,1,1) }
-  let!(:measure_type_coe) { create :measure_type, measure_type_id: 'COE', validity_start_date: Date.new(1972,1,1) }
+  let!(:measure_type_qrc) { create :measure_type, measure_type_id: 'QRC', validity_start_date: Date.new(1972, 1, 1) }
+  let!(:measure_type_att) { create :measure_type, measure_type_id: 'ATT', validity_start_date: Date.new(1972, 1, 1) }
+  let!(:measure_type_cvd) { create :measure_type, measure_type_id: 'CVD', validity_start_date: Date.new(1972, 1, 1) }
+  let!(:measure_type_coe) { create :measure_type, measure_type_id: 'COE', validity_start_date: Date.new(1972, 1, 1) }
 
   describe "Initial Load Scenario P&R \n" do
     # In this scenario a number of P&R measures are created. The created measures represent Export and Import restrictions for:
@@ -47,12 +47,12 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
     let!(:tamf3) { create(:tamf, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "CVD", tar_msr_no: "2106909829", cngp_code: "D066") }
     let!(:tamf4) { create(:tamf, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "QRC", tar_msr_no: "97060000", cngp_code: "A001") }
 
-    let!(:mfcm1){ create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2006-07-24 08:45:00"), msrgp_code: "HO", msr_type: "CON", tar_msr_no: "12113000", cmdty_code: "1211300000") }
-    let!(:mfcm2){ create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2007-10-01 00:00:00"), msrgp_code: "PR", msr_type: "ATT", tar_msr_no: "1210100010", cmdty_code: "1210100010") }
-    let!(:mfcm3){ create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "CVD", tar_msr_no: "2106909829", cmdty_code: "2106909829") }
-    let!(:mfcm4){ create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "QRC", tar_msr_no: "97060000", cmdty_code: "9706000000") }
-    let!(:mfcm5){ create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "QRC", tar_msr_no: "97060000", cmdty_code: "9706000010") }
-    let!(:mfcm6){ create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "QRC", tar_msr_no: "97060000", cmdty_code: "9706000090") }
+    let!(:mfcm1) { create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2006-07-24 08:45:00"), msrgp_code: "HO", msr_type: "CON", tar_msr_no: "12113000", cmdty_code: "1211300000") }
+    let!(:mfcm2) { create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2007-10-01 00:00:00"), msrgp_code: "PR", msr_type: "ATT", tar_msr_no: "1210100010", cmdty_code: "1210100010") }
+    let!(:mfcm3) { create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "CVD", tar_msr_no: "2106909829", cmdty_code: "2106909829") }
+    let!(:mfcm4) { create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "QRC", tar_msr_no: "97060000", cmdty_code: "9706000000") }
+    let!(:mfcm5) { create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "QRC", tar_msr_no: "97060000", cmdty_code: "9706000010") }
+    let!(:mfcm6) { create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "QRC", tar_msr_no: "97060000", cmdty_code: "9706000090") }
 
     let!(:geographical_area) { create :geographical_area, :fifteen_years, :erga_omnes, geographical_area_sid: 400 }
 
@@ -192,92 +192,112 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
       #In this scenario the country group is changed from D066 to G012, which means that excluded countries will be removed for this measure.
       describe "Daily Scenario 1: Changed country group for measure \n" do
         context "Alternative 1: Update & Insert" do
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                        le_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tame6) { create(:tame, :prohibition,
+          let!(:tame6) {
+            create(:tame, :prohibition,
                                        amend_indicator: "I",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tamf5) { create(:tamf, :prohibition,
+          let!(:tamf5) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "D066",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tamf6) { create(:tamf, :prohibition,
+          let!(:tamf6) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "I",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "G012",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
           it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 1: Changed country group for measure outcome"
         end
 
         context "Alternative 2: Update" do
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
 
-          let!(:tamf5) { create(:tamf, :prohibition,
+          let!(:tamf5) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "G012",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
           it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 1: Changed country group for measure outcome"
         end
 
         context "Alternative 3: Delete & Insert" do
           # NOTE: is example wrong, fe_tsmp was adjusted
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "X",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tame6) { create(:tame, :prohibition,
+          let!(:tame6) {
+            create(:tame, :prohibition,
                                        amend_indicator: "I",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tamf5) { create(:tamf, :prohibition,
+          let!(:tamf5) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "X",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "D066",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
           # NOTE: is example wrong, fe_tsmp was adjusted
-          let!(:tamf6) { create(:tamf, :prohibition,
+          let!(:tamf6) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "I",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "G012",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
           it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 1: Changed country group for measure outcome"
         end
@@ -285,53 +305,63 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
 
       describe "Daily Scenario 2: Restriction removed\n" do
         context "Alternative 1: Update TAME & TAMF" do
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                        le_tsmp: DateTime.parse("2008-05-31 17:50:00"),
                                        msrgp_code: "PR",
                                        msr_type: "QRC",
-                                       tar_msr_no: "97060000") }
+                                       tar_msr_no: "97060000")
+          }
 
 
-          let!(:tamf5) { create(:tamf, :prohibition,
+          let!(:tamf5) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "QRC",
                                        cngp_code: "A001",
-                                       tar_msr_no: "97060000") }
+                                       tar_msr_no: "97060000")
+          }
 
           it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 2: Restriction removed outcome"
         end
 
         context "Alternative 2: Delete TAME & TAMF" do
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "X",
                                        fe_tsmp: DateTime.parse("2008-05-31 17:50:00"),
                                        msrgp_code: "PR",
                                        msr_type: "QRC",
-                                       tar_msr_no: "97060000") }
+                                       tar_msr_no: "97060000")
+          }
 
 
-          let!(:tamf5) { create(:tamf, :prohibition,
+          let!(:tamf5) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "X",
                                        fe_tsmp: DateTime.parse("2008-05-31 17:50:00"),
                                        msrgp_code: "PR",
                                        msr_type: "QRC",
                                        cngp_code: "A001",
-                                       tar_msr_no: "97060000") }
+                                       tar_msr_no: "97060000")
+          }
 
           it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 2: Restriction removed outcome"
         end
 
         context "Alternative 3: Delete TAME" do
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "X",
                                        fe_tsmp: DateTime.parse("2008-05-31 17:50:00"),
                                        msrgp_code: "PR",
                                        msr_type: "QRC",
-                                       tar_msr_no: "97060000") }
+                                       tar_msr_no: "97060000")
+          }
 
           it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 2: Restriction removed outcome"
         end
@@ -343,36 +373,44 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
           let!(:us) { create(:geographical_area, geographical_area_id: "US", geographical_area_sid: 103, validity_start_date: DateTime.parse("1975-07-18 00:00:00")) }
           let!(:cn) { create(:geographical_area, geographical_area_id: "CN", geographical_area_sid: 439, validity_start_date: DateTime.parse("1975-07-18 00:00:00")) }
 
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tamf5) { create(:tamf, :prohibition,
+          let!(:tamf5) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "US",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tamf6) { create(:tamf, :prohibition,
+          let!(:tamf6) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "CN",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
-          let!(:tamf7) { create(:tamf, :prohibition,
+          let!(:tamf7) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "CVD",
                                        cngp_code: "IQ",
-                                       tar_msr_no: "2106909829") }
+                                       tar_msr_no: "2106909829")
+          }
 
           it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 3: Country group changed countries outcome"
         end
@@ -382,75 +420,89 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
     describe "Daily Update MFCM \n" do
       describe "Daily Scenario 1: Restriction removed for measure \n" do
         context "Alternative 1: Update MFCM" do
-          let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature, :prohibition,
+          let!(:mfcm7) {
+            create(:mfcm, :with_goods_nomenclature, :prohibition,
                                 amend_indicator: "U",
                                 fe_tsmp: DateTime.parse("2007-10-01 00:00:00"),
                                 le_tsmp: DateTime.parse("2008-04-30 15:00:00"),
                                 msrgp_code: "PR",
                                 msr_type: "ATT",
                                 tar_msr_no: "1210100010",
-                                cmdty_code: "1210100010") }
+                                cmdty_code: "1210100010")
+          }
 
           it_results_in "P&R Daily Update MFCM Daily Scenario 1: Restriction removed for measure outcome"
         end
 
         context "Alternative 2: Delete" do
-          let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature, :prohibition,
+          let!(:mfcm7) {
+            create(:mfcm, :with_goods_nomenclature, :prohibition,
                                 amend_indicator: "X",
                                 fe_tsmp: DateTime.parse("2008-04-30 15:00:00"),
                                 msrgp_code: "PR",
                                 msr_type: "ATT",
                                 tar_msr_no: "1210100010",
-                                cmdty_code: "1210100010") }
+                                cmdty_code: "1210100010")
+          }
 
           it_results_in "P&R Daily Update MFCM Daily Scenario 1: Restriction removed for measure outcome"
         end
 
         context "Alternative 3: Delete & Update TAME/TAMF" do
-          let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature, :prohibition,
+          let!(:mfcm7) {
+            create(:mfcm, :with_goods_nomenclature, :prohibition,
                                 amend_indicator: "U",
                                 fe_tsmp: DateTime.parse("2007-10-01 00:00:00"),
                                 le_tsmp: DateTime.parse("2008-04-30 15:00:00"),
                                 msrgp_code: "PR",
                                 msr_type: "ATT",
                                 tar_msr_no: "1210100010",
-                                cmdty_code: "1210100010") }
+                                cmdty_code: "1210100010")
+          }
 
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                        le_tsmp: DateTime.parse("2008-04-30 15:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "ATT",
-                                       tar_msr_no: "1210100010") }
+                                       tar_msr_no: "1210100010")
+          }
 
-          let!(:tamf5) { create(:tamf, :prohibition,
+          let!(:tamf5) {
+            create(:tamf, :prohibition,
                                        amend_indicator: "U",
                                        fe_tsmp: DateTime.parse("2008-04-01 00:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "ATT",
                                        cngp_code: "XC",
-                                       tar_msr_no: "1210100010") }
+                                       tar_msr_no: "1210100010")
+          }
 
           it_results_in "P&R Daily Update MFCM Daily Scenario 1: Restriction removed for measure outcome"
         end
 
         context "Alternative 4: Delete & Delete TAME" do
-          let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature, :prohibition,
+          let!(:mfcm7) {
+            create(:mfcm, :with_goods_nomenclature, :prohibition,
                                 amend_indicator: "X",
                                 fe_tsmp: DateTime.parse("2008-04-30 15:00:00"),
                                 msrgp_code: "PR",
                                 msr_type: "ATT",
                                 tar_msr_no: "1210100010",
-                                cmdty_code: "1210100010") }
+                                cmdty_code: "1210100010")
+          }
 
 
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "X",
                                        fe_tsmp: DateTime.parse("2008-04-30 15:00:00"),
                                        msrgp_code: "PR",
                                        msr_type: "ATT",
-                                       tar_msr_no: "1210100010") }
+                                       tar_msr_no: "1210100010")
+          }
 
           it_results_in "P&R Daily Update MFCM Daily Scenario 1: Restriction removed for measure outcome"
         end
@@ -458,46 +510,53 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
 
       describe "Daily Scenario 2: Updated measure with later start date \n" do
         context "Alternative 1: Update" do
-          let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature, :prohibition,
+          let!(:mfcm7) {
+            create(:mfcm, :with_goods_nomenclature, :prohibition,
                                 amend_indicator: "U",
                                 fe_tsmp: DateTime.parse("2008-04-30 15:00:00"),
                                 msrgp_code: "PR",
                                 msr_type: "ATT",
                                 tar_msr_no: "1210100010",
-                                cmdty_code: "1210100010") }
+                                cmdty_code: "1210100010")
+          }
 
           it_results_in "P&R Daily Update MFCM Daily Scenario 2: Updated measure with later start date outcome"
         end
-
       end
 
       describe "Daily Scenario 3: Restriction applied to wrong commodity removed \n" do
         context "Alternative 1: Delete MFCM & TAME" do
-          let!(:tame5) { create(:tame, :prohibition,
+          let!(:tame5) {
+            create(:tame, :prohibition,
                                        amend_indicator: "X",
                                        fe_tsmp: DateTime.parse("2006-07-24 08:45:00"),
                                        msrgp_code: "HO",
                                        msr_type: "CON",
-                                       tar_msr_no: "1211300000") }
-          let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature, :prohibition,
+                                       tar_msr_no: "1211300000")
+          }
+          let!(:mfcm7) {
+            create(:mfcm, :with_goods_nomenclature, :prohibition,
                                       amend_indicator: "X",
                                       fe_tsmp: DateTime.parse("2006-07-24 08:45:00"),
                                       msrgp_code: "HO",
                                       msr_type: "CON",
                                       tar_msr_no: "1211300000",
-                                      cmdty_code: "1211300000") }
+                                      cmdty_code: "1211300000")
+          }
 
           it_results_in "P&R Daily Update MFCM Daily Scenario 3: Restriction applied to wrong commodity removed outcome"
         end
 
         context "Alternative 2: Delete MFCM" do
-          let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature, :prohibition,
+          let!(:mfcm7) {
+            create(:mfcm, :with_goods_nomenclature, :prohibition,
                                       amend_indicator: "X",
                                       fe_tsmp: DateTime.parse("2006-07-24 08:45:00"),
                                       msrgp_code: "HO",
                                       msr_type: "CON",
                                       tar_msr_no: "12113000",
-                                      cmdty_code: "1211300000") }
+                                      cmdty_code: "1211300000")
+          }
 
           it_results_in "P&R Daily Update MFCM Daily Scenario 3: Restriction applied to wrong commodity removed outcome"
         end
@@ -513,49 +572,61 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
       let!(:cn) { create(:geographical_area, geographical_area_id: "CN", geographical_area_sid: 439, validity_start_date: DateTime.parse("1975-07-18 00:00:00")) }
       let!(:iq) { create(:geographical_area, geographical_area_id: "IQ", geographical_area_sid: 666, validity_start_date: DateTime.parse("1975-07-18 00:00:00")) }
 
-      let!(:mfcm7){ create(:mfcm, :with_goods_nomenclature,
+      let!(:mfcm7) {
+        create(:mfcm, :with_goods_nomenclature,
                                   :prohibition,
                                   amend_indicator: "I",
                                   fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                   msrgp_code: "PR",
                                   msr_type: "CVD",
                                   cmdty_code: "2106909829",
-                                  tar_msr_no: "2106909829") }
-      let!(:tamf5) { create(:tamf, :prohibition,
+                                  tar_msr_no: "2106909829")
+      }
+      let!(:tamf5) {
+        create(:tamf, :prohibition,
                                    amend_indicator: "I",
                                    fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                    msrgp_code: "PR",
                                    msr_type: "CVD",
                                    cngp_code: "US",
-                                   tar_msr_no: "2106909829") }
-      let!(:tamf6) { create(:tamf, :prohibition,
+                                   tar_msr_no: "2106909829")
+      }
+      let!(:tamf6) {
+        create(:tamf, :prohibition,
                                    amend_indicator: "I",
                                    fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                    msrgp_code: "PR",
                                    msr_type: "CVD",
                                    cngp_code: "CN",
-                                   tar_msr_no: "2106909829") }
-      let!(:tamf7) { create(:tamf, :prohibition,
+                                   tar_msr_no: "2106909829")
+      }
+      let!(:tamf7) {
+        create(:tamf, :prohibition,
                                    amend_indicator: "I",
                                    fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                    msrgp_code: "PR",
                                    msr_type: "CVD",
                                    cngp_code: "IQ",
-                                   tar_msr_no: "2106909829") }
-      let!(:tame5) { create(:tame, :prohibition,
+                                   tar_msr_no: "2106909829")
+      }
+      let!(:tame5) {
+        create(:tame, :prohibition,
                                    amend_indicator: "I",
                                    fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                    msrgp_code: "PR",
                                    msr_type: "CVD",
-                                   tar_msr_no: "2106909829") }
-      let!(:mfcm8){ create(:mfcm, :with_goods_nomenclature,
+                                   tar_msr_no: "2106909829")
+      }
+      let!(:mfcm8) {
+        create(:mfcm, :with_goods_nomenclature,
                                   :prohibition,
                                   amend_indicator: "X",
                                   fe_tsmp: DateTime.parse("2008-06-01 00:00:00"),
                                   msrgp_code: "PR",
                                   msr_type: "CVD",
                                   cmdty_code: "2106909829",
-                                  tar_msr_no: "2106909829") }
+                                  tar_msr_no: "2106909829")
+      }
 
       before {
         ChiefTransformer.instance.invoke
@@ -573,7 +644,7 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
                            validity_start_date: DateTime.parse("2008-05-01 00:00:00")).take
         expect(m2.measure_conditions.count).to eq 2
         expect(m2.footnote_association_measures.count).to eq 1
-        m3 =Measure.where(goods_nomenclature_item_id: "2106909829",
+        m3 = Measure.where(goods_nomenclature_item_id: "2106909829",
                           geographical_area_id: 'IQ',
                           validity_start_date: DateTime.parse("2008-05-01 00:00:00")).take
         expect(m3.measure_conditions.count).to eq 2
@@ -585,26 +656,32 @@ describe "CHIEF: Prohibitions and Restrictions \n" do
       end
 
       context "Alternative 1: Update TAME & TAMF" do
-        let!(:tamf9) { create(:tamf, :prohibition,
+        let!(:tamf9) {
+          create(:tamf, :prohibition,
                                      amend_indicator: "U",
                                      fe_tsmp: DateTime.parse("2008-06-01 00:00:00"),
                                      msrgp_code: "PR",
                                      msr_type: "CVD",
                                      cngp_code: "CN",
-                                     tar_msr_no: "2106909829") }
-        let!(:tamf8) { create(:tamf, :prohibition,
+                                     tar_msr_no: "2106909829")
+        }
+        let!(:tamf8) {
+          create(:tamf, :prohibition,
                                      amend_indicator: "U",
                                      fe_tsmp: DateTime.parse("2008-06-01 00:00:00"),
                                      msrgp_code: "PR",
                                      msr_type: "CVD",
                                      cngp_code: "IQ",
-                                     tar_msr_no: "2106909829") }
-        let!(:tame6) { create(:tame, :prohibition,
+                                     tar_msr_no: "2106909829")
+        }
+        let!(:tame6) {
+          create(:tame, :prohibition,
                                      amend_indicator: "U",
                                      fe_tsmp: DateTime.parse("2008-06-01 00:00:00"),
                                      msrgp_code: "PR",
                                      msr_type: "CVD",
-                                     tar_msr_no: "2106909829") }
+                                     tar_msr_no: "2106909829")
+        }
 
         it_results_in "P&R Daily Update TAME and TAMF Daily Scenario 4: Country removed from restriction outcome"
       end
