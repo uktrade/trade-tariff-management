@@ -53,7 +53,11 @@ jobs: # a collection of steps
 
       - run:
           name: Database setup
-          command: bin/rails db:schema:load --trace
+          command: bin/rake db:setup --trace
+
+      - run:
+          name: Compile assets
+          command: bin/rake assets:precompile --trace
 
       - run:
           name: Run rspec in parallel
