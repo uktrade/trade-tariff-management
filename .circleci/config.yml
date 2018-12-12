@@ -10,6 +10,7 @@ jobs: # a collection of steps
           BUNDLE_PATH: vendor/bundle
           PGHOST: 127.0.0.1
           PGUSER: circleci-tariffs-management
+          DATABASE_URL: postgresql://circleci-tariffs-management@localhost:5432/tariff_management_test
           REDIS_URL: redis://localhost:6379
           RAILS_ENV: test
           GOVUK_APP_DOMAIN: test
@@ -53,7 +54,7 @@ jobs: # a collection of steps
 
       - run:
           name: Database setup
-          command: bin/rake db:drop db:setup --trace
+          command: bin/rake db:setup --trace
 
       - run:
           name: Compile assets
