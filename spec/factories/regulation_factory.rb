@@ -5,11 +5,11 @@ FactoryGirl.define do
 
     trait :xml do
       published_date          { Date.today.ago(2.years) }
-      officialjournal_number  "L 120"
-      officialjournal_page    13
-      replacement_indicator   0
-      information_text        "TR"
-      approved_flag           true
+      officialjournal_number  { "L 120" }
+      officialjournal_page    { 13 }
+      replacement_indicator   { 0 }
+      information_text        { "TR" }
+      approved_flag           { true }
     end
   end
 
@@ -20,11 +20,11 @@ FactoryGirl.define do
     trait :xml do
       published_date          { Date.today.ago(2.years) }
       abrogation_date         { Date.today.ago(1.years) }
-      officialjournal_number  "L 120"
-      officialjournal_page    13
-      replacement_indicator   0
-      information_text        "TR"
-      approved_flag           true
+      officialjournal_number  { "L 120" }
+      officialjournal_page    { 13 }
+      replacement_indicator   { 0 }
+      information_text        { "TR" }
+      approved_flag           { true }
     end
   end
 
@@ -34,11 +34,11 @@ FactoryGirl.define do
 
     trait :xml do
       published_date            { Date.today.ago(2.years) }
-      officialjournal_number    "L 120"
-      officialjournal_page      13
-      replacement_indicator     0
-      information_text          "TR"
-      approved_flag             true
+      officialjournal_number    { "L 120" }
+      officialjournal_page      { 13 }
+      replacement_indicator     { 0 }
+      information_text          { "TR" }
+      approved_flag             { true }
     end
   end
 

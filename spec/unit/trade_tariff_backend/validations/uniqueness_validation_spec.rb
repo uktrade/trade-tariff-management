@@ -16,8 +16,8 @@ describe TradeTariffBackend::Validations::UniquenessValidation do
 
       it 'returns false' do
         expect(
-          validation.valid?(record)
-        ).to be_falsy
+          validation
+        ).not_to be_valid(record)
       end
     end
 
@@ -30,8 +30,8 @@ describe TradeTariffBackend::Validations::UniquenessValidation do
 
       it 'returns true' do
         expect(
-          validation.valid?(record)
-        ).to be_truthy
+          validation
+        ).to be_valid(record)
       end
     end
 

@@ -29,7 +29,7 @@ describe "Measure Form APIs: Quota order numbers", type: :request do
       not_actual_quota_order_number_3
     end
 
-    it "should return JSON collection of all actual quota_order_numbers" do
+    it "returns JSON collection of all actual quota_order_numbers" do
       get "/quota_order_numbers.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -38,7 +38,7 @@ describe "Measure Form APIs: Quota order numbers", type: :request do
       expecting_quota_order_number_in_result(1, actual_quota_order_number_2)
     end
 
-    it "should filter quota_order_numbers by keyword" do
+    it "filters quota_order_numbers by keyword" do
       get "/quota_order_numbers.json", params: { q: "11" }, headers: headers
 
       expect(collection.count).to eq(1)

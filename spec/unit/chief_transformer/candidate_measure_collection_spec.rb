@@ -114,7 +114,7 @@ describe ChiefTransformer::CandidateMeasure::Collection do
       }
 
       let(:candidate_measures) {
-        ChiefTransformer::CandidateMeasure::Collection.new(mfcm.tames.map { |tame|
+        described_class.new(mfcm.tames.map { |tame|
           ChiefTransformer::CandidateMeasure.new(mfcm: mfcm, tame: tame)
         })
       }
@@ -167,7 +167,7 @@ describe ChiefTransformer::CandidateMeasure::Collection do
       }
 
       let(:candidate_measures) {
-        ChiefTransformer::CandidateMeasure::Collection.new(mfcm.tames.map { |tame|
+        described_class.new(mfcm.tames.map { |tame|
           ChiefTransformer::CandidateMeasure.new(mfcm: mfcm, tame: tame)
         })
       }

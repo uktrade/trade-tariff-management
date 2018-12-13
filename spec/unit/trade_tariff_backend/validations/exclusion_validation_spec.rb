@@ -9,8 +9,8 @@ describe TradeTariffBackend::Validations::ExclusionValidation do
                                                                   from: %i[a b c] })
       }
 
-      it 'should validate' do
-        expect(validation.valid?(model)).to be_falsy
+      it 'validates' do
+        expect(validation).not_to be_valid(model)
       end
     end
 
@@ -21,8 +21,8 @@ describe TradeTariffBackend::Validations::ExclusionValidation do
                                                                  from: -> { %i[a b c] } })
       }
 
-      it 'should validate' do
-        expect(validation.valid?(model)).to be_falsy
+      it 'validates' do
+        expect(validation).not_to be_valid(model)
       end
     end
 

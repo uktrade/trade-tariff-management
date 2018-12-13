@@ -35,7 +35,7 @@ describe "Measure Form APIs: Duty expressions", type: :request do
       not_actual_duty_expression_03
     end
 
-    it "should return JSON collection of all actual duty_expressions" do
+    it "returns JSON collection of all actual duty_expressions" do
       get "/duty_expressions.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Duty expressions", type: :request do
       expecting_duty_expression_in_result(1, actual_duty_expression_99)
     end
 
-    it "should filter duty_expressions by keyword" do
+    it "filters duty_expressions by keyword" do
       get "/duty_expressions.json", params: { q: "% or amo" }, headers: headers
 
       expect(collection.count).to eq(1)

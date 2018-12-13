@@ -45,7 +45,7 @@ describe AdditionalCode do
         it 'loads correct description respecting given actual time' do
           TimeMachine.now do
             expect(
-              AdditionalCode.where(additional_code_sid: additional_code.additional_code_sid)
+              described_class.where(additional_code_sid: additional_code.additional_code_sid)
                           .eager(:additional_code_descriptions)
                           .all
                           .first
@@ -57,7 +57,7 @@ describe AdditionalCode do
         it 'loads correct description respecting given time' do
           TimeMachine.at(1.year.ago) do
             expect(
-              AdditionalCode.where(additional_code_sid: additional_code.additional_code_sid)
+              described_class.where(additional_code_sid: additional_code.additional_code_sid)
                           .eager(:additional_code_descriptions)
                           .all
                           .first
@@ -67,7 +67,7 @@ describe AdditionalCode do
 
           TimeMachine.at(4.years.ago) do
             expect(
-              AdditionalCode.where(additional_code_sid: additional_code.additional_code_sid)
+              described_class.where(additional_code_sid: additional_code.additional_code_sid)
                           .eager(:additional_code_descriptions)
                           .all
                           .first

@@ -11,17 +11,17 @@ describe NationalMeasurementUnitSet do
                                uoq_code_cdu3: tbl3.tbl_code
     }
 
-    let(:nmus) { NationalMeasurementUnitSet.where(cmdty_code: comm.cmdty_code).first }
+    let(:nmus) { described_class.where(cmdty_code: comm.cmdty_code).first }
 
     it 'builds array of national measurement units' do
       expect(nmus.national_measurement_unit_set_units).to be_kind_of Array
     end
 
-    it 'should include national measurement units' do
-      expect(nmus.national_measurement_unit_set_units.all? { |nmusu| nmusu.is_a?(NationalMeasurementUnit) }).to be_truthy
+    it 'includes national measurement units' do
+      expect(nmus.national_measurement_unit_set_units).to be_all { |nmusu| nmusu.is_a?(NationalMeasurementUnit) }
     end
 
-    it 'should set first national measurement unit code/description to comm uoq_code_cdu1' do
+    it 'sets first national measurement unit code/description to comm uoq_code_cdu1' do
       nmusu = nmus.national_measurement_unit_set_units.first
 
       expect(nmusu.measurement_unit_code).to eq tbl1.tbl_code
@@ -29,7 +29,7 @@ describe NationalMeasurementUnitSet do
       expect(nmusu.level).to eq 1
     end
 
-    it 'should set second national measurement unit code/description to comm uoq_code_cdu2' do
+    it 'sets second national measurement unit code/description to comm uoq_code_cdu2' do
       nmusu = nmus.national_measurement_unit_set_units.second
 
       expect(nmusu.measurement_unit_code).to eq tbl2.tbl_code
@@ -37,7 +37,7 @@ describe NationalMeasurementUnitSet do
       expect(nmusu.level).to eq 2
     end
 
-    it 'should set second national measurement unit code/description to comm uoq_code_cdu3' do
+    it 'sets second national measurement unit code/description to comm uoq_code_cdu3' do
       nmusu = nmus.national_measurement_unit_set_units.last
 
       expect(nmusu.measurement_unit_code).to eq tbl3.tbl_code

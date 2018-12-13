@@ -36,8 +36,8 @@ FactoryGirl.define do
 
   factory :additional_code_description do
     transient do
-      valid_at Time.now.ago(2.years)
-      valid_to nil
+      valid_at { Time.now.ago(2.years) }
+      valid_to { nil }
     end
 
     additional_code_description_period_sid { generate(:additional_code_sid) }

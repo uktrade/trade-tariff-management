@@ -22,7 +22,7 @@ describe "Regulation Form APIs: Regulation groups", type: :request do
       not_actual_group_apl
     end
 
-    it "should return JSON collection of all actual regulation groups" do
+    it "returns JSON collection of all actual regulation groups" do
       get "/regulation_form_api/regulation_groups.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -31,7 +31,7 @@ describe "Regulation Form APIs: Regulation groups", type: :request do
       expecting_group_in_result(1, actual_group_prf)
     end
 
-    it "should filter regulation groups by keyword" do
+    it "filters regulation groups by keyword" do
       get "/regulation_form_api/regulation_groups.json", params: { q: "Unit price, standard" }, headers: headers
 
       expect(collection.count).to eq(1)

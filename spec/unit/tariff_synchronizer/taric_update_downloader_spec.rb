@@ -64,7 +64,7 @@ describe TariffSynchronizer::TaricUpdateDownloader do
           travel_to example_date do
             described_class.new(example_date).perform
           end
-        }.to_not change(TariffSynchronizer::TaricUpdate, :count)
+        }.not_to change(TariffSynchronizer::TaricUpdate, :count)
       end
 
       it "Logs the creating of the TaricUpdate record with missing state" do

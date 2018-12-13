@@ -2,18 +2,19 @@ require 'rails_helper'
 require 'tariff_synchronizer'
 
 describe TariffSynchronizer::ChiefUpdate do
+  let(:chief_file) { ChiefFileNameGenerator.new(example_date) }
+  let(:example_date) { Date.new(2010, 1, 1) }
+
   it_behaves_like 'Base Update'
 
-  let(:example_date) { Date.new(2010, 1, 1) }
-  let(:chief_file) { ChiefFileNameGenerator.new(example_date) }
 
   describe '.download' do
     it "Calls TariffDownloader perform for a CHIEF update" do
       downlader = instance_double("TariffSynchronizer::TariffDownloader", perform: true)
       expect(TariffSynchronizer::TariffDownloader).to receive(:new)
-        .with(chief_file.name, chief_file.url, example_date, TariffSynchronizer::ChiefUpdate)
+        .with(chief_file.name, chief_file.url, example_date, described_class)
         .and_return(downlader)
-      TariffSynchronizer::ChiefUpdate.download(example_date)
+      described_class.download(example_date)
     end
   end
 

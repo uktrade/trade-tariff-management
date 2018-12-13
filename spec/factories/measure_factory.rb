@@ -151,7 +151,7 @@ FactoryGirl.define do
     end
 
     trait :excise do
-      measure_type_description "EXCISE 111"
+      measure_type_description { "EXCISE 111" }
     end
 
     after(:build) do |measure_type, _evaluator|

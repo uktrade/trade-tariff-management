@@ -20,7 +20,7 @@ describe TaricImporter::RecordProcessor::DestroyOperation do
     }
 
     let(:operation) {
-      TaricImporter::RecordProcessor::DestroyOperation.new(record, operation_date)
+      described_class.new(record, operation_date)
     }
 
     context 'record present for destroy' do

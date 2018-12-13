@@ -133,7 +133,7 @@ describe Commodity do
         measure_type
         measure
 
-        expect(commodity.measures.map(&:measure_sid)).to_not include measure.measure_sid
+        expect(commodity.measures.map(&:measure_sid)).not_to include measure.measure_sid
       end
     end
 
@@ -165,7 +165,7 @@ describe Commodity do
       it 'groups measures by measure_generating_regulation_id and picks latest one' do
         TimeMachine.at(Date.current) do
           expect(commodity.measures.map(&:measure_sid)).to     include measure1.measure_sid
-          expect(commodity.measures.map(&:measure_sid)).to_not include measure2.measure_sid
+          expect(commodity.measures.map(&:measure_sid)).not_to include measure2.measure_sid
         end
       end
     end
@@ -196,7 +196,7 @@ describe Commodity do
 
       it 'groups measures by measure_generating_regulation_id and picks the measure with the highest goods_nomenclature_item_id' do
         TimeMachine.at(Date.current) do
-          expect(commodity.measures.map(&:measure_sid)).to_not     include measure1.measure_sid
+          expect(commodity.measures.map(&:measure_sid)).not_to     include measure1.measure_sid
           expect(commodity.measures.map(&:measure_sid)).to include measure2.measure_sid
         end
       end
@@ -227,10 +227,10 @@ describe Commodity do
           import_measure
 
           expect(commodity1.export_measures.map(&:measure_sid)).to     include export_measure.measure_sid
-          expect(commodity1.export_measures.map(&:measure_sid)).to_not include import_measure.measure_sid
+          expect(commodity1.export_measures.map(&:measure_sid)).not_to include import_measure.measure_sid
 
           expect(commodity2.import_measures.map(&:measure_sid)).to     include import_measure.measure_sid
-          expect(commodity2.import_measures.map(&:measure_sid)).to_not include export_measure.measure_sid
+          expect(commodity2.import_measures.map(&:measure_sid)).not_to include export_measure.measure_sid
         end
       end
 
@@ -246,7 +246,7 @@ describe Commodity do
         }
 
         it 'includes measures that belongs to related export refund nomenclature' do
-          expect(commodity.measures).to_not be_blank
+          expect(commodity.measures).not_to be_blank
           expect(commodity.measures.map(&:measure_sid)).to include export_measure.measure_sid
         end
       end
@@ -285,17 +285,17 @@ describe Commodity do
       }
 
       it 'measure validity date superseeds regulation validity date' do
-        measures = TimeMachine.at(Time.now.ago(1.year)) { Commodity.actual.first.measures }.map(&:measure_sid)
+        measures = TimeMachine.at(Time.now.ago(1.year)) { described_class.actual.first.measures }.map(&:measure_sid)
         expect(measures).to     include measure3.measure_sid
-        expect(measures).to_not include measure2.measure_sid
-        expect(measures).to_not include measure1.measure_sid
+        expect(measures).not_to include measure2.measure_sid
+        expect(measures).not_to include measure1.measure_sid
 
-        measures = TimeMachine.at(Time.now.ago(2.years)) { Commodity.actual.first.measures }.map(&:measure_sid)
+        measures = TimeMachine.at(Time.now.ago(2.years)) { described_class.actual.first.measures }.map(&:measure_sid)
         expect(measures).to     include measure3.measure_sid
         expect(measures).to     include measure2.measure_sid
-        expect(measures).to_not include measure1.measure_sid
+        expect(measures).not_to include measure1.measure_sid
 
-        measures = TimeMachine.at(Time.now.ago(3.years)) { Commodity.actual.first.measures }.map(&:measure_sid)
+        measures = TimeMachine.at(Time.now.ago(3.years)) { described_class.actual.first.measures }.map(&:measure_sid)
         expect(measures).to     include measure3.measure_sid
         expect(measures).to     include measure2.measure_sid
         expect(measures).to     include measure1.measure_sid
@@ -335,17 +335,17 @@ describe Commodity do
       }
 
       it 'measure validity date superseeds regulation validity date' do
-        measures = TimeMachine.at(Time.now.ago(1.year)) { Commodity.actual.first.measures }.map(&:measure_sid)
+        measures = TimeMachine.at(Time.now.ago(1.year)) { described_class.actual.first.measures }.map(&:measure_sid)
         expect(measures).to     include measure3.measure_sid
-        expect(measures).to_not include measure2.measure_sid
-        expect(measures).to_not include measure1.measure_sid
+        expect(measures).not_to include measure2.measure_sid
+        expect(measures).not_to include measure1.measure_sid
 
-        measures = TimeMachine.at(Time.now.ago(2.years)) { Commodity.actual.first.measures }.map(&:measure_sid)
+        measures = TimeMachine.at(Time.now.ago(2.years)) { described_class.actual.first.measures }.map(&:measure_sid)
         expect(measures).to     include measure3.measure_sid
         expect(measures).to     include measure2.measure_sid
-        expect(measures).to_not include measure1.measure_sid
+        expect(measures).not_to include measure1.measure_sid
 
-        measures = TimeMachine.at(Time.now.ago(3.years)) { Commodity.actual.first.measures }.map(&:measure_sid)
+        measures = TimeMachine.at(Time.now.ago(3.years)) { described_class.actual.first.measures }.map(&:measure_sid)
         expect(measures).to     include measure3.measure_sid
         expect(measures).to     include measure2.measure_sid
         expect(measures).to     include measure1.measure_sid
@@ -367,7 +367,7 @@ describe Commodity do
 
     context 'when not in TimeMachine block' do
       it 'fetches all commodities' do
-        commodities = Commodity.all
+        commodities = described_class.all
         expect(commodities).to include actual_commodity
         expect(commodities).to include expired_commodity
       end
@@ -376,7 +376,7 @@ describe Commodity do
     context 'when in TimeMachine block' do
       it 'fetches commodities that are actual on specified Date' do
         TimeMachine.at(Date.today.ago(2.years)) do
-          commodities = Commodity.actual.all
+          commodities = described_class.actual.all
           expect(commodities).to include actual_commodity
           expect(commodities).to include expired_commodity
         end
@@ -578,13 +578,13 @@ describe Commodity do
         end
       end
 
-      it 'should return valid ancestors' do
+      it 'returns valid ancestors' do
         expect(commodity0.ancestors.map(&:goods_nomenclature_item_id)).to eq(%w[8504900000 8504909100 8504909900])
         expect(commodity7.ancestors.map(&:goods_nomenclature_item_id)).to eq(%w[8504900000 8504900500 8504901100 8504901100])
         expect(commodity10.ancestors.map(&:goods_nomenclature_item_id)).to eq(%w[8504900000 8504900500 8504901100 8504901800])
       end
 
-      it 'should return ancestors with indent less then current commodity indent' do
+      it 'returns ancestors with indent less then current commodity indent' do
         expect(commodity0.ancestors.map(&:number_indents)).to all(be < commodity0.number_indents)
       end
     end
@@ -636,29 +636,29 @@ describe Commodity do
 
     context 'with children' do
       before do
-        allow_any_instance_of(Commodity).to receive(:children).and_return([1])
+        allow_any_instance_of(described_class).to receive(:children).and_return([1])
       end
 
-      it "should return true for producline_suffix == '80'" do
-        expect(commodity_80.declarable?).to be_falsey
+      it "returns true for producline_suffix == '80'" do
+        expect(commodity_80).not_to be_declarable
       end
 
-      it "should return false for other producline_suffix" do
-        expect(commodity_10.declarable?).to be_falsey
+      it "returns false for other producline_suffix" do
+        expect(commodity_10).not_to be_declarable
       end
     end
 
     context 'without children' do
       before do
-        allow_any_instance_of(Commodity).to receive(:children).and_return([])
+        allow_any_instance_of(described_class).to receive(:children).and_return([])
       end
 
-      it "should return true for producline_suffix == '80'" do
-        expect(commodity_80.declarable?).to be_truthy
+      it "returns true for producline_suffix == '80'" do
+        expect(commodity_80).to be_declarable
       end
 
-      it "should return false for other producline_suffix" do
-        expect(commodity_10.declarable?).to be_falsey
+      it "returns false for other producline_suffix" do
+        expect(commodity_10).not_to be_declarable
       end
     end
   end
@@ -667,10 +667,10 @@ describe Commodity do
     let(:commodity_80) { create(:commodity, producline_suffix: '80') }
     let(:commodity_10) { create(:commodity, producline_suffix: '10') }
 
-    it "should return commodities ony with producline_suffix == '80'" do
+    it "returns commodities ony with producline_suffix == '80'" do
       commodities = described_class.declarable
       expect(commodities).to include(commodity_80)
-      expect(commodities).to_not include(commodity_10)
+      expect(commodities).not_to include(commodity_10)
     end
   end
 
@@ -678,10 +678,10 @@ describe Commodity do
     let(:commodity1) { create(:commodity, goods_nomenclature_item_id: '123') }
     let(:commodity2) { create(:commodity, goods_nomenclature_item_id: '456') }
 
-    it 'should return commodities filtered by goods_nomenclature_item_id' do
+    it 'returns commodities filtered by goods_nomenclature_item_id' do
       commodities = described_class.by_code('123')
       expect(commodities).to include(commodity1)
-      expect(commodities).to_not include(commodity2)
+      expect(commodities).not_to include(commodity2)
     end
   end
 end

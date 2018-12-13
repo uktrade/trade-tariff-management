@@ -64,7 +64,7 @@ FactoryGirl.define do
   factory :geographical_area_description do
     transient do
       valid_at { Date.today.ago(3.years) }
-      valid_to nil
+      valid_to { nil }
     end
 
     geographical_area_description_period_sid { generate(:geographical_area_sid) }

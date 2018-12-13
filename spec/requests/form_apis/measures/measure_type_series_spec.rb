@@ -35,7 +35,7 @@ describe "Measure Form APIs: Measure type series", type: :request do
       not_actual_measure_type_series_c
     end
 
-    it "should return JSON collection of all actual measure_type_series" do
+    it "returns JSON collection of all actual measure_type_series" do
       get "/measure_type_series.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Measure type series", type: :request do
       expecting_measure_type_series_in_result(1, actual_measure_type_series_b)
     end
 
-    it "should filter measure_type_series by keyword" do
+    it "filters measure_type_series by keyword" do
       get "/measure_type_series.json", params: { q: "Importation and" }, headers: headers
 
       expect(collection.count).to eq(1)

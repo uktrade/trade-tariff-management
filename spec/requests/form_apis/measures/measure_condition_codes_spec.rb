@@ -35,7 +35,7 @@ describe "Measure Form APIs: Measure condition codes", type: :request do
       not_actual_measure_condition_code_z
     end
 
-    it "should return JSON collection of all actual measure_condition_codes" do
+    it "returns JSON collection of all actual measure_condition_codes" do
       get "/measure_condition_codes.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Measure condition codes", type: :request do
       expecting_measure_condition_code_in_result(1, actual_measure_condition_code_y)
     end
 
-    it "should filter measure_condition_codes by keyword" do
+    it "filters measure_condition_codes by keyword" do
       get "/measure_condition_codes.json", params: { q: "Combined Nomen" }, headers: headers
 
       expect(collection.count).to eq(1)

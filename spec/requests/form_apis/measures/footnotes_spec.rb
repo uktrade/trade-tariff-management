@@ -38,7 +38,7 @@ describe "Measure Form APIs: Footnotes", type: :request do
       not_actual_footnote_c
     end
 
-    it "should return JSON collection of all actual footnotes" do
+    it "returns JSON collection of all actual footnotes" do
       get "/footnotes.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -47,7 +47,7 @@ describe "Measure Form APIs: Footnotes", type: :request do
       expecting_footnote_in_result(1, actual_footnote_nc)
     end
 
-    it "should filter footnotes by keyword" do
+    it "filters footnotes by keyword" do
       get "/footnotes.json", params: { description: "Combined Nomen" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -59,7 +59,7 @@ describe "Measure Form APIs: Footnotes", type: :request do
       expecting_footnote_in_result(0, actual_footnote_wr)
     end
 
-    it "should filter footnotes by footnote_type_id" do
+    it "filters footnotes by footnote_type_id" do
       get "/footnotes.json", params: { footnote_type_id: "NC" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -71,7 +71,7 @@ describe "Measure Form APIs: Footnotes", type: :request do
       expecting_footnote_in_result(0, actual_footnote_wr)
     end
 
-    it "should filter footnotes by keyword and footnote_type_id at the same time" do
+    it "filters footnotes by keyword and footnote_type_id at the same time" do
       get "/footnotes.json", params: { footnote_type_id: "NC", description: "Combined No" }, headers: headers
 
       expect(collection.count).to eq(1)

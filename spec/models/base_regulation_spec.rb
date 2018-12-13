@@ -3,9 +3,9 @@ require 'rails_helper'
 describe BaseRegulation do
   describe 'validations' do
     # ROIMB1
-    it { should validate_uniqueness.of(%i[base_regulation_id base_regulation_role]) }
+    it { is_expected.to validate_uniqueness.of(%i[base_regulation_id base_regulation_role]) }
     # ROIMB3
-    it { should validate_validity_dates }
+    it { is_expected.to validate_validity_dates }
 
     context "ROIMB4" do
       let(:base_regulation) {
@@ -16,11 +16,13 @@ describe BaseRegulation do
 
       describe "valid" do
         let(:regulation_group_id) { create(:regulation_group).regulation_group_id }
+
         it { expect(base_regulation.conformance_errors).to be_empty }
       end
 
       describe "invalid" do
         let(:regulation_group_id) { "ACC" }
+
         it {
           expect(base_regulation.conformance_errors).to have_key(:ROIMB4)
         }
@@ -41,8 +43,8 @@ describe BaseRegulation do
           )
           base_regulation.officialjournal_page = 12
           expect(
-            base_regulation.conformant_for?(:update)
-          ).to be_truthy
+            base_regulation
+          ).to be_conformant_for(:update)
         end
 
         it "invalid" do
@@ -55,8 +57,8 @@ describe BaseRegulation do
           )
           base_regulation.information_text = "AC"
           expect(
-            base_regulation.conformant_for?(:update)
-          ).to be_falsey
+            base_regulation
+          ).not_to be_conformant_for(:update)
           expect(base_regulation.conformance_errors).to have_key(:ROIMB5)
         end
       end
@@ -70,8 +72,8 @@ describe BaseRegulation do
                                    officialjournal_page: 11
           base_regulation.officialjournal_page = 12
           expect(
-            base_regulation.conformant_for?(:update)
-          ).to be_truthy
+            base_regulation
+          ).to be_conformant_for(:update)
         end
 
         it "invalid" do
@@ -80,8 +82,8 @@ describe BaseRegulation do
                                    information_text: "AB"
           base_regulation.information_text = "AC"
           expect(
-            base_regulation.conformant_for?(:update)
-          ).to be_falsey
+            base_regulation
+          ).not_to be_conformant_for(:update)
           expect(base_regulation.conformance_errors).to have_key(:ROIMB6)
         end
       end
@@ -93,8 +95,8 @@ describe BaseRegulation do
                                  effective_end_date: Date.today + 10.days
         base_regulation.validity_end_date = Date.today + 5.days
         expect(
-          base_regulation.conformant_for?(:create)
-        ).to be_truthy
+          base_regulation
+        ).to be_conformant_for(:create)
       end
 
       it "invalid" do
@@ -102,8 +104,8 @@ describe BaseRegulation do
                                  effective_end_date: Date.today + 10.days
         base_regulation.validity_end_date = Date.today + 15.days
         expect(
-          base_regulation.conformant_for?(:create)
-        ).to be_falsey
+          base_regulation
+        ).not_to be_conformant_for(:create)
         expect(base_regulation.conformance_errors).to have_key(:ROIMB48)
       end
     end
@@ -122,7 +124,7 @@ describe BaseRegulation do
                                  base_regulation_id: "C123",
                                  approved_flag: true
         base_regulation.approved_flag = false
-        expect(base_regulation).to_not be_conformant
+        expect(base_regulation).not_to be_conformant
         expect(base_regulation.conformance_errors).to have_key(:ROIMB44)
       end
 
@@ -142,8 +144,8 @@ describe BaseRegulation do
                                  regulation_group_id: regulation_group.regulation_group_id,
                                  validity_start_date: Date.today - 10.days
         expect(
-          base_regulation.conformant_for?(:update)
-        ).to be_truthy
+          base_regulation
+        ).to be_conformant_for(:update)
       end
 
       it "invalid" do
@@ -155,8 +157,8 @@ describe BaseRegulation do
                                  validity_start_date: Date.today - 10.days,
                                  validity_end_date: Date.today + 10.days
         expect(
-          base_regulation.conformant_for?(:update)
-        ).to be_falsey
+          base_regulation
+        ).not_to be_conformant_for(:update)
         expect(base_regulation.conformance_errors).to have_key(:ROIMB47)
       end
     end
@@ -235,7 +237,7 @@ describe BaseRegulation do
                                          base_regulation_id: base_regulation.base_regulation_id,
                                          base_regulation_role: base_regulation.base_regulation_role,
                                          validity_start_date: Date.today - 10.days
-        expect(base_regulation).to_not be_conformant
+        expect(base_regulation).not_to be_conformant
         expect(base_regulation.conformance_errors).to have_key(:ROIMB15)
       end
     end
@@ -266,7 +268,7 @@ describe BaseRegulation do
                                 full_temporary_stop_regulation_id: modification_regulation.modification_regulation_id,
                                 full_temporary_stop_regulation_role: modification_regulation.modification_regulation_role,
                                 validity_start_date: Date.today - 10.days
-        expect(base_regulation).to_not be_conformant
+        expect(base_regulation).not_to be_conformant
         expect(base_regulation.conformance_errors).to have_key(:ROIMB19)
       end
     end
@@ -303,7 +305,7 @@ describe BaseRegulation do
                                 full_temporary_stop_regulation_role: modification_regulation.modification_regulation_role,
                                 validity_start_date: Date.today - 5.days,
                                 validity_end_date: Date.today + 10.days
-        expect(base_regulation).to_not be_conformant
+        expect(base_regulation).not_to be_conformant
         expect(base_regulation.conformance_errors).to have_key(:ROIMB20)
       end
     end
@@ -358,7 +360,7 @@ describe BaseRegulation do
           explicit_abrogation_regulation_role: fts_regulation.full_temporary_stop_regulation_role,
           abrogation_date: Date.today - 10.days
         )
-        expect(base_regulation).to_not be_conformant
+        expect(base_regulation).not_to be_conformant
         expect(base_regulation.conformance_errors).to have_key(:ROIMB21)
       end
     end

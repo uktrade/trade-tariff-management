@@ -6,7 +6,7 @@ describe 'workbasket table', js: true do
   end
 
   context 'user have no workbaskets' do
-    it 'should contain no data' do
+    it 'contains no data' do
       visit root_path
       expect(page).to have_content('You are not working with any items at the moment.')
     end
@@ -21,7 +21,7 @@ describe 'workbasket table', js: true do
              status: :new_in_progress,)
     end
 
-    it 'should display user workbasket data' do
+    it 'displays user workbasket data' do
       visit root_path
 
       expect(page).to have_content('093456')
@@ -44,7 +44,7 @@ describe 'workbasket table', js: true do
                status: :awaiting_cross_check,)
       end
 
-      it 'should display another users workbasket data' do
+      it 'displays another users workbasket data' do
         visit root_path
 
         expect(page).to have_content('093456')
@@ -69,7 +69,7 @@ describe 'workbasket table', js: true do
                status: :awaiting_cross_check,)
       end
 
-      it 'should display all users workbasket data' do
+      it 'displays all users workbasket data' do
         visit root_path
 
         expect(page).to have_content('093456')

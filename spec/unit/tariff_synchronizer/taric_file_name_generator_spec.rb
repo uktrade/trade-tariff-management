@@ -3,7 +3,7 @@ require 'tariff_synchronizer/taric_file_name_generator'
 
 describe TaricFileNameGenerator do
   let(:example_date) { Date.new(2010, 1, 1) }
-  let(:name_generator) { TaricFileNameGenerator.new(example_date) }
+  let(:name_generator) { described_class.new(example_date) }
 
   describe "#url" do
     it "returns the expected url to have the taric file for a specific date" do

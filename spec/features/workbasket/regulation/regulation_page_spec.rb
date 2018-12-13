@@ -5,7 +5,7 @@ describe 'create_regulation_page', js: true do
     include_context 'system_test_base_context'
 
     context 'click on Create regulation' do
-      it 'should open regulation page' do
+      it 'opens regulation page' do
         visit root_path
         expect(page).to have_content 'Create a new regulation'
 
@@ -20,7 +20,7 @@ describe 'create_regulation_page', js: true do
 
     context 'empty page' do
       context 'click on Create a new regulation' do
-        it 'should show validation error' do
+        it 'shows validation error' do
           visit_create_regulation
           click_on 'Create regulation'
           expect(page).to have_content 'You need to specify the regulation type!'

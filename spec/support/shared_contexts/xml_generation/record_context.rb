@@ -30,7 +30,7 @@ shared_context "xml_generation_record_context" do
     allow(settings).to receive(:collection) { [db_record] }
   end
 
-  it "should return valid XML" do
+  it "returns valid XML" do
     fields_to_check.map do |_field_name|
       expect_proper_xml_at(_field_name)
     end

@@ -6,11 +6,11 @@ describe Chief::CountryCode do
     let(:example_code) { Forgery(:basic).text }
 
     it 'maps CHIEF code to Taric' do
-      expect(Chief::CountryCode.to_taric(country_code.chief_country_cd)).to eq country_code.country_cd
+      expect(described_class.to_taric(country_code.chief_country_cd)).to eq country_code.country_cd
     end
 
     it 'is blank if no mapping is found' do
-      expect(Chief::CountryCode.to_taric(example_code)).to be_blank
+      expect(described_class.to_taric(example_code)).to be_blank
     end
   end
 end

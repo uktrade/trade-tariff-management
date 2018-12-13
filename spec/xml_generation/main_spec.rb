@@ -63,7 +63,7 @@ describe "Main XML generation" do
     allow(settings).to receive(:collection) { db_records }
   end
 
-  it "should return valid XML" do
+  it "returns valid XML" do
     expect(xml_envelope_node["id"]).not_to be_nil
     expect(xml_envelope_node["xmlns"]).to be_eql("urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0")
     expect(xml_envelope_node["xmlns:env"]).to be_eql("urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0")

@@ -35,7 +35,7 @@ describe "Measure Form APIs: Monetary units", type: :request do
       not_actual_monetary_unit_z
     end
 
-    it "should return JSON collection of all actual monetary_units" do
+    it "returns JSON collection of all actual monetary_units" do
       get "/monetary_units.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Monetary units", type: :request do
       expecting_monetary_unit_in_result(1, actual_monetary_unit_y)
     end
 
-    it "should filter monetary_units by keyword" do
+    it "filters monetary_units by keyword" do
       get "/monetary_units.json", params: { q: "Combined Nomen" }, headers: headers
 
       expect(collection.count).to eq(1)

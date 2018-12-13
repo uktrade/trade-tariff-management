@@ -47,7 +47,7 @@ describe Footnote do
         it 'loads correct description respecting given actual time' do
           TimeMachine.now do
             expect(
-              Footnote.where(footnote_id: footnote.footnote_id,
+              described_class.where(footnote_id: footnote.footnote_id,
                            footnote_type_id: footnote.footnote_type_id)
                           .eager(:footnote_descriptions)
                           .all
@@ -60,7 +60,7 @@ describe Footnote do
         it 'loads correct description respecting given time' do
           TimeMachine.at(1.year.ago) do
             expect(
-              Footnote.where(footnote_id: footnote.footnote_id,
+              described_class.where(footnote_id: footnote.footnote_id,
                            footnote_type_id: footnote.footnote_type_id)
                           .eager(:footnote_descriptions)
                           .all
@@ -71,7 +71,7 @@ describe Footnote do
 
           TimeMachine.at(4.years.ago) do
             expect(
-              Footnote.where(footnote_id: footnote.footnote_id,
+              described_class.where(footnote_id: footnote.footnote_id,
                            footnote_type_id: footnote.footnote_type_id)
                           .eager(:footnote_descriptions)
                           .all
@@ -99,7 +99,7 @@ describe Footnote do
         before { footnote.footnote_description_periods.each(&:destroy) }
 
         it 'performs validation' do
-          expect(footnote.reload).to_not be_conformant
+          expect(footnote.reload).not_to be_conformant
         end
       end
 
@@ -109,7 +109,7 @@ describe Footnote do
 
         it 'performs validation' do
           desc_period.update(validity_start_date: footnote.validity_start_date + 1.day)
-          expect(footnote.reload).to_not be_conformant
+          expect(footnote.reload).not_to be_conformant
         end
       end
 
@@ -123,7 +123,7 @@ describe Footnote do
         }
 
         it 'performs validation' do
-          expect(footnote.reload).to_not be_conformant
+          expect(footnote.reload).not_to be_conformant
         end
       end
 
@@ -134,7 +134,7 @@ describe Footnote do
         before { desc_period.update(validity_start_date: footnote.validity_end_date + 1.day) }
 
         it 'performs validation' do
-          expect(footnote.reload).to_not be_conformant
+          expect(footnote.reload).not_to be_conformant
         end
       end
     end
@@ -152,7 +152,7 @@ describe Footnote do
         expect(footnote).to be_conformant
 
         footnote.validity_start_date = measure.validity_start_date + 1
-        expect(footnote).to_not be_conformant
+        expect(footnote).not_to be_conformant
       end
     end
 
@@ -169,7 +169,7 @@ describe Footnote do
         expect(footnote).to be_conformant
 
         footnote.validity_start_date = goods_nomenclature.validity_start_date + 1
-        expect(footnote).to_not be_conformant
+        expect(footnote).not_to be_conformant
       end
     end
 
@@ -186,7 +186,7 @@ describe Footnote do
         expect(footnote).to be_conformant
 
         footnote.validity_start_date = export_refund_nomenclature.validity_start_date + 1
-        expect(footnote).to_not be_conformant
+        expect(footnote).not_to be_conformant
       end
     end
 
@@ -203,16 +203,16 @@ describe Footnote do
         expect(footnote).to be_conformant
 
         footnote.validity_start_date = additional_code.validity_start_date + 1
-        expect(footnote).to_not be_conformant
+        expect(footnote).not_to be_conformant
       end
     end
 
     describe 'FO10' do
-      it { should validate_validity_date_span.of(:meursing_headings) }
+      it { is_expected.to validate_validity_date_span.of(:meursing_headings) }
     end
 
     describe 'FO17' do
-      it { should validate_validity_date_span.of(:footnote_type) }
+      it { is_expected.to validate_validity_date_span.of(:footnote_type) }
     end
 
     describe 'FO11' do

@@ -34,7 +34,7 @@ FactoryGirl.define do
     end
 
     trait :declarable do
-      producline_suffix "80"
+      producline_suffix { "80" }
     end
 
     trait :expired do

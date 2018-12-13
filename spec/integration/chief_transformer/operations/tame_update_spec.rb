@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe ChiefTransformer::Processor::TameUpdate do
   before(:all) { preload_standing_data }
+
   after(:all)  { clear_standing_data }
 
   let(:sample_operation_date) { Date.new(2013, 8, 5) }
@@ -33,7 +34,7 @@ describe ChiefTransformer::Processor::TameUpdate do
                                   origin: chief_update.filename)
       }
 
-      before { ChiefTransformer::Processor::TameUpdate.new(tame).process }
+      before { described_class.new(tame).process }
 
       it 'ends measure setting its validity end date to TAME last effective timestap' do
         expect(measure.reload.validity_end_date.to_date).to eq last_effective_date.to_date

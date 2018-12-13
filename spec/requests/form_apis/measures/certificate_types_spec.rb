@@ -35,7 +35,7 @@ describe "Measure Form APIs: Certificate types", type: :request do
       not_actual_certificate_type_z
     end
 
-    it "should return JSON collection of all actual certificate_types" do
+    it "returns JSON collection of all actual certificate_types" do
       get "/certificate_types.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Certificate types", type: :request do
       expecting_certificate_type_in_result(1, actual_certificate_type_y)
     end
 
-    it "should filter certificate_types by keyword" do
+    it "filters certificate_types by keyword" do
       get "/certificate_types.json", params: { q: "Combined Nomen" }, headers: headers
 
       expect(collection.count).to eq(1)

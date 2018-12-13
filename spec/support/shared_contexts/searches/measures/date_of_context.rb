@@ -7,7 +7,7 @@ shared_context "measures_search_date_of_context" do
     set_date(c_measure, field_name, 1.days.ago)
   end
 
-  it "should filter by operator values" do
+  it "filters by operator values" do
     #
     # 'is' filter
     #

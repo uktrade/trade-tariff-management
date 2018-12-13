@@ -35,7 +35,7 @@ describe "Measure Form APIs: Measurement unit qualifiers", type: :request do
       not_actual_measurement_unit_qualifier_b
     end
 
-    it "should return JSON collection of all actual measurement_unit_qualifiers" do
+    it "returns JSON collection of all actual measurement_unit_qualifiers" do
       get "/measurement_unit_qualifiers.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Measurement unit qualifiers", type: :request do
       expecting_measurement_unit_qualifier_in_result(1, actual_measurement_unit_qualifier_z)
     end
 
-    it "should filter measurement_unit_qualifiers by keyword" do
+    it "filters measurement_unit_qualifiers by keyword" do
       get "/measurement_unit_qualifiers.json", params: { q: "Gros" }, headers: headers
 
       expect(collection.count).to eq(1)

@@ -64,7 +64,7 @@ RSpec.configure do |config|
     redis.flushdb
   end
 
-  config.before(:each) do
+  config.before do
     Rails.cache.clear
     Sidekiq::Worker.clear_all
   end

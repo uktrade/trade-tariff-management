@@ -7,7 +7,7 @@ describe "Auditable sequel plugin" do
     it "creates an audit record when updated" do
       expect {
         model_with_plugin.update(content: "test")
-      }.to change { Audit.count }.by(1)
+      }.to change(Audit, :count).by(1)
     end
 
     it "the new audit record created keeps the record of the changes" do

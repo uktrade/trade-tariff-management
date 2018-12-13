@@ -123,7 +123,7 @@ shared_examples_for 'search references controller' do
           delete :destroy, params: {
             format: :json
           }.merge(resource_query)
-        }.to change { SearchReference.count }.by(-1)
+        }.to change(SearchReference, :count).by(-1)
       end
     end
 
@@ -136,7 +136,7 @@ shared_examples_for 'search references controller' do
             id: bogus_search_ref_id,
             format: :json
           }.merge(collection_query)
-        }.not_to change { SearchReference.count }
+        }.not_to change(SearchReference, :count)
       end
 
       it 'returns 404 response' do

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe TaricImporter::RecordProcessor::DestroyOperation do
   describe '#to_oplog_operation' do
     let(:empty_operation) {
-      TaricImporter::RecordProcessor::DestroyOperation.new(nil, nil)
+      described_class.new(nil, nil)
     }
 
     it 'identifies as destroy operation' do

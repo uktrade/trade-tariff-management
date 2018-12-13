@@ -45,7 +45,7 @@ describe GeographicalArea do
         it 'loads correct description respecting given actual time' do
           TimeMachine.now do
             expect(
-              GeographicalArea.where(geographical_area_sid: geographical_area.geographical_area_sid)
+              described_class.where(geographical_area_sid: geographical_area.geographical_area_sid)
                           .eager(:geographical_area_descriptions)
                           .first
                           .geographical_area_description.pk
@@ -55,7 +55,7 @@ describe GeographicalArea do
 
         it 'loads correct description respecting given time' do
           TimeMachine.at(1.year.ago) do
-            result = GeographicalArea.eager(:geographical_area_descriptions)
+            result = described_class.eager(:geographical_area_descriptions)
                       .where(geographical_area_sid: geographical_area.geographical_area_sid)
                       .first.geographical_area_description.pk
             expect(result).to eq(geographical_area_description1.pk)
@@ -64,7 +64,7 @@ describe GeographicalArea do
 
         it 'loads correct description respecting given time' do
           TimeMachine.at(4.years.ago) do
-            result = GeographicalArea.where(geographical_area_sid: geographical_area.geographical_area_sid)
+            result = described_class.where(geographical_area_sid: geographical_area.geographical_area_sid)
                       .eager(:geographical_area_descriptions)
                       .first.geographical_area_description.pk
             expect(result).to eq(geographical_area_description2.pk)
@@ -126,7 +126,7 @@ describe GeographicalArea do
         it 'loads correct description respecting given actual time' do
           TimeMachine.now do
             expect(
-              GeographicalArea.where(geographical_area_sid: geographical_area.geographical_area_sid)
+              described_class.where(geographical_area_sid: geographical_area.geographical_area_sid)
                           .eager(:contained_geographical_areas)
                           .all
                           .first
@@ -139,7 +139,7 @@ describe GeographicalArea do
         it 'loads correct description respecting given time' do
           TimeMachine.at(1.year.ago) do
             expect(
-              GeographicalArea.where(geographical_area_sid: geographical_area.geographical_area_sid)
+              described_class.where(geographical_area_sid: geographical_area.geographical_area_sid)
                           .eager(:contained_geographical_areas)
                           .all
                           .first
@@ -150,7 +150,7 @@ describe GeographicalArea do
 
           TimeMachine.at(4.years.ago) do
             expect(
-              GeographicalArea.where(geographical_area_sid: geographical_area.geographical_area_sid)
+              described_class.where(geographical_area_sid: geographical_area.geographical_area_sid)
                           .eager(:contained_geographical_areas)
                           .all
                           .first
@@ -173,7 +173,7 @@ describe GeographicalArea do
       it "without description record" do
         geographical_area = create :geographical_area
         geographical_area.geographical_area_sid = generate(:geographical_area_sid)
-        expect(geographical_area).to_not be_conformant
+        expect(geographical_area).not_to be_conformant
         expect(geographical_area.conformance_errors).to have_key(:GA3)
       end
 
@@ -182,7 +182,7 @@ describe GeographicalArea do
                                    validity_start_date: Date.today - 10.days
         geographical_area_description = geographical_area.geographical_area_description
         geographical_area_description.geographical_area_description_period.validity_start_date = Date.today - 8.days
-        expect(geographical_area).to_not be_conformant
+        expect(geographical_area).not_to be_conformant
         expect(geographical_area.conformance_errors).to have_key(:GA3)
       end
 
@@ -196,7 +196,7 @@ describe GeographicalArea do
           valid_at: validity_start_date,
           geographical_area_sid: geographical_area.geographical_area_sid
         )
-        expect(geographical_area).to_not be_conformant
+        expect(geographical_area).not_to be_conformant
         expect(geographical_area.conformance_errors).to have_key(:GA3)
       end
 
@@ -205,7 +205,7 @@ describe GeographicalArea do
                                    validity_end_date: Date.today + 5.days
         geographical_area_description = geographical_area.geographical_area_description
         geographical_area_description.geographical_area_description_period.validity_end_date = Date.today + 10.days
-        expect(geographical_area).to_not be_conformant
+        expect(geographical_area).not_to be_conformant
         expect(geographical_area.conformance_errors).to have_key(:GA3)
       end
 
@@ -251,7 +251,7 @@ describe GeographicalArea do
         }
 
         it {
-          expect(geographical_area.conformance_errors).to_not have_key(:GA4)
+          expect(geographical_area.conformance_errors).not_to have_key(:GA4)
         }
       end
     end
@@ -334,7 +334,7 @@ describe GeographicalArea do
           }
 
           it {
-            expect(geographical_area.conformance_errors).to_not have_key(:GA5)
+            expect(geographical_area.conformance_errors).not_to have_key(:GA5)
           }
         end
 
@@ -346,7 +346,7 @@ describe GeographicalArea do
           }
 
           it {
-            expect(geographical_area.conformance_errors).to_not have_key(:GA5)
+            expect(geographical_area.conformance_errors).not_to have_key(:GA5)
           }
         end
 
@@ -363,7 +363,7 @@ describe GeographicalArea do
           }
 
           it {
-            expect(geographical_area.conformance_errors).to_not have_key(:GA5)
+            expect(geographical_area.conformance_errors).not_to have_key(:GA5)
           }
         end
       end
@@ -418,24 +418,24 @@ describe GeographicalArea do
 
     describe "#group?" do
       it "determines the type from the geographical code" do
-        expect(country).to_not be_group
+        expect(country).not_to be_group
         expect(group).to be_group
-        expect(region).to_not be_group
+        expect(region).not_to be_group
       end
     end
 
     describe "#country?" do
       it "determines the type from the geographical code" do
         expect(country).to be_country
-        expect(group).to_not be_country
-        expect(region).to_not be_country
+        expect(group).not_to be_country
+        expect(region).not_to be_country
       end
     end
 
     describe "#region?" do
       it "determines the type from the geographical code" do
-        expect(country).to_not be_region
-        expect(group).to_not be_region
+        expect(country).not_to be_region
+        expect(group).not_to be_region
         expect(region).to be_region
       end
     end

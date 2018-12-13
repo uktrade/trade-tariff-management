@@ -24,7 +24,7 @@ describe "Measure search: type filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by measure_type_id with 'is' operator" do
+    it "filters by measure_type_id with 'is' operator" do
       res = search_results(
         enabled: true,
         operator: 'is',
@@ -48,7 +48,7 @@ describe "Measure search: type filter" do
       expect(measure_sids).not_to include(type_143_measure.measure_sid)
     end
 
-    it "should filter by measure_type_id with 'is_not' operator" do
+    it "filters by measure_type_id with 'is_not' operator" do
       res = search_results(
         enabled: true,
         operator: 'is_not',
