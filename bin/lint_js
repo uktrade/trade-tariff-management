@@ -6,8 +6,7 @@
 
 set -eu
 
-LINT_SINCE_SHA=33e3c45a
-EDITED_JS_FILES=$(git diff $LINT_SINCE_SHA..HEAD --name-only -- '*.js' | grep -Ev 'eslintrc|vendor')
+EDITED_JS_FILES=$(git diff origin/master HEAD --name-only -- '*.js' | grep -Ev 'eslintrc|vendor|node_modules')
 
 if [[ "$EDITED_JS_FILES" == "" ]]; then
   echo "No JS files to lint"

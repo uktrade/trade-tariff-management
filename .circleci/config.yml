@@ -27,11 +27,11 @@ jobs: # a collection of steps
           name: Which bundler?
           command: bundle -v
 
-      # Restore bundle cache
+      # Restore bundle & npm cache
       - restore_cache:
           keys:
             - tariff_management_test-{{ checksum "Gemfile.lock" }}
-            - tariff_management_test-
+            - tariff_management_test-{{ checksum "package-lock.json" }}
 
       - run:
           name: Install PostgreSQL CLI utilities
@@ -41,11 +41,29 @@ jobs: # a collection of steps
           name: Bundle Install
           command: bundle check || bundle install
 
+      - run:
+          name: NPM Install
+          command: npm install
+
+      # Store npm cache
+      - save_cache:
+          key: tariff_management_test-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
       # Store bundle cache
       - save_cache:
           key: tariff_management_test-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
+
+      - run:
+          name: Lint Ruby code
+          command: bin/lint_ruby
+
+      - run:
+          name: Lint JavaScript code
+          command: bin/lint_js
 
       - run:
           name: Wait for DB
