@@ -31,6 +31,10 @@ jobs: # a collection of steps
       - restore_cache:
           keys:
             - tariff_management_test-{{ checksum "Gemfile.lock" }}
+
+      # Restore npm cache
+      - restore_cache:
+          keys:
             - tariff_management_test-{{ checksum "package-lock.json" }}
 
       - run:
