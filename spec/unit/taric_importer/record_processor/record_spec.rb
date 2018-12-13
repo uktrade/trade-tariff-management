@@ -15,7 +15,7 @@ describe TaricImporter::RecordProcessor::Record do
 
   describe 'initialization' do
     let(:record) {
-      TaricImporter::RecordProcessor::Record.new(record_hash)
+      described_class.new(record_hash)
     }
 
     it 'assigns transaction id' do
@@ -39,7 +39,7 @@ describe TaricImporter::RecordProcessor::Record do
 
   describe '#attributes=' do
     let(:record) {
-      TaricImporter::RecordProcessor::Record.new(record_hash)
+      described_class.new(record_hash)
     }
 
     context 'no mutations' do

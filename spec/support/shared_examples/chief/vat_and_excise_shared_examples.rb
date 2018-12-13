@@ -5,33 +5,33 @@ shared_examples_for "VAT and Excise TAME Daily Scenario 1: Changed VAT rate outc
     expect(Measure.count).to eq 5
   end
 
-  it 'should add end date to measure 0101010100' do
+  it 'adds end date to measure 0101010100' do
     m = Measure.where(goods_nomenclature_item_id: "0101010100",
                       validity_start_date: DateTime.parse("2007-11-15 11:00:00"),
                       validity_end_date: DateTime.parse("2008-04-01 00:00:00")).take
     expect(m.measure_components.first.duty_amount).to eq 15
   end
 
-  it 'should add end date to measure 0202020200' do
+  it 'adds end date to measure 0202020200' do
     m = Measure.where(goods_nomenclature_item_id: "0202020200",
                       validity_start_date: DateTime.parse("2008-01-01 00:00:00"),
                       validity_end_date: DateTime.parse("2008-04-01 00:00:00")).take
     expect(m.measure_components.first.duty_amount).to eq 15
   end
 
-  it 'should increase Duty Amount to 17% for measure 0303030300' do
+  it 'increases Duty Amount to 17% for measure 0303030300' do
     m = Measure.where(goods_nomenclature_item_id: "0303030300",
                       validity_start_date: DateTime.parse("2008-04-30 14:00:00")).take
     expect(m.measure_components.first.duty_amount).to eq 17
   end
 
-  it 'should create new Measure for 0101010100 with duty amount of 17%' do
+  it 'creates new Measure for 0101010100 with duty amount of 17%' do
     m = Measure.where(goods_nomenclature_item_id: "0101010100",
                       validity_start_date: DateTime.parse("2008-04-01 00:00:00")).take
     expect(m.measure_components.first.duty_amount).to eq 17
   end
 
-  it 'should create new Measure for 0202020200 with duty amount of 17%' do
+  it 'creates new Measure for 0202020200 with duty amount of 17%' do
     m = Measure.where(goods_nomenclature_item_id: "0202020200",
                       validity_start_date: DateTime.parse("2008-04-01 00:00:00")).take
     expect(m.measure_components.first.duty_amount).to eq 17
@@ -265,7 +265,7 @@ shared_examples_for "VAT and Excise TAMF Daily Scenario 3: Removed max amount ou
 end
 
 shared_examples_for "VAT and Excise MFCM Daily Scenario 1: Updated measure with later start date outcome" do
-  before(:each) { ChiefTransformer.instance.invoke }
+  before { ChiefTransformer.instance.invoke }
 
   it 'no changes should be done to Measure because just fe_tsmp was moved forward' do
     m = Measure.where(goods_nomenclature_item_id: "0101010100",
@@ -296,7 +296,7 @@ shared_examples_for "VAT and Excise MFCM Daily Scenario 2: Updated measure with 
 end
 
 shared_examples_for "VAT and Excise MFCM Daily Scenario 3: Updated measure with later start date for terminated measure outcome" do
-  before(:each) { ChiefTransformer.instance.invoke }
+  before { ChiefTransformer.instance.invoke }
 
   it 'adds end date to existing measure' do
     m1 = Measure.where(goods_nomenclature_item_id: "0101010100",
@@ -313,7 +313,7 @@ shared_examples_for "VAT and Excise MFCM Daily Scenario 3: Updated measure with 
 end
 
 shared_examples_for "VAT and Excise MFCM Daily Scenario 4: Start date for measure moved forward outcome" do
-  before(:each) { ChiefTransformer.instance.invoke }
+  before { ChiefTransformer.instance.invoke }
 
   it 'deletes existing Matching measures' do
     Measure.where(goods_nomenclature_item_id: "0101010100",

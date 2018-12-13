@@ -7,7 +7,7 @@ FactoryGirl.define do
     validity_end_date        { nil }
 
     trait :xml do
-      measure_type_combination 0
+      measure_type_combination { 0 }
       validity_end_date        { Date.today.ago(1.years) }
     end
 

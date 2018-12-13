@@ -21,7 +21,7 @@ FactoryGirl.define do
     }
 
     trait :for_insert do
-      amend_indicator "I"
+      amend_indicator { "I" }
     end
 
     trait :prohibition do
@@ -35,12 +35,12 @@ FactoryGirl.define do
     end
 
     trait :with_vat_group do
-      msrgp_code "VT"
+      msrgp_code { "VT" }
       msr_type { %w[A E S Z].sample }
     end
 
     trait :with_non_vat_group do
-      msrgp_code "XX"
+      msrgp_code { "XX" }
     end
 
     trait :with_geographical_area do
@@ -78,8 +78,8 @@ FactoryGirl.define do
 
     trait :with_tamf_conditions do
       with_tame # TAMF requires TAME to be present, it's a subsidiary entry
-      msrgp_code "PR"
-      msr_type "AHC"
+      msrgp_code { "PR" }
+      msr_type { "AHC" }
       after(:create) { |mfcm|
         FactoryGirl.create(:tamf, msrgp_code: mfcm.msrgp_code,
                                   msr_type: mfcm.msr_type,
@@ -95,9 +95,9 @@ FactoryGirl.define do
     end
 
     trait :with_tame_components do
-      msrgp_code "EX"
-      msr_type "EXF"
-      tty_code "591"
+      msrgp_code { "EX" }
+      msr_type { "EXF" }
+      tty_code { "591" }
       after(:create) { |mfcm|
         tame = FactoryGirl.create(:tame, msrgp_code: mfcm.msrgp_code,
                                          msr_type: mfcm.msr_type,
@@ -119,9 +119,9 @@ FactoryGirl.define do
 
     trait :with_tamf_components do
       with_tame # TAMF requires TAME to be present, it's a subsidiary entry
-      msrgp_code "EX"
-      msr_type "EXF"
-      tty_code "591"
+      msrgp_code { "EX" }
+      msr_type { "EXF" }
+      tty_code { "591" }
       after(:create) { |mfcm|
         FactoryGirl.create(:tamf, msrgp_code: mfcm.msrgp_code,
                                   msr_type: mfcm.msr_type,
@@ -302,24 +302,24 @@ FactoryGirl.define do
   end
 
   factory :chief_duty_expression, class: Chief::DutyExpression do
-    adval1_rate 0
-    adval2_rate 0
-    spfc1_rate 1
-    spfc2_rate 0
-    duty_expression_id_spfc1 "01"
-    monetary_unit_code_spfc1 "GBP"
-    duty_expression_id_spfc2 nil
-    monetary_unit_code_spfc2 nil
-    duty_expression_id_adval1 nil
-    monetary_unit_code_adval1 nil
-    duty_expression_id_adval2 nil
+    adval1_rate { 0 }
+    adval2_rate { 0 }
+    spfc1_rate { 1 }
+    spfc2_rate { 0 }
+    duty_expression_id_spfc1 { "01" }
+    monetary_unit_code_spfc1 { "GBP" }
+    duty_expression_id_spfc2 { nil }
+    monetary_unit_code_spfc2 { nil }
+    duty_expression_id_adval1 { nil }
+    monetary_unit_code_adval1 { nil }
+    duty_expression_id_adval2 { nil }
   end
 
   factory :chief_measurement_unit, class: Chief::MeasurementUnit do
-    spfc_cmpd_uoq "098"
-    spfc_uoq "078"
-    measurem_unit_cd "ASX"
-    measurem_unit_qual_cd "X"
+    spfc_cmpd_uoq { "098" }
+    spfc_uoq { "078" }
+    measurem_unit_cd { "ASX" }
+    measurem_unit_qual_cd { "X" }
   end
 
   factory :chief_measure_type_footnote, class: Chief::MeasureTypeFootnote do

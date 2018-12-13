@@ -28,7 +28,7 @@ describe TariffSynchronizer::TariffDownloader do
           chief_update = chief_update_klass.last
           expect {
             tariff_downloader.perform
-          }.to_not change(chief_update_klass, :count)
+          }.not_to change(chief_update_klass, :count)
         end
 
         it "Creates a ChiefUpdate record with a pending state" do
@@ -127,7 +127,7 @@ describe TariffSynchronizer::TariffDownloader do
               travel_to example_date do
                 tariff_downloader.perform
               end
-            }.to_not change(chief_update_klass, :count)
+            }.not_to change(chief_update_klass, :count)
           end
 
           it "Logs the creating of the ChiefUpdate record with missing state" do

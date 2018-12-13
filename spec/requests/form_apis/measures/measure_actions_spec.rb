@@ -35,7 +35,7 @@ describe "Measure Form APIs: Measure actions", type: :request do
       not_actual_measure_action_z
     end
 
-    it "should return JSON collection of all actual measure_actions" do
+    it "returns JSON collection of all actual measure_actions" do
       get "/measure_actions.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Measure actions", type: :request do
       expecting_measure_action_in_result(1, actual_measure_action_y)
     end
 
-    it "should filter measure_actions by keyword" do
+    it "filters measure_actions by keyword" do
       get "/measure_actions.json", params: { q: "Combined Nomen" }, headers: headers
 
       expect(collection.count).to eq(1)

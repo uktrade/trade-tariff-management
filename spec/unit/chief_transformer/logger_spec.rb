@@ -27,7 +27,7 @@ describe ChiefTransformer::Logger do
           expect(@logger.logged(:error).size).to eq 1
           expect(@logger.logged(:error).last).to match /Could not transform/i
 
-          expect(ActionMailer::Base.deliveries).to_not be_empty
+          expect(ActionMailer::Base.deliveries).not_to be_empty
           email = ActionMailer::Base.deliveries.last
           expect(email.encoded).to match /invalid CHIEF operation/
         end

@@ -38,7 +38,7 @@ describe "Measure Form APIs: Measurement units", type: :request do
       not_actual_measurement_unit_mtr
     end
 
-    it "should return JSON collection of all actual measurement_units" do
+    it "returns JSON collection of all actual measurement_units" do
       get "/measurement_units.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -47,7 +47,7 @@ describe "Measure Form APIs: Measurement units", type: :request do
       expecting_measurement_unit_in_result(1, actual_measurement_unit_wat)
     end
 
-    it "should filter measurement_units by keyword" do
+    it "filters measurement_units by keyword" do
       get "/measurement_units.json", params: { q: "Carrying capacity in" }, headers: headers
 
       expect(collection.count).to eq(1)

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe RingBuffer do
   describe '#push' do
-    let(:ring_buffer) { RingBuffer.new(2) }
+    let(:ring_buffer) { described_class.new(2) }
 
     context 'with element limit not reached' do
       before {
@@ -29,7 +29,7 @@ describe RingBuffer do
   end
 
   describe '#full?' do
-    let(:ring_buffer) { RingBuffer.new(1) }
+    let(:ring_buffer) { described_class.new(1) }
 
     context 'element limit reached' do
       before { ring_buffer.push('foo') }

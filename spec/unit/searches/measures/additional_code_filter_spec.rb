@@ -39,7 +39,7 @@ describe "Measure search: additional code filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by additional_code_id with operator" do
+    it "filters by additional_code_id with operator" do
       #
       # 'is' filter
       #

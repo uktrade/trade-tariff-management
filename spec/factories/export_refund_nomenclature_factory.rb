@@ -62,8 +62,8 @@ FactoryGirl.define do
     transient do
       validity_start_date { Date.today.ago(3.years) }
       validity_end_date { nil }
-      valid_at Time.now.ago(2.years)
-      valid_to nil
+      valid_at { Time.now.ago(2.years) }
+      valid_to { nil }
     end
 
     export_refund_nomenclature_sid { generate(:sid) }

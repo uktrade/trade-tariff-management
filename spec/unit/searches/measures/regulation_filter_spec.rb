@@ -32,7 +32,7 @@ describe "Measure search: regulation filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by regulation with operator" do
+    it "filters by regulation with operator" do
       #
       # 'is' filter
       #

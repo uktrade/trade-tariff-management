@@ -66,14 +66,14 @@ describe MeasureCondition do
         it 'does not load associated measure component' do
           expect(
             measure_condition.measure_condition_components
-          ).to_not include measure_condition_component2
+          ).not_to include measure_condition_component2
         end
       end
 
       context 'eager loading' do
         it 'loads associated measure components' do
           expect(
-            MeasureCondition.where(measure_condition_sid: measure_condition.measure_condition_sid)
+            described_class.where(measure_condition_sid: measure_condition.measure_condition_sid)
                  .eager(:measure_condition_components)
                  .all
                  .first
@@ -83,12 +83,12 @@ describe MeasureCondition do
 
         it 'does not load associated measure component' do
           expect(
-            MeasureCondition.where(measure_condition_sid: measure_condition.measure_condition_sid)
+            described_class.where(measure_condition_sid: measure_condition.measure_condition_sid)
                  .eager(:measure_condition_components)
                  .all
                  .first
                  .measure_condition_components
-          ).to_not include measure_condition_component2
+          ).not_to include measure_condition_component2
         end
       end
     end
@@ -158,11 +158,11 @@ describe MeasureCondition do
   describe '#document_code' do
     let(:measure_condition) { create :measure_condition, condition_code: 'L', certificate_type_code: '1' }
 
-    it 'should contain certificate_type_code' do
+    it 'contains certificate_type_code' do
       expect(measure_condition.document_code).to include(measure_condition.certificate_type_code)
     end
 
-    it 'should contain certificate_code' do
+    it 'contains certificate_code' do
       expect(measure_condition.certificate_code).to include(measure_condition.certificate_code)
     end
   end
@@ -170,7 +170,7 @@ describe MeasureCondition do
   describe '#action' do
     let(:measure_condition) { create :measure_condition, measure_action: create(:measure_action) }
 
-    it 'should return measure_action_description' do
+    it 'returns measure_action_description' do
       expect(measure_condition.measure_action).to receive(:description).at_least(1)
       expect(measure_condition.action).to eq(measure_condition.measure_action_description)
     end
@@ -182,11 +182,11 @@ describe MeasureCondition do
                                      component_sequence_number: 456
     }
 
-    it 'should contain condition_code' do
+    it 'contains condition_code' do
       expect(measure_condition.condition).to include(measure_condition.condition_code)
     end
 
-    it 'should contain component_sequence_number' do
+    it 'contains component_sequence_number' do
       expect(measure_condition.condition).to include(measure_condition.component_sequence_number.to_s)
     end
   end
@@ -207,47 +207,47 @@ describe MeasureCondition do
     }
 
     describe "ME56: The referenced certificate must exist." do
-      it "should run validation successfully" do
+      it "runs validation successfully" do
         expect(measure_condition).to be_conformant
       end
 
-      it "should not run validation successfully" do
+      it "does not run validation successfully" do
         measure_condition.certificate_type_code = "z"
         measure_condition.certificate_type_code = "000"
 
-        expect(measure_condition).to_not be_conformant
+        expect(measure_condition).not_to be_conformant
         expect(measure_condition.conformance_errors).to have_key(:ME56)
       end
     end
 
     describe "ME57: The VP of the duty expression must span the VP of the measure." do
-      it "should run validation successfully" do
+      it "runs validation successfully" do
         expect(measure_condition).to be_conformant
       end
 
-      it "should not run validation successfully" do
+      it "does not run validation successfully" do
         measure.validity_start_date = Date.today.ago(5.years)
         measure.validity_end_date   = Date.today.ago(4.years)
         measure.save
 
-        expect(measure_condition).to_not be_conformant
+        expect(measure_condition).not_to be_conformant
         expect(measure_condition.conformance_errors).to have_key(:ME57)
       end
     end
 
     describe "ME58: The same certificate can only be referenced once by the same measure and the same condition type." do
-      it { should validate_uniqueness.of %i[measure_sid certificate_type_code certificate_code] }
+      it { is_expected.to validate_uniqueness.of %i[measure_sid certificate_type_code certificate_code] }
     end
 
     describe "ME59: The referenced action code must exist." do
-      it "should run validation successfully" do
+      it "runs validation successfully" do
         expect(measure_condition).to be_conformant
       end
 
-      it "should not run validation successfully" do
+      it "does not run validation successfully" do
         measure_condition.action_code = "0"
 
-        expect(measure_condition).to_not be_conformant
+        expect(measure_condition).not_to be_conformant
         expect(measure_condition.conformance_errors).to have_key(:ME59)
       end
     end

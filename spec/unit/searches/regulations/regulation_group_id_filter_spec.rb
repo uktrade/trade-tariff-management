@@ -3,7 +3,7 @@ require "rails_helper"
 describe "Regulations search: Regulation group id filter" do
   include_context "regulations_search_base_context"
 
-  it "should filter" do
+  it "filters" do
     results = search_results(regulation_group_id: group_aaa.regulation_group_id)
     expect(results.count).to be_eql(2)
     expect(results[0].regulation_id).to be_eql(base_i1111111.base_regulation_id)

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe ChiefTransformer::Processor::TameDelete do
   before(:all) { preload_standing_data }
+
   after(:all)  { clear_standing_data }
 
   let(:sample_operation_date) { Date.new(2013, 8, 5) }
@@ -43,7 +44,7 @@ describe ChiefTransformer::Processor::TameDelete do
               measure_type_id: 'VTS'
           }
 
-          before { ChiefTransformer::Processor::TameDelete.new(tame).process }
+          before { described_class.new(tame).process }
 
           it 'ends measure setting validity end date to goods nomenclature validity end date' do
             expect(
@@ -59,8 +60,8 @@ describe ChiefTransformer::Processor::TameDelete do
                   justification_regulation_id: nil,
                   justification_regulation_role: nil
                 )
-              ).one?
-            ).to be_truthy
+              )
+            ).to be_one
           end
         end
 
@@ -83,7 +84,7 @@ describe ChiefTransformer::Processor::TameDelete do
               measure_type_id: 'VTS'
           }
 
-          before { ChiefTransformer::Processor::TameDelete.new(tame).process }
+          before { described_class.new(tame).process }
 
           it 'ends measure setting validity end date to TAME first effective date' do
             expect(
@@ -99,8 +100,8 @@ describe ChiefTransformer::Processor::TameDelete do
                   justification_regulation_id: nil,
                   justification_regulation_role: nil
                 )
-              ).one?
-            ).to be_truthy
+              )
+            ).to be_one
           end
         end
       end
@@ -115,7 +116,7 @@ describe ChiefTransformer::Processor::TameDelete do
             measure_type_id: 'VTS'
         }
 
-        before { ChiefTransformer::Processor::TameDelete.new(tame).process }
+        before { described_class.new(tame).process }
 
         it 'ends measure setting validity end date to TAME first effective date' do
           expect(
@@ -131,8 +132,8 @@ describe ChiefTransformer::Processor::TameDelete do
                 justification_regulation_id: nil,
                 justification_regulation_role: nil
               )
-            ).one?
-          ).to be_truthy
+            )
+          ).to be_one
         end
       end
     end
@@ -158,7 +159,7 @@ describe ChiefTransformer::Processor::TameDelete do
           measure_type_id: 'VTS'
       }
 
-      before { ChiefTransformer::Processor::TameDelete.new(tame).process }
+      before { described_class.new(tame).process }
 
       it 'does not update Measure validity period' do
         expect(
@@ -171,8 +172,8 @@ describe ChiefTransformer::Processor::TameDelete do
             validity_end_date: measure.validity_end_date,
             justification_regulation_id: nil,
             justification_regulation_role: nil
-          ).one?
-        ).to be_truthy
+          )
+        ).to be_one
       end
     end
   end

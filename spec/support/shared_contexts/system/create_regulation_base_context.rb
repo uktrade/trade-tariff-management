@@ -100,7 +100,7 @@ shared_context 'create_regulation_base_context' do
 
   context 'filled regulation type' do
     context 'click on Create regulation' do
-      it 'should show validation errors' do
+      it 'shows validation errors' do
         visit_create_regulation
 
         within(find("fieldset", text: "Specify the regulation type")) do
@@ -118,7 +118,7 @@ shared_context 'create_regulation_base_context' do
     context 'filled required fields' do
       context 'click on Create regulation' do
         context 'click on Submit for cross-check' do
-          it 'should be okay' do
+          it 'is okay' do
             visit_create_regulation
 
             within(find("fieldset", text: "Specify the regulation type")) do
@@ -140,7 +140,7 @@ shared_context 'create_regulation_base_context' do
     context 'filled all fields' do
       context 'click on Create regulation' do
         context 'click on Submit for cross-check' do
-          it 'should be okay' do
+          it 'is okay' do
             visit_create_regulation
 
             within(find("fieldset", text: "Specify the regulation type")) do

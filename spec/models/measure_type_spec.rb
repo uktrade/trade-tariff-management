@@ -3,11 +3,11 @@ require 'rails_helper'
 describe MeasureType do
   describe 'validations' do
     # MT1 The measure type code must be unique.
-    it { should validate_uniqueness.of :measure_type_id }
+    it { is_expected.to validate_uniqueness.of :measure_type_id }
     # MT2 The start date must be less than or equal to the end date.
-    it { should validate_validity_dates }
+    it { is_expected.to validate_validity_dates }
     # MT4 The referenced measure type series must exist.
-    it { should validate_presence.of(:measure_type_series) }
+    it { is_expected.to validate_presence.of(:measure_type_series) }
 
     describe "MT3" do
       let(:measure_type) do
@@ -22,7 +22,7 @@ describe MeasureType do
                measure_type_id: measure_type.measure_type_id
       end
 
-      it "shouldn't allow to use a measure type that doesn't span the validity period of a measure" do
+      it "does not allow to use a measure type that doesn't span the validity period of a measure" do
         measure
         measure_type.reload
         measure_type.validity_end_date = Date.tomorrow
@@ -35,11 +35,11 @@ describe MeasureType do
       let(:measure_type) { create :measure_type }
       let(:measure) { create :measure, measure_type_id: measure_type.measure_type_id }
 
-      it "shouldn't allow a measure type to be deleted if it's used by a measure" do
+      it "does not allow a measure type to be deleted if it's used by a measure" do
         measure
         expect(
-          measure_type.reload.conformant_for?(:destroy)
-        ).to be_falsey
+          measure_type.reload
+        ).not_to be_conformant_for(:destroy)
         expect(measure_type.conformance_errors).to have_key(:MT7)
       end
     end
@@ -57,7 +57,7 @@ describe MeasureType do
 
       it "measure type series spans validity period of measure" do
         measure_type.measure_type_series.validity_end_date = Date.today + 3.days
-        expect(measure_type.conformant?).to be_falsey
+        expect(measure_type).not_to be_conformant
         expect(measure_type.conformance_errors).to have_key(:MT10)
       end
     end

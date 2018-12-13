@@ -107,7 +107,7 @@ describe "Measure Form APIs: Goods nomenclatures", type: :request do
     before do
     end
 
-    it "should return JSON collection of all actual goods_nomenclatures" do
+    it "returns JSON collection of all actual goods_nomenclatures" do
       get "/goods_nomenclatures.html", params: { q: commodity_code }, headers: headers
 
       expect(

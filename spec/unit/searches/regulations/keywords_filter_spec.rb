@@ -3,7 +3,7 @@ require "rails_helper"
 describe "Regulations search: Keywords filter" do
   include_context "regulations_search_base_context"
 
-  it "should filter" do
+  it "filters" do
     results = search_results(keywords: "Modific")
     expect(results.count).to be_eql(2)
     expect(results[0].regulation_id).to be_eql(modification_r5555555.modification_regulation_id)

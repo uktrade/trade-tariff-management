@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature "Regulations listing" do
+describe "Regulations listing" do
   let!(:user) do
     create(:user)
   end
@@ -22,7 +22,7 @@ feature "Regulations listing" do
     create(:base_regulation, validity_start_date: 1.year.ago)
   end
 
-  scenario "Find a regulation page" do
+  it "Find a regulation page" do
     visit root_url
     expect(page).to have_link("Find and edit regulations")
 
@@ -37,7 +37,7 @@ feature "Regulations listing" do
     expect(page).to have_content("If you know the ID of the regulation, then you can enter the ID in the box below. Alternatively, enter any other keyword(s) to help locate the regulation.")
   end
 
-  scenario "Search params for a regulation" do
+  it "Search params for a regulation" do
     visit regulations_path
 
     select("Various", from: "Select the regulation group")

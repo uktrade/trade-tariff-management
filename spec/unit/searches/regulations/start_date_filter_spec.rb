@@ -3,7 +3,7 @@ require "rails_helper"
 describe "Regulations search: Start date filter" do
   include_context "regulations_search_base_context"
 
-  it "should filter" do
+  it "filters" do
     results = search_results(start_date: date_to_format(11.days.ago))
     expect(results.count).to be_eql(2)
     expect(results[0].regulation_id).to be_eql(prorogation_r9999999.prorogation_regulation_id)

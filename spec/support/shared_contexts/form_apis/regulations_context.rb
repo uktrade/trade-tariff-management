@@ -25,7 +25,7 @@ shared_context "form_apis_regulations_base_context" do
       not_actual_modification_regulation_r9713560
     end
 
-    it "should return JSON collection of all actual regulation groups" do
+    it "returns JSON collection of all actual regulation groups" do
       get target_url, headers: headers
 
       expect(collection.count).to eq(2)
@@ -34,7 +34,7 @@ shared_context "form_apis_regulations_base_context" do
       expecting_regulation_in_result(1, actual_modification_regulation_r9713280)
     end
 
-    it "should filter regulation groups by keyword" do
+    it "filters regulation groups by keyword" do
       get target_url, params: { q: "New classification 2005" }, headers: headers
 
       expect(collection.count).to eq(1)

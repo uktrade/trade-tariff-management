@@ -73,7 +73,7 @@ describe Heading do
 
         expect(
           heading.measures.map(&:measure_sid)
-        ).to_not include measure.measure_sid
+        ).not_to include measure.measure_sid
       end
     end
 
@@ -95,7 +95,7 @@ describe Heading do
                                          validity_end_date: 8.years.ago
       }
 
-      around(:each) do |example|
+      around do |example|
         TimeMachine.at(1.year.ago) do
           example.run
         end
@@ -116,7 +116,7 @@ describe Heading do
       it 'does not return commodity that is irrelevant to given time' do
         expect(
           heading.commodities
-        ).to_not include commodity3
+        ).not_to include commodity3
       end
     end
 
@@ -134,7 +134,7 @@ describe Heading do
       }
 
 
-      around(:each) do |example|
+      around do |example|
         TimeMachine.at(1.year.ago) do
           example.run
         end
@@ -241,7 +241,7 @@ describe Heading do
         expect(
           heading.changes.select { |change|
             change.oid == heading.oid &&
-            change.model == Heading
+            change.model == described_class
           }
         ).to be_present
       end
@@ -293,7 +293,7 @@ describe Heading do
   describe '#short_code' do
     let!(:heading) { create :heading, goods_nomenclature_item_id: '1234000000' }
 
-    it 'should return first 4 chars of goods_nomenclature_item_id' do
+    it 'returns first 4 chars of goods_nomenclature_item_id' do
       expect(heading.short_code).to eq('1234')
     end
   end
@@ -302,10 +302,10 @@ describe Heading do
     let(:heading_80) { create(:heading, producline_suffix: '80') }
     let(:heading_10) { create(:heading, producline_suffix: '10') }
 
-    it "should return headings ony with producline_suffix == '80'" do
+    it "returns headings ony with producline_suffix == '80'" do
       headings = described_class.declarable
       expect(headings).to include(heading_80)
-      expect(headings).to_not include(heading_10)
+      expect(headings).not_to include(heading_10)
     end
   end
 
@@ -313,10 +313,10 @@ describe Heading do
     let!(:heading1) { create(:heading, goods_nomenclature_item_id: '1234000000') }
     let!(:heading2) { create(:heading, goods_nomenclature_item_id: '4321000000') }
 
-    it 'should return headings filtered by goods_nomenclature_item_id' do
+    it 'returns headings filtered by goods_nomenclature_item_id' do
       headings = described_class.by_code('1234')
       expect(headings).to include(heading1)
-      expect(headings).to_not include(heading2)
+      expect(headings).not_to include(heading2)
     end
   end
 end

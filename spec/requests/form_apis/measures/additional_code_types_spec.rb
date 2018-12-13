@@ -56,14 +56,14 @@ describe "Measure Form APIs: Additional code types", type: :request do
       not_actual_additional_code_type_3
     end
 
-    it "should return actual additional_code_types only" do
+    it "returns actual additional_code_types only" do
       get "/additional_code_types.json", params: { measure_type_id: "488" }, headers: headers
 
       expect(collection.count).to eq(1)
       expecting_additional_code_type_in_result(0, actual_additional_code_type_2)
     end
 
-    it "should filter additional_code_types by measure_type_id" do
+    it "filters additional_code_types by measure_type_id" do
       get "/additional_code_types.json", params: { measure_type_id: "277" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -75,7 +75,7 @@ describe "Measure Form APIs: Additional code types", type: :request do
       expecting_additional_code_type_in_result(0, actual_additional_code_type_2)
     end
 
-    it "should filter additional_code_types by keyword and measure_type_id at the same time" do
+    it "filters additional_code_types by keyword and measure_type_id at the same time" do
       get "/additional_code_types.json", params: { q: "Y", measure_type_id: "277" },
                                          headers: headers
 

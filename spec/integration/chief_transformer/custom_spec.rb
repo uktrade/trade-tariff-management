@@ -4,6 +4,7 @@ require 'chief_transformer'
 
 describe 'CHIEF: Custom scenarios' do
   before(:all) { preload_standing_data }
+
   after(:all)  { clear_standing_data }
 
   # Based on real data
@@ -34,7 +35,7 @@ describe 'CHIEF: Custom scenarios' do
     }
 
     specify 'national measure is valid before update' do
-      expect(national_measure.valid?).to be_truthy
+      expect(national_measure).to be_valid
     end
 
     context 'Taric update occurs' do
@@ -70,7 +71,7 @@ describe 'CHIEF: Custom scenarios' do
         perform_transaction
 
         expect(national_measure.reload.invalidated_by).to eq transaction_id
-        expect(national_measure.valid?).to be_truthy
+        expect(national_measure).to be_valid
       end
 
       specify 'sets goods nomenclature update date to operation date' do
@@ -114,7 +115,7 @@ describe 'CHIEF: Custom scenarios' do
     }
 
     specify 'national measure is valid before update' do
-      expect(national_measure.valid?).to be_truthy
+      expect(national_measure).to be_valid
     end
 
     context 'Taric update occurs' do
@@ -149,7 +150,7 @@ describe 'CHIEF: Custom scenarios' do
 
       specify 'sets national measures invalidate_by to Taric transaction number' do
         expect(national_measure.reload.invalidated_by).to eq transaction_id
-        expect(national_measure.valid?).to be_truthy
+        expect(national_measure).to be_valid
       end
 
       specify 'deletes goods nomenclature' do
@@ -196,14 +197,15 @@ describe 'CHIEF: Custom scenarios' do
                                 processed: false,
                                 amend_indicator: 'X'
     }
+
     before {
       ChiefTransformer.instance.invoke
     }
 
-    it 'should set measure validity end date to gono validity end date' do
+    it 'sets measure validity end date to gono validity end date' do
       # so that ME8 validation on Measure is kept valid
       expect(measure.reload.validity_end_date).to eq gono.validity_end_date
-      expect(measure.validity_end_date).to_not eq tame.fe_tsmp
+      expect(measure.validity_end_date).not_to eq tame.fe_tsmp
     end
   end
 
@@ -319,8 +321,8 @@ describe 'CHIEF: Custom scenarios' do
           validity_start_date: DateTime.new(2013, 7, 10, 10, 27),
           validity_end_date: DateTime.new(2013, 7, 10, 10, 28),
           measure_type_id: 'VTZ'
-        ).any?
-      ).to be_truthy
+        )
+      ).to be_any
     end
 
     it 'creates an open VTZ measure for 1104291710' do
@@ -330,8 +332,8 @@ describe 'CHIEF: Custom scenarios' do
           validity_start_date: DateTime.new(2013, 7, 10, 10, 28),
           validity_end_date: nil,
           measure_type_id: 'VTZ'
-        ).any?
-      ).to be_truthy
+        )
+      ).to be_any
     end
   end
 
@@ -388,8 +390,8 @@ describe 'CHIEF: Custom scenarios' do
           goods_nomenclature_item_id: '6111301000',
           measure_type_id: 'DPO',
           geographical_area_id: '1011' # erga omnes
-        ).any?
-      ).to be_truthy
+        )
+      ).to be_any
     end
   end
 

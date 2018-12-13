@@ -20,7 +20,7 @@ describe TaricImporter::RecordProcessor::CreateOperation do
     }
 
     let(:operation) {
-      TaricImporter::RecordProcessor::CreateOperation.new(record, operation_date)
+      described_class.new(record, operation_date)
     }
 
     before {

@@ -18,14 +18,14 @@ describe TradeTariffBackend::Validations::ValidityDateSpanValidation do
         }
         let(:validation) { described_class.new(:vld1, 'validity_date') }
 
-        it 'should return false' do
+        it 'returns false' do
           expect(
             described_class.new(
               :vld1,
               'validity date span validation',
               validation_options: { of: :associated_record }
-            ).valid?(model)
-          ).to be_falsy
+            )
+          ).not_to be_valid(model)
         end
       end
 
@@ -38,14 +38,14 @@ describe TradeTariffBackend::Validations::ValidityDateSpanValidation do
         }
         let(:validation) { described_class.new(:vld1, 'validity_date') }
 
-        it 'should return false' do
+        it 'returns false' do
           expect(
             described_class.new(
               :vld1,
               'validity date span validation',
               validation_options: { of: :associated_record }
-            ).valid?(model)
-          ).to be_falsy
+            )
+          ).not_to be_valid(model)
         end
       end
 
@@ -59,14 +59,14 @@ describe TradeTariffBackend::Validations::ValidityDateSpanValidation do
         }
         let(:validation) { described_class.new(:vld1, 'validity_date') }
 
-        it 'should return false' do
+        it 'returns false' do
           expect(
             described_class.new(
               :vld1,
               'validity date span validation',
               validation_options: { of: :associated_record }
-            ).valid?(model)
-          ).to be_falsy
+            )
+          ).not_to be_valid(model)
         end
       end
     end

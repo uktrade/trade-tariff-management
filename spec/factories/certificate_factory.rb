@@ -32,8 +32,8 @@ FactoryGirl.define do
 
   factory :certificate_description do
     transient do
-      valid_at Time.now.ago(2.years)
-      valid_to nil
+      valid_at { Time.now.ago(2.years) }
+      valid_to { nil }
     end
 
     certificate_description_period_sid { generate(:certificate_sid) }

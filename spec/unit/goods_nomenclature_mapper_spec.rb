@@ -28,7 +28,7 @@ describe GoodsNomenclatureMapper do
       }
 
       it 'assigns no parents or children to both commodities' do
-        commodities = GoodsNomenclatureMapper.new([commodity1, commodity2, commodity3])
+        commodities = described_class.new([commodity1, commodity2, commodity3])
         expect(commodity1.children).to include commodity2
         expect(commodity1.children).to include commodity3
         expect(commodity1.ancestors).to be_blank
@@ -40,7 +40,7 @@ describe GoodsNomenclatureMapper do
 
         expect(commodity3.children).to be_blank
         expect(commodity3.ancestors).to include commodity1
-        expect(commodity3.ancestors).to_not include commodity2
+        expect(commodity3.ancestors).not_to include commodity2
         expect(commodity3.parent).to eq commodity1
       end
     end
@@ -75,7 +75,7 @@ describe GoodsNomenclatureMapper do
       }
 
       it 'assigns no parents or children to both commodities' do
-        commodities = GoodsNomenclatureMapper.new([commodity1, commodity2, commodity3, commodity4])
+        commodities = described_class.new([commodity1, commodity2, commodity3, commodity4])
         expect(commodity1.children).to include commodity2
         expect(commodity1.ancestors).to be_blank
         expect(commodity1.parent).to be_blank
@@ -133,7 +133,7 @@ describe GoodsNomenclatureMapper do
       }
 
       it 'assigns no parents or children to both commodities' do
-        commodities = GoodsNomenclatureMapper.new([commodity1, commodity2, commodity3, commodity4, commodity5])
+        commodities = described_class.new([commodity1, commodity2, commodity3, commodity4, commodity5])
         expect(commodity1.children).to include commodity2
         expect(commodity1.children).to include commodity5
         expect(commodity1.ancestors).to be_blank
@@ -195,9 +195,9 @@ describe GoodsNomenclatureMapper do
       }
 
       it 'assigns no parents or children to both commodities' do
-        headings = GoodsNomenclatureMapper.new([heading1, heading2, heading3, heading4])
+        headings = described_class.new([heading1, heading2, heading3, heading4])
         expect(heading1.children).to include heading2
-        expect(heading1.children).to_not include heading3
+        expect(heading1.children).not_to include heading3
         expect(heading1.ancestors).to be_blank
         expect(heading1.parent).to be_blank
 
@@ -211,7 +211,7 @@ describe GoodsNomenclatureMapper do
 
         expect(heading4.children).to be_blank
         expect(heading4.ancestors).to include heading3
-        expect(heading4.ancestors).to_not include heading1
+        expect(heading4.ancestors).not_to include heading1
         expect(heading4.parent).to eq heading3
       end
     end

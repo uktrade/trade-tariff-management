@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe ChiefTransformer::Processor::MfcmUpdate do
   before(:all) { preload_standing_data }
+
   after(:all)  { clear_standing_data }
 
   let(:sample_operation_date) { Date.new(2013, 8, 5) }
@@ -33,7 +34,7 @@ describe ChiefTransformer::Processor::MfcmUpdate do
         }
 
         before {
-          ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process
+          described_class.new(mfcm).process
         }
 
         it 'ends affected measures' do
@@ -50,8 +51,8 @@ describe ChiefTransformer::Processor::MfcmUpdate do
                 justification_regulation_id: nil,
                 justification_regulation_role: nil
               )
-            ).one?
-          ).to be_truthy
+            )
+          ).to be_one
         end
       end
 
@@ -76,7 +77,7 @@ describe ChiefTransformer::Processor::MfcmUpdate do
         }
 
         before {
-          ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process
+          described_class.new(mfcm).process
         }
 
         it 'does not change measures' do
@@ -89,8 +90,8 @@ describe ChiefTransformer::Processor::MfcmUpdate do
               validity_end_date: nil,
               justification_regulation_id: nil,
               justification_regulation_role: nil
-            ).one?
-          ).to be_truthy
+            )
+          ).to be_one
         end
       end
     end
@@ -130,7 +131,7 @@ describe ChiefTransformer::Processor::MfcmUpdate do
         let!(:geographical_area) { create :geographical_area, :fifteen_years, :erga_omnes }
 
         before {
-          ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process
+          described_class.new(mfcm).process
         }
 
         it 'creates new measures for new validity period' do
@@ -144,8 +145,8 @@ describe ChiefTransformer::Processor::MfcmUpdate do
               validity_end_date: nil,
               justification_regulation_id: nil,
               justification_regulation_role: nil
-            ).one?
-          ).to be_truthy
+            )
+          ).to be_one
         end
       end
 
@@ -183,7 +184,7 @@ describe ChiefTransformer::Processor::MfcmUpdate do
         let!(:geographical_area) { create :geographical_area, :fifteen_years, :erga_omnes }
 
         it 'does not create new measures' do
-          expect { ChiefTransformer::Processor::MfcmUpdate.new(mfcm).process }.not_to change { Measure.count }
+          expect { described_class.new(mfcm).process }.not_to change(Measure, :count)
         end
       end
     end

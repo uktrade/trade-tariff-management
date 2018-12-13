@@ -45,8 +45,8 @@ describe TradeTariffBackend::Validations::GenericValidation do
 
       it 'returns true' do
         expect(
-          validation.valid?
-        ).to be_truthy
+          validation
+        ).to be_valid
       end
     end
 
@@ -55,8 +55,8 @@ describe TradeTariffBackend::Validations::GenericValidation do
 
       it 'returns false' do
         expect(
-          validation.valid?
-        ).to be_falsy
+          validation
+        ).not_to be_valid
       end
     end
   end

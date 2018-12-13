@@ -52,7 +52,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       not_actual_measure_type_105
     end
 
-    it "should return JSON collection of all actual measure_types" do
+    it "returns JSON collection of all actual measure_types" do
       get "/measure_types.json", headers: headers
 
       expect(collection.count).to eq(3)
@@ -62,7 +62,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       expecting_measure_type_in_result(2, actual_measure_type_481)
     end
 
-    it "should filter measure_types by keyword" do
+    it "filters measure_types by keyword" do
       get "/measure_types.json", params: { q: "Declaration of subheading submitted" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -74,7 +74,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       expecting_measure_type_in_result(0, actual_measure_type_277)
     end
 
-    it "should filter measure_types by measure_type_series_id" do
+    it "filters measure_types by measure_type_series_id" do
       get "/measure_types.json", params: { measure_type_series_id: "C" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -87,7 +87,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       expecting_measure_type_in_result(1, actual_measure_type_481)
     end
 
-    it "should filter measure_types by keyword and measure_type_series_id at the same time" do
+    it "filters measure_types by keyword and measure_type_series_id at the same time" do
       get "/measure_types.json", params: { q: "481", measure_type_series_id: "C" }, headers: headers
 
       expect(collection.count).to eq(0)

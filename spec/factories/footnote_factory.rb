@@ -3,8 +3,8 @@ FactoryGirl.define do
 
   factory :footnote do
     transient do
-      valid_at Date.today.ago(2.years)
-      valid_to nil
+      valid_at { Date.today.ago(2.years) }
+      valid_to { nil }
       goods_nomenclature_sid { generate(:goods_nomenclature_sid) }
     end
 
@@ -61,8 +61,8 @@ FactoryGirl.define do
 
   factory :footnote_description do
     transient do
-      valid_at Date.today.ago(2.years)
-      valid_to nil
+      valid_at { Date.today.ago(2.years) }
+      valid_to { nil }
     end
 
     footnote_description_period_sid { generate(:footnote_sid) }
@@ -93,8 +93,8 @@ FactoryGirl.define do
     validity_end_date               { nil }
 
     trait :xml do
-      goods_nomenclature_item_id    "0406909200"
-      productline_suffix            "80"
+      goods_nomenclature_item_id    { "0406909200" }
+      productline_suffix            { "80" }
       validity_end_date             { Date.today.ago(1.years) }
     end
   end
@@ -107,10 +107,10 @@ FactoryGirl.define do
     validity_end_date               { nil }
 
     trait :xml do
-      goods_nomenclature_item_id    "0406909200"
-      additional_code_type          "9"
-      export_refund_code            "500"
-      productline_suffix            "80"
+      goods_nomenclature_item_id    { "0406909200" }
+      additional_code_type          { "9" }
+      export_refund_code            { "500" }
+      productline_suffix            { "80" }
       validity_end_date             { Date.today.ago(1.years) }
     end
   end
@@ -129,8 +129,8 @@ FactoryGirl.define do
     validity_end_date               { nil }
 
     trait :xml do
-      additional_code_type_id       "F"
-      additional_code               "397"
+      additional_code_type_id       { "F" }
+      additional_code               { "397" }
       validity_end_date             { Date.today.ago(1.years) }
     end
   end
@@ -144,7 +144,7 @@ FactoryGirl.define do
     validity_end_date               { nil }
 
     trait :xml do
-      row_column_code               0
+      row_column_code               { 0 }
       validity_end_date             { Date.today.ago(1.years) }
     end
   end
@@ -155,7 +155,7 @@ FactoryGirl.define do
     validity_end_date   { nil }
 
     trait :xml do
-      application_code  4
+      application_code  { 4 }
       validity_end_date { Date.today.ago(1.years) }
     end
   end

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe ChiefTransformer::Processor::MfcmDelete do
   before(:all) { preload_standing_data }
+
   after(:all)  { clear_standing_data }
 
   let(:sample_operation_date) { Date.new(2013, 8, 5) }
@@ -35,7 +36,7 @@ describe ChiefTransformer::Processor::MfcmDelete do
       }
 
       before {
-        ChiefTransformer::Processor::MfcmDelete.new(mfcm).process
+        described_class.new(mfcm).process
       }
 
       it 'adds default national justification regulation to affected measures' do
@@ -51,8 +52,8 @@ describe ChiefTransformer::Processor::MfcmDelete do
               justification_regulation_id: nil,
               justification_regulation_role: nil
             )
-          ).one?
-        ).to be_truthy
+          )
+        ).to be_one
       end
     end
 
@@ -86,7 +87,7 @@ describe ChiefTransformer::Processor::MfcmDelete do
         }
 
         before {
-          ChiefTransformer::Processor::MfcmDelete.new(mfcm).process
+          described_class.new(mfcm).process
         }
 
         it 'adds validity end date of goods_nomenclature validity_end_date to affected measure' do
@@ -98,8 +99,8 @@ describe ChiefTransformer::Processor::MfcmDelete do
               measure_type_id: 'VTS',
               operation: 'U',
               operation_date: sample_operation_date
-            ).one?
-          ).to be_truthy
+            )
+          ).to be_one
         end
       end
 
@@ -132,7 +133,7 @@ describe ChiefTransformer::Processor::MfcmDelete do
         }
 
         before {
-          ChiefTransformer::Processor::MfcmDelete.new(mfcm).process
+          described_class.new(mfcm).process
         }
 
         it 'adds validity end date of MFCM fe_tsmp to affected measure' do
@@ -144,8 +145,8 @@ describe ChiefTransformer::Processor::MfcmDelete do
               measure_type_id: 'VTS',
               operation: 'U',
               operation_date: sample_operation_date
-            ).one?
-          ).to be_truthy
+            )
+          ).to be_one
         end
       end
     end
@@ -179,7 +180,7 @@ describe ChiefTransformer::Processor::MfcmDelete do
       }
 
       before {
-        ChiefTransformer::Processor::MfcmDelete.new(mfcm).process
+        described_class.new(mfcm).process
       }
 
       it 'adds validity end date of MFCM fe_tsmp to affected measure' do
@@ -191,8 +192,8 @@ describe ChiefTransformer::Processor::MfcmDelete do
             measure_type_id: 'VTS',
             operation: 'U',
             operation_date: sample_operation_date
-          ).one?
-        ).to be_truthy
+          )
+        ).to be_one
       end
     end
   end

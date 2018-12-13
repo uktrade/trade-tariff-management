@@ -35,7 +35,7 @@ describe "Measure Form APIs: Footnote types", type: :request do
       not_actual_footnote_type_c
     end
 
-    it "should return JSON collection of all actual footnote types" do
+    it "returns JSON collection of all actual footnote types" do
       get "/footnote_types.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -44,7 +44,7 @@ describe "Measure Form APIs: Footnote types", type: :request do
       expecting_footnote_type_in_result(1, actual_footnote_type_wr)
     end
 
-    it "should filter footnote types by keyword" do
+    it "filters footnote types by keyword" do
       get "/footnote_types.json", params: { q: "Combined Nomen" }, headers: headers
 
       expect(collection.count).to eq(1)

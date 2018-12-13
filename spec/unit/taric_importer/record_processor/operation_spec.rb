@@ -3,7 +3,7 @@ require 'rails_helper'
 describe TaricImporter::RecordProcessor::Operation do
   describe '#call' do
     let(:empty_operation) {
-      TaricImporter::RecordProcessor::Operation.new(nil, nil)
+      described_class.new(nil, nil)
     }
 
     it 'must be implemented by subclasses' do
@@ -13,7 +13,7 @@ describe TaricImporter::RecordProcessor::Operation do
 
   describe '#to_oplog_operation' do
     let(:empty_operation) {
-      TaricImporter::RecordProcessor::Operation.new(nil, nil)
+      described_class.new(nil, nil)
     }
 
     it 'must be implemented by subclasses' do
