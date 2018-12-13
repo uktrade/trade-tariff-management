@@ -8,10 +8,9 @@ end
 ruby "~> 2.5.0"
 
 gem "rails", "5.1.6.1"
-gem "sinatra", "~> 2.0.2"
 
 # DB
-gem "pg", "0.18.4"
+gem 'pg', '~> 1.1', '>= 1.1.3'
 gem "sequel", "~> 4.32"
 gem "sequel-rails", "~> 0.9", ">= 0.9.12"
 
