@@ -1,15 +1,10 @@
 #!/bin/bash
 
-# Only lint JS modified since 'd-day' (when JS started getting linted)
-# As a file gets edited, it's time to fix the lint warnings.
-# This allows progressive linting of the previous JS.
-
-set -eu
-
 EDITED_JS_FILES=$(git diff origin/master HEAD --name-only -- '*.js' | grep -Ev 'eslintrc|vendor|node_modules')
 
 if [[ "$EDITED_JS_FILES" == "" ]]; then
   echo "No JS files to lint"
+  exit 0
 else
   echo "Linting JS"
   echo "$EDITED_JS_FILES"
