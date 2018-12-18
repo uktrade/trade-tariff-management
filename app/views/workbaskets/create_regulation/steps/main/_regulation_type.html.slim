@@ -1,9 +1,0 @@
-fieldset
-  h3.heading-medium
-    | Specify the regulation type
-    .row
-      .col-md-6
-        .form-group v-bind:class="{ 'form-group-error': errors.role }"
-          span.error-message v-if="errors.role" v-html="errors.role"
-          = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.role", "code-class-name" => "prefix--l1" } do
-            = f.input :role, as: :select, collection: form.regulation_roles, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select regulation type -"

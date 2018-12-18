@@ -6,20 +6,6 @@ shared_context 'create_regulation_base_context' do
   before do
     create(:regulation_role_type_description,
            regulation_role_type_id: 1, description: 'Base regulation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 2, description: 'Provisional anti-dumping/countervailing duty')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 3, description: 'Definitive anti-dumping/countervailing duty')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 4, description: 'Modification')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 5, description: 'Prorogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 6, description: 'Complete abrogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 7, description: 'Explicit abrogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 8, description: 'Regulation which temporarily suspends all another regulation (FTS - Full Temporary Stop)')
   end
 
   let!(:regulation_group) do
@@ -37,7 +23,6 @@ shared_context 'create_regulation_base_context' do
                Forgery(:basic).number(at_least: 10, at_most: 19).to_s +
                Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s +
                Forgery(:basic).number(at_least: 0, at_most: 9).to_s,
-           base_regulation_role: 1,
            replacement_indicator: 0,
            information_text: Forgery('lorem_ipsum').sentence)
   end
@@ -52,10 +37,6 @@ shared_context 'create_regulation_base_context' do
 
   let(:abrogation_date) do
     validity_start_date
-  end
-
-  let(:regulation_type) do
-    ''
   end
 
   let(:base_required_fields) do
@@ -103,10 +84,6 @@ shared_context 'create_regulation_base_context' do
       it 'shows validation errors' do
         visit_create_regulation
 
-        within(find("fieldset", text: "Specify the regulation type")) do
-          select_dropdown_value(regulation_type)
-        end
-
         click_on 'Create regulation'
 
         required_fields.each do |field|
@@ -120,10 +97,6 @@ shared_context 'create_regulation_base_context' do
         context 'click on Submit for cross-check' do
           it 'is okay' do
             visit_create_regulation
-
-            within(find("fieldset", text: "Specify the regulation type")) do
-              select_dropdown_value(regulation_type)
-            end
 
             fill_in_form(required_filed_values)
 
@@ -142,10 +115,6 @@ shared_context 'create_regulation_base_context' do
         context 'click on Submit for cross-check' do
           it 'is okay' do
             visit_create_regulation
-
-            within(find("fieldset", text: "Specify the regulation type")) do
-              select_dropdown_value(regulation_type)
-            end
 
             fill_in_form(filed_values)
 

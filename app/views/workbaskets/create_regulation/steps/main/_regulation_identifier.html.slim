@@ -19,10 +19,3 @@ h3.heading-medium
     .form-group v-bind:class="{ 'form-group-error': errors.number_suffix }"
       span.error-message v-if="errors.number_suffix" v-html="errors.number_suffix"
       = f.input :number_suffix, label: "Number suffix", input_html: { placeholder: "#", "v-model" => "regulation.number_suffix" }
-
-.row
-  .col-md-4
-    .form-group v-bind:class="{ 'form-group-error': errors.replacement_indicator }"
-      span.error-message v-if="errors.replacement_indicator" v-html="errors.replacement_indicator"
-      = content_tag "custom-select", { "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.replacement_indicator", "code-class-name" => "prefix--l1" } do
-        = f.input :replacement_indicator, as: :select, collection: form.replacement_indicators, value_method: :first, label_method: :last, label: "Replacement indicator", include_blank: true, prompt: "- select replacement indicator -"

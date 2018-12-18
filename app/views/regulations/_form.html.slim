@@ -7,43 +7,6 @@
         = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.role", "code-class-name" => "prefix--l1" } do
           = f.input :role, as: :select, collection: refulation_form.regulation_roles, value_method: :first, label_method: :last, label: false, include_blank: true, prompt: "- select regulation type -"
 
-    div v-if="dependentOnBaseRegulation"
-      h4.heading-small
-        | Specify the base regulation
-      .row
-        .col-md-6
-          .form-group v-bind:class="{ 'form-group-error': regulation.errors.base_regulation_id }"
-            span.error-message v-if="regulation.errors.base_regulation_id" v-html="regulation.errors.base_regulation_id[0]"
-            = f.input :base_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.base_regulation_role" }
-            = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.base_regulation_id", placeholder: "- select base regulation -", ":on-change" => "onBaseRegulationChange", "name" => "regulation_form[base_regulation_id]", "code-class-name" => "prefix--regulation" }
-
-    div v-if="canHaveRelatedAntidumpingLink"
-      h4.heading-small
-        | Specify a related antidumping regulation
-      .row
-        .col-md-6
-          .form-group v-bind:class="{ 'form-group-error': regulation.errors.related_antidumping_regulation_id }"
-            span.error-message v-if="regulation.errors.related_antidumping_regulation_id" v-html="regulation.errors.related_antidumping_regulation_id[0]"
-            = f.input :antidumping_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.antidumping_regulation_role" }
-            = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.related_antidumping_regulation_id", placeholder: "- select related antidumping regulation -", ":on-change" => "onRelatedAntidumpingRegulationChange", "name" => "regulation_form[related_antidumping_regulation_id]", ":drilldown-value" => "antidumpingRoles", "drilldown-name" => "roles", "code-class-name" => "prefix--regulation" }
-
-
-    / TODO: Return me back later
-    /       Hidden because of
-    /       `On create set the community code to 1 and hide the field`
-    /       from https://trello.com/c/EbZmbJYu/158-create-regulation-phase-1
-    /
-    - if false
-      div v-if="showCommunityCode"
-        h4.heading-small
-          | Specify the community code
-        .row
-          .col-md-4
-            .form-group v-bind:class="{ 'form-group-error': regulation.errors.community_code }"
-              span.error-message v-if="regulation.errors.community_code" v-html="regulation.errors.community_code[0]"
-              = f.input :community_code, as: :hidden, input_html: { "v-model" => "regulation.community_code" }
-              = content_tag "custom-select", "", { ":options" => "communityCodes", "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.community_code", "code-class-name" => "prefix--l1", "placeholder" => "- select community code -" }
-
     h4.heading-small
       | Specify the regulation identifier
 
@@ -58,18 +21,12 @@
       .col-md-3
         = f.input :number_suffix, label: "Number suffix", input_html: { placeholder: "#", "v-model" => "regulation.number_suffix" }
 
-    .row
-      .col-md-4
-        = content_tag "custom-select", { "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.replacement_indicator", "code-class-name" => "prefix--l1" } do
-          = f.input :replacement_indicator, as: :select, collection: RegulationForm::REPLACEMENT_INDICATORS, value_method: :first, label_method: :last, label: "Replacement indicator", include_blank: true, prompt: "- select replacement indicator -"
-
-
     h4.heading-small
       | Give the regulation name
 
     = f.input :information_text, as: :text, label: false, input_html: { rows: 4, "v-model" => "regulation.information_text" }
 
-    div v-if="showValidityPeriod"
+    div
       h4.heading-small
         | Specify the regulation's validity period
 
@@ -97,7 +54,7 @@
         span.error-message v-if="regulation.errors.effective_end_date" v-html="regulation.errors.effective_end_date[0]"
         = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.effective_end_date"  }
 
-      div v-if="showRegulationGroup"
+      div
         h4.heading-small
           | Specify the regulation group
 
@@ -106,22 +63,6 @@
             .form-group v-bind:class="{ 'form-group-error': regulation.errors.regulation_group_id }"
               span.error-message v-if="regulation.errors.regulation_group_id" v-html="regulation.errors.regulation_group_id[0]"
               = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }
-
-    div v-if="showPublishedDate"
-      h4.heading-small
-        | Specify the published date
-      = f.input :published_date, as: :hidden, input_html: { "v-model" => "regulation.published_date" }
-      .form-group v-bind:class="{ 'form-group-error': regulation.errors.published_date }"
-        span.error-message v-if="regulation.errors.published_date" v-html="regulation.errors.published_date[0]"
-        = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.published_date"  }
-
-    div v-if="isExplicitAbrogation"
-      h4.heading-small
-        | Specify the abrogation date
-      = f.input :abrogation_date, as: :hidden, input_html: { "v-model" => "regulation.abrogation_date" }
-      .form-group v-bind:class="{ 'form-group-error': regulation.errors.abrogation_date }"
-        span.error-message v-if="regulation.errors.abrogation_date" v-html="regulation.errors.abrogation_date[0]"
-        = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.abrogation_date"  }
 
     h4.heading-small
       | Upload the regulation

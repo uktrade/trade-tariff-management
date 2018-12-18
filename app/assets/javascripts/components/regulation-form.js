@@ -10,13 +10,6 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
-        antidumpingRoles: ["2", "3"],
-        communityCodes: [
-          { value: "1", text: "Economic" },
-          { value: "2", text: "Atomic" },
-          { value: "3", text: "Coal" },
-          { value: "4", text: "Economic/Coal"}
-        ],
         errors: []
       };
 
@@ -94,35 +87,13 @@ $(document).ready(function() {
       });
     },
     computed: {
-      dependentOnBaseRegulation: function() {
-        return $.inArray(this.regulation.role, ['4', '6', '7']) !== -1;
-      },
-      canHaveRelatedAntidumpingLink: function() {
-        var roles = ["2", "3"];
-
-        return roles.indexOf(this.regulation.role) > -1;
-      },
-      showCommunityCode: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
-      },
-      showValidityPeriod: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3", "4", "8"]) !== -1;
-      },
-      showRegulationGroup: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
-      },
-      showPublishedDate: function() {
-        return $.inArray(this.regulation.role, ["5", "6", "7", "8"]) !== -1;
-      },
-      isExplicitAbrogation: function() {
-        return this.regulation.role === "7";
-      },
       hasErrors: function() {
         return this.errors.length > 0;
       }
     },
     methods: {
       parseRegulationPayload: function(payload) {
+        //Todo check which of these values are no longer necessary if we are using base regulations only
         return {
           role: payload.role ? payload.role + "" : payload.role,
           prefix: payload.prefix,
@@ -146,7 +117,8 @@ $(document).ready(function() {
       },
       emptyRegulation: function() {
         return {
-          role: null,
+          //Todo check which of these values are no longer necessary if we are using base regulations only
+          role: "1",
           prefix: null,
           publication_year: null,
           regulation_number: null,
@@ -171,7 +143,8 @@ $(document).ready(function() {
       },
       createRegulationMainStepPayLoad: function() {
         return {
-          role: this.regulation.role,
+          //Todo check which of these values are no longer necessary if we are using base regulations only
+          role: "1",
           prefix: this.regulation.prefix,
           publication_year: this.regulation.publication_year,
           regulation_number: this.regulation.regulation_number,
@@ -195,20 +168,6 @@ $(document).ready(function() {
           published_date: this.regulation.published_date,
           abrogation_date: this.regulation.abrogation_date
         };
-      },
-      onBaseRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.base_regulation_role = item.role;
-      },
-      onRelatedAntidumpingRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.antidumping_regulation_role = item.role;
       }
     }
   });
