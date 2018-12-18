@@ -1,10 +1,6 @@
-= render "workbaskets/create_regulation/steps/main/regulation_type", f: f
-= render "workbaskets/create_regulation/steps/main/base_regulation", f: f
-= render "workbaskets/create_regulation/steps/main/antidumping_regulation", f: f
-= render "workbaskets/create_regulation/steps/main/regulation_identifier", f: f
-= render "workbaskets/create_regulation/steps/main/regulation_name", f: f
-= render "workbaskets/create_regulation/steps/main/validity_period", f: f
-= render "workbaskets/create_regulation/steps/main/published_date", f: f
-= render "workbaskets/create_regulation/steps/main/abrogation_date", f: f
-= render "workbaskets/create_regulation/steps/main/regulation_upload", f: f
-= render "workbaskets/create_regulation/steps/main/operation_date", f: f
+fieldset
+  = render "workbaskets/create_regulation/steps/main/regulation_identifier", f: f
+  = render "workbaskets/create_regulation/steps/main/regulation_name", f: f
+  = render "workbaskets/create_regulation/steps/main/validity_period", f: f
+  = render "workbaskets/create_regulation/steps/main/regulation_upload", f: f
+  = render "workbaskets/create_regulation/steps/main/operation_date", f: f
