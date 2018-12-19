@@ -1,5 +1,5 @@
 module Workbaskets
-  class BaseController < Measures::BulksBaseController
+  class BaseController < BulksBaseController
     around_action :configure_time_machine
 
     before_action :require_to_be_workbasket_owner!,
