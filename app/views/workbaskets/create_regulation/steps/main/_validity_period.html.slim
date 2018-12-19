@@ -22,18 +22,6 @@ div
       { "v-bind:value.sync" => "regulation.validity_end_date",
         id: "end_date" }
 
-  h3.heading-medium
-    | Specify the effective end date
-
-  = f.input :effective_end_date, as: :hidden, input_html: { "v-model" => "regulation.effective_end_date" }
-  .form-group v-bind:class="{ 'form-group-error': errors.effective_end_date }"
-    label.form-label for="effective_end_date"
-      | Effective end date
-    span.error-message v-if="errors.effective_end_date" v-html="errors.effective_end_date"
-    = content_tag "date-select", "",
-      { "v-bind:value.sync" => "regulation.effective_end_date",
-        id: "effective_end_date" }
-
   fieldset
     h3.heading-medium
       | Specify the regulation group

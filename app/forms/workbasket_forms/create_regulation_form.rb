@@ -12,7 +12,10 @@ module WorkbasketForms
                   :effective_end_date,
                   :published_date,
                   :abrogation_date,
-                  :pdf_data
+                  :pdf_data,
+                  :legal_id,
+                  :description,
+                  :reference_url
 
     def regulation_roles
       roles = RegulationRoleTypeDescription.all.map do |role|

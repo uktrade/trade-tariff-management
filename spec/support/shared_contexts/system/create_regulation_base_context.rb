@@ -27,10 +27,6 @@ shared_context 'create_regulation_base_context' do
            information_text: Forgery('lorem_ipsum').sentence)
   end
 
-  let(:effective_end_date) do
-    validity_end_date + 1.day
-  end
-
   let(:published_date) do
     validity_start_date
   end
@@ -45,9 +41,7 @@ shared_context 'create_regulation_base_context' do
         'Publication year',
         'Regulation number',
         'Number suffix',
-        # 'Replacement indicator', always filled
         'Information text',
-        'Operation date',
     ]
   end
 
@@ -61,9 +55,7 @@ shared_context 'create_regulation_base_context' do
         { name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text },
         { name: 'Regulation number', value: Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s, type: :text },
         { name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text },
-        # 'Replacement indicator', always filled
         { name: 'Information text', value: Forgery('lorem_ipsum').sentence, type: :text },
-        { name: 'Operation date', value: operation_date, type: :date },
     ]
   end
 
