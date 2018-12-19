@@ -1,5 +1,4 @@
 class BaseController < ApplicationController
-
   respond_to :json
   around_action :configure_time_machine
 
