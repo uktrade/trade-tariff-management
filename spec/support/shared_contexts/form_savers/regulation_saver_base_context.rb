@@ -4,7 +4,7 @@ shared_context "regulation_saver_base_context" do
   include_context "form_savers_base_context"
 
   let(:workbasket) do
-    ::Workbaskets::Workbasket::buld_new_workbasket!(:create_regulation, user)
+    ::Workbaskets::Workbasket::create(type: :create_regulation, user: user)
   end
 
   let(:regulation_saver) do

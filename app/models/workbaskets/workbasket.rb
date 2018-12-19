@@ -530,16 +530,6 @@ module Workbaskets
         999
       end
 
-      def buld_new_workbasket!(type, current_user)
-        workbasket = Workbaskets::Workbasket.new(
-          type: type,
-          user: current_user
-        )
-        workbasket.save
-
-        workbasket
-      end
-
       def clean_up!
         %w(
           bulk_edit_of_measures
