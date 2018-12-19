@@ -1,5 +1,5 @@
 module Quotas
-  class BulksController < Measures::BulksBaseController
+  class BulksController < BulksBaseController
     before_action :require_to_be_workbasket_owner!, only: %i[
         update destroy
     ]
