@@ -1,5 +1,4 @@
 class BulksBaseController < ApplicationController
-
   expose(:workbasket) do
     Workbaskets::Workbasket.find(id: params[:id])
   end
