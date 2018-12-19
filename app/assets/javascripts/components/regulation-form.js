@@ -5,6 +5,10 @@ $(document).ready(function() {
     return;
   }
 
+  const SUB_FIELD_LEGAL_ID = 0,
+        SUB_FIELD_DESCRIPTION = 1,
+        SUB_FIELD_URL = 2;
+
   var app = new Vue({
     el: form,
     data: function() {
@@ -112,7 +116,10 @@ $(document).ready(function() {
           antidumping_regulation_role: payload.antidumping_regulation_role,
           related_antidumping_regulation_id: payload.related_antidumping_regulation_id,
           published_date: payload.published_date,
-          abrogation_date: payload.abrogation_date
+          abrogation_date: payload.abrogation_date,
+          legal_id: this.extract_sub_field(payload.information_text, SUB_FIELD_LEGAL_ID),
+          description: this.extract_sub_field(payload.information_text, SUB_FIELD_DESCRIPTION),
+          reference_url: this.extract_sub_field(payload.information_text, SUB_FIELD_URL)
         };
       },
       emptyRegulation: function() {
@@ -137,8 +144,11 @@ $(document).ready(function() {
           antidumping_regulation_role: null,
           related_antidumping_regulation_id: null,
           published_date: null,
-          operation_date: null,
-          abrogation_date: null
+          operation_date: new Date().toLocaleDateString("en-GB"),
+          abrogation_date: null,
+          legal_id: null,
+          description: null,
+          reference_url: null
         }
       },
       createRegulationMainStepPayLoad: function() {
@@ -149,7 +159,7 @@ $(document).ready(function() {
           publication_year: this.regulation.publication_year,
           regulation_number: this.regulation.regulation_number,
           number_suffix: this.regulation.number_suffix,
-          information_text: this.regulation.information_text,
+          information_text: `${this.regulation.legal_id || ''}|${this.regulation.description || '' }|${this.regulation.reference_url || ''}`,
           effective_end_date: this.regulation.effective_end_date,
           regulation_group_id: this.regulation.regulation_group_id,
           base_regulation_id: this.regulation.base_regulation_id,
@@ -164,10 +174,16 @@ $(document).ready(function() {
           validity_start_date: this.regulation.validity_start_date,
           end_date: this.regulation.validity_end_date,
           validity_end_date: this.regulation.validity_end_date,
-          operation_date: this.regulation.operation_date,
+          operation_date: this.regulation.operation_date || new Date().toLocaleDateString("en-GB"),
           published_date: this.regulation.published_date,
           abrogation_date: this.regulation.abrogation_date
         };
+      },
+      extract_sub_field(string, field_position){
+        if (string === undefined) {
+          return undefined
+        }
+        return string.split("|")[field_position]
       }
     }
   });

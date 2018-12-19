@@ -34,6 +34,24 @@ table.create-measures-details-table
 
     tr
       td.heading_column
+        | Legal ID
+      td
+        = attributes_parser.legal_id
+
+    tr
+      td.heading_column
+        | Description
+      td
+        = attributes_parser.description
+
+    tr
+      td.heading_column
+        | Reference URL
+      td
+        = attributes_parser.reference_url
+
+    tr
+      td.heading_column
         | Start date
       td
         = attributes_parser.start_date_formatted

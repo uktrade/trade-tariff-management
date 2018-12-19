@@ -175,6 +175,7 @@ module WorkbasketInteractions
       def valid?
         @errors = {}
         check_required_params!
+        check_sub_fields!
         return false if @errors.present?
 
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
@@ -281,6 +282,15 @@ module WorkbasketInteractions
         if regulation_code_params_present? && regulation_code.size != 8
           @errors[:regulation_number] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
         end
+      end
+
+      # SUB_FIELD_NAME = {legal_id: 'Legal ID', description: 'Description', reference_url: 'Reference URL'}
+
+      def check_sub_fields!
+        legal_id, description, reference_url = original_params['information_text']&.split('|')
+        @errors[:legal_id] = "Legal ID can't be blank!" unless legal_id.present?
+        @errors[:description] = "Description can't be blank!" unless description.present?
+        @errors[:reference_url] = "Reference URL can't be blank!" unless reference_url.present?
       end
 
       def regulation_code_params_present?

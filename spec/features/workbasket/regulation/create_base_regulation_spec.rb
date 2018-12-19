@@ -27,7 +27,6 @@ describe 'base regulation', js: true do
     required_filed_values.
         concat([
                    { name: 'End date', value: validity_end_date, type: :date },
-                   { name: 'Effective end date', value: effective_end_date, type: :date },
                ])
   end
 end
