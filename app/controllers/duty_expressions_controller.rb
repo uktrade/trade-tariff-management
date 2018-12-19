@@ -1,4 +1,5 @@
 class DutyExpressionsController < ::BaseController
+
   def collection
     scope = DutyExpression.actual
 

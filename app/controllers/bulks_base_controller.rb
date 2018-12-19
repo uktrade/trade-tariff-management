@@ -1,5 +1,4 @@
 class BulksBaseController < ApplicationController
-  skip_around_action :configure_time_machine
 
   expose(:workbasket) do
     Workbaskets::Workbasket.find(id: params[:id])
