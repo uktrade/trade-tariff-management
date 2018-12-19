@@ -66,8 +66,9 @@ module Workbaskets
     end
 
     def new
-      self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
-        settings_type, current_user
+      self.workbasket = Workbaskets::Workbasket.create(
+        type: settings_type,
+        user: current_user
       )
 
       redirect_to initial_step_url
