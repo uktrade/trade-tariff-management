@@ -7,14 +7,16 @@
       = link_to "Measures", measures_url
 
     li aria-current="page"
-      | Approve new measures
+      | Cross-check and create measures
 
 header
   h1.heading-large
-    | Approve new measures
+    | Cross-check and create measures
 
   .view-workbasket-container
-    = render "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/block", partial_name: "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/approves/general"
+    = render "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/block", screen_type: :cross_check
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/workbasket_details"
+    = render "workbaskets/#{workbasket.type}/workflow_screens_parts/summary_of_configuration"
+
     = render "workbaskets/shared/steps/review_and_submit/measures", read_only: true, record_type: workbasket.type
-    = render "workbaskets/approves/form"
+    = render "workbaskets/workflows/cross_checks/form"
