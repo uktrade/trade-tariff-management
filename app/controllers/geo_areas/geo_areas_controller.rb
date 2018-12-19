@@ -1,6 +1,5 @@
 module GeoAreas
   class GeoAreasController < ApplicationController
-    skip_around_action :configure_time_machine, only: %i[index validate_search_settings]
 
     expose(:search_ops) do
       ops = params[:search]

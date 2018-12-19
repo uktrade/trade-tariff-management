@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
   before_action do
     authorise_user!('signin')
   end
-  around_action :configure_time_machine
 
   def current_page
     Integer(params[:page] || 1)

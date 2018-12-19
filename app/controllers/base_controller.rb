@@ -1,5 +1,7 @@
 class BaseController < ApplicationController
+
   respond_to :json
+  around_action :configure_time_machine
 
   expose(:json_list) do
     list = []

@@ -2,6 +2,8 @@ module XmlGeneration
   class ExportsController < ApplicationController
     include ::BaseJobMixin
 
+    around_action :configure_time_machine
+
     expose(:record_name) do
       "Export"
     end
