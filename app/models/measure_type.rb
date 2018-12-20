@@ -65,7 +65,7 @@ class MeasureType < Sequel::Model
         )
       end
 
-      scope.order(Sequel.asc(:measure_types__measure_type_id))
+      scope.order(Sequel.asc(:measure_types__measure_type_id)).eager(:measure_type_description).all
     end
   end
 

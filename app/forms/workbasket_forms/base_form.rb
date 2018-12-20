@@ -74,6 +74,7 @@ module WorkbasketForms
     def all_measure_types
       @all_mt ||= Rails.cache.fetch(:measures_form_measure_types, expires_in: 8.hours) do
         MeasureType.actual
+                   .eager(:measure_type_description)
                    .all
       end
     end
@@ -81,6 +82,7 @@ module WorkbasketForms
     def measure_type_series_collection
       @series ||= Rails.cache.fetch(:measures_form_measure_type_series, expires_in: 8.hours) do
         MeasureTypeSeries.actual
+                         .eager(:measure_type_series_description)
                          .all
       end
     end
@@ -89,7 +91,7 @@ module WorkbasketForms
       @ga_json ||= Rails.cache.fetch(:measures_form_geographical_areas_json, expires_in: 8.hours) do
         list = {}
 
-        GeographicalArea.actual.map do |group|
+        GeographicalArea.actual.eager(contained_geographical_areas: :geographical_area_descriptions).all.map do |group|
           list[group.geographical_area_id] = group.contained_geographical_areas.map do |child|
             {
               geographical_area_id: child.geographical_area_id,
@@ -105,6 +107,8 @@ module WorkbasketForms
     def all_geographical_areas
       @all_ga ||= Rails.cache.fetch(:measures_form_geographical_areas, expires_in: 8.hours) do
         GeographicalArea.actual
+                        .eager(:geographical_area_descriptions)
+                        .all
                         .map(&:to_json)
       end
     end
@@ -113,6 +117,8 @@ module WorkbasketForms
       @all_gc ||= Rails.cache.fetch(:measures_form_geographical_countries, expires_in: 8.hours) do
         GeographicalArea.actual
                         .countries
+                        .eager(:geographical_area_descriptions)
+                        .all
                         .map(&:to_json)
       end
     end
@@ -122,13 +128,16 @@ module WorkbasketForms
         GeographicalArea.actual
                         .groups
                         .except_erga_omnes
+                        .eager(:geographical_area_descriptions)
+                        .all
                         .map(&:to_json)
       end
     end
 
     def geographical_area_erga_omnes
       @gaeo ||= Rails.cache.fetch(:measures_form_geographical_area_erga_omnes, expires_in: 8.hours) do
-        GeographicalArea.erga_omnes_group.to_json
+        GeographicalArea.erga_omnes_group
+                        .to_json
       end
     end
 
