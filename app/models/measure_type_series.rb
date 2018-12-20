@@ -32,7 +32,7 @@ class MeasureTypeSeries < Sequel::Model
           q_rule, q_rule)
       end
 
-      scope.order(Sequel.asc(:measure_type_series__measure_type_series_id))
+      scope.order(Sequel.asc(:measure_type_series__measure_type_series_id)).eager(:measure_type_series_description).all
     end
   end
 
