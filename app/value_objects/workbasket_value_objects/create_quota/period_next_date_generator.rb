@@ -7,7 +7,7 @@ module WorkbasketValueObjects
 
       def initialize(mode, start_date)
         @mode = mode
-        @start_date = start_date + 1.day
+        @start_date = start_date
         @end_date = start_date + self.class.period_length(mode)
       end
 
@@ -19,6 +19,10 @@ module WorkbasketValueObjects
 
       class << self
         def period_length(period_type)
+          base_period_length(period_type) - 1.day
+        end
+
+        private def base_period_length(period_type)
           case period_type
           when 'annual'
             1.year
@@ -32,13 +36,6 @@ module WorkbasketValueObjects
         end
       end
 
-    private
-
-      def step_range_period(step_number)
-        step_range = position * step_number
-        @start_date = start_date + (step_range - step_number).months
-        @end_date = start_date + step_range.months
-      end
     end
   end
 end
