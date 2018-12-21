@@ -164,10 +164,14 @@ module WorkbasketInteractions
         @quota_period_sids << period_saver.quota_definition.quota_definition_sid
 
         @start_point, @end_point = period_next_date_generator_class.new(
-          section_ops['type'], @end_point
+          section_ops['type'], next_start_date
         ).date_range
         sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
         period_saver.quota_definition
+      end
+
+      def next_start_date
+        @end_point + 1.day
       end
 
       def add_custom_period!(section_ops, balance_ops)
