@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe WorkbasketValueObjects::CreateQuota::PeriodNextDateGenerator do
+describe WorkbasketValueObjects::CreateQuota::PeriodGenerator do
 
   let(:start_date ) { DateTime.new(2019, 1,1) }
 
@@ -17,29 +17,25 @@ describe WorkbasketValueObjects::CreateQuota::PeriodNextDateGenerator do
     end
   end
 
-  describe '#date_range' do
+  describe '#current_period' do
     it "returns a tuple of start and end date" do
-      expect(described_class.new('quarterly', start_date).date_range).to eq [start_date, DateTime.new(2019, 3, 31)]
+      expect(described_class.new('quarterly', start_date).current_period).to eq [start_date, DateTime.new(2019, 3, 31)]
+      expect(described_class.new('bi_annual', start_date).current_period).to eq [start_date, DateTime.new(2019, 6, 30)]
     end
   end
 
-  it "covers the expected dates when used multiple times" do
-    periods = []
-    next_start_date = start_date
+  describe "#increment_period!" do
 
-    4.times do
-      start_date, end_date = described_class.new('quarterly', next_start_date).date_range
-      periods << [start_date, end_date]
-      next_start_date = end_date + 1
+    it "covers the expected dates when called multiple times" do
+      monthly_periods = described_class.new('monthly', start_date)
+      expect(monthly_periods.increment_period!).to eq [DateTime.new(2019, 2, 1), DateTime.new(2019, 2, 28)]
+      expect(monthly_periods.increment_period!).to eq [DateTime.new(2019, 3, 1), DateTime.new(2019, 3, 31)]
+
+
+      annual_periods = described_class.new('annual', start_date)
+      expect(annual_periods.increment_period!).to eq [DateTime.new(2020, 1, 1), DateTime.new(2020, 12, 31)]
+      expect(annual_periods.increment_period!).to eq [DateTime.new(2021, 1, 1), DateTime.new(2021, 12, 31)]
     end
-
-    expected_periods = [
-      [DateTime.new(2019, 1, 1), DateTime.new(2019, 3, 31)],
-      [DateTime.new(2019, 4, 1), DateTime.new(2019, 6, 30)],
-      [DateTime.new(2019, 7, 1), DateTime.new(2019, 9, 30)],
-      [DateTime.new(2019, 10,1), DateTime.new(2019, 12,31)]
-    ]
-    expect(periods).to eq expected_periods
   end
 
 end

@@ -163,15 +163,9 @@ module WorkbasketInteractions
 
         @quota_period_sids << period_saver.quota_definition.quota_definition_sid
 
-        @start_point, @end_point = period_next_date_generator_class.new(
-          section_ops['type'], next_start_date
-        ).date_range
+        @start_point, @end_point = @period_generator.increment_period!
         sub_quota_saver.add_period!(period_saver.quota_definition, section_ops, balance_ops)
         period_saver.quota_definition
-      end
-
-      def next_start_date
-        @end_point + 1.day
       end
 
       def add_custom_period!(section_ops, balance_ops)
@@ -214,8 +208,8 @@ module WorkbasketInteractions
         period_type = section_ops['type']
         return true if period_type == 'custom'
 
-        @start_point = section_ops['start_date'].to_date
-        @end_point = @start_point + period_next_date_generator_class.period_length(period_type)
+        @period_generator = ::WorkbasketValueObjects::CreateQuota::PeriodGenerator.new(period_type, section_ops['start_date'].to_date)
+        @start_point, @end_point = @period_generator.current_period
       end
 
       def populator_class_for(period_type)
@@ -229,10 +223,6 @@ module WorkbasketInteractions
         end
 
         "::WorkbasketServices::QuotaSavers::#{target_klass_name}".constantize
-      end
-
-      def period_next_date_generator_class
-        ::WorkbasketValueObjects::CreateQuota::PeriodNextDateGenerator
       end
     end
   end
