@@ -12,6 +12,6 @@ class DutyExpressionsController < ::BaseController
       end
     end
 
-    scope.sort_by(&:duty_expression_id)
+    scope.eager(:duty_expression_description).all.sort_by(&:duty_expression_id)
   end
 end
