@@ -17,24 +17,12 @@ describe MeasurementUnit do
   end
 
   describe "#abbreviation" do
-    before {
-      allow(measurement_unit).to receive(:measurement_unit_abbreviation) {
-        raise Sequel::RecordNotFound
-      }
-    }
-
-    it {
-      expect(measurement_unit.abbreviation).to eq(measurement_unit.description)
-    }
+    it { expect(measurement_unit.abbreviation).to eq(measurement_unit.description) }
   end
 
   describe "#measurement_unit_abbreviation" do
     context "without measurement_unit_abbreviation" do
-      it {
-        expect {
-          measurement_unit.measurement_unit_abbreviation
-        }.to raise_error(Sequel::RecordNotFound)
-      }
+      it { expect(measurement_unit.measurement_unit_abbreviation).to eq(nil) }
     end
 
     context "with measurement_unit_abbreviation" do
@@ -42,9 +30,7 @@ describe MeasurementUnit do
         create(:measurement_unit_abbreviation, measurement_unit_code: measurement_unit.measurement_unit_code)
       }
 
-      it {
-        expect(measurement_unit.measurement_unit_abbreviation).to eq(measurement_unit_abbreviation)
-      }
+      it { expect(measurement_unit.measurement_unit_abbreviation).to eq(measurement_unit_abbreviation) }
     end
   end
 end
