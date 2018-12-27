@@ -76,6 +76,7 @@ describe Certificate do
                        .eager(:certificate_descriptions)
                        .all
                        .first
+                       .reload
                        .certificate_description.pk
             ).to eq certificate_description2.pk
           end
