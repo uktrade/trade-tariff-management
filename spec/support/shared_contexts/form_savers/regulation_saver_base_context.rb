@@ -33,10 +33,11 @@ shared_context "regulation_saver_base_context" do
 
   let(:base_ops) do
     {
-      prefix: "A",
-      publication_year: "18",
-      regulation_number: "1234",
-      number_suffix: "5",
+      # prefix: "A",
+      # publication_year: "18",
+      # regulation_number: "1234",
+      # number_suffix: "5",
+      base_regulation_id: 'A1812345',
       replacement_indicator: "0",
       information_text: "S1.2019.1473|Info text|http://google.com",
       operation_date: date_to_s(operation_date)

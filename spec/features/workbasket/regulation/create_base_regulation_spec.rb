@@ -10,8 +10,8 @@ describe 'base regulation', js: true do
   let(:required_fields) do
     base_required_fields.
         concat([
-                   'Validity start date',
-                   'Regulation group id',
+                   { label: 'Validity start date' },
+                   { label: 'Regulation group id' }
                ])
   end
 

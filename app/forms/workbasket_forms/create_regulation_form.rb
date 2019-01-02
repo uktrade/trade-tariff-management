@@ -2,6 +2,7 @@ module WorkbasketForms
   class CreateRegulationForm < ::WorkbasketForms::BaseForm
     attr_accessor :role,
                   :base_regulation_role,
+                  :base_regulation_id,
                   :antidumping_regulation_role,
                   :prefix,
                   :publication_year,

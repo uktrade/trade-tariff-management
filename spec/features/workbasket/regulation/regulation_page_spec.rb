@@ -10,7 +10,7 @@ describe 'create_regulation_page', js: true do
         expect(page).to have_content 'Create a new regulation'
 
         click_on 'Create a new regulation'
-        expect(page).to have_content 'Specify the regulation identifier'
+        expect(page).to have_content 'What is the regulation identifier'
       end
     end
   end

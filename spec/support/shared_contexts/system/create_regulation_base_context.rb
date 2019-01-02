@@ -37,11 +37,15 @@ shared_context 'create_regulation_base_context' do
 
   let(:base_required_fields) do
     [
-        'Prefix',
-        'Publication year',
-        'Regulation number',
-        'Number suffix',
-        'Information text',
+        # TODO: use base regulation id
+        # 'Prefix',
+        # 'Publication year',
+        # 'Regulation number',
+        # 'Number suffix',
+        { label: 'Regulation identifier', id: 'workbasket_forms_create_regulation_form_base_regulation_id' },
+        { label: 'Legal ID', id: 'workbasket_forms_create_regulation_form_legal_id' },
+        { label: 'Description', id: 'workbasket_forms_create_regulation_form_description' },
+        { label: 'Reference URL', id: 'workbasket_forms_create_regulation_form_reference_url' }
     ]
   end
 
@@ -51,11 +55,14 @@ shared_context 'create_regulation_base_context' do
 
   let(:base_required_filed_values) do
     [
-        { name: 'Prefix', value: "Decision", type: :select },
-        { name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text },
-        { name: 'Regulation number', value: Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s, type: :text },
-        { name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text },
-        { name: 'Information text', value: Forgery('lorem_ipsum').sentence, type: :text },
+        # { name: 'Prefix', value: "Decision", type: :select },
+        # { name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text },
+        # { name: 'Regulation number', value: Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s, type: :text },
+        # { name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text },
+        { name: 'Regulation identifier', id: 'workbasket_forms_create_regulation_form_base_regulation_id', value: 'C1234567', type: :text },
+        { name: 'Legal ID', id: 'workbasket_forms_create_regulation_form_legal_id', value: Forgery('lorem_ipsum').characters, type: :text },
+        { name: 'Description', id: 'workbasket_forms_create_regulation_form_description', value: Forgery('lorem_ipsum').sentence, type: :text },
+        { name: 'Reference URL', id: 'workbasket_forms_create_regulation_form_reference_url', value: Forgery(:internet).domain_name, type: :text }
     ]
   end
 
@@ -79,7 +86,7 @@ shared_context 'create_regulation_base_context' do
         click_on 'Create regulation'
 
         required_fields.each do |field|
-          expect(page).to have_content "#{field} can't be blank!"
+          expect(page).to have_content "#{field[:label]} can't be blank!"
         end
       end
     end
@@ -127,13 +134,13 @@ shared_context 'create_regulation_base_context' do
     form_values.each do |value|
       case value[:type]
       when :text
-        fill_in value[:name], with: value[:value]
+        fill_in (value[:id] || value[:name]), with: value[:value]
       when :select
-        within(first(".form-group, fieldset", text: value[:name])) do
+        within(first(".form-group, fieldset", text: (value[:id] || value[:name]))) do
           select_dropdown_value(value[:value])
         end
       when :date
-        input_date(value[:name], value[:value])
+        input_date((value[:id] || value[:name]), value[:value])
       end
     end
   end
