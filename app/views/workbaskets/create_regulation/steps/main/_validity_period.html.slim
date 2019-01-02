@@ -1,4 +1,4 @@
-div
+fieldset
   h3.heading-medium
     | Specify the regulation's validity period
 
@@ -22,12 +22,12 @@ div
       { "v-bind:value.sync" => "regulation.validity_end_date",
         id: "end_date" }
 
-  fieldset
-    h3.heading-medium
-      | Specify the regulation group
+fieldset
+  h3.heading-medium
+    | Specify the regulation group
 
-    .row
-      .col-md-6
-        .form-group v-bind:class="{ 'form-group-error': errors.regulation_group_id }"
-          span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
-          = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }
+  .row
+    .col-md-6
+      .form-group v-bind:class="{ 'form-group-error': errors.regulation_group_id }"
+        span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
+        = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group" }

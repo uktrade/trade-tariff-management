@@ -78,14 +78,8 @@ module WorkbasketValueObjects
         @normalized_params[:community_code] = 1 if target_class == BaseRegulation
       end
 
-      def fetch_regulation_number
-        base = "#{prefix}#{publication_year}#{regulation_number}"
-        base += number_suffix.to_s
-        base.delete(' ')
-      end
-
       def workbasket_name
-        fetch_regulation_number
+        base_regulation_id
       end
 
       def method_regulation_role(role)
@@ -107,7 +101,7 @@ module WorkbasketValueObjects
                         end
 
         ops[target_class.primary_key[1]] = role
-        ops[target_class.primary_key[0]] = fetch_regulation_number
+        ops[target_class.primary_key[0]] = base_regulation_id
 
         ops
       end

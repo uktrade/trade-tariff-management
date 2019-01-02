@@ -23,10 +23,6 @@ module WorkbasketInteractions
 
       REQUIRED_PARAMS = %i[
         role
-        prefix
-        publication_year
-        regulation_number
-        number_suffix
         replacement_indicator
         information_text
         operation_date
@@ -279,31 +275,20 @@ module WorkbasketInteractions
           end
         end
 
-        if regulation_code_params_present? && regulation_code.size != 8
-          @errors[:regulation_number] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
+        if original_params[:base_regulation_id].present?
+          if original_params[:base_regulation_id].size != 8
+            @errors[:base_regulation_id] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
+          end
+        else
+          @errors[:base_regulation_id] = "Regulation identifier can't be blank!"
         end
       end
-
-      # SUB_FIELD_NAME = {legal_id: 'Legal ID', description: 'Description', reference_url: 'Reference URL'}
 
       def check_sub_fields!
         legal_id, description, reference_url = original_params['information_text']&.split('|')
         @errors[:legal_id] = "Legal ID can't be blank!" unless legal_id.present?
         @errors[:description] = "Description can't be blank!" unless description.present?
         @errors[:reference_url] = "Reference URL can't be blank!" unless reference_url.present?
-      end
-
-      def regulation_code_params_present?
-        REGULATION_CODE_KEYS.all? do |k|
-          original_params[k].present?
-        end
-      end
-
-      def regulation_code
-        REGULATION_CODE_KEYS.map do |k|
-          original_params[k]
-        end.join
-           .delete(" ")
       end
 
       def target_class_required_params

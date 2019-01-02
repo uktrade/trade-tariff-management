@@ -18,19 +18,13 @@ table.create-measures-details-table
       td.heading_column
         | Regulation
       td
-        = attributes_parser.fetch_regulation_number
+        = attributes_parser.base_regulation_id
 
     tr
       td.heading_column
         | Replacement
       td
         = form.replacement_indicators[attributes_parser.replacement_indicator]
-
-    tr
-      td.heading_column
-        | Regulation name
-      td
-        = attributes_parser.information_text
 
     tr
       td.heading_column
