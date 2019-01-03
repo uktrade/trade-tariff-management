@@ -78,6 +78,8 @@ module WorkbasketInteractions
         @do_not_rollback_transactions = true
         @measure_sids = []
 
+        validate!
+
         settings.measure_sids_jsonb = @measure_sids.to_json
 
         if settings.save
