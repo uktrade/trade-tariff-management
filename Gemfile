@@ -93,6 +93,7 @@ group :development do
   gem "foreman"
   gem "letter_opener"
   gem "govuk-lint"
+  gem "meta_request"
 end
 
 group :development, :test do
