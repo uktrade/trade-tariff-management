@@ -54,6 +54,10 @@ module WorkbasketValueObjects
       end
     end
 
+    def geographical_area_id
+      ops[:geographical_area_id]
+    end
+
     def excluded_geographical_areas
       if ops[:excluded_geographical_areas].present?
         ops[:excluded_geographical_areas].uniq
