@@ -61,13 +61,13 @@ jobs: # a collection of steps
           paths:
             - vendor/bundle
 
-      - run:
-          name: Lint Ruby code
-          command: bin/lint_ruby
-
-      - run:
-          name: Lint JavaScript code
-          command: bin/lint_js
+      # - run:
+      #     name: Lint Ruby code
+      #     command: bin/lint_ruby
+      #
+      # - run:
+      #     name: Lint JavaScript code
+      #     command: bin/lint_js
 
       - run:
           name: Wait for DB
