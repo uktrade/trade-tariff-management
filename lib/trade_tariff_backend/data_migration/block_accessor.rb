@@ -8,7 +8,7 @@ module TradeTariffBackend
           mod = Module.new
 
           names.each do |name|
-            mod.module_eval(%Q{
+            mod.module_eval(%{
               def #{name}(&block)
                 if block
                   instance_variable_set(:"@#{name}", block)

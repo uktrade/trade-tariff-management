@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateAdditionalCodeSettings < Sequel::Model(:create_additional_code_workbasket_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -25,6 +24,5 @@ module Workbaskets
         i.class.name.in?(%w(AdditionalCode MeursingAdditionalCode))
       end
     end
-
   end
 end

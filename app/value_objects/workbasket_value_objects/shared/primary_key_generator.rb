@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module Shared
     class PrimaryKeyGenerator
-
       PRIMARY_KEYS = {
         "AdditionalCode" => :additional_code_sid,
         "AdditionalCodeDescriptionPeriod" => :additional_code_description_period_sid,
@@ -16,12 +15,12 @@ module WorkbasketValueObjects
         "GeographicalArea" => :geographical_area_sid,
         "GeographicalAreaDescriptionPeriod" => :geographical_area_description_period_sid,
         "CertificateDescriptionPeriod" => :certificate_description_period_sid
-      }
+      }.freeze
 
       attr_accessor :record,
                     :extra_increment_value
 
-      def initialize(record, extra_increment_value=nil)
+      def initialize(record, extra_increment_value = nil)
         @record = record
         @extra_increment_value = extra_increment_value
       end

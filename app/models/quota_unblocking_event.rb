@@ -1,8 +1,7 @@
 class QuotaUnblockingEvent < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
-  plugin :oplog, primary_key: [:oid, :quota_definition_sid]
+  plugin :oplog, primary_key: %i[oid quota_definition_sid]
   plugin :conformance_validator
 
   set_primary_key [:quota_definition_sid]

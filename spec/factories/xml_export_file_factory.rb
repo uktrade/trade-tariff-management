@@ -5,4 +5,3 @@ FactoryGirl.define do
     workbasket { true }
   end
 end
-

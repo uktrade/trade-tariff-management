@@ -20,9 +20,7 @@ module WorkbasketHelpers
                 .by_workbasket(workbasket_id)
                 .all
       end.flatten
-         .sort do |a, b|
-         a.workbasket_sequence_number <=> b.workbasket_sequence_number
-      end
+         .sort_by(&:workbasket_sequence_number)
     end
 
     def collection_by_type(type_of_record)
@@ -48,7 +46,7 @@ module WorkbasketHelpers
       save
     end
 
-    def track_step_validations_status!(step, passed=false)
+    def track_step_validations_status!(step, passed = false)
       public_send("#{step}_step_validation_passed=", passed)
       save
     end

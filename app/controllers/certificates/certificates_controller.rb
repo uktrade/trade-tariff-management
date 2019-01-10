@@ -1,7 +1,6 @@
 module Certificates
   class CertificatesController < ::BaseController
-
-    skip_around_action :configure_time_machine, only: [:search, :validate_search_settings]
+    skip_around_action :configure_time_machine, only: %i[search validate_search_settings]
 
     expose(:search_ops) do
       ops = params[:search]
@@ -51,7 +50,7 @@ module Certificates
     end
 
     def collection
-      Certificate.q_search(params)
+      Certificate.q_search(params).eager(:certificate_descriptions).all
     end
   end
 end

@@ -1,5 +1,4 @@
 class CertificateTypeDescription < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :certificate_type_code

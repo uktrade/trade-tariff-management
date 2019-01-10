@@ -3,8 +3,8 @@ module ApplicationHelper
     opts = {}
 
     if (activator.is_a?(String) && request.path.start_with?(activator)) ||
-      (activator.is_a?(Regexp) && request.path =~ activator)
-      opts.merge!({ class: 'active' })
+        (activator.is_a?(Regexp) && request.path =~ activator)
+      opts[:class] = 'active'
     end
 
     content_tag :li, opts do
@@ -21,9 +21,10 @@ module ApplicationHelper
     end
 
     options ||= {}
-    options.merge!({sort_by: column, sort_dir: direction})
+    options[:sort_by] = column
+    options[:sort_dir] = direction
 
-    link_to title, options, {class: css_class}
+    link_to title, options, class: css_class
   end
 
   def application_version_identifier

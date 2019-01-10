@@ -19,24 +19,22 @@ class ChiefTransformer
         @map[association_name] = record
       end
 
-      def map=(new_map)
-        @map = new_map
-      end
+      attr_writer :map
 
       def persist
         assign_measure_sid
 
         Sequel::Model.db.transaction do
-          @map.each do |association, records|
+          @map.each do |_association, records|
             [records].flatten.each(&:save)
           end
         end
       end
 
-      private
+    private
 
       def assign_measure_sid
-        @map.each do |association, records|
+        @map.each do |_association, records|
           if records.is_a?(Array)
             records.each do |record|
               record.measure_sid = measure.measure_sid if record.respond_to?(:measure_sid=)

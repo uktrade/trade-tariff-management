@@ -1,17 +1,16 @@
 class AllAdditionalCode < Sequel::Model
-
   include ::WorkbasketHelpers::Association
 
   plugin :time_machine
 
-  set_primary_key  [:additional_code_sid]
+  set_primary_key [:additional_code_sid]
 
   one_to_one :additional_code_type, key: :additional_code_type_id, primary_key: :additional_code_type_id
 
   many_to_many :additional_code_descriptions, join_table: :additional_code_description_periods,
                left_key: :additional_code_sid,
-               right_key: [:additional_code_description_period_sid,
-                           :additional_code_sid] do |ds|
+               right_key: %i[additional_code_description_period_sid
+                             additional_code_sid] do |ds|
     ds.with_actual(AdditionalCodeDescriptionPeriod)
   end
 
@@ -25,25 +24,24 @@ class AllAdditionalCode < Sequel::Model
         scope = scope.where("
           all_additional_codes.additional_code ilike ? OR
           all_additional_codes.description ilike ?",
-                q_rule, q_rule
-        )
+                q_rule, q_rule)
       end
 
       if filter_ops[:additional_code_type_id].present?
         scope = scope.where(
-            "all_additional_codes.additional_code_type_id = ?", filter_ops[:additional_code_type_id]
+          "all_additional_codes.additional_code_type_id = ?", filter_ops[:additional_code_type_id]
         )
       end
 
       scope.order(Sequel.asc(:all_additional_codes__additional_code))
     end
 
-    def by_code(code=nil)
+    def by_code(code = nil)
       full_code = code.to_s
                       .delete(" ")
                       .downcase
 
-      return nil unless (full_code.present? && full_code.size == 4)
+      return nil unless full_code.present? && full_code.size == 4
 
       additional_code_type_id = full_code[0]
       additional_code = full_code[1..-1]
@@ -91,7 +89,7 @@ class AllAdditionalCode < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
         additional_code_sid: additional_code_sid,
         additional_code: additional_code,

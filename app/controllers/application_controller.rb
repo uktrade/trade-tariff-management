@@ -7,19 +7,17 @@ class ApplicationController < ActionController::Base
   before_action do
     authorise_user!('signin')
   end
-  around_action :configure_time_machine
 
   def current_page
     Integer(params[:page] || 1)
   end
 
-  private
+private
 
   def actual_date
     Date.parse(params[:start_date].to_s)
-
-    rescue ArgumentError
-      Date.current
+  rescue ArgumentError
+    Date.current
   end
   helper_method :actual_date
 

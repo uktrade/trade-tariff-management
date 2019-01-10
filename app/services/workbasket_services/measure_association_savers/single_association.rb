@@ -1,7 +1,6 @@
 module WorkbasketServices
   module MeasureAssociationSavers
     class SingleAssociation < ::WorkbasketServices::MeasureAssociationSavers::AssociationBase
-
       attr_accessor :measure,
                     :system_ops,
                     :record,
@@ -9,7 +8,7 @@ module WorkbasketServices
                     :extra_increment_value,
                     :errors
 
-      def initialize(measure, system_ops, record_ops={})
+      def initialize(measure, system_ops, record_ops = {})
         @measure = measure
         @system_ops = system_ops
         @record_ops = record_ops
@@ -33,20 +32,20 @@ module WorkbasketServices
         persist_record!(record)
       end
 
-      private
+    private
 
-        def validate!
-          ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-            record, validator, {}
-          ).errors
-           .map do |k, v|
-            @errors[k] = v
-          end
+      def validate!
+        ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
+          record, validator, {}
+        ).errors
+         .map do |k, v|
+          @errors[k] = v
         end
+      end
 
-        def validator
-          "#{record.class.name}Validator".constantize
-        end
+      def validator
+        "#{record.class.name}Validator".constantize
+      end
     end
   end
 end

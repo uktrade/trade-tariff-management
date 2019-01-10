@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateQuotaController < Workbaskets::BaseController
-
     expose(:sub_klass) { "CreateQuota" }
     expose(:settings_type) { :create_quota }
 
@@ -34,23 +33,23 @@ module Workbaskets
       workbasket_settings.parent_quota_periods
     end
 
-    private
+  private
 
-      def check_if_action_is_permitted!
-        if (
-             step_pointer.conditions_footnotes? ||
-             step_pointer.review_and_submit_step?
-           ) &&
-           !workbasket_settings.validations_passed?(previous_step)
+    def check_if_action_is_permitted!
+      if (
+           step_pointer.conditions_footnotes? ||
+           step_pointer.review_and_submit_step?
+         ) &&
+          !workbasket_settings.validations_passed?(previous_step)
 
-          redirect_to previous_step_url
-          return false
-        end
+        redirect_to previous_step_url
+        false
       end
+    end
 
-      def workbasket_data_can_be_persisted?
-        step_pointer.conditions_footnotes? &&
+    def workbasket_data_can_be_persisted?
+      step_pointer.conditions_footnotes? &&
         saver_mode == 'continue'
-      end
+    end
   end
 end

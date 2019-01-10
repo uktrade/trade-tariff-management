@@ -1,0 +1,12 @@
+#!/bin/bash
+
+EDITED_JS_FILES=$(git diff origin/master HEAD --name-only -- '*.js' | grep -Ev 'eslintrc|vendor|node_modules')
+
+if [[ "$EDITED_JS_FILES" == "" ]]; then
+  echo "No JS files to lint"
+  exit 0
+else
+  echo "Linting JS"
+  echo "$EDITED_JS_FILES"
+  node_modules/.bin/eslint $EDITED_JS_FILES
+fi

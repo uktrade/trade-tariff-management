@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe TariffSynchronizer::BaseUpdateImporter do
-
   let(:taric_update) { create :taric_update, :pending }
   let(:base_update_importer) { described_class.new(taric_update) }
 
@@ -14,7 +13,7 @@ describe TariffSynchronizer::BaseUpdateImporter do
     it "do not call the import! method to the object if is not pending"do
       taric_update.mark_as_failed
 
-      expect(taric_update).to_not receive(:import!)
+      expect(taric_update).not_to receive(:import!)
       base_update_importer.apply
     end
 
@@ -41,7 +40,7 @@ describe TariffSynchronizer::BaseUpdateImporter do
       expect(@logger.logged(:error).size).to eq(1)
       expect(@logger.logged(:error).last).to include("Update failed: ")
 
-      expect(ActionMailer::Base.deliveries).to_not be_empty
+      expect(ActionMailer::Base.deliveries).not_to be_empty
       email = ActionMailer::Base.deliveries.last
       expect(email.subject).to include("Failed Trade Tariff update")
       expect(email.encoded).to include("Backtrace")

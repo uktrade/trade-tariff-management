@@ -1,10 +1,9 @@
 module Measures
-  class BulksController < Measures::BulksBaseController
-
+  class BulksController < BulksBaseController
     include ::SearchCacheHelpers
 
-    before_action :require_to_be_workbasket_owner!, only: [
-      :update, :destroy
+    before_action :require_to_be_workbasket_owner!, only: %i[
+      update destroy
     ]
 
     expose(:separator) do

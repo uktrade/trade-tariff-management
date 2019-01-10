@@ -1,17 +1,16 @@
 module AdditionalCodes
   module SearchFilters
     class Description
-
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         is
         is_not
         starts_with
-      )
+      ).freeze
 
       attr_accessor :operator,
                     :description
 
-      def initialize(operator, description=nil)
+      def initialize(operator, description = nil)
         @operator = operator
         @description = description.to_s.strip
       end
@@ -22,30 +21,30 @@ module AdditionalCodes
         clause
       end
 
-      private
+    private
 
       def required_options_are_blank?
         OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
-            description.blank?
+          description.blank?
       end
 
       def clause
         case operator
-          when "is"
+        when "is"
 
-            [ is_clause, value ]
-          when "is_not"
+          [is_clause, value]
+        when "is_not"
 
-            [ is_not_clause, value ]
-          when "is_not_specified"
+          [is_not_clause, value]
+        when "is_not_specified"
 
-            is_not_specified_clause
-          when "is_not_unspecified"
+          is_not_specified_clause
+        when "is_not_unspecified"
 
-            is_not_unspecified_clause
-          when "starts_with"
+          is_not_unspecified_clause
+        when "starts_with"
 
-            [ starts_with_clause, value ]
+          [starts_with_clause, value]
         end
       end
 

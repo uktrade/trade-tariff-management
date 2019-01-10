@@ -1,7 +1,6 @@
 module WorkbasketServices
   module QuotaSavers
     class MultiplePartsPeriod < ::WorkbasketServices::QuotaSavers::BasePeriod
-
       attr_accessor :saver_class,
                     :attrs_parser,
                     :all_settings,
@@ -26,13 +25,13 @@ module WorkbasketServices
         @end_point = balance_ops[:end_point]
       end
 
-        def balance
-          if section_ops["staged"] == "true"
-            balance_ops["balance"]
-          else
-            section_ops["balance"][target_key]
-          end.to_i
-        end
+      def balance
+        if section_ops["staged"] == "true"
+          balance_ops["balance"]
+        else
+          section_ops["balance"][target_key]
+        end.to_i
+      end
     end
   end
 end

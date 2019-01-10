@@ -1,5 +1,4 @@
 class MeasurementUnitQualifier < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include OwnValidityPeriod
 
@@ -23,12 +22,10 @@ class MeasurementUnitQualifier < Sequel::Model
 
         scope = scope.join_table(:inner,
           :measurement_unit_qualifier_descriptions,
-          measurement_unit_qualifier_code: :measurement_unit_qualifier_code,
-        ).where("
+          measurement_unit_qualifier_code: :measurement_unit_qualifier_code,).where("
           measurement_unit_qualifiers.measurement_unit_qualifier_code ilike ? OR
           measurement_unit_qualifier_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       scope.order(Sequel.asc(:measurement_unit_qualifiers__measurement_unit_qualifier_code))
@@ -50,7 +47,7 @@ class MeasurementUnitQualifier < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     json_mapping
   end
 end

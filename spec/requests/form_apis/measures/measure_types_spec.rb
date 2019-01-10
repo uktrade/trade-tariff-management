@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Measure Form APIs: Measure types", type: :request do
-
   include_context "form_apis_base_context"
 
   let(:actual_measure_type_277) do
@@ -9,9 +8,9 @@ describe "Measure Form APIs: Measure types", type: :request do
       measure_type_id: "277",
       measure_type_series_id: "A",
       validity_start_date: 1.year.ago,
-      measure_type_acronym: "TI1"},
-      "Import prohibition"
-    )
+      measure_type_acronym: "TI1"
+ },
+      "Import prohibition")
   end
 
   let(:actual_measure_type_481) do
@@ -19,9 +18,9 @@ describe "Measure Form APIs: Measure types", type: :request do
       measure_type_id: "481",
       measure_type_series_id: "A",
       validity_start_date: 1.year.ago,
-      measure_type_acronym: "DTK"},
-      "Declaration of subheading submitted to restrictions (import)"
-    )
+      measure_type_acronym: "DTK"
+ },
+      "Declaration of subheading submitted to restrictions (import)")
   end
 
   let(:actual_measure_type_106) do
@@ -29,9 +28,9 @@ describe "Measure Form APIs: Measure types", type: :request do
       measure_type_id: "106",
       measure_type_series_id: "C",
       validity_start_date: 1.year.ago,
-      measure_type_acronym: "WFR"},
-      "Customs Union Duty"
-    )
+      measure_type_acronym: "WFR"
+ },
+      "Customs Union Duty")
   end
 
   let(:not_actual_measure_type_105) do
@@ -40,9 +39,9 @@ describe "Measure Form APIs: Measure types", type: :request do
       measure_type_series_id: "C",
       validity_start_date: 1.year.ago,
       validity_end_date: 3.months.ago,
-      measure_type_acronym: "MR"},
-      "Non preferential duty under end-use"
-    )
+      measure_type_acronym: "MR"
+ },
+      "Non preferential duty under end-use")
   end
 
   context "Index" do
@@ -53,7 +52,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       not_actual_measure_type_105
     end
 
-    it "should return JSON collection of all actual measure_types" do
+    it "returns JSON collection of all actual measure_types" do
       get "/measure_types.json", headers: headers
 
       expect(collection.count).to eq(3)
@@ -63,7 +62,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       expecting_measure_type_in_result(2, actual_measure_type_481)
     end
 
-    it "should filter measure_types by keyword" do
+    it "filters measure_types by keyword" do
       get "/measure_types.json", params: { q: "Declaration of subheading submitted" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -75,7 +74,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       expecting_measure_type_in_result(0, actual_measure_type_277)
     end
 
-    it "should filter measure_types by measure_type_series_id" do
+    it "filters measure_types by measure_type_series_id" do
       get "/measure_types.json", params: { measure_type_series_id: "C" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -88,7 +87,7 @@ describe "Measure Form APIs: Measure types", type: :request do
       expecting_measure_type_in_result(1, actual_measure_type_481)
     end
 
-    it "should filter measure_types by keyword and measure_type_series_id at the same time" do
+    it "filters measure_types by keyword and measure_type_series_id at the same time" do
       get "/measure_types.json", params: { q: "481", measure_type_series_id: "C" }, headers: headers
 
       expect(collection.count).to eq(0)
@@ -102,33 +101,33 @@ describe "Measure Form APIs: Measure types", type: :request do
 
   private
 
-    def add_measure_type(ops={}, description)
-      mt = create(:measure_type, ops)
-      add_description(mt, description)
+  def add_measure_type(ops = {}, description)
+    mt = create(:measure_type, ops)
+    add_description(mt, description)
 
-      mt
-    end
+    mt
+  end
 
-    def add_description(measure_type, description)
-      create(
-        :measure_type_description,
-        measure_type_id: measure_type.measure_type_id,
-        description: description
-      )
-    end
+  def add_description(measure_type, description)
+    create(
+      :measure_type_description,
+      measure_type_id: measure_type.measure_type_id,
+      description: description
+    )
+  end
 
-    def expecting_measure_type_in_result(position, measure_type)
-      expect(collection[position]["measure_type_id"]).to be_eql(measure_type.measure_type_id)
-      expect(collection[position]["measure_type_series_id"]).to be_eql(measure_type.measure_type_series_id)
-      expect(collection[position]["measure_type_acronym"]).to be_eql(measure_type.measure_type_acronym)
-      expect(collection[position]["description"]).to be_eql(measure_type.description)
-      expect(date_to_format(collection[position]["validity_start_date"])).to be_eql(
-        date_to_format(measure_type.validity_start_date)
-      )
-    end
+  def expecting_measure_type_in_result(position, measure_type)
+    expect(collection[position]["measure_type_id"]).to be_eql(measure_type.measure_type_id)
+    expect(collection[position]["measure_type_series_id"]).to be_eql(measure_type.measure_type_series_id)
+    expect(collection[position]["measure_type_acronym"]).to be_eql(measure_type.measure_type_acronym)
+    expect(collection[position]["description"]).to be_eql(measure_type.description)
+    expect(date_to_format(collection[position]["validity_start_date"])).to be_eql(
+      date_to_format(measure_type.validity_start_date)
+    )
+  end
 
-    def date_to_format(date_in_string)
-      date_in_string.to_date
-                    .strftime("%d/%m/%Y")
-    end
+  def date_to_format(date_in_string)
+    date_in_string.to_date
+                  .strftime("%d/%m/%Y")
+  end
 end

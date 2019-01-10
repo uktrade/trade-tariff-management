@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "FootnoteAssociationMeasure XML generation" do
-
   let(:db_record) do
     create(:footnote_association_measure)
   end
@@ -11,10 +10,10 @@ describe "FootnoteAssociationMeasure XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :measure_sid,
-      :footnote_type_id,
-      :footnote_id
+    %i[
+      measure_sid
+      footnote_type_id
+      footnote_id
     ]
   end
 

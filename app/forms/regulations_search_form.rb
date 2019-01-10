@@ -1,5 +1,4 @@
 class RegulationsSearchForm
-
   attr_accessor :role,
                 :regulation_group_id,
                 :start_date,

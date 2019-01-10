@@ -5,12 +5,12 @@ describe Chief::Tamf do
     describe 'measure_type_conds' do
       let!(:common) { attributes_for(:measure_type_cond) }
       let!(:tamf)   { create :tamf, msrgp_code: common[:measure_group_code], msr_type: common[:measure_type] }
-      let!(:measure_type_cond)  { create :measure_type_cond, common }
+      let!(:measure_type_cond) { create :measure_type_cond, common }
       let!(:measure_type_cond_irrelevant) { create :measure_type_cond }
 
       it 'associates correct Chief measure type conditions' do
         expect(tamf.measure_type_conds).to     include measure_type_cond
-        expect(tamf.measure_type_conds).to_not include measure_type_cond_irrelevant
+        expect(tamf.measure_type_conds).not_to include measure_type_cond_irrelevant
       end
     end
   end
@@ -26,29 +26,33 @@ describe Chief::Tamf do
   end
 
   describe '#geographical_area' do
-    before { Chief::Tamf.unrestrict_primary_key }
+    before { described_class.unrestrict_primary_key }
 
     it 'picks cngp_code if it is available' do
-      tamf = Chief::Tamf.new(cngp_code: 'abc')
+      tamf = described_class.new(cngp_code: 'abc')
       expect(tamf.geographical_area).to eq 'abc'
     end
 
     it 'picks cntry_orig if cngp_code is unavailable' do
-      tamf = Chief::Tamf.new(cntry_orig: 'abc')
+      tamf = described_class.new(cntry_orig: 'abc')
       expect(tamf.geographical_area).to eq 'abc'
     end
 
     it 'picks cntry_disp if cngp_cod and cntry_orig are unavailable' do
-      tamf = Chief::Tamf.new(cntry_disp: 'abc')
+      tamf = described_class.new(cntry_disp: 'abc')
       expect(tamf.geographical_area).to eq 'abc'
     end
   end
 
   describe '#measurement_unit' do
-    let!(:chief_measurement_unit1) { create :chief_measurement_unit, spfc_cmpd_uoq: '12',
-                                                                    spfc_uoq: '13' }
-    let!(:chief_measurement_unit2) { create :chief_measurement_unit, spfc_cmpd_uoq: nil,
-                                                                    spfc_uoq: '13' }
+    let!(:chief_measurement_unit1) {
+      create :chief_measurement_unit, spfc_cmpd_uoq: '12',
+                                                                    spfc_uoq: '13'
+    }
+    let!(:chief_measurement_unit2) {
+      create :chief_measurement_unit, spfc_cmpd_uoq: nil,
+                                                                    spfc_uoq: '13'
+    }
     let(:tamf) { build :tamf }
 
     context 'cmpd_uoq present' do

@@ -1,5 +1,4 @@
 class AdditionalCodeType < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include OwnValidityPeriod
 
@@ -33,7 +32,7 @@ class AdditionalCodeType < Sequel::Model
     1 => "Additional Codes",
     3 => "Meursing addition codes",
     4 => "Export refund for processed agricultural goods"
-  }
+  }.freeze
 
   def meursing?
     application_code.present? && application_code.in?("3")

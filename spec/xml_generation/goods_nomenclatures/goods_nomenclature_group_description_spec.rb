@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "GoodsNomenclatureGroupDescription XML generation" do
-
   let(:db_record) do
     create(:goods_nomenclature_group_description, :xml)
   end
@@ -11,11 +10,11 @@ describe "GoodsNomenclatureGroupDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :goods_nomenclature_group_type,
-      :goods_nomenclature_group_id,
-      :language_id,
-      :description
+    %i[
+      goods_nomenclature_group_type
+      goods_nomenclature_group_id
+      language_id
+      description
     ]
   end
 

@@ -24,17 +24,16 @@
 module AdditionalCodes
   module SearchFilters
     class AdditionalCode
-
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         is
         is_not
         starts_with
-      )
+      ).freeze
 
       attr_accessor :operator,
                     :additional_code
 
-      def initialize(operator, additional_code=nil)
+      def initialize(operator, additional_code = nil)
         @operator = operator
         @additional_code = additional_code.to_s
                                           .delete(" ")
@@ -47,71 +46,71 @@ module AdditionalCodes
         clause
       end
 
-      private
+    private
 
-        def required_options_are_blank?
-          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+      def required_options_are_blank?
+        OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
           additional_code.blank?
+      end
+
+      def clause
+        case operator
+        when "is"
+
+          [is_clause, value]
+        when "is_not"
+
+          [is_not_clause, value]
+        when "is_not_specified"
+
+          is_not_specified_clause
+        when "is_not_unspecified"
+
+          is_not_unspecified_clause
+        when "starts_with"
+
+          [starts_with_clause, value]
         end
+      end
 
-        def clause
-          case operator
-          when "is"
-
-            [ is_clause, value ]
-          when "is_not"
-
-            [ is_not_clause, value ]
-          when "is_not_specified"
-
-            is_not_specified_clause
-          when "is_not_unspecified"
-
-            is_not_unspecified_clause
-          when "starts_with"
-
-            [ starts_with_clause, value ]
-          end
+      def value
+        if operator == "starts_with"
+          "#{additional_code}%"
+        else
+          additional_code
         end
+      end
 
-        def value
-          if operator == "starts_with"
-            "#{additional_code}%"
-          else
-            additional_code
-          end
-        end
+      def is_clause
+        <<-eos
+          all_additional_codes.additional_code = ?
+        eos
+      end
 
-        def is_clause
-          <<-eos
-            all_additional_codes.additional_code = ?
-          eos
-        end
-
-        def is_not_clause
-          <<-eos
+      def is_not_clause
+        <<-eos
             #{is_not_specified_clause} OR
             all_additional_codes.additional_code != ?
-          eos
-        end
+        eos
+      end
 
-        def starts_with_clause
-          <<-eos
-            all_additional_codes.additional_code ilike ?
-          eos
-        end
+      def starts_with_clause
+        <<-eos
+          all_additional_codes.additional_code ilike ?
+        eos
+      end
 
-        def is_not_specified_clause
-          <<-eos
-            all_additional_codes.additional_code IS NULL
-          eos
-        end
+      def is_not_specified_clause
+        <<-eos
+          all_additional_codes.additional_code IS NULL
+        eos
+      end
 
-        def is_not_unspecified_clause
-          <<-eos
-            all_additional_codes.additional_code IS NOT NULL
-          eos
-        end
+      def is_not_unspecified_clause
+        <<-eos
+          all_additional_codes.additional_code IS NOT NULL
+        eos
+      end
     end
   end
 end

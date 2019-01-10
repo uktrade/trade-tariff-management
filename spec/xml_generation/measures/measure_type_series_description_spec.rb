@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasureTypeSeriesDescription XML generation" do
-
   let(:db_record) do
     create(:measure_type_series_description, :xml)
   end
@@ -11,10 +10,10 @@ describe "MeasureTypeSeriesDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :measure_type_series_id,
-      :language_id,
-      :description
+    %i[
+      measure_type_series_id
+      language_id
+      description
     ]
   end
 

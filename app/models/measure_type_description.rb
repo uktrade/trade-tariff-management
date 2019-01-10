@@ -1,5 +1,4 @@
 class MeasureTypeDescription < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   set_primary_key [:measure_type_id]

@@ -1,5 +1,4 @@
 class MeursingAdditionalCode < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
 
@@ -7,7 +6,7 @@ class MeursingAdditionalCode < Sequel::Model
   plugin :time_machine
   plugin :conformance_validator
 
-  set_primary_key  [:meursing_additional_code_sid]
+  set_primary_key [:meursing_additional_code_sid]
 
   def code
     "7#{additional_code}"
@@ -33,7 +32,7 @@ class MeursingAdditionalCode < Sequel::Model
     status.blank? || status.to_s.in?(::Workbaskets::Workbasket::SENT_TO_CDS_STATES)
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
         additional_code_sid: meursing_additional_code_sid,
         additional_code: additional_code,
@@ -49,5 +48,4 @@ class MeursingAdditionalCode < Sequel::Model
         sent_to_cds: sent_to_cds?
     }
   end
-
 end

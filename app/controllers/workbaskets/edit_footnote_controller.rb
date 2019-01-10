@@ -1,6 +1,5 @@
 module Workbaskets
   class EditFootnoteController < Workbaskets::BaseController
-
     skip_around_action :configure_time_machine, only: [:submitted_for_cross_check]
 
     expose(:sub_klass) { "EditFootnote" }
@@ -35,8 +34,9 @@ module Workbaskets
     end
 
     def new
-      self.workbasket = Workbaskets::Workbasket.buld_new_workbasket!(
-        settings_type, current_user
+      self.workbasket = Workbaskets::Workbasket.create(
+        type: settings_type,
+        user: current_user
       )
 
       workbasket_settings.update(
@@ -75,26 +75,26 @@ module Workbaskets
       end
     end
 
-    private
+  private
 
-      def handle_validate_request!(validator)
-        if validator.valid?
-          render json: {},
-                 status: :ok
-        else
-          render json: {
-            step: :main,
-            errors: validator.errors
-          }, status: :unprocessable_entity
-        end
+    def handle_validate_request!(validator)
+      if validator.valid?
+        render json: {},
+               status: :ok
+      else
+        render json: {
+          step: :main,
+          errors: validator.errors
+        }, status: :unprocessable_entity
       end
+    end
 
-      def check_if_action_is_permitted!
-        true
-      end
+    def check_if_action_is_permitted!
+      true
+    end
 
-      def submit_for_cross_check_mode?
-        params[:mode] == "submit_for_cross_check"
-      end
+    def submit_for_cross_check_mode?
+      params[:mode] == "submit_for_cross_check"
+    end
   end
 end

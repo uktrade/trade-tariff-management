@@ -1,7 +1,6 @@
 module WorkbasketServices
   module QuotaSavers
     class ParentQuota
-
       attr_accessor :settings_saver,
                     :all_settings,
                     :ops,
@@ -31,7 +30,8 @@ module WorkbasketServices
           record = QuotaOrderNumber.new(quota_order_number_id: ops['order_number'])
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(record).assign!
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-              record, QuotaOrderNumberValidator, {}).errors.map do |key, error|
+            record, QuotaOrderNumberValidator, {}
+).errors.map do |key, error|
             @errors.merge!("#{key.join(',')}": error.join('. '))
           end
         end
@@ -48,19 +48,19 @@ module WorkbasketServices
         balance = ops['balances'][index]['balance']
         balance = balance.blank? || balance.to_i == 0 ? section_balance : balance.to_i
         definition = QuotaDefinition.new(
-            volume: balance,
-            initial_volume: balance,
-            validity_start_date: start_date,
-            validity_end_date: end_date.present? ? end_date : start_date + 1.year,
-            critical_state: source_definition.critical_state,
-            critical_threshold: source_definition.critical_threshold,
-            description: source_definition.description,
-            quota_order_number_id: order_number.quota_order_number_id,
-            quota_order_number_sid: order_number.quota_order_number_sid,
-            measurement_unit_code: source_definition.measurement_unit_code,
-            measurement_unit_qualifier_code: source_definition.measurement_unit_qualifier_code,
-            workbasket_type_of_quota: source_definition.workbasket_type_of_quota,
-            maximum_precision: all_settings["quota_precision"]
+          volume: balance,
+          initial_volume: balance,
+          validity_start_date: start_date,
+          validity_end_date: end_date.present? ? end_date : start_date + 1.year,
+          critical_state: source_definition.critical_state,
+          critical_threshold: source_definition.critical_threshold,
+          description: source_definition.description,
+          quota_order_number_id: order_number.quota_order_number_id,
+          quota_order_number_sid: order_number.quota_order_number_sid,
+          measurement_unit_code: source_definition.measurement_unit_code,
+          measurement_unit_qualifier_code: source_definition.measurement_unit_qualifier_code,
+          workbasket_type_of_quota: source_definition.workbasket_type_of_quota,
+          maximum_precision: all_settings["quota_precision"]
         )
         ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(definition).assign!
         settings_saver.assign_system_ops!(definition)
@@ -71,21 +71,22 @@ module WorkbasketServices
       def build_quota_association!(main_definition, sub_definition)
         QuotaAssociation.unrestrict_primary_key
         association = QuotaAssociation.new(
-            main_quota_definition_sid: main_definition.quota_definition_sid,
-            sub_quota_definition_sid: sub_definition.quota_definition_sid,
-            relation_type: 'NM',
-            coefficient: 1,
+          main_quota_definition_sid: main_definition.quota_definition_sid,
+          sub_quota_definition_sid: sub_definition.quota_definition_sid,
+          relation_type: 'NM',
+          coefficient: 1,
         )
         settings_saver.assign_system_ops!(association)
         association.save
       end
 
-      private
-        def build_order_number!(order_number_ops)
-          ::WorkbasketServices::QuotaSavers::OrderNumber.new(
-              settings_saver, order_number_ops, true
-          )
-        end
+    private
+
+      def build_order_number!(order_number_ops)
+        ::WorkbasketServices::QuotaSavers::OrderNumber.new(
+          settings_saver, order_number_ops, true
+        )
+      end
     end
   end
 end

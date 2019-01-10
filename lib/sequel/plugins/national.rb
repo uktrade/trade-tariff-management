@@ -12,15 +12,14 @@ module Sequel
 
         def next_national_sid
           x_model = self.national.last
-          if x_model
-            sid = x_model.send(self.primary_key)
-          else
-            sid = 0
-          end
+          sid = if x_model
+                  x_model.send(self.primary_key)
+                else
+                  0
+                end
           sid - 1
         end
       end
     end
   end
 end
-

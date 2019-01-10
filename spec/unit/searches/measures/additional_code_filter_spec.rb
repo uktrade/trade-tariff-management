@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: additional code filter" do
-
   include_context "measures_search_is_or_is_not_context"
 
   let(:is_not_context_number_of_measures) { 4 }
@@ -40,7 +39,7 @@ describe "Measure search: additional code filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by additional_code_id with operator" do
+    it "filters by additional_code_id with operator" do
       #
       # 'is' filter
       #

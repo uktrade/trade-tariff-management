@@ -2,9 +2,10 @@ require "rails_helper"
 require "tariff_synchronizer"
 
 describe TariffSynchronizer::TaricUpdate do
+  let(:example_date) { Date.new(2010, 1, 1) }
+
   it_behaves_like "Base Update"
 
-  let(:example_date) { Date.new(2010,1,1) }
 
   describe '.download' do
     it "Calls TaricUpdateDownloader perform for a TARIC update" do
@@ -12,19 +13,17 @@ describe TariffSynchronizer::TaricUpdate do
       expect(TariffSynchronizer::TaricUpdateDownloader).to receive(:new)
         .with(example_date)
         .and_return(downlader)
-      TariffSynchronizer::TaricUpdate.download(example_date)
+      described_class.download(example_date)
     end
   end
 
   describe "#import!" do
-
-    let(:taric_update) { create :taric_update}
+    let(:taric_update) { create :taric_update }
 
     before do
       # stub the file_path method to return a valid path of a real file.
       allow(taric_update).to receive(:file_path)
                               .and_return("spec/fixtures/taric_samples/insert_record.xml")
-
     end
 
     it "Calls the TaricImporter import method" do

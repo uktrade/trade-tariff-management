@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^5.9.0",
-    "eslint-plugin-vue": "^4.7.1"
+    "eslint": "^5.10.0",
+    "eslint-plugin-vue": "^5.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.bitzesty.com:clients/trade-tariff/trade-tariff-management.git"
+    "url": "git@github.com:uktrade/trade-tariff-management.git"
   },
   "author": "",
   "license": "UNLICENSED"

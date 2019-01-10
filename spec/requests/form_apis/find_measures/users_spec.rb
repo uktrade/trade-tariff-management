@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Find measures API: Users", type: :request do
-
   include_context "form_apis_base_context"
 
   let(:adam) do
@@ -22,7 +21,7 @@ describe "Find measures API: Users", type: :request do
       bredd
     end
 
-    it "should return JSON collection of all actual users" do
+    it "returns JSON collection of all actual users" do
       get "/users.json", headers: headers
 
       expect(collection.count).to eq(2)
@@ -31,7 +30,7 @@ describe "Find measures API: Users", type: :request do
       expect_user(1, bredd)
     end
 
-    it "should filter users by keyword" do
+    it "filters users by keyword" do
       get "/users.json", params: { q: "Adam Se" }, headers: headers
 
       expect(collection.count).to eq(1)
@@ -46,8 +45,8 @@ describe "Find measures API: Users", type: :request do
 
   private
 
-    def expect_user(position, user)
-      expect(collection[position]["id"]).to be_eql(user.id)
-      expect(collection[position]["name"]).to be_eql(user.name)
-    end
+  def expect_user(position, user)
+    expect(collection[position]["id"]).to be_eql(user.id)
+    expect(collection[position]["name"]).to be_eql(user.name)
+  end
 end

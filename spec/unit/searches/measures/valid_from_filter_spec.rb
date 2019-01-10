@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: valid_from filter" do
-
   include_context "measures_search_base_context"
   include_context "measures_date_universal_context"
 
@@ -9,7 +8,7 @@ describe "Measure search: valid_from filter" do
   let(:field_name) { "validity_start_date" }
 
   describe "Valid Search" do
-    it "should filter by operator" do
+    it "filters by operator" do
       res = search_results(
         enabled: true,
         operator: 'is',

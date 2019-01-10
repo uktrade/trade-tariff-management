@@ -1,8 +1,7 @@
 module Quotas
-  class BulksController < Measures::BulksBaseController
-
-    before_action :require_to_be_workbasket_owner!, only: [
-        :update, :destroy
+  class BulksController < BulksBaseController
+    before_action :require_to_be_workbasket_owner!, only: %i[
+        update destroy
     ]
 
     expose(:current_page) do
@@ -37,12 +36,12 @@ module Quotas
     expose(:initial_step_url) do
       if workbasket_settings.edit_quota_workbasket?
         edit_quotas_bulk_url(
-            workbasket.id,
+          workbasket.id,
             step: :main
         )
       else
         edit_quotas_bulk_url(
-            workbasket.id,
+          workbasket.id,
             search_code: workbasket_settings.initial_search_results_code
         )
       end
@@ -52,7 +51,7 @@ module Quotas
 
     expose(:previous_step_url) do
       edit_quotas_bulk_url(
-          workbasket.id,
+        workbasket.id,
           step: previous_step
       )
     end
@@ -89,7 +88,7 @@ module Quotas
 
     expose(:workbasket_container) do
       ::Measures::Workbasket::Items.new(
-          workbasket, cached_search_ops
+        workbasket, cached_search_ops
       ).prepare
     end
 
@@ -156,14 +155,14 @@ module Quotas
 
     expose(:attributes_parser) do
       ::WorkbasketValueObjects::CreateQuota::AttributesParser.new(
-          workbasket_settings,
+        workbasket_settings,
           current_step
       )
     end
 
     expose(:submit_for_cross_check) do
       ::WorkbasketInteractions::CreateQuota::SubmitForCrossCheck.new(
-          current_user, workbasket
+        current_user, workbasket
       )
     end
 
@@ -188,11 +187,11 @@ module Quotas
         'remove_suspension' => '::Quotas::RemoveSuspensionSaver',
         'stop_quota' => '::Quotas::StopSaver',
         'suspend_quota' => '::Quotas::SuspendSaver'
-    }
+    }.freeze
 
     expose(:bulk_saver) do
       WORKBASKET_ACTION_SAVER[workbasket_settings.workbasket_action].constantize.new(
-          current_user,
+        current_user,
           workbasket,
           send("#{workbasket_settings.workbasket_action}_ops")
       )
@@ -200,7 +199,7 @@ module Quotas
 
     expose(:saver) do
       ::WorkbasketInteractions::EditQuota::SettingsSaver.new(
-          workbasket,
+        workbasket,
           current_step,
           saver_mode,
           settings_params
@@ -233,48 +232,48 @@ module Quotas
 
     def handle_edit_quota_request
       self.workbasket = Workbaskets::Workbasket.new(
-          status: :new_in_progress,
-          type: :bulk_edit_of_quotas,
-          user: current_user
+        status: :new_in_progress,
+        type: :bulk_edit_of_quotas,
+        user: current_user
       )
 
       if workbasket.save
         quota_sid = params[:quota_sids].first
         quota_settings = ::WorkbasketInteractions::EditQuota::SettingsExtractor.new(quota_sid)
         workbasket_settings.update(
-            initial_search_results_code: params[:search_code],
-            initial_quota_sid: quota_sid,
-            main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
-            configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
-            conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
+          initial_search_results_code: params[:search_code],
+          initial_quota_sid: quota_sid,
+          main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
+          configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
+          conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
         )
 
         redirect_to work_with_selected_quotas_bulk_url(
-                        workbasket.id
+          workbasket.id
                     )
       else
         redirect_to quotas_url(
-                        notice: "You have to select 1 quota from list!"
+          notice: "You have to select 1 quota from list!"
                     )
       end
     end
 
     def handle_clone_quota_request
       self.workbasket = Workbaskets::Workbasket.new(
-          status: :new_in_progress,
-          type: :clone_quota,
-          user: current_user
+        status: :new_in_progress,
+        type: :clone_quota,
+        user: current_user
       )
       if workbasket.save
 
         quota_sid = params[:quota_sids].first
         workbasket_settings.update(
-            initial_search_results_code: params[:search_code],
-            initial_quota_sid: quota_sid
+          initial_search_results_code: params[:search_code],
+          initial_quota_sid: quota_sid
         )
 
         redirect_to configure_cloned_quotas_bulk_url(
-                        workbasket.id
+          workbasket.id
                     )
       end
     end
@@ -292,8 +291,8 @@ module Quotas
           workbasket.move_status_to!(current_user, :awaiting_cross_check)
 
           redirect_to quotas_url(
-                          search_code: workbasket_settings.initial_search_results_code,
-                          previous_workbasket_id: workbasket.id
+            search_code: workbasket_settings.initial_search_results_code,
+            previous_workbasket_id: workbasket.id
                       )
         end
       end
@@ -303,12 +302,12 @@ module Quotas
       workbasket.update(title: params['workbasket_name'])
       quota_settings = ::WorkbasketInteractions::EditQuota::SettingsExtractor.new(workbasket_settings.initial_quota_sid, params[:exclusions])
       workbasket_settings.update(
-          main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
-          configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
-          conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
+        main_step_settings_jsonb: quota_settings.main_step_settings.to_json,
+        configure_quota_step_settings_jsonb: quota_settings.configure_quota_step_settings.to_json,
+        conditions_footnotes_step_settings_jsonb: quota_settings.conditions_footnotes_step_settings.to_json
       )
       redirect_to edit_create_quotum_url(
-          workbasket.id,
+        workbasket.id,
           step: :main
       )
     end
@@ -327,7 +326,7 @@ module Quotas
           bulk_saver.persist!
 
           render json: bulk_saver.success_response.merge(
-              redirect_url: submitted_for_cross_check_quotas_bulk_url(workbasket.id)
+            redirect_url: submitted_for_cross_check_quotas_bulk_url(workbasket.id)
           ), status: :ok
         else
           render json: bulk_saver.success_response,
@@ -343,7 +342,7 @@ module Quotas
       if step_pointer.review_and_submit_step?
         submit_for_cross_check.run!
 
-        render json: {redirect_url: submitted_url},
+        render json: { redirect_url: submitted_url },
                status: :ok
       else
         saver.save!
@@ -378,7 +377,7 @@ module Quotas
       render json: {}, head: :ok
     end
 
-    private
+  private
 
     def check_if_action_is_permitted!
       if (step_pointer.conditions_footnotes? ||
@@ -392,8 +391,7 @@ module Quotas
 
     def workbasket_data_can_be_persisted?
       step_pointer.conditions_footnotes? &&
-          saver_mode == 'continue'
+        saver_mode == 'continue'
     end
-
   end
 end

@@ -1,6 +1,5 @@
 module Db
   class Rollback < Sequel::Model(:db_rollbacks)
-
     plugin :serialization
 
     serialize_attributes :yaml, :date_filters

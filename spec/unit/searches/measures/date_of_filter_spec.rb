@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: date_of filter" do
-
   include_context "measures_search_base_context"
 
   let(:search_key) { "date_of" }
@@ -48,7 +47,7 @@ describe "Measure search: date_of filter" do
   end
 
   describe "Invalid Search" do
-    it "should not filter if value option is blank" do
+    it "does not filter if value option is blank" do
       res = search_results(
         enabled: true,
         mode: 'creation',
@@ -58,7 +57,7 @@ describe "Measure search: date_of filter" do
       expect(res.count).to be_eql(3)
     end
 
-    it "should not filter if value and operator options are blank" do
+    it "does not filter if value and operator options are blank" do
       res = search_results(
         enabled: true,
         mode: 'creation'
@@ -67,7 +66,7 @@ describe "Measure search: date_of filter" do
       expect(res.count).to be_eql(3)
     end
 
-    it "should not filter with blank options provided" do
+    it "does not filter with blank options provided" do
       res = search_results({})
 
       expect(res.count).to be_eql(3)
@@ -76,10 +75,10 @@ describe "Measure search: date_of filter" do
 
   private
 
-    def set_date(measure, field_name, value)
-      measure.send("#{field_name}=", value)
-      measure.save
+  def set_date(measure, field_name, value)
+    measure.send("#{field_name}=", value)
+    measure.save
 
-      measure.reload
-    end
+    measure.reload
+  end
 end

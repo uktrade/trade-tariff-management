@@ -1,5 +1,4 @@
 class GoodsNomenclatureDescriptionPeriod < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :time_machine
@@ -9,8 +8,8 @@ class GoodsNomenclatureDescriptionPeriod < Sequel::Model
   set_primary_key [:goods_nomenclature_description_period_sid]
 
   many_to_one :goods_nomenclature, key: :goods_nomenclature_sid
-  many_to_one :goods_nomenclature_description, key: [:goods_nomenclature_sid,
-                                                     :goods_nomenclature_description_period_sid]
+  many_to_one :goods_nomenclature_description, key: %i[goods_nomenclature_sid
+                                                       goods_nomenclature_description_period_sid]
 
   def record_code
     "400".freeze

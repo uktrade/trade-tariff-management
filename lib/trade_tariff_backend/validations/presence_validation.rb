@@ -6,7 +6,7 @@ module TradeTariffBackend
 
         raise ArgumentError.new("validates presence expects of:[Array] to be passed in") if args.blank?
 
-        [args].flatten.all? {|arg|
+        [args].flatten.all? { |arg|
           record.send(arg.to_sym).present?
         }
       end

@@ -25,5 +25,5 @@ script
               = content_tag "cross-check-decision", "", { kind: "reject", ":cross_check" => "types.reject" }
 
   = render "workbaskets/shared/success_message", f: f
-  = render "workbaskets/cross_checks/action_links", f: f
+  = render "workbaskets/workflows/cross_checks/action_links", f: f
   = render "shared/vue_templates/cross_check_decision"

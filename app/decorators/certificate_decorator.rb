@@ -1,5 +1,4 @@
 class CertificateDecorator < ApplicationDecorator
-
   def title
     "#{object.certificate_type_code} #{object.certificate_code}"
   end
@@ -24,10 +23,9 @@ class CertificateDecorator < ApplicationDecorator
     false # TODO
   end
 
-  private
+private
 
-    def to_date(value)
-      value.try(:strftime, "%d %B %Y") || '-'
-    end
-
+  def to_date(value)
+    value.try(:strftime, "%d %B %Y") || '-'
+  end
 end

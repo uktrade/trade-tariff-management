@@ -1,19 +1,18 @@
 module XmlGeneration
   class NodeMessage
-
     GEOGRAPHICAL_AREAS = [
       GeographicalArea,
       GeographicalAreaDescription,
       GeographicalAreaDescriptionPeriod,
       GeographicalAreaMembership
-    ]
+    ].freeze
 
     MONETARY = [
       MonetaryUnit,
       MonetaryUnitDescription,
       MonetaryExchangePeriod,
       MonetaryExchangeRate
-    ]
+    ].freeze
 
     MEASUREMENTS = [
       MeasurementUnitQualifier,
@@ -21,7 +20,7 @@ module XmlGeneration
       MeasurementUnit,
       MeasurementUnitDescription,
       Measurement
-    ]
+    ].freeze
 
     QUOTA = [
       QuotaOrderNumber,
@@ -37,7 +36,7 @@ module XmlGeneration
       QuotaExhaustionEvent,
       QuotaSuspensionPeriod,
       QuotaBlockingPeriod
-    ]
+    ].freeze
 
     GOODS_NOMENCLATURES = [
       GoodsNomenclatureGroup,
@@ -49,7 +48,7 @@ module XmlGeneration
       GoodsNomenclatureOrigin,
       GoodsNomenclatureSuccessor,
       NomenclatureGroupMembership
-    ]
+    ].freeze
 
     MEASURE_RELATED = [
       MeasureTypeSeries,
@@ -66,7 +65,7 @@ module XmlGeneration
       MeasureConditionComponent,
       MeasurePartialTemporaryStop,
       MeasureExcludedGeographicalArea
-    ]
+    ].freeze
 
     ADDITIONAL_CODES = [
       AdditionalCodeType,
@@ -75,7 +74,7 @@ module XmlGeneration
       AdditionalCode,
       AdditionalCodeDescription,
       AdditionalCodeDescriptionPeriod
-    ]
+    ].freeze
 
     MEURSING = [
       MeursingAdditionalCode,
@@ -84,12 +83,12 @@ module XmlGeneration
       MeursingHeading,
       MeursingHeadingText,
       MeursingSubheading
-    ]
+    ].freeze
 
     DUTY_EXPRESSIONS = [
       DutyExpression,
       DutyExpressionDescription
-    ]
+    ].freeze
 
     CERTIFICATES = [
       CertificateType,
@@ -97,7 +96,7 @@ module XmlGeneration
       Certificate,
       CertificateDescription,
       CertificateDescriptionPeriod
-    ]
+    ].freeze
 
     REGULATIONS = [
       RegulationRoleType,
@@ -113,7 +112,7 @@ module XmlGeneration
       FtsRegulationAction,
       ProrogationRegulation,
       ProrogationRegulationAction
-    ]
+    ].freeze
 
     FOOTNOTES = [
       FootnoteType,
@@ -126,21 +125,21 @@ module XmlGeneration
       FootnoteAssociationMeasure,
       FootnoteAssociationMeursingHeading,
       FootnoteAssociationErn
-    ]
+    ].freeze
 
     EXPORT_REFUND_NOMENCLATURES = [
       ExportRefundNomenclature,
       ExportRefundNomenclatureDescription,
       ExportRefundNomenclatureDescriptionPeriod,
       ExportRefundNomenclatureIndent
-    ]
+    ].freeze
 
     SYSTEM = [
       Language,
       LanguageDescription,
       TransmissionComment,
       PublicationSigle
-    ]
+    ].freeze
 
     attr_accessor :record
 
@@ -173,58 +172,56 @@ module XmlGeneration
       "#{base_partial_path}/#{partial_folder_name}/#{record_class}.builder"
     end
 
-    private
+  private
 
-      def record_class
-        record.class
-              .name
-              .titleize
-              .split()
-              .map(&:downcase)
-              .join("_")
-      end
+    def record_class
+      record.class
+            .name
+            .titleize
+            .split
+            .map(&:downcase)
+            .join("_")
+    end
 
-      def base_partial_path
-        ::XmlGeneration::TaricExport.base_partial_path
-      end
+    def base_partial_path
+      ::XmlGeneration::TaricExport.base_partial_path
+    end
 
-      def partial_folder_name
-        if it_is?(record, MEASURE_RELATED)
-          :measures
-        elsif it_is?(record, ADDITIONAL_CODES)
-          :additional_codes
-        elsif it_is?(record, DUTY_EXPRESSIONS)
-          :duty_expressions
-        elsif it_is?(record, REGULATIONS)
-          :regulations
-        elsif it_is?(record, FOOTNOTES)
-          :footnotes
-        elsif it_is?(record, EXPORT_REFUND_NOMENCLATURES)
-          :export_refund_nomenclatures
-        elsif it_is?(record, CERTIFICATES)
-          :certificates
-        elsif it_is?(record, GEOGRAPHICAL_AREAS)
-          :geographical_areas
-        elsif it_is?(record, GOODS_NOMENCLATURES)
-          :goods_nomenclatures
-        elsif it_is?(record, MEASUREMENTS)
-          :measurements
-        elsif it_is?(record, MEURSING)
-          :meursing
-        elsif it_is?(record, MONETARY)
-          :monetary
-        elsif it_is?(record, QUOTA)
-          :quota
-        elsif it_is?(record, SYSTEM)
-          :system
-        else
-          # TODO: add more types
-        end
+    def partial_folder_name
+      if it_is?(record, MEASURE_RELATED)
+        :measures
+      elsif it_is?(record, ADDITIONAL_CODES)
+        :additional_codes
+      elsif it_is?(record, DUTY_EXPRESSIONS)
+        :duty_expressions
+      elsif it_is?(record, REGULATIONS)
+        :regulations
+      elsif it_is?(record, FOOTNOTES)
+        :footnotes
+      elsif it_is?(record, EXPORT_REFUND_NOMENCLATURES)
+        :export_refund_nomenclatures
+      elsif it_is?(record, CERTIFICATES)
+        :certificates
+      elsif it_is?(record, GEOGRAPHICAL_AREAS)
+        :geographical_areas
+      elsif it_is?(record, GOODS_NOMENCLATURES)
+        :goods_nomenclatures
+      elsif it_is?(record, MEASUREMENTS)
+        :measurements
+      elsif it_is?(record, MEURSING)
+        :meursing
+      elsif it_is?(record, MONETARY)
+        :monetary
+      elsif it_is?(record, QUOTA)
+        :quota
+      elsif it_is?(record, SYSTEM)
+        :system
       end
+    end
 
-      def it_is?(record, list)
-        list.map(&:to_s)
-            .include?(record.class.name)
-      end
+    def it_is?(record, list)
+      list.map(&:to_s)
+          .include?(record.class.name)
+    end
   end
 end

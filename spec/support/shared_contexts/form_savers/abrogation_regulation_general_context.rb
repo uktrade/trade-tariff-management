@@ -9,7 +9,7 @@ shared_context "abrogation_general_regulation_context" do
       base_regulation.reload
     end
 
-    it "should update selected base regulation" do
+    it "updates selected base regulation" do
       expect(base_regulation.public_send("#{primary_key_prefix}_role")).to be_eql(
         regulation.public_send("#{primary_key_prefix}_role")
       )

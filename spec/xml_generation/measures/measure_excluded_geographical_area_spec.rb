@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasureExcludedGeographicalArea XML generation" do
-
   let(:db_record) do
     create(:measure_excluded_geographical_area)
   end
@@ -11,10 +10,10 @@ describe "MeasureExcludedGeographicalArea XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :measure_sid,
-      :excluded_geographical_area,
-      :geographical_area_sid
+    %i[
+      measure_sid
+      excluded_geographical_area
+      geographical_area_sid
     ]
   end
 

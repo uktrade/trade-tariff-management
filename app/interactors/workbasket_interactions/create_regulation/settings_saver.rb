@@ -1,165 +1,164 @@
 module WorkbasketInteractions
   module CreateRegulation
     class SettingsSaver < ::WorkbasketInteractions::SettingsSaverBase
-
-      WORKBASKET_TYPE = "CreateRegulation"
+      WORKBASKET_TYPE = "CreateRegulation".freeze
 
       ATTRS_PARSER_METHODS = %w(
         workbasket_name
-      )
+      ).freeze
 
-      ANTIDUMPING_REGULATION_ROLES = %w(2 3)
-      ABROGATION_REGULATION_ROLES = %w(6 7)
+      ANTIDUMPING_REGULATION_ROLES = %w(2 3).freeze
+      ABROGATION_REGULATION_ROLES = %w(6 7).freeze
       ABROGATION_MODELS = %w(
         CompleteAbrogationRegulation
         ExplicitAbrogationRegulation
-      )
+      ).freeze
 
       REGULATION_CODE_KEYS = %w(
         prefix
         publication_year
         regulation_number
         number_suffix
-      )
+      ).freeze
 
-      REQUIRED_PARAMS = [
-        :role,
-        :prefix,
-        :publication_year,
-        :regulation_number,
-        :number_suffix,
-        :replacement_indicator,
-        :information_text,
-        :operation_date
+      REQUIRED_PARAMS = %i[
+        role
+        prefix
+        publication_year
+        regulation_number
+        number_suffix
+        replacement_indicator
+        information_text
+        operation_date
+      ].freeze
+
+      BASE_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + %i[
+        validity_start_date
+        regulation_group_id
       ]
 
-      BASE_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
-        :validity_start_date,
-        :regulation_group_id
+      BASE_REGULATION_WHITELIST_PARAMS = %i[
+        community_code
+        replacement_indicator
+        information_text
+        validity_start_date
+        validity_end_date
+        effective_end_date
+        regulation_group_id
+        officialjournal_number
+        officialjournal_page
+        operation_date
+        workbasket_id
+      ].freeze
+
+      MODIFICATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + %i[
+        base_regulation_role
+        base_regulation_id
+        validity_start_date
       ]
 
-      BASE_REGULATION_WHITELIST_PARAMS = [
-        :community_code,
-        :replacement_indicator,
-        :information_text,
-        :validity_start_date,
-        :validity_end_date,
-        :effective_end_date,
-        :regulation_group_id,
-        :officialjournal_number,
-        :officialjournal_page,
-        :operation_date,
-        :workbasket_id
+      MODIFICATION_REGULATION_WHITELIST_PARAMS = %i[
+        base_regulation_role
+        base_regulation_id
+        replacement_indicator
+        information_text
+        validity_start_date
+        validity_end_date
+        effective_end_date
+        officialjournal_number
+        officialjournal_page
+        operation_date
+        workbasket_id
+      ].freeze
+
+      ANTIDUMPING_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + %i[
+        antidumping_regulation_role
+        related_antidumping_regulation_id
       ]
 
-      MODIFICATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
-        :base_regulation_role,
-        :base_regulation_id,
-        :validity_start_date
+      ANTIDUMPING_REGULATION_WHITELIST_PARAMS = %i[
+        antidumping_regulation_role
+        related_antidumping_regulation_id
+        community_code
+        replacement_indicator
+        information_text
+        validity_start_date
+        validity_end_date
+        effective_end_date
+        regulation_group_id
+        officialjournal_number
+        officialjournal_page
+        operation_date
+        workbasket_id
+      ].freeze
+
+      COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + %i[
+        base_regulation_role
+        base_regulation_id
+        published_date
       ]
 
-      MODIFICATION_REGULATION_WHITELIST_PARAMS = [
-        :base_regulation_role,
-        :base_regulation_id,
-        :replacement_indicator,
-        :information_text,
-        :validity_start_date,
-        :validity_end_date,
-        :effective_end_date,
-        :officialjournal_number,
-        :officialjournal_page,
-        :operation_date,
-        :workbasket_id
-      ]
-
-      ANTIDUMPING_REGULATION_REQUIRED_PARAMS = BASE_REGULATION_REQUIRED_PARAMS + [
-        :antidumping_regulation_role,
-        :related_antidumping_regulation_id
-      ]
-
-      ANTIDUMPING_REGULATION_WHITELIST_PARAMS = [
-        :antidumping_regulation_role,
-        :related_antidumping_regulation_id,
-        :community_code,
-        :replacement_indicator,
-        :information_text,
-        :validity_start_date,
-        :validity_end_date,
-        :effective_end_date,
-        :regulation_group_id,
-        :officialjournal_number,
-        :officialjournal_page,
-        :operation_date,
-        :workbasket_id
-      ]
-
-      COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
-        :base_regulation_role,
-        :base_regulation_id,
-        :published_date
-      ]
-
-      COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS = [
-        :replacement_indicator,
-        :information_text,
-        :officialjournal_number,
-        :officialjournal_page,
-        :published_date,
-        :operation_date,
-        :workbasket_id
-      ]
+      COMPLETE_ABROGATION_REGULATION_WHITELIST_PARAMS = %i[
+        replacement_indicator
+        information_text
+        officialjournal_number
+        officialjournal_page
+        published_date
+        operation_date
+        workbasket_id
+      ].freeze
 
       EXPLICIT_ABROGATION_REGULATION_REQUIRED_PARAMS = COMPLETE_ABROGATION_REGULATION_REQUIRED_PARAMS + [
         :abrogation_date
       ]
 
-      EXPLICIT_ABROGATION_REGULATION_WHITELIST_PARAMS = [
-        :replacement_indicator,
-        :information_text,
-        :officialjournal_number,
-        :officialjournal_page,
-        :published_date,
-        :abrogation_date,
-        :operation_date,
-        :workbasket_id
-      ]
+      EXPLICIT_ABROGATION_REGULATION_WHITELIST_PARAMS = %i[
+        replacement_indicator
+        information_text
+        officialjournal_number
+        officialjournal_page
+        published_date
+        abrogation_date
+        operation_date
+        workbasket_id
+      ].freeze
 
       PROROGATION_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
         :published_date
       ]
 
-      PROROGATION_REGULATION_WHITELIST_PARAMS = [
-        :replacement_indicator,
-        :information_text,
-        :officialjournal_number,
-        :officialjournal_page,
-        :published_date,
-        :operation_date,
-        :workbasket_id
+      PROROGATION_REGULATION_WHITELIST_PARAMS = %i[
+        replacement_indicator
+        information_text
+        officialjournal_number
+        officialjournal_page
+        published_date
+        operation_date
+        workbasket_id
+      ].freeze
+
+      FULL_TEMPORARY_STOP_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + %i[
+        validity_start_date
+        published_date
       ]
 
-      FULL_TEMPORARY_STOP_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + [
-        :validity_start_date,
-        :published_date
-      ]
-
-      FULL_TEMPORARY_STOP_REGULATION_WHITELIST_PARAMS = [
-        :replacement_indicator,
-        :information_text,
-        :officialjournal_number,
-        :officialjournal_page,
-        :validity_start_date,
-        :validity_end_date,
-        :effective_enddate,
-        :published_date,
-        :operation_date,
-        :workbasket_id
-      ]
+      FULL_TEMPORARY_STOP_REGULATION_WHITELIST_PARAMS = %i[
+        replacement_indicator
+        information_text
+        officialjournal_number
+        officialjournal_page
+        validity_start_date
+        validity_end_date
+        effective_enddate
+        published_date
+        operation_date
+        workbasket_id
+      ].freeze
 
       BASE_OR_MODIFICATION = %w(
         BaseRegulation
         ModificationRegulation
-      )
+      ).freeze
 
       delegate :target_class, to: :attrs_parser
 
@@ -223,15 +222,15 @@ module WorkbasketInteractions
       end
 
       def filtered_ops
-        ops = regulation_params.select do |k ,v|
+        ops = regulation_params.select do |k, _v|
           whitelist_params.include?(k.to_sym) &&
-              !target_class.primary_key.include?(k)
+            !target_class.primary_key.include?(k)
         end
 
         ops
       end
 
-      private
+    private
 
       def set_published_date
         regulation.published_date = regulation_params[:validity_start_date]
@@ -239,27 +238,27 @@ module WorkbasketInteractions
 
       def need_to_bump_published_date?
         BASE_OR_MODIFICATION.include?(target_class.to_s) &&
-            regulation_params[:published_date].blank? &&
-            regulation_params[:validity_start_date].present?
+          regulation_params[:published_date].blank? &&
+          regulation_params[:validity_start_date].present?
       end
 
       def set_base_regulation
         @base_regulation = if original_params[:base_regulation_role] == "4"
                              ModificationRegulation.where(
-                                 modification_regulation_role: original_params[:base_regulation_role],
-                                 modification_regulation_id: original_params[:base_regulation_id],
+                               modification_regulation_role: original_params[:base_regulation_role],
+                               modification_regulation_id: original_params[:base_regulation_id],
                              ).first
                            else
                              BaseRegulation.where(
-                                 base_regulation_role: original_params[:base_regulation_role],
-                                 base_regulation_id: original_params[:base_regulation_id],
+                               base_regulation_role: original_params[:base_regulation_role],
+                               base_regulation_id: original_params[:base_regulation_id],
                              ).first
                            end
       end
 
       def modification_regulation_and_end_period_not_set?
         regulation.is_a?(ModificationRegulation) &&
-            original_params[:validity_end_date].blank?
+          original_params[:validity_end_date].blank?
       end
 
       def set_validity_end_date

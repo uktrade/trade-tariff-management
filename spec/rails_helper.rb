@@ -18,7 +18,7 @@ elsif ENV.key?("ENABLE_COVERAGE")
   SimpleCov.start "rails"
 end
 
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path('../config/environment', __dir__)
 
 require 'rspec/rails'
 require 'json_expressions/rspec'
@@ -30,11 +30,11 @@ require 'capybara/rails'
 require 'selenium/webdriver'
 
 require Rails.root.join("spec/support/tariff_validation_matcher.rb")
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 # require models and serializers
-Dir[Rails.root.join("app/models/*.rb")].each {|f| require f}
-Dir[Rails.root.join("app/serializers/*.rb")].each {|f| require f}
+Dir[Rails.root.join("app/models/*.rb")].each { |f| require f }
+Dir[Rails.root.join("app/serializers/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
@@ -53,7 +53,7 @@ RSpec.configure do |config|
   config.include CapybaraFormHelper, type: :feature
   config.include Rails.application.routes.url_helpers
 
-  redis = Redis.new(:db => 15)
+  redis = Redis.new(db: 15)
   RedisLockDb.redis = redis
 
   config.before(:suite) do
@@ -64,7 +64,7 @@ RSpec.configure do |config|
     redis.flushdb
   end
 
-  config.before(:each) do
+  config.before do
     Rails.cache.clear
     Sidekiq::Worker.clear_all
   end

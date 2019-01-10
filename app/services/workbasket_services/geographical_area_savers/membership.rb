@@ -1,18 +1,11 @@
 module WorkbasketServices
   module GeographicalAreaSavers
     class Membership
+      def initialize; end
 
-      def initialize()
+      def valid?; end
 
-      end
-
-      def valid?
-
-      end
-
-      def errors
-
-      end
+      def errors; end
     end
   end
 end

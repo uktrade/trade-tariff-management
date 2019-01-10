@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MonetaryUnit XML generation" do
-
   let(:db_record) do
     create(:monetary_unit, :xml)
   end
@@ -11,10 +10,10 @@ describe "MonetaryUnit XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :monetary_unit_code,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      monetary_unit_code
+      validity_start_date
+      validity_end_date
     ]
   end
 

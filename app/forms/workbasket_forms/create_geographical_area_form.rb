@@ -1,6 +1,5 @@
 module WorkbasketForms
   class CreateGeographicalAreaForm
-
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 

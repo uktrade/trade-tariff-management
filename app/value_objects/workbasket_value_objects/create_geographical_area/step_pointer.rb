@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateGeographicalArea
     class StepPointer < ::WorkbasketValueObjects::StepPointerBase
-
       def has_next_step?
         false
       end

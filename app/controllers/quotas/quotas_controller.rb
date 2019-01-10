@@ -1,8 +1,6 @@
 module Quotas
   class QuotasController < ApplicationController
-
     include ::SearchCacheHelpers
-    skip_around_action :configure_time_machine, only: [:index, :search]
 
     expose(:separator) do
       "_SQ_"

@@ -1,9 +1,8 @@
 class QuotaOrderNumberValidator < TradeTariffBackend::Validator
-
   #
   # TODO: We need to make sure and confirm code of this comformance rule
   #
-  validation :QON1, 'Order number can not be blank.', on: [:create, :update] do
+  validation :QON1, 'Order number can not be blank.', on: %i[create update] do
     validates :presence, of: :quota_order_number_id
   end
 
@@ -21,27 +20,27 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
   # end
 
   validation :ON1, 'Quota order number id + start date must be unique' do
-    validates :uniqueness, of: [:quota_order_number_id, :validity_start_date]
+    validates :uniqueness, of: %i[quota_order_number_id validity_start_date]
   end
 
   validation :ON2, 'There may be no overlap in time of two quota order numbers with the same quota order number id.' do |record|
     if record.validity_end_date.present?
       record.class.where(
         quota_order_number_id: record.quota_order_number_id
-      ){
+      ) {
         (
           (validity_end_date > record.validity_start_date) &
           (validity_start_date < record.validity_end_date)
         ) |
-        (
-          (validity_start_date < record.validity_end_date) &
-          (validity_end_date > record.validity_end_date)
-        )
+          (
+            (validity_start_date < record.validity_end_date) &
+            (validity_end_date > record.validity_end_date)
+          )
       }.empty?
     else
       record.class.where(
         quota_order_number_id: record.quota_order_number_id
-      ){
+      ) {
         (validity_end_date > record.validity_start_date)
       }.empty?
     end
@@ -66,8 +65,8 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
       (
         record.validity_start_date <= record.quota_order_number_origin.validity_start_date
       ) && (
-        ( record.validity_end_date.blank? && record.quota_order_number_origin.validity_end_date.blank? ) ||
-        ( record.validity_end_date.present? && record.quota_order_number_origin.validity_end_date.present? && (record.validity_end_date >= record.quota_order_number_origin.validity_end_date) )
+        (record.validity_end_date.blank? && record.quota_order_number_origin.validity_end_date.blank?) ||
+        (record.validity_end_date.present? && record.quota_order_number_origin.validity_end_date.present? && (record.validity_end_date >= record.quota_order_number_origin.validity_end_date))
       )
     end
   end
@@ -108,6 +107,6 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
   # end
 
   validation :ON11, 'The quota order number cannot be deleted if it is used in a measure. This rule is only applicable for measure with start date after 31/12/2007.', on: [:destroy] do |record|
-    record.measure.blank? || record.measure.validity_start_date.to_date <= Date.new(2007,12,31)
+    record.measure.blank? || record.measure.validity_start_date.to_date <= Date.new(2007, 12, 31)
   end
 end

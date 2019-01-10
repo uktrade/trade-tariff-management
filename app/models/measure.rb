@@ -1,5 +1,4 @@
 class Measure < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
   include ::ForceValidatorConcern
@@ -9,7 +8,7 @@ class Measure < Sequel::Model
     2, # Modification
     3, # Provisional anti-dumping/countervailing duty
     4  # Definitive anti-dumping/countervailing duty
-  ]
+  ].freeze
 
   set_primary_key [:measure_sid]
   plugin :time_machine, period_start_column: :effective_start_date,
@@ -54,7 +53,7 @@ class Measure < Sequel::Model
                            order: [Sequel.asc(:footnote_type_id, nulls: :first),
                                    Sequel.asc(:footnote_id, nulls: :first)],
                            left_key: :measure_sid,
-                           right_key: [:footnote_type_id, :footnote_id] do |ds|
+                           right_key: %i[footnote_type_id footnote_id] do |ds|
                              ds.with_actual(Footnote)
                            end
 
@@ -107,15 +106,15 @@ class Measure < Sequel::Model
     measure_partial_temporary_stops.first
   end
 
-  many_to_one :modification_regulation, primary_key: [:modification_regulation_id,
-                                                      :modification_regulation_role],
-                                        key: [:measure_generating_regulation_id,
-                                              :measure_generating_regulation_role]
+  many_to_one :modification_regulation, primary_key: %i[modification_regulation_id
+                                                        modification_regulation_role],
+                                        key: %i[measure_generating_regulation_id
+                                                measure_generating_regulation_role]
 
-  many_to_one :base_regulation, primary_key: [:base_regulation_id,
-                                      :base_regulation_role],
-                                key: [:measure_generating_regulation_id,
-                                      :measure_generating_regulation_role]
+  many_to_one :base_regulation, primary_key: %i[base_regulation_id
+                                                base_regulation_role],
+                                key: %i[measure_generating_regulation_id
+                                        measure_generating_regulation_role]
 
   def validity_start_date
     if self[:validity_start_date].present?
@@ -129,13 +128,11 @@ class Measure < Sequel::Model
     if national
       self[:validity_end_date]
     elsif self[:validity_end_date].present? && generating_regulation.present? && generating_regulation.effective_end_date.present?
-      (self[:validity_end_date] > generating_regulation.effective_end_date) ? generating_regulation.effective_end_date : self[:validity_end_date]
+      self[:validity_end_date] > generating_regulation.effective_end_date ? generating_regulation.effective_end_date : self[:validity_end_date]
     elsif self[:validity_end_date].present? && validity_date_justified?
       self[:validity_end_date]
     elsif generating_regulation.present?
       generating_regulation.effective_end_date
-    else
-      nil
     end
   end
 
@@ -150,10 +147,10 @@ class Measure < Sequel::Model
 
   def justification_regulation
     @justification_regulation ||= case justification_regulation_role
-                                    when nil then nil
-                                    when 4 then ModificationRegulation.find(modification_regulation_id: justification_regulation_id)
-                                    else
-                                      BaseRegulation.find(base_regulation_id: justification_regulation_id)
+                                  when nil then nil
+                                  when 4 then ModificationRegulation.find(modification_regulation_id: justification_regulation_id)
+                                  else
+                                    BaseRegulation.find(base_regulation_id: justification_regulation_id)
                                   end
   end
 
@@ -167,15 +164,15 @@ class Measure < Sequel::Model
   def not_update_of_the_same_measure?
     updating_measure.blank? || (
       updating_measure.present? &&
-      [
-        :measure_type_id,
-        :geographical_area_sid,
-        :goods_nomenclature_sid,
-        :additional_code_type_id,
-        :additional_code_id,
-        :ordernumber,
-        :reduction_indicator,
-        :validity_start_date
+      %i[
+        measure_type_id
+        geographical_area_sid
+        goods_nomenclature_sid
+        additional_code_type_id
+        additional_code_id
+        ordernumber
+        reduction_indicator
+        validity_start_date
       ].any? do |field_name|
         public_send(field_name).to_s != updating_measure.public_send(field_name).to_s
       end
@@ -204,34 +201,36 @@ class Measure < Sequel::Model
 
     def with_base_regulations
       query = if model.point_in_time.present?
-        distinct(:measure_generating_regulation_id, :measure_type_id, :goods_nomenclature_sid, :geographical_area_id, :geographical_area_sid, :additional_code_type_id, :additional_code_id).select(Sequel.expr(:measures).*)
-      else
-        select(Sequel.expr(:measures).*)
+                distinct(:measure_generating_regulation_id, :measure_type_id, :goods_nomenclature_sid, :geographical_area_id, :geographical_area_sid, :additional_code_type_id, :additional_code_id).select(Sequel.expr(:measures).*)
+              else
+                select(Sequel.expr(:measures).*)
       end
       query.
-        select_append(Sequel.as(Sequel.case({{Sequel.qualify(:measures, :validity_start_date)=>nil}=>Sequel.lit('base_regulations.validity_start_date')}, Sequel.lit('measures.validity_start_date')), :effective_start_date)).
-        select_append(Sequel.as(Sequel.case({{Sequel.qualify(:measures, :validity_end_date)=>nil}=>Sequel.lit('base_regulations.effective_end_date')}, Sequel.lit('measures.validity_end_date')), :effective_end_date)).
+        select_append(Sequel.as(Sequel.case({ { Sequel.qualify(:measures, :validity_start_date) => nil } => Sequel.lit('base_regulations.validity_start_date') }, Sequel.lit('measures.validity_start_date')), :effective_start_date)).
+        select_append(Sequel.as(Sequel.case({ { Sequel.qualify(:measures, :validity_end_date) => nil } => Sequel.lit('base_regulations.effective_end_date') }, Sequel.lit('measures.validity_end_date')), :effective_end_date)).
         join_table(:inner, :base_regulations, base_regulations__base_regulation_id: :measures__measure_generating_regulation_id).
         actual_for_base_regulations
     end
 
     def with_modification_regulations
       query = if model.point_in_time.present?
-        distinct(:measure_generating_regulation_id, :measure_type_id, :goods_nomenclature_sid, :geographical_area_id, :geographical_area_sid, :additional_code_type_id, :additional_code_id).select(Sequel.expr(:measures).*)
-      else
-        select(Sequel.expr(:measures).*)
+                distinct(:measure_generating_regulation_id, :measure_type_id, :goods_nomenclature_sid, :geographical_area_id, :geographical_area_sid, :additional_code_type_id, :additional_code_id).select(Sequel.expr(:measures).*)
+              else
+                select(Sequel.expr(:measures).*)
       end
       query.
-        select_append(Sequel.as(Sequel.case({{Sequel.qualify(:measures, :validity_start_date)=>nil}=>Sequel.lit('modification_regulations.validity_start_date')}, Sequel.lit('measures.validity_start_date')), :effective_start_date)).
-        select_append(Sequel.as(Sequel.case({{Sequel.qualify(:measures, :validity_end_date)=>nil}=>Sequel.lit('modification_regulations.effective_end_date')}, Sequel.lit('measures.validity_end_date')), :effective_end_date)).
+        select_append(Sequel.as(Sequel.case({ { Sequel.qualify(:measures, :validity_start_date) => nil } => Sequel.lit('modification_regulations.validity_start_date') }, Sequel.lit('measures.validity_start_date')), :effective_start_date)).
+        select_append(Sequel.as(Sequel.case({ { Sequel.qualify(:measures, :validity_end_date) => nil } => Sequel.lit('modification_regulations.effective_end_date') }, Sequel.lit('measures.validity_end_date')), :effective_end_date)).
         join_table(:inner, :modification_regulations, modification_regulations__modification_regulation_id: :measures__measure_generating_regulation_id).
         actual_for_modifications_regulations
     end
 
     def actual_for_base_regulations
       if model.point_in_time.present?
-        filter{|o| o.<=(Sequel.case({{Sequel.qualify(:measures, :validity_start_date)=>nil}=>Sequel.lit('base_regulations.validity_start_date')}, Sequel.lit('measures.validity_start_date')), model.point_in_time) &
-        (o.>=(Sequel.case({{Sequel.qualify(:measures, :validity_end_date)=>nil}=>Sequel.lit('base_regulations.effective_end_date')}, Sequel.lit('measures.validity_end_date')), model.point_in_time) | ({Sequel.case({{Sequel.qualify(:measures, :validity_end_date)=>nil}=>Sequel.lit('base_regulations.effective_end_date')}, Sequel.lit('measures.validity_end_date')) => nil})) }
+        filter { |o|
+          o.<=(Sequel.case({ { Sequel.qualify(:measures, :validity_start_date) => nil } => Sequel.lit('base_regulations.validity_start_date') }, Sequel.lit('measures.validity_start_date')), model.point_in_time) &
+            (o.>=(Sequel.case({ { Sequel.qualify(:measures, :validity_end_date) => nil } => Sequel.lit('base_regulations.effective_end_date') }, Sequel.lit('measures.validity_end_date')), model.point_in_time) | ({ Sequel.case({ { Sequel.qualify(:measures, :validity_end_date) => nil } => Sequel.lit('base_regulations.effective_end_date') }, Sequel.lit('measures.validity_end_date')) => nil }))
+        }
       else
         self
       end
@@ -239,8 +238,10 @@ class Measure < Sequel::Model
 
     def actual_for_modifications_regulations
       if model.point_in_time.present?
-        filter{|o| o.<=(Sequel.case({{Sequel.qualify(:measures, :validity_start_date)=>nil}=>Sequel.lit('modification_regulations.validity_start_date')}, Sequel.lit('measures.validity_start_date')), model.point_in_time) &
-        (o.>=(Sequel.case({{Sequel.qualify(:measures, :validity_end_date)=>nil}=>Sequel.lit('modification_regulations.effective_end_date')}, Sequel.lit('measures.validity_end_date')), model.point_in_time) | ({Sequel.case({{Sequel.qualify(:measures, :validity_end_date)=>nil}=>Sequel.lit('modification_regulations.effective_end_date')}, Sequel.lit('measures.validity_end_date')) => nil})) }
+        filter { |o|
+          o.<=(Sequel.case({ { Sequel.qualify(:measures, :validity_start_date) => nil } => Sequel.lit('modification_regulations.validity_start_date') }, Sequel.lit('measures.validity_start_date')), model.point_in_time) &
+            (o.>=(Sequel.case({ { Sequel.qualify(:measures, :validity_end_date) => nil } => Sequel.lit('modification_regulations.effective_end_date') }, Sequel.lit('measures.validity_end_date')), model.point_in_time) | ({ Sequel.case({ { Sequel.qualify(:measures, :validity_end_date) => nil } => Sequel.lit('modification_regulations.effective_end_date') }, Sequel.lit('measures.validity_end_date')) => nil }))
+        }
       else
         self
       end
@@ -383,7 +384,7 @@ class Measure < Sequel::Model
     self.searchable_data = ops.to_json
     self.searchable_data_updated_at = Time.now.utc
 
-    save(columns: [:searchable_data, :searchable_data_updated_at])
+    save(columns: %i[searchable_data searchable_data_updated_at])
   end
 
   def_column_accessor :effective_end_date, :effective_start_date
@@ -424,7 +425,7 @@ class Measure < Sequel::Model
     "#{regulation_code.first}#{regulation_code[3..6]}/#{regulation_code[1..2]}"
   end
 
-  def generating_regulation_url(for_suspending_regulation=false)
+  def generating_regulation_url(for_suspending_regulation = false)
     return false if national?
 
     MeasureService::CouncilRegulationUrlGenerator.new(
@@ -467,7 +468,7 @@ class Measure < Sequel::Model
   def duty_expression_with_national_measurement_units_for(declarable)
     national_measurement_units = national_measurement_units_for(declarable)
     if national_measurement_units.present?
-      "#{duty_expression} (#{national_measurement_units.join(" - ")})"
+      "#{duty_expression} (#{national_measurement_units.join(' - ')})"
     else
       duty_expression
     end
@@ -486,7 +487,7 @@ class Measure < Sequel::Model
       declarable.national_measurement_unit_set
                 .national_measurement_unit_set_units
                 .select(&:present?)
-                .select{ |nmu| nmu.level > 1 }
+                .select { |nmu| nmu.level > 1 }
                 .map(&:to_s)
     end
   end
@@ -494,7 +495,7 @@ class Measure < Sequel::Model
   def formatted_duty_expression_with_national_measurement_units_for(declarable)
     national_measurement_units = national_measurement_units_for(declarable)
     if national_measurement_units.present?
-      "#{formatted_duty_expression} (#{national_measurement_units.join(" - ")})"
+      "#{formatted_duty_expression} (#{national_measurement_units.join(' - ')})"
     else
       formatted_duty_expression
     end
@@ -579,41 +580,41 @@ class Measure < Sequel::Model
   #
 
   begin :searchable_data_cache_helpers
-    def parsed_searchable_data
-      JSON.parse(searchable_data) || {}
-    end
+        def parsed_searchable_data
+          JSON.parse(searchable_data) || {}
+        end
 
-    def get_from_index(value_name)
-      parsed_searchable_data[value_name]
-    end
+        def get_from_index(value_name)
+          parsed_searchable_data[value_name]
+        end
 
-    def cached_excluded_geographical_areas_info
-      get_from_index('cached_excluded_geographical_areas_info')
-    end
+        def cached_excluded_geographical_areas_info
+          get_from_index('cached_excluded_geographical_areas_info')
+        end
 
-    def cached_conditions_short_list
-      get_from_index('cached_conditions_short_list')
-    end
+        def cached_conditions_short_list
+          get_from_index('cached_conditions_short_list')
+        end
 
-    def cached_footnotes_abbreviation_info
-      get_from_index('cached_footnotes_abbreviation_info')
-    end
+        def cached_footnotes_abbreviation_info
+          get_from_index('cached_footnotes_abbreviation_info')
+        end
 
-    def cached_duty_expression_info
-      get_from_index('cached_duty_expression_info')
-    end
+        def cached_duty_expression_info
+          get_from_index('cached_duty_expression_info')
+        end
 
-    def justification_regulation_info
-      generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?
-    end
+        def justification_regulation_info
+          generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?
+        end
 
-    def last_updated_at_info
-      (updated_at || added_at).try(:strftime, "%d %b %Y")
-    end
+        def last_updated_at_info
+          (updated_at || added_at).try(:strftime, "%d %b %Y")
+        end
 
-    def value_or_default(value)
-      value || "-"
-    end
+        def value_or_default(value)
+          value || "-"
+        end
   end
 
   def to_table_json
@@ -668,7 +669,7 @@ class Measure < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       measure_sid: measure_sid,
       regulation: generating_regulation.to_json,

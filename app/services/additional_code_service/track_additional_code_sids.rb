@@ -1,7 +1,6 @@
 module AdditionalCodeService
   class TrackAdditionalCodeSids
-
-    CACHE_KEY_SEPARATOR = "_FAD_ALL_IDS_"
+    CACHE_KEY_SEPARATOR = "_FAD_ALL_IDS_".freeze
 
     attr_accessor :search_code
 
@@ -16,20 +15,20 @@ module AdditionalCodeService
       )
     end
 
-    private
+  private
 
-      def cache_key
-        search_code.gsub("_SAD_", CACHE_KEY_SEPARATOR)
-      end
+    def cache_key
+      search_code.gsub("_SAD_", CACHE_KEY_SEPARATOR)
+    end
 
-      def additional_code_sids
-        ::AdditionalCodes::Search.new(
-          search_ops
-        ).additional_code_sids
-      end
+    def additional_code_sids
+      ::AdditionalCodes::Search.new(
+        search_ops
+      ).additional_code_sids
+    end
 
-      def search_ops
-        Rails.cache.read(search_code)
-      end
+    def search_ops
+      Rails.cache.read(search_code)
+    end
   end
 end

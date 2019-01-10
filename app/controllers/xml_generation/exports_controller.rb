@@ -1,7 +1,8 @@
 module XmlGeneration
   class ExportsController < ApplicationController
-
     include ::BaseJobMixin
+
+    around_action :configure_time_machine
 
     expose(:record_name) do
       "Export"
@@ -31,7 +32,7 @@ module XmlGeneration
       nil
     end
 
-    private
+  private
 
     def persist_record(record)
       record.save_with_envelope_id

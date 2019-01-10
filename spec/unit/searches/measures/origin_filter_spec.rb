@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: origin filter" do
-
   include_context "measures_search_is_or_is_not_context"
 
   let(:search_key) { "origin" }
@@ -25,7 +24,7 @@ describe "Measure search: origin filter" do
   end
 
   describe "Valid Search" do
-    it "should filter by geographical_area_id with 'is' operator" do
+    it "filters by geographical_area_id with 'is' operator" do
       res = search_results(
         enabled: true,
         operator: 'is',
@@ -49,7 +48,7 @@ describe "Measure search: origin filter" do
       expect(measure_sids).not_to include(ae_measure.measure_sid)
     end
 
-    it "should filter by geographical_area_id with 'is_not' operator" do
+    it "filters by geographical_area_id with 'is_not' operator" do
       res = search_results(
         enabled: true,
         operator: 'is_not',

@@ -35,18 +35,8 @@
 
 ### CI
 
-CI for this project is provided by GitLab CI.
+CI for this project is provided by CircleCI: https://circleci.com/gh/uktrade/trade-tariff-management.
 
-If you'd like to update the CI configuration you can test changes locally using
-the GitLab Runner (to avoid having to continually push changes then adjust):
-
-1. Install [Docker](https://docs.docker.com/install/)
-  - `brew cask install docker` on MacOS
-1. Install [GitLab Runner](https://docs.gitlab.com/runner/install/index.html)
-  - `brew install gitlab-runner` on MacOS
-1. Run `gitlab-runner exec docker test`
-  - N.B. Any changes aside from edits to `.gitlab-ci.yml` need to be committed
-    to take effect
 
 ## Deployment
 

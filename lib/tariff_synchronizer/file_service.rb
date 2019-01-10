@@ -19,7 +19,7 @@ module TariffSynchronizer
         if use_s3
           bucket.object(file_path).put(body: body)
         else
-          File.open(file_path, "wb") {|f| f.write(body) }
+          File.open(file_path, "wb") { |f| f.write(body) }
         end
       end
 

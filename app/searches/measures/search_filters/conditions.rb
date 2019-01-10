@@ -26,11 +26,10 @@
 module Measures
   module SearchFilters
     class Conditions < ::Shared::SearchFilters::CollectionFilterBase
-
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         are
         include
-      )
+      ).freeze
 
       attr_accessor :operator,
                     :conditions_list
@@ -39,9 +38,9 @@ module Measures
         @operator = operator
 
         @conditions_list = if conditions_list.present?
-          filtered_collection_params(conditions_list)
-        else
-          []
+                             filtered_collection_params(conditions_list)
+                           else
+                             []
         end
       end
 
@@ -66,50 +65,50 @@ module Measures
         end
       end
 
-      private
+    private
 
-        def required_options_are_blank?
-          OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
+      def required_options_are_blank?
+        OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
           conditions_list.size.zero?
-        end
+      end
 
-        def initial_filter_sql
+      def initial_filter_sql
+        <<-eos
+          searchable_data #>> '{"measure_conditions"}' IS NOT NULL
+        eos
+      end
+
+      def collection_sql_rules
+        conditions_list.map do
           <<-eos
-            searchable_data #>> '{"measure_conditions"}' IS NOT NULL
+            (searchable_data #>> '{"measure_conditions"}')::text ilike ?
           eos
-        end
+        end.join(" AND ")
+      end
 
-        def collection_sql_rules
-          conditions_list.map do
-            <<-eos
-              (searchable_data #>> '{"measure_conditions"}')::text ilike ?
-            eos
-          end.join(" AND ")
+      def collection_compare_values
+        conditions_list.map do |code|
+          "%_#{code}_%"
         end
+      end
 
-        def collection_compare_values
-          conditions_list.map do |code|
-            "%_#{code}_%"
-          end
-        end
-
-        def count_comparison_sql_rule
-          <<-eos
+      def count_comparison_sql_rule
+        <<-eos
             searchable_data #>> '{"measure_conditions_count"}' = '#{conditions_list.count}'
-          eos
-        end
+        eos
+      end
 
-        def are_not_specified_sql_rule
-          <<-eos
-            searchable_data #>> '{"measure_conditions"}' IS NULL
-          eos
-        end
+      def are_not_specified_sql_rule
+        <<-eos
+          searchable_data #>> '{"measure_conditions"}' IS NULL
+        eos
+      end
 
-        def are_not_unspecified_sql_rule
-          <<-eos
-            searchable_data #>> '{"measure_conditions"}' IS NOT NULL
-          eos
-        end
+      def are_not_unspecified_sql_rule
+        <<-eos
+          searchable_data #>> '{"measure_conditions"}' IS NOT NULL
+        eos
+      end
     end
   end
 end

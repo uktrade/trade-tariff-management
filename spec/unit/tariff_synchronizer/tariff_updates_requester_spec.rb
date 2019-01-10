@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe TariffSynchronizer::TariffUpdatesRequester do
-
   describe ".perform" do
     let(:url) { "http://example/test" }
 
@@ -31,7 +30,7 @@ describe TariffSynchronizer::TariffUpdatesRequester do
 
       it "returns retry_count_exceeded? as true when not valid request" do
         response = described_class.perform("http://example/test")
-        expect(response.retry_count_exceeded?).to be_truthy
+        expect(response).to be_retry_count_exceeded
       end
 
       it "logs an info event" do

@@ -2,9 +2,10 @@ require 'rails_helper'
 
 describe ChiefTransformer::Processor::TameInsert do
   before(:all) { preload_standing_data }
+
   after(:all)  { clear_standing_data }
 
-  let(:sample_operation_date) { Date.new(2013,8,5) }
+  let(:sample_operation_date) { Date.new(2013, 8, 5) }
 
   let(:chief_update) {
     create :chief_update, :applied, issue_date: sample_operation_date
@@ -15,14 +16,16 @@ describe ChiefTransformer::Processor::TameInsert do
       let(:sample_date) { DateTime.parse("2008-04-01 00:00:00") }
 
       context 'TAME has no TAMFs associated' do
-        let!(:tame) { create(:tame, amend_indicator: "I",
+        let!(:tame) {
+          create(:tame, amend_indicator: "I",
                                     fe_tsmp: sample_date,
                                     tar_msr_no: '0101010100',
                                     msrgp_code: "VT",
                                     msr_type: "S",
                                     tty_code: "813",
                                     adval_rate: 55.000,
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
         let!(:measure) {
           create :measure, :national,
@@ -39,7 +42,7 @@ describe ChiefTransformer::Processor::TameInsert do
             duty_amount: 5
         }
 
-        before { ChiefTransformer::Processor::TameInsert.new(tame).process }
+        before { described_class.new(tame).process }
 
         it 'updates associated measure components duty amount' do
           expect(measure_component.reload.duty_amount).to eq 55
@@ -108,7 +111,7 @@ describe ChiefTransformer::Processor::TameInsert do
             excluded_geographical_area: iq.geographical_area_id
         }
 
-        before { ChiefTransformer::Processor::TameInsert.new(tame).process }
+        before { described_class.new(tame).process }
 
         it 'deletes existing measure components' do
           expect(
@@ -138,7 +141,7 @@ describe ChiefTransformer::Processor::TameInsert do
         it 'creates new excluded geographical area associations' do
           expect(
             measure.reload.measure_excluded_geographical_areas.map(&:excluded_geographical_area)
-          ).to match_array ["AD", "FO", "NO", "SM", "IS"]
+          ).to match_array %w[AD FO NO SM IS]
         end
       end
     end
@@ -149,17 +152,19 @@ describe ChiefTransformer::Processor::TameInsert do
           create(:mfcm, :with_goods_nomenclature, :prohibition, amend_indicator: "I", fe_tsmp: DateTime.parse("2008-04-01 00:00:00"), msrgp_code: "PR", msr_type: "CVD", tar_msr_no: "2106909829", cmdty_code: "2106909829", origin: chief_update.filename)
         }
 
-        let!(:tame) { create(:tame, :prohibition,
+        let!(:tame) {
+          create(:tame, :prohibition,
                                     amend_indicator: "I",
                                     fe_tsmp: DateTime.parse("2008-05-01 00:00:00"),
                                     msrgp_code: "PR",
                                     msr_type: "CVD",
                                     tar_msr_no: "2106909829",
-                                    origin: chief_update.filename) }
+                                    origin: chief_update.filename)
+        }
 
         let!(:geographical_area) { create :geographical_area, :fifteen_years, :erga_omnes, geographical_area_sid: 400 }
 
-        before { ChiefTransformer::Processor::TameInsert.new(tame).process }
+        before { described_class.new(tame).process }
 
         it 'creates new P&R measure' do
           expect(
@@ -167,8 +172,8 @@ describe ChiefTransformer::Processor::TameInsert do
               measure_type_id: 'CVD',
               operation_date: sample_operation_date,
               operation: 'C'
-            ).one?
-          ).to be_truthy
+            )
+          ).to be_one
         end
       end
 
@@ -177,8 +182,8 @@ describe ChiefTransformer::Processor::TameInsert do
 
         it 'creates no new measures' do
           expect {
-            ChiefTransformer::Processor::TameInsert.new(tame).process
-          }.not_to change{Measure.count}
+            described_class.new(tame).process
+          }.not_to change(Measure, :count)
         end
       end
     end

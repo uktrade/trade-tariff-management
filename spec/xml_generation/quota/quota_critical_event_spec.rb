@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "QuotaCriticalEvent XML generation" do
-
   let(:db_record) do
     create(:quota_critical_event, :xml)
   end
@@ -11,11 +10,11 @@ describe "QuotaCriticalEvent XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :quota_definition_sid,
-      :occurrence_timestamp,
-      :critical_state,
-      :critical_state_change_date
+    %i[
+      quota_definition_sid
+      occurrence_timestamp
+      critical_state
+      critical_state_change_date
     ]
   end
 

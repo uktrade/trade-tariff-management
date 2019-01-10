@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "QuotaSuspensionPeriod XML generation" do
-
   let(:db_record) do
     create(:quota_suspension_period)
   end
@@ -11,12 +10,12 @@ describe "QuotaSuspensionPeriod XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :quota_suspension_period_sid,
-      :quota_definition_sid,
-      :suspension_start_date,
-      :suspension_end_date,
-      :description
+    %i[
+      quota_suspension_period_sid
+      quota_definition_sid
+      suspension_start_date
+      suspension_end_date
+      description
     ]
   end
 

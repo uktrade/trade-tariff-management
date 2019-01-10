@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "RegulationGroupDescription XML generation" do
-
   let(:db_record) do
     create(:regulation_group_description)
   end
@@ -11,10 +10,10 @@ describe "RegulationGroupDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :regulation_group_id,
-      :language_id,
-      :description
+    %i[
+      regulation_group_id
+      language_id
+      description
     ]
   end
 

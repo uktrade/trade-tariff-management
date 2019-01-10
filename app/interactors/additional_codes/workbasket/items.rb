@@ -1,7 +1,6 @@
 module AdditionalCodes
   module Workbasket
     class Items
-
       attr_accessor :workbasket,
                     :workbasket_settings,
                     :search_ops,
@@ -31,54 +30,52 @@ module AdditionalCodes
       end
 
       def collection
-        workbasket_items.map do |item|
-          item.hash_data
-        end
+        workbasket_items.map(&:hash_data)
       end
 
       def pagination_metadata
         paginator.metadata
       end
 
-      private
+    private
 
-        def fetch_target_records
-          @target_records = ::AllAdditionalCode.bulk_edit_scope(
-            :additional_code_sid, paginator.current_batch_ids
+      def fetch_target_records
+        @target_records = ::AllAdditionalCode.bulk_edit_scope(
+          :additional_code_sid, paginator.current_batch_ids
+        )
+      end
+
+      def generate_initial_workbasket_items!
+        @workbasket_items = target_records.map do |record|
+          ::Workbaskets::Item.create_from_target_record(
+            workbasket, record
           )
         end
 
-        def generate_initial_workbasket_items!
-          @workbasket_items = target_records.map do |record|
-            ::Workbaskets::Item.create_from_target_record(
-              workbasket, record
-            )
-          end
+        workbasket_settings.track_current_page_loaded!(current_page)
+        workbasket_settings.initial_items_populated = true if final_batch_populated?
+        workbasket_settings.save
+      end
 
-          workbasket_settings.track_current_page_loaded!(current_page)
-          workbasket_settings.initial_items_populated = true if final_batch_populated?
-          workbasket_settings.save
-        end
+      def load_workbasket_items
+        @workbasket_items = ::Workbaskets::Item.by_workbasket(workbasket)
+                                               .bulk_edit_scope(
+                                                 :record_id, paginator.current_batch_ids
+        )
+      end
 
-        def load_workbasket_items
-          @workbasket_items = ::Workbaskets::Item.by_workbasket(workbasket)
-                                                 .bulk_edit_scope(
-            :record_id, paginator.current_batch_ids
-          )
-        end
+      def final_batch_populated?
+        workbasket.items.count == paginator.total_count
+      end
 
-        def final_batch_populated?
-          workbasket.items.count == paginator.total_count
-        end
+      def current_batch_is_not_loaded?
+        !workbasket_settings.batches_loaded_pages
+                            .include?(current_page)
+      end
 
-        def current_batch_is_not_loaded?
-          !workbasket_settings.batches_loaded_pages
-                              .include?(current_page)
-        end
-
-        def current_page
-          paginator.current_page
-        end
+      def current_page
+        paginator.current_page
+      end
     end
   end
 end

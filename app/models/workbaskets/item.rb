@@ -1,11 +1,10 @@
 module Workbaskets
   class Item < Sequel::Model(:workbasket_items)
-
-    STATES = [
-      :in_progress,
-      :submitted,
-      :rejected
-    ]
+    STATES = %i[
+      in_progress
+      submitted
+      rejected
+    ].freeze
 
     plugin :timestamps
 
@@ -19,7 +18,6 @@ module Workbaskets
                   :record_type
 
       inclusion_of :status, in: STATES.map(&:to_s)
-
     end
 
     dataset_module do
@@ -77,12 +75,14 @@ module Workbaskets
     end
 
     def record
-      record_type.constantize
-                 .where(record_key.to_sym => record_id)
-                 .first if record_id
+      if record_id
+        record_type.constantize
+                   .where(record_key.to_sym => record_id)
+                   .first
+      end
     end
 
-    def error_details(errored_column)
+    def error_details(_errored_column)
       errors_detected = validate!(
         ActiveSupport::HashWithIndifferentAccess.new(
           hash_data

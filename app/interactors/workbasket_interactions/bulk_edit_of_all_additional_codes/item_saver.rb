@@ -1,7 +1,6 @@
 module WorkbasketInteractions
   module BulkEditOfAllAdditionalCodes
     class ItemSaver
-
       attr_accessor :workbasket_item,
                     :workbasket,
                     :operation_date,
@@ -36,26 +35,26 @@ module WorkbasketInteractions
 
         @records.each do |record|
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              record, system_ops
+            record, system_ops
           ).assign!
           record.save
         end
       end
 
       def validate!(params)
-        return {validity_start_date: "Start date can't be blank!"} if params[:validity_start_date].blank?
+        return { validity_start_date: "Start date can't be blank!" } if params[:validity_start_date].blank?
 
         if params['changes'].include?('validity_end_date') && !meursing?(params)
           additional_code = build_additional_code!(params)
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-              additional_code,
+            additional_code,
               AdditionalCodeValidator,
               {}
           ).errors
         end
       end
 
-      private
+    private
 
       def meursing?(params)
         AdditionalCodeType.find(additional_code_type_id: params['type_id']).meursing?
@@ -64,25 +63,22 @@ module WorkbasketInteractions
       def build_meursing_additional_code!(params)
         MeursingAdditionalCode.unrestrict_primary_key
         MeursingAdditionalCode.new(
-          {
-              meursing_additional_code_sid: existing.additional_code_sid,
-              additional_code: existing.additional_code,
-              validity_start_date: params['validity_start_date'].to_date,
-              validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
-          }
+          meursing_additional_code_sid: existing.additional_code_sid,
+          additional_code: existing.additional_code,
+          validity_start_date: params['validity_start_date'].to_date,
+          validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
         )
       end
 
       def build_additional_code!(params)
         AdditionalCode.unrestrict_primary_key
         AdditionalCode.new(
-            {
-                additional_code_sid: existing.additional_code_sid,
-                additional_code_type_id: existing.additional_code_type_id,
-                additional_code: existing.additional_code,
-                validity_start_date: params['validity_start_date'].to_date,
-                validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
-            })
+          additional_code_sid: existing.additional_code_sid,
+          additional_code_type_id: existing.additional_code_type_id,
+          additional_code: existing.additional_code,
+          validity_start_date: params['validity_start_date'].to_date,
+          validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
+)
       end
 
       def build_additional_code_description!(params)
@@ -91,22 +87,20 @@ module WorkbasketInteractions
         description = existing.additional_code_description
         [
             AdditionalCodeDescription.new(
-                {
-                    additional_code_description_period_sid: description.additional_code_description_period_sid,
-                    additional_code_sid: description.additional_code_sid,
-                    additional_code_type_id: description.additional_code_type_id,
-                    additional_code: description.additional_code,
-                    language_id: description.language_id,
-                    description: params['additional_code_description']['description']
-                }),
+              additional_code_description_period_sid: description.additional_code_description_period_sid,
+              additional_code_sid: description.additional_code_sid,
+              additional_code_type_id: description.additional_code_type_id,
+              additional_code: description.additional_code,
+              language_id: description.language_id,
+              description: params['additional_code_description']['description']
+),
             AdditionalCodeDescriptionPeriod.new(
-                {
-                    additional_code_description_period_sid: description.additional_code_description_period_sid,
-                    additional_code_sid: description.additional_code_sid,
-                    additional_code_type_id: description.additional_code_type_id,
-                    additional_code: description.additional_code,
-                    validity_start_date: params['additional_code_description']['validity_start_date'].to_date
-                })
+              additional_code_description_period_sid: description.additional_code_description_period_sid,
+              additional_code_sid: description.additional_code_sid,
+              additional_code_type_id: description.additional_code_type_id,
+              additional_code: description.additional_code,
+              validity_start_date: params['additional_code_description']['validity_start_date'].to_date
+)
         ]
       end
 

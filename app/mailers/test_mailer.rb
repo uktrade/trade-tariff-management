@@ -1,5 +1,4 @@
 class TestMailer < ActionMailer::Base
-
   default from: TradeTariffBackend.from_email
 
   def welcome(email)

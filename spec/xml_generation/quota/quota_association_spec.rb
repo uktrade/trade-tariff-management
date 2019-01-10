@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "QuotaAssociation XML generation" do
-
   let(:db_record) do
     create(:quota_association)
   end
@@ -11,11 +10,11 @@ describe "QuotaAssociation XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :main_quota_definition_sid,
-      :sub_quota_definition_sid,
-      :relation_type,
-      :coefficient
+    %i[
+      main_quota_definition_sid
+      sub_quota_definition_sid
+      relation_type
+      coefficient
     ]
   end
 

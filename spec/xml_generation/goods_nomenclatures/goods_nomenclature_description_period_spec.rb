@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "GoodsNomenclatureDescriptionPeriod XML generation" do
-
   let(:db_record) do
     create(:goods_nomenclature_description_period, :xml)
   end
@@ -11,12 +10,12 @@ describe "GoodsNomenclatureDescriptionPeriod XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :goods_nomenclature_description_period_sid,
-      :goods_nomenclature_sid,
-      :validity_start_date,
-      :goods_nomenclature_item_id,
-      :productline_suffix
+    %i[
+      goods_nomenclature_description_period_sid
+      goods_nomenclature_sid
+      validity_start_date
+      goods_nomenclature_item_id
+      productline_suffix
     ]
   end
 

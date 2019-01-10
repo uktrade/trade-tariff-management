@@ -12,9 +12,11 @@ module Formatter
         define_method(attribute) do
           opts = {}
 
-          [using].flatten.each do |field|
-            opts[field] = result_of_attribute_or_method_call(field)
-          end if using.present?
+          if using.present?
+            [using].flatten.each do |field|
+              opts[field] = result_of_attribute_or_method_call(field)
+            end
+          end
 
           formatter.format(opts)
         end
@@ -29,11 +31,11 @@ module Formatter
     end
   end
 
-  private
+private
 
   def result_of_attribute_or_method_call(field_name)
     self[field_name.to_s].presence ||
-    (send(field_name) if respond_to?(field_name)).presence ||
-    ""
+      (send(field_name) if respond_to?(field_name)).presence ||
+      ""
   end
 end

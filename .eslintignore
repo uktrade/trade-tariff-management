@@ -1,3 +1,2 @@
-app/assets/javascripts/vendors/**/*.js
 vendor/
 node_modules/

@@ -8,10 +8,9 @@ end
 ruby "~> 2.5.0"
 
 gem "rails", "5.1.6.1"
-gem "sinatra", "~> 2.0.2"
 
 # DB
-gem "pg", "0.18.4"
+gem 'pg', '~> 1.1', '>= 1.1.3'
 gem "sequel", "~> 4.32"
 gem "sequel-rails", "~> 0.9", ">= 0.9.12"
 
@@ -79,7 +78,6 @@ gem "gds-sso", "~> 13", ">= 13.6.0"
 
 # System gems
 gem "connection_pool", "~> 2.2"
-gem "newrelic_rpm"
 gem "logstash-event"
 gem "lograge", ">= 0.3.6"
 gem "bootsnap", require: false
@@ -94,12 +92,13 @@ end
 group :development do
   gem "foreman"
   gem "letter_opener"
-  gem "byebug"
+  gem "govuk-lint"
+  gem "meta_request"
 end
 
 group :development, :test do
   gem "dotenv-rails"
-  gem "pry-byebug"
+  gem "pry"
   gem "pry-rails"
 end
 

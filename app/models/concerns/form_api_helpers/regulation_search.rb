@@ -8,9 +8,9 @@ module FormApiHelpers
           q_rule = "#{keyword}%"
 
           scope = if %w(base_regulation_id modification_regulation_id).include?(primary_key.to_s)
-            not_replaced_and_partially_replaced.actual_or_starts_in_future
-          else
-            not_replaced_and_partially_replaced
+                    not_replaced_and_partially_replaced.actual_or_starts_in_future
+                  else
+                    not_replaced_and_partially_replaced
           end
 
           scope.where(
@@ -29,7 +29,7 @@ module FormApiHelpers
       public_send(primary_key[0])
     end
 
-    def json_mapping(details_with_code=false)
+    def json_mapping(details_with_code = false)
       res = {
         regulation_id: regulation_id,
         description: details(details_with_code),
@@ -49,9 +49,9 @@ module FormApiHelpers
 
     def details(details_with_code)
       res = if details_with_code.present?
-        "#{regulation_id}: #{information_text}"
-      else
-        information_text
+              "#{regulation_id}: #{information_text}"
+            else
+              information_text
       end
       res += " (#{date_to_uk(reg_date)})" if reg_date.present?
       res = "#{res} to #{date_to_uk(effective_end_date)})" if try(:effective_end_date).present?

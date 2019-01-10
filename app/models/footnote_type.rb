@@ -1,10 +1,9 @@
 class FootnoteType < Sequel::Model
-
   NOMENCLATURE_TYPES = %w(
     TN
     PN
     NC
-  )
+  ).freeze
 
   MEASURE_TYPES = %w(
     CD
@@ -18,7 +17,7 @@ class FootnoteType < Sequel::Model
     IS
     CG
     OZ
-  )
+  ).freeze
 
   include ::XmlGeneration::BaseHelper
 
@@ -35,7 +34,7 @@ class FootnoteType < Sequel::Model
   delegate :description, to: :footnote_type_description
 
   dataset_module do
-    def q_search(keyword=nil)
+    def q_search(keyword = nil)
       scope = actual
 
       if keyword.present?
@@ -43,12 +42,10 @@ class FootnoteType < Sequel::Model
 
         scope = scope.join_table(:inner,
           :footnote_type_descriptions,
-          footnote_type_id: :footnote_type_id
-        ).where("
+          footnote_type_id: :footnote_type_id).where("
           footnote_types.footnote_type_id ilike ? OR
           footnote_type_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       scope.order(Sequel.asc(:footnote_types__footnote_type_id))
@@ -82,7 +79,7 @@ class FootnoteType < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       footnote_type_id: footnote_type_id,
       description: description

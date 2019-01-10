@@ -22,7 +22,6 @@
 module Measures
   module SearchFilters
     class MeasureSid
-
       attr_accessor :operator,
                     :measure_sid
 
@@ -37,39 +36,39 @@ module Measures
         case operator
         when "is"
 
-          [ is_clause, measure_sids ]
+          [is_clause, measure_sids]
         when "starts_with", "contains"
 
-          [ equal_clause, equal_value ]
+          [equal_clause, equal_value]
         end
       end
 
-      private
+    private
 
-        def is_clause
-          <<-eos
-            measure_sid::text in ?
-          eos
-        end
+      def is_clause
+        <<-eos
+          measure_sid::text in ?
+        eos
+      end
 
-        def equal_clause
-          <<-eos
-            measure_sid::text ilike ?
-          eos
-        end
+      def equal_clause
+        <<-eos
+          measure_sid::text ilike ?
+        eos
+      end
 
-        def measure_sids
-          measure_sid.split(',').map(&:strip)
-        end
+      def measure_sids
+        measure_sid.split(',').map(&:strip)
+      end
 
-        def equal_value
-          case operator
-          when "starts_with"
-            "#{measure_sid}%"
-          when "contains"
-            "%#{measure_sid}%"
-          end
+      def equal_value
+        case operator
+        when "starts_with"
+          "#{measure_sid}%"
+        when "contains"
+          "%#{measure_sid}%"
         end
+      end
     end
   end
 end

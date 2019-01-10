@@ -1,6 +1,5 @@
 module Workbaskets
   class WorkbasketDecorator < ApplicationDecorator
-
     def type
       case object.type
       when "create_measures"
@@ -18,7 +17,7 @@ module Workbaskets
       when "bulk_edit_of_additional_codes"
         "Bulk Edit of Additional Codes"
       when "bulk_edit_of_quotas"
-        "Edit of Quota" + (object.settings.workbasket_action.present? ? " (#{object.settings.workbasket_action.gsub('_', ' ')})" : '')
+        "Edit of Quota" + (object.settings.workbasket_action.present? ? " (#{object.settings.workbasket_action.tr('_', ' ')})" : '')
       when "create_geographical_area"
         "Create Geographical Area"
       when "create_footnote"

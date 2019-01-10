@@ -18,9 +18,7 @@ module WorkbasketForms
           certificate_type_code: ft.certificate_type_code,
           description: ft.description
         }
-      end.sort do |a, b|
-        a[:certificate_type_code] <=> b[:certificate_type_code]
-      end
+      end.sort_by { |a| a[:certificate_type_code] }
     end
   end
 end

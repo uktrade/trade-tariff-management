@@ -24,7 +24,6 @@
 module Measures
   module SearchFilters
     class Duties < ::Shared::SearchFilters::CollectionFilterBase
-
       attr_accessor :operator,
                     :duties_list
 
@@ -32,9 +31,9 @@ module Measures
         @operator = operator
 
         @duties_list = if duties_list.present?
-          filtered_hash_collection_params(duties_list)
-        else
-          []
+                         filtered_hash_collection_params(duties_list)
+                       else
+                         []
         end
       end
 
@@ -47,54 +46,54 @@ module Measures
         sql
       end
 
-      private
+    private
 
-        def initial_filter_sql
-          "(searchable_data -> 'duty_expressions')::text <> '[]'::text"
-        end
+      def initial_filter_sql
+        "(searchable_data -> 'duty_expressions')::text <> '[]'::text"
+      end
 
-        def collection_sql_rules
-          duties_list.map do |duty_ops|
-            q_rule = item_id_sql_rule(duty_ops)
+      def collection_sql_rules
+        duties_list.map do |duty_ops|
+          q_rule = item_id_sql_rule(duty_ops)
 
-            amount = item_amount(duty_ops)
-            q_rule += "AND #{item_amount_sql_rule(amount)}" if amount.present?
+          amount = item_amount(duty_ops)
+          q_rule += "AND #{item_amount_sql_rule(amount)}" if amount.present?
 
-            "(#{q_rule})"
-          end.join(" AND ")
-        end
+          "(#{q_rule})"
+        end.join(" AND ")
+      end
 
-        def count_comparison_sql_rule
-          <<-eos
+      def count_comparison_sql_rule
+        <<-eos
             searchable_data #>> '{"duty_expressions_count"}' = '#{duties_list.count}'
-          eos
-        end
+        eos
+      end
 
-        def item_id_sql_rule(ops)
-          d_id = item_id(ops)[0..1]
+      def item_id_sql_rule(ops)
+        d_id = item_id(ops)[0..1]
 
-          <<-eos
+        <<-eos
             searchable_data @> '{"duty_expressions": [{"duty_expression_id": "#{d_id}"}]}'
-          eos
-        end
+        eos
+      end
 
-        def item_amount_sql_rule(amount)
-          <<-eos
+      def item_amount_sql_rule(amount)
+        <<-eos
             searchable_data @> '{"duty_expressions": [{"duty_amount": "#{amount}"}]}'
-          eos
-        end
+        eos
+      end
 
-        def item_id(duty_ops)
-          duty_ops.keys[0]
-                  .strip
-        end
+      def item_id(duty_ops)
+        duty_ops.keys[0]
+                .strip
+      end
 
-        def item_amount(duty_ops)
-          val = duty_ops.values[0]
-                        .strip
+      def item_amount(duty_ops)
+        val = duty_ops.values[0]
+                      .strip
 
-          val.present? ? val.to_f.to_s : ""
-        end
+        val.present? ? val.to_f.to_s : ""
+      end
     end
   end
 end

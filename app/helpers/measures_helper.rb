@@ -6,11 +6,11 @@ module MeasuresHelper
 
   def find_measure_condition_group_name
     [
-      [ "is", "is" ],
-      [ "is_not", "is not" ],
-      [ "is_not_specified", "is not specified" ],
-      [ "is_not_unspecified", "is not unspecified" ],
-      [ "starts_with", "starts with" ]
+      %w[is is],
+      ["is_not", "is not"],
+      ["is_not_specified", "is not specified"],
+      ["is_not_unspecified", "is not unspecified"],
+      ["starts_with", "starts with"]
     ]
   end
 

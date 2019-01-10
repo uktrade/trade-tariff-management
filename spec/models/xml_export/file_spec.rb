@@ -8,7 +8,7 @@ RSpec.describe XmlExport::File do
 
     it "persists the record" do
       expect { xml_export_file.save_with_envelope_id }.
-        to change { xml_export_file.exists? }.from(false).to(true)
+        to change(xml_export_file, :exists?).from(false).to(true)
     end
 
     it "generates the envelope ID" do

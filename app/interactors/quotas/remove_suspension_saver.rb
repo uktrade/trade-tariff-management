@@ -5,7 +5,7 @@ module Quotas
                   :workbasket_settings,
                   :quota_definition
 
-    def initialize(current_admin, workbasket, settings_ops={})
+    def initialize(current_admin, workbasket, _settings_ops = {})
       @current_admin = current_admin
       @workbasket = workbasket
       @workbasket_settings = workbasket.settings
@@ -21,18 +21,18 @@ module Quotas
       if suspension_period.present?
         suspension_period.suspension_end_date = (operation_date - 1.day).midnight
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            suspension_period, system_ops.merge(operation: "U")
+          suspension_period, system_ops.merge(operation: "U")
         ).assign!
         suspension_period.save
 
         QuotaUnsuspensionEvent.unrestrict_primary_key
-        record = QuotaUnsuspensionEvent.new({
-                                               quota_definition_sid: workbasket_settings.initial_quota_sid,
-                                               occurrence_timestamp: operation_date,
-                                               unsuspension_date: operation_date
-                                           })
+        record = QuotaUnsuspensionEvent.new(
+          quota_definition_sid: workbasket_settings.initial_quota_sid,
+          occurrence_timestamp: operation_date,
+          unsuspension_date: operation_date
+                                           )
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            record, system_ops
+          record, system_ops
         ).assign!
         record.save
       end
@@ -46,7 +46,7 @@ module Quotas
       {}
     end
 
-    private
+  private
 
     def operation_date
       workbasket_settings.configure_step_settings['start_date'].try(:to_date)
@@ -60,6 +60,5 @@ module Quotas
           status: "awaiting_cross_check"
       }
     end
-
   end
 end

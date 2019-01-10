@@ -2,25 +2,25 @@ require 'rails_helper'
 
 describe TaricImporter::RecordProcessor::DestroyOperation do
   let(:record_hash) {
-    {"transaction_id"=>"31946",
-     "record_code"=>"130",
-     "subrecord_code"=>"05",
-     "record_sequence_number"=>"1",
-     "update_type"=>"2",
-     "language_description"=>
-      {"language_code_id"=>"FR",
-       "language_id"=>"EN",
-       "description"=>"French!"}}
+    { "transaction_id" => "31946",
+     "record_code" => "130",
+     "subrecord_code" => "05",
+     "record_sequence_number" => "1",
+     "update_type" => "2",
+     "language_description" =>
+      { "language_code_id" => "FR",
+       "language_id" => "EN",
+       "description" => "French!" } }
   }
 
   describe '#call' do
-    let(:operation_date) { Date.new(2013,8,1) }
+    let(:operation_date) { Date.new(2013, 8, 1) }
     let(:record) {
       TaricImporter::RecordProcessor::Record.new(record_hash)
     }
 
     let(:operation) {
-      TaricImporter::RecordProcessor::DestroyOperation.new(record, operation_date)
+      described_class.new(record, operation_date)
     }
 
     context 'record present for destroy' do

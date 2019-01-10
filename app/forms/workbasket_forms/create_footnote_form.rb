@@ -1,6 +1,5 @@
 module WorkbasketForms
   class CreateFootnoteForm
-
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 
@@ -18,9 +17,7 @@ module WorkbasketForms
           footnote_type_id: ft.footnote_type_id,
           description: ft.description
         }
-      end.sort do |a, b|
-        a[:footnote_type_id] <=> b[:footnote_type_id]
-      end
+      end.sort_by { |a| a[:footnote_type_id] }
     end
 
     def goods_footnote_type_ids
