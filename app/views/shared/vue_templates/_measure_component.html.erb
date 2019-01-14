@@ -6,7 +6,7 @@
           Duty expression
         </label>
 
-        <custom-select url="/duty_expressions" label-field="description" value-field="duty_expression_id" code-field="duty_expression_code" v-model="measureComponent.duty_expression_id" date-sensitive="true" code-class-name="prefix--duty-expression" abbreviation-class-name="abbreviation--duty-expression" :options-filter="expressionsFriendlyDuplicate" :on-change="onDutyExpressionSelected" :compact="true" :showCompactAbbreviation="true" placeholder="―" :id="(prefix ? prefix : '') + '-duty-expression'"></custom-select>
+        <custom-select data-test="duty-expression" url="/duty_expressions" label-field="description" value-field="duty_expression_id" code-field="duty_expression_code" v-model="measureComponent.duty_expression_id" date-sensitive="true" code-class-name="prefix--duty-expression" abbreviation-class-name="abbreviation--duty-expression" :options-filter="expressionsFriendlyDuplicate" :on-change="onDutyExpressionSelected" :compact="true" :showCompactAbbreviation="true" placeholder="―" :id="(prefix ? prefix : '') + '-duty-expression'"></custom-select>
       </form-group>
     </div>
 
@@ -15,7 +15,7 @@
         <label class="form-label" v-if="index === 0">
           Duty amount
         </label>
-        <input class="form-control" v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001" :id="(prefix ? prefix : '') + '-amount'">
+        <input class="form-control" v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001" :id="(prefix ? prefix : '') + '-amount'" id="duty-amount">
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index === 0">

@@ -5,7 +5,7 @@
         What period type will this section have?
       </label>
 
-      <div class="row">
+      <div class="row" id="quota-period-select">
         <div class="col-md-3">
           <custom-select :options="section_types" :allow-clear="true" label-field="label" value-field="id" v-model="section.type" placeholder="― select quota period type ―"></custom-select>
         </div>
@@ -28,7 +28,7 @@
                     <input value="January" disabled class='form-control string'>
                   </div>
                   <div class="col-md-4">
-                    <input :value="section.start_date && section.start_date.split('/')[2]" @input="section.start_date = `01/01/${$event.target.value}`" class='form-control string'>
+                    <input :value="section.start_date && section.start_date.split('/')[2]" @input="section.start_date = `01/01/${$event.target.value}`" class='form-control string' id='quota-period-year'>
                   </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
 
           <div class="row">
             <div class="col-md-3">
-              <custom-select url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="section.measurement_unit_code" placeholder="― select measurement unit ―" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit"></custom-select>
+              <custom-select id="measurement-unit-code" url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="section.measurement_unit_code" placeholder="― select measurement unit ―" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit"></custom-select>
             </div>
             <div class="col-md-3">
               <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="section.measurement_unit_qualifier_code" placeholder="― optionally select qualifier ―" date-sensitive=true code-class-name="prefix--measurement-unit-qualifier"></custom-select>
