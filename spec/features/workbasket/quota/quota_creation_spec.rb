@@ -12,7 +12,11 @@ RSpec.describe "adding quotas", :js do
         information_text: "Test regulation",
       )
     end
-    let(:measure_type) { create(:measure_type, order_number_capture_code: 1) }
+    let(:measure_type_series) { create(:measure_type_series_description) }
+    let(:measure_type) { create(:measure_type, order_number_capture_code: 1, measure_type_series_id: measure_type_series.measure_type_series_id) }
+    let(:measure_type_series_description) do
+      create(:measure_type_series_description, measure_type_series_id: measure_type_series.measure_type_series_id)
+    end
     let(:commodity) { create(:commodity, :declarable) }
     let(:test_order_number) { '090909' }
 
@@ -89,7 +93,6 @@ RSpec.describe "adding quotas", :js do
   def create_required_model_instances
     create(:geographical_area, :erga_omnes)
     create(:user)
-    create(:measure_type_series_description)
     create(:duty_expression, :with_description, duty_expression_id: "01")
   end
 
