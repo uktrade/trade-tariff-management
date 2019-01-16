@@ -74,7 +74,7 @@ RSpec.describe "adding quotas", :js do
       find(".selectize-dropdown-content .selection", text: measurement_unit.measurement_unit_code).click
     end
     find("#annual-opening-balance").set(10000)
-    find("#duty-amount").set(10)
+    find('[data-test="duty-amount"]').set(10)
     click_button('Continue')
   end
 

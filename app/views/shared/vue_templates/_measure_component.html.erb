@@ -15,7 +15,7 @@
         <label class="form-label" v-if="index === 0">
           Duty amount
         </label>
-        <input class="form-control" v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001" :id="(prefix ? prefix : '') + '-amount'" id="duty-amount">
+        <input class="form-control" data-test="duty-amount" v-model="measureComponent.duty_amount" type="number" min="0" step="0.0001" :id="(prefix ? prefix : '') + '-amount'">
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index === 0">
