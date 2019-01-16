@@ -2,7 +2,8 @@ fieldset
   form-group :errors="errors" error-key="validity_start_date"
     template slot-scope="slotProps"
       h3.heading-medium
-        | When is the footnote valid from?
+        label for="footnote_validity_date"
+          | When is the footnote valid from?
 
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -11,7 +12,7 @@ fieldset
 
       .bootstrap-row
         .col-md-6
-          = content_tag "date-select", "", ":value.sync" => "footnote.validity_start_date"
+          = content_tag "date-select", "", ":value.sync" => "footnote.validity_start_date", "id" => "footnote_validity_date"
 
 fieldset
   form-group :errors="errors" error-key="validity_end_date"
