@@ -1,6 +1,7 @@
 fieldset
   h3.heading-medium
-    | What is the name of this workbasket?
+    label for="additional_code_workbasket_name"
+      | What is the name of this workbasket?
 
   form-group :errors="errors" error-key="workbasket_name"
     template slot-scope="slotProps"
@@ -12,4 +13,4 @@ fieldset
 
       .bootstrap-row
         .col-md-9
-          input.form-control*{ "v-model" => "workbasket_name" }
+          input.form-control *{'id' => 'additional_code_workbasket_name', "v-model" => "workbasket_name" }
