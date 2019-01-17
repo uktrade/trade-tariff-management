@@ -2,16 +2,19 @@ require "rails_helper"
 
 RSpec.describe "adding footnotes", :js do
 
-  let!(:footnote_type) { create(:footnote_type) }
+  # Reference data required for Footnote Type selector
+  let(:footnote_type) { create(:footnote_type) }
   let!(:footnote_type_description) { create(:footnote_type_description, footnote_type_id: footnote_type.footnote_type_id) }
 
+  let(:footnote_description) { "A foot is 12 inches long." }
+  let(:footnote_valid_from) { Date.today }
+  let(:footnote_operational_from) { Date.today + 1.day }
+
+  before :each do
+    create(:user)
+  end
+
   it "allows a new footnote to be created" do
-
-    footnote_description = "A foot is 12 inches long."
-    footnote_valid_from = Date.today
-    footnote_operational_from = Date.today + 1.day
-
-    _user = create(:user)
 
     visit(root_path)
     click_on("Create a new footnote")
@@ -20,7 +23,6 @@ RSpec.describe "adding footnotes", :js do
       select_dropdown_value(footnote_type.footnote_type_id)
     end
 
-    # save_and_open_page
     fill_in("What is the footnote description?", with: footnote_description)
     input_date("When is the footnote valid from?", footnote_valid_from)
     input_date("Specify the operation date", footnote_operational_from)

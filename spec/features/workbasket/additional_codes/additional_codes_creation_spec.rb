@@ -2,14 +2,15 @@ require "rails_helper"
 
 RSpec.describe "adding additional codes", :js do
 
-  let!(:code_type) { create(:additional_code_type) }
+  let (:code_type) { create(:additional_code_type) }
+  let (:new_code) { '888' }
+  let (:new_description) { 'New code description' }
+
+  before :each do
+    create(:user)
+  end
 
   it "allows a new code to be created" do
-
-    new_code = '888'
-    new_description = 'New code description'
-
-    _user = create(:user)
 
     visit(root_path)
     click_on("Create new additional codes")
@@ -30,7 +31,5 @@ RSpec.describe "adding additional codes", :js do
     expect(AdditionalCode.last).to have_attributes(additional_code_type_id: code_type.additional_code_type_id,
                                                    additional_code: new_code,
                                                    description: new_description)
-
   end
-
 end
