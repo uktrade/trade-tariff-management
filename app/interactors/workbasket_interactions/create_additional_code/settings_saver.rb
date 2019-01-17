@@ -90,7 +90,7 @@ module WorkbasketInteractions
           AdditionalCodeDescriptionPeriod.unrestrict_primary_key
           additional_code_description_period = AdditionalCodeDescriptionPeriod.new(
             attrs_parser.additional_code_description_period_attributes(additional_code_sid, item)
-)
+          )
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code_description_period, position.to_i).assign!
           additional_code_description_period_sid = additional_code_description_period.additional_code_description_period_sid
           @records << additional_code_description_period
@@ -98,7 +98,7 @@ module WorkbasketInteractions
           AdditionalCodeDescription.unrestrict_primary_key
           additional_code_description = AdditionalCodeDescription.new(
             attrs_parser.additional_code_description_attributes(additional_code_description_period_sid, additional_code_sid, item)
-)
+          )
           @records << additional_code_description
         end
       end

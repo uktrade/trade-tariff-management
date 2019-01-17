@@ -28,10 +28,10 @@ fieldset
               | This will be visible to operators and should be as precise as possible, or use 'Other'.
       .bootstrap-row.additional-code-row v-for="(additionalCode, index) in additional_codes"
         div :class="{'col-md-2': true, 'col-has-error': !!errors['additional_code_type_id_' + index]}"
-          custom-select url="/additional_code_types" value-field="additional_code_type_id" code-field="additional_code_type_id" label-field="description" v-model="additionalCode.additional_code_type_id" placeholder="— select type —" :scope-date="validity_start_date" :date-sensitive="true"
+          custom-select url="/additional_code_types" value-field="additional_code_type_id" code-field="additional_code_type_id" label-field="description" v-model="additionalCode.additional_code_type_id" placeholder="— select type —" :scope-date="validity_start_date" :date-sensitive="true" :id="`additional_code_type_${index}`"
         div :class="{'col-md-2': true, 'col-has-error': !!errors['additional_code_' + index]}"
-          input.form-control v-model="additionalCode.additional_code" maxlength="3"
+          input.form-control v-model="additionalCode.additional_code" maxlength="3" :id="`additional_code_code_${index}`"
         div :class="{'col-md-7': true, 'col-has-error': !!errors['description_' + index]}"
-          textarea.form-control v-model="additionalCode.description" rows="3"
+          textarea.form-control v-model="additionalCode.description" rows="3" :id="`additional_code_description_${index}`"
       a href="#" role="button" v-on:click.prevent="addAdditionalCodes"
         | Add more codes
