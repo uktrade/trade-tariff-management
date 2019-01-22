@@ -19,6 +19,7 @@ RSpec.describe "adding quotas", :js do
     end
     let(:commodity) { create(:commodity, :declarable) }
     let(:test_order_number) { '090909' }
+    let(:workbasket_description) { "test quota description" }
 
 
     it 'creates new quota order number ' do
@@ -34,6 +35,7 @@ RSpec.describe "adding quotas", :js do
       expect_to_be_on_submit_for_cross_check_page
 
       expect(QuotaOrderNumber.count).to eq 1
+      expect(Workbaskets::Workbasket.first.title).to eq workbasket_description
     end
   end
 
@@ -59,7 +61,7 @@ RSpec.describe "adding quotas", :js do
       select_dropdown_value(measure_type.measure_type_id)
     end
 
-    fill_in :quota_description, with: 'test quota description'
+    fill_in :quota_description, with: workbasket_description
 
     input_date('operation_date', Date.today.beginning_of_year)
 
