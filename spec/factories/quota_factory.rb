@@ -70,7 +70,7 @@ FactoryGirl.define do
 
     trait :actual do
       validity_start_date { Date.today.ago(3.years) }
-      validity_end_date   { Date.today + 1.year }
+      validity_end_date   { nil }
     end
 
     trait :xml do
