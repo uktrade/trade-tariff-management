@@ -2,7 +2,8 @@ fieldset
   form-group.without_bottom_margin :errors="errors" error-key="description"
     template slot-scope="slotProps"
       h3.heading-medium
-        | What is the footnote description?
+        label for="footnote_description"
+          | What is the footnote description?
 
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -12,4 +13,4 @@ fieldset
 
       .bootstrap-row
         .col-lg-6.col-md-8.col-sm-12.col-xs-12
-          = f.input :description, as: :text, label: false, input_html: { "v-model" => "footnote.description", rows: 5 }
+          = f.input :description, as: :text, label: false, input_html: {'id' => 'footnote_description', "v-model" => "footnote.description", rows: 5 }

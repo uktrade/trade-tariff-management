@@ -18,6 +18,7 @@ module WorkbasketInteractions
       measure_components
       conditions
       footnotes
+      geographical_area_id
       excluded_geographical_areas
       quota_periods
       quota_precision
@@ -43,7 +44,7 @@ module WorkbasketInteractions
     def initialize(workbasket, current_step, save_mode, settings_ops = {})
       if current_step == 'main' && self.class::WORKBASKET_TYPE == "CreateQuota"
         settings_ops['start_date'] = Date.today.strftime("%Y-%m-%d")
-        settings_ops['workbasket_name'] = settings_ops['quota_ordernumber']
+        settings_ops['workbasket_name'] = settings_ops['quota_description']
       end
 
       @workbasket = workbasket
@@ -138,10 +139,6 @@ module WorkbasketInteractions
         end
       end
 
-      if self.class::WORKBASKET_TYPE == "CreateMeasures" && workbasket_name.blank?
-        general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
-      end
-
       if self.class::WORKBASKET_TYPE == "CreateQuota"
         if quota_ordernumber.present?
           unless order_number_saver.valid?
@@ -152,31 +149,35 @@ module WorkbasketInteractions
         else
           general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
         end
-      end
 
-      if candidates.flatten.compact.blank?
-        general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
-      end
-
-      if commodity_codes.blank? && commodity_codes_exclusions.present?
-        general_errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
-      end
-
-      if settings_params['start_date'].present? && (
-          commodity_codes.present? ||
-          additional_codes.present?
-        ) && candidates.flatten.compact.blank?
-
-        @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
-      end
-
-      if self.class::WORKBASKET_TYPE == "CreateQuota" && step_pointer.configure_quota?
-        if quota_periods.blank?
-          general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
+        if geographical_area_id.present?
+          if candidates.flatten.compact.blank?
+            general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
+          end
+        else
+          general_errors[:geographical_area_id] = errors_translator(:no_geographical_area)
         end
 
-        if quota_precision.blank?
-          general_errors[:maximum_precision] = errors_translator(:maximum_precision_blank)
+        if commodity_codes.blank? && commodity_codes_exclusions.present?
+          general_errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
+        end
+
+        if settings_params['start_date'].present? && (
+            commodity_codes.present? ||
+            additional_codes.present?
+          ) && candidates.flatten.compact.blank?
+
+          @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
+        end
+
+        if step_pointer.configure_quota?
+          if quota_periods.blank?
+            general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
+          end
+
+          if quota_precision.blank?
+            general_errors[:maximum_precision] = errors_translator(:maximum_precision_blank)
+          end
         end
       end
 
