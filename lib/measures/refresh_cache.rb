@@ -1,13 +1,12 @@
 module Measures
   class RefreshCache
-
-    KEYS_TO_CLEAR = [
-      :measures_form_geographical_areas_json,
-      :measures_form_geographical_areas,
-      :measures_form_geographical_countries,
-      :measures_form_geographical_groups_except_erga_omnes,
-      :measures_form_geographical_area_erga_omnes
-    ]
+    KEYS_TO_CLEAR = %i[
+      measures_form_geographical_areas_json
+      measures_form_geographical_areas
+      measures_form_geographical_countries
+      measures_form_geographical_groups_except_erga_omnes
+      measures_form_geographical_area_erga_omnes
+    ].freeze
 
     class << self
       def run

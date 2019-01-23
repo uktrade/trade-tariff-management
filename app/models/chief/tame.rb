@@ -1,38 +1,39 @@
 module Chief
   class Tame < Sequel::Model(Sequel::Model.db[:chief_tame].order(Sequel.asc(:audit_tsmp), Sequel.asc(:fe_tsmp)))
-
-    set_primary_key [:msrgp_code,
-                     :msr_type,
-                     :tty_code,
-                     :tar_msr_no,
-                     :fe_tsmp,
-                     :le_tsmp,
-                     :audit_tsmp,
-                     :amend_indicator]
+    set_primary_key %i[msrgp_code
+                       msr_type
+                       tty_code
+                       tar_msr_no
+                       fe_tsmp
+                       le_tsmp
+                       audit_tsmp
+                       amend_indicator]
 
     one_to_one :measure_type, key: {}, primary_key: {},
-      dataset: -> { Chief::MeasureTypeAdco.where(chief_measure_type_adco__measure_group_code: msrgp_code,
+      dataset: -> {
+                 Chief::MeasureTypeAdco.where(chief_measure_type_adco__measure_group_code: msrgp_code,
                                                  chief_measure_type_adco__measure_type: msr_type,
-                                                 chief_measure_type_adco__tax_type_code: tty_code) },
+                                                 chief_measure_type_adco__tax_type_code: tty_code)
+               },
                                                  class_name: 'Chief::MeasureTypeAdco'
 
-    one_to_one :duty_expression, key: [:adval1_rate, :adval2_rate, :spfc1_rate, :spfc2_rate],
-                                 primary_key: [:adval1_rate, :adval2_rate, :spfc1_rate, :spfc2_rate]
+    one_to_one :duty_expression, key: %i[adval1_rate adval2_rate spfc1_rate spfc2_rate],
+                                 primary_key: %i[adval1_rate adval2_rate spfc1_rate spfc2_rate]
 
-    one_to_many :tamfs, key:{}, primary_key: {}, dataset: -> {
-      Chief::Tamf.filter({:fe_tsmp => fe_tsmp})
-                 .filter({:msrgp_code => msrgp_code})
-                 .filter({:msr_type => msr_type})
-                 .filter({:tty_code => tty_code})
-                 .filter({:tar_msr_no => tar_msr_no})
-                 .filter({:amend_indicator => amend_indicator})
+    one_to_many :tamfs, key: {}, primary_key: {}, dataset: -> {
+      Chief::Tamf.filter(fe_tsmp: fe_tsmp)
+                 .filter(msrgp_code: msrgp_code)
+                 .filter(msr_type: msr_type)
+                 .filter(tty_code: tty_code)
+                 .filter(tar_msr_no: tar_msr_no)
+                 .filter(amend_indicator: amend_indicator)
     }, class_name: 'Chief::Tamf'
 
     one_to_many :mfcms, key: {}, primary_key: {}, dataset: -> {
-      Chief::Mfcm.filter({:msrgp_code => msrgp_code})
-                 .filter({:msr_type => msr_type})
-                 .filter({:tty_code => tty_code})
-                 .filter({:tar_msr_no => tar_msr_no})
+      Chief::Mfcm.filter(msrgp_code: msrgp_code)
+                 .filter(msr_type: msr_type)
+                 .filter(tty_code: tty_code)
+                 .filter(tar_msr_no: tar_msr_no)
                  .order(Sequel.asc(:audit_tsmp))
     }
 
@@ -49,8 +50,11 @@ module Chief
     end
 
     def adval1_rate; true; end
+
     def adval2_rate; false; end
+
     def spfc1_rate; false; end
+
     def spfc2_rate; false; end
 
     def mark_as_processed!

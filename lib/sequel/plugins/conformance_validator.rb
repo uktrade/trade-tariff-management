@@ -1,7 +1,7 @@
 module Sequel
   module Plugins
     module ConformanceValidator
-      def self.configure(model, options = {})
+      def self.configure(model, _options = {})
         # Delegations
         model.delegate :conformance_validator, to: model
       end
@@ -28,8 +28,8 @@ module Sequel
         def conformance_validator
           @_conformance_validator ||= begin
                             "#{self}Validator".constantize.new
-                          rescue NameError
-                            NullValidator
+                                      rescue NameError
+                                        NullValidator
                           end
         end
 

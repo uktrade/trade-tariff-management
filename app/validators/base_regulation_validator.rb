@@ -1,20 +1,20 @@
 ######### Conformance validations 285
 class BaseRegulationValidator < TradeTariffBackend::Validator
-  validation :ROIMB1, 'The (regulation id + role id) must be unique.', on: [:create, :update] do
-    validates :uniqueness, of: [:base_regulation_id, :base_regulation_role]
+  validation :ROIMB1, 'The (regulation id + role id) must be unique.', on: %i[create update] do
+    validates :uniqueness, of: %i[base_regulation_id base_regulation_role]
   end
 
   validation :ROIMB3, 'The start date must be less than or equal to the end date' do
     validates :validity_dates
   end
 
-  validation :ROIMB4, 'The referenced regulation group must exist', on: [:create, :update] do |record|
+  validation :ROIMB4, 'The referenced regulation group must exist', on: %i[create update] do |record|
     if record.regulation_group_id.present?
       RegulationGroup.where(regulation_group_id: record.regulation_group_id).any?
     end
   end
 
-  validation :on_officialjournal_page, 'Official journal page should be a number', on: [:create, :update] do
+  validation :on_officialjournal_page, 'Official journal page should be a number', on: %i[create update] do
     validates :integer, of: :officialjournal_page,
                         allow_nil: true,
                         allow_blank: true
@@ -24,12 +24,12 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
              'If the regulation is replaced, completely or partially, modification is allowed only on the fields "Publication Date", "Official journal Number", "Official journal Page" and "Regulation Group Id".',
              on: [:update] do |record|
     if record.modification_regulations.any? && record.column_changes.present?
-      allowed_fields_to_change = [
-        :publication_date,
-        :officialjournal_page,
-        :officialjournal_number,
-        :regulation_group_id,
-        :replacement_indicator
+      allowed_fields_to_change = %i[
+        publication_date
+        officialjournal_page
+        officialjournal_number
+        regulation_group_id
+        replacement_indicator
       ]
 
       record.column_changes.keys.all? do |key|
@@ -42,15 +42,15 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
              'If the regulation is abrogated, completely or explicitly, modification is allowed only on the fields "Publication Date", "Official journal Number", "Official journal Page" and "Regulation Group Id".',
              on: [:update] do |record|
     if record.complete_abrogation_regulation.present? || record.explicit_abrogation_regulation.present?
-      allowed_fields_to_change = [
-        :publication_date,
-        :officialjournal_page,
-        :officialjournal_number,
-        :regulation_group_id,
-        :complete_abrogation_regulation_id,
-        :complete_abrogation_regulation_role,
-        :explicit_abrogation_regulation_id,
-        :explicit_abrogation_regulation_role
+      allowed_fields_to_change = %i[
+        publication_date
+        officialjournal_page
+        officialjournal_number
+        regulation_group_id
+        complete_abrogation_regulation_id
+        complete_abrogation_regulation_role
+        explicit_abrogation_regulation_id
+        explicit_abrogation_regulation_role
       ]
 
       record.column_changes.keys.all? do |key|
@@ -63,7 +63,7 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
 
   validation :ROIMB48,
              'If the regulation has not been abrogated, the effective end date must be greater than or equal to the base regulation end date if it is explicit.',
-             on: [:create, :update] do |record|
+             on: %i[create update] do |record|
     return true if record.complete_abrogation_regulation.present? && record.explicit_abrogation_regulation.present?
 
     if record.effective_end_date.present? && record.validity_end_date.present?
@@ -84,7 +84,7 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
 
   validation :ROIMB47,
              'The validity period of the regulation group id must span the validity period of the base regulation.',
-             on: [:create, :update] do |record|
+             on: %i[create update] do |record|
     if record.regulation_group.present?
       record.regulation_group.validity_start_date <= record.validity_start_date &&
         ((record.regulation_group.validity_end_date.blank? || record.validity_end_date.blank?) ||
@@ -96,8 +96,8 @@ class BaseRegulationValidator < TradeTariffBackend::Validator
              'Explicit dates of related measures must be within the validity period of the base regulation.' do |record|
     record.measures.all? do |measure|
       record.validity_start_date <= measure.validity_start_date &&
-      ((record.validity_end_date.blank? || measure.validity_end_date.blank?) ||
-        (record.validity_end_date >= measure.validity_end_date))
+        ((record.validity_end_date.blank? || measure.validity_end_date.blank?) ||
+          (record.validity_end_date >= measure.validity_end_date))
     end
   end
 

@@ -9,23 +9,23 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each) do
-    if Capybara.current_driver == :rack_test
-      DatabaseCleaner.strategy = :transaction
-    else
-      DatabaseCleaner.strategy = :truncation
-    end
+  config.before do
+    DatabaseCleaner.strategy = if Capybara.current_driver == :rack_test
+                                 :transaction
+                               else
+                                 :truncation
+                               end
   end
 
-  config.before(:each, :truncation => true) do
+  config.before(:each, truncation: true) do
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
   end
 end

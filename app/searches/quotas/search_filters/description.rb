@@ -1,11 +1,10 @@
 module Quotas
   module SearchFilters
     class Description
-
       attr_accessor :operator,
                     :description
 
-      def initialize(operator, description=nil)
+      def initialize(operator, description = nil)
         @operator = operator
         @description = description.to_s.strip
       end
@@ -16,19 +15,19 @@ module Quotas
         clause
       end
 
-      private
+    private
 
       def clause
         case operator
-          when "is"
+        when "is"
 
-            [ is_clause, value ]
-          when "starts_with"
+          [is_clause, value]
+        when "starts_with"
 
-            [ like_clause, value ]
-          when "contains"
+          [like_clause, value]
+        when "contains"
 
-            [ like_clause, value ]
+          [like_clause, value]
         end
       end
 
@@ -53,7 +52,6 @@ module Quotas
             quota_definitions.description ilike ?
         eos
       end
-
     end
   end
 end

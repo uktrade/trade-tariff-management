@@ -6,19 +6,19 @@ module WorkbasketWorkflowHelper
 
   def workbasket_rejected?
     workbasket.cross_check_rejected? ||
-    workbasket.approval_rejected?
+      workbasket.approval_rejected?
   end
 
   def workbasket_awaiting_cross_check_or_rejected?
     workbasket.awaiting_cross_check? ||
-    workbasket.cross_check_rejected?
+      workbasket.cross_check_rejected?
   end
 
   def workbasket_view_show_actions_allowed?
     workbasket.awaiting_cross_check? ||
-    workbasket.ready_for_approval? ||
-    workbasket.ready_for_export? ||
-    workbasket.awaiting_cds_upload_create_new?
+      workbasket.ready_for_approval? ||
+      workbasket.ready_for_export? ||
+      workbasket.awaiting_cds_upload_create_new?
   end
 
   def workbasket_status_in_error_level?

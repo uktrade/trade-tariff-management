@@ -43,11 +43,11 @@ module CommoditiesHelper
 
     if commodity.number_indents > 1
       code = if code[6..9] == "0000"
-        code[0..5]
-      elsif code[8..9] == "00"
-        code[0..7]
-      else
-        code
+               code[0..5]
+             elsif code[8..9] == "00"
+               code[0..7]
+             else
+               code
       end
 
       "#{chapter_and_heading_codes(code)}
@@ -59,7 +59,7 @@ module CommoditiesHelper
     end
   end
 
-  private
+private
 
   def chapter_and_heading_codes(code)
     "<div class='chapter-code'>
@@ -75,12 +75,12 @@ module CommoditiesHelper
   end
 
   def tree_node(main_commodity, commodities, depth)
-    deeper_node = commodities.select{ |c| c.number_indents == depth + 1 }.first
+    deeper_node = commodities.select { |c| c.number_indents == depth + 1 }.first
     if deeper_node.present? && deeper_node.number_indents < main_commodity.number_indents
       content_tag(:ul) do
         content_tag(:li) do
           content_tag(:span, deeper_node.formatted_description.html_safe) +
-          tree_node(main_commodity, commodities, deeper_node.number_indents)
+            tree_node(main_commodity, commodities, deeper_node.number_indents)
         end
       end
     else
@@ -128,7 +128,7 @@ module CommoditiesHelper
                          title: "Full tariff code: #{commodity.code}",
                          class: 'full-code',
                          'aria-describedby' => "commodity-#{commodity.code}") +
-      content_tag(:h1, commodity.formatted_description.html_safe)
+        content_tag(:h1, commodity.formatted_description.html_safe)
     end
   end
 end

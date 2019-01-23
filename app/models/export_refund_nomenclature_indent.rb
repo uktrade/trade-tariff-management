@@ -1,5 +1,4 @@
 class ExportRefundNomenclatureIndent < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :time_machine, period_start_column: :export_refund_nomenclature_indents__validity_start_date,

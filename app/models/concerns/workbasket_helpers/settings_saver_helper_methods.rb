@@ -27,7 +27,7 @@ module WorkbasketHelpers
       system_ops_assigner.record
     end
 
-    def set_primary_key!(record, extra_increment_value=nil)
+    def set_primary_key!(record, extra_increment_value = nil)
       ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(
         record,
         extra_increment_value

@@ -1,15 +1,14 @@
 class MeasureConditionComponent < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
   include ::ForceValidatorConcern
 
   plugin :time_machine
-  plugin :oplog, primary_key: [:measure_condition_sid,
-                               :duty_expression_id]
+  plugin :oplog, primary_key: %i[measure_condition_sid
+                                 duty_expression_id]
   plugin :conformance_validator
 
-  set_primary_key [:measure_condition_sid, :duty_expression_id]
+  set_primary_key %i[measure_condition_sid duty_expression_id]
 
   one_to_one :measure_condition, key: :measure_condition_sid,
                                  primary_key: :measure_condition_sid
@@ -40,7 +39,7 @@ class MeasureConditionComponent < Sequel::Model
   delegate :validity_start_date, :validity_end_date, to: :measure_condition, allow_nil: true
 
   def formatted_duty_expression
-    DutyExpressionFormatter.format({
+    DutyExpressionFormatter.format(
       duty_expression_id: duty_expression_id,
       duty_expression_description: duty_expression_description,
       duty_expression_abbreviation: duty_expression_abbreviation,
@@ -49,7 +48,7 @@ class MeasureConditionComponent < Sequel::Model
       monetary_unit_abbreviation: monetary_unit_abbreviation,
       measurement_unit: measurement_unit,
       measurement_unit_qualifier: measurement_unit_qualifier
-    })
+    )
   end
 
   def record_code
@@ -60,7 +59,7 @@ class MeasureConditionComponent < Sequel::Model
     "11".freeze
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       original_duty_expression_id: original_duty_expression_id,
       duty_amount: duty_amount,

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasureConditionCode XML generation" do
-
   let(:db_record) do
     create(:measure_condition_code, :xml)
   end
@@ -11,10 +10,10 @@ describe "MeasureConditionCode XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :condition_code,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      condition_code
+      validity_start_date
+      validity_end_date
     ]
   end
 

@@ -32,14 +32,13 @@
 module Shared
   module SearchFilters
     class DateOf
-
       include ::Shared::Methods::Date
 
       attr_accessor :operator,
                     :mode,
                     :value
 
-      def initialize(ops={})
+      def initialize(ops = {})
         @operator = ops[:operator]
         @mode = ops[:mode]
         @value = ops[:value].try(:to_date)
@@ -49,42 +48,42 @@ module Shared
       def sql_rules
         return nil if required_params_are_blank?
 
-        [ clause, value ]
+        [clause, value]
       end
 
-      private
+    private
 
-        def required_params_are_blank?
-          operator.blank? ||
+      def required_params_are_blank?
+        operator.blank? ||
           mode.blank? ||
           value.blank?
+      end
+
+      def clause
+        case operator
+        when "is"
+
+          is_clause
+        when "is_not"
+
+          is_not_clause
+        when "is_before"
+
+          is_before_clause
+        when "is_after"
+
+          is_after_clause
         end
+      end
 
-        def clause
-          case operator
-          when "is"
-
-            is_clause
-          when "is_not"
-
-            is_not_clause
-          when "is_before"
-
-            is_before_clause
-          when "is_after"
-
-            is_after_clause
-          end
+      def field_name
+        case mode
+        when "creation", "authoring"
+          "added_at"
+        when "last_status_change"
+          "last_status_change_at"
         end
-
-        def field_name
-          case mode
-          when "creation", "authoring"
-            "added_at"
-          when "last_status_change"
-            "last_status_change_at"
-          end
-        end
+      end
     end
   end
 end

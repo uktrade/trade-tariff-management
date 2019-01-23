@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasurementUnit XML generation" do
-
   let(:db_record) do
     create(:measurement_unit, :xml)
   end
@@ -11,10 +10,10 @@ describe "MeasurementUnit XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :measurement_unit_code,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      measurement_unit_code
+      validity_start_date
+      validity_end_date
     ]
   end
 

@@ -1,20 +1,19 @@
 module WorkbasketInteractions
   module CreateAdditionalCode
     class SettingsSaver < ::WorkbasketInteractions::SettingsSaverBase
-
-      WORKBASKET_TYPE = "CreateAdditionalCode"
+      WORKBASKET_TYPE = "CreateAdditionalCode".freeze
 
       REQUIRED_PARAMS = %w(
         workbasket_name
         validity_start_date
-      )
+      ).freeze
 
       ATTRS_PARSER_METHODS = %w(
         workbasket_name
         validity_start_date
         validity_end_date
         filtered_additional_codes
-      )
+      ).freeze
 
       ATTRS_PARSER_METHODS.map do |option|
         define_method(option) do
@@ -47,7 +46,7 @@ module WorkbasketInteractions
         save_additional_codes!
       end
 
-      private
+    private
 
       def check_required_params!
         general_errors = {}
@@ -90,14 +89,16 @@ module WorkbasketInteractions
 
           AdditionalCodeDescriptionPeriod.unrestrict_primary_key
           additional_code_description_period = AdditionalCodeDescriptionPeriod.new(
-              attrs_parser.additional_code_description_period_attributes(additional_code_sid, item))
+            attrs_parser.additional_code_description_period_attributes(additional_code_sid, item)
+          )
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(additional_code_description_period, position.to_i).assign!
           additional_code_description_period_sid = additional_code_description_period.additional_code_description_period_sid
           @records << additional_code_description_period
 
           AdditionalCodeDescription.unrestrict_primary_key
           additional_code_description = AdditionalCodeDescription.new(
-              attrs_parser.additional_code_description_attributes(additional_code_description_period_sid, additional_code_sid, item))
+            attrs_parser.additional_code_description_attributes(additional_code_description_period_sid, additional_code_sid, item)
+          )
           @records << additional_code_description
         end
       end
@@ -108,10 +109,10 @@ module WorkbasketInteractions
           validator = validator(record)
           if validator.present?
             ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-                record,
+              record,
                 validator,
                 {}
-            ).errors.map do |key, error|
+            ).errors.map do |_key, error|
               additional_code_errors.merge!("#{index}": error.join('. '))
             end
           end
@@ -128,10 +129,9 @@ module WorkbasketInteractions
 
       def validator(record)
         "#{record.class.name}Validator".constantize
-      rescue
+      rescue StandardError
         nil
       end
-
     end
   end
 end

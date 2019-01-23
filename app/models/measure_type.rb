@@ -1,12 +1,11 @@
 class MeasureType < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include OwnValidityPeriod
 
-  IMPORT_MOVEMENT_CODES = [0, 2]
-  EXPORT_MOVEMENT_CODES = [1, 2]
-  EXCLUDED_TYPES = ['442', 'SPL']
-  THIRD_COUNTRY = '103'
+  IMPORT_MOVEMENT_CODES = [0, 2].freeze
+  EXPORT_MOVEMENT_CODES = [1, 2].freeze
+  EXCLUDED_TYPES = %w[442 SPL].freeze
+  THIRD_COUNTRY = '103'.freeze
 
   plugin :time_machine, period_start_column: :measure_types__validity_start_date,
                         period_end_column:   :measure_types__validity_end_date
@@ -53,13 +52,11 @@ class MeasureType < Sequel::Model
 
         scope = scope.join_table(:inner,
           :measure_type_descriptions,
-          measure_type_id: :measure_type_id
-        ).where("
+          measure_type_id: :measure_type_id).where("
           measure_types.measure_type_id ilike ? OR
           measure_types.measure_type_acronym ilike ? OR
           measure_type_descriptions.description ilike ?",
-          q_rule, q_rule, q_rule
-        )
+          q_rule, q_rule, q_rule)
       end
 
       if filter_ops[:measure_type_series_id].present?
@@ -68,7 +65,7 @@ class MeasureType < Sequel::Model
         )
       end
 
-      scope.order(Sequel.asc(:measure_types__measure_type_id))
+      scope.order(Sequel.asc(:measure_types__measure_type_id)).eager(:measure_type_description).all
     end
   end
 
@@ -109,7 +106,7 @@ class MeasureType < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       measure_type_id: measure_type_id,
       measure_type_series: measure_type_series.to_json,

@@ -1,7 +1,6 @@
 module WorkbasketInteractions
   module CreateFootnote
     class SettingsSaver
-
       include ::WorkbasketHelpers::SettingsSaverHelperMethods
 
       ATTRS_PARSER_METHODS = %w(
@@ -12,7 +11,7 @@ module WorkbasketInteractions
         operation_date
         commodity_codes
         measure_sids
-      )
+      ).freeze
 
       attr_accessor :current_step,
                     :save_mode,
@@ -31,7 +30,7 @@ module WorkbasketInteractions
                     :measures_candidates,
                     :persist
 
-      def initialize(workbasket, current_step, save_mode, settings_ops={})
+      def initialize(workbasket, current_step, save_mode, settings_ops = {})
         @workbasket = workbasket
         @save_mode = save_mode
         @current_step = current_step
@@ -81,193 +80,193 @@ module WorkbasketInteractions
         end
       end
 
-      private
+    private
 
-        def validate!
-          check_initial_validation_rules!
-          check_conformance_rules! if @errors.blank?
+      def validate!
+        check_initial_validation_rules!
+        check_conformance_rules! if @errors.blank?
+      end
+
+      def check_initial_validation_rules!
+        @initial_validator = ::WorkbasketInteractions::CreateFootnote::InitialValidator.new(
+          settings_params
+        )
+
+        @errors = initial_validator.fetch_errors
+        @errors_summary = initial_validator.errors_summary
+      end
+
+      def check_conformance_rules!
+        Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
+          add_footnote!
+          add_footnote_description_period!
+          add_footnote_description!
+
+          add_new_commodity_codes_associations! if commodity_codes.present?
+          add_new_measures_associations! if measure_sids.present?
+
+          parse_and_format_conformance_rules
+        end
+      end
+
+      def parse_and_format_conformance_rules
+        @conformance_errors = {}
+
+        unless footnote.conformant?
+          @conformance_errors.merge!(get_conformance_errors(footnote))
         end
 
-        def check_initial_validation_rules!
-          @initial_validator = ::WorkbasketInteractions::CreateFootnote::InitialValidator.new(
-            settings_params
-          )
-
-          @errors = initial_validator.fetch_errors
-          @errors_summary = initial_validator.errors_summary
+        unless footnote_description_period.conformant?
+          @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
         end
 
-        def check_conformance_rules!
-          Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
-            add_footnote!
-            add_footnote_description_period!
-            add_footnote_description!
-
-            add_new_commodity_codes_associations! if commodity_codes.present?
-            add_new_measures_associations! if measure_sids.present?
-
-            parse_and_format_conformance_rules
-          end
+        unless footnote_description.conformant?
+          @conformance_errors.merge!(get_conformance_errors(footnote_description))
         end
 
-        def parse_and_format_conformance_rules
-          @conformance_errors = {}
-
-          unless footnote.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote))
-          end
-
-          unless footnote_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
-          end
-
-          unless footnote_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote_description))
-          end
-
-          if commodity_codes_candidates.present?
-            commodity_codes_candidates.map do |item|
-              unless item.conformant?
-                @conformance_errors.merge!(get_conformance_errors(item))
-              end
-            end
-          end
-
-          if measures_candidates.present?
-            measures_candidates.map do |item|
-              unless item.conformant?
-                @conformance_errors.merge!(get_conformance_errors(item))
-              end
-            end
-          end
-
-          if conformance_errors.present?
-            @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
-          end
-        end
-
-        def add_footnote!
-          @footnote = Footnote.new(
-            validity_start_date: validity_start_date,
-            validity_end_date: validity_end_date
-          )
-
-          footnote.footnote_type_id = footnote_type_id
-
-          assign_system_ops!(footnote)
-          set_primary_key!(footnote)
-
-          footnote.save if persist_mode?
-        end
-
-        def add_footnote_description_period!
-          @footnote_description_period = FootnoteDescriptionPeriod.new(
-            validity_start_date: validity_start_date,
-            validity_end_date: validity_end_date
-          )
-
-          footnote_description_period.footnote_id = footnote.footnote_id
-          footnote_description_period.footnote_type_id = footnote_type_id
-
-          assign_system_ops!(footnote_description_period)
-          set_primary_key!(footnote_description_period)
-
-          footnote_description_period.save if persist_mode?
-        end
-
-        def add_footnote_description!
-          @footnote_description = FootnoteDescription.new(
-            description: description,
-            language_id: "EN"
-          )
-
-          footnote_description.footnote_id = footnote.footnote_id
-          footnote_description.footnote_type_id = footnote_type_id
-
-          assign_system_ops!(footnote_description)
-          set_primary_key!(footnote_description)
-
-          footnote_description.footnote_description_period_sid = footnote_description_period.footnote_description_period_sid
-
-          footnote_description.save if persist_mode?
-        end
-
-        def add_new_commodity_codes_associations!
-          commodity_codes.map do |code|
-            gn = GoodsNomenclature.actual
-                                  .by_code(code)
-                                  .first
-
-            if gn.present?
-              association = FootnoteAssociationGoodsNomenclature.new(
-                validity_start_date: validity_start_date,
-                validity_end_date: validity_end_date
-              )
-
-              association.goods_nomenclature_sid = gn.goods_nomenclature_sid
-              association.goods_nomenclature_item_id = gn.goods_nomenclature_item_id
-              association.productline_suffix = gn.producline_suffix
-
-              association.footnote_type = footnote.footnote_type_id
-              association.footnote_id = footnote.footnote_id
-
-              assign_system_ops!(association)
-              association.save if persist_mode?
-
-              @commodity_codes_candidates << association
+        if commodity_codes_candidates.present?
+          commodity_codes_candidates.map do |item|
+            unless item.conformant?
+              @conformance_errors.merge!(get_conformance_errors(item))
             end
           end
         end
 
-        def add_new_measures_associations!
-          measure_sids.map do |measure_sid|
-            measure = Measure.by_measure_sid(measure_sid)
-                             .first
-
-            if measure.present?
-              association = FootnoteAssociationMeasure.new()
-              association.measure_sid = measure.measure_sid
-
-              association.footnote_type_id = footnote.footnote_type_id
-              association.footnote_id = footnote.footnote_id
-
-              assign_system_ops!(association)
-              association.save if persist_mode?
-
-              @measures_candidates << association
+        if measures_candidates.present?
+          measures_candidates.map do |item|
+            unless item.conformant?
+              @conformance_errors.merge!(get_conformance_errors(item))
             end
           end
         end
 
-        def persist_mode?
-          @persist.present?
+        if conformance_errors.present?
+          @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
         end
+      end
 
-        def setup_attrs_parser!
-          @attrs_parser = ::WorkbasketValueObjects::CreateFootnote::AttributesParser.new(
-            settings_params
-          )
+      def add_footnote!
+        @footnote = Footnote.new(
+          validity_start_date: validity_start_date,
+          validity_end_date: validity_end_date
+        )
+
+        footnote.footnote_type_id = footnote_type_id
+
+        assign_system_ops!(footnote)
+        set_primary_key!(footnote)
+
+        footnote.save if persist_mode?
+      end
+
+      def add_footnote_description_period!
+        @footnote_description_period = FootnoteDescriptionPeriod.new(
+          validity_start_date: validity_start_date,
+          validity_end_date: validity_end_date
+        )
+
+        footnote_description_period.footnote_id = footnote.footnote_id
+        footnote_description_period.footnote_type_id = footnote_type_id
+
+        assign_system_ops!(footnote_description_period)
+        set_primary_key!(footnote_description_period)
+
+        footnote_description_period.save if persist_mode?
+      end
+
+      def add_footnote_description!
+        @footnote_description = FootnoteDescription.new(
+          description: description,
+          language_id: "EN"
+        )
+
+        footnote_description.footnote_id = footnote.footnote_id
+        footnote_description.footnote_type_id = footnote_type_id
+
+        assign_system_ops!(footnote_description)
+        set_primary_key!(footnote_description)
+
+        footnote_description.footnote_description_period_sid = footnote_description_period.footnote_description_period_sid
+
+        footnote_description.save if persist_mode?
+      end
+
+      def add_new_commodity_codes_associations!
+        commodity_codes.map do |code|
+          gn = GoodsNomenclature.actual
+                                .by_code(code)
+                                .first
+
+          if gn.present?
+            association = FootnoteAssociationGoodsNomenclature.new(
+              validity_start_date: validity_start_date,
+              validity_end_date: validity_end_date
+            )
+
+            association.goods_nomenclature_sid = gn.goods_nomenclature_sid
+            association.goods_nomenclature_item_id = gn.goods_nomenclature_item_id
+            association.productline_suffix = gn.producline_suffix
+
+            association.footnote_type = footnote.footnote_type_id
+            association.footnote_id = footnote.footnote_id
+
+            assign_system_ops!(association)
+            association.save if persist_mode?
+
+            @commodity_codes_candidates << association
+          end
         end
+      end
 
-        def get_conformance_errors(record)
-          res = {}
+      def add_new_measures_associations!
+        measure_sids.map do |measure_sid|
+          measure = Measure.by_measure_sid(measure_sid)
+                           .first
 
-          record.conformance_errors.map do |k, v|
-            message = if v.is_a?(Array)
-              v.flatten.join(' ')
-            else
-              v
-            end
+          if measure.present?
+            association = FootnoteAssociationMeasure.new
+            association.measure_sid = measure.measure_sid
 
-            res[k.to_s] = "<strong class='workbasket-conformance-error-code'>#{k.to_s}</strong>: #{message}".html_safe
+            association.footnote_type_id = footnote.footnote_type_id
+            association.footnote_id = footnote.footnote_id
+
+            assign_system_ops!(association)
+            association.save if persist_mode?
+
+            @measures_candidates << association
+          end
+        end
+      end
+
+      def persist_mode?
+        @persist.present?
+      end
+
+      def setup_attrs_parser!
+        @attrs_parser = ::WorkbasketValueObjects::CreateFootnote::AttributesParser.new(
+          settings_params
+        )
+      end
+
+      def get_conformance_errors(record)
+        res = {}
+
+        record.conformance_errors.map do |k, v|
+          message = if v.is_a?(Array)
+                      v.flatten.join(' ')
+                    else
+                      v
           end
 
-          res
+          res[k.to_s] = "<strong class='workbasket-conformance-error-code'>#{k}</strong>: #{message}".html_safe
         end
 
-        def validator_class(record)
-          "#{record.class.name}Validator".constantize
-        end
+        res
+      end
+
+      def validator_class(record)
+        "#{record.class.name}Validator".constantize
+      end
     end
   end
 end

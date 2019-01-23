@@ -100,10 +100,10 @@ module Sequel
       module ClassMethods
         # Hide oplog columns if asked
         def columns
-          super - [:oid, :operation, :operation_date]
+          super - %i[oid operation operation_date]
         end
 
-        def insert(*args)
+        def insert(*_args)
           raise NotImplementedError.new("You should be instantiating model and saving instances.")
         end
 

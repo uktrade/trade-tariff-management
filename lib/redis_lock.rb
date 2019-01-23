@@ -2,7 +2,6 @@
 ## and modified to suit our needs, in particular to “bump” the lock in separate thread, specifically for long-running tasks
 
 class RedisLock
-
   class LockTimeout < StandardError; end #:nodoc:
 
   attr_reader :key, :options
@@ -24,7 +23,7 @@ class RedisLock
   # Get the lock and execute the code block. Any other code that needs the lock
   # (on any server) will spin waiting for the lock up to the :timeout
   # that was specified when the lock was defined.
-  def lock(&block)
+  def lock
     start = Time.now
     gotit = false
     expiration = nil
@@ -66,14 +65,13 @@ class RedisLock
       watchdog = Thread.new {
         sleep @options[:sleep_interval]
         while run_watchdog
-          expiration = generate_expiration 
+          expiration = generate_expiration
           @redis.set(@key, expiration)
           sleep @options[:sleep_interval]
         end
       }
 
       yield
-
     ensure
       run_watchdog = false
       watchdog.join if watchdog

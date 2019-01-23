@@ -1,5 +1,4 @@
 class CertificateType < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :certificate_type_code
@@ -26,12 +25,10 @@ class CertificateType < Sequel::Model
 
         scope = scope.join_table(:inner,
           :certificate_type_descriptions,
-          certificate_type_code: :certificate_type_code,
-        ).where("
+          certificate_type_code: :certificate_type_code,).where("
           certificate_types.certificate_type_code ilike ? OR
           certificate_type_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       scope.order(Sequel.asc(:certificate_types__certificate_type_code))
@@ -53,7 +50,7 @@ class CertificateType < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     json_mapping
   end
 end

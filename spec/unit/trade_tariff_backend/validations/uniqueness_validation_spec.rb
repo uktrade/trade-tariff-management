@@ -8,32 +8,36 @@ describe TradeTariffBackend::Validations::UniquenessValidation do
 
     context 'duplicates found' do
       let(:model)  { double(filter: [double]) }
-      let(:record) { double(values: { a: 'a' },
+      let(:record) {
+        double(values: { a: 'a' },
                           model: model,
-                          new?: false) }
+                          new?: false)
+      }
 
       it 'returns false' do
         expect(
-          validation.valid?(record)
-        ).to be_falsy
+          validation
+        ).not_to be_valid(record)
       end
     end
 
     context 'no duplicates found' do
       let(:model)  { double(filter: []) }
-      let(:record) { double(values: { a: 'a' },
-                          model: model) }
+      let(:record) {
+        double(values: { a: 'a' },
+                          model: model)
+      }
 
       it 'returns true' do
         expect(
-          validation.valid?(record)
-        ).to be_truthy
+          validation
+        ).to be_valid(record)
       end
     end
 
     context 'no arguments provided to search uniquness for' do
       let(:validation) {
-        described_class.new(:vld1, 'valid', validation_options: { })
+        described_class.new(:vld1, 'valid', validation_options: {})
       }
 
       it 'raises an ArgumentError' do

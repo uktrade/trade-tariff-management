@@ -1,18 +1,17 @@
 module Quotas
   module SearchFilters
     class CommodityCode
-
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
         includes
         is
         is_not
         starts_with
-      )
+      ).freeze
 
       attr_accessor :operator,
                     :commodity_code
 
-      def initialize(operator, commodity_code=nil)
+      def initialize(operator, commodity_code = nil)
         @operator = operator
         @commodity_code = commodity_code.to_s
                                         .delete(" ")
@@ -25,24 +24,24 @@ module Quotas
         clause
       end
 
-      private
+    private
 
       def required_options_are_blank?
         OPERATORS_WITH_REQUIRED_PARAMS.include?(operator) &&
-            commodity_code.blank?
+          commodity_code.blank?
       end
 
       def clause
         case operator
         when "includes"
 
-          [ includes_clause, '0(\?=0*$)', value ]
+          [includes_clause, '0(\?=0*$)', value]
         when "is"
 
-          [ is_clause, value ]
+          [is_clause, value]
         when "is_not"
 
-          [ is_not_clause, value ]
+          [is_not_clause, value]
         when "are_not_specified"
 
           specified_not_clause
@@ -51,7 +50,7 @@ module Quotas
           specified_clause
         when "starts_with"
 
-          [ starts_with_clause, value ]
+          [starts_with_clause, value]
         end
       end
 
@@ -64,67 +63,67 @@ module Quotas
       end
 
       def includes_clause
-        <<-eos
-EXISTS (SELECT 1 
-          FROM measures 
-         WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-           AND measures.validity_start_date = quota_definitions.validity_start_date
-           AND regexp_replace(measures.goods_nomenclature_item_id, ?, '_', 'g') LIKE ?)
+        <<~eos
+          EXISTS (SELECT 1
+                    FROM measures
+                   WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                     AND measures.validity_start_date = quota_definitions.validity_start_date
+                     AND regexp_replace(measures.goods_nomenclature_item_id, ?, '_', 'g') LIKE ?)
         eos
       end
 
       def is_clause
-        <<-eos
-EXISTS (SELECT 1 
-          FROM measures 
-         WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-           AND measures.validity_start_date = quota_definitions.validity_start_date
-           AND measures.goods_nomenclature_item_id = ?)
+        <<~eos
+          EXISTS (SELECT 1
+                    FROM measures
+                   WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                     AND measures.validity_start_date = quota_definitions.validity_start_date
+                     AND measures.goods_nomenclature_item_id = ?)
         eos
       end
 
       def is_not_clause
-        <<-eos
-(
-EXISTS (SELECT 1 
-          FROM measures 
-         WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-           AND measures.validity_start_date = quota_definitions.validity_start_date)
-AND
-NOT EXISTS (SELECT 1 
-              FROM measures 
-             WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-               AND measures.validity_start_date = quota_definitions.validity_start_date
-               AND measures.goods_nomenclature_item_id = ?)
-)
+        <<~eos
+          (
+          EXISTS (SELECT 1
+                    FROM measures
+                   WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                     AND measures.validity_start_date = quota_definitions.validity_start_date)
+          AND
+          NOT EXISTS (SELECT 1
+                        FROM measures
+                       WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                         AND measures.validity_start_date = quota_definitions.validity_start_date
+                         AND measures.goods_nomenclature_item_id = ?)
+          )
         eos
       end
 
       def specified_not_clause
-        <<-eos
-NOT EXISTS (SELECT 1 
-              FROM measures 
-             WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-           AND measures.validity_start_date = quota_definitions.validity_start_date)
+        <<~eos
+          NOT EXISTS (SELECT 1
+                        FROM measures
+                       WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                     AND measures.validity_start_date = quota_definitions.validity_start_date)
         eos
       end
 
       def specified_clause
-        <<-eos
-EXISTS (SELECT 1 
-          FROM measures 
-         WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-           AND measures.validity_start_date = quota_definitions.validity_start_date)
+        <<~eos
+          EXISTS (SELECT 1
+                    FROM measures
+                   WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                     AND measures.validity_start_date = quota_definitions.validity_start_date)
         eos
       end
 
       def starts_with_clause
-        <<-eos
-EXISTS (SELECT 1 
-          FROM measures 
-         WHERE measures.ordernumber = quota_definitions.quota_order_number_id
-           AND measures.validity_start_date = quota_definitions.validity_start_date
-           AND measures.goods_nomenclature_item_id ILIKE ?)
+        <<~eos
+          EXISTS (SELECT 1
+                    FROM measures
+                   WHERE measures.ordernumber = quota_definitions.quota_order_number_id
+                     AND measures.validity_start_date = quota_definitions.validity_start_date
+                     AND measures.goods_nomenclature_item_id ILIKE ?)
         eos
       end
     end

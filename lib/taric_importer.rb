@@ -10,7 +10,7 @@ class TaricImporter
   class ImportException < StandardError
     attr_reader :original
 
-    def initialize(msg = "TaricImporter::ImportException", original=$!)
+    def initialize(msg = "TaricImporter::ImportException", original = $!)
       super(msg)
       @original = original
     end

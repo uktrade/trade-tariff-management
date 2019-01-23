@@ -1,10 +1,9 @@
 module WorkbasketInteractions
   class SettingsSaverBase
-
     REQUIRED_PARAMS = %w(
       start_date
       operation_date
-    )
+    ).freeze
 
     ATTRS_PARSER_METHODS = %w(
       start_date
@@ -19,17 +18,18 @@ module WorkbasketInteractions
       measure_components
       conditions
       footnotes
+      geographical_area_id
       excluded_geographical_areas
       quota_periods
       quota_precision
-    )
+    ).freeze
 
     ASSOCIATION_LIST = %w(
       measure_components
       conditions
       footnotes
       excluded_geographical_areas
-    )
+    ).freeze
 
     attr_accessor :current_step,
                   :save_mode,
@@ -41,10 +41,10 @@ module WorkbasketInteractions
                   :errors,
                   :candidates_with_errors
 
-    def initialize(workbasket, current_step, save_mode, settings_ops={})
+    def initialize(workbasket, current_step, save_mode, settings_ops = {})
       if current_step == 'main' && self.class::WORKBASKET_TYPE == "CreateQuota"
         settings_ops['start_date'] = Date.today.strftime("%Y-%m-%d")
-        settings_ops['workbasket_name'] = settings_ops['quota_ordernumber']
+        settings_ops['workbasket_name'] = settings_ops['quota_description']
       end
 
       @workbasket = workbasket
@@ -115,48 +115,47 @@ module WorkbasketInteractions
 
     def assign_system_ops!(measure)
       system_ops_assigner = ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-          measure, system_ops
+        measure, system_ops
       )
       system_ops_assigner.assign!
 
       system_ops_assigner.record
     end
 
-    private
+  private
 
-      ASSOCIATION_LIST.map do |name|
-        define_method("#{name}_errors") do |measure|
-          get_association_errors(name, measure)
+    ASSOCIATION_LIST.map do |name|
+      define_method("#{name}_errors") do |measure|
+        get_association_errors(name, measure)
+      end
+    end
+
+    def check_required_params!
+      general_errors = {}
+
+      REQUIRED_PARAMS.map do |k|
+        if public_send(k).blank?
+          general_errors[k.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
         end
       end
 
-      def check_required_params!
-        general_errors = {}
-
-        REQUIRED_PARAMS.map do |k|
-          if public_send(k).blank?
-            general_errors[k.to_sym] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+      if self.class::WORKBASKET_TYPE == "CreateQuota"
+        if quota_ordernumber.present?
+          unless order_number_saver.valid?
+            general_errors[:quota_ordernumber] = order_number_saver.errors
+                                                                   .join('. ')
           end
+
+        else
+          general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
         end
 
-        if self.class::WORKBASKET_TYPE == "CreateMeasures" && workbasket_name.blank?
-          general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
-        end
-
-        if self.class::WORKBASKET_TYPE == "CreateQuota"
-          if quota_ordernumber.present?
-            unless order_number_saver.valid?
-              general_errors[:quota_ordernumber] = order_number_saver.errors
-                                                                     .join('. ')
-            end
-
-          else
-            general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
+        if geographical_area_id.present?
+          if candidates.flatten.compact.blank?
+            general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
           end
-        end
-
-        if candidates.flatten.compact.blank?
-          general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
+        else
+          general_errors[:geographical_area_id] = errors_translator(:no_geographical_area)
         end
 
         if commodity_codes.blank? && commodity_codes_exclusions.present?
@@ -171,7 +170,7 @@ module WorkbasketInteractions
           @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
         end
 
-        if self.class::WORKBASKET_TYPE == "CreateQuota" && step_pointer.configure_quota?
+        if step_pointer.configure_quota?
           if quota_periods.blank?
             general_errors[:quota_periods] = errors_translator(:no_any_quota_period)
           end
@@ -180,152 +179,153 @@ module WorkbasketInteractions
             general_errors[:maximum_precision] = errors_translator(:maximum_precision_blank)
           end
         end
+      end
 
-        if general_errors.present?
-          if step_pointer.main_step?
-            general_errors.map do |k, v|
-              @errors[k] = v
+      if general_errors.present?
+        if step_pointer.main_step?
+          general_errors.map do |k, v|
+            @errors[k] = v
+          end
+
+        else
+          @errors[:general] = general_errors
+        end
+      end
+    end
+
+    def validate!
+      @persist = true
+
+      Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
+        validate_candidates!
+      end
+
+      get_unique_errors_from_candidates!
+    end
+
+    def validate_candidates!
+      candidates.map do |variable_params|
+        candidate_errors = candidate_validation_errors(variable_params)
+
+        if candidate_errors.present?
+          @candidates_with_errors[variable_params.to_s] = candidate_errors
+        end
+      end
+    end
+
+    def validation_mode
+      commodity_codes.present? ? :commodity_codes : :additional_codes
+    end
+
+    def current_admin
+      workbasket.user
+    end
+
+    def get_unique_errors_from_candidates!
+      summarizer = ::WorkbasketValueObjects::Shared::CandidatesValidationsSummarizer.new(
+        current_step, candidates_with_errors
+      )
+      summarizer.summarize!
+
+      summarizer.errors.map do |k, v|
+        @errors[k] = v
+      end
+    end
+
+    def errors_translator(key)
+      I18n.t(
+        self.class::WORKBASKET_TYPE.titleize
+                                   .tr(' ', '_')
+                                   .downcase
+      )[:errors][key]
+    end
+
+    def setup_system_pointers!
+      @step_pointer = "#{workbasket_type_prefix}::StepPointer".constantize.new(current_step)
+      @attrs_parser = "#{workbasket_type_prefix}::AttributesParser".constantize.new(
+        settings,
+        current_step,
+        settings_params
+      )
+      @errors = {}
+      @candidates_with_errors = {}
+    end
+
+    def clear_cached_sequence_number!
+      Rails.cache.delete("#{workbasket.id}_sequence_number")
+    end
+
+    begin :measures_related_methods
+          def candidate_validation_errors(variable_params)
+            errors_collection = {}
+
+            measure = generate_new_measure!(variable_params)
+
+            m_errors = measure_errors(measure)
+            errors_collection[:measure] = m_errors if m_errors.present?
+
+            ASSOCIATION_LIST.map do |name|
+              if public_send(name).present?
+                association_errors = send("#{name}_errors", measure)
+                errors_collection[name] = association_errors if association_errors.present?
+              end
             end
 
-          else
-            @errors[:general] = general_errors
+            errors_collection
           end
-        end
-      end
 
-      def validate!
-        @persist = true
+          def get_association_errors(name, measure)
+            klass_name = name.split("_").map(&:capitalize).join('')
 
-        Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
-          validate_candidates!
-        end
-
-        get_unique_errors_from_candidates!
-      end
-
-      def validate_candidates!
-        candidates.map do |variable_params|
-          candidate_errors = candidate_validation_errors(variable_params)
-
-          if candidate_errors.present?
-            @candidates_with_errors[variable_params.to_s] = candidate_errors
+            "::WorkbasketServices::MeasureAssociationSavers::#{klass_name}".constantize.errors_in_collection(
+              measure, system_ops.merge(type_of: name), public_send(name)
+            )
           end
-        end
-      end
 
-      def validation_mode
-        commodity_codes.present? ? :commodity_codes : :additional_codes
-      end
+          def generate_new_measure!(variable_params)
+            measure = Measure.new(
+              attrs_parser.measure_params(variable_params)
+            )
 
-      def current_admin
-        workbasket.user
-      end
+            measure.measure_sid = Measure.max(:measure_sid).to_i + 1
+            if measure.measure_type_id.present?
+              measure_type = MeasureType.where(measure_type_id: measure.measure_type_id).first
+              measure.measure_type = measure_type
+            end
 
-      def get_unique_errors_from_candidates!
-        summarizer = ::WorkbasketValueObjects::Shared::CandidatesValidationsSummarizer.new(
-          current_step, candidates_with_errors
-        )
-        summarizer.summarize!
+            if @order_number.present?
+              measure.quota_order_number = @order_number
+            end
 
-        summarizer.errors.map do |k, v|
-          @errors[k] = v
-        end
-      end
+            if @persist.present?
+              measure = assign_system_ops!(measure)
+              measure.save
+              @measure_sids << measure.measure_sid
 
-      def errors_translator(key)
-        I18n.t(
-          self.class::WORKBASKET_TYPE.titleize
-                                     .gsub(' ', '_')
-                                     .downcase
-        )[:errors][key]
-      end
-
-      def setup_system_pointers!
-        @step_pointer = "#{workbasket_type_prefix}::StepPointer".constantize.new(current_step)
-        @attrs_parser = "#{workbasket_type_prefix}::AttributesParser".constantize.new(
-          settings,
-          current_step,
-          settings_params
-        )
-        @errors = {}
-        @candidates_with_errors = {}
-      end
-
-      def clear_cached_sequence_number!
-        Rails.cache.delete("#{workbasket.id}_sequence_number")
-      end
-
-      begin :measures_related_methods
-        def candidate_validation_errors(variable_params)
-          errors_collection = {}
-
-          measure = generate_new_measure!(variable_params)
-
-          m_errors = measure_errors(measure)
-          errors_collection[:measure] = m_errors if m_errors.present?
-
-          ASSOCIATION_LIST.map do |name|
-            if public_send(name).present?
-              association_errors = send("#{name}_errors", measure)
-              errors_collection[name] = association_errors if association_errors.present?
+              Measure.where(measure_sid: measure.measure_sid)
+                     .first
+            else
+              measure
             end
           end
 
-          errors_collection
-        end
-
-        def get_association_errors(name, measure)
-          klass_name = name.split("_").map(&:capitalize).join('')
-
-          "::WorkbasketServices::MeasureAssociationSavers::#{klass_name}".constantize.errors_in_collection(
-            measure, system_ops.merge(type_of: name), public_send(name)
-          )
-        end
-
-        def generate_new_measure!(variable_params)
-          measure = Measure.new(
-            attrs_parser.measure_params(variable_params)
-          )
-
-          measure.measure_sid = Measure.max(:measure_sid).to_i + 1
-          if measure.measure_type_id.present?
-            measure_type = MeasureType.where(measure_type_id: measure.measure_type_id).first
-            measure.measure_type = measure_type
+          def measure_errors(measure)
+            ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
+              measure, MeasureValidator, {}
+            ).errors
           end
 
-          if @order_number.present?
-            measure.quota_order_number = @order_number
+          def system_ops
+            {
+              workbasket_id: workbasket.id,
+              operation_date: operation_date,
+              current_admin_id: current_admin.id
+            }
           end
 
-          if @persist.present?
-            measure = assign_system_ops!(measure)
-            measure.save
-            @measure_sids << measure.measure_sid
-
-            Measure.where(measure_sid: measure.measure_sid)
-                   .first
-          else
-            measure
+          def workbasket_type_prefix
+            "::WorkbasketValueObjects::#{self.class::WORKBASKET_TYPE}"
           end
-        end
-
-        def measure_errors(measure)
-          ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
-            measure, MeasureValidator, {}
-          ).errors
-        end
-
-        def system_ops
-          {
-            workbasket_id: workbasket.id,
-            operation_date: operation_date,
-            current_admin_id: current_admin.id
-          }
-        end
-
-        def workbasket_type_prefix
-          "::WorkbasketValueObjects::#{self.class::WORKBASKET_TYPE}"
-        end
-      end
+    end
   end
 end

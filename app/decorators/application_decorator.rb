@@ -1,5 +1,4 @@
 class ApplicationDecorator < Draper::Decorator
-
   delegate_all
 
   def to_readable_date_time(field_name)

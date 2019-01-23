@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "AdditionalCodeType XML generation" do
-
   let(:db_record) do
     create(:additional_code_type, :with_meursing_table_plan, :xml)
   end
@@ -11,12 +10,12 @@ describe "AdditionalCodeType XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :additional_code_type_id,
-      :application_code,
-      :meursing_table_plan_id,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      additional_code_type_id
+      application_code
+      meursing_table_plan_id
+      validity_start_date
+      validity_end_date
     ]
   end
 

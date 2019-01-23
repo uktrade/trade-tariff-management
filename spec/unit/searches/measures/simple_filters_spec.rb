@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe "Measure search: simple filters" do
-
   include_context "measures_search_base_context"
 
   let(:adam) do
@@ -36,7 +35,7 @@ describe "Measure search: simple filters" do
   describe "Author filter" do
     let(:search_key) { "author" }
 
-    it "should filter" do
+    it "filters" do
       res = search_results(
         enabled: true,
         value: adam.id
@@ -61,7 +60,7 @@ describe "Measure search: simple filters" do
   describe "Last updated by filter" do
     let(:search_key) { "last_updated_by" }
 
-    it "should filter" do
+    it "filters" do
       res = search_results(
         enabled: true,
         value: adam.id

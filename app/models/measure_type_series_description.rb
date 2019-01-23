@@ -1,5 +1,4 @@
 class MeasureTypeSeriesDescription < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :measure_type_series_id

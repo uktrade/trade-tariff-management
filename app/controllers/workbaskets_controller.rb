@@ -1,4 +1,5 @@
 class WorkbasketsController < ApplicationController
+  around_action :configure_time_machine
 
   expose(:workbaskets) do
     ::WorkbasketsSearch.new(

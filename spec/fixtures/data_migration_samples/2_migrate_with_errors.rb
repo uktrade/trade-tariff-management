@@ -12,7 +12,7 @@ TradeTariffBackend::DataMigrator.migration do
   end
 
   down do
-    applicable { }
-    apply { }
+    applicable {}
+    apply {}
   end
 end

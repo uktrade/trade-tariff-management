@@ -5,12 +5,14 @@ describe TariffSynchronizer::Logger, truncation: true do
   include BankHolidaysHelper
 
   before(:all) { WebMock.disable_net_connect! }
+
   after(:all)  { WebMock.allow_net_connect! }
 
   before { tariff_synchronizer_logger_listener }
 
   describe '#missing_updates' do
     let(:not_found_response) { build :response, :not_found }
+
     before {
       stub_holidays_gem_between_call
       create :chief_update, :missing, issue_date: Date.today.ago(2.days)
@@ -26,17 +28,19 @@ describe TariffSynchronizer::Logger, truncation: true do
     end
 
     it 'sends a warning email' do
-      expect(ActionMailer::Base.deliveries).to_not be_empty
+      expect(ActionMailer::Base.deliveries).not_to be_empty
       email = ActionMailer::Base.deliveries.last
       expect(email.encoded).to match /missing/
     end
   end
+
   describe "#rollback_lock_error" do
     before {
-       expect(TradeTariffBackend).to receive(
-        :with_redis_lock).and_raise(RedisLock::LockTimeout)
+      expect(TradeTariffBackend).to receive(
+        :with_redis_lock
+).and_raise(RedisLock::LockTimeout)
 
-       TariffSynchronizer.rollback(Date.today, true)
+      TariffSynchronizer.rollback(Date.today, true)
     }
 
     it 'logs a warn event' do
@@ -47,10 +51,11 @@ describe TariffSynchronizer::Logger, truncation: true do
 
   describe "#apply_lock_error" do
     before {
-       expect(TradeTariffBackend).to receive(
-        :with_redis_lock).and_raise(RedisLock::LockTimeout)
+      expect(TradeTariffBackend).to receive(
+        :with_redis_lock
+).and_raise(RedisLock::LockTimeout)
 
-       TariffSynchronizer.apply
+      TariffSynchronizer.apply
     }
 
     it 'logs a warn event' do

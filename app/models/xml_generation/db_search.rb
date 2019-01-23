@@ -1,6 +1,5 @@
 module XmlGeneration
-    class DBSearch
-
+  class DBSearch
     EXPORT_MODELS = [
         GeographicalArea,
         GeographicalAreaDescription,
@@ -101,7 +100,7 @@ module XmlGeneration
         LanguageDescription,
         TransmissionComment,
         PublicationSigle,
-    ]
+    ].freeze
 
     attr_accessor :start_date,
                   :end_date
@@ -115,7 +114,7 @@ module XmlGeneration
       data
     end
 
-    private
+  private
 
     def data
       EXPORT_MODELS.map do |entity|
@@ -130,5 +129,5 @@ module XmlGeneration
         ['operation_date = ?', start_date]
       end
     end
-  end
+end
 end

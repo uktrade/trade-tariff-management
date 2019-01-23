@@ -1,6 +1,5 @@
 module WorkbasketValueObjects
   class StepPointerBase
-
     attr_accessor :current_step
 
     def initialize(current_step)
@@ -32,7 +31,7 @@ module WorkbasketValueObjects
     end
 
     def previous_step
-      step_transitions.select do |k, v|
+      step_transitions.select do |_k, v|
         v == current_step.to_sym
       end.try(:keys)
          .try(:first)

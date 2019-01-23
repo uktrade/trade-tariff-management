@@ -3,7 +3,7 @@ module BaseJobMixin
 
   included do
     expose(:collection) do
-      "#{klass.to_s}Decorator".constantize.decorate_collection(
+      "#{klass}Decorator".constantize.decorate_collection(
         klass.reverse_order(:issue_date)
              .page(params[:page])
       )
@@ -34,7 +34,7 @@ module BaseJobMixin
     end
   end
 
-  private
+private
 
   def persist_record(record)
     record.save

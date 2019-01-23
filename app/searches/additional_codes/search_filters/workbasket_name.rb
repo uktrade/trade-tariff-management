@@ -1,11 +1,10 @@
 module AdditionalCodes
   module SearchFilters
     class WorkbasketName
-
       attr_accessor :operator,
                     :workbasket_name
 
-      def initialize(operator, workbasket_name=nil)
+      def initialize(operator, workbasket_name = nil)
         @operator = operator
         @workbasket_name = workbasket_name.to_s.strip
       end
@@ -16,19 +15,19 @@ module AdditionalCodes
         clause
       end
 
-      private
+    private
 
       def clause
         case operator
-          when "is"
+        when "is"
 
-            [ is_clause, value ]
-          when "starts_with"
+          [is_clause, value]
+        when "starts_with"
 
-            [ like_clause, value ]
-          when "contains"
+          [like_clause, value]
+        when "contains"
 
-            [ like_clause, value ]
+          [like_clause, value]
         end
       end
 
@@ -53,7 +52,6 @@ module AdditionalCodes
             workbaskets.title ilike ?
         eos
       end
-
     end
   end
 end

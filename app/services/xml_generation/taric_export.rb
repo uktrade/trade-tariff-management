@@ -2,7 +2,6 @@ require 'zip'
 
 module XmlGeneration
   class TaricExport < ::XmlGeneration::XmlInteractorBase
-
     attr_accessor :record,
                   :extract_start_date_time,
                   :extract_end_date_time,
@@ -38,7 +37,7 @@ module XmlGeneration
       "#{filename_prefix}-EUFileSequence.xml"
     end
 
-    private
+  private
 
     def mark_export_process_as_started!
       @extract_start_date_time = Time.now.utc

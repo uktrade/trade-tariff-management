@@ -16,11 +16,11 @@ module TradeTariffBackend
 
       def inspect
         vars = self.instance_variables.
-          map{|v| "#{v}=#{instance_variable_get(v).inspect}"}.join(", ")
-        "<#{self.class} #{@destination.to_s.capitalize}RunnerOn(#{@migration.class.to_s}): #{vars}>"
+          map { |v| "#{v}=#{instance_variable_get(v).inspect}" }.join(", ")
+        "<#{self.class} #{@destination.to_s.capitalize}RunnerOn(#{@migration.class}): #{vars}>"
       end
 
-      private
+    private
 
       def method_missing(method, *args, &block)
         @migration.send(method, *args, &block)

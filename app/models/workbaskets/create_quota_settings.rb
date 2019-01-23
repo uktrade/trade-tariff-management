@@ -1,6 +1,5 @@
 module Workbaskets
   class CreateQuotaSettings < Sequel::Model(:create_quota_workbasket_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -62,9 +61,7 @@ module Workbaskets
     end
 
     def ordered_quota_periods
-      quota_periods.sort do |a, b|
-        a.validity_start_date <=> b.validity_start_date
-      end
+      quota_periods.sort_by(&:validity_start_date)
     end
 
     def earliest_period_date

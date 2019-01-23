@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "MeasureConditionCodeDescription XML generation" do
-
   let(:db_record) do
     create(:measure_condition_code_description, :xml)
   end
@@ -11,10 +10,10 @@ describe "MeasureConditionCodeDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :condition_code,
-      :language_id,
-      :description
+    %i[
+      condition_code
+      language_id
+      description
     ]
   end
 

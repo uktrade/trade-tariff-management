@@ -1,7 +1,6 @@
 module WorkbasketInteractions
   module CreateGeographicalArea
     class InitialValidator
-
       ALLOWED_OPS = %w(
         geographical_code
         geographical_area_id
@@ -10,7 +9,7 @@ module WorkbasketInteractions
         validity_start_date
         validity_end_date
         operation_date
-      )
+      ).freeze
 
       attr_accessor :settings,
                     :errors,
@@ -51,97 +50,97 @@ module WorkbasketInteractions
         I18n.t(:create_geographical_area)[key]
       end
 
-      private
+    private
 
-        def check_type!
-          if geographical_code.blank?
-            @errors[:geographical_code] = errors_translator(:geographical_code)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
-          end
+      def check_type!
+        if geographical_code.blank?
+          @errors[:geographical_code] = errors_translator(:geographical_code)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
+      end
 
-        def check_area_id!
-          if area_id.present?
-            if geographical_code.present?
-              if type == "group" && area_id.match(/^[0-9A-Z]{4}$/).blank?
-                @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_group_code)
-                @errors_summary = errors_translator(:summary_invalid_fields)
-              end
-
-              if ["country", "region"].include?(type) && area_id.match(/^[A-Z]{2}$/).blank?
-                @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_country_code)
-                @errors_summary = errors_translator(:summary_invalid_fields)
-              end
-            end
-
-            if GeographicalArea.where(geographical_area_id: area_id).present?
-              @errors[:geographical_area_id] = errors_translator(:geographical_area_id_already_exist)
-              @errors_summary = errors_translator(:summary_invalid_fields)
-            end
-          else
-            @errors[:geographical_area_id] = errors_translator(:geographical_area_id_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
-          end
-        end
-
-        def check_description!
-          if description.blank? || (
-              description.present? &&
-              description.squish.split.size.zero?
-            )
-
-            @errors[:description] = errors_translator(:description_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
-          end
-        end
-
-        def check_validity_period!
-          if start_date.present?
-            if end_date.present? && start_date > end_date
-              @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
+      def check_area_id!
+        if area_id.present?
+          if geographical_code.present?
+            if type == "group" && area_id.match(/^[0-9A-Z]{4}$/).blank?
+              @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_group_code)
               @errors_summary = errors_translator(:summary_invalid_fields)
             end
 
-          elsif @errors[:validity_start_date].blank?
-            @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
+            if %w[country region].include?(type) && area_id.match(/^[A-Z]{2}$/).blank?
+              @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_country_code)
+              @errors_summary = errors_translator(:summary_invalid_fields)
+            end
           end
 
-          if start_date.present? &&
-             end_date.present? &&
-             end_date < start_date
-
-            @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
+          if GeographicalArea.where(geographical_area_id: area_id).present?
+            @errors[:geographical_area_id] = errors_translator(:geographical_area_id_already_exist)
             @errors_summary = errors_translator(:summary_invalid_fields)
           end
+        else
+          @errors[:geographical_area_id] = errors_translator(:geographical_area_id_blank)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
+      end
 
-        def check_operation_date!
-          if operation_date.blank?
-            @errors[:operation_date] = errors_translator(:operation_date_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
+      def check_description!
+        if description.blank? || (
+            description.present? &&
+            description.squish.split.size.zero?
+          )
+
+          @errors[:description] = errors_translator(:description_blank)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
+        end
+      end
+
+      def check_validity_period!
+        if start_date.present?
+          if end_date.present? && start_date > end_date
+            @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
+            @errors_summary = errors_translator(:summary_invalid_fields)
           end
+
+        elsif @errors[:validity_start_date].blank?
+          @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
 
-        def squish_it(val)
-          val.to_s
-             .squish
+        if start_date.present? &&
+            end_date.present? &&
+            end_date < start_date
+
+          @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
+          @errors_summary = errors_translator(:summary_invalid_fields)
         end
+      end
 
-        def parse_date(option_name)
-          date_in_string = public_send(option_name)
-          date_in_string.blank? rescue nil
+      def check_operation_date!
+        if operation_date.blank?
+          @errors[:operation_date] = errors_translator(:operation_date_blank)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
+        end
+      end
 
-          begin
-            Date.strptime(date_in_string, "%d/%m/%Y")
-          rescue Exception => e
-            if public_send(option_name).present?
-              @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
-            end
+      def squish_it(val)
+        val.to_s
+           .squish
+      end
 
-            nil
+      def parse_date(option_name)
+        date_in_string = public_send(option_name)
+        date_in_string.blank? rescue nil
+
+        begin
+          Date.strptime(date_in_string, "%d/%m/%Y")
+        rescue Exception => e
+          if public_send(option_name).present?
+            @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
           end
+
+          nil
         end
+      end
     end
   end
 end

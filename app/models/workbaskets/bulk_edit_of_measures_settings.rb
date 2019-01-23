@@ -1,6 +1,5 @@
 module Workbaskets
   class BulkEditOfMeasuresSettings < Sequel::Model(:bulk_edit_of_measures_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -52,7 +51,7 @@ module Workbaskets
     def commodity_codes_covered
       @commodity_codes_covered ||= workbasket_items.select do |i|
         i.hash_data["goods_nomenclature"].present? &&
-        i.hash_data["goods_nomenclature"]["goods_nomenclature_item_id"].present?
+          i.hash_data["goods_nomenclature"]["goods_nomenclature_item_id"].present?
       end.map do |i|
         i.hash_data["goods_nomenclature"]["goods_nomenclature_item_id"]
       end.uniq
@@ -61,7 +60,7 @@ module Workbaskets
     def additional_codes_covered
       @additional_codes_covered ||= workbasket_items.select do |i|
         i.hash_data["additional_code"].present? &&
-        i.hash_data["additional_code"]["additional_code"].present?
+          i.hash_data["additional_code"]["additional_code"].present?
       end.map do |i|
         i.hash_data["additional_code"]["additional_code"]
       end.uniq

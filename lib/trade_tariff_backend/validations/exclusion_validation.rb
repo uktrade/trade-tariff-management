@@ -8,7 +8,7 @@ module TradeTariffBackend
         raise ArgumentError.new('validates :exclusion expects {from: ARRAY} and {of: :symbol} to be passed in with options') if exclude_from.blank? || exclusion_of.blank?
 
         exclude_from = (exclude_from.is_a?(Proc) ? exclude_from.call : exclude_from)
-        attribute_values = [exclusion_of].flatten.map{|att| record.send(att) }
+        attribute_values = [exclusion_of].flatten.map { |att| record.send(att) }
 
         # Could be Sequel dataset similar to:
         #

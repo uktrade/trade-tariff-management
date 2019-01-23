@@ -1,6 +1,5 @@
 module WorkbasketForms
   class WorkflowForm
-
     extend ActiveModel::Naming
     include ActiveModel::Conversion
 

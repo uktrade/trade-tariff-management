@@ -23,9 +23,9 @@ class Commodity < GoodsNomenclature
   }
 
   one_to_many :search_references, key: :referenced_id, primary_key: :code, reciprocal: :referenced, conditions: { referenced_class: 'Commodity' },
-    adder: proc{ |search_reference| search_reference.update(referenced_id: code, referenced_class: 'Commodity') },
-    remover: proc{ |search_reference| search_reference.update(referenced_id: nil, referenced_class: nil)},
-    clearer: proc{ search_references_dataset.update(referenced_id: nil, referenced_class: nil) }
+    adder: proc { |search_reference| search_reference.update(referenced_id: code, referenced_class: 'Commodity') },
+    remover: proc { |search_reference| search_reference.update(referenced_id: nil, referenced_class: nil) },
+    clearer: proc { search_references_dataset.update(referenced_id: nil, referenced_class: nil) }
 
   delegate :section, to: :chapter
 
@@ -61,8 +61,8 @@ class Commodity < GoodsNomenclature
                  .group(:goods_nomenclature_sid, :goods_nomenclature_item_id, :number_indents)
                  .from_self
                  .where("number_indents < ?", goods_nomenclature_indent.number_indents),
-        { t1__goods_nomenclature_sid: :goods_nomenclatures__goods_nomenclature_sid,
-          t1__goods_nomenclature_item_id: :goods_nomenclatures__goods_nomenclature_item_id })
+         t1__goods_nomenclature_sid: :goods_nomenclatures__goods_nomenclature_sid,
+          t1__goods_nomenclature_item_id: :goods_nomenclatures__goods_nomenclature_item_id)
       .order(Sequel.desc(:goods_nomenclatures__goods_nomenclature_item_id))
       .all
       .group_by(&:number_indents)
@@ -70,7 +70,7 @@ class Commodity < GoodsNomenclature
       .map(&:first)
       .reverse
       .sort_by(&:number_indents)
-      .select{ |a| a.number_indents < goods_nomenclature_indent.number_indents }
+      .select { |a| a.number_indents < goods_nomenclature_indent.number_indents }
   end
 
   def declarable?
@@ -113,15 +113,16 @@ class Commodity < GoodsNomenclature
      .union(
        Measure.changes_for(
          depth + 1,
-         Sequel.qualify(:measures_oplog, :goods_nomenclature_item_id) => goods_nomenclature_item_id)
+         Sequel.qualify(:measures_oplog, :goods_nomenclature_item_id) => goods_nomenclature_item_id
+)
      )
      .from_self
      .where(Sequel.~(operation_date: nil))
      .tap! { |criteria|
        # if Commodity did not come from initial seed, filter by its
        # create/update date
-       criteria.where { |o| o.>=(:operation_date, operation_date) } unless operation_date.blank?
-      }
+      criteria.where { |o| o.>=(:operation_date, operation_date) } unless operation_date.blank?
+    }
      .limit(TradeTariffBackend.change_count)
      .order(Sequel.desc(:operation_date, nulls: :last), Sequel.desc(:depth))
   end
@@ -154,7 +155,7 @@ class Commodity < GoodsNomenclature
     parent_sid.blank?
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       goods_nomenclature_item_id: code
     }

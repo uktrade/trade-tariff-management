@@ -1,5 +1,4 @@
 class AdditionalCodeTypeDescription < Sequel::Model
-
   include Formatter
   include ::XmlGeneration::BaseHelper
 

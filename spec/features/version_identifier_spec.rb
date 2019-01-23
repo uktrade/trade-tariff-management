@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "version identifier" do
   include EnvironmentHelper
 
-  before(:each) { create(:user) }
+  before { create(:user) }
 
   context "is available" do
     it "is displayed in the footer" do
@@ -23,7 +23,7 @@ RSpec.describe "version identifier" do
         visit root_path
       end
 
-      expect(find("footer")).to_not have_content "Version"
+      expect(find("footer")).not_to have_content "Version"
     end
   end
 end

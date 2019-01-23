@@ -1,6 +1,5 @@
 module Quotas
-  class BulkItemsController < Measures::BulksBaseController
-
+  class BulkItemsController < BulksBaseController
     before_action :require_to_be_workbasket_owner!, only: [
       :remove_items
     ]

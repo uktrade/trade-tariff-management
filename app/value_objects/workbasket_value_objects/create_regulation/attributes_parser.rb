@@ -1,7 +1,6 @@
 module WorkbasketValueObjects
   module CreateRegulation
     class AttributesParser < WorkbasketValueObjects::AttributesParserBase
-
       SIMPLE_OPS = %w(
         operation_date
         role
@@ -17,7 +16,7 @@ module WorkbasketValueObjects
         regulation_group_id
         published_date
         abrogation_date
-      )
+      ).freeze
 
       SIMPLE_OPS.map do |option_name|
         define_method(option_name) do
@@ -28,7 +27,7 @@ module WorkbasketValueObjects
       ALIASES = {
           role: :method_regulation_role,
           effective_end_date: :method_effective_end_date,
-      }
+      }.freeze
 
       attr_accessor :ops,
                     :normalized_params,
@@ -41,20 +40,20 @@ module WorkbasketValueObjects
                  ops
                else
                  ActiveSupport::HashWithIndifferentAccess.new(
-                     workbasket_settings.settings
+                   workbasket_settings.settings
                  )
                end
 
-        @ops = @ops.select do |k, v|
+        @ops = @ops.select do |_k, v|
           v.present?
         end
 
         @normalized_params = {}
         @ops.map do |k, v|
-          if ALIASES.keys.include?(k.to_sym)
+          if ALIASES.key?(k.to_sym)
             if ALIASES[k.to_sym].to_s.starts_with?("method_")
               @normalized_params.merge!(
-                  send(ALIASES[k.to_sym], @ops[k])
+                send(ALIASES[k.to_sym], @ops[k])
               )
             else
               @normalized_params[ALIASES[k.to_sym]] = v
@@ -66,7 +65,6 @@ module WorkbasketValueObjects
 
         stub_some_attributes
         @normalized_params = ActiveSupport::HashWithIndifferentAccess.new(normalized_params)
-
       end
 
       def stub_some_attributes
@@ -90,18 +88,18 @@ module WorkbasketValueObjects
         ops = {}
 
         @target_class = case role
-                          when "1", "2", "3"
-                            BaseRegulation
-                          when "4"
-                            ModificationRegulation
-                          when "5"
-                            ProrogationRegulation
-                          when "6"
-                            CompleteAbrogationRegulation
-                          when "7"
-                            ExplicitAbrogationRegulation
-                          when "8"
-                            FullTemporaryStopRegulation
+                        when "1", "2", "3"
+                          BaseRegulation
+                        when "4"
+                          ModificationRegulation
+                        when "5"
+                          ProrogationRegulation
+                        when "6"
+                          CompleteAbrogationRegulation
+                        when "7"
+                          ExplicitAbrogationRegulation
+                        when "8"
+                          FullTemporaryStopRegulation
                         end
 
         ops[target_class.primary_key[1]] = role
@@ -133,7 +131,6 @@ module WorkbasketValueObjects
       def abrogation_date_formatted
         date_to_format(abrogation_date)
       end
-
     end
   end
 end

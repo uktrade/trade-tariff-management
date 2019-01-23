@@ -3,7 +3,7 @@ require 'rails_helper'
 describe QuotaOrderNumber do
   describe 'validations' do
     describe "ON1" do
-      it { is_expected.to validate_uniqueness.of([:quota_order_number_id, :validity_start_date]) }
+      it { is_expected.to validate_uniqueness.of(%i[quota_order_number_id validity_start_date]) }
 
       it "invalid" do
         start_date = 3.years.ago
@@ -12,7 +12,7 @@ describe QuotaOrderNumber do
         qon2 = build :quota_order_number,
                      validity_start_date: start_date,
                      quota_order_number_id: qon1.quota_order_number_id
-        expect(qon2).to_not be_conformant
+        expect(qon2).not_to be_conformant
         expect(qon2.conformance_errors).to have_key(:ON1)
       end
     end
@@ -39,7 +39,7 @@ describe QuotaOrderNumber do
                      quota_order_number_id: qon1.quota_order_number_id,
                      validity_start_date: 3.years.ago,
                      validity_end_date: 2.years.ago
-        expect(qon2).to_not be_conformant
+        expect(qon2).not_to be_conformant
         expect(qon2.conformance_errors).to have_key(:ON2)
       end
     end
@@ -56,7 +56,7 @@ describe QuotaOrderNumber do
         qon = build :quota_order_number,
                     validity_start_date: 5.days.ago,
                     validity_end_date: 10.days.ago
-        expect(qon).to_not be_conformant
+        expect(qon).not_to be_conformant
         expect(qon.conformance_errors).to have_key(:ON3)
       end
     end
@@ -75,7 +75,7 @@ describe QuotaOrderNumber do
         qon = create :quota_order_number
         qono = create :quota_order_number_origin,
                       quota_order_number_sid: qon.quota_order_number_sid
-        expect(qon).to_not be_conformant
+        expect(qon).not_to be_conformant
         expect(qon.conformance_errors).to have_key(:ON4)
       end
     end
@@ -101,7 +101,7 @@ describe QuotaOrderNumber do
                       quota_order_number_sid: qon.quota_order_number_sid,
                       validity_start_date: 12.days.ago,
                       validity_end_date: 8.days.ago
-        expect(qon).to_not be_conformant
+        expect(qon).not_to be_conformant
         expect(qon.conformance_errors).to have_key(:ON7)
       end
     end
@@ -171,7 +171,7 @@ describe QuotaOrderNumber do
 
     describe "ON11" do
       it "valid" do
-        bottom_date = Date.new(2007,12,31)
+        bottom_date = Date.new(2007, 12, 31)
         measure = create :measure,
                   ordernumber: generate(:quota_order_number_id),
                   validity_start_date: bottom_date - 1.day
@@ -179,7 +179,7 @@ describe QuotaOrderNumber do
                     validity_start_date: 15.days.ago,
                     validity_end_date: 5.days.ago,
                     quota_order_number_id: measure.ordernumber
-        expect(qon.conformant_for?(:destroy)).to be_truthy
+        expect(qon).to be_conformant_for(:destroy)
       end
 
       it "invalid" do
@@ -191,7 +191,7 @@ describe QuotaOrderNumber do
                     validity_start_date: 15.days.ago,
                     validity_end_date: 5.days.ago,
                     quota_order_number_id: measure.ordernumber
-        expect(qon.conformant_for?(:destroy)).to be_falsey
+        expect(qon).not_to be_conformant_for(:destroy)
         expect(qon.conformance_errors).to have_key(:ON11)
       end
     end

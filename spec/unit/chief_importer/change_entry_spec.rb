@@ -24,18 +24,18 @@ describe ChiefImporter::ChangeEntry do
     end
 
     it 'assigns table name' do
-      ce = ChiefImporter::ChangeEntry.new(valid_args)
+      ce = described_class.new(valid_args)
       expect(ce.table).to eq valid_table_name
     end
 
     it 'assigns proper available strategy' do
-      ce = ChiefImporter::ChangeEntry.new(invalid_args)
+      ce = described_class.new(invalid_args)
       expect(ce.table).to eq invalid_table_name
       expect(ce.strategy).to be_blank
 
-      ce = ChiefImporter::ChangeEntry.new(valid_args)
+      ce = described_class.new(valid_args)
       expect(ce.table).to eq valid_table_name
-      expect(ce.strategy).to_not be_blank
+      expect(ce.strategy).not_to be_blank
       expect(ce.strategy).to be_kind_of ChiefImporter::Strategies::TestStrategy
     end
   end
@@ -43,16 +43,16 @@ describe ChiefImporter::ChangeEntry do
   describe "#relevant?" do
     it 'returns false if table is relevant' do
       expect(
-        ChiefImporter::ChangeEntry.new(invalid_args).relevant?
-      ).to be_falsy
+        described_class.new(invalid_args)
+      ).not_to be_relevant
     end
 
     it 'returns true if table is relevant' do
       ChiefImporter.relevant_tables += valid_args
 
       expect(
-        ChiefImporter::ChangeEntry.new(valid_args).relevant?
-      ).to be_truthy
+        described_class.new(valid_args)
+      ).to be_relevant
     end
   end
 end

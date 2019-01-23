@@ -1,26 +1,26 @@
 class MeasureValidator < TradeTariffBackend::Validator
-  validation :ME1, 'The combination of measure type + geographical area + goods nomenclature item id + additional code type + additional code + order number + reduction indicator + start date must be unique.', on: [:create, :update], if: -> (record) { record.not_update_of_the_same_measure? } do
-    validates :uniqueness, of: [:measure_type_id, :geographical_area_sid, :goods_nomenclature_sid, :additional_code_type_id, :additional_code_id, :ordernumber, :reduction_indicator, :validity_start_date]
+  validation :ME1, 'The combination of measure type + geographical area + goods nomenclature item id + additional code type + additional code + order number + reduction indicator + start date must be unique.', on: %i[create update], if: ->(record) { record.not_update_of_the_same_measure? } do
+    validates :uniqueness, of: %i[measure_type_id geographical_area_sid goods_nomenclature_sid additional_code_type_id additional_code_id ordernumber reduction_indicator validity_start_date]
   end
 
-  validation :ME2, 'The measure type must exist.', on: [:create, :update] do
+  validation :ME2, 'The measure type must exist.', on: %i[create update] do
     validates :presence, of: :measure_type
   end
 
-  validation :ME3, 'The validity period of the measure type must span the validity period of the measure.', on: [:create, :update] do
+  validation :ME3, 'The validity period of the measure type must span the validity period of the measure.', on: %i[create update] do
     validates :validity_date_span, of: :measure_type, extend_message: true
   end
 
-  validation :ME4, 'The geographical area must exist.', on: [:create, :update] do
+  validation :ME4, 'The geographical area must exist.', on: %i[create update] do
     validates :presence, of: :geographical_area
   end
 
-  validation :ME5, 'The validity period of the geographical area must span the validity period of the measure.', on: [:create, :update] do
+  validation :ME5, 'The validity period of the geographical area must span the validity period of the measure.', on: %i[create update] do
     validates :validity_date_span, of: :geographical_area, extend_message: true
   end
 
   validation :ME6, 'The goods code must exist.',
-      on: [:create, :update],
+      on: %i[create update],
       if: ->(record) {
         # NOTE wont apply to national invalidates Measures
         # Taric may delete a Goods Code and national measures will be invalid.
@@ -29,69 +29,68 @@ class MeasureValidator < TradeTariffBackend::Validator
         # do not validate for if related to meursing additional code type
         # do not validate for invalidated national measures (when goods code is deleted by Taric, and CHIEF measures are left orphaned-invalidated)
         (
-         (record.additional_code.blank?) &&
-         (record.export_refund_nomenclature.blank?) &&
+         record.additional_code.blank? &&
+         record.export_refund_nomenclature.blank? &&
          (!record.national? || !record.invalidated?)
         ) &&
-        (record.additional_code_type.present? &&
-         !record.additional_code_type.meursing?)
+          (record.additional_code_type.present? &&
+           !record.additional_code_type.meursing?)
       } do
     validates :presence, of: :goods_nomenclature
   end
 
-  validation :ME7, 'The goods nomenclature code must be a product code; that is, it may not be an intermediate line.', on: [:create, :update] do |record|
+  validation :ME7, 'The goods nomenclature code must be a product code; that is, it may not be an intermediate line.', on: %i[create update] do |record|
     # NOTE wont apply to national invalidates Measures
     # Taric may delete a Goods Code and national measures will be invalid.
     (record.national? && record.invalidated?) ||
-    (record.goods_nomenclature.blank?) ||
-    (record.goods_nomenclature.present? && record.goods_nomenclature.producline_suffix == "80") || (
+      record.goods_nomenclature.blank? ||
+      (record.goods_nomenclature.present? && record.goods_nomenclature.producline_suffix == "80") || (
     record.export_refund_nomenclature.present? && record.export_refund_nomenclature.productline_suffix == "80"
     )
   end
 
   validation :ME8, 'The validity period of the goods code must span the validity period of the measure.',
-      on: [:create, :update] do
+      on: %i[create update] do
     validates :validity_date_span, of: :goods_nomenclature, extend_message: true
   end
 
-  validation :ME9, 'If no additional code is specified then the goods code is mandatory.', on: [:create, :update] do |record|
-    (record.additional_code_id.present?) || (record.additional_code_id.blank? && record.goods_nomenclature_item_id.present?)
+  validation :ME9, 'If no additional code is specified then the goods code is mandatory.', on: %i[create update] do |record|
+    record.additional_code_id.present? || (record.additional_code_id.blank? && record.goods_nomenclature_item_id.present?)
   end
 
-  validation :ME10, 'The order number must be specified if the "order number flag" (specified in the measure type record) has the value "mandatory". If the flag is set to "not permitted" then the field cannot be entered.', on: [:create, :update] do |record|
+  validation :ME10, 'The order number must be specified if the "order number flag" (specified in the measure type record) has the value "mandatory". If the flag is set to "not permitted" then the field cannot be entered.', on: %i[create update] do |record|
     record.measure_type.present? &&
-    ((record.ordernumber.present? && record.measure_type.order_number_capture_code == 1) ||
-    (record.ordernumber.blank? && record.measure_type.order_number_capture_code != 1))
+      ((record.ordernumber.present? && record.measure_type.order_number_capture_code == 1) ||
+      (record.ordernumber.blank? && record.measure_type.order_number_capture_code != 1))
   end
 
   validation :ME12, 'If the additional code is specified then the additional code type must have a relationship with the measure type.',
-    on: [:create, :update],
+    on: %i[create update],
     extend_message: ->(record) { record.measure_sid.present? ? "{ measure_sid=>\"#{record.measure_sid}\" }" : nil } do |record|
     (record.additional_code_type.present? && AdditionalCodeTypeMeasureType.where(additional_code_type_id: record.additional_code_type_id,
                                                                                  measure_type_id: record.measure_type_id).any?) ||
-     record.additional_code_type.blank?
+      record.additional_code_type.blank?
   end
 
-  validation :ME13, 'If the additional code type is related to a Meursing table plan then only the additional code can be specified: no goods code, order number or reduction indicator.', on: [:create, :update] do |record|
+  validation :ME13, 'If the additional code type is related to a Meursing table plan then only the additional code can be specified: no goods code, order number or reduction indicator.', on: %i[create update] do |record|
     (record.additional_code_type.present? &&
      record.additional_code_type.meursing? &&
      record.meursing_additional_code.present? &&
      record.goods_nomenclature_item_id.blank? &&
      record.ordernumber.blank? &&
      record.reduction_indicator.blank?) ||
-     (record.additional_code_type.present? && !record.additional_code_type.meursing?) ||
-     record.additional_code_type.blank?
+      (record.additional_code_type.present? && !record.additional_code_type.meursing?) ||
+      record.additional_code_type.blank?
   end
 
-  validation :ME14, 'If the additional code type is related to a Meursing table plan then the additional code must exist as a Meursing additional code.', on: [:create, :update] do |record|
-     (record.additional_code_type.present? &&
-      record.additional_code_type.meursing? &&
-      record.meursing_additional_code.present?
-     ) || (
-      record.additional_code_type.present? && !record.additional_code_type.meursing?
-     ) || (
-       record.additional_code_type.blank?
-     )
+  validation :ME14, 'If the additional code type is related to a Meursing table plan then the additional code must exist as a Meursing additional code.', on: %i[create update] do |record|
+    (record.additional_code_type.present? &&
+     record.additional_code_type.meursing? &&
+     record.meursing_additional_code.present?
+    ) || (
+     record.additional_code_type.present? && !record.additional_code_type.meursing?
+    ) ||
+      record.additional_code_type.blank?
   end
 
   # FIXME: https://trello.com/c/COQPnHr2/602-dit-tq-128-edit-quota-measures-is-throwing-with-conformance-errors-needs-to-check-if-these-are-valid-me16-and-me119-6
@@ -141,28 +140,28 @@ class MeasureValidator < TradeTariffBackend::Validator
   #   end
 
   validation :ME17, "If the additional code type has as application 'non-Meursing' then the additional code must exist as a non-Meursing additional code.",
-    on: [:create, :update],
-    if: -> (record) { record.additional_code_type.present? && record.additional_code_type.non_meursing? } do |record|
+    on: %i[create update],
+    if: ->(record) { record.additional_code_type.present? && record.additional_code_type.non_meursing? } do |record|
       record.additional_code.present?
     end
 
   validation :ME19,
-    %Q(If the additional code type has as application 'ERN' then the goods code must be specified
+    %(If the additional code type has as application 'ERN' then the goods code must be specified
     but the order number is blocked for input.),
-    on: [:create, :update],
+    on: %i[create update],
     if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code.in?("0") } do |record|
       record.goods_nomenclature_item_id.present? && record.ordernumber.blank?
     end
 
   validation :ME21,
-    %Q(If the additional code type has as application 'ERN' then the combination of goods code + additional code
+    %(If the additional code type has as application 'ERN' then the combination of goods code + additional code
     must exist as an ERN product code and its validity period must span the validity period of the measure),
-    on: [:create, :update],
+    on: %i[create update],
     if: ->(record) {
       record.additional_code_type.present? &&
-      record.additional_code_type.application_code.present? &&
-      record.additional_code_type.application_code.in?("0") &&
-      record.goods_nomenclature_item_id.present? && record.additional_code.present?
+        record.additional_code_type.application_code.present? &&
+        record.additional_code_type.application_code.in?("0") &&
+        record.goods_nomenclature_item_id.present? && record.additional_code.present?
     } do
       validates :validity_date_span, of: :additional_code_type, extend_message: true
     end
@@ -172,26 +171,27 @@ class MeasureValidator < TradeTariffBackend::Validator
   #end
 
   validation :ME25, "If the measure's end date is specified (implicitly or explicitly) then the start date of the measure must be less than or equal to the end date.",
-      on: [:create, :update],
+      on: %i[create update],
       if: ->(record) { (record.national? && !record.invalidated?) || !record.national? } do
         validates :validity_dates
       end
 
   validation :ME26, 'The entered regulation may not be completely abrogated.' do
-    validates :exclusion, of: [:measure_generating_regulation_id,
-                               :measure_generating_regulation_role],
-                          from: -> { CompleteAbrogationRegulation.select(:complete_abrogation_regulation_id,
+    validates :exclusion, of: %i[measure_generating_regulation_id
+                                 measure_generating_regulation_role],
+                          from: -> {
+                                  CompleteAbrogationRegulation.select(:complete_abrogation_regulation_id,
                                                                          :complete_abrogation_regulation_role)
-                                   }
+                                }
   end
 
-  validation :ME27, 'The entered regulation may not be fully replaced.', on: [:create, :update] do |record|
+  validation :ME27, 'The entered regulation may not be fully replaced.', on: %i[create update] do |record|
     record.generating_regulation.present? && !record.generating_regulation.fully_replaced?
   end
 
-  validation :ME29, 'If the entered regulation is a modification regulation then its base regulation may not be completely abrogated.', on: [:create, :update] do |record|
+  validation :ME29, 'If the entered regulation is a modification regulation then its base regulation may not be completely abrogated.', on: %i[create update] do |record|
     (record.generating_regulation.is_a?(ModificationRegulation) && record.modification_regulation.base_regulation.not_completely_abrogated?) ||
-    (!record.generating_regulation.is_a?(ModificationRegulation))
+      !record.generating_regulation.is_a?(ModificationRegulation)
   end
 
   validation :ME32,
@@ -199,23 +199,23 @@ class MeasureValidator < TradeTariffBackend::Validator
      same nomenclature hierarchy which references the same measure type, geo area, order number,
      additional code and reduction indicator. This rule is not applicable for Meursing additional
      codes.),
-     on: [:create, :update],
+     on: %i[create update],
      extend_message: ->(record) { record.measure_sid.present? ? "{ measure_sid=>\"#{record.measure_sid}\" }" : nil },
      if: ->(record) { record.additional_code.present? && record.additional_code_type.present? && record.additional_code_type.non_meursing? } do |record|
        record.duplicates_by_attributes.count.zero?
      end
 
-  validation [:ME33, :ME34], %q{A justification regulation may not be entered if the measure end date is not filled in
-                                A justification regulation must be entered if the measure end date is filled in.}, on: [:create, :update] do |record|
-     (record[:validity_end_date].blank? &&
-      record.justification_regulation_id.blank? &&
-      record.justification_regulation_role.blank?) ||
-     (record[:validity_end_date].present? &&
-      record.justification_regulation_id.present? &&
-      record.justification_regulation_role.present?)
+  validation [:ME33, :ME34], 'A justification regulation may not be entered if the measure end date is not filled in
+                                A justification regulation must be entered if the measure end date is filled in.', on: %i[create update] do |record|
+    (record[:validity_end_date].blank? &&
+     record.justification_regulation_id.blank? &&
+     record.justification_regulation_role.blank?) ||
+      (record[:validity_end_date].present? &&
+       record.justification_regulation_id.present? &&
+       record.justification_regulation_role.present?)
   end
 
-  validation :ME39, "The validity period of the measure must span the validity period of all related partial temporary stop (PTS) records.", on: [:create, :update] do
+  validation :ME39, "The validity period of the measure must span the validity period of all related partial temporary stop (PTS) records.", on: %i[create update] do
     validates :validity_date_span, of: :measure_partial_temporary_stops
   end
 
@@ -242,7 +242,7 @@ class MeasureValidator < TradeTariffBackend::Validator
   #     valid
   #   end
 
-  validation :ME86, 'The role of the entered regulation must be a Base, a Modification, a Provisional Anti-Dumping, a Definitive Anti-Dumping.', on: [:create, :update] do
+  validation :ME86, 'The role of the entered regulation must be a Base, a Modification, a Provisional Anti-Dumping, a Definitive Anti-Dumping.', on: %i[create update] do
     validates :inclusion, of: :measure_generating_regulation_role, in: Measure::VALID_ROLE_TYPE_IDS
   end
 
@@ -270,21 +270,21 @@ class MeasureValidator < TradeTariffBackend::Validator
   #   valid
   # end
 
-  validation :ME88, 'The level of the goods code, if present, cannot exceed the explosion level of the measure type.', on: [:create, :update] do |record|
+  validation :ME88, 'The level of the goods code, if present, cannot exceed the explosion level of the measure type.', on: %i[create update] do |record|
     # NOTE wont apply to national invalidates Measures
     # Taric may delete a Goods Code and national measures will be invalid.
     # TODO is not applicable for goods indent numbers above 10?
     (record.national? && record.invalidated?) ||
-    (record.goods_nomenclature.blank? && record.export_refund_nomenclature.blank?) ||
-    (record.measure_type.present? &&
-    (record.goods_nomenclature.present? &&
-     record.goods_nomenclature.number_indents.present? &&
-     (record.goods_nomenclature.number_indents > 10 ||
-     record.goods_nomenclature.number_indents <= record.measure_type.measure_explosion_level)) ||
-     (record.export_refund_nomenclature.present? &&
-      record.export_refund_nomenclature.number_indents.present? &&
-      (record.export_refund_nomenclature.number_indents > 10 ||
-       record.export_refund_nomenclature.number_indents <= (record.measure_type.measure_explosion_level))))
+      (record.goods_nomenclature.blank? && record.export_refund_nomenclature.blank?) ||
+      (record.measure_type.present? &&
+      (record.goods_nomenclature.present? &&
+       record.goods_nomenclature.number_indents.present? &&
+       (record.goods_nomenclature.number_indents > 10 ||
+       record.goods_nomenclature.number_indents <= record.measure_type.measure_explosion_level)) ||
+       (record.export_refund_nomenclature.present? &&
+        record.export_refund_nomenclature.number_indents.present? &&
+        (record.export_refund_nomenclature.number_indents > 10 ||
+         record.export_refund_nomenclature.number_indents <= record.measure_type.measure_explosion_level)))
   end
 
   validation :ME104,
@@ -296,7 +296,7 @@ class MeasureValidator < TradeTariffBackend::Validator
     valid = true
 
     justification_regulation_present = record.justification_regulation_id.present? &&
-                                       record.justification_regulation.present?
+      record.justification_regulation.present?
 
     if justification_regulation_present
       # CASE 1:
@@ -304,7 +304,7 @@ class MeasureValidator < TradeTariffBackend::Validator
       # The justification regulation must be either the measure’s measure-generating regulation
       #
       valid = record.justification_regulation_id == record.measure_generating_regulation_id &&
-              record.justification_regulation_role == record.measure_generating_regulation_role
+        record.justification_regulation_role == record.measure_generating_regulation_role
     end
 
     # puts ""
@@ -318,16 +318,16 @@ class MeasureValidator < TradeTariffBackend::Validator
 
     unless valid
       if record.measure_generating_regulation_id.present?
-        if record.generating_regulation.validity_end_date.present? &&
+        valid = if record.generating_regulation.validity_end_date.present? &&
             record.validity_end_date.present?
 
           # puts ""
           # puts "CASE 2-1"
           # puts ""
 
-          valid = record.generating_regulation.validity_end_date > record.validity_end_date
+                  record.generating_regulation.validity_end_date > record.validity_end_date
 
-        else
+                else
           # puts ""
           # puts "CASE 2-2"
           # puts ""
@@ -337,11 +337,11 @@ class MeasureValidator < TradeTariffBackend::Validator
           # puts ""
 
           # This means measure is valid record as its validity end date is `nil`
-          valid = (
-            record.validity_end_date.blank? &&
-            record.generating_regulation.validity_end_date.blank?
-          )
-        end
+                  (
+                    record.validity_end_date.blank? &&
+                    record.generating_regulation.validity_end_date.blank?
+                  )
+                end
       end
     end
 
@@ -374,30 +374,30 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME112, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the measure does not require a goods code.",
-    on: [:create, :update],
+    on: %i[create update],
     if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code.in?("4") } do |record|
       record.goods_nomenclature_item_id.blank?
     end
 
   validation :ME113, "If the additional code type has as application 'Export Refund for Processed Agricultural Goods' then the additional code must exist as an Export Refund for Processed Agricultural Goods additional code.",
-    on: [:create, :update],
+    on: %i[create update],
     if: ->(record) { record.additional_code_type.present? && record.additional_code_type.application_code == "4" } do |record|
       record.additional_code.present? &&
-      AdditionalCodeType.export_refund_for_processed_agricultural_goods_type_ids.include?(
-        record.additional_code.additional_code_type_id
-      )
+        AdditionalCodeType.export_refund_for_processed_agricultural_goods_type_ids.include?(
+          record.additional_code.additional_code_type_id
+        )
     end
 
-  validation :ME115, 'The validity period of the referenced additional code must span the validity period of the measure', on: [:create, :update] do
+  validation :ME115, 'The validity period of the referenced additional code must span the validity period of the measure', on: %i[create update] do
     validates :validity_date_span, of: :additional_code, extend_message: true
   end
 
   validation :ME116, 'When a quota order number is used in a measure then the validity period of the quota order number must span the validity period of the measure.  This rule is only applicable for measures with start date after 31/12/2007.',
-    on: [:create, :update],
+    on: %i[create update],
     if: ->(record) {
       record.validity_start_date.present? &&
-      record.validity_start_date > Date.new(2007,12,31) &&
-      record.order_number.present? && record.ordernumber =~ /^09[012356789]/
+        record.validity_start_date > Date.new(2007, 12, 31) &&
+        record.order_number.present? && record.ordernumber =~ /^09[012356789]/
     } do
       # Only quota order numbers managed by the first come first served principle are in scope; these order number are starting with '09'; except order numbers starting with '094'
       validates :validity_date_span, of: :order_number, extend_message: true
@@ -428,16 +428,16 @@ class MeasureValidator < TradeTariffBackend::Validator
      span the validity period of the measure. This rule is only applicable for measures with start date after
      31/12/2007. Only quota order numbers managed by the first come first served principle are in scope;
      these order number are starting with '09'; except order numbers starting with '094'),
-    on: [:create, :update],
+    on: %i[create update],
     if: ->(record) {
-      (record.validity_start_date > Date.new(2007,12,31)) &&
-      (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
-      (record.ordernumber[0,2] == "09" && record.ordernumber[0,3] != "094")
+      (record.validity_start_date > Date.new(2007, 12, 31)) &&
+        (record.order_number.present? && record.ordernumber =~ /^09[012356789]/) &&
+        (record.ordernumber[0, 2] == "09" && record.ordernumber[0, 3] != "094")
     } do
-      validates :validity_date_span, of: :order_number, extend_message: true
+    validates :validity_date_span, of: :order_number, extend_message: true
   end
 
-  # FIXME: https://trello.com/c/COQPnHr2/602-dit-tq-128-edit-quota-measures-is-throwing-with-conformance-errors-needs-to-check-if-these-are-valid-me16-and-me119-6 
+  # FIXME: https://trello.com/c/COQPnHr2/602-dit-tq-128-edit-quota-measures-is-throwing-with-conformance-errors-needs-to-check-if-these-are-valid-me16-and-me119-6
   # validation :ME119,
   #   %(When a quota order number is used in a measure then the validity period of the quota order number origin must
   #    span the validity period of the measure. This rule is only applicable for measures with start date after

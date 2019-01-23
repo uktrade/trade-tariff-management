@@ -1,6 +1,5 @@
 module Workbaskets
   class BulkEditOfAdditionalCodesSettings < Sequel::Model(:bulk_edit_of_additional_codes_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -18,8 +17,8 @@ module Workbaskets
 
     def set_workbasket_system_data!
       workbasket.update(
-          title: main_step_settings['title'],
-          operation_date: main_step_settings['start_date'].try(:to_date) || Date.today
+        title: main_step_settings['title'],
+        operation_date: main_step_settings['start_date'].try(:to_date) || Date.today
       )
     end
 
@@ -39,6 +38,5 @@ module Workbaskets
         i.record_id.to_s == target_id
       end
     end
-
   end
 end

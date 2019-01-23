@@ -24,7 +24,7 @@ class TaricImporter
       end
     end
 
-    private
+  private
 
     def verify_transaction
       if @transaction['transaction_id'].blank?

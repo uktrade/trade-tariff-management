@@ -57,14 +57,14 @@ describe MeasureComponent do
     }
 
     # ME43: The same duty expression can only be used once with the same measure.
-    it { should validate_uniqueness.of [:measure_sid, :duty_expression_id] }
+    it { is_expected.to validate_uniqueness.of %i[measure_sid duty_expression_id] }
 
     it "valid" do
       expect(measure_component).to be_conformant
     end
 
     describe "ME41" do
-      let!(:duty_expression)   do
+      let!(:duty_expression) do
         create(
           :duty_expression,
           duty_expression_id: duty_expression_id,
@@ -74,15 +74,15 @@ describe MeasureComponent do
         )
       end
 
-      it "should pass validation" do
+      it "passes validation" do
         expect(measure_component).to be_conformant
         expect(measure_component.conformance_errors).to be_empty
       end
 
-      it "should not pass validation" do
+      it "does not pass validation" do
         measure_component = build(:measure_component, duty_expression_id: "987")
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME41)
       end
     end
@@ -92,7 +92,7 @@ describe MeasureComponent do
       measure.validity_end_date = Date.today.ago(4.years)
       measure.save
 
-      expect(measure_component).to_not be_conformant
+      expect(measure_component).not_to be_conformant
       expect(measure_component.conformance_errors).to have_key(:ME42)
     end
 
@@ -102,7 +102,7 @@ describe MeasureComponent do
         measure_component.save
 
         expect(duty_expression.duty_amount_applicability_code).to eq(1)
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME45)
       end
 
@@ -113,7 +113,7 @@ describe MeasureComponent do
         measure_component.duty_amount = 3.0
         measure_component.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME45)
       end
     end
@@ -126,7 +126,7 @@ describe MeasureComponent do
         measure_component.monetary_unit_code = nil
         measure_component.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME46)
       end
 
@@ -137,7 +137,7 @@ describe MeasureComponent do
         measure_component.monetary_unit_code = 'BGN'
         measure_component.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME46)
       end
     end
@@ -150,7 +150,7 @@ describe MeasureComponent do
         measure_component.measurement_unit_code = nil
         measure_component.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME47)
       end
 
@@ -161,83 +161,83 @@ describe MeasureComponent do
         measure_component.measurement_unit_code = 'TNE'
         measure_component.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME47)
       end
     end
 
     describe "ME48: The referenced monetary unit must exist." do
-      it "should pass validation" do
+      it "passes validation" do
         expect(measure_component).to be_conformant
         expect(measure_component.conformance_errors).to be_empty
       end
 
-      it "should not pass validation" do
+      it "does not pass validation" do
         measure_component = build(:measure_component, monetary_unit_code: "wrong_code")
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME48)
       end
     end
 
     describe "ME49: The validity period of the referenced monetary unit must span the validity period of the measure." do
-      it "should un validation successfully" do
+      it "uns validation successfully" do
         expect(measure_component).to be_conformant
       end
 
-      it "should not run validation successfully" do
+      it "does not run validation successfully" do
         monetary_unit = measure_component.monetary_unit
         monetary_unit.validity_start_date = Date.today.ago(5.years)
         monetary_unit.validity_end_date = Date.today.ago(4.years)
         monetary_unit.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME49)
       end
     end
 
     describe "ME50: The combination measurement unit + measurement unit qualifier must exist." do
-      it "should run validation successfully" do
+      it "runs validation successfully" do
         expect(measure_component).to be_conformant
       end
 
-      it "should not run validation successfully" do
+      it "does not run validation successfully" do
         measure_component.measurement_unit_code = "0"
         measure_component.measurement_unit_qualifier_code = "0"
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME50)
       end
     end
 
     describe "ME51: The validity period of the measurement unit must span the validity period of the measure." do
-      it "should un validation successfully" do
+      it "uns validation successfully" do
         expect(measure_component).to be_conformant
       end
 
-      it "should not run validation successfully" do
+      it "does not run validation successfully" do
         measurement_unit = measure_component.measurement_unit
         measurement_unit.validity_start_date = Date.today.ago(5.years)
         measurement_unit.validity_end_date = Date.today.ago(4.years)
         measurement_unit.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME51)
       end
     end
 
     describe "ME52: The validity period of the measurement unit qualifier must span the validity period of the measure." do
-      it "should un validation successfully" do
+      it "uns validation successfully" do
         expect(measure_component).to be_conformant
       end
 
-      it "should not run validation successfully" do
+      it "does not run validation successfully" do
         measurement_unit_qualifier = measure_component.measurement_unit_qualifier
         measurement_unit_qualifier.validity_start_date = Date.today.ago(5.years)
         measurement_unit_qualifier.validity_end_date = Date.today.ago(4.years)
         measurement_unit_qualifier.save
 
-        expect(measure_component).to_not be_conformant
+        expect(measure_component).not_to be_conformant
         expect(measure_component.conformance_errors).to have_key(:ME52)
       end
     end

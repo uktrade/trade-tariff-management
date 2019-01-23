@@ -1,6 +1,5 @@
 module DbMigrationHelpers
   class XmlExportViewRePopulator
-
     MODELS_TO_UPDATE = [
       GeographicalArea,
       GeographicalAreaDescription,
@@ -92,7 +91,7 @@ module DbMigrationHelpers
       LanguageDescription,
       TransmissionComment,
       PublicationSigle
-    ]
+    ].freeze
 
     class << self
       def new_view_definition(model)
@@ -122,10 +121,10 @@ module DbMigrationHelpers
       def add_workbasket_attrs(model, first_part)
         new_columns_definition = ", "
 
-        new_columns_definition += [
-          :status,
-          :workbasket_id,
-          :workbasket_sequence_number
+        new_columns_definition += %i[
+          status
+          workbasket_id
+          workbasket_sequence_number
         ].map do |field_name|
           "#{viewname(model)}1.#{field_name}"
         end.join(",\n ")

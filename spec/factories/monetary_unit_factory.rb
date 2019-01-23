@@ -5,13 +5,13 @@ FactoryGirl.define do
     validity_end_date   { nil }
 
     trait :with_description do
-      after(:create) { |monetary_unit, evaluator|
+      after(:create) { |monetary_unit, _evaluator|
         FactoryGirl.create :monetary_unit_description, monetary_unit_code: monetary_unit.monetary_unit_code
       }
     end
 
     trait :xml do
-      validity_end_date   { Date.today.ago(1.years) }
+      validity_end_date { Date.today.ago(1.years) }
     end
   end
 
@@ -20,7 +20,7 @@ FactoryGirl.define do
     description        { Forgery(:basic).text }
 
     trait :xml do
-      language_id      { "EN" }
+      language_id { "EN" }
     end
   end
 
@@ -31,7 +31,7 @@ FactoryGirl.define do
     validity_end_date             { nil }
 
     trait :xml do
-      validity_end_date           { Date.today.ago(1.years) }
+      validity_end_date { Date.today.ago(1.years) }
     end
   end
 

@@ -1,11 +1,10 @@
 module AdditionalCodeService
   class FetchAdditionalCodeSids
-
     attr_accessor :search_code,
                   :selection_type,
                   :additional_code_sids
 
-    def initialize(params={})
+    def initialize(params = {})
       @search_code = params[:search_code].gsub(
         "_SAD_", ::AdditionalCodeService::TrackAdditionalCodeSids::CACHE_KEY_SEPARATOR
       )
@@ -30,10 +29,10 @@ module AdditionalCodeService
       end
     end
 
-    private
+  private
 
-      def all_additional_code_sids
-        Rails.cache.read(search_code)
-      end
+    def all_additional_code_sids
+      Rails.cache.read(search_code)
+    end
   end
 end

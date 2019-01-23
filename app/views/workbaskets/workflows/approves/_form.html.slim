@@ -25,5 +25,5 @@ script
               = content_tag "approve-decision", "", { kind: "reject", ":approve" => "types.reject" }
 
   = render "workbaskets/shared/success_message", f: f
-  = render "workbaskets/approves/action_links", f: f
+  = render "workbaskets/workflows/approves/action_links", f: f
   = render "shared/vue_templates/approve_decision"

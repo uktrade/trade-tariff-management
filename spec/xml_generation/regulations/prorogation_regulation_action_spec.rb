@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "ProrogationRegulationAction XML generation" do
-
   let(:db_record) do
     create(:prorogation_regulation_action)
   end
@@ -11,12 +10,12 @@ describe "ProrogationRegulationAction XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :prorogation_regulation_role,
-      :prorogation_regulation_id,
-      :prorogated_regulation_role,
-      :prorogated_regulation_id,
-      :prorogated_date
+    %i[
+      prorogation_regulation_role
+      prorogation_regulation_id
+      prorogated_regulation_role
+      prorogated_regulation_id
+      prorogated_date
     ]
   end
 

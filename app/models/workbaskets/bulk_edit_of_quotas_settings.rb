@@ -1,6 +1,5 @@
 module Workbaskets
   class BulkEditOfQuotasSettings < Sequel::Model(:bulk_edit_of_quotas_settings)
-
     include ::WorkbasketHelpers::SettingsBase
 
     def collection_models
@@ -68,9 +67,7 @@ module Workbaskets
     end
 
     def ordered_quota_periods
-      quota_periods.sort do |a, b|
-        a.validity_start_date <=> b.validity_start_date
-      end
+      quota_periods.sort_by(&:validity_start_date)
     end
 
     def earliest_period_date
@@ -90,8 +87,8 @@ module Workbaskets
 
     def set_workbasket_system_data!
       workbasket.update(
-          title: configure_step_settings['title'],
-          operation_date: configure_step_settings['start_date'].try(:to_date)
+        title: configure_step_settings['title'],
+        operation_date: configure_step_settings['start_date'].try(:to_date)
       )
     end
 
@@ -132,9 +129,8 @@ module Workbaskets
       workbasket.items.detect do |i|
         target_id.in?([i.record_id.to_s, i.row_id])
       end || ::Workbaskets::Item.new_from_empty_record(
-          workbasket, Measure.new, target_id
+        workbasket, Measure.new, target_id
       )
     end
-
   end
 end

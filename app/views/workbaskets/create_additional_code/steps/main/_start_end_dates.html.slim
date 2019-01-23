@@ -1,6 +1,7 @@
 fieldset
   h3.heading-medium
-    | When are these new codes valid from?
+    label for="additional_code_valid_from"
+      | When are these new codes valid from?
 
   form-group :errors="errors" error-key="validity_start_date"
     template slot-scope="slotProps"
@@ -8,11 +9,12 @@ fieldset
         | {{slotProps.error}}
       .bootstrap-row
         .col-md-6
-          = content_tag "date-select", "", ":value.sync" => "validity_start_date"
+          = content_tag "date-select", "", id: "additional_code_valid_from", ":value.sync" => "validity_start_date"
 
 fieldset
   h3.heading-medium
-    | When are these new codes valid until?
+    label for="additional_code_valid_until"
+      | When are these new codes valid until?
 
   form-group :errors="errors" error-key="validity_end_date"
     template slot-scope="slotProps"
@@ -24,4 +26,4 @@ fieldset
 
       .row
         .col-md-6
-          = content_tag "date-select", "", ":value.sync" => "validity_end_date"
+          = content_tag "date-select", "", id: "additional_code_valid_until", ":value.sync" => "validity_end_date"

@@ -1,5 +1,4 @@
 class Language < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :oplog, primary_key: :language_id

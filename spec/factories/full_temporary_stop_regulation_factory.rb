@@ -7,11 +7,11 @@ FactoryGirl.define do
     effective_enddate                     { nil }
 
     trait :xml do
-      officialjournal_number              "L 120"
-      officialjournal_page                13
-      replacement_indicator               0
-      information_text                    "TR"
-      approved_flag                       true
+      officialjournal_number              { "L 120" }
+      officialjournal_page                { 13 }
+      replacement_indicator               { 0 }
+      information_text                    { "TR" }
+      approved_flag                       { true }
 
       explicit_abrogation_regulation_role { Forgery(:basic).number }
       explicit_abrogation_regulation_id   { Forgery(:basic).text(exactly: 8) }

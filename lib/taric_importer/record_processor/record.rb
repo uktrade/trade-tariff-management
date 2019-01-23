@@ -9,7 +9,7 @@ require 'taric_importer/record_processor/attribute_mutator'
 #    end
 #  end
 
-Dir[File.join(Rails.root, 'lib', 'taric_importer', 'record_processor', 'attribute_mutator_overrides', '*.rb')].each {|file|
+Dir[File.join(Rails.root, 'lib', 'taric_importer', 'record_processor', 'attribute_mutator_overrides', '*.rb')].each { |file|
   require file
 }
 
@@ -42,11 +42,11 @@ class TaricImporter
         @attributes = default_attributes.merge(attrs)
       end
 
-      private
+    private
 
       def default_attributes
         klass.columns.reduce({}) do |memo, column_name|
-          memo.merge!({column_name.to_s => nil})
+          memo.merge!(column_name.to_s => nil)
         end
       end
 

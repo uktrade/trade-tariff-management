@@ -19,7 +19,7 @@ class ChiefTransformer
   class TransformException < StandardError
     attr_reader :original
 
-    def initialize(msg = "ChiefTransformer::TransformException", original=$!)
+    def initialize(msg = "ChiefTransformer::TransformException", original = $!)
       super(msg)
       @original = original
     end
@@ -33,7 +33,7 @@ class ChiefTransformer
   # Use initial_load mode to process initial CHIEF load. It performs
   # pagination and does not process TAMEs and TAMFs separately from MFCMs.
   cattr_accessor :work_modes
-  self.work_modes = [:update, :initial_load]
+  self.work_modes = %i[update initial_load]
 
   # Number of MFCM entries to process per page. Can't be too high due to
   # memory constraints. Only applicable to initial_load mode.

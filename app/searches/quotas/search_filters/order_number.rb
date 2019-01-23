@@ -1,11 +1,10 @@
 module Quotas
   module SearchFilters
     class OrderNumber
-
       attr_accessor :operator,
                     :order_number
 
-      def initialize(operator, order_number=nil)
+      def initialize(operator, order_number = nil)
         @operator = operator
         @order_number = order_number.to_s.strip
       end
@@ -16,19 +15,19 @@ module Quotas
         clause
       end
 
-      private
+    private
 
       def clause
         case operator
-          when "is"
+        when "is"
 
-            [ is_clause, value ]
-          when "starts_with"
+          [is_clause, value]
+        when "starts_with"
 
-            [ like_clause, value ]
-          when "contains"
+          [like_clause, value]
+        when "contains"
 
-            [ like_clause, value ]
+          [like_clause, value]
         end
       end
 
@@ -53,7 +52,6 @@ module Quotas
             quota_definitions.quota_order_number_id ilike ?
         eos
       end
-
     end
   end
 end

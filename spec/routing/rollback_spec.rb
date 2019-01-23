@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "db/rollbacks routing" do
   before { reload_routes(production) }
+
   after { reload_routes(false) }
 
   context "in a non-production environment" do

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "CertificateTypeDescription XML generation" do
-
   let(:db_record) do
     create(:certificate_type_description, :xml)
   end
@@ -11,10 +10,10 @@ describe "CertificateTypeDescription XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :certificate_type_code,
-      :language_id,
-      :description
+    %i[
+      certificate_type_code
+      language_id
+      description
     ]
   end
 

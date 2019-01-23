@@ -1,10 +1,9 @@
 require "rails_helper"
 
 describe "Regulations search: Start and end date filter" do
-
   include_context "regulations_search_base_context"
 
-  it "should filter" do
+  it "filters" do
     results = search_results(
       start_date: date_to_format(1.year.ago),
       end_date: date_to_format(5.days.from_now)

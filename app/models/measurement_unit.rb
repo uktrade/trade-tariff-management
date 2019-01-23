@@ -1,5 +1,4 @@
 class MeasurementUnit < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include OwnValidityPeriod
 
@@ -12,6 +11,8 @@ class MeasurementUnit < Sequel::Model
   one_to_one :measurement_unit_description, primary_key: :measurement_unit_code,
                                             key: :measurement_unit_code
 
+  one_to_many :measurement_unit_abbreviations, key: :measurement_unit_code
+
   delegate :description, to: :measurement_unit_description
 
   dataset_module do
@@ -23,12 +24,10 @@ class MeasurementUnit < Sequel::Model
 
         scope = scope.join_table(:inner,
           :measurement_unit_descriptions,
-          measurement_unit_code: :measurement_unit_code,
-        ).where("
+          measurement_unit_code: :measurement_unit_code,).where("
           measurement_units.measurement_unit_code ilike ? OR
           measurement_unit_descriptions.description ilike ?",
-          q_rule, q_rule
-        )
+          q_rule, q_rule)
       end
 
       scope.order(Sequel.asc(:measurement_units__measurement_unit_code))
@@ -39,18 +38,16 @@ class MeasurementUnit < Sequel::Model
     description
   end
 
-  def abbreviation(options={})
-    measurement_unit_abbreviation(options).abbreviation
-  rescue Sequel::RecordNotFound
-    description
+  def abbreviation(options = {})
+    measurement_unit_abbreviation(options).try(:abbreviation) || description
   end
 
-  def measurement_unit_abbreviation(options={})
-    measurement_unit_qualifier = options[:measurement_unit_qualifier]
-    MeasurementUnitAbbreviation.where(
-      measurement_unit_code: measurement_unit_code,
-      measurement_unit_qualifier: measurement_unit_qualifier.try(:measurement_unit_qualifier_code)
-    ).take
+  def measurement_unit_abbreviation(options = {})
+    measurement_unit_qualifier = options[:measurement_unit_qualifier].try(:measurement_unit_qualifier_code)
+
+    return measurement_unit_abbreviations.first unless measurement_unit_qualifier
+
+    measurement_unit_abbreviations.select { |a| a.measurement_unit_qualifier == measurement_unit_qualifier }.first
   end
 
   def record_code
@@ -69,7 +66,7 @@ class MeasurementUnit < Sequel::Model
     }
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     json_mapping
   end
 end

@@ -2,20 +2,20 @@ require 'rails_helper'
 
 describe TaricImporter::RecordProcessor::Record do
   let(:record_hash) {
-    {"transaction_id"=>"31946",
-     "record_code"=>"130",
-     "subrecord_code"=>"05",
-     "record_sequence_number"=>"1",
-     "update_type"=>"3",
-     "language_description"=>
-      {"language_code_id"=>"FR",
-       "language_id"=>"EN",
-       "description"=>"French"}}
+    { "transaction_id" => "31946",
+     "record_code" => "130",
+     "subrecord_code" => "05",
+     "record_sequence_number" => "1",
+     "update_type" => "3",
+     "language_description" =>
+      { "language_code_id" => "FR",
+       "language_id" => "EN",
+       "description" => "French" } }
   }
 
   describe 'initialization' do
     let(:record) {
-      TaricImporter::RecordProcessor::Record.new(record_hash)
+      described_class.new(record_hash)
     }
 
     it 'assigns transaction id' do
@@ -33,13 +33,13 @@ describe TaricImporter::RecordProcessor::Record do
     it 'assigns sanitized attributes' do
       expect(
         reject_workbasket_attributes(record.attributes)
-      ).to eq({"language_code_id"=>"FR", "language_id"=>"EN", "description"=>"French"})
+      ).to eq("language_code_id" => "FR", "language_id" => "EN", "description" => "French")
     end
   end
 
   describe '#attributes=' do
     let(:record) {
-      TaricImporter::RecordProcessor::Record.new(record_hash)
+      described_class.new(record_hash)
     }
 
     context 'no mutations' do
@@ -48,7 +48,7 @@ describe TaricImporter::RecordProcessor::Record do
 
         expect(
           reject_workbasket_attributes(record.attributes)
-        ).to eq({"language_code_id"=>nil, "language_id"=>nil, "description"=>nil, "foo"=>"bar"})
+        ).to eq("language_code_id" => nil, "language_id" => nil, "description" => nil, "foo" => "bar")
       end
     end
 
@@ -72,18 +72,18 @@ describe TaricImporter::RecordProcessor::Record do
 
         expect(
           reject_workbasket_attributes(record.attributes)
-        ).to eq({"language_code_id"=>nil, "language_id"=>nil, "description"=>nil, "foo_id"=>"bar"})
+        ).to eq("language_code_id" => nil, "language_id" => nil, "description" => nil, "foo_id" => "bar")
       end
     end
   end
 
   def reject_workbasket_attributes(attributes)
-    attributes.reject do |k, v|
+    attributes.reject do |k, _v|
       k.to_sym.in?(
-        [
-          :status,
-          :workbasket_id,
-          :workbasket_sequence_number
+        %i[
+          status
+          workbasket_id
+          workbasket_sequence_number
         ]
       )
     end

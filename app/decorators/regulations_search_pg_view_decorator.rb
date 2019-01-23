@@ -1,5 +1,4 @@
 class RegulationsSearchPgViewDecorator < ApplicationDecorator
-
   def regulation_type
     return "Full Temporary Stop" if object.role.to_s == "8"
 
@@ -29,5 +28,3 @@ class RegulationsSearchPgViewDecorator < ApplicationDecorator
     date_format(object.published_date)
   end
 end
-
-

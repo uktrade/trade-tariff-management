@@ -9,7 +9,7 @@ class DutyExpressionFormatter
       )
     end
 
-    def format(opts={})
+    def format(opts = {})
       duty_expression_id = opts[:duty_expression_id]
       duty_expression_description = opts[:duty_expression_description]
       duty_expression_abbreviation = opts[:duty_expression_abbreviation]
@@ -23,11 +23,11 @@ class DutyExpressionFormatter
       output = []
       case duty_expression_id
       when "99"
-        if opts[:formatted]
-          output << "<abbr title='#{measurement_unit.description}'>#{measurement_unit_abbreviation}</abbr>"
-        else
-          output << "#{measurement_unit_abbreviation}"
-        end
+        output << if opts[:formatted]
+                    "<abbr title='#{measurement_unit.description}'>#{measurement_unit_abbreviation}</abbr>"
+                  else
+                    measurement_unit_abbreviation.to_s
+                  end
       when "12", "14", "37", "40", "41", "42", "43", "44", "21", "25", "27", "29"
         if duty_expression_abbreviation.present?
           output << duty_expression_abbreviation
@@ -43,17 +43,17 @@ class DutyExpressionFormatter
         if duty_amount.present?
           output << prettify(duty_amount).to_s
         end
-        if monetary_unit.present?
-          output << monetary_unit
-        else
-          output << "%"
-        end
+        output << if monetary_unit.present?
+                    monetary_unit
+                  else
+                    "%"
+                  end
         if measurement_unit_abbreviation.present?
-          if opts[:formatted]
-            output << "/ <abbr title='#{measurement_unit.description}'>#{measurement_unit_abbreviation}</abbr>"
-          else
-            output << "/ #{measurement_unit_abbreviation}"
-          end
+          output << if opts[:formatted]
+                      "/ <abbr title='#{measurement_unit.description}'>#{measurement_unit_abbreviation}</abbr>"
+                    else
+                      "/ #{measurement_unit_abbreviation}"
+                    end
         end
       else
         if duty_amount.present?
@@ -70,11 +70,11 @@ class DutyExpressionFormatter
           output << monetary_unit
         end
         if measurement_unit_abbreviation.present?
-          if opts[:formatted]
-            output << "/ <abbr title='#{measurement_unit.description}'>#{measurement_unit_abbreviation}</abbr>"
-          else
-            output << "/ #{measurement_unit_abbreviation}"
-          end
+          output << if opts[:formatted]
+                      "/ <abbr title='#{measurement_unit.description}'>#{measurement_unit_abbreviation}</abbr>"
+                    else
+                      "/ #{measurement_unit_abbreviation}"
+                    end
         end
       end
       output.join(" ").html_safe

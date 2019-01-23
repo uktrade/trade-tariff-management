@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Measure XML generation" do
-
   let(:db_record) do
     create(:measure, :xml)
   end

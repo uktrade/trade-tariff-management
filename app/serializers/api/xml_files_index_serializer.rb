@@ -1,6 +1,6 @@
 module Api
   module XmlFilesIndexSerializer
-    module_function
+  module_function
 
     def call(files)
       files.map do |file|

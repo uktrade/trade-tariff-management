@@ -1,12 +1,11 @@
 class MeasureExcludedGeographicalArea < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
 
-  plugin :oplog, primary_key: [:measure_sid, :geographical_area_sid]
+  plugin :oplog, primary_key: %i[measure_sid geographical_area_sid]
   plugin :conformance_validator
 
-  set_primary_key [:measure_sid, :geographical_area_sid]
+  set_primary_key %i[measure_sid geographical_area_sid]
 
   one_to_one :measure, key: :measure_sid,
                        primary_key: :measure_sid
@@ -22,7 +21,7 @@ class MeasureExcludedGeographicalArea < Sequel::Model
     "15".freeze
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       geographical_area: geographical_area.to_json
     }
@@ -35,5 +34,4 @@ class MeasureExcludedGeographicalArea < Sequel::Model
   def validity_end_date
     geographical_area.membership_validity_end_date
   end
-
 end

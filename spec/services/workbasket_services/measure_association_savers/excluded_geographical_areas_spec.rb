@@ -5,21 +5,21 @@ RSpec.describe WorkbasketServices::MeasureAssociationSavers::ExcludedGeographica
     it "doesn't insert an extra oplog row for existing measures" do
       measure = create(:measure)
       geographical_area = create(:geographical_area)
-      record_ops = { excluded_geographical_area: geographical_area.id}
+      record_ops = { excluded_geographical_area: geographical_area.id }
       saver = described_class.new(measure, {}, record_ops)
 
       expect { saver.valid? }.
-        to_not change{ oplog_count_for_measure(measure) }.from(1)
+        not_to change { oplog_count_for_measure(measure) }.from(1)
     end
 
     it "persists a new measure for reference integrity" do
       measure = build(:measure)
       excluded_geographical_area = create(:geographical_area)
-      record_ops = { excluded_geographical_area: excluded_geographical_area.id}
+      record_ops = { excluded_geographical_area: excluded_geographical_area.id }
       saver = described_class.new(measure, {}, record_ops)
 
       expect { saver.valid? }.
-        to change{ oplog_count_for_measure(measure) }.from(0).to(1)
+        to change { oplog_count_for_measure(measure) }.from(0).to(1)
 
       expect(measure.exists?).to be true
     end

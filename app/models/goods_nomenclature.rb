@@ -25,7 +25,7 @@ class GoodsNomenclature < Sequel::Model
 
     if gono_id.ends_with?('00000000')
       'Chapter'
-    elsif gono_id.ends_with?('000000') && gono_id.slice(2,2) != '00'
+    elsif gono_id.ends_with?('000000') && gono_id.slice(2, 2) != '00'
       'Heading'
     elsif !gono_id.ends_with?('000000')
       'Commodity'
@@ -36,7 +36,7 @@ class GoodsNomenclature < Sequel::Model
 
   def sti_instance
     if child_class_name == self.class.to_s
-      return self
+      self
     else
       klass = Object.const_get child_class_name
       klass.find(goods_nomenclature_item_id: goods_nomenclature_item_id)
@@ -56,8 +56,8 @@ class GoodsNomenclature < Sequel::Model
   many_to_many :goods_nomenclature_descriptions, join_table: :goods_nomenclature_description_periods,
                                                  left_primary_key: :goods_nomenclature_sid,
                                                  left_key: :goods_nomenclature_sid,
-                                                 right_key: [:goods_nomenclature_description_period_sid, :goods_nomenclature_sid],
-                                                 right_primary_key: [:goods_nomenclature_description_period_sid, :goods_nomenclature_sid] do |ds|
+                                                 right_key: %i[goods_nomenclature_description_period_sid goods_nomenclature_sid],
+                                                 right_primary_key: %i[goods_nomenclature_description_period_sid goods_nomenclature_sid] do |ds|
     ds.with_actual(GoodsNomenclatureDescriptionPeriod, self)
       .order(Sequel.desc(:goods_nomenclature_description_periods__validity_start_date))
   end
@@ -69,8 +69,8 @@ class GoodsNomenclature < Sequel::Model
   many_to_many :footnotes, join_table: :footnote_association_goods_nomenclatures,
                            left_primary_key: :goods_nomenclature_sid,
                            left_key: :goods_nomenclature_sid,
-                           right_key: [:footnote_type, :footnote_id],
-                           right_primary_key: [:footnote_type_id, :footnote_id] do |ds|
+                           right_key: %i[footnote_type footnote_id],
+                           right_primary_key: %i[footnote_type_id footnote_id] do |ds|
     ds.with_actual(FootnoteAssociationGoodsNomenclature)
   end
 
@@ -88,15 +88,15 @@ class GoodsNomenclature < Sequel::Model
   delegate :number_indents, to: :goods_nomenclature_indent, allow_nil: true
   delegate :description, :formatted_description, to: :goods_nomenclature_description, allow_nil: true
 
-  one_to_one :goods_nomenclature_origin, key: [:goods_nomenclature_item_id,
-                                               :productline_suffix],
-                                         primary_key: [:goods_nomenclature_item_id,
-                                                       :producline_suffix]
+  one_to_one :goods_nomenclature_origin, key: %i[goods_nomenclature_item_id
+                                                 productline_suffix],
+                                         primary_key: %i[goods_nomenclature_item_id
+                                                         producline_suffix]
 
-  one_to_many :goods_nomenclature_successors, key: [:absorbed_goods_nomenclature_item_id,
-                                                    :absorbed_productline_suffix],
-                                              primary_key: [:goods_nomenclature_item_id,
-                                                            :producline_suffix]
+  one_to_many :goods_nomenclature_successors, key: %i[absorbed_goods_nomenclature_item_id
+                                                      absorbed_productline_suffix],
+                                              primary_key: %i[goods_nomenclature_item_id
+                                                              producline_suffix]
 
   one_to_many :export_refund_nomenclatures, key: :goods_nomenclature_sid,
                                             primary_key: :goods_nomenclature_sid do |ds|
@@ -157,7 +157,7 @@ class GoodsNomenclature < Sequel::Model
   def heading?
     gono_id = goods_nomenclature_item_id.to_s
 
-    gono_id.ends_with?('000000') && gono_id.slice(2,2) != '00'
+    gono_id.ends_with?('000000') && gono_id.slice(2, 2) != '00'
   end
 
   def commodity?
@@ -178,7 +178,7 @@ class GoodsNomenclature < Sequel::Model
   one_to_many :commodities, dataset: -> {
     actual_or_relevant(Commodity)
              .filter("goods_nomenclatures.goods_nomenclature_item_id LIKE ?", heading_id)
-             .where(Sequel.~(goods_nomenclatures__goods_nomenclature_item_id: HiddenGoodsNomenclature.codes ))
+             .where(Sequel.~(goods_nomenclatures__goods_nomenclature_item_id: HiddenGoodsNomenclature.codes))
   }
 
   def children
@@ -214,7 +214,7 @@ class GoodsNomenclature < Sequel::Model
     "00".freeze
   end
 
-  def to_json(options = {})
+  def to_json(_options = {})
     {
       goods_nomenclature_item_id: code
     }

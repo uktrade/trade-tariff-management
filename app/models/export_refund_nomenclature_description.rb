@@ -1,5 +1,4 @@
 class ExportRefundNomenclatureDescription < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
 
   plugin :time_machine

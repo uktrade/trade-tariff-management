@@ -1,6 +1,5 @@
 module XmlExport
   class File < Sequel::Model(:xml_export_files)
-
     include XmlDataUploader::Attachment.new(:xml)
     include XmlDataUploader::Attachment.new(:base_64)
     include XmlDataUploader::Attachment.new(:zip)
@@ -18,7 +17,7 @@ module XmlExport
       end
     end
 
-    private
+  private
 
     def envelope_id_sql
       # Format: YYxxxx (YY = current year, xxxx = number sequence this year)

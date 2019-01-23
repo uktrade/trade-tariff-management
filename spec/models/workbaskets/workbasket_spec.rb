@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe(Workbaskets::Workbasket) do
   describe "#can_withdraw?" do
     valid_states = described_class::APPROVER_SCOPE | described_class::STATES_WITH_ERROR
-    invalid_states = described_class::STATUS_LIST.reject {|status| status.in?(valid_states) }
+    invalid_states = described_class::STATUS_LIST.reject { |status| status.in?(valid_states) }
 
     valid_states.each do |state|
       context "when in #{state} state" do

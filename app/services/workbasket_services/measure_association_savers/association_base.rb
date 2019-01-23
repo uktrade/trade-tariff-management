@@ -1,7 +1,6 @@
 module WorkbasketServices
   module MeasureAssociationSavers
     class AssociationBase < ::WorkbasketServices::Base
-
       class << self
         def errors_in_collection(measure, system_ops, collection)
           errors = {}
@@ -47,7 +46,7 @@ module WorkbasketServices
             if codes_and_items[code].present?
               codes_and_items[code] << k
             else
-              codes_and_items[code] = [ k ]
+              codes_and_items[code] = [k]
             end
           end
 
@@ -59,36 +58,36 @@ module WorkbasketServices
         end
       end
 
-      private
+    private
 
-        def persist_record!(record)
-          assigner = ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            record, system_ops
-          )
-          assigner.assign!
+      def persist_record!(record)
+        assigner = ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          record, system_ops
+        )
+        assigner.assign!
 
-          rec = assigner.record
-          rec.save
+        rec = assigner.record
+        rec.save
 
-          rec
-        end
+        rec
+      end
 
-        def set_primary_key(record, extra_increment_value=nil)
-          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(
-            record,
-            extra_increment_value
-          ).assign!
-        end
+      def set_primary_key(record, extra_increment_value = nil)
+        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(
+          record,
+          extra_increment_value
+        ).assign!
+      end
 
-        def unit_ops(attrs)
-          {
-            duty_amount: attrs[:duty_amount],
-            monetary_unit_code: attrs[:monetary_unit_code],
-            measurement_unit_code: attrs[:measurement_unit_code],
-            measurement_unit_qualifier_code: attrs[:measurement_unit_qualifier_code],
-            original_duty_expression_id: attrs[:original_duty_expression_id]
-          }
-        end
+      def unit_ops(attrs)
+        {
+          duty_amount: attrs[:duty_amount],
+          monetary_unit_code: attrs[:monetary_unit_code],
+          measurement_unit_code: attrs[:measurement_unit_code],
+          measurement_unit_qualifier_code: attrs[:measurement_unit_qualifier_code],
+          original_duty_expression_id: attrs[:original_duty_expression_id]
+        }
+      end
     end
   end
 end

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "QuotaOrderNumberOrigin XML generation" do
-
   let(:db_record) do
     create(:quota_order_number_origin, :xml)
   end
@@ -11,13 +10,13 @@ describe "QuotaOrderNumberOrigin XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :quota_order_number_origin_sid,
-      :quota_order_number_sid,
-      :geographical_area_id,
-      :validity_start_date,
-      :validity_end_date,
-      :geographical_area_sid
+    %i[
+      quota_order_number_origin_sid
+      quota_order_number_sid
+      geographical_area_id
+      validity_start_date
+      validity_end_date
+      geographical_area_sid
     ]
   end
 

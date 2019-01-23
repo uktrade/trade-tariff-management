@@ -1,0 +1,100 @@
+version: 2 # use CircleCI 2.0
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    parallelism: 3 # run three instances of this job in parallel
+    docker: # run the steps with Docker
+      - image: circleci/ruby:2.5-node-browsers # ...with this image as the primary container; this is where all `steps` will run
+        environment: # environment variables for primary container
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          PGHOST: 127.0.0.1
+          PGUSER: circleci-tariffs-management
+          DATABASE_URL: postgresql://circleci-tariffs-management@localhost:5432/tariff_management_test
+          REDIS_URL: redis://localhost:6379
+          RAILS_ENV: test
+          GOVUK_APP_DOMAIN: test
+      - image: circleci/postgres:9.5-alpine # database image
+        environment: # environment variables for database
+          POSTGRES_USER: circleci-tariffs-management
+          POSTGRES_PASSWORD: ""
+      - image: circleci/redis:latest # database image
+    steps: # a collection of executable commands
+      - checkout # special step to check out source code to working directory
+
+      # Which version of bundler?
+      - run:
+          name: Which bundler?
+          command: bundle -v
+
+      # Restore bundle & npm cache
+      - restore_cache:
+          keys:
+            - tariff_management_test-{{ checksum "Gemfile.lock" }}
+
+      # Restore npm cache
+      - restore_cache:
+          keys:
+            - tariff_management_test-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Install PostgreSQL CLI utilities
+          command: sudo apt-get install postgresql-client
+
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+
+      - run:
+          name: NPM Install
+          command: npm install
+
+      # Store npm cache
+      - save_cache:
+          key: tariff_management_test-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+      # Store bundle cache
+      - save_cache:
+          key: tariff_management_test-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      # - run:
+      #     name: Lint Ruby code
+      #     command: bin/lint_ruby
+      #
+      # - run:
+      #     name: Lint JavaScript code
+      #     command: bin/lint_js
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Wait for Redis
+          command: dockerize -wait tcp://localhost:6379 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: bin/rake db:setup --trace
+
+      - run:
+          name: Compile assets
+          command: bin/rake assets:precompile --trace
+
+      - run:
+          name: Run rspec in parallel
+          command: |
+            bundle exec rspec --profile 10 \
+                              --format RspecJunitFormatter \
+                              --out test_results/rspec.xml \
+                              --format progress \
+                              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+
+      # Save test results for timing analysis
+      - store_test_results:
+          path: test_results
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for example deploy configs

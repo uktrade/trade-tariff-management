@@ -1,9 +1,6 @@
 module Measures
   class MeasuresController < ApplicationController
-
     include ::SearchCacheHelpers
-
-    skip_around_action :configure_time_machine, only: [:index, :search]
 
     expose(:separator) do
       "_SM_"
@@ -60,31 +57,31 @@ module Measures
       perform_search
     end
 
-    private
+  private
 
-      def setup_advanced_filters(ops)
-        if params[:regulation_id].present?
-          ops[:regulation] = {
-            operator: 'is',
-            value: params[:regulation_id]
-          }
-        end
-
-        if params[:code].present?
-          ops[:commodity_code] = {
-            operator: 'is',
-            value: params[:code]
-          }
-        end
-
-        ops
+    def setup_advanced_filters(ops)
+      if params[:regulation_id].present?
+        ops[:regulation] = {
+          operator: 'is',
+          value: params[:regulation_id]
+        }
       end
 
-      def perform_search
-        code = search_code
-        ::MeasureService::TrackMeasureSids.new(code).run
-
-        redirect_to measures_url(search_code: code)
+      if params[:code].present?
+        ops[:commodity_code] = {
+          operator: 'is',
+          value: params[:code]
+        }
       end
+
+      ops
+    end
+
+    def perform_search
+      code = search_code
+      ::MeasureService::TrackMeasureSids.new(code).run
+
+      redirect_to measures_url(search_code: code)
+    end
   end
 end

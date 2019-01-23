@@ -146,13 +146,16 @@ Rails.application.routes.draw do
   end
 
   scope module: :workbaskets do
-    resources :workbaskets, only: [] do
-      member do
-        resource :schedule_export_to_cds, only: [:new, :create]
-        resource :cross_check, only: [:new, :create, :show]
-        resource :approve, only: [:new, :create, :show]
-        resource :workflow_transitions, only: [] do
-          post :submit_for_approval
+
+    scope module: :workflows do
+      resources :workbaskets, only: [] do
+        member do
+          resource :schedule_export_to_cds, only: [:new, :create]
+          resource :cross_check, only: [:new, :create, :show]
+          resource :approve, only: [:new, :create, :show]
+          resource :workflow_transitions, only: [] do
+            post :submit_for_approval
+          end
         end
       end
     end

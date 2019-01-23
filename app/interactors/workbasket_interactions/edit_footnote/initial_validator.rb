@@ -1,7 +1,6 @@
 module WorkbasketInteractions
   module EditFootnote
     class InitialValidator
-
       ALLOWED_OPS = %w(
         reason_for_changes
         operation_date
@@ -11,12 +10,12 @@ module WorkbasketInteractions
         validity_end_date
         commodity_codes
         measure_sids
-      )
+      ).freeze
 
-      VALIDITY_PERIOD_ERRORS_KEYS = [
-        :validity_start_date,
-        :validity_end_date
-      ]
+      VALIDITY_PERIOD_ERRORS_KEYS = %i[
+        validity_start_date
+        validity_end_date
+      ].freeze
 
       attr_accessor :original_footnote,
                     :settings,
@@ -61,141 +60,141 @@ module WorkbasketInteractions
         I18n.t(:edit_footnote)[key]
       end
 
-      private
+    private
 
-        def check_reason_for_changes!
-          if reason_for_changes.blank?
-            @errors[:reason_for_changes] = errors_translator(:reason_for_changes_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
-          end
+      def check_reason_for_changes!
+        if reason_for_changes.blank?
+          @errors[:reason_for_changes] = errors_translator(:reason_for_changes_blank)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
+      end
 
-        def check_operation_date!
-          oper_date = parse_date(:operation_date)
+      def check_operation_date!
+        oper_date = parse_date(:operation_date)
 
-          if oper_date.present?
-            if start_date.present? && oper_date < start_date
-              @errors[:operation_date] = errors_translator(:operation_date_is_before_start_date)
-            end
-          else
-            @errors[:operation_date] = errors_translator(:operation_date_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
+        if oper_date.present?
+          if start_date.present? && oper_date < start_date
+            @errors[:operation_date] = errors_translator(:operation_date_is_before_start_date)
           end
+        else
+          @errors[:operation_date] = errors_translator(:operation_date_blank)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
+      end
 
-        def check_description!
-          if description.blank? || (
-              description.present? &&
-              description.squish.split.size.zero?
-            )
+      def check_description!
+        if description.blank? || (
+            description.present? &&
+            description.squish.split.size.zero?
+          )
 
-            @errors[:description] = errors_translator(:description_blank)
-            @errors_summary = errors_translator(:summary_minimal_required_fields)
-          end
+          @errors[:description] = errors_translator(:description_blank)
+          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
+      end
 
-        def check_description_validity_start_date!
-          desc_date = parse_date(:description_validity_start_date)
+      def check_description_validity_start_date!
+        desc_date = parse_date(:description_validity_start_date)
 
-          if desc_date.present?
-            if start_date.present?
-              if end_date.present?
-                if desc_date < start_date || desc_date > end_date
-                  @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_outside_range)
-                  @errors_summary = errors_translator(:summary_invalid_fields)
-                end
-
-              else
-                if desc_date < start_date
-                  @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_outside_range)
-                  @errors_summary = errors_translator(:summary_invalid_fields)
-                end
-              end
-            end
-
-          else
-
-            if description.present? && description_does_not_match_original_description?
-              @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_blank)
-              @errors_summary = errors_translator(:summary_minimal_required_fields)
-            end
-          end
-        end
-
-        def check_validity_period!
+        if desc_date.present?
           if start_date.present?
-            if end_date.present? && start_date > end_date
-              @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
-            end
+            if end_date.present?
+              if desc_date < start_date || desc_date > end_date
+                @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_outside_range)
+                @errors_summary = errors_translator(:summary_invalid_fields)
+              end
 
-          elsif @errors[:validity_start_date].blank?
-            @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
-          end
-
-          if start_date.present? &&
-             end_date.present? &&
-             end_date < start_date
-
-            @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
-          end
-
-          if VALIDITY_PERIOD_ERRORS_KEYS.any? do |error_key|
-              errors.has_key?(error_key)
-            end
-
-            @errors_summary = errors_translator(:summary_invalid_fields) if @errors_summary.blank?
-          end
-        end
-
-        def check_commodity_codes!
-          if commodity_codes.present?
-            list = attrs_parser.parse_list_of_values(commodity_codes)
-
-            if list.present?
-              db_list = GoodsNomenclature.where(goods_nomenclature_item_id: list)
-                                         .distinct(:goods_nomenclature_item_id)
-
-              if db_list.count < list.count
-                @errors[:commodity_codes] = errors_translator(:commodity_codes_not_recognised)
+            else
+              if desc_date < start_date
+                @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_outside_range)
                 @errors_summary = errors_translator(:summary_invalid_fields)
               end
             end
           end
+
+        else
+
+          if description.present? && description_does_not_match_original_description?
+            @errors[:description_validity_start_date] = errors_translator(:description_validity_start_date_blank)
+            @errors_summary = errors_translator(:summary_minimal_required_fields)
+          end
+        end
+      end
+
+      def check_validity_period!
+        if start_date.present?
+          if end_date.present? && start_date > end_date
+            @errors[:validity_start_date] = errors_translator(:validity_start_date_later_than_until_date)
+          end
+
+        elsif @errors[:validity_start_date].blank?
+          @errors[:validity_start_date] = errors_translator(:validity_start_date_blank)
         end
 
-        def check_measures!
-          if measure_sids.present?
-            list = attrs_parser.parse_list_of_values(measure_sids)
+        if start_date.present? &&
+            end_date.present? &&
+            end_date < start_date
 
-            if list.present?
-              db_list = Measure.where(measure_sid: list)
-                               .distinct(:measure_sid)
+          @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
+        end
 
-              if db_list.count < list.count
-                @errors[:measure_sids] = errors_translator(:measures_not_recognised)
-                @errors_summary = errors_translator(:summary_invalid_fields)
-              end
+        if VALIDITY_PERIOD_ERRORS_KEYS.any? do |error_key|
+             errors.has_key?(error_key)
+           end
+
+          @errors_summary = errors_translator(:summary_invalid_fields) if @errors_summary.blank?
+        end
+      end
+
+      def check_commodity_codes!
+        if commodity_codes.present?
+          list = attrs_parser.parse_list_of_values(commodity_codes)
+
+          if list.present?
+            db_list = GoodsNomenclature.where(goods_nomenclature_item_id: list)
+                                       .distinct(:goods_nomenclature_item_id)
+
+            if db_list.count < list.count
+              @errors[:commodity_codes] = errors_translator(:commodity_codes_not_recognised)
+              @errors_summary = errors_translator(:summary_invalid_fields)
             end
           end
         end
+      end
 
-        def parse_date(option_name)
-          date_in_string = public_send(option_name)
+      def check_measures!
+        if measure_sids.present?
+          list = attrs_parser.parse_list_of_values(measure_sids)
 
-          begin
-            Date.strptime(date_in_string, "%d/%m/%Y")
-          rescue Exception => e
-            if date_in_string.present?
-              @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
+          if list.present?
+            db_list = Measure.where(measure_sid: list)
+                             .distinct(:measure_sid)
+
+            if db_list.count < list.count
+              @errors[:measure_sids] = errors_translator(:measures_not_recognised)
+              @errors_summary = errors_translator(:summary_invalid_fields)
             end
-
-            nil
           end
         end
+      end
 
-        def description_does_not_match_original_description?
-          description.squish != original_footnote.description.squish
+      def parse_date(option_name)
+        date_in_string = public_send(option_name)
+
+        begin
+          Date.strptime(date_in_string, "%d/%m/%Y")
+        rescue Exception => e
+          if date_in_string.present?
+            @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
+          end
+
+          nil
         end
+      end
+
+      def description_does_not_match_original_description?
+        description.squish != original_footnote.description.squish
+      end
     end
   end
 end

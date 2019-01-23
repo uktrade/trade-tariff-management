@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "AdditionalCode XML generation" do
-
   let(:db_record) do
     create(:additional_code, :xml)
   end
@@ -11,12 +10,12 @@ describe "AdditionalCode XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :additional_code_sid,
-      :additional_code_type_id,
-      :additional_code,
-      :validity_start_date,
-      :validity_end_date
+    %i[
+      additional_code_sid
+      additional_code_type_id
+      additional_code
+      validity_start_date
+      validity_end_date
     ]
   end
 

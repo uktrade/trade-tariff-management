@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "RegulationReplacement XML generation" do
-
   let(:db_record) do
     create(:regulation_replacement)
   end
@@ -11,14 +10,14 @@ describe "RegulationReplacement XML generation" do
   end
 
   let(:fields_to_check) do
-    [
-      :replacing_regulation_role,
-      :replacing_regulation_id,
-      :replaced_regulation_role,
-      :replaced_regulation_id,
-      :measure_type_id,
-      :geographical_area_id,
-      :chapter_heading
+    %i[
+      replacing_regulation_role
+      replacing_regulation_id
+      replaced_regulation_role
+      replaced_regulation_id
+      measure_type_id
+      geographical_area_id
+      chapter_heading
     ]
   end
 

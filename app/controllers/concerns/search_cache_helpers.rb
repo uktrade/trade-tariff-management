@@ -31,11 +31,11 @@ module SearchCacheHelpers
 
     expose(:pagination_metadata) do
       if search_mode?
-         {
-           page: search_results.current_page,
-           total_count: search_results.total_count,
-           per_page: search_results.limit_value
-         }
+        {
+          page: search_results.current_page,
+          total_count: search_results.total_count,
+          per_page: search_results.limit_value
+        }
       else
         {}
       end
@@ -46,10 +46,10 @@ module SearchCacheHelpers
     end
   end
 
-  private
+private
 
-    def search_mode?
-      params[:search_code].present? &&
+  def search_mode?
+    params[:search_code].present? &&
       Rails.cache.exist?(params[:search_code])
-    end
+  end
 end

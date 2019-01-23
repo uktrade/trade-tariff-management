@@ -1,5 +1,4 @@
 class QuotaOrderNumber < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
   include OwnValidityPeriod

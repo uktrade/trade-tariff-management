@@ -1,5 +1,4 @@
 class CertificateDescription < Sequel::Model
-
   include ::XmlGeneration::BaseHelper
   include ::WorkbasketHelpers::Association
 

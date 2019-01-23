@@ -1,7 +1,6 @@
 module WorkbasketServices
   module QuotaSavers
     class OrderNumber < ::WorkbasketServices::Base
-
       attr_accessor :saver_class,
                     :order_number_ops,
                     :first_period_start_date,
@@ -14,7 +13,7 @@ module WorkbasketServices
                     :periods,
                     :errors
 
-      def initialize(saver_class, order_number_ops, persist_data=false)
+      def initialize(saver_class, order_number_ops, persist_data = false)
         @saver_class = saver_class
         @order_number_ops = order_number_ops
         @persist_data = persist_data
@@ -53,7 +52,7 @@ module WorkbasketServices
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
             record, get_validator(record_key), {}
           ).errors
-           .map do |k, v|
+           .map do |_k, v|
             @errors << v
           end
         end
@@ -63,107 +62,93 @@ module WorkbasketServices
       end
 
       def persist!
-        records.map do |record|
-          record.save
+        records.map(&:save)
+      end
+
+    private
+
+      def records
+        [
+          order_number,
+          origin_areas,
+          excluded_areas
+        ].flatten
+         .reject(&:blank?)
+      end
+
+      def set_first_period_date
+        @first_period_start_date = if periods.present?
+                                     periods.map do |_k, v|
+                                       if v['type'].to_s == 'custom'
+                                         v['periods'].map do |_k, v|
+                                           v['start_date']
+                                         end.min_by(&:to_date)
+
+                                       else
+                                         v['start_date']
+                                       end
+                                     end.reject(&:blank?).min_by(&:to_date)
+                                        .to_date
+
+                                   else
+                                     Date.today
         end
       end
 
-      private
+      def build_order_number
+        Rails.logger.info ""
+        Rails.logger.info " first_period_start_date: #{first_period_start_date}"
+        Rails.logger.info ""
 
-        def records
-          [
-            order_number,
-            origin_areas,
-            excluded_areas
-          ].flatten
-           .reject do |el|
-            el.blank?
-          end
-        end
+        @order_number = QuotaOrderNumber.new(
+          quota_order_number_id: order_number_ops["quota_ordernumber"],
+          validity_start_date: first_period_start_date
+        )
 
-        def set_first_period_date
-          @first_period_start_date = if periods.present?
-            periods.map do |k, v|
-              if v['type'].to_s == 'custom'
-                v['periods'].map do |k, v|
-                  v['start_date']
-                end.sort do |a, b|
-                  a.to_date <=> b.to_date
-                end.first
+        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(@order_number).assign!
 
-              else
-                v['start_date']
-              end
-            end.reject do |p|
-              p.blank?
-            end.sort do |a, b|
-              a.to_date <=> b.to_date
-            end.first
-               .to_date
+        set_system_data(order_number)
+      end
 
-          else
-            Date.today
-          end
-        end
+      def build_origin_areas_ops
+        @origin_areas = origin_areas_ops.reject(&:blank?).map do |area_code|
+          area = geographical_area(area_code)
 
-        def build_order_number
-          Rails.logger.info ""
-          Rails.logger.info " first_period_start_date: #{first_period_start_date}"
-          Rails.logger.info ""
-
-          @order_number = QuotaOrderNumber.new(
-            quota_order_number_id: order_number_ops["quota_ordernumber"],
-            validity_start_date: first_period_start_date
+          origin = QuotaOrderNumberOrigin.new(
+            validity_start_date: order_number.validity_start_date,
+              quota_order_number_sid: order_number.quota_order_number_sid,
+              geographical_area_id: area.geographical_area_id,
+              geographical_area_sid: area.geographical_area_sid
           )
+          set_system_data(origin)
 
-          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(@order_number).assign!
-
-          set_system_data(order_number)
+          origin
         end
+      end
 
-        def build_origin_areas_ops
-          @origin_areas = origin_areas_ops.reject do |el|
-            el.blank?
-          end.map do |area_code|
-            area = geographical_area(area_code)
+      def build_excluded_areas_ops
+        @excluded_areas = excluded_areas_ops.reject(&:blank?).map do |area_code|
+          area = geographical_area(area_code)
 
-            origin = QuotaOrderNumberOrigin.new(
-                validity_start_date: order_number.validity_start_date,
-                quota_order_number_sid: order_number.quota_order_number_sid,
-                geographical_area_id: area.geographical_area_id,
-                geographical_area_sid: area.geographical_area_sid
-            )
-            set_system_data(origin)
+          exclusion = QuotaOrderNumberOriginExclusion.new
+          exclusion.quota_order_number_origin_sid = origin_areas.first.quota_order_number_origin_sid
+          exclusion.excluded_geographical_area_sid = area.geographical_area_sid
+          set_system_data(exclusion)
 
-            origin
-          end
+          exclusion
         end
+      end
 
-        def build_excluded_areas_ops
-          @excluded_areas = excluded_areas_ops.reject do |el|
-            el.blank?
-          end.map do |area_code|
-            area = geographical_area(area_code)
-
-            exclusion = QuotaOrderNumberOriginExclusion.new
-            exclusion.quota_order_number_origin_sid = origin_areas.first.quota_order_number_origin_sid
-            exclusion.excluded_geographical_area_sid = area.geographical_area_sid
-            set_system_data(exclusion)
-
-            exclusion
-          end
+      def get_validator(klass_name)
+        case klass_name.to_s
+        when "QuotaOrderNumber"
+          QuotaOrderNumberValidator
+        when "QuotaOrderNumberOrigin"
+          QuotaOrderNumberOriginValidator
+        when "QuotaOrderNumberOriginExclusion"
+          QuotaOrderNumberOriginExclusionValidator
         end
-
-        def get_validator(klass_name)
-          case klass_name.to_s
-          when "QuotaOrderNumber"
-            QuotaOrderNumberValidator
-          when "QuotaOrderNumberOrigin"
-            QuotaOrderNumberOriginValidator
-          when "QuotaOrderNumberOriginExclusion"
-            QuotaOrderNumberOriginExclusionValidator
-          end
-        end
+      end
     end
   end
 end

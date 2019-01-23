@@ -9,8 +9,8 @@ class ChiefTransformer
                .valid_to(record.fe_tsmp)
                .not_terminated
                .each do |measure|
-          end_date = if (measure.associated_to_non_open_ended_gono? &&
-                         record.fe_tsmp > measure.goods_nomenclature.validity_end_date)
+          end_date = if measure.associated_to_non_open_ended_gono? &&
+              record.fe_tsmp > measure.goods_nomenclature.validity_end_date
                        measure.goods_nomenclature.validity_end_date
                      else
                        record.fe_tsmp

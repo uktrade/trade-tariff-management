@@ -10,7 +10,7 @@ shared_examples_for 'search references controller' do
   describe "GET #index" do
     let(:pattern) {
       [
-        {id: Integer, title: String, referenced_class: String, referenced_id: String }
+        { id: Integer, title: String, referenced_class: String, referenced_id: String }
       ]
     }
 
@@ -54,7 +54,7 @@ shared_examples_for 'search references controller' do
 
   describe "GET to #show" do
     let(:pattern) {
-      {id: Integer, title: String, referenced: Hash, referenced_class: String, referenced_id: String }.ignore_extra_keys!
+      { id: Integer, title: String, referenced: Hash, referenced_class: String, referenced_id: String }.ignore_extra_keys!
     }
 
     it 'returns rendered search reference record' do
@@ -67,7 +67,7 @@ shared_examples_for 'search references controller' do
   end
 
   describe "POST to #create" do
-    let(:search_reference)  { build :search_reference }
+    let(:search_reference) { build :search_reference }
 
     context 'valid params provided' do
       let(:pattern) {
@@ -116,15 +116,14 @@ shared_examples_for 'search references controller' do
 
   describe "DELETE #destroy" do
     context 'search reference exists' do
-
-      before { search_reference  }
+      before { search_reference }
 
       it 'destroys SearchReference entry' do
         expect {
           delete :destroy, params: {
             format: :json
           }.merge(resource_query)
-        }.to change { SearchReference.count }.by(-1)
+        }.to change(SearchReference, :count).by(-1)
       end
     end
 
@@ -137,7 +136,7 @@ shared_examples_for 'search references controller' do
             id: bogus_search_ref_id,
             format: :json
           }.merge(collection_query)
-        }.not_to change { SearchReference.count }
+        }.not_to change(SearchReference, :count)
       end
 
       it 'returns 404 response' do
@@ -152,7 +151,7 @@ shared_examples_for 'search references controller' do
   end
 
   describe "PUT #update" do
-    let(:new_title)         { 'new title' }
+    let(:new_title) { 'new title' }
 
     context 'valid params provided' do
       before {

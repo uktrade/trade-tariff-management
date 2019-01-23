@@ -1,10 +1,9 @@
 module AdditionalCodes
-  class BulksController < Measures::BulksBaseController
-
+  class BulksController < BulksBaseController
     include ::SearchCacheHelpers
 
-    before_action :require_to_be_workbasket_owner!, only: [
-        :update, :destroy
+    before_action :require_to_be_workbasket_owner!, only: %i[
+        update destroy
     ]
 
     expose(:separator) do
@@ -28,7 +27,7 @@ module AdditionalCodes
 
     expose(:edit_url) do
       edit_additional_codes_bulk_url(
-          workbasket.id,
+        workbasket.id,
           search_code: workbasket_settings.search_code
       )
     end
@@ -43,7 +42,7 @@ module AdditionalCodes
 
     expose(:workbasket_container) do
       ::AdditionalCodes::Workbasket::Items.new(
-          workbasket, cached_search_ops
+        workbasket, cached_search_ops
       ).prepare
     end
 
@@ -55,7 +54,7 @@ module AdditionalCodes
         }
       else
         Rails.cache.read(params[:search_code]).merge(
-            page: current_page
+          page: current_page
         )
       end
     end
@@ -88,7 +87,7 @@ module AdditionalCodes
 
     expose(:bulk_saver) do
       ::AdditionalCodes::BulkSaver.new(
-          current_user,
+        current_user,
           workbasket,
           bulk_additional_codes_collection
       )
@@ -108,24 +107,24 @@ module AdditionalCodes
 
     def create
       self.workbasket = Workbaskets::Workbasket.new(
-          status: :new_in_progress,
-          type: :bulk_edit_of_additional_codes,
-          user: current_user
+        status: :new_in_progress,
+        type: :bulk_edit_of_additional_codes,
+        user: current_user
       )
 
       if workbasket.save
         workbasket_settings.update(
-            initial_search_results_code: params[:search_code],
-            search_code: search_code
+          initial_search_results_code: params[:search_code],
+          search_code: search_code
         )
 
         redirect_to work_with_selected_additional_codes_bulk_url(
-                        workbasket.id,
+          workbasket.id,
                         search_code: workbasket_settings.search_code
                     )
       else
         redirect_to additional_codes_url(
-                        notice: "You have to select at least of 1 additional code from list!"
+          notice: "You have to select at least of 1 additional code from list!"
                     )
       end
     end
@@ -143,7 +142,7 @@ module AdditionalCodes
           bulk_saver.persist!
 
           render json: bulk_saver.success_response.merge(
-              redirect_url: submitted_for_cross_check_additional_codes_bulk_url(workbasket.id)
+            redirect_url: submitted_for_cross_check_additional_codes_bulk_url(workbasket.id)
           ), status: :ok
         else
           render json: bulk_saver.success_response,
@@ -160,6 +159,5 @@ module AdditionalCodes
 
       render json: {}, head: :ok
     end
-
   end
 end

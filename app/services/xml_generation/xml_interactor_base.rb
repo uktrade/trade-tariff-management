@@ -1,13 +1,12 @@
 module XmlGeneration
   class XmlInteractorBase
-
     class << self
       def base_partial_path
         "#{Rails.root}/app/views/xml_generation/templates"
       end
     end
 
-    private
+  private
 
     def xml_builder
       Builder::XmlMarkup.new

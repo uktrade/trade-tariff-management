@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "Main XML generation" do
-
   include_context "xml_generation_base_context"
 
   let(:additional_code) do
@@ -64,7 +63,7 @@ describe "Main XML generation" do
     allow(settings).to receive(:collection) { db_records }
   end
 
-  it "should return valid XML" do
+  it "returns valid XML" do
     expect(xml_envelope_node["id"]).not_to be_nil
     expect(xml_envelope_node["xmlns"]).to be_eql("urn:publicid:-:DGTAXUD:TARIC:MESSAGE:1.0")
     expect(xml_envelope_node["xmlns:env"]).to be_eql("urn:publicid:-:DGTAXUD:GENERAL:ENVELOPE:1.0")
@@ -79,20 +78,20 @@ describe "Main XML generation" do
   it "increments the message ID within a given export" do
     message_ids = parsed_xml.xpath("//app.message").map { |node| node["id"] }
 
-    expect(message_ids).to eq ["1", "2", "3"]
+    expect(message_ids).to eq %w[1 2 3]
   end
 
   it "increments record sequence ID within a given export" do
     record_sequence_ids =
       parsed_xml.xpath("//record.sequence.number").map(&:text)
 
-    expect(record_sequence_ids).to eq ["1", "2", "3"]
+    expect(record_sequence_ids).to eq %w[1 2 3]
   end
 
   def transaction_node_expect_to_be_valid(message_node, data_node_name)
     transmission_node = message_node["oub:transmission"]
     record_node = transmission_node["oub:record"]
-    data_node_name = data_node_name.gsub("_", ".") if data_node_name.include?("_")
+    data_node_name = data_node_name.tr("_", ".") if data_node_name.include?("_")
     data_item_node = record_node["oub:#{data_node_name}"]
 
     expect(message_node["id"]).not_to be_nil
