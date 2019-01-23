@@ -75,7 +75,7 @@ module WorkbasketInteractions
       def extract_quota_periods_settings
         {
             '0': {
-                'type': quota_definition.workbasket_type_of_quota,
+                'type': 'custom',
                 'repeat': 'false',
                 'balance': '',
                 'measurement_unit_id': '',
