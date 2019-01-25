@@ -31,8 +31,6 @@ RSpec.describe "adding quotas", :js do
       visit_create_quota_page
       fill_out_create_quota_form
       fill_out_configure_quota_form
-      # skip_optional_footnote_form
-      # expect_to_be_on_submit_for_cross_check_page
 
       expect(page).to have_content 'The following commodity/additional codes are incorrect, please check: ["Bananas", "Widgets"]'
     end

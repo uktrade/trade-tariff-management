@@ -57,7 +57,6 @@ en:
       no_any_quota_period: "Need to specify at least of one valid quota period. Period type, Start date, Length of period, Balance and Measurement Unit are required!"
       no_geographical_area: "A geographical origin (or Erga Omnes) must be specified."
       maximum_precision_blank: "Maximum precision must be specified."
-#      invalid_commodity_codes: "The following commodity codes are invalid, please check: "
 
   create_geographical_area:
     geographical_code: "Geographical area type must be specified."
