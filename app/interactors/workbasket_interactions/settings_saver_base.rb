@@ -61,7 +61,7 @@ module WorkbasketInteractions
       @measure_sids = []
       check_required_params!
 
-      if candidates.present?
+      if @errors.blank? && candidates.present?
         validate!
         candidates_with_errors.blank?
       end
@@ -156,6 +156,13 @@ module WorkbasketInteractions
           end
         else
           general_errors[:geographical_area_id] = errors_translator(:no_geographical_area)
+        end
+
+        if candidates.flatten.compact.present?
+          invalid_commodity_codes = get_invalid_commodity_codes
+          if invalid_commodity_codes.present?
+            general_errors[:workbasket_name] = "The following commodity/additional codes are incorrect, please check: #{invalid_commodity_codes}"
+          end
         end
 
         if commodity_codes.blank? && commodity_codes_exclusions.present?
@@ -280,6 +287,12 @@ module WorkbasketInteractions
             "::WorkbasketServices::MeasureAssociationSavers::#{klass_name}".constantize.errors_in_collection(
               measure, system_ops.merge(type_of: name), public_send(name)
             )
+          end
+
+          def get_invalid_commodity_codes
+            candidates.flatten.compact.map do |candidate|
+              GoodsNomenclature.by_code(candidate[:goods_nomenclature_code]).declarable.first.present? ? nil : candidate[:goods_nomenclature_code]
+            end.compact
           end
 
           def generate_new_measure!(variable_params)
