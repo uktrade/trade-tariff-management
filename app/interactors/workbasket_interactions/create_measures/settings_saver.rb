@@ -123,15 +123,24 @@ module WorkbasketInteractions
 
         if candidates.flatten.compact.blank?
           general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
-        else
-          invalid_commodity_codes = get_invalid_commodity_codes
-          if invalid_commodity_codes.present?
-            general_errors[:workbasket_name] = "The following commodity/additional codes are incorrect, please check: #{invalid_commodity_codes}"
-          end
         end
 
         if commodity_codes.blank? && commodity_codes_exclusions.present?
           general_errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
+        end
+
+        if commodity_codes.present?
+          invalid_commodity_codes = get_invalid_commodity_codes(::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.parse_to_array(commodity_codes))
+          if invalid_commodity_codes.present?
+            general_errors[:commodity_codes] = "The following commodity codes are incorrect, please check: #{invalid_commodity_codes}"
+          end
+        end
+
+        if commodity_codes_exclusions.present?
+          invalid_commodity_codes = get_invalid_commodity_codes(commodity_codes_exclusions)
+          if invalid_commodity_codes.present?
+            general_errors[:exclusion_commodity_codes] = "The following Exception commodity codes are incorrect, please check: #{invalid_commodity_codes}"
+          end
         end
 
         if settings_params['start_date'].present? && (
@@ -240,10 +249,10 @@ module WorkbasketInteractions
               )
             end
 
-            def get_invalid_commodity_codes
-              candidates.flatten.compact.map do |candidate|
-                GoodsNomenclature.by_code(candidate[:goods_nomenclature_code]).declarable.first.present? ? nil : candidate[:goods_nomenclature_code]
-              end.compact
+            def get_invalid_commodity_codes(codes)
+              codes.select do |code|
+                !GoodsNomenclature.by_code(code).declarable.first.present?
+              end
             end
 
             def generate_new_measure!(gn_and_additional_codes)

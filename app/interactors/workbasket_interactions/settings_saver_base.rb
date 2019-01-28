@@ -158,10 +158,17 @@ module WorkbasketInteractions
           general_errors[:geographical_area_id] = errors_translator(:no_geographical_area)
         end
 
-        if candidates.flatten.compact.present?
-          invalid_commodity_codes = get_invalid_commodity_codes
+        if commodity_codes.present?
+          invalid_commodity_codes = get_invalid_commodity_codes(::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.parse_to_array(commodity_codes))
           if invalid_commodity_codes.present?
-            general_errors[:workbasket_name] = "The following commodity/additional codes are incorrect, please check: #{invalid_commodity_codes}"
+            general_errors[:commodity_codes] = "The following commodity codes are incorrect, please check: #{invalid_commodity_codes}"
+          end
+        end
+
+        if commodity_codes_exclusions.present?
+          invalid_commodity_codes = get_invalid_commodity_codes(commodity_codes_exclusions)
+          if invalid_commodity_codes.present?
+            general_errors[:commodity_codes_exclusions] = "The following Exception commodity codes are incorrect, please check: #{invalid_commodity_codes}"
           end
         end
 
@@ -289,10 +296,10 @@ module WorkbasketInteractions
             )
           end
 
-          def get_invalid_commodity_codes
-            candidates.flatten.compact.map do |candidate|
-              GoodsNomenclature.by_code(candidate[:goods_nomenclature_code]).declarable.first.present? ? nil : candidate[:goods_nomenclature_code]
-            end.compact
+          def get_invalid_commodity_codes(codes)
+            codes.select do |code|
+              !GoodsNomenclature.by_code(code).declarable.first.present?
+            end
           end
 
           def generate_new_measure!(variable_params)

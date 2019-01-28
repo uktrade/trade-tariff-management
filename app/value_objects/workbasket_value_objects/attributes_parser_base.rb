@@ -1,8 +1,6 @@
 module WorkbasketValueObjects
   class AttributesParserBase
     attr_accessor :workbasket_settings,
-                  :commodity_codes_analyzer,
-                  :additional_codes_analyzer,
                   :step,
                   :ops
 
@@ -75,8 +73,8 @@ module WorkbasketValueObjects
     end
 
     def candidates
-      a_codes = additional_codes_analyzer.collection
-      gn_codes = commodity_codes_analyzer.collection
+      a_codes = @additional_codes_analyzer.collection
+      gn_codes = @commodity_codes_analyzer.collection
 
       if gn_codes.blank?
         gn_codes = [nil]
@@ -136,15 +134,15 @@ module WorkbasketValueObjects
           end
 
           def commodity_codes_formatted
-            commodity_codes_analyzer.commodity_codes_formatted
+            @commodity_codes_analyzer.commodity_codes_formatted
           end
 
           def exclusions_formatted
-            commodity_codes_analyzer.exclusions_formatted
+            @commodity_codes_analyzer.exclusions_formatted
           end
 
           def additional_codes_formatted
-            additional_codes_analyzer.additional_codes_formatted
+            @additional_codes_analyzer.additional_codes_formatted
           end
 
           def origin

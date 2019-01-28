@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe WorkbasketValueObjects::Shared::CommodityCodeParser do
 
-  before(:all) do
+  before(:each) do
     [
       # from production db dump
       ['0101000000', '80', '1972-01-01 00:00:00.000000', nil],                          # not a leaf so will never be returned
@@ -43,28 +43,26 @@ describe WorkbasketValueObjects::Shared::CommodityCodeParser do
   describe 'regression checks' do
     it "retrieves all leaves in the tree from a given code" do
       #check old codes
-      expect(described_class.new("01/01/2009".to_date, "0101109090").codes).to eq(["0101109090"])
-      expect(described_class.new("01/01/2009".to_date, "0101109000").codes).to eq(["0101109010", "0101109090"])
-      expect(described_class.new("01/01/2009".to_date, "0101100000").codes).to eq(["0101101000", "0101109010", "0101109090"])
+      expect(described_class.get_leaves(query_date: "01/01/2009".to_date, code: "0101109090")).to eq(["0101109090"])
+      expect(described_class.get_leaves(query_date: "01/01/2009".to_date, code: "0101109000")).to eq(["0101109010", "0101109090"])
+      expect(described_class.get_leaves(query_date: "01/01/2009".to_date, code: "0101100000")).to eq(["0101101000", "0101109010", "0101109090"])
 
-      expect(described_class.new("01/01/2000".to_date, "0101100000").codes).to eq(["0101110000", "0101191000", "0101199000"])
+      expect(described_class.get_leaves(query_date: "01/01/2000".to_date, code: "0101100000")).to eq(["0101110000", "0101191000", "0101199000"])
 
 
       #check old codes don't match with current date
-      expect(described_class.new("01/01/2019".to_date, "0101100000").codes).to eq([])
+      expect(described_class.get_leaves(query_date: "01/01/2019".to_date, code: "0101100000")).to eq([])
 
       #check newer codes without end date
-      expect(described_class.new("01/01/2019".to_date, "0101290000").codes).to eq(["0101291000", "0101299000"])
-      expect(described_class.new("01/01/2019".to_date, "0101000000").codes).to eq(["0101210000", "0101291000", "0101299000", "0101300000", "0101900000"])
-      expect(described_class.new("01/01/2019".to_date, "0100000000").codes).to eq(["0101210000", "0101291000", "0101299000", "0101300000", "0101900000", "0102000000"])
+      expect(described_class.get_leaves(query_date: "01/01/2019".to_date, code: "0101290000")).to eq(["0101291000", "0101299000"])
+      expect(described_class.get_leaves(query_date: "01/01/2019".to_date, code: "0101000000")).to eq(["0101210000", "0101291000", "0101299000", "0101300000", "0101900000"])
+      expect(described_class.get_leaves(query_date: "01/01/2019".to_date, code: "0100000000")).to eq(["0101210000", "0101291000", "0101299000", "0101300000", "0101900000", "0102000000"])
 
-      expect(described_class.new("01/01/2019".to_date, "0200000000").codes).to eq(["0200000000"])
+      expect(described_class.get_leaves(query_date: "01/01/2019".to_date, code: "0200000000")).to eq(["0200000000"])
 
       #check 0101109000 is a leaf on some dates
-      expect(described_class.new("01/05/2011".to_date, "0101100000").codes).to eq(["0101101000", "0101109010", "0101109090"])
-      expect(described_class.new("01/12/2011".to_date, "0101100000").codes).to eq(["0101101000", "0101109000"])
+      expect(described_class.get_leaves(query_date: "01/05/2011".to_date, code: "0101100000")).to eq(["0101101000", "0101109010", "0101109090"])
+      expect(described_class.get_leaves(query_date: "01/12/2011".to_date, code: "0101100000")).to eq(["0101101000", "0101109000"])
     end
   end
-
-
 end
