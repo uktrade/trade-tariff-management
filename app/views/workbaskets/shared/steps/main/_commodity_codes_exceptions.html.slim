@@ -1,4 +1,4 @@
-label.form-label
+label.form-label for="exceptions"
   span.create-measures-sub_header
     | Exceptions
 
@@ -7,4 +7,4 @@ label.form-label
 
 .row
   .col-xs-12.col-md-8.col-lg-6
-    textarea.form-control*{ "v-model" => "measure.commodity_codes_exclusions", rows: 4 }
+    textarea.form-control*{ "v-model" => "measure.commodity_codes_exclusions", rows: 4, id: "exceptions" }

@@ -32,7 +32,7 @@ RSpec.describe "adding quotas", :js do
       fill_out_create_quota_form
       fill_out_configure_quota_form
 
-      expect(page).to have_content 'The following commodity/additional codes are incorrect, please check: ["Bananas", "Widgets"]'
+      expect(page).to have_content 'The following commodity codes are incorrect, please check: ["Bananas", "Widgets"]'
     end
   end
 
