@@ -159,7 +159,7 @@ module WorkbasketInteractions
         end
 
         if commodity_codes.present?
-          invalid_commodity_codes = get_invalid_commodity_codes(::WorkbasketValueObjects::Shared::CommodityCodesAnalyzer.parse_to_array(commodity_codes))
+          invalid_commodity_codes = get_invalid_commodity_codes(Misc.csv_string_to_array(commodity_codes))
           if invalid_commodity_codes.present?
             general_errors[:commodity_codes] = "The following commodity codes are incorrect, please check: #{invalid_commodity_codes}"
           end
@@ -297,8 +297,8 @@ module WorkbasketInteractions
           end
 
           def get_invalid_commodity_codes(codes)
-            codes.select do |code|
-              !GoodsNomenclature.by_code(code).declarable.first.present?
+            codes.reject do |code|
+              GoodsNomenclature.by_code(code).declarable.first.present?
             end
           end
 

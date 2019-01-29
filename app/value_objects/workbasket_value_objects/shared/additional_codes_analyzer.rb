@@ -35,7 +35,7 @@ module WorkbasketValueObjects
           additional_codes.split(/[\s|,]+/)
               .map(&:strip)
               .reject(&:blank?)
-              .uniq
+              .uniq.sort
         end
       end
 
@@ -51,7 +51,7 @@ module WorkbasketValueObjects
       def clean_array(list)
         (list || []).flatten
                     .reject(&:blank?)
-                    .uniq
+                    .uniq.sort
       end
     end
   end
