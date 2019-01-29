@@ -128,72 +128,22 @@ $(document).ready(function() {
         if (window.all_settings.quota_periods) {
           data.quota_sections = objectToArray(window.all_settings.quota_periods).map(function(section) {
 
-            if (section.type == "custom") {
-              section.repeat = section.repeat === "true";
-              section.opening_balances = [];
-              section.duty_expressions = [];
+            section.repeat = section.repeat === "true";
+            section.opening_balances = [];
+            section.duty_expressions = [];
 
-              section.periods = objectToArray(section.periods).map(function(period) {
-                period.critical = period.critical === "true";
+            section.periods = objectToArray(section.periods).map(function(period) {
+              period.critical = period.critical === "true";
 
-                period.duty_expressions = objectToArray(period.duty_expressions).map(function(e) {
-                  delete e.$order;
-                  e.duty_expression_id = self.getDutyExpressionId(e);
-
-                  return e;
-                });
-
-                return period;
-              });
-
-            } else {
-              section.critical = section.critical === "true";
-              section.staged = section.staged === "true";
-              section.criticality_each_period = section.criticality_each_period === "true";
-              section.duties_each_period = section.duties_each_period === "true";
-              section.periods = [];
-
-              section.duty_expressions = objectToArray(section.duty_expressions).map(function(e) {
+              period.duty_expressions = objectToArray(period.duty_expressions).map(function(e) {
                 delete e.$order;
                 e.duty_expression_id = self.getDutyExpressionId(e);
 
                 return e;
               });
 
-              section.opening_balances = objectToArray(section.opening_balances).map(function(balance) {
-                if (section.type == "annual") {
-                  balance.critical = balance.critical === "true";
-
-                  balance.duty_expressions = objectToArray(balance.duty_expressions).map(function(e) {
-                    delete e.$order;
-                    e.duty_expression_id = self.getDutyExpressionId(e);
-
-                    return e;
-                  });
-                } else {
-                  var ks = {
-                    bi_annual: ["semester1", "semester2"],
-                    quarterly: ["quarter1", "quarter2", "quarter3", "quarter4"],
-                    monthly: ["month1", "month2", "month3", "month4", "month5", "month6", "month7", "month8", "month9", "month10", "month11", "month12"]
-                  };
-
-                  ks[section.type].forEach(function(k) {
-                    balance[k].critical = balance[k].critical === "true";
-
-
-                    balance[k].duty_expressions = objectToArray(balance[k].duty_expressions).map(function(e) {
-                      delete e.$order;
-                      e.duty_expression_id = self.getDutyExpressionId(e);
-
-                      return e;
-                    });
-                  });
-                }
-
-                return balance;
-              });
-            }
-
+              return period;
+            });
             section.parent_quota.associate = section.parent_quota.associate === true ||
                                              section.parent_quota.associate === "true";
 
