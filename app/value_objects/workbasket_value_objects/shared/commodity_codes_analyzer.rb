@@ -22,15 +22,6 @@ module WorkbasketValueObjects
         clean_array(@exclusions_detected).join(', ')
       end
 
-      def self.parse_to_array(codes_string)
-        codes_string = codes_string || ""
-        codes_string.split(/[\s|,]+/)
-          .map(&:strip)
-          .reject(&:blank?)
-          .uniq
-          .sort
-      end
-
     private
 
       def setup_collection!
@@ -48,7 +39,7 @@ module WorkbasketValueObjects
                   handle_chapter_code(code)
                 else
                   #if code is not a chapter, get all declarable commodities
-                  current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_leaves(code: code, query_date: @start_date)
+                  current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_child_code_leaves(code: code, query_date: @start_date)
                   #and add all declarable commodities without excluded
                   @commodity_codes_detected = @commodity_codes_detected + (current_codes - @exclusions_detected)
                 end
@@ -77,7 +68,7 @@ module WorkbasketValueObjects
           heading_code = heading.goods_nomenclature_item_id
           if has_any_child_in?(heading_code, commodity_codes_exclusions)
             #if heading_code has excluded commodity, get declarable commodity within parent_code
-            current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_leaves(code: heading_code, query_date: @start_date)
+            current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_child_code_leaves(code: heading_code, query_date: @start_date)
             #add all commodities that not excluded
             @commodity_codes_detected = @commodity_codes_detected + (current_codes - @exclusions_detected)
           else
@@ -101,7 +92,7 @@ module WorkbasketValueObjects
 
       def fetch_commodity_codes(codes_list)
         res = codes_list.map do |code|
-          ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_leaves(code: code, query_date: @start_date)
+          ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_child_code_leaves(code: code, query_date: @start_date)
         end
 
         clean_array(res)

@@ -2,7 +2,7 @@ module WorkbasketValueObjects
   module Shared
     class CommodityCodeParser
 
-      def self.get_leaves(code:, query_date:)
+      def self.get_child_code_leaves(code:, query_date:)
         # Retrieve the commodity codes from each "leaf" in the commodity code tree from a given node
         GoodsNomenclature.fetch(expand_commodity_tree_sql(code: code, query_date: query_date)).all.map do |item|
           item[:goods_nomenclature_item_id]
