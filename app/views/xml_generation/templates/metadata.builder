@@ -63,22 +63,6 @@ xml.tag!("BatchFileInterfaceMetadata", xmlns: "http://www.hmrc.gsi.gov.uk/mdg/ba
     xml_data_item(record, self.xml_file_size)
   end
 
-  env.tag!("compressed") do |record|
-    xml_data_item(record, self.class::COMPRESSED)
-  end
-
-  env.tag!("compressionAlgorithm") do |record|
-    xml_data_item(record, self.class::COMPRESSION_ALGORITHM)
-  end
-
-  env.tag!("compressedChecksum") do |record|
-    xml_data_item(record, self.compressed_checksum)
-  end
-
-  env.tag!("compressedChecksumAlgorithm") do |record|
-    xml_data_item(record, self.class::COMPRESSED_CHECKSUM_ALGORITHM)
-  end
-
   env.tag!("sourceLocation") do |record|
     xml_data_item(record, self.class::SOURCE_LOCATION)
   end
