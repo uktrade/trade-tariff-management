@@ -1,11 +1,9 @@
 module XmlGeneration
   class WorkbasketSearch
-    attr_accessor :start_date,
-                  :end_date
+    attr_accessor :workbasket_id
 
-    def initialize(date_filters)
-      @start_date = date_filters[:start_date].strftime("%Y-%m-%d")
-      @end_date = date_filters[:end_date].strftime("%Y-%m-%d") if date_filters[:end_date].present?
+    def initialize(date_filters, workbasket_id)
+      @workbasket_id = workbasket_id
     end
 
     def result
@@ -13,9 +11,7 @@ module XmlGeneration
     end
 
     def target_workbaskets
-      ::Workbaskets::Workbasket.xml_export_collection(
-        start_date, end_date
-      )
+      ::Workbaskets::Workbasket.where('id = ?', workbasket_id).all
     end
 
     def data

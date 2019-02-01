@@ -9,13 +9,13 @@ module XmlGeneration
                   :xml_data,
                   :tmp_xml_file
 
-    def initialize(record)
+    def initialize(record, workbasket_id)
       @record = record
+      @workbasket_id = workbasket_id
     end
 
     def run
       mark_export_process_as_started!
-
       fetch_relevant_data_and_generate_xml
 
       if xml_data
@@ -72,11 +72,7 @@ module XmlGeneration
     end
 
     def xml_generator_search
-      if @record.workbasket
-        ::XmlGeneration::WorkbasketSearch.new(@record.date_filters)
-      else
-        ::XmlGeneration::DBSearch.new(@record.date_filters)
-      end
+      ::XmlGeneration::WorkbasketSearch.new(record.date_filters, @workbasket_id)
     end
 
     def validate_xml_data!
