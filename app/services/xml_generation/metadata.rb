@@ -20,7 +20,6 @@ module XmlGeneration
 
     attr_accessor :xml_export,
                   :xml_file_path,
-                  :zip_file_path,
                   :extract_start_date_time,
                   :extract_end_date_time,
                   :extract_database_date_time
@@ -28,7 +27,6 @@ module XmlGeneration
     def initialize(xml_export)
       @xml_export = xml_export
       @xml_file_path = xml_export.tmp_xml_file.path
-      @zip_file_path = xml_export.tmp_zip_file.path
 
       @extract_start_date_time = xml_export.extract_start_date_time.xmlschema
       @extract_end_date_time = xml_export.extract_end_date_time.xmlschema
@@ -49,10 +47,6 @@ module XmlGeneration
 
     def xml_file_size
       File.size(xml_file_path)
-    end
-
-    def compressed_checksum
-      get_md5_checksum(zip_file_path)
     end
 
     def destinations
