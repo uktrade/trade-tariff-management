@@ -246,6 +246,11 @@ module Workbaskets
          .order(:operation_date)
       end
 
+      def xml_export(workbasket_ids:)
+        where(id: workbasket_ids)
+        .in_status(%w[awaiting_cds_upload_create_new awaiting_cds_upload_edit])
+      end
+
       def by_date_range(start_date, end_date)
         if end_date.present?
           where(

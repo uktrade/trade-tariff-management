@@ -25,16 +25,4 @@ module MeasuresHelper
       }
     }
   end
-
-  def search_in_measures_by_regulation_rule(item)
-    {
-      search: {
-        regulation: {
-          enabled: "1",
-          operator: "is",
-          value: item.regulation_id
-        }
-      }
-    }
-  end
 end

@@ -73,7 +73,7 @@ module XmlGeneration
 
     def xml_generator_search
       if @record.workbasket
-        ::XmlGeneration::WorkbasketSearch.new(@record.date_filters)
+        ::XmlGeneration::WorkbasketSearch.new([@record.workbasket_selected])
       else
         ::XmlGeneration::DBSearch.new(@record.date_filters)
       end

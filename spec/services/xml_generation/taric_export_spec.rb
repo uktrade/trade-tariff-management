@@ -2,14 +2,16 @@ require "rails_helper"
 
 RSpec.describe XmlGeneration::TaricExport do
   let(:operation_date) { Date.current }
+  let(:workbasket) do
+    build(
+      :workbasket, id: 12345)
+  end
 
   let(:xml_export_file) do
     build(
       :xml_export_file,
-      workbasket: false,
-      date_filters: {
-        start_date: operation_date,
-      }
+      workbasket: true,
+      workbasket_selected: workbasket.id
     )
   end
 
