@@ -15,7 +15,6 @@ module XmlGeneration
 
     def run
       mark_export_process_as_started!
-
       fetch_relevant_data_and_generate_xml
 
       if xml_data
@@ -72,11 +71,7 @@ module XmlGeneration
     end
 
     def xml_generator_search
-      if @record.workbasket
-        ::XmlGeneration::WorkbasketSearch.new(@record.date_filters)
-      else
-        ::XmlGeneration::DBSearch.new(@record.date_filters)
-      end
+      ::XmlGeneration::WorkbasketSearch.new(record.workbasket_selected)
     end
 
     def validate_xml_data!
@@ -130,12 +125,8 @@ module XmlGeneration
       "DIT_TAQ01_V1_#{timestamp}_metadata.xml"
     end
 
-    # file name format "DIT_<Start Date-YYYYMMDD>-<End Date-YYYYMMDD>-<Timestamp-YYYYMMDDTHHMMSS>-EUFileSequence.XML"
     def filename_prefix
-      start_date = @record.date_filters[:start_date].strftime("%Y%m%d")
-      end_date   = (@record.date_filters[:end_date] || Date.today).strftime("%Y%m%d")
-
-      "DIT_#{start_date}-#{end_date}-#{timestamp}"
+      "DIT_#{timestamp}"
     end
 
     def timestamp
