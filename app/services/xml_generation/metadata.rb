@@ -7,7 +7,6 @@ module XmlGeneration
     SOURCE_SYSTEM_OS = "RedHat_7.3".freeze
     INTERFACE_NAME = "TAQ01".freeze
     INTERFACE_VERSION = "V1.0".freeze
-    CORRELATION_ID = "8452f702-a7e0-40aa-8d2f-052073d9ca88".freeze
     CONVERSATION_ID = "TODO".freeze
     TRANSACTION_ID = "TODO".freeze
     MESSAGE_ID = "TODO".freeze
@@ -35,6 +34,10 @@ module XmlGeneration
 
     def generate
       renderer.render(self, xml: xml_builder)
+    end
+
+    def correlation_id
+      SecureRandom.uuid
     end
 
     def source_file_name
