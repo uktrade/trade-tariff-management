@@ -15,7 +15,7 @@ gem "sequel", "~> 4.32"
 gem "sequel-rails", "~> 0.9", ">= 0.9.12"
 
 # Server
-gem "puma", "~> 3.4"
+gem "puma", "~> 3.12"
 
 # UI
 gem "sass-rails", "5.0.6"
@@ -103,13 +103,13 @@ group :development, :test do
 end
 
 group :test do
-  gem "rspec-rails", "~> 3.5.2"
-  gem "factory_girl_rails", "~> 4.8.0", require: false
-  gem "fakefs", "~> 0.11.0", require: "fakefs/safe"
+  gem "rspec-rails"
+  gem "factory_girl_rails", require: false
+  gem "fakefs", require: "fakefs/safe"
   gem "forgery"
-  gem "json_expressions", "~> 0.9.0"
-  gem "simplecov", "~> 0.14.1"
-  gem "webmock", "~> 3.0.1"
+  gem "json_expressions"
+  gem "simplecov"
+  gem "webmock"
   gem "database_cleaner"
   gem 'codeclimate-test-reporter', require: nil
   gem "rspec_junit_formatter"
