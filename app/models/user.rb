@@ -35,10 +35,10 @@ class User < Sequel::Model
   def self.from_omniauth(auth)
 
     if user = find(uid: auth.uid)
-      puts "user exists in system"
+      logger.debug "user exists in system"
     else
-      puts "user does not exist in system"
-      puts user_params_from_auth(auth)
+      logger.debug "user does not exist in system"
+      logger.debug user_params_from_auth(auth)
       user = create(user_params_from_auth(auth))
     end
 
