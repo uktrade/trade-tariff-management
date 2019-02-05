@@ -1,5 +1,4 @@
 class User < Sequel::Model
-  include GDS::SSO::User
 
   plugin :serialization
 
@@ -30,26 +29,41 @@ class User < Sequel::Model
     end
   end
 
-  module Permissions
-    SIGNIN = 'signin'.freeze
-    HMRC_EDITOR = 'HMRC Editor'.freeze
-    GDS_EDITOR = 'GDS Editor'.freeze
-  end
+  # find user from SSO auth data (uid)
+  # create the user if doesn't exist
+  # NB user would be created with access disabled
+  def self.from_omniauth(auth)
 
-  def self.find_for_gds_oauth(auth_hash)
-    user_params = user_params_from_auth_hash(auth_hash)
-
-    # update details of existing user
-    if user = find(uid: auth_hash["uid"])
-      user.update_attributes(user_params)
-    else # Create a new user.
-      create(user_params)
+    if user = find(uid: auth.uid)
+      puts "user exists in system"
+    else
+      puts "user does not exist in system"
+      puts user_params_from_auth(auth)
+      user = create(user_params_from_auth(auth))
     end
+
+    # return the found user or newly created user
+    user
   end
 
-  def self.user_params_from_auth_hash(auth_hash)
-    GDS::SSO::User.user_params_from_auth_hash(auth_hash.to_hash)
+  def self.user_params_from_auth(auth)
+
+    # combine first & last names into name for User model
+    name = auth.info.first_name.to_s + " " + auth.info.last_name.to_s
+
+    # return a set of parameters to create the user record
+    {
+        'uid' => auth.uid,
+        'email' => auth.info.email,
+        # perhaps add these separate fields in the future?
+        # 'first_name' => auth.first_name,
+        # 'last_name' => auth.last_name,
+        'name' => name,
+        'disabled' => true      # user access is disabled by default
+    }
+
   end
+
 
   def self.find_by_uid(uid)
     find(uid: uid)
@@ -59,19 +73,8 @@ class User < Sequel::Model
     create(attrs)
   end
 
-  def gds_editor?
-    has_permission?(Permissions::GDS_EDITOR)
-  end
-
-  def hmrc_editor?
-    has_permission?(Permissions::HMRC_EDITOR)
-  end
-
   def approver?
-    #
-    # FIXME
-    #
-    true # approver_user.present?
+    approver_user.present?
   end
 
   def remotely_signed_out?
