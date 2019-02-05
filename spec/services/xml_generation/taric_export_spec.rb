@@ -44,7 +44,7 @@ RSpec.describe XmlGeneration::TaricExport do
       create(:measure, :for_upload_today, workbasket_id: workbasket.id)
 
       xml_export_file.save
-      taric_export = described_class.new(xml_export_file, workbasket.id)
+      taric_export = described_class.new(xml_export_file)
 
       expect(xml_export_file.envelope_id).to be_nil
       expect { taric_export.run }.
@@ -78,7 +78,7 @@ RSpec.describe XmlGeneration::TaricExport do
 
   def perform_taric_export(xml_export_file)
     xml_export_file.save_with_envelope_id
-    taric_export = described_class.new(xml_export_file, workbasket.id)
+    taric_export = described_class.new(xml_export_file)
     taric_export.run
     taric_export
   end

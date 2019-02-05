@@ -7961,11 +7961,11 @@ CREATE TABLE public.xml_export_files (
     created_at timestamp without time zone,
     xml_data text,
     issue_date timestamp without time zone,
-    date_filters text,
     meta_data text,
     workbasket boolean DEFAULT true,
     validation_errors jsonb DEFAULT '{}'::jsonb,
-    envelope_id integer
+    envelope_id integer,
+    workbasket_selected integer
 );
 
 
@@ -12319,6 +12319,14 @@ CREATE INDEX user_id ON public.rollbacks USING btree (user_id);
 --
 
 CREATE UNIQUE INDEX xml_export_files_envelope_id_index ON public.xml_export_files USING btree (envelope_id);
+
+
+--
+-- Name: reassign_owned; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
+   EXECUTE PROCEDURE public.reassign_owned();
 
 
 --

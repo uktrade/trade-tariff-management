@@ -22,7 +22,7 @@ module BaseJobMixin
       }.merge(additional_params)
     )
     if persist_record(record)
-      worker_klass.perform_async(record.id, params[:workbasket_id]) unless Rails.env.test?
+      worker_klass.perform_async(record.id) unless Rails.env.test?
 
       redirect_to redirect_url,
                   notice: "#{record_name} was successfully scheduled. Please wait!"

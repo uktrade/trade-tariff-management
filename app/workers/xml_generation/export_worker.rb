@@ -4,9 +4,9 @@ module XmlGeneration
 
     sidekiq_options queue: :xml_generation, retry: false
 
-    def perform(record_id, workbasket_id)
+    def perform(record_id)
       record = ::XmlExport::File.filter(id: record_id).first
-      ::XmlGeneration::TaricExport.new(record, workbasket_id).run
+      ::XmlGeneration::TaricExport.new(record).run
     end
   end
 end

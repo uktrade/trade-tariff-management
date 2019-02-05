@@ -9,9 +9,8 @@ module XmlGeneration
                   :xml_data,
                   :tmp_xml_file
 
-    def initialize(record, workbasket_id)
+    def initialize(record)
       @record = record
-      @workbasket_id = workbasket_id
     end
 
     def run
@@ -72,10 +71,7 @@ module XmlGeneration
     end
 
     def xml_generator_search
-      # todo xxx get workbasket from record
-      ::XmlGeneration::WorkbasketSearch.new(@workbasket_id)
-      # todo XXX if DBSearch is no longer used can we delete it all??
-      # ::XmlGeneration::DBSearch.new(@record.date_filters)
+      ::XmlGeneration::WorkbasketSearch.new(record.workbasket_selected)
     end
 
     def validate_xml_data!
@@ -129,12 +125,8 @@ module XmlGeneration
       "DIT_TAQ01_V1_#{timestamp}_metadata.xml"
     end
 
-    # file name format "DIT_<Start Date-YYYYMMDD>-<End Date-YYYYMMDD>-<Timestamp-YYYYMMDDTHHMMSS>-EUFileSequence.XML"
     def filename_prefix
-      start_date = "01/01/2019" #@record.date_filters[:start_date].strftime("%Y%m%d")
-      end_date   = "01/01/2019" #(@record.date_filters[:end_date] || Date.today).strftime("%Y%m%d")
-
-      "DIT_#{start_date}-#{end_date}-#{timestamp}"
+      "DIT_#{timestamp}"
     end
 
     def timestamp
