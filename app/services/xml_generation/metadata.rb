@@ -3,33 +3,20 @@ module XmlGeneration
     include ::XmlGeneration::BaseHelper
 
     SOURCE_SYSTEM = "DIT".freeze
-    SOURCE_SYSTEM_TYPE = "AWS".freeze
-    SOURCE_SYSTEM_OS = "RedHat_7.3".freeze
     INTERFACE_NAME = "TAQ01".freeze
     INTERFACE_VERSION = "V1.0".freeze
-    CONVERSATION_ID = "TODO".freeze
-    TRANSACTION_ID = "TODO".freeze
-    MESSAGE_ID = "TODO".freeze
     CHECKSUM_ALGORITHM = "MD5".freeze
     COMPRESSED = "false".freeze
     COMPRESSION_ALGORITHM = "ZIP".freeze
     COMPRESSED_CHECKSUM_ALGORITHM = "MD5".freeze
     SOURCE_LOCATION = "DIT FTP Server".freeze
-    SOURCE_FILE_ENCODING = "UTF-8".freeze
 
     attr_accessor :xml_export,
-                  :xml_file_path,
-                  :extract_start_date_time,
-                  :extract_end_date_time,
-                  :extract_database_date_time
+                  :xml_file_path
 
     def initialize(xml_export)
       @xml_export = xml_export
       @xml_file_path = xml_export.tmp_xml_file.path
-
-      @extract_start_date_time = xml_export.extract_start_date_time.xmlschema
-      @extract_end_date_time = xml_export.extract_end_date_time.xmlschema
-      @extract_database_date_time = xml_export.extract_database_date_time.xmlschema
     end
 
     def generate
