@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Misc do
+describe CodeParsingService do
   describe '#csv_string_to_array' do
     it "returns an empty array for an empty string" do
       expect(described_class.csv_string_to_array("")).to eq([])

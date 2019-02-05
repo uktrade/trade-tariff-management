@@ -1,4 +1,4 @@
-class Misc
+class CodeParsingService
   def self.csv_string_to_array(codes_string)
     codes_string = codes_string || ""
     codes_string.split(/[\s|,]+/)

@@ -159,7 +159,7 @@ module WorkbasketInteractions
         end
 
         if commodity_codes.present?
-          invalid_commodity_codes = get_invalid_commodity_codes(Misc.csv_string_to_array(commodity_codes))
+          invalid_commodity_codes = get_invalid_commodity_codes(CodeParsingService.csv_string_to_array(commodity_codes))
           if invalid_commodity_codes.present?
             general_errors[:commodity_codes] = "The following commodity codes are incorrect, please check: #{invalid_commodity_codes}"
           end
