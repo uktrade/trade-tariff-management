@@ -42,35 +42,40 @@ describe WorkbasketValueObjects::Shared::CommodityCodesAnalyzer do
     end
 
     describe 'regression checks' do
-      it "retrieves the correct code for given codes and exclusions" do
+      it "retrieves the correct code for given code with no exclusion" do
         analyser = described_class.new(start_date: "01/01/2019".to_date, commodity_codes: "0101110000", commodity_codes_exclusions: nil)
         expect(analyser.commodity_codes_formatted).to eq("0101110000")
         expect(analyser.exclusions_formatted).to eq("")
         expect(analyser.commodity_codes).to eq("0101110000")
         expect(analyser.commodity_codes_exclusions).to eq(nil)
         expect(analyser.collection).to eq(["0101110000"])
+      end
 
+      it "retrieves the correct codes for given code with an exclusion" do
         analyser = described_class.new(start_date: "01/01/2019".to_date, commodity_codes: "0101000000", commodity_codes_exclusions: ["0101210000"])
         expect(analyser.commodity_codes_formatted).to eq("0101291000, 0101299000, 0101300000, 0101900000")
         expect(analyser.exclusions_formatted).to eq("0101210000")
         expect(analyser.commodity_codes).to eq("0101000000")
         expect(analyser.commodity_codes_exclusions).to eq(["0101210000"])
         expect(analyser.collection).to eq(["0101291000", "0101299000", "0101300000", "0101900000"])
+      end
 
+      it "retrieves the correct codes for multiple codes with no exclusion" do
         analyser = described_class.new(start_date: "01/01/2019".to_date, commodity_codes: "0101210000, 0101290000", commodity_codes_exclusions: nil)
         expect(analyser.commodity_codes_formatted).to eq("0101210000, 0101290000")
         expect(analyser.exclusions_formatted).to eq("")
         expect(analyser.commodity_codes).to eq("0101210000, 0101290000")
         expect(analyser.commodity_codes_exclusions).to eq(nil)
         expect(analyser.collection).to eq(["0101210000", "0101290000"])
+      end
 
+      it "retrieves the correct codes for multiple codes with an exclusion in one" do
         analyser = described_class.new(start_date: "01/01/2019".to_date, commodity_codes: "0101200000, 0101300000", commodity_codes_exclusions: ["0101291000"])
         expect(analyser.commodity_codes_formatted).to eq("0101210000, 0101299000, 0101300000")
         expect(analyser.exclusions_formatted).to eq("0101291000")
         expect(analyser.commodity_codes).to eq("0101200000, 0101300000")
         expect(analyser.commodity_codes_exclusions).to eq(["0101291000"])
         expect(analyser.collection).to eq(["0101210000", "0101299000", "0101300000"])
-
       end
     end
   end
