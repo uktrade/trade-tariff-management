@@ -59,12 +59,6 @@ module Workbaskets
       )
     end
 
-    expose(:submit_for_cross_check) do
-      "::WorkbasketInteractions::#{sub_klass}::SubmitForCrossCheck".constantize.new(
-        current_user, workbasket
-      )
-    end
-
     def new
       self.workbasket = Workbaskets::Workbasket.create(
         type: settings_type,
@@ -133,7 +127,7 @@ module Workbaskets
 
     def handle_submit_for_cross_check!
       if step_pointer.review_and_submit_step?
-        submit_for_cross_check.run!
+        workbasket.submit_for_cross_check!(current_admin: current_user)
 
         render json: { redirect_url: submitted_url },
                status: :ok

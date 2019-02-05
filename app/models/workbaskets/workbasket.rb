@@ -294,6 +294,14 @@ module Workbaskets
     end
 
     begin :workflow_related_helpers
+          def submit_for_cross_check!(current_admin:)
+            move_status_to!(current_admin, :awaiting_cross_check)
+
+            settings.collection.map do |item|
+              item.move_status_to!(:awaiting_cross_check)
+            end
+          end
+          
           def assign_cross_checker!(current_user)
             add_event!(current_user, :cross_check_process_started)
 
