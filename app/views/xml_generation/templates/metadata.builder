@@ -24,7 +24,7 @@ xml.tag!("BatchFileInterfaceMetadata", xmlns: "http://www.hmrc.gsi.gov.uk/mdg/ba
   end
 
   env.tag!("correlationID") do |record|
-    xml_data_item(record, self.class::CORRELATION_ID)
+    xml_data_item(record, self.correlation_id)
   end
 
   env.tag!("conversationID") do |record|
