@@ -146,11 +146,11 @@ GEM
     et-orbi (1.1.6)
       tzinfo
     execjs (2.7.0)
-    factory_girl (4.9.0)
-      activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
-      railties (>= 3.0.0)
+    factory_bot (5.0.0)
+      activesupport (>= 4.2.0)
+    factory_bot_rails (5.0.0)
+      factory_bot (~> 5.0.0)
+      railties (>= 4.2.0)
     fakefs (0.18.1)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
@@ -518,7 +518,7 @@ DEPENDENCIES
   dotenv-rails
   draper
   enumerize
-  factory_girl_rails
+  factory_bot_rails
   fakefs
   ffi (~> 1.9.24)
   foreman

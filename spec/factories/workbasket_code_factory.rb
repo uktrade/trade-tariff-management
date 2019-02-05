@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :workbasket, class: ::Workbaskets::Workbasket do
     title { "Test" }
     user_id { create(:user).id }
