@@ -33,6 +33,9 @@ gem "pikaday-gem"
 gem "selectize-rails"
 gem "parsley-rails"
 
+# Single sign on
+gem 'omniauth-oauth2'
+
 # File uploads and AWS
 gem "shrine"
 gem "aws-sdk-rails"
@@ -72,9 +75,6 @@ gem "responders", "~> 2.1", ">= 2.1.0"
 gem "redis-rails"
 gem "sidekiq", "~> 4.1.4"
 gem "sidekiq-scheduler", "~> 2.1.8"
-
-gem "plek", "~> 1.11"
-gem "gds-sso", "~> 13", ">= 13.6.0"
 
 # System gems
 gem "connection_pool", "~> 2.2"

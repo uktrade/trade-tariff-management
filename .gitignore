@@ -16,6 +16,7 @@ data/*.xml
 # Environment files
 .env
 .env.*.local
+config/database.yml
 
 # Cloud Foundry manifest files
 *_manifest.yml
@@ -26,6 +27,7 @@ config/trade_tariff_backend_secrets.yml
 *.DS_Store
 /coverage/*
 .idea/*
+*.iml
 REVISION
 *.org
 
