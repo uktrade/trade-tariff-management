@@ -48,11 +48,14 @@ describe WorkbasketValueObjects::Shared::CommodityCodeParser do
       expect(described_class.get_child_code_leaves(query_date: "01/01/2009".to_date, code: "0101100000")).to eq(["0101101000", "0101109010", "0101109090"])
 
       expect(described_class.get_child_code_leaves(query_date: "01/01/2000".to_date, code: "0101100000")).to eq(["0101110000", "0101191000", "0101199000"])
+    end
 
-
-      #check old codes don't match with current date
+    it "doesn't match expired codes when searching current date" do
       expect(described_class.get_child_code_leaves(query_date: "01/01/2019".to_date, code: "0101100000")).to eq([])
 
+    end
+
+    it "matches open ended codes" do
       #check newer codes without end date
       expect(described_class.get_child_code_leaves(query_date: "01/01/2019".to_date, code: "0101290000")).to eq(["0101291000", "0101299000"])
       expect(described_class.get_child_code_leaves(query_date: "01/01/2019".to_date, code: "0101000000")).to eq(["0101210000", "0101291000", "0101299000", "0101300000", "0101900000"])
@@ -60,6 +63,9 @@ describe WorkbasketValueObjects::Shared::CommodityCodeParser do
 
       expect(described_class.get_child_code_leaves(query_date: "01/01/2019".to_date, code: "0200000000")).to eq(["0200000000"])
 
+    end
+
+    it "returns different values when a sub-code has expired" do
       #check 0101109000 is a leaf on some dates
       expect(described_class.get_child_code_leaves(query_date: "01/05/2011".to_date, code: "0101100000")).to eq(["0101101000", "0101109010", "0101109090"])
       expect(described_class.get_child_code_leaves(query_date: "01/12/2011".to_date, code: "0101100000")).to eq(["0101101000", "0101109000"])
