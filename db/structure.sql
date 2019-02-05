@@ -12322,14 +12322,6 @@ CREATE UNIQUE INDEX xml_export_files_envelope_id_index ON public.xml_export_file
 
 
 --
--- Name: reassign_owned; Type: EVENT TRIGGER; Schema: -; Owner: -
---
-
-CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
-   EXECUTE PROCEDURE public.reassign_owned();
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -12522,3 +12514,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_origina
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181204111717_add_envelope_id_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190131153106_remove_unneeded_files_from_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_export_from_dates_to_workbasket.rb');

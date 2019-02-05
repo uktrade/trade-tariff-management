@@ -17,7 +17,6 @@ module BaseJobMixin
   def create
     record = klass.new(
       {
-        date_filters: date_filters,
         issue_date: Time.zone.now,
         state: "P"
       }.merge(additional_params)
@@ -31,20 +30,5 @@ module BaseJobMixin
       redirect_to redirect_url,
                   notice: "Something wrong!"
     end
-  end
-
-private
-
-  def persist_record(record)
-    record.save
-  end
-
-  def date_filters
-    ops = {}
-
-    ops[:start_date] = params[:start_date].try(:to_date) || Date.today
-    ops[:end_date] = params[:end_date].try(:to_date) if params[:end_date].present?
-
-    ops
   end
 end

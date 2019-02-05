@@ -2,7 +2,7 @@ module XmlGeneration
   class WorkbasketSearch
     attr_accessor :workbasket_id
 
-    def initialize(date_filters, workbasket_id)
+    def initialize(workbasket_id)
       @workbasket_id = workbasket_id
     end
 
@@ -11,7 +11,8 @@ module XmlGeneration
     end
 
     def target_workbaskets
-      ::Workbaskets::Workbasket.where('id = ?', workbasket_id).all
+      ::Workbaskets::Workbasket.where('id = ?', workbasket_id)
+        .in_status(%w[awaiting_cds_upload_create_new awaiting_cds_upload_edit awaiting_cross_check]).all
     end
 
     def data

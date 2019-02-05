@@ -239,13 +239,6 @@ module Workbaskets
           underscored_keywords)
       end
 
-      def xml_export_collection(start_date, end_date)
-        by_date_range(
-          start_date, end_date
-        ).in_status(%w[awaiting_cds_upload_create_new awaiting_cds_upload_edit awaiting_cross_check])
-         .order(:operation_date)
-      end
-
       def by_date_range(start_date, end_date)
         if end_date.present?
           where(
