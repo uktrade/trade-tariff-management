@@ -301,7 +301,7 @@ module Workbaskets
               item.move_status_to!(:awaiting_cross_check)
             end
           end
-          
+
           def assign_cross_checker!(current_user)
             add_event!(current_user, :cross_check_process_started)
 
@@ -355,7 +355,7 @@ module Workbaskets
           end
 
           def can_continue_cross_check?(current_user)
-            awaiting_cross_check? && cross_checker_is?(current_user)
+            awaiting_cross_check? && !current_user.author_of_workbasket?(self) && cross_checker_id.blank?
           end
 
           def approve_process_can_be_started?
