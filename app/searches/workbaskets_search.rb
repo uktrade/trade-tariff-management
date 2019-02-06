@@ -52,11 +52,7 @@ private
     end
   end
 
-  def paginate_workbaskets(with_pagination = true)
-    if with_pagination.present?
-      relation.page(page)
-    else
-      relation
-    end
+  def paginate_workbaskets
+    relation.page(page)
   end
 end
