@@ -32,7 +32,7 @@
 /       | &nbsp;|&nbsp;
 /       = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
 
-- if current_user.author_of_workbasket?(workbasket) && workbasket.object.type == "create_measures"
+- if current_user.author_of_workbasket?(workbasket)
 
   - if workbasket.can_withdraw?
     | &nbsp;|&nbsp;
@@ -42,7 +42,7 @@
     | &nbsp;|&nbsp;
     = link_to "Delete", "#", data: { target_url: workbasket_view_link_based_on_type(workbasket) }, class: "js-main-menu-show-delete-confirmation-link"
 
-  - if workbasket.cross_check_process_can_be_started? || workbasket.can_continue_cross_check?(current_user)
+  - if workbasket.can_continue_cross_check?(current_user)
     | &nbsp;|&nbsp;
     = link_to "Review for cross-check", new_cross_check_url(workbasket.id)
 
