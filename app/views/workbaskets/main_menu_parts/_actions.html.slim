@@ -32,29 +32,27 @@
 /       | &nbsp;|&nbsp;
 /       = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
 
-- if current_user.author_of_workbasket?(workbasket)
+- if workbasket.can_withdraw? && current_user.author_of_workbasket?(workbasket)
+  | &nbsp;|&nbsp;
+  = link_to "Withdraw/edit", "#", data: { target_url: withdraw_workbasket_from_workflow_create_measure_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
 
-  - if workbasket.can_withdraw?
+- elsif workbasket.new_in_progress?
+  | &nbsp;|&nbsp;
+  = link_to "Delete", "#", data: { target_url: workbasket_view_link_based_on_type(workbasket) }, class: "js-main-menu-show-delete-confirmation-link"
+
+- if workbasket.can_continue_cross_check?(current_user)
+  | &nbsp;|&nbsp;
+  = link_to "Review for cross-check", new_cross_check_url(workbasket.id)
+
+- if current_user.approver?
+  - if workbasket.approve_process_can_be_started? || workbasket.can_continue_approve?(current_user)
     | &nbsp;|&nbsp;
-    = link_to "Withdraw/edit", "#", data: { target_url: withdraw_workbasket_from_workflow_create_measure_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
+    = link_to "Review for approval", new_approve_url(workbasket.id)
 
-  - elsif workbasket.new_in_progress?
+  - elsif workbasket.ready_for_export?
     | &nbsp;|&nbsp;
-    = link_to "Delete", "#", data: { target_url: workbasket_view_link_based_on_type(workbasket) }, class: "js-main-menu-show-delete-confirmation-link"
+    = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
 
-  - if workbasket.can_continue_cross_check?(current_user)
+  - elsif workbasket.operation_date_can_be_rescheduled?
     | &nbsp;|&nbsp;
-    = link_to "Review for cross-check", new_cross_check_url(workbasket.id)
-
-  - if current_user.approver?
-    - if workbasket.approve_process_can_be_started? || workbasket.can_continue_approve?(current_user)
-      | &nbsp;|&nbsp;
-      = link_to "Review for approval", new_approve_url(workbasket.id)
-
-    - elsif workbasket.ready_for_export?
-      | &nbsp;|&nbsp;
-      = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
-
-    - elsif workbasket.operation_date_can_be_rescheduled?
-      | &nbsp;|&nbsp;
-      = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
+    = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
