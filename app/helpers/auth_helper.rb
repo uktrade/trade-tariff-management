@@ -11,7 +11,7 @@ module AuthHelper
   # @return [Boolean]
   def token_expired?
 
-    if session[:auth].credentials.expires_at.nil?
+    if session[:auth].credentials.nil? || session[:auth].credentials.expires_at.nil?
       false
     else
       session[:auth].credentials.expires_at < Time.now.to_i
