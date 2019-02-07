@@ -5,7 +5,6 @@ class SessionsController < ActionController::Base
 
     logger.debug "In SessionsController#create"
     auth = request.env['omniauth.auth']
-    @details = auth   # for sessions.create view - for debug only
 
     if auth.uid.nil? || auth.uid.blank? ||
         auth.info.email.nil? || auth.info.email.blank? ||
@@ -25,10 +24,14 @@ class SessionsController < ActionController::Base
       logger.debug session[:userinfo]
 
       # for debug - can remove...
+      @details = auth       # @details for view - remove redirect to test...
       logger.debug "email: " + @details["info"]["email"].to_s
-      logger.debug "token: " + @details["credentials"]["token"].to_s
-      logger.debug "refresh: " + @details["credentials"]["refresh_token"].to_s
-      logger.debug "expires: " + @details["credentials"]['expires_at'].to_s
+
+      if @details["credentials"].present?
+        logger.debug "token: " + @details["credentials"]["token"].to_s
+        logger.debug "refresh: " + @details["credentials"]["refresh_token"].to_s
+        logger.debug "expires: " + @details["credentials"]['expires_at'].to_s
+      end
 
       redirect_to root_url
 
