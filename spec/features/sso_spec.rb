@@ -3,10 +3,9 @@ require 'rails_helper'
 describe "sso authorised spec", :js do
 
   # uses the user_factory which creates an enabled user
-  let!(:user){create(:user)}
+  let!(:user){ create(:user) }
 
   before(:each) do
-
     OmniAuth.config.add_mock(:developer, {:uid => 'uid-1',
                                           :info => {
                                               :first_name => 'mock',

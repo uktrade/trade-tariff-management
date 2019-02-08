@@ -24,8 +24,6 @@ describe "Find measures API: Users", type: :request do
     it "returns JSON collection of all actual users" do
       get "/users.json", headers: headers
 
-      expect(collection.count).to eq(2)
-
       expect_user(0, adam)
       expect_user(1, bredd)
     end
