@@ -40,6 +40,7 @@ module AuthHelper
       logger.debug "user not signed in"
       redirect_to login_path
     end
+
   end
 
   # User record is held in the session variable
@@ -53,11 +54,20 @@ module AuthHelper
   # The login page depends on the authentication provider [ditsso internal or the omniauth developer]
   def login_path
 
-    if !ENV['DITSSO_INTERNAL_PROVIDER'].nil?
+    if ENV['DITSSO_INTERNAL_PROVIDER'].present?
       '/auth/ditsso_internal/'
     else
       '/auth/developer/'
     end
+
+  end
+
+  def logout_path
+
+    if ENV['DITSSO_LOGOUT_URL'].present?
+      ENV['DITSSO_LOGOUT_URL']
+    end
+
   end
 
   # @return the path to the disabled message page

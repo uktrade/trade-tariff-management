@@ -1,5 +1,7 @@
 class SessionsController < ActionController::Base
 
+  include AuthHelper
+
   # this is the SSO callback
   def create
 
@@ -39,26 +41,24 @@ class SessionsController < ActionController::Base
 
   end
 
-  # handle logout
+  # handle logout or unauthorised/access disabled
   def destroy
 
     session[:userinfo] = nil
     session[:auth] = nil
-
-    @title = "Logged out"
-    @message = "You are now logged out of the Tariff Application."
-    @additional = "You can reconnect to the application, but note that you may not need to enter your credentials again."
 
     if params[:disabled]
       logger.debug "?disabled=something"
       @title = "Unauthorised"
       @message = "Your user account is not authorised to use this application."
       @additional = "Please contact the application administrator to arrange access."
-    end
 
-    # Don't redirect to root url otherwise, the authentication sequence will restart
-    # Therefore the default view for destroy will just show a 'you are logged out page'
-    #redirect_to root_url
+      # Don't redirect to root url otherwise, the authentication sequence will restart
+      # Therefore the default view for destroy will just show a 'you are logged out page'
+
+    else
+      redirect_to logout_path
+    end
 
   end
 
