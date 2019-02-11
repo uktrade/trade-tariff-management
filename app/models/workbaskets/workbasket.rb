@@ -362,7 +362,7 @@ module Workbaskets
           end
 
           def can_continue_cross_check?(current_user)
-            awaiting_cross_check? && !current_user.author_of_workbasket?(self) && cross_checker_id.blank?
+            awaiting_cross_check? && !current_user.author_of_workbasket?(self)
           end
 
           def approve_process_can_be_started?
@@ -410,6 +410,8 @@ module Workbaskets
       self.last_update_by_id = current_user.id
       self.last_status_change_at = Time.zone.now
 
+      reset_settings_step_validations if new_status.to_sym == :editing
+
       save
     end
 
@@ -422,6 +424,10 @@ module Workbaskets
       )
 
       event.save
+    end
+
+    def reset_settings_step_validations
+      settings.reset_step_validations
     end
 
     def settings
