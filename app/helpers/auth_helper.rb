@@ -57,11 +57,11 @@ module AuthHelper
   end
 
   def logout_path
-
     if ENV['DITSSO_LOGOUT_URL'].present?
       ENV['DITSSO_LOGOUT_URL']
+    else
+      '/'
     end
-
   end
 
   # @return the path to the disabled message page
