@@ -3,20 +3,18 @@ ENV["RAILS_ENV"] ||= 'test'
 require "spec_helper"
 
 require 'webmock/rspec'
-require 'simplecov'
-require "codeclimate-test-reporter"
 
 WebMock.disable_net_connect!(allow: "codeclimate.com", allow_localhost: true)
 
-SimpleCov.add_filter "vendor"
-
-if ENV.key?("CODECLIMATE_REPO_TOKEN")
-  SimpleCov.formatters = []
-  SimpleCov.start CodeClimate::TestReporter.configuration.profile
-elsif ENV.key?("ENABLE_COVERAGE")
-  puts "Code coverage enabled"
-  SimpleCov.start "rails"
-end
+# SimpleCov.add_filter "vendor"
+#
+# if ENV.key?("CODECLIMATE_REPO_TOKEN")
+#   SimpleCov.formatters = []
+#   SimpleCov.start CodeClimate::TestReporter.configuration.profile
+# elsif ENV.key?("ENABLE_COVERAGE")
+#   puts "Code coverage enabled"
+#   SimpleCov.start "rails"
+# end
 
 require File.expand_path('../config/environment', __dir__)
 
@@ -57,6 +55,11 @@ RSpec.configure do |config|
   RedisLockDb.redis = redis
 
   config.before(:example, :type => :request) do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(create(:user))
+    allow_any_instance_of(ApplicationController).to receive(:token_expired?).and_return(false)
+  end
+
+  config.before(:example, :type => :feature) do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(create(:user))
     allow_any_instance_of(ApplicationController).to receive(:token_expired?).and_return(false)
   end

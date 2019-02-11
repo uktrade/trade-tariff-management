@@ -28,6 +28,6 @@ module WorkbasketWorkflowHelper
   end
 
   def iam_workbasket_author?
-    workbasket.user_id == current_user.id
+    workbasket.user_id == @current_user.id
   end
 end

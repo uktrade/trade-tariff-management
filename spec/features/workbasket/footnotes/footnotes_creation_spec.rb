@@ -10,10 +10,6 @@ RSpec.describe "adding footnotes", :js do
   let(:footnote_valid_from) { Date.today }
   let(:footnote_operational_from) { Date.today + 1.day }
 
-  before :each do
-    create(:user)
-  end
-
   it "allows a new footnote to be created" do
 
     visit(root_path)

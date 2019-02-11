@@ -23,20 +23,15 @@ module AuthHelper
   # - redirects to login page if not signed in or expired session
   # - redirects to error page if user access is disabled
   def authenticate_user!
+    @current_user = current_user
     if user_signed_in?
-      # logger.debug "user signed in"
-      # logger.debug session[:auth].info.email
-
       if token_expired?
-        logger.debug "token expired"
         redirect_to login_path
       end
       if current_user.disabled?
-        logger.debug "user access is disabled"
         redirect_to disabled_user_path
       end
     else
-      logger.debug "user not signed in"
       redirect_to login_path
     end
 

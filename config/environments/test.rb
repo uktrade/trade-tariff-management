@@ -53,13 +53,4 @@ Rails.application.configure do
   config.log_level = :info
 
   OmniAuth.config.test_mode = true
-
-  # NB This is the default mock ... can specify for specific test cases too
-  OmniAuth.config.add_mock(:developer, {:uid => 'uid-1',
-                                        :info => {
-                                          :first_name => 'mock',
-                                          :last_name => 'user',
-                                          :email => 'mock.user@mock.com'
-                                        }})
-
 end
