@@ -27,6 +27,17 @@ describe 'workbasket table', js: true do
       expect(page).to have_content('Continue')
     end
 
+    context "user's workbasket has been rejected by cross checker" do
+      it 'to do' do
+        current_users_workbasket.status = :cross_check_rejected
+        current_users_workbasket.save
+        visit root_path
+        expect(page).to have_content(current_users_workbasket.title)
+        expect(page).to have_content('Create Measure')
+        expect(page).to have_content('Cross-check rejected')
+      end
+    end
+
     context 'another user has created a workbasket which is awaiting cross check' do
       let!(:another_user) do
         create(:user)
