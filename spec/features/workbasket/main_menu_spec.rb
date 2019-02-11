@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 describe 'workbasket table', js: true do
-  let!(:user) do
-    create(:user)
-  end
-
   context 'no workbaskets exist' do
     it 'contains no data' do
       visit root_path
@@ -15,7 +11,7 @@ describe 'workbasket table', js: true do
   context 'user has created a workbasket' do
     let!(:current_users_workbasket) do
       create(:workbasket,
-             user_id: user.id,
+             user_id: User.first.id,
              title: '093456',
              type: :create_measures,
              status: :new_in_progress,)

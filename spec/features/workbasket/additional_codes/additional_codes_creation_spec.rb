@@ -5,19 +5,13 @@ RSpec.describe "adding additional codes", :js do
   let (:code_type) { create(:additional_code_type) }
   let (:new_code) { '888' }
   let (:new_description) { 'New code description' }
-
-  before :each do
-    create(:user)
-  end
-
+  
   it "allows a new code to be created" do
-
     visit(root_path)
     click_on("Create new additional codes")
 
     fill_in("What is the name of this workbasket?", with: "workbasket description")
     input_date("When are these new codes valid from?", Date.today)
-
     within(first("div.additional-code-row")) do
       select_dropdown_value(code_type.additional_code_type_id)
     end

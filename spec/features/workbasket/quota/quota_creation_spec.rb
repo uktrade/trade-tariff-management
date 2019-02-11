@@ -21,7 +21,6 @@ RSpec.describe "adding quotas", :js do
     let(:test_order_number) { '090909' }
     let(:workbasket_description) { "test quota description" }
 
-
     it 'creates new quota order number ' do
       create_required_model_instances
       stub_measure_types_controller
@@ -94,7 +93,6 @@ RSpec.describe "adding quotas", :js do
 
   def create_required_model_instances
     create(:geographical_area, :erga_omnes)
-    create(:user)
     create(:duty_expression, :with_description, duty_expression_id: "01")
   end
 

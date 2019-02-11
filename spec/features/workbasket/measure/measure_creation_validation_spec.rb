@@ -15,7 +15,6 @@ RSpec.describe "adding measures", :js do
       measure_type_series: measure_type_series,
     )
     commodity = create(:commodity, :declarable)
-    create(:user)
 
     visit(root_path)
 
