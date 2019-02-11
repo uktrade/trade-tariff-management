@@ -33,5 +33,9 @@ module Workbaskets
       @additional_codes_covered ||= measures.where("additional_code_id IS NOT NULL AND additional_code_type_id IS NOT NULL")
                                             .pluck(:additional_code_type_id, :additional_code_id).map(&:join).uniq
     end
+
+    def reset_step_validations
+      super([:duties_conditions_footnotes])
+    end
   end
 end
