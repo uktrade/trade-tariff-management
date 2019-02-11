@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   get "healthcheck" => "healthcheck#index"
 
+  get  "/auth/:provider/callback", to: "sessions#create"
+  post "/auth/:provider/callback", to: "sessions#create"
+  get  "/logout",                  to: "sessions#destroy", as: "gds_sign_out"
+
   resources :workbaskets, only: [:index]
 
   namespace :xml_generation do

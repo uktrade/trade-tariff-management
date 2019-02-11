@@ -1,8 +1,9 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     sequence(:uid) { |n| "uid-#{n}" }
     sequence(:name) { |n| "Joe Bloggs #{n}" }
     sequence(:email) { |n| "joe#{n}@bloggs.com" }
-    permissions { [User::Permissions::SIGNIN] }
+    disabled { false }
+    #permissions { [User::Permissions::SIGNIN] }
   end
 end

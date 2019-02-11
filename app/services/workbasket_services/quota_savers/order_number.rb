@@ -78,21 +78,22 @@ module WorkbasketServices
 
       def set_first_period_date
         @first_period_start_date = if periods.present?
-                                     periods.map do |_k, v|
-                                       if v['type'].to_s == 'custom'
-                                         v['periods'].map do |_k, v|
-                                           v['start_date']
-                                         end.min_by(&:to_date)
-
-                                       else
-                                         v['start_date']
-                                       end
-                                     end.reject(&:blank?).min_by(&:to_date)
-                                        .to_date
-
+                                     earliest_start_date&.to_date
                                    else
                                      Date.today
-        end
+                                   end
+      end
+
+      def earliest_start_date
+        periods.map do |_k, v|
+          if v['type'].to_s == 'custom'
+            v['periods'].map do |_k, v|
+              v['start_date']
+            end.min_by(&:to_date)
+          else
+            v['start_date']
+          end
+        end.reject(&:blank?).min_by(&:to_date)
       end
 
       def build_order_number

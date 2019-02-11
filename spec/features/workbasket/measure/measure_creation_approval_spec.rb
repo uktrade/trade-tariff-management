@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe "approval process for a Create Measure workbasket", :js do
   it "allows a cross-checked Measure to be approved" do
-    create(:user)
     workbasket = workbasket_creating_measure(status: :awaiting_approval)
 
     visit new_approve_path(workbasket.id)
@@ -16,7 +15,6 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
   end
 
   it "allows a cross-checked Measure to be rejected" do
-    create(:user)
     workbasket = workbasket_creating_measure(status: :awaiting_approval)
 
     visit new_approve_path(workbasket.id)

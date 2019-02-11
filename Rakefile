@@ -16,6 +16,6 @@ rescue LoadError
 end
 
 task default: [
-  "factory_girl:lint",
+  "factory_bot:lint",
   :spec,
 ]

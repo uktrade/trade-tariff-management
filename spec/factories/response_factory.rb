@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :response, class: TariffSynchronizer::Response do
     skip_create
 

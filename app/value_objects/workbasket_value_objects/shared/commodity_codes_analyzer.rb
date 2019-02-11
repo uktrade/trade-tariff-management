@@ -1,12 +1,9 @@
 module WorkbasketValueObjects
   module Shared
     class CommodityCodesAnalyzer
-      attr_accessor :start_date,
-                    :commodity_codes,
+      attr_accessor :commodity_codes,
                     :commodity_codes_exclusions,
-                    :collection,
-                    :commodity_codes_detected,
-                    :exclusions_detected
+                    :collection
 
       def initialize(ops = {})
         @collection = nil
@@ -18,11 +15,11 @@ module WorkbasketValueObjects
       end
 
       def commodity_codes_formatted
-        clean_array(commodity_codes_detected).join(', ')
+        clean_array(@commodity_codes_detected).join(', ')
       end
 
       def exclusions_formatted
-        clean_array(exclusions_detected).join(', ')
+        clean_array(@exclusions_detected).join(', ')
       end
 
     private
@@ -42,16 +39,14 @@ module WorkbasketValueObjects
                   handle_chapter_code(code)
                 else
                   #if code is not a chapter, get all declarable commodities
-                  current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
-                      new(start_date, code).
-                      codes
+                  current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_child_code_leaves(code: code, query_date: @start_date)
                   #and add all declarable commodities without excluded
-                  @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
+                  @commodity_codes_detected = @commodity_codes_detected + (current_codes - @exclusions_detected)
                 end
 
               else
                 #code has no excluded child within, we will add it to result
-                @commodity_codes_detected = commodity_codes_detected + Array::wrap(code)
+                @commodity_codes_detected = @commodity_codes_detected + Array::wrap(code)
               end
             end
 
@@ -59,7 +54,7 @@ module WorkbasketValueObjects
             #if has no excluded commodities, apply all codes without changes or expanding
             @commodity_codes_detected = list_of_codes
           end
-          @collection = commodity_codes_detected
+          @collection = @commodity_codes_detected
         end
 
         clean_array(collection).sort do |a, b|
@@ -73,33 +68,31 @@ module WorkbasketValueObjects
           heading_code = heading.goods_nomenclature_item_id
           if has_any_child_in?(heading_code, commodity_codes_exclusions)
             #if heading_code has excluded commodity, get declarable commodity within parent_code
-            current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.
-                new(start_date, heading_code).
-                codes
+            current_codes = ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_child_code_leaves(code: heading_code, query_date: @start_date)
             #add all commodities that not excluded
-            @commodity_codes_detected = commodity_codes_detected + (current_codes - exclusions_detected)
+            @commodity_codes_detected = @commodity_codes_detected + (current_codes - @exclusions_detected)
           else
             #add heading_code completely if has no excluded commodities
-            @commodity_codes_detected = commodity_codes_detected + Array::wrap(heading_code)
+            @commodity_codes_detected = @commodity_codes_detected + Array::wrap(heading_code)
           end
         end
       end
 
       def list_of_codes
-        if commodity_codes.present?
-          commodity_codes.split(/[\s|,]+/)
-                         .map(&:strip)
-                         .reject(&:blank?)
-                         .uniq
+        @list_of_codes ||= begin
+          if commodity_codes.present?
+            commodity_codes.split(/[\s|,]+/)
+                           .map(&:strip)
+                           .reject(&:blank?)
+                           .uniq
+                           .sort
+          end
         end
-        end
+      end
 
       def fetch_commodity_codes(codes_list)
         res = codes_list.map do |code|
-          ::WorkbasketValueObjects::Shared::CommodityCodeParser.new(
-            start_date,
-            code
-          ).codes
+          ::WorkbasketValueObjects::Shared::CommodityCodeParser.get_child_code_leaves(code: code, query_date: @start_date)
         end
 
         clean_array(res)
@@ -109,6 +102,7 @@ module WorkbasketValueObjects
         (list || []).flatten
                     .reject(&:blank?)
                     .uniq
+                    .sort
       end
 
       def chapter?(code)

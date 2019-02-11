@@ -31,7 +31,7 @@ module Workbaskets
         workbasket_settings.track_step_validations_status!(current_step, true)
         if workbasket_data_can_be_persisted?
           saver.persist!
-          submit_for_cross_check.run!
+          workbasket.submit_for_cross_check!(current_admin: current_user)
           render json: { redirect_url: submitted_url },
                  status: :ok
         else

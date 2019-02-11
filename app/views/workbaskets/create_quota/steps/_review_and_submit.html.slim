@@ -11,8 +11,6 @@
   = render "workbaskets/create_quota/steps/review_and_submit/details", read_only: read_only
   = render "workbaskets/create_quota/steps/review_and_submit/quota_periods", read_only: read_only
   = render "workbaskets/shared/steps/review_and_submit/measures", read_only: read_only, record_type: 'create_quota'
-  = render "workbaskets/create_quota/steps/review_and_submit/parent_quotas", read_only: read_only, record_type: 'create_quota'
-  = render "workbaskets/create_quota/steps/review_and_submit/sub_quotas", read_only: read_only, record_type: 'create_quota'
 
   - if read_only
     .form-actions

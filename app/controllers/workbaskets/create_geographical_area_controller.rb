@@ -36,7 +36,7 @@ module Workbaskets
 
         if submit_for_cross_check_mode?
           saver.persist!
-          submit_for_cross_check.run!
+          workbasket.submit_for_cross_check!(current_admin: current_user)
 
           render json: { redirect_url: submitted_url },
                  status: :ok

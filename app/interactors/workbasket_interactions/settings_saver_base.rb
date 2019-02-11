@@ -61,7 +61,7 @@ module WorkbasketInteractions
       @measure_sids = []
       check_required_params!
 
-      if candidates.present?
+      if @errors.blank? && candidates.present?
         validate!
         candidates_with_errors.blank?
       end
@@ -156,6 +156,20 @@ module WorkbasketInteractions
           end
         else
           general_errors[:geographical_area_id] = errors_translator(:no_geographical_area)
+        end
+
+        if commodity_codes.present?
+          invalid_commodity_codes = get_invalid_commodity_codes(CodeParsingService.csv_string_to_array(commodity_codes))
+          if invalid_commodity_codes.present?
+            general_errors[:commodity_codes] = "The following commodity codes are incorrect, please check: #{invalid_commodity_codes}"
+          end
+        end
+
+        if commodity_codes_exclusions.present?
+          invalid_commodity_codes = get_invalid_commodity_codes(commodity_codes_exclusions)
+          if invalid_commodity_codes.present?
+            general_errors[:commodity_codes_exclusions] = "The following Exception commodity codes are incorrect, please check: #{invalid_commodity_codes}"
+          end
         end
 
         if commodity_codes.blank? && commodity_codes_exclusions.present?
@@ -280,6 +294,12 @@ module WorkbasketInteractions
             "::WorkbasketServices::MeasureAssociationSavers::#{klass_name}".constantize.errors_in_collection(
               measure, system_ops.merge(type_of: name), public_send(name)
             )
+          end
+
+          def get_invalid_commodity_codes(codes)
+            codes.reject do |code|
+              GoodsNomenclature.by_code(code).declarable.first.present?
+            end
           end
 
           def generate_new_measure!(variable_params)

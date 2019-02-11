@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 describe "Regulations listing" do
-  let!(:user) do
-    create(:user)
-  end
-
   let!(:regulation_group) do
     group = create(:regulation_group)
     create(:regulation_group_description, regulation_group_id: group.regulation_group_id, description: "Various")

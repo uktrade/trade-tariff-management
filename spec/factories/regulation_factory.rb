@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :complete_abrogation_regulation do
     complete_abrogation_regulation_id   { generate(:sid) }
     complete_abrogation_regulation_role { Forgery(:basic).number }

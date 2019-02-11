@@ -15,7 +15,6 @@ RSpec.describe "adding measures", :js do
       measure_type_series: measure_type_series,
     )
     commodity = create(:commodity, :declarable)
-    create(:user)
 
     visit(root_path)
 
@@ -46,19 +45,6 @@ RSpec.describe "adding measures", :js do
     click_on("Submit for cross-check")
 
     expect(page).to have_content "Measures submitted"
-
-    click_on("Return to main menu")
-
-    within(find("tr", text: workbasket_name)) do
-      click_on("Review for cross-check")
-    end
-
-    expect(page).to have_content "Cross-check and create measures"
-
-    select_radio("I confirm that I have checked the above details")
-    click_on("Finish cross-check")
-
-    expect(page).to have_content "Measures cross-checked"
   end
 
   private

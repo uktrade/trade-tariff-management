@@ -1,0 +1,67 @@
+<% content_for :page_title do %>Tariff Management<% end %>
+<% content_for :app_title do %>Tariff Management<% end %>
+<% content_for :homepage_url, root_path %>
+
+<% content_for :head do %>
+  <%- if ENV["SENTRY_DSN"].present? %>
+    <%= javascript_include_tag "sentry" %>
+
+    <script>
+        Sentry.init({ dsn: '<%= ENV.fetch("SENTRY_DSN") %>' });
+    </script>
+  <% end %>
+
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+<% end %>
+
+<% content_for :global_header_text, "<span class='desktop-title'>Tariff Management</span><span class='mobile-title'>TMA</span>".html_safe %>
+
+<%= content_for :proposition_header do %>
+  <div class="tma_header">
+    <ul>
+      <li style="display:none"><%= link_to 'Sign out', '/logout' %></li>
+    </ul>
+  </div>
+<% end %>
+
+<% content_for :before_content do %>
+  <div class="phase-banner">
+    <p>
+      <strong class="phase-tag">BETA</strong>
+      <span>This is a new service – your <a href="mailto:support@bitzesty.com?Subject=DIT%20Tariff%20Management">feedback</a> will help us to improve it.</span>
+    </p>
+  </div>
+<% end %>
+
+<% content_for :content do %>
+  <h1 class="heading-xlarge">
+    <%= @title %>
+  </h1>
+
+  <div class="row">
+      <p>
+        <%= @message %>
+      </p>
+  </div>
+  <div class="row">
+      <p>
+        <%= @additional %>
+      </p>
+  </div>
+  <div class="row">
+      <p>
+        &nbsp;
+      </p>
+  </div>
+
+<% end %>
+
+<% content_for :footer_bottom do %>
+  <%= render "application/version_identifier" %>
+<% end %>
+
+<%= render template: "layouts/govuk_template" %>
+
+

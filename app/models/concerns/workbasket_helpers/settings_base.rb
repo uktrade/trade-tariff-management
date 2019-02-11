@@ -55,6 +55,13 @@ module WorkbasketHelpers
       public_send("#{step}_step_validation_passed").present?
     end
 
+    def reset_step_validations(steps= [])
+      ([:main] + steps).each do |step|
+        public_send("#{step}_step_validation_passed=", false)
+      end
+      save
+    end
+
     def set_searchable_data_for_created_measures!
       measures.map do |measure|
         measure.manual_add = true

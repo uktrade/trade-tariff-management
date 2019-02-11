@@ -78,5 +78,9 @@ module Workbaskets
       diff = (latest_period_date.year - earliest_period_date.year)
       [1, diff].max
     end
+
+    def reset_step_validations
+      super([:configure_quota, :conditions_footnotes])
+    end
   end
 end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:comment_sid) { |n| n }
 
   factory :transmission_comment do
