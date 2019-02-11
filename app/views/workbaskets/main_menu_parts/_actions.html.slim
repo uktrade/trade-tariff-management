@@ -33,7 +33,8 @@
 /       = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
 
 - if workbasket.can_withdraw? && @current_user.author_of_workbasket?(workbasket) && workbasket.object.type == "create_measures"
-
+  | &nbsp;|&nbsp;
+  = link_to "Withdraw/edit", "#", data: { target_url: withdraw_workbasket_from_workflow_create_measure_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
 - elsif workbasket.new_in_progress?
   | &nbsp;|&nbsp;
   = link_to "Delete", "#", data: { target_url: workbasket_view_link_based_on_type(workbasket) }, class: "js-main-menu-show-delete-confirmation-link"
