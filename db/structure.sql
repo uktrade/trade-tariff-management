@@ -7961,13 +7961,11 @@ CREATE TABLE public.xml_export_files (
     created_at timestamp without time zone,
     xml_data text,
     issue_date timestamp without time zone,
-    date_filters text,
-    base_64_data text,
-    zip_data text,
     meta_data text,
     workbasket boolean DEFAULT true,
     validation_errors jsonb DEFAULT '{}'::jsonb,
-    envelope_id integer
+    envelope_id integer,
+    workbasket_selected integer
 );
 
 
@@ -12523,3 +12521,5 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164645_create_edit
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_original_fields_to_edit_geographical_areas_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181204111717_add_envelope_id_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190131153106_remove_unneeded_files_from_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_export_from_dates_to_workbasket.rb');

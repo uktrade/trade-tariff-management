@@ -1,0 +1,32 @@
+<h1>Authenticated</h1>
+
+<table>
+  <tr>
+    <td>Email:</td>
+    <td><%= @details["info"]["email"] %></td>
+  </tr>
+  <tr>
+    <td>First Name:</td>
+    <td><%= @details["info"]["first_name"] %></td>
+  </tr>
+  <tr>
+    <td>Last Name:</td>
+    <td><%= @details["info"]["last_name"] %></td>
+  </tr>
+  <tr>
+    <td>User id:</td>
+    <td><%= @details["user_id"] %></td>
+  </tr>
+  <tr>
+    <td>Access token</td>
+    <td><%= @details["credentials"]["token"] %></td>
+  </tr>
+  <tr>
+    <td>Refresh token</td>
+    <td><%= @details["credentials"]["refresh_token"] %></td>
+  </tr>
+  <tr>
+    <td>Expires at</td>
+    <td><%= @details["credentials"]['expires_at'] %></td>
+  </tr>
+</table>

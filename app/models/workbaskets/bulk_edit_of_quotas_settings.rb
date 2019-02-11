@@ -132,5 +132,10 @@ module Workbaskets
         workbasket, Measure.new, target_id
       )
     end
+
+    def reset_step_validations
+      super([:configure_quota, :conditions_footnotes])
+    end
+
   end
 end

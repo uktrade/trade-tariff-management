@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe "adding geographical areas", :js do
   it "allows a new group to be created" do
-    _user = create(:user)
 
     visit(root_path)
 
@@ -23,8 +22,6 @@ RSpec.describe "adding geographical areas", :js do
     create(:geographical_area, :erga_omnes)
     create(:geographical_area, :third_countries)
     group = create(:geographical_area, :group, geographical_area_id: "9999")
-
-    _user = create(:user)
 
     visit(root_path)
 

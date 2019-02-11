@@ -6,7 +6,7 @@ table.table
     col width="*"
   thead
     tr
-      th.span2 Date / Range
+      th.span2 Workbasket
       th.span2 Scheduled at
       th.span2 Status
       th.span2 Download and Review
@@ -14,7 +14,7 @@ table.table
     - collection.map do |export_item|
       tr
         td
-          = export_item.date_range
+          = export_item.workbasket_selected
         td
           = export_item.issue_date
         td
@@ -37,9 +37,3 @@ table.table
 
               =<> link_to "Metadata file", export_item.meta.url, download: export_item.meta.original_filename
               br
-
-            - if export_item.base_64.present?
-              =<> link_to "Encoded BASE64", export_item.base_64.url, download: export_item.base_64.original_filename
-              span
-               =<> '|'
-              =<> link_to "Encoded BASE64 in ZIP", export_item.zip.url, download: export_item.zip.original_filename

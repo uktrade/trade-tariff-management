@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:duty_expression_description) { |n| n }
 
   factory :duty_expression do

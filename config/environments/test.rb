@@ -51,4 +51,6 @@ Rails.application.configure do
   end
 
   config.log_level = :info
+
+  OmniAuth.config.test_mode = true
 end

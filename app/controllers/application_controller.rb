@@ -1,12 +1,14 @@
 class ApplicationController < ActionController::Base
-  include GDS::SSO::ControllerMethods
 
-  protect_from_forgery
+  include AuthHelper
 
-  prepend_before_action :authenticate_user!
-  before_action do
-    authorise_user!('signin')
-  end
+  protect_from_forgery with: :null_session
+
+  before_action :authenticate_user!
+
+  # prepend_before_action :authenticate_user! before_action do
+  #   authorise_user!('signin')
+  # end
 
   def current_page
     Integer(params[:page] || 1)

@@ -3,40 +3,28 @@ module XmlGeneration
     include ::XmlGeneration::BaseHelper
 
     SOURCE_SYSTEM = "DIT".freeze
-    SOURCE_SYSTEM_TYPE = "AWS".freeze
-    SOURCE_SYSTEM_OS = "RedHat_7.3".freeze
     INTERFACE_NAME = "TAQ01".freeze
     INTERFACE_VERSION = "V1.0".freeze
-    CORRELATION_ID = "8452f702-a7e0-40aa-8d2f-052073d9ca88".freeze
-    CONVERSATION_ID = "TODO".freeze
-    TRANSACTION_ID = "TODO".freeze
-    MESSAGE_ID = "TODO".freeze
     CHECKSUM_ALGORITHM = "MD5".freeze
     COMPRESSED = "false".freeze
     COMPRESSION_ALGORITHM = "ZIP".freeze
     COMPRESSED_CHECKSUM_ALGORITHM = "MD5".freeze
     SOURCE_LOCATION = "DIT FTP Server".freeze
-    SOURCE_FILE_ENCODING = "UTF-8".freeze
 
     attr_accessor :xml_export,
-                  :xml_file_path,
-                  :zip_file_path,
-                  :extract_start_date_time,
-                  :extract_end_date_time,
-                  :extract_database_date_time
+                  :xml_file_path
 
     def initialize(xml_export)
       @xml_export = xml_export
       @xml_file_path = xml_export.tmp_xml_file.path
-      @zip_file_path = xml_export.tmp_zip_file.path
-
-      @extract_start_date_time = xml_export.extract_start_date_time.xmlschema
-      @extract_end_date_time = xml_export.extract_end_date_time.xmlschema
-      @extract_database_date_time = xml_export.extract_database_date_time.xmlschema
     end
 
     def generate
       renderer.render(self, xml: xml_builder)
+    end
+
+    def correlation_id
+      SecureRandom.uuid
     end
 
     def source_file_name
@@ -49,10 +37,6 @@ module XmlGeneration
 
     def xml_file_size
       File.size(xml_file_path)
-    end
-
-    def compressed_checksum
-      get_md5_checksum(zip_file_path)
     end
 
     def destinations
