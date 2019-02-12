@@ -44,7 +44,7 @@
   = link_to "Review for cross-check", new_cross_check_url(workbasket.id)
 
 - if @current_user.approver?
-  - if workbasket.approve_process_can_be_started? || workbasket.can_continue_approve?(@current_user)
+  - if workbasket.can_continue_approve?(@current_user)
     | &nbsp;|&nbsp;
     = link_to "Review for approval", new_approve_url(workbasket.id)
 

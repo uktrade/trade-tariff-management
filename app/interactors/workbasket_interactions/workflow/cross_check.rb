@@ -4,12 +4,10 @@ module WorkbasketInteractions
     private
 
       def post_approve_action!
-        if submit_for_approval.present?
-          workbasket.move_status_to!(
-            current_user,
-            :awaiting_approval
-          )
-        end
+        workbasket.move_status_to!(
+          current_user,
+          :awaiting_approval
+        )
       end
 
       def post_reject_action!

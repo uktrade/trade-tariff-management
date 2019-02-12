@@ -11,22 +11,6 @@ script type="text/x-template" id="cross-check-decision-template"
       label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected"
         | I am not happy with the measure(s).
 
-    .panel.panel-border-narrow.hidden.js-cross-check-approve-details-block v-if="approveTypeSelected"
-      label.form-label
-        | Do you want to submit the measure(s) for approval now?
-
-        span.form-hint.with_bigger_font-size
-          | Leave this option unselected if the measures are not yet ready to be sent to CDS.
-
-      .parent-group-target
-        .form-group
-          .find-measures__checkbox-column
-            .multiple-choice
-              input name="cross_check[submit_for_approval]" type="hidden" v-model="cross_check.submit_for_approval" value="1"
-              input#toggle-type name="cross_check[submit_for_approval]" type="checkbox" v-model="cross_check.submit_for_approval" value="1"
-              label.with_bigger_font-size for="toggle-type"
-                | Immediately submit for approval
-
     .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block v-if="rejectTypeSelected"
       label.form-label
         | Provide your reasons and/or state the changes required:
