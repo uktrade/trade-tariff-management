@@ -50,7 +50,7 @@ module Certificates
     end
 
     def collection
-      Certificate.q_search(params).eager(:certificate_descriptions).all
+      Certificate.q_search(params)
     end
   end
 end

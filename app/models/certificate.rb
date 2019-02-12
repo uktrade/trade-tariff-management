@@ -84,7 +84,7 @@ class Certificate < Sequel::Model
   end
 
   def certificate_description
-    certificate_descriptions.first
+    certificate_descriptions(reload: true).first
   end
 
   one_to_many :certificate_types, key: :certificate_type_code,
