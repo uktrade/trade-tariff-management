@@ -216,13 +216,13 @@ module Workbaskets
       def relevant_for_manager(current_user)
         if current_user.approver?
           where(
-            "user_id = ? OR status = ?",
-            current_user.id, "awaiting_cross_check"
+            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval')",
+            current_user.id
           )
         else
           where(
-            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval')",
-            current_user.id
+            "user_id = ? OR status = ?",
+            current_user.id, "awaiting_cross_check"
           )
         end
       end
@@ -365,17 +365,12 @@ module Workbaskets
             awaiting_cross_check? && !current_user.author_of_workbasket?(self)
           end
 
-          def approve_process_can_be_started?
-            awaiting_approval? &&
-              approver_id.blank?
-          end
-
           def approve_process_can_not_be_started?
             !approve_process_can_be_started?
           end
 
           def can_continue_approve?(current_user)
-            awaiting_approval? && approver_is?(current_user)
+            awaiting_approval? && current_user.approver?
           end
 
           def awaiting_cds_upload_new_or_edit_item?
