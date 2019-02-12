@@ -47,6 +47,7 @@ describe 'workbasket table', js: true do
         expect(page).to have_content(current_users_workbasket.title)
         expect(page).to have_content('Create Measure')
         expect(page).to have_content('Cross-check rejected')
+        expect(page).to have_content('Withdraw/edit')
       end
     end
 
