@@ -321,4 +321,12 @@ module WorkbasketHelper
       edit_geographical_area_url(workbasket.id)
     end
   end
+
+  def workbasket_edit_link(workbasket)
+    if workbasket.object.type == "create_measures"
+      withdraw_workbasket_from_workflow_create_measure_url(workbasket.id)
+    elsif workbasket.object.type == "create_quota"
+      withdraw_workbasket_from_workflow_create_quotum_url(workbasket.id)
+    end
+  end
 end
