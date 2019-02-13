@@ -34,7 +34,7 @@
 
 / withdraw_workbasket_from_workflow_create_quotum
 
-- if workbasket.can_withdraw? && @current_user.author_of_workbasket?(workbasket) && (workbasket.object.type == "create_measures" || workbasket.object.type == "create_quota")
+- if show_withdraw_edit?(workbasket)
   | &nbsp;|&nbsp;
   = link_to "Withdraw/edit", "#", data: { target_url: workbasket_edit_link(workbasket) }, class: "js-main-menu-show-withdraw-confirmation-link"
 - elsif workbasket.new_in_progress?
