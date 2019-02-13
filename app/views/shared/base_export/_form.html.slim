@@ -1,16 +1,15 @@
 .search-form
+  -if @form_error
+    .error-summary role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1"
+      .heading-medium.error-summary-heading
+        = @form_error
+
   = simple_form_for record_name.downcase, url: redirect_url, html: { method: :post, "data-parsley-validate" => true, "autocomplete" => "off", class: "export-form" } do |f|
 
     .row
       .col-sm-3.col-md-2.col-lg-2
-        = f.input :workbasket_id, as: :string, label: 'Workbasket ID'.html_safe,  input_html: { name: :workbasket_id, class: 'form-control end-date' }
-    - if show_workbasket_checkbox
-      .row
-        .col-sm-3.col-md-2.col-lg-2
-          .multiple-choice
-            input type="checkbox" id="export_workbasket" name="workbasket" checked="checked"
-            label.form-label.boolean.optional for="export_workbasket"
-              | Workbasket
+        = f.input :workbasket_id, as: :integer, required: true, label: 'Workbasket ID'.html_safe,  input_html: { name: :workbasket_id, class: 'form-control end-date' }
+        = f.hidden_field  :export_workbasket, value:"true"
 
     .form-actions
       = f.button :submit, "Schedule #{record_name}", class: 'button', data: { 'disable-with' => 'Scheduling' }

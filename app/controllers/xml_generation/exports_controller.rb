@@ -35,7 +35,26 @@ module XmlGeneration
       nil
     end
 
+    def create
+      if valid_workbasket?
+        super
+      else
+        render :index
+      end
+    end
+
   private
+
+    def valid_workbasket?
+      if Workbaskets::Workbasket[params[:workbasket_id]].present?
+        if Workbaskets::Workbasket[params[:workbasket_id]].status != :awaiting_cds_upload_create_new
+          @form_error= "Workbasket status must be 'Awaiting CDS upload', currently it is '#{Workbaskets::Workbasket[params[:workbasket_id]].status.humanize}'."
+        end
+      else
+        @form_error= "Cannot find Workbasket '#{params[:workbasket_id]}'."
+      end
+      @form_error.blank?
+    end
 
     def persist_record(record)
       record.save_with_envelope_id
