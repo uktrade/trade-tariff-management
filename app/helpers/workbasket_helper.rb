@@ -329,4 +329,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_quotum_url(workbasket.id)
     end
   end
+
+  def show_withdraw_edit?(workbasket)
+    workbasket.can_withdraw? && @current_user.author_of_workbasket?(workbasket) && (workbasket.object.type == "create_measures" || workbasket.object.type == "create_quota")
+  end
 end
