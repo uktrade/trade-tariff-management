@@ -27,7 +27,7 @@ describe 'workbasket table', js: true do
       expect(page).to have_content('Continue')
     end
 
-    context "user's workbasket has been submitted for cross checker" do
+    context "user's `create measure` workbasket has been submitted for cross checker" do
       it 'shows status `Awaiting cross-check` and option to withdraw or edit' do
         current_users_workbasket.status = :awaiting_cross_check
         current_users_workbasket.save
@@ -39,13 +39,39 @@ describe 'workbasket table', js: true do
       end
     end
 
-    context "user's workbasket has been rejected by cross checker" do
+    context "user's `create measure` workbasket has been rejected by cross checker" do
       it 'shows workbasket with status `Cross-check rejected`' do
         current_users_workbasket.status = :cross_check_rejected
         current_users_workbasket.save
         visit root_path
         expect(page).to have_content(current_users_workbasket.title)
         expect(page).to have_content('Create Measure')
+        expect(page).to have_content('Cross-check rejected')
+        expect(page).to have_content('Withdraw/edit')
+      end
+    end
+
+    context "user's `create quota` workbasket has been submitted for cross checker" do
+      it 'shows status `Awaiting cross-check` and option to withdraw or edit' do
+        current_users_workbasket.type = :create_quota
+        current_users_workbasket.status = :awaiting_cross_check
+        current_users_workbasket.save
+        visit root_path
+        expect(page).to have_content(current_users_workbasket.title)
+        expect(page).to have_content('Create Quota')
+        expect(page).to have_content('Awaiting cross-check')
+        expect(page).to have_content('Withdraw/edit')
+      end
+    end
+
+    context "user's `create quota` workbasket has been rejected by cross checker" do
+      it 'shows workbasket with status `Cross-check rejected`' do
+        current_users_workbasket.type = :create_quota
+        current_users_workbasket.status = :cross_check_rejected
+        current_users_workbasket.save
+        visit root_path
+        expect(page).to have_content(current_users_workbasket.title)
+        expect(page).to have_content('Create Quota')
         expect(page).to have_content('Cross-check rejected')
         expect(page).to have_content('Withdraw/edit')
       end
@@ -66,7 +92,6 @@ describe 'workbasket table', js: true do
 
       it 'displays other users workbasket data' do
         visit root_path
-
         expect(page).to have_content(current_users_workbasket.title)
         expect(page).to have_content('Create Measure')
         expect(page).to have_content('New - in progress')

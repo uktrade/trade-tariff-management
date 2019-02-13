@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe "adding quotas", :js do
-  context 'succesfully completed form' do
+RSpec.describe "quotas", :js do
+  context 'create quota' do
     let!(:measurement_unit) { create(:measurement_unit, :with_description) }
 
     let(:regulation) do
@@ -38,6 +38,40 @@ RSpec.describe "adding quotas", :js do
     end
   end
 
+  context 'edit quota' do
+    let!(:measurement_unit) { create(:measurement_unit, :with_description) }
+
+    let(:regulation) do
+      regulation = create(
+      :base_regulation,
+        :not_replaced,
+        base_regulation_id: "D0399990",
+        information_text: "Test regulation",
+      )
+    end
+    let(:measure_type_series) { create(:measure_type_series_description) }
+    let(:measure_type) { create(:measure_type, order_number_capture_code: 1, measure_type_series_id: measure_type_series.measure_type_series_id) }
+    let(:measure_type_series_description) do
+      create(:measure_type_series_description, measure_type_series_id: measure_type_series.measure_type_series_id)
+    end
+    let(:commodity) { create(:commodity, :declarable) }
+    let(:test_order_number) { '090909' }
+    let(:workbasket_description) { "test quota description" }
+
+    it 'creates new quota order number ' do
+      create_required_model_instances
+      stub_measure_types_controller
+      visit_create_quota_page
+      fill_out_create_quota_form
+      fill_out_configure_quota_form
+      skip_optional_footnote_form
+      expect_to_be_on_submit_for_cross_check_page
+      click_button 'Submit for cross-check'
+      navigate_to_edit_form
+      change_precision_quota_and_submit
+      expect(page).to have_content('Quota submitted')
+    end
+  end
 
   def visit_create_quota_page
     visit(root_path)
@@ -98,5 +132,21 @@ RSpec.describe "adding quotas", :js do
 
   def stub_measure_types_controller
     allow_any_instance_of(Measures::MeasureTypesController).to receive(:collection).and_return([measure_type])
+  end
+
+  def navigate_to_edit_form
+    click_link 'Return to main menu'
+    click_link 'Withdraw/edit'
+    click_link 'Confirm'
+  end
+
+  def change_precision_quota_and_submit
+    within(find("fieldset", text: "What is the maximum precision for this quota")) do
+      search_for_value(type_value: "2", select_value: "2")
+    end
+    click_button 'Continue'
+    click_button 'Continue'
+    click_button 'Continue'
+    click_button 'Submit for cross-check'
   end
 end
