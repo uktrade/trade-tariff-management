@@ -1,0 +1,97 @@
+h3.heading-medium Summary of quota configuration
+
+- first_measure = workbasket_settings.measures.first
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Order number
+      td
+        = attributes_parser.quota_ordernumber
+
+    tr
+      td.heading_column
+        | Maximum precision
+      td
+        = attributes_parser.quota_precision
+
+    tr
+      td.heading_column
+        | Type
+      td
+        = "#{first_measure.measure_type_id} #{attributes_parser.measure_type}"
+
+    tr
+      td.heading_column
+        | Operation date
+      td
+        = attributes_parser.operation_date_formatted
+
+    tr
+      td.heading_column
+        | Licensed
+      td
+        = attributes_parser.quota_is_licensed == 'true' ? 'Yes' : 'No'
+
+    tr
+      td.heading_column
+        | Regulation
+      td
+        = attributes_parser.regulation
+
+    tr
+      td.heading_column
+        | Goods
+      td
+        = attributes_parser.commodity_codes_formatted
+
+    tr
+      td.heading_column
+        | Goods exceptions
+      td
+        = attributes_parser.exclusions_formatted
+
+    tr
+      td.heading_column
+        | Additional codes
+      td
+        = attributes_parser.additional_codes_formatted
+
+    tr
+      td.heading_column
+        | Origin
+      td
+        - areas = workbasket_settings.settings["geographical_area_id"]
+
+        - if areas.present?
+          - if areas.is_a?(Array)
+            = workbasket_settings.settings["geographical_area_id"].join(", ")
+          - else
+            = attributes_parser.origin
+
+    tr
+      td.heading_column
+        | Origin exceptions
+      td
+        = attributes_parser.origin_exceptions
+
+    tr
+      td.heading_column
+        | Conditions
+      td
+        = first_measure.conditions_short_list
+
+    tr
+      td.heading_column
+        | Footnotes
+      td
+        ul.workbasket-review-and-submit-footnotes-list
+          - first_measure.footnotes.map.with_index do |footnote, index|
+            li class="#{index.zero? ? 'without_top_margin' : ''}"
+              = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
+              br
+              = footnote.description
+
+    tr
+      td.heading_column
