@@ -25,6 +25,7 @@
     .virtual-scroller
       .item-container
         .items style=("margin-top: 0px;")
+          - quota_periods = workbasket.settings.quota_periods
           - quota_periods.map do |item|
             .table__row data-measure-sid="-485562" height="45"
 
