@@ -1,0 +1,12 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Quota cross-checked.
+
+  h3.heading-medium
+    | The quota has been cross-checked but not yet sent through to CDS. It is currently pending approval.
+
+    br
+    br
+    | Once approved it will be made live.
+
+= render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
