@@ -7,14 +7,14 @@
       = link_to "Measures", measures_url
 
     li aria-current="page"
-      | Approve new measures
+      = approval_title(workbasket)
 
 header
   h1.heading-large
-    | Approve new measures
+    = approval_title(workbasket)
 
   .view-workbasket-container
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/block", partial_name: "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/approves/general"
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/workbasket_details"
-    = render "workbaskets/shared/steps/review_and_submit/measures", read_only: true, record_type: workbasket.type
+    = render table_partial(workbasket), read_only: true, record_type: workbasket.type
     = render "workbaskets/workflows/approves/form"
