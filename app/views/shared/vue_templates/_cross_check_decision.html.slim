@@ -3,12 +3,12 @@ script type="text/x-template" id="cross-check-decision-template"
     .multiple-choice
       input type='radio' :id="radioID" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" :checked="cross_check.selected"
 
-      label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected"
+      label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected" data-test='approve-cross-check'
         = "I confirm that I have checked the above details and am satisfied that the #{object_name(workbasket)} have been configured correctly and reflect the requirements."
         span.form-hint.with_bigger_font-size
           | Selecting this option will have the system generate the measure(s). There will be a further approval step before they are sent to CDS.
 
-      label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected"
+      label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected" data-test='reject-cross-check'
         = "I am not happy with the #{object_name(workbasket)}."
 
     .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block v-if="rejectTypeSelected"
@@ -16,4 +16,4 @@ script type="text/x-template" id="cross-check-decision-template"
         | Provide your reasons and/or state the changes required:
 
       .parent-group-target.col-xs-8.col-md-10.col-lg-12
-        textarea.form-control*{ "v-model" => "cross_check.reject_reasons", rows: 4, name: "cross_check[reject_reasons]" }
+        textarea.form-control*{ "v-model" => "cross_check.reject_reasons", rows: 4, name: "cross_check[reject_reasons]" } data-test='reject-reason'
