@@ -16,33 +16,37 @@ RSpec.describe 'cross check', :js do
 
   let!(:measure) { create(:measure, status: :awaiting_cross_check, workbasket_id: workbasket.id, measure_type: measure_type, geographical_area: geographical_area, quota_order_number: quota_order_number) }
 
-
-  it 'allows approving cross check' do
+  before(:example) do
     allow_any_instance_of(WorkbasketHelper).to receive(:workbasket_quota_periods_years_length) { 2 }
     allow_any_instance_of(WorkbasketValueObjects::AttributesParserBase).to receive(:measure_type) { MeasureType.first }
     allow_any_instance_of(WorkbasketValueObjects::AttributesParserBase).to receive(:regulation) { base_regulation.formatted_id }
     workbasket.settings.measure_sids_jsonb = "[#{measure.measure_sid}]"
     workbasket.settings.measure_sids_jsonb = "[#{measure.measure_sid}]"
     workbasket.settings.save
+  end
+
+  it 'allows approving cross check' do
     visit root_path
     click_link 'Review for cross-check'
-    find("[data-test='approve-cross-check']").click
+    select_approve
     click_button('Finish cross-check')
     expect(page).to have_content('Quota cross-checked.')
   end
 
   it 'allows approving cross check' do
-    allow_any_instance_of(WorkbasketHelper).to receive(:workbasket_quota_periods_years_length) { 2 }
-    allow_any_instance_of(WorkbasketValueObjects::AttributesParserBase).to receive(:measure_type) { MeasureType.first }
-    allow_any_instance_of(WorkbasketValueObjects::AttributesParserBase).to receive(:regulation) { base_regulation.formatted_id }
-    workbasket.settings.measure_sids_jsonb = "[#{measure.measure_sid}]"
-    workbasket.settings.measure_sids_jsonb = "[#{measure.measure_sid}]"
-    workbasket.settings.save
     visit root_path
     click_link 'Review for cross-check'
-    find("[data-test='reject-cross-check']").click
-    find("[data-test='reject-reason']").set('xxxxx')
+    select_reject_and_give_reason
     click_button('Finish cross-check')
     expect(page).to have_content('Quota cross-check rejected')
+  end
+
+  def select_approve
+    find("[data-test='approve-cross-check']").click
+  end
+
+  def select_reject_and_give_reason
+    find("[data-test='reject-cross-check']").click
+    find("[data-test='reject-reason']").set('Something is wrong')
   end
 end
