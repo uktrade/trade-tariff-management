@@ -4,10 +4,10 @@ script type="text/x-template" id="approve-decision-template"
       input type='radio' :id="radioID" class="radio-inline-group js-approve-decision" name="approve[mode]" :checked="approve.selected"
 
       label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected"
-        | Approve the measures(s).
+        = "Approve the #{object_name(workbasket)}."
 
       label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected"
-        | I am not happy with the measure(s).
+        = "I am not happy with the #{object_name(workbasket)}."
 
     .panel.panel-border-narrow.hidden.js-approve-details-block v-if="approveTypeSelected"
       label.form-label for="approve_export_date"
