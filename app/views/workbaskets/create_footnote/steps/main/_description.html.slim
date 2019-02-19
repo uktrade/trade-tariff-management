@@ -9,7 +9,8 @@ fieldset
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}
         span.form-hint
-          | Description cannot be left blank and must comprise at least one word.
+          p Description cannot be left blank and must comprise at least one word.
+          p Reminder: for data-protection reasons, do not include anyone's personal information here, such as names, email addresses or phone numbers.
 
       .bootstrap-row
         .col-lg-6.col-md-8.col-sm-12.col-xs-12
