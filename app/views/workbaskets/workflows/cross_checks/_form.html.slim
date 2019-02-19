@@ -39,7 +39,7 @@ script
                 | Provide your reasons and/or state the changes required:
 
               .parent-group-target.col-xs-8.col-md-10.col-lg-12
-                textarea.form-control id="rejection_reason" rows="4" name="cross_check[reject_reasons]" oninvalid="this.setCustomValidity('Please fill in this field.')"
+                textarea.form-control id="rejection_reason" rows="4" name="cross_check[reject_reasons]" oninvalid="this.setCustomValidity('Please fill in this field.')" oninput="setCustomValidity('')"
 
   / = render "workbaskets/shared/success_message", f: f
   = render "workbaskets/workflows/cross_checks/action_links", f: f
