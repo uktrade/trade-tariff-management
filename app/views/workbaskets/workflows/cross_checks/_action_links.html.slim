@@ -3,9 +3,6 @@
     | Next step
 
   .submit_group_for_cross_check_block
-    = f.button :submit, "Finish cross-check", name: "submit_for_cross_check", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button"
+    = f.button :submit, "Finish cross-check", name: "submit_for_cross_check", class: "button"
 
-    .js-workbasket-base-continue-spinner.spinner_block.hidden
-      = render "measures/bulks/loading_spinner", message: "Checking data..."
-
-  = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-workbasket-base-exit-button"
+  = link_to "Exit (return to main menu)", root_url, class: "secondary-button"

@@ -41,12 +41,10 @@ module Workbaskets
         if checker.valid?
           checker.persist!
 
-          render json: { redirect_url: check_completed_url },
-                         status: :ok
+          redirect_to check_completed_url
         else
-          render json: {
-            errors: checker.errors,
-          }, status: :unprocessable_entity
+          @errors = checker.errors
+          render :new,  status: :unprocessable_entity
         end
       end
     end

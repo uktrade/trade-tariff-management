@@ -16,7 +16,7 @@ module WorkbasketInteractions
       end
 
       def approve_status
-        :ready_for_approval
+        :awaiting_approval
       end
 
       def reject_status

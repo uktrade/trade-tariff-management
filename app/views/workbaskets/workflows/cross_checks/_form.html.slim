@@ -5,25 +5,42 @@ script
 = simple_form_for form, url: cross_check_url(workbasket.id),
                         html: { \
                           class: "cross-check-form create-measures-v2", \
+                          novalidate: false, \
                           method: :post \
                         } do |f|
 
   .cross-check-form-fields
-    fieldset
-      h3.heading-medium
-        | Confirm cross-check
+    h3.heading-medium
+      | Confirm cross-check
 
-      form-group :errors="errors" error-key="general"
-        template slot-scope="slotProps"
-          label.form-label
-            span.error-message v-if="slotProps.hasError" v-cloak=""
-              | {{slotProps.error}}
+    form-group
+      label.form-label
+        - if @errors.present?
+          span.error-message
+            - @errors.each do |error|
+              = error
+      .bootstrap-row
+        .controls
+          .cross-check-decision
+            .multiple-choice
+              input type='radio' id="radioID" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" value="approve" required="true"
+                label.with_bigger_font-size for='radioID'
+                  | I confirm that I have checked the above details and am satisfied that the measure(s) have been configured correctly and reflect the requirements.
+                  span.form-hint.with_bigger_font-size
+                    | Selecting this option will have the system generate the measure(s). There will be a further approval step before they are sent to CDS.
+          .cross-check-decision
+            .multiple-choice
+              input type='radio' id="radioID2" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" value="reject" required="true"
+                label.with_bigger_font-size for='radioID2'
+                  | I am not happy with the measure(s).
 
-          .bootstrap-row
-            .controls
-              = content_tag "cross-check-decision", "", { kind: "approve", ":cross_check" => "types.approve" }
-              = content_tag "cross-check-decision", "", { kind: "reject", ":cross_check" => "types.reject" }
+            .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block id="cross-check-rejection-reason"
+              label.form-label for="rejection_reason"
+                | Provide your reasons and/or state the changes required:
 
-  = render "workbaskets/shared/success_message", f: f
+              .parent-group-target.col-xs-8.col-md-10.col-lg-12
+                textarea.form-control id="rejection_reason" rows="4" name="cross_check[reject_reasons]"
+
+  / = render "workbaskets/shared/success_message", f: f
   = render "workbaskets/workflows/cross_checks/action_links", f: f
-  = render "shared/vue_templates/cross_check_decision"
+  / = render "shared/vue_templates/cross_check_decision"
