@@ -26,18 +26,18 @@ script
               .multiple-choice
                 input type='radio' id="approve-decision-approve" class="radio-inline-group" name="approve[mode]" value="approve" required="true"
                   label.with_bigger_font-size for="approve-decision-approve"
-                    | Approve the measure(s).
+                    | Approve.
             .approve-decision
               .multiple-choice
                 input type='radio' id="approve-decision-reject" class="radio-inline-group" name="approve[mode]" value="reject" required="true"
                   label.with_bigger_font-size for="approve-decision-reject"
-                    | I am not happy with the measure(s).
+                    | I am not happy.
 
               .panel.panel-border-narrow.hidden.js-approve-reject-details-block id="approval-rejection-reason"
                 label.form-label for="approve_reject_reasons"
                   | Provide your reasons and/or state the changes required:
 
                 .parent-group-target.col-xs-8.col-md-10.col-lg-12
-                  textarea.form-control rows="4" name="approve[reject_reasons]" id="approve_reject_reasons"
+                  textarea.form-control rows="4" name="approve[reject_reasons]" id="approve_reject_reasons" oninvalid="this.setCustomValidity('Please fill in this field.')"
 
   = render "workbaskets/workflows/approves/action_links", f: f
