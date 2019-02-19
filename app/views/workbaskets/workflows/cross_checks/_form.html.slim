@@ -25,21 +25,21 @@ script
             .multiple-choice
               input type='radio' id="radioID" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" value="approve" required="true"
                 label.with_bigger_font-size for='radioID'
-                  | I confirm that I have checked the above details and am satisfied that the measure(s) have been configured correctly and reflect the requirements.
+                  | I confirm that I have checked the above details and am satisfied this has been configured correctly and reflect the requirements.
                   span.form-hint.with_bigger_font-size
                     | Selecting this option will have the system generate the measure(s). There will be a further approval step before they are sent to CDS.
           .cross-check-decision
             .multiple-choice
               input type='radio' id="radioID2" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" value="reject" required="true"
                 label.with_bigger_font-size for='radioID2'
-                  | I am not happy with the measure(s).
+                  | I am not happy.
 
             .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block id="cross-check-rejection-reason"
               label.form-label for="rejection_reason"
                 | Provide your reasons and/or state the changes required:
 
               .parent-group-target.col-xs-8.col-md-10.col-lg-12
-                textarea.form-control id="rejection_reason" rows="4" name="cross_check[reject_reasons]"
+                textarea.form-control id="rejection_reason" rows="4" name="cross_check[reject_reasons]" oninvalid="this.setCustomValidity('Please fill in this field.')"
 
   / = render "workbaskets/shared/success_message", f: f
   = render "workbaskets/workflows/cross_checks/action_links", f: f

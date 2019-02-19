@@ -17,11 +17,11 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
     workbasket = workbasket_creating_measure(status: :awaiting_cross_check)
 
     visit new_cross_check_path(workbasket.id)
-    select_radio(/I am not happy with the measure?/i)
+    select_radio('I am not happy.')
     click_on("Finish cross-check")
 
     message = page.find("#rejection_reason").native.attribute("validationMessage")
-    expect(message).to eq "Please fill out this field."
+    expect(message).to eq "Please fill in this field."
 
     fill_in("Provide your reasons", with: "Computer says no")
     click_on("Finish cross-check")
@@ -34,7 +34,7 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
     workbasket = workbasket_creating_measure(status: :awaiting_approval)
 
     visit new_approve_path(workbasket.id)
-    find("label", text:'Approve the measure(s).').click
+    find("label", text:'Approve.').click
     click_on("Finish approval")
 
     expect(page).to have_content "Measures approved"
@@ -45,11 +45,11 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
 
     visit new_approve_path(workbasket.id)
 
-    find("label", text:'I am not happy with the measure(s).').click
+    find("label", text:'I am not happy.').click
     click_on("Finish approval")
 
     message = page.find("#approve_reject_reasons").native.attribute("validationMessage")
-    expect(message).to eq "Please fill out this field."
+    expect(message).to eq "Please fill in this field."
 
     fill_in("Provide your reasons and/or state the changes required:", with: "Computer says no")
     click_on("Finish approval")

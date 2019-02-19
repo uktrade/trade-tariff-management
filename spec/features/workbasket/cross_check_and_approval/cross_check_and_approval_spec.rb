@@ -74,23 +74,22 @@ RSpec.describe 'cross check', :js do
   end
 
   def select_approve
-    find("[data-test='approve-cross-check']").click
+    find("label", text:'I confirm that I have checked the above details and am satisfied this has been configured correctly and reflect the requirements.').click
   end
 
   def select_reject_and_give_reason
-    find("[data-test='reject-cross-check']").click
-    find("[data-test='reject-reason']").set('Something is wrong')
+    find("label", text:'I am not happy').click
+    fill_in("Provide your reasons and/or state the changes required:", with: "Computer says no")
   end
 
   def confirm_approval
-    find("[data-test='approve-approval']").click
-    input_date('approve_export_date', Date.today)
+    find("label", text:'Approve.').click
     click_button 'Finish approval'
   end
 
   def reject_approval
-    find("[data-test='reject-approval']").click
-    fill_in('approve_reject_reasons', with: 'No no no no no')
+    find("label", text:'I am not happy').click
+    fill_in("Provide your reasons and/or state the changes required:", with: "Computer says no")
     click_button 'Finish approval'
   end
 end

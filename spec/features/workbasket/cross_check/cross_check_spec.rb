@@ -46,7 +46,7 @@ RSpec.describe 'cross check', :js do
   end
 
   def select_reject_and_give_reason
-    find("label", text:'I am not happy with the measure(s).').click
+    find("label", text:'I am not happy.').click
     fill_in("Provide your reasons and/or state the changes required:", with: "Something is wrong")
   end
 end
