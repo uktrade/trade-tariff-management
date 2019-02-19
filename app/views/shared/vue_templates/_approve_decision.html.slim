@@ -3,10 +3,10 @@ script type="text/x-template" id="approve-decision-template"
     .multiple-choice
       input type='radio' :id="radioID" class="radio-inline-group js-approve-decision" name="approve[mode]" :checked="approve.selected"
 
-      label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected"
+      label.with_bigger_font-size :for="radioID" v-if="approveTypeSelected" data-test="approve-approval"
         = "Approve the #{object_name(workbasket)}."
 
-      label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected"
+      label.with_bigger_font-size :for="radioID" v-if="rejectTypeSelected" data-test="reject-approval"
         = "I am not happy with the #{object_name(workbasket)}."
 
     .panel.panel-border-narrow.hidden.js-approve-details-block v-if="approveTypeSelected"
