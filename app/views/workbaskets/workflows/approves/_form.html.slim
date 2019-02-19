@@ -38,6 +38,6 @@ script
                   | Provide your reasons and/or state the changes required:
 
                 .parent-group-target.col-xs-8.col-md-10.col-lg-12
-                  textarea.form-control rows="4" name="approve[reject_reasons]" id="approve_reject_reasons" oninvalid="this.setCustomValidity('Please fill in this field.')"
+                  textarea.form-control rows="4" name="approve[reject_reasons]" id="approve_reject_reasons" oninvalid="this.setCustomValidity('Please fill in this field.')" oninput="setCustomValidity('')"
 
   = render "workbaskets/workflows/approves/action_links", f: f
