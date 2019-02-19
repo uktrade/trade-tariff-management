@@ -3,11 +3,13 @@ require "rails_helper"
 RSpec.describe XmlGeneration::TaricExport do
   let(:operation_date) { Date.current }
   let!(:workbasket) { create(:workbasket, status: :awaiting_cds_upload_create_new) }
+  let(:user) { create(:user) }
   let(:xml_export_file) do
     build(
       :xml_export_file,
       workbasket: true,
-      workbasket_selected: workbasket.id
+      workbasket_selected: workbasket.id,
+      user_id: user.id
     )
   end
 

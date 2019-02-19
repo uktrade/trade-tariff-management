@@ -27,6 +27,7 @@ module XmlGeneration
       else
         mark_export_process_as_empty!
       end
+      mark_workbasket_as_sent!
     end
 
     def name_of_xml_file
@@ -46,6 +47,10 @@ module XmlGeneration
 
     def mark_export_process_as_empty!
       record.update(state: "E")
+    end
+
+    def mark_workbasket_as_sent!
+      Workbaskets::Workbasket[@record.workbasket_selected].move_status_to!(User[@record.user_id], :sent_to_cds)
     end
 
     # data is a XmlGeneration::NodeEnvelope object

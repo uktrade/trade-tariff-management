@@ -18,7 +18,8 @@ module BaseJobMixin
     record = klass.new(
       {
         issue_date: Time.zone.now,
-        state: "P"
+        state: "P",
+        user_id: current_user.id
       }.merge(additional_params)
     )
     if persist_record(record)

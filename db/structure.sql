@@ -7965,7 +7965,8 @@ CREATE TABLE public.xml_export_files (
     workbasket boolean DEFAULT true,
     validation_errors jsonb DEFAULT '{}'::jsonb,
     envelope_id integer,
-    workbasket_selected integer
+    workbasket_selected integer,
+    user_id integer
 );
 
 
@@ -12523,3 +12524,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181204111717_add_envelope_id_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190131153106_remove_unneeded_files_from_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_export_from_dates_to_workbasket.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190212163200_add_user_id_to_xml_export_files.rb');

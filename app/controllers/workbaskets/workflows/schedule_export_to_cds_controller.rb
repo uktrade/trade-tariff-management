@@ -6,16 +6,10 @@ module Workbaskets
       end
 
       def create
-        if export_date.present?
-          workbasket.operation_date = export_date
-
-          if workbasket.save
-            workbasket.move_status_to!(
-              current_user,
-              :awaiting_cds_upload_create_new
-            )
-          end
-        end
+        workbasket.move_status_to!(
+          current_user,
+          :awaiting_cds_upload_create_new
+        )
       end
     end
   end
