@@ -131,5 +131,52 @@ describe 'workbasket table', js: true do
         expect(page).to_not have_content(other_users_unsubmitted_workbasket.title)
       end
     end
+
+    context 'another user has created a workbasket which is awaiting approval' do
+      let!(:another_user) do
+        create(:user)
+      end
+
+      let!(:other_users_awaiting_approval_workbasket) do
+        create(:workbasket,
+          user_id: another_user.id,
+          title: '091234',
+          type: :create_quota,
+          status: :awaiting_approval)
+      end
+      let(:current_user) { User.first }
+
+      context 'current user is an approver' do
+        it 'displays other users workbasket data' do
+          current_user.approver_user = true
+          current_user.save
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
+
+          visit root_path
+
+          expect(page).to have_content(other_users_awaiting_approval_workbasket.title)
+          expect(page).to have_content('Create Quota')
+          expect(page).to have_content('Awaiting approval')
+          expect(page).to have_content('View')
+          expect(page).to_not have_content('Withdraw/edit')
+        end
+      end
+
+      context 'current user is not an approver' do
+        it 'displays other users workbasket data' do
+          current_user.approver_user = false
+          current_user.save
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
+
+          visit root_path
+
+          expect(page).to_not have_content(other_users_awaiting_approval_workbasket.title)
+          expect(page).to_not have_content('Create Quota')
+          expect(page).to_not have_content('Awaiting approval')
+          expect(page).to_not have_content('View')
+          expect(page).to_not have_content('Withdraw/edit')
+        end
+      end
+    end
   end
 end
