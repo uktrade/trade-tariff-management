@@ -1,7 +1,7 @@
 module WorkbasketInteractions
   module Workflow
     class ApproveBase
-      ALLOWED_OPS = %w(
+      ALLOWED_OPTIONS = %w(
         mode
         submit_for_approval
         reject_reasons
@@ -24,7 +24,7 @@ module WorkbasketInteractions
         @errors = {}
       end
 
-      ALLOWED_OPS.map do |option_name|
+      ALLOWED_OPTIONS.map do |option_name|
         define_method(option_name) do
           settings[option_name]
         end

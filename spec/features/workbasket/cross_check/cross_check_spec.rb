@@ -42,11 +42,11 @@ RSpec.describe 'cross check', :js do
   end
 
   def select_approve
-    find("[data-test='approve-cross-check']").click
+    find("label", text:'I confirm that I have checked the above details').click
   end
 
   def select_reject_and_give_reason
-    find("[data-test='reject-cross-check']").click
-    find("[data-test='reject-reason']").set('Something is wrong')
+    find("label", text:'I am not happy with the measure(s).').click
+    fill_in("Provide your reasons and/or state the changes required:", with: "Something is wrong")
   end
 end

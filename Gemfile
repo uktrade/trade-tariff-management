@@ -98,13 +98,13 @@ end
 
 group :development, :test do
   gem "dotenv-rails"
+  gem "factory_bot_rails", require: false
   gem "pry"
   gem "pry-rails"
 end
 
 group :test do
   gem "rspec-rails"
-  gem "factory_bot_rails", require: false
   gem "fakefs", require: "fakefs/safe"
   gem "forgery"
   gem "json_expressions"
