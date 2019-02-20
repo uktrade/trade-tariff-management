@@ -17,6 +17,9 @@ Vue.component("quota-section", {
         { id: "4", label: "4 years" },
         { id: "5", label: "5 years" }
       ],
+      monetary_units: [
+        { id: "EUR", label: "EUROs"}
+      ]
     };
   },
   props: ["section", "index"],
@@ -174,7 +177,7 @@ Vue.component("quota-section", {
         return true;
       }
 
-      if (!this.section.type || !this.section.start_date || !this.section.period || !this.section.measurement_unit_code) {
+      if (!this.section.type || !this.section.start_date || !this.section.period || !(this.section.measurement_unit_code || this.section.monetary_unit_code)) {
         return false;
       }
 

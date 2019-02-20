@@ -124,6 +124,7 @@ module WorkbasketInteractions
                   'measurement_unit_code': period.measurement_unit_code,
                   'measurement_unit_qualifier_id': '',
                   'measurement_unit_qualifier_code': period.measurement_unit_qualifier_code,
+                  'monetary_unit_code': period.monetary_unit_code,
                   'duty_expressions': extract_duty_expressions(period)
               }
           }

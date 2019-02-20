@@ -1,6 +1,6 @@
 <script type="text/x-template" id="quota-sections-manager-template">
   <div>
-    <quota-section :section="section" :index="index" v-for="(section, index) in sections">
+    <quota-section :section="section" :index="index" v-for="(section, index) in sections" :key="index">
       <p>
         <a href="#" v-on:click.prevent="removeSection(index)">
           Remove section

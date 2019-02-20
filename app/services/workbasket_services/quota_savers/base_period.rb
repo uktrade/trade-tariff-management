@@ -78,6 +78,10 @@ module WorkbasketServices
         section_ops["measurement_unit_qualifier_code"]
       end
 
+      def monetary_unit_code
+        section_ops["monetary_unit_code"]
+      end
+
       def definition_ops
         {
           volume: balance,
@@ -91,6 +95,7 @@ module WorkbasketServices
           quota_order_number_sid: order_number.quota_order_number_sid,
           measurement_unit_code: measurement_unit_code,
           measurement_unit_qualifier_code: measurement_unit_qualifier_code,
+          monetary_unit_code: monetary_unit_code,
           workbasket_type_of_quota: section_ops['type'],
           maximum_precision: all_settings["quota_precision"]
         }
