@@ -58,7 +58,7 @@ module WorkbasketValueObjects
         section_ops['start_date'].present? &&
           section_ops['period'].present? &&
           section_ops['period'].to_s != "1_repeating" &&
-          section_ops['measurement_unit_code'].present?
+          (section_ops['measurement_unit_code'].present? || section_ops['monetary_unit_code'].present?)
       end
 
       def quota_type_specific_requirements_passed?(section_ops, period_type)

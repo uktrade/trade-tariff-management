@@ -85,6 +85,9 @@
         <div class="form-group">
           <label for="" class="form-label">
             How will the quota balance(s) in this section be measured?
+            <span class="form-hint">
+              In most cases, quotas are measured according to physical attributes, such as weight or volume. Please select that attribute here.
+            </span>
           </label>
 
           <div class="row">
@@ -93,6 +96,21 @@
             </div>
             <div class="col-md-3">
               <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="section.measurement_unit_qualifier_code" placeholder="― optionally select qualifier ―" date-sensitive=true code-class-name="prefix--measurement-unit-qualifier"></custom-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="" class="form-label">
+            Will the quota be measured according to total monetary value?
+            <span class="form-hint">
+              Alternatively, the quota may be measured according to the total Euro value that can be imported. If this is the case, please select EUROs in the dropdown below.
+            </span>
+          </label>
+
+          <div class="row">
+            <div class="col-md-3">
+              <custom-select id="monetary-unit-code" :options="monetary_units" placeholder="― select monetary unit ―" label-field="label" value-field="id" v-model="section.monetary_unit_code"></custom-select>
             </div>
           </div>
         </div>

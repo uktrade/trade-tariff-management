@@ -54,7 +54,7 @@ en:
       blank_commodity_and_additional_codes: "Goods commodity codes: can be empty but only if one or more Meursing codes are entered in the Additional codes field."
       commodity_codes_exclusions: "Exceptions: if one or more codes are entered here, Goods commodity codes field must not be empty; each exception code must be a child of one of the goods commodity codes above."
       commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please, double check params"
-      no_any_quota_period: "Need to specify at least of one valid quota period. Period type, Start date, Length of period, Balance and Measurement Unit are required!"
+      no_any_quota_period: "Need to specify at least of one valid quota period. Period type, Start date, Length of period, Balance and Measurement/Monetary Unit are required!"
       no_geographical_area: "A geographical origin (or Erga Omnes) must be specified."
       maximum_precision_blank: "Maximum precision must be specified."
 
