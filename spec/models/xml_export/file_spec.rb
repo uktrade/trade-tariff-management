@@ -51,11 +51,11 @@ RSpec.describe XmlExport::File do
       it "follows on from the previous ID for this year" do
         xml_export_file_2 = build(:xml_export_file)
 
-        first_envelope_id = "#{Date.current.strftime('%y')}1234"
+        first_envelope_id = "#{Date.current.strftime('%y')}8888"
         xml_export_file.save_with_envelope_id(envelope_id: first_envelope_id)
         xml_export_file_2.save_with_envelope_id
 
-        expect(xml_export_file_2.envelope_id.to_s).to end_with("1235")
+        expect(xml_export_file_2.envelope_id.to_s).to end_with("8889")
       end
     end
 
