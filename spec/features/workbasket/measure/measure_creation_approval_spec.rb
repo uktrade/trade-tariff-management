@@ -3,6 +3,11 @@ require "rails_helper"
 RSpec.describe "approval process for a Create Measure workbasket", :js do
   include_context 'create_measures_base_context'
 
+  before(:example) do
+    user = (create(:user, approver_user: true))
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+  end
+
   it "allows a Measure to be cross-checked" do
     workbasket = workbasket_creating_measure(status: :awaiting_cross_check)
 

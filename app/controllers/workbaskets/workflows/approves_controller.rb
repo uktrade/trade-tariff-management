@@ -1,7 +1,7 @@
 module Workbaskets
   module Workflows
     class ApprovesController < Workbaskets::Workflows::BaseController
-      # before_action :require_to_be_approver!, only: [:create, :show]
+      before_action :require_to_be_approver!
       # before_action :require_approve_not_to_be_aready_started!, only: [:new]
       # before_action :check_approve_permissions!, only: [:create, :show]
 
@@ -23,7 +23,7 @@ module Workbaskets
 
       def require_to_be_approver!
         unless current_user.approver?
-          redirect_to read_only_url
+          redirect_to root_path
           false
         end
       end
