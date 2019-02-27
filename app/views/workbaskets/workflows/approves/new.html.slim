@@ -16,5 +16,7 @@ header
   .view-workbasket-container
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/block", partial_name: "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/approves/general"
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/workbasket_details"
+    = render "workbaskets/#{workbasket.type}/workflow_screens_parts/summary_of_configuration"
+
     = render table_partial(workbasket), read_only: true, record_type: workbasket.type
     = render "workbaskets/workflows/approves/form"
