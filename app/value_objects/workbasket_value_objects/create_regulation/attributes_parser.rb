@@ -30,8 +30,8 @@ module WorkbasketValueObjects
       }.freeze
 
       SUB_FIELD_LEGAL_ID = 0
-      SUB_FIELD_DESCRIPTION = 1
-      SUB_FIELD_REFERENCE_URL = 2
+      SUB_FIELD_REFERENCE_URL = 1
+      SUB_FIELD_DESCRIPTION = 2
 
       attr_accessor :ops,
                     :normalized_params,
