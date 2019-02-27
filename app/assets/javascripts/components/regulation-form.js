@@ -6,8 +6,8 @@ $(document).ready(function() {
   }
 
   const SUB_FIELD_LEGAL_ID = 0,
-        SUB_FIELD_DESCRIPTION = 1,
-        SUB_FIELD_URL = 2;
+        SUB_FIELD_URL = 1,
+        SUB_FIELD_DESCRIPTION = 2
 
   var app = new Vue({
     el: form,
@@ -97,7 +97,6 @@ $(document).ready(function() {
     },
     methods: {
       parseRegulationPayload: function(payload) {
-        //Todo check which of these values are no longer necessary if we are using base regulations only
         return {
           role: payload.role ? payload.role + "" : payload.role,
           prefix: payload.prefix,
@@ -124,7 +123,6 @@ $(document).ready(function() {
       },
       emptyRegulation: function() {
         return {
-          //Todo check which of these values are no longer necessary if we are using base regulations only
           role: "1",
           prefix: null,
           publication_year: null,
@@ -153,7 +151,6 @@ $(document).ready(function() {
       },
       createRegulationMainStepPayLoad: function() {
         return {
-          //Todo check which of these values are no longer necessary if we are using base regulations only
           role: "1",
           prefix: this.regulation.prefix,
           publication_year: this.regulation.publication_year,
