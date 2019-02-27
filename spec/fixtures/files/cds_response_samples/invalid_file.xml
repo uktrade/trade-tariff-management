@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<taric3TransactionsLogData xmlns="http://www.eurodyn.com/Tariff/services/Taric3TransactionsLog/request/v03">
+    <headerData>
+        <envelopeId>18023</envelopeId>
+        <fileName>TGB18023.XML_201811271120001.xml</fileName>
+        <userName>taxud</userName>
+        <nationalFlag>T</nationalFlag>
+    </headerData>
+    <processResult>0</processResult>
+</taric3TransactionsLogData>

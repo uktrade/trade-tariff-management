@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<taric3TransactionsLogData xmlns="http://www.eurodyn.com/Tariff/services/Taric3TransactionsLog/request/v03">
+    <headerData>
+        <envelopeId>18029</envelopeId>
+        <fileName>TGB18029_20181207144726.xml</fileName>
+        <userName>taxud</userName>
+        <nationalFlag>T</nationalFlag>
+    </headerData>
+    <invalidTransactionData>
+        <invalidTransaction>
+            <transacationId>1</transacationId>
+            <invalidTransmissionData>
+                <invalidTransmission>
+                    <transactionId>1</transactionId>
+                    <recordCode>360</recordCode>
+                    <subRecordCode>00</subRecordCode>
+                    <operation>3</operation>
+                    <recordInfo key="quota.order.number.sid" value="3190"/>
+                    <recordInfo key="quota.order.number.id" value="093376"/>
+                    <recordInfo key="validity.start.date" value="2019-01-01"/>
+                </invalidTransmission>
+            </invalidTransmissionData>
+        </invalidTransaction>
+        <invalidTransaction>
+            <transacationId>2</transacationId>
+            <invalidTransmissionData>
+                <invalidTransmission>
+                    <transactionId>2</transactionId>
+                    <recordCode>360</recordCode>
+                    <subRecordCode>10</subRecordCode>
+                    <operation>3</operation>
+                    <recordInfo key="quota.order.number.origin.sid" value="8742"/>
+                    <recordInfo key="quota.order.number.sid" value="3190"/>
+                    <recordInfo key="geographical.area.id" value="1011"/>
+                    <recordInfo key="validity.start.date" value="2019-01-01"/>
+                    <recordInfo key="geographical.area.sid" value="400"/>
+                </invalidTransmission>
+            </invalidTransmissionData>
+        </invalidTransaction>
+        <invalidTransaction>
+            <transacationId>5</transacationId>
+            <invalidTransmissionData>
+                <invalidTransmission>
+                    <transactionId>5</transactionId>
+                    <recordCode>370</recordCode>
+                    <subRecordCode>00</subRecordCode>
+                    <operation>3</operation>
+                    <recordInfo key="quota.definition.sid" value="13788"/>
+                    <recordInfo key="quota.order.number.id" value="093376"/>
+                    <recordInfo key="validity.start.date" value="2019-04-01"/>
+                    <recordInfo key="validity.end.date" value="2019-07-01"/>
+                    <recordInfo key="quota.order.number.sid" value="3190"/>
+                    <recordInfo key="volume" value="2000.0"/>
+                    <recordInfo key="initial.volume" value="2000.0"/>
+                    <recordInfo key="measurement.unit.code" value="GRM"/>
+                    <recordInfo key="measurement.unit.qualifier.code" value="R"/>
+                    <recordInfo key="maximum.precision" value="3"/>
+                    <recordInfo key="critical.state" value="N"/>
+                    <recordInfo key="critical.threshold" value="80"/>
+                </invalidTransmission>
+            </invalidTransmissionData>
+        </invalidTransaction>
+        <invalidTransaction>
+            <transacationId>7</transacationId>
+            <invalidTransmissionData>
+                <invalidTransmission>
+                    <transactionId>7</transactionId>
+                    <recordCode>370</recordCode>
+                    <subRecordCode>00</subRecordCode>
+                    <operation>3</operation>
+                    <recordInfo key="quota.definition.sid" value="14222"/>
+                    <recordInfo key="quota.order.number.id" value="093376"/>
+                    <recordInfo key="validity.start.date" value="2019-04-01"/>
+                    <recordInfo key="validity.end.date" value="2019-09-30"/>
+                    <recordInfo key="quota.order.number.sid" value="3190"/>
+                    <recordInfo key="volume" value="4000.0"/>
+                    <recordInfo key="initial.volume" value="4000.0"/>
+                    <recordInfo key="measurement.unit.code" value="KLT"/>
+                    <recordInfo key="measurement.unit.qualifier.code" value="B"/>
+                    <recordInfo key="maximum.precision" value="3"/>
+                    <recordInfo key="critical.state" value="N"/>
+                    <recordInfo key="critical.threshold" value="80"/>
+                </invalidTransmission>
+            </invalidTransmissionData>
+        </invalidTransaction>
+    </invalidTransactionData>
+    <processSummary>
+        <operationStartDate>2018-12-07T02:48:00</operationStartDate>
+        <operationEndDate>2018-12-07T02:48:00</operationEndDate>
+        <totalTransmissions>5</totalTransmissions>
+        <totalTransactionsProcessed>0</totalTransactionsProcessed>
+        <totalErroneousTransactions>4</totalErroneousTransactions>
+    </processSummary>
+    <processResult>1</processResult>
+</taric3TransactionsLogData>
