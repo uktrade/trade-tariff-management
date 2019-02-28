@@ -90,7 +90,6 @@ $(document).ready(function() {
           { value: "editing", label: "Editing" },
           { value: "awaiting_cross_check", label: "Awaiting cross-check" },
           { value: "cross_check_rejected", label: "Cross-check rejected" },
-          { value: "ready_for_approval", label: "Ready for approval" },
           { value: "awaiting_approval", label: "Awaiting approval" },
           { value: "approval_rejected", label: "Approval rejected" },
           { value: "ready_for_export", label: "Ready for export" },

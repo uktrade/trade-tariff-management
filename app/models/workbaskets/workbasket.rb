@@ -30,9 +30,6 @@ module Workbaskets
       :cross_check_rejected,           # Cross-check rejected
                                        # Did not pass cross-check, returned to submitter
                                        #
-      :ready_for_approval,             # Ready for approval
-                                       # Has passed cross-check but not yet submitted for approval
-                                       #
       :awaiting_approval,              # Awaiting approval
                                        # Submitted for approval, pending response from Approver
                                        #
@@ -302,28 +299,6 @@ module Workbaskets
             end
           end
 
-          def assign_cross_checker!(current_user)
-            add_event!(current_user, :cross_check_process_started)
-
-            self.cross_checker_id = current_user.id
-            save
-          end
-
-          def assign_approver!(current_user)
-            add_event!(current_user, :approve_process_started)
-
-            self.approver_id = current_user.id
-            save
-          end
-
-          def cross_checker_is?(current_user)
-            cross_checker_id.to_i == current_user.id
-          end
-
-          def approver_is?(current_user)
-            approver_id.to_i == current_user.id
-          end
-
           def edit_type?
             EDIT_WORKABSKETS.include?(type)
           end
@@ -367,10 +342,6 @@ module Workbaskets
 
           def approve_process_can_not_be_started?
             !approve_process_can_be_started?
-          end
-
-          def can_continue_approve?(current_user)
-            awaiting_approval? && current_user.approver?
           end
 
           def awaiting_cds_upload_new_or_edit_item?

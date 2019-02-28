@@ -28,7 +28,6 @@ en:
       editing: "Editing"
       awaiting_cross_check: "Awaiting cross-check"
       cross_check_rejected: "Cross-check rejected"
-      ready_for_approval: "Ready for approval"
       awaiting_approval: "Awaiting approval"
       approval_rejected: "Approval rejected"
       ready_for_export: "Ready for export"

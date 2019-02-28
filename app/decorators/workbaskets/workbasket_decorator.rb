@@ -43,8 +43,6 @@ module Workbaskets
         "Awaiting cross-check"
       when :cross_check_rejected
         "Cross-check rejected"
-      when :ready_for_approval
-        "Ready for approval"
       when :awaiting_approval
         "Awaiting approval"
       when :approval_rejected
