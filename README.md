@@ -13,7 +13,7 @@
 
 ### Setup
 
-1. Setup your environment.
+1. Setup your environment..
 
     bin/setup
 
