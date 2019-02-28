@@ -9,18 +9,18 @@ describe "Measure search: status filter" do
     create(:measure, status: "new_in_progress")
   end
 
-  let(:ready_for_approval_measure) do
-    create(:measure, status: "ready_for_approval")
+  let(:awaiting_approval_measure) do
+    create(:measure, status: "awaiting_approval")
   end
 
-  let(:second_ready_for_approval_measure) do
-    create(:measure, status: "ready_for_approval")
+  let(:second_awaiting_approval_measure) do
+    create(:measure, status: "awaiting_approval")
   end
 
   before do
     new_in_progress_measure
-    ready_for_approval_measure
-    second_ready_for_approval_measure
+    awaiting_approval_measure
+    second_awaiting_approval_measure
   end
 
   describe "Valid Search" do
@@ -37,14 +37,14 @@ describe "Measure search: status filter" do
       res = search_results(
         enabled: true,
         operator: 'is',
-        value: "ready_for_approval"
+        value: "awaiting_approval"
       )
 
       expect(res.count).to be_eql(2)
 
       measure_sids = res.map(&:measure_sid)
-      expect(measure_sids).to include(ready_for_approval_measure.measure_sid)
-      expect(measure_sids).to include(second_ready_for_approval_measure.measure_sid)
+      expect(measure_sids).to include(awaiting_approval_measure.measure_sid)
+      expect(measure_sids).to include(second_awaiting_approval_measure.measure_sid)
       expect(measure_sids).not_to include(new_in_progress_measure.measure_sid)
     end
 
