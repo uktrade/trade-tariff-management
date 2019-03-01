@@ -140,16 +140,6 @@ module WorkbasketInteractions
       end
 
       if self.class::WORKBASKET_TYPE == "CreateQuota"
-        if quota_ordernumber.present?
-          unless order_number_saver.valid?
-            general_errors[:quota_ordernumber] = order_number_saver.errors
-                                                                   .join('. ')
-          end
-
-        else
-          general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
-        end
-
         if geographical_area_id.present?
           if candidates.flatten.compact.blank?
             general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
@@ -192,6 +182,15 @@ module WorkbasketInteractions
           if quota_precision.blank?
             general_errors[:maximum_precision] = errors_translator(:maximum_precision_blank)
           end
+        end
+
+        if quota_ordernumber.present? && general_errors.blank? && !order_number_saver.valid?
+          general_errors[:quota_ordernumber] = order_number_saver.errors
+                                                                 .join('. ')
+        end
+
+        unless quota_ordernumber.present?
+          general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
         end
       end
 
