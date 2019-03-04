@@ -9,7 +9,7 @@ ul class="list"
 
   - if mode == "approve" && next_approve.present? && workbasket.id != next_approve.id
     li
-      = link_to "Review next workbasket", new_approve_url(next_approve.id)
+      = link_to "Approve next workbasket", new_approve_url(next_approve.id)
 
   li
     = link_to "Return to main menu", root_url
