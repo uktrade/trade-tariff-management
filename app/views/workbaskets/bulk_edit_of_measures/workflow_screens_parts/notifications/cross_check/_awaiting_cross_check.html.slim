@@ -3,7 +3,7 @@
 
 p
   | You are about to update
-  =< pluralize(workbasket_items.count, "measure", "measures")
+  =< pluralize(workbasket.items.count, "measure", "measures")
   | , covering
 
   - if commodity_codes_count > 0 && additional_codes_count > 0
