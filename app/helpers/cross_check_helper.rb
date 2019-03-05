@@ -12,6 +12,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/measures"
     elsif workbasket.type == 'create_quota'
       "workbaskets/shared/steps/review_and_submit/quotas"
+    elsif workbasket.type == 'bulk_edit_of_measures'
+      "workbaskets/shared/steps/review_and_submit/measures"
     end
   end
 
