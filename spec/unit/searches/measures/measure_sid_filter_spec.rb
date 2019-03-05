@@ -7,26 +7,20 @@ describe "Measure search: measure_sid filter" do
 
   let(:a_measure_sid) { 3632261 }
 
-  let(:a_measure) do
+  let!(:a_measure) do
     generate_measure(a_measure_sid)
   end
 
   let(:b_measure_sid) { 4556446 }
 
-  let(:b_measure) do
+  let!(:b_measure) do
     generate_measure(b_measure_sid)
   end
 
   let(:c_measure_sid) { 6445435 }
 
-  let(:c_measure) do
+  let!(:c_measure) do
     generate_measure(c_measure_sid)
-  end
-
-  before do
-    a_measure
-    b_measure
-    c_measure
   end
 
   describe "Valid Search" do

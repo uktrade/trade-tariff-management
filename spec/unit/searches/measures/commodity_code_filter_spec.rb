@@ -5,22 +5,16 @@ describe "Measure search: commodity code filter" do
 
   let(:search_key) { "commodity_code" }
 
-  let(:a_measure) do
+  let!(:a_measure) do
     create(:measure, goods_nomenclature_item_id: "3333333333")
   end
 
-  let(:b_measure) do
+  let!(:b_measure) do
     create(:measure, goods_nomenclature_item_id: "3333444444")
   end
 
-  let(:c_measure) do
+  let!(:c_measure) do
     create(:measure, goods_nomenclature_item_id: "5555555555")
-  end
-
-  before do
-    a_measure
-    b_measure
-    c_measure
   end
 
   describe "Valid Search" do

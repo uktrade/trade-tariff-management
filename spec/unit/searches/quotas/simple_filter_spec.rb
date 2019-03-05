@@ -1,26 +1,19 @@
 require "rails_helper"
 
 describe "Quota search: simple filters" do
-  let(:a_quota_definition) do
+  let!(:a_quota_definition) do
     create(:quota_definition, status: 'published')
   end
 
-  let(:b_quota_definition) do
+  let!(:b_quota_definition) do
     create(:quota_definition, status: 'published')
   end
 
-  let(:c_quota_definition) do
+  let!(:c_quota_definition) do
     create(:quota_definition, status: 'published')
   end
-
-  before do
-    a_quota_definition
-    b_quota_definition
-    c_quota_definition
-  end
-
+  
   describe "published quotas" do
-    let(:search_key) { nil }
 
     it "shows all published measures" do
       res = search_results
