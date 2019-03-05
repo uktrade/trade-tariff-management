@@ -12,15 +12,15 @@ describe "Measure search: simple filters" do
   end
 
   let(:a_measure) do
-    create(:measure, added_by_id: adam.id, last_update_by_id: bredd.id)
+    create(:measure, added_by_id: adam.id, last_update_by_id: bredd.id, status: 'published')
   end
 
   let(:b_measure) do
-    create(:measure, added_by_id: bredd.id, last_update_by_id: adam.id)
+    create(:measure, added_by_id: bredd.id, last_update_by_id: adam.id, status: 'published')
   end
 
   let(:c_measure) do
-    create(:measure, added_by_id: adam.id, last_update_by_id: adam.id)
+    create(:measure, added_by_id: adam.id, last_update_by_id: adam.id, status: 'published')
   end
 
   before do
@@ -30,6 +30,26 @@ describe "Measure search: simple filters" do
     a_measure
     b_measure
     c_measure
+  end
+
+  describe "published measures" do
+    let(:search_key) { nil }
+
+    it "shows all published measures" do
+      res = search_results(enabled: true)
+      expect(res.count).to eq 3
+    end
+
+    it "does not show measures that are not published" do
+      c_measure.status = 'awaiting_cross_check'
+      c_measure.save
+
+      res = search_results(enabled: true)
+      statuses = res.map(&:status)
+
+      expect(res.count).to eq 2
+      expect(statuses.include?('awaiting_cross_check')).to eq false
+    end
   end
 
   describe "Author filter" do
