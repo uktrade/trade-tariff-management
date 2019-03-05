@@ -5,22 +5,16 @@ describe "Measure search: type filter" do
 
   let(:search_key) { "type" }
 
-  let(:type_143_measure) do
+  let!(:type_143_measure) do
     create(:measure, measure_type_id: "143")
   end
 
-  let(:type_481_measure) do
+  let!(:type_481_measure) do
     create(:measure, measure_type_id: "481")
   end
 
-  let(:second_type_481_measure) do
+  let!(:second_type_481_measure) do
     create(:measure, measure_type_id: "481")
-  end
-
-  before do
-    type_143_measure
-    type_481_measure
-    second_type_481_measure
   end
 
   describe "Valid Search" do

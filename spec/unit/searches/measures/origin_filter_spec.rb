@@ -5,22 +5,16 @@ describe "Measure search: origin filter" do
 
   let(:search_key) { "origin" }
 
-  let(:ae_measure) do
+  let!(:ae_measure) do
     create(:measure, geographical_area_id: "AE")
   end
 
-  let(:ag_measure) do
+  let!(:ag_measure) do
     create(:measure, geographical_area_id: "AG")
   end
 
-  let(:second_ag_measure) do
+  let!(:second_ag_measure) do
     create(:measure, geographical_area_id: "AG")
-  end
-
-  before do
-    ae_measure
-    ag_measure
-    second_ag_measure
   end
 
   describe "Valid Search" do

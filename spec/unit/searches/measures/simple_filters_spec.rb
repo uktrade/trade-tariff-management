@@ -3,33 +3,24 @@ require "rails_helper"
 describe "Measure search: simple filters" do
   include_context "measures_search_base_context"
 
-  let(:adam) do
+  let!(:adam) do
     create(:user)
   end
 
-  let(:bredd) do
+  let!(:bredd) do
     create(:user)
   end
 
-  let(:a_measure) do
+  let!(:a_measure) do
     create(:measure, added_by_id: adam.id, last_update_by_id: bredd.id, status: 'published')
   end
 
-  let(:b_measure) do
+  let!(:b_measure) do
     create(:measure, added_by_id: bredd.id, last_update_by_id: adam.id, status: 'published')
   end
 
-  let(:c_measure) do
+  let!(:c_measure) do
     create(:measure, added_by_id: adam.id, last_update_by_id: adam.id, status: 'published')
-  end
-
-  before do
-    adam
-    bredd
-
-    a_measure
-    b_measure
-    c_measure
   end
 
   describe "published measures" do

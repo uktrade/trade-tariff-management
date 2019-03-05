@@ -5,30 +5,24 @@ describe "Measure search: regulation filter" do
 
   let(:search_key) { "regulation" }
 
-  let(:a_measure) do
+  let!(:a_measure) do
     set_searchable_jsonb_data!(
       create(:measure, measure_generating_regulation_id: "R3333333")
     )
   end
 
-  let(:b_measure) do
+  let!(:b_measure) do
     set_searchable_jsonb_data!(
       create(:measure, measure_generating_regulation_id: "R3344444")
     )
   end
 
-  let(:c_measure) do
+  let!(:c_measure) do
     set_searchable_jsonb_data!(
       create(:measure,
         measure_generating_regulation_id: "R1715780",
         justification_regulation_id: "R5555555")
     )
-  end
-
-  before do
-    a_measure
-    b_measure
-    c_measure
   end
 
   describe "Valid Search" do
