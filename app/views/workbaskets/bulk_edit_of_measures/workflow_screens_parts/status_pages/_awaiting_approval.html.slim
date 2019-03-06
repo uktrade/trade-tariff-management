@@ -1,14 +1,9 @@
 .panel.panel--confirmation
   h1.heading-xlarge
-    | Measures cross-checked.
+    | Edited measures cross-checked.
 
   h3.heading-medium
-    | The measure(s) have been cross-checked but not yet sent through to CDS. They are currently pending approval.
-
-    br
-    br
-    | Once approved,
-    =<> pluralize(workbasket_items.count, "measure", "measures")
-    | will be made live.
+    = "The workbasket #{workbasket.title} has passed cross-check, containing #{pluralize(workbasket.settings.workbasket_items.count, "measure", "measures")},"
+    | Once approve the workbasket will be made live.
 
 = render "workbaskets/bulk_edit_of_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
