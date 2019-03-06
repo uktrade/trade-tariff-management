@@ -74,6 +74,22 @@ module Workbaskets
       JSON.parse(request.body.read)["bulk_measures_collection"]
     end
 
+    expose(:json_response) do
+      {
+        collection: json_collection,
+        total_pages: search_results.total_pages,
+        current_page: search_results.current_page,
+        has_more: !search_results.last_page?
+      }
+    end
+
+    def show
+      respond_to do |format|
+        format.json { render json: json_response }
+        format.html
+      end
+    end
+
   private
 
     def check_if_action_is_permitted!
