@@ -16,6 +16,14 @@ module WorkbasketValueObjects
         end
       end
 
+      def created_by
+        User.find(id: workbasket_settings.workbasket.user_id).name
+      end
+
+      def reason_for_edit
+        JSON.parse(workbasket_settings.values[:main_step_settings_jsonb])['reason']
+      end
+
     private
 
       def prepare_ops

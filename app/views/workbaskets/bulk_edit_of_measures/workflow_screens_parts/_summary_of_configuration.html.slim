@@ -11,10 +11,10 @@ table.create-measures-details-table
       td.heading_column
         | Created by
       td
-        = User.find(id: workbasket.user_id).name
+        = attributes_parser.created_by
 
     tr
       td.heading_column
         | Reason for changes
       td
-        = JSON.parse(workbasket.settings.values[:main_step_settings_jsonb])['reason']
+        = attributes_parser.reason_for_edit
