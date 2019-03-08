@@ -72,6 +72,11 @@ module WorkbasketValueObjects
                           .uniq : []
     end
 
+    def entered_exception_codes
+      ops['commodity_codes_exclusions']
+    end
+
+
     def candidates
       a_codes = @additional_codes_analyzer.collection
       gn_codes = @commodity_codes_analyzer.collection
