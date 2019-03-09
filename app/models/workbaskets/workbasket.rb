@@ -337,7 +337,10 @@ module Workbaskets
           end
 
           def can_continue_cross_check?(current_user)
-            awaiting_cross_check? && !current_user.author_of_workbasket?(self)
+            return false if current_user.approver_user
+            return false if current_user.author_of_workbasket?(self)
+            return false unless awaiting_cross_check?
+            true
           end
 
           def approve_process_can_not_be_started?
