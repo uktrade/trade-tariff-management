@@ -50,6 +50,9 @@ Vue.component("records-grid", {
     };
   },
   methods: {
+    locked: function(item) {
+      return(item.status !== 'Published')
+    },
     selectSorting: function(column) {
       var f = column.field;
 
