@@ -11,15 +11,6 @@
     br
     =<> "'#{geographical_area.description}'"
     | has been approved. It has been scheduled for export CDS
-
-    - scheduled_date = workbasket.operation_date
-
-    - if scheduled_date > Date.today
-      =< "on or after"
-      =<> "#{scheduled_date.day.ordinalize} #{scheduled_date.strftime("%B %Y")}"
-      | .
-
-    - else
-      =< "in the next batch."
+    =< "in the next batch."
 
 = render "workbaskets/create_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
