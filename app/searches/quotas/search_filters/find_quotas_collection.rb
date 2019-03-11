@@ -4,7 +4,6 @@ module Quotas
       include ::Shared::SearchFilters::FindCollection
 
       def by_start_date_and_quota_definition_sid_reverse
-        where(status: 'published').
         order(
           Sequel.desc(:quota_definitions__quota_order_number_id),
             Sequel.desc(:quota_definitions__validity_start_date)
