@@ -53,6 +53,14 @@ Vue.component("records-grid", {
     locked: function(item) {
       return(item.status !== 'Published')
     },
+    oneOrMoreLockedItems: function() {
+      var lockedStatusOfItems;
+      lockedStatusOfItems = this.data.map(item => this.locked(item));
+      return(lockedStatusOfItems.includes(true))
+    },
+    showSelectAll: function() {
+      return(this.disableSelectAll !== true && this.oneOrMoreLockedItems() === false)
+    },
     selectSorting: function(column) {
       var f = column.field;
 
