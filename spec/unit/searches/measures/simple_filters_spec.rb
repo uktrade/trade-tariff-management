@@ -26,20 +26,9 @@ describe "Measure search: simple filters" do
   describe "published measures" do
     let(:search_key) { nil }
 
-    it "shows all published measures" do
+    it "shows all measures" do
       res = search_results(enabled: true)
       expect(res.count).to eq 3
-    end
-
-    it "does not show measures that are not published" do
-      c_measure.status = 'awaiting_cross_check'
-      c_measure.save
-
-      res = search_results(enabled: true)
-      statuses = res.map(&:status)
-
-      expect(res.count).to eq 2
-      expect(statuses.include?('awaiting_cross_check')).to eq false
     end
   end
 
