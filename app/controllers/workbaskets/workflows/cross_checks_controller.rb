@@ -12,6 +12,13 @@ module Workbaskets
         cross_check_url(workbasket.id)
       end
 
+      private
+        def workbasket_is_editable?
+          false
+        end
+
+        helper_method :workbasket_is_editable?
+
     end
   end
 end

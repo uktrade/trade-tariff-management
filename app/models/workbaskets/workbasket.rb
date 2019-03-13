@@ -371,6 +371,10 @@ module Workbaskets
       !status.to_sym.in? %i[new_in_progress editing]
     end
 
+    def is_bulk_edit?
+      type.start_with?("bulk_edit")
+    end
+
     def move_status_to!(current_user, new_status, description = nil)
       reload
       add_event!(current_user, new_status, description)

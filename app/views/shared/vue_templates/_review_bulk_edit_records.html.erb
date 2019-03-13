@@ -1,0 +1,36 @@
+<script type="text/x-template" id="review-bulk-edit-records-template">
+  <div class="bulk-edit-records">
+    <%= render "shared/bulks/table_top" %>
+
+    <div v-if="pagination.total_count > 0">
+      <records-grid :disableSelection="true" :table-class="tableClass" :primary-key="primaryKey" :data="visibleRecordsPage" :columns="columns" :selected-rows="selectedRecords" v-if="!isLoading" selection-type="none" :client-selection="false" :disable-scroller="true" :sort-by-changed="onSortByChange" :sort-dir-changed="onSortDirChanged"></records-grid>
+
+      <table-pagination v-if="!isLoading" :page="currentPage" :total="visibleCount" :per-page="25" :on-click="onPageChange"></table-pagination>
+
+      <loading-indicator v-if="isLoading" :metadata="pagination">
+        <h1 class="heading-xlarge" slot="title">
+          Loading {{thing}}
+        </h1>
+        <h4 class="heading-medium" slot-scope="slotProps">
+          Please wait while we load and prepare {{thing}} for editing
+          <br>
+          {{slotProps.start}} to {{slotProps.end}} of {{slotProps.total}}
+          <br>
+          <loading-spinner></loading-spinner>
+        </h4>
+      </loading-indicator>
+    </div>
+
+    <div v-else>
+      <warning-message>
+        This workbasket contains no {{thing}}.
+      </warning-message>
+    </div>
+
+    <slot :selected-action="selectedAction" :selected-record-objects="selectedRecordObjects"> </slot>
+
+  </div>
+</script>
+
+<%= render "shared/vue_templates/records_grid" %>
+<%= render "measures/bulks/save_actions_popups/collection" %>
