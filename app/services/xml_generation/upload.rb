@@ -22,11 +22,40 @@ module XmlGeneration
     end
 
     def upload_main_file
-      bucket(main_file_remote_path).upload_file(local_main_file_path)
+      if Rails.env.development?
+        upload_main_file_from_local
+      else
+        move_main_file_from_bucket
+      end
     end
 
     def upload_metadata_file
+      if Rails.env.development?
+        upload_metadata_from_local
+      else
+        move_metadata_from_bucket
+      end
+    end
+
+    def upload_main_file_from_local
       bucket(metadata_remote_path).upload_file(local_metadata_file_path)
+    end
+
+    def move_main_file_from_bucket
+      key = record.xml.url.split('/').last(2).join('/').prepend('/')
+      object = s3.buckets['AWS_BUCKET_NAME'].objects[key]
+      object.move_to(ENV['AWS_BUCKET_NAME'] + "dev/xml_testing/#{remote_main_file_name}")
+    end
+
+    def upload_metadata_from_local
+      bucket(metadata_remote_path).upload_file(local_metadata_file_path)
+    end
+
+    def move_metadata_from_bucket
+      remote_metadata_file_name = Rails.root.join('store', local_metadata_filename)
+      key = record.xml.url.split('/').last(2).join('/').prepend('/')
+      object = s3.buckets['AWS_BUCKET_NAME'].objects[key]
+      object.move_to(ENV['AWS_BUCKET_NAME'] + "dev/xml_testing/#{remote_metadata_file_name}")
     end
 
     def remote_metadata_file_name
