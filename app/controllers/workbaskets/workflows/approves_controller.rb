@@ -15,6 +15,11 @@ module Workbaskets
       end
 
     private
+      def workbasket_is_editable?
+        false
+      end
+
+      helper_method :workbasket_is_editable?
 
       def require_to_be_approver!
         unless current_user.approver?

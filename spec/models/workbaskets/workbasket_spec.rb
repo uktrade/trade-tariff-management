@@ -82,4 +82,16 @@ RSpec.describe(Workbaskets::Workbasket) do
       end
     end
   end
+
+  describe "#is_bulk_edit?" do
+    it "returns true for a 'bulk_edit_of_measures' workbasket" do
+      workbasket = build(:workbasket, type: :bulk_edit_of_measures)
+      expect(workbasket.is_bulk_edit?).to eq true
+    end
+
+    it "returns false for a non bulk edit (e.g. 'create_measures') workbasket" do
+      workbasket = build(:workbasket, type: :create_measures)
+      expect(workbasket.is_bulk_edit?).to eq false
+    end
+  end
 end
