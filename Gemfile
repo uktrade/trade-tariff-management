@@ -7,7 +7,7 @@ end
 
 ruby "~> 2.5.0"
 
-gem "rails", "5.1.6.1"
+gem "rails", "5.1.6.2"
 
 # DB
 gem 'pg', '~> 1.1', '>= 1.1.3'
