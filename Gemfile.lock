@@ -526,7 +526,7 @@ DEPENDENCIES
   meta_request
   momentjs-rails
   multi_json (~> 1.11)
-  nokogiri (~> 1.8.1)
+  nokogiri (= 1.8.5)
   oj
   omniauth-oauth2
   ox (>= 2.8.1)
