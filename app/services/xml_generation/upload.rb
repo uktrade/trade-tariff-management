@@ -57,5 +57,19 @@ module XmlGeneration
     def metadata_remote_path
       "dev/xml_testing/#{remote_metadata_file_name}"
     end
+
+    def upload_on_non_dev_metadata
+      s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
+      metadata_filename = JSON.parse(record.meta_data)['id']
+      object = s3.bucket(ENV['AWS_BUCKET_NAME']).object("store/#{metadata_filename}")
+      object.copy_to(ENV['AWS_BUCKET_NAME'] + "/dev/xml_testing/#{remote_metadata_file_name}")
+    end
+
+    def upload_on_non_dev_mainfile
+      s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
+      filename = record.xml.id
+      object = s3.bucket(ENV['AWS_BUCKET_NAME']).object("store/#{filename}")
+      object.copy_to(ENV['AWS_BUCKET_NAME'] + "/dev/xml_testing/#{remote_main_file_name}")
+    end
   end
 end
