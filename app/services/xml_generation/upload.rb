@@ -47,6 +47,7 @@ module XmlGeneration
     end
 
     def move_main_file_from_bucket
+      s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
       key = record.xml.url.split('/').last(2).join('/').prepend('/')
       Rails.logger.debug "Moving main file from #{key}"
       object = s3.buckets['AWS_BUCKET_NAME'].objects[key]
@@ -60,6 +61,7 @@ module XmlGeneration
     end
 
     def move_metadata_from_bucket
+      s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
       remote_metadata_file_name = Rails.root.join('store', local_metadata_filename)
       key = record.xml.url.split('/').last(2).join('/').prepend('/')
       object = s3.buckets['AWS_BUCKET_NAME'].objects[key]
