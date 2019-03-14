@@ -10,6 +10,7 @@ module XmlGeneration
     end
 
     def bucket
+      Rails.logger.debug "Downloading XML"
       s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
       s3.bucket(ENV['AWS_BUCKET_NAME'])
     end
@@ -29,6 +30,7 @@ module XmlGeneration
     end
 
     def move_objects_to_processed_directory(objects)
+      Rails.logger.debug "Moving objects" if objects
       objects.each do |object_summary|
           filename = object_summary.key.split('/').last
         object_summary.object.move_to(ENV['AWS_BUCKET_NAME'] + "/dev/processed/#{filename}")
