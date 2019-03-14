@@ -7,6 +7,18 @@ class TariffMainMenuPage < SitePrism::Page
   element :find_edit_measures_link, "#main-menu div:nth-child(7) a[href$='/measure']"
   element :create_quotas_link, "#main-menu div:nth-child(8) a[href$='/new']"
   element :find_edit_quotas_link, "#main-menu div:nth-child(8) a[href$='/quotas']"
+  element :find_edit_regulations_link, ""
+  element :create_reglutaions_link, ""
+  element :find_edit_additional_codes_link, ""
+  element :create_additional_codes_link, ""
+  element :find_edit_geo_areas_link, ""
+  element :create_geo_areas_link, ""
+  element :find_edit_certificates_link, ""
+  element :create_certificates_link, ""
+  element :find_edit_footnotes_link, ""
+  element :create_footnotes_link, ""
+  element :xml_generation_link, ""
+  element :rollbacks_link, ""
 
   def create_new_measure
     create_measures_link.click
