@@ -13,7 +13,7 @@ class CreateMeasurePageElements < SitePrism::Page
   element :commodity_code, "#commodity_codes"
   element :exceptions, "#exceptions"
   element :additional_codes, :xpath, "//form/fieldset[7]//textarea"
-  element :additional_codes, "input.single-digit-field"
+  element :reduction_indicator, "input.single-digit-field"
   element :erga_omnes_radio_button, ".origins-region #measure-origin-erga_omnes"
   element :country_groups_radio_button, ".origins-region #measure-origin-group"
   element :country_groups_dropdown, "div.origins-region div.measure-origin:nth-child(2) .selectize-control"
@@ -48,20 +48,44 @@ class CreateMeasurePageElements < SitePrism::Page
     elements :qualifier_options, "#measure-component-0-measurement-unit-qualifier .selectize-dropdown .selection"
   end
 
-  section :footnotes, '#wrapper fieldset:nth-child(6)' do
-    sections :footnote_dropdown, ".selectize-control" do
-      elements :footnote_options, ".selectize-dropdown-content .selection"
-    end
-    element :add_footnote_link, "div.footnote .selectize-input input"
-  end
+  element :footnote_dropdown, "#wrapper fieldset:nth-child(6) .selectize-control"
+  element :footnote_options, "#wrapper fieldset:nth-child(6) .selectize-dropdown-content .selection"
+  element :footnote_text_field, "#footnote-0-footnote"
+  element :footnote_text_suggestion, "#footnote-0-suggestion-0-use-button"
+  element :add_footnote_link, "div.footnote .selectize-input input"
 
   section :measure_summary, '.create-measures-details-table' do
+    element :workbasket_name, "tr:nth-child(1) td:nth-child(2)"
+    element :operation_date, "tr:nth-child(2) td:nth-child(2)"
+    element :regulation, "tr:nth-child(3) td:nth-child(2)"
+    element :start_date, "tr:nth-child(4) td:nth-child(2)"
+    element :end_date, "tr:nth-child(5) td:nth-child(2)"
+    element :type, "tr:nth-child(6) td:nth-child(2)"
+    element :goods, "tr:nth-child(7) td:nth-child(2)"
+    element :goods_exceptions, "tr:nth-child(8) td:nth-child(2)"
+    element :additional_codes, "tr:nth-child(9) td:nth-child(2)"
+    element :origin, "tr:nth-child(10) td:nth-child(2)"
+    element :origin_exceptions, "tr:nth-child(11) td:nth-child(2)"
+  end
 
+  section :measures_to_be_created, '.records-table .item-container' do
+    elements :commodity_codes, ".goods_nomenclature-column"
+    elements :additional_codes, ".additional_code-column"
+    elements :start_date, ".validity_start_date-column"
+    elements :end_date, ".validity_end_date-column"
+    elements :duties, ".duties-column"
+    elements :conditions, ".conditions-column"
+    elements :footnotes, ".footnotes-column"
+  end
+
+  section :confirm_submission, '.panel--confirmation' do
+    element :header, "h1", text: "Measures submitted"
+    element :message, "h3"
   end
 
   element :save_button, "input[name='save_progress']"
   element :continue_button, "input[name='continue']"
-  element :exit_link, "a.secondary-button"
+  element :exit_link, "a.js-workbasket-base-exit-button"
   element :previous_step_link, "a[class$='previous-step-link']"
   element :submit_for_crosscheck_button, "input[name='submit_for_cross_check']"
 
