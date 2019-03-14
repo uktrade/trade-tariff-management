@@ -4,7 +4,7 @@
 //= require ../components/db
 //= require ../components/sorting/record-sorter
 
-Vue.component("bulk-edit-records", {
+Vue.component("review-bulk-edit-records", {
   template: "#review-bulk-edit-records-template",
   props: [
     "primaryKey",
