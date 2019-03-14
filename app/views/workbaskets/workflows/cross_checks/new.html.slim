@@ -19,7 +19,7 @@ header
 
     - if workbasket.is_bulk_edit?
       .review-bulk-edit-measures.submitted-for-cross-check-view
-        bulk-edit-records workbasket_id="#{workbasket.id}" primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
+        review-bulk-edit-records workbasket_id="#{workbasket.id}" primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
       = render "shared/vue_templates/review_bulk_edit_records.html.erb"
 
       script
