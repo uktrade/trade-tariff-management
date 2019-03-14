@@ -12,6 +12,7 @@ module XmlGeneration
     end
 
     def run
+      Rails.logger.debug "Uploading XML"
       upload_main_file
       upload_metadata_file
     end
@@ -23,16 +24,20 @@ module XmlGeneration
 
     def upload_main_file
       if Rails.env.development?
+        Rails.logger.debug "Dev environment"
         upload_main_file_from_local
       else
+        Rails.logger.debug "Non dev enviroment"
         move_main_file_from_bucket
       end
     end
 
     def upload_metadata_file
       if Rails.env.development?
+        Rails.logger.debug "Dev environment"
         upload_metadata_from_local
       else
+        Rails.logger.debug "Non dev enviroment"
         move_metadata_from_bucket
       end
     end
@@ -43,8 +48,11 @@ module XmlGeneration
 
     def move_main_file_from_bucket
       key = record.xml.url.split('/').last(2).join('/').prepend('/')
+      Rails.logger.debug "Moving main file from #{key}"
       object = s3.buckets['AWS_BUCKET_NAME'].objects[key]
+      Rails.logger.debug "Object found" if object
       object.move_to(ENV['AWS_BUCKET_NAME'] + "dev/xml_testing/#{remote_main_file_name}")
+      Rails.logger.debug "main file moved"
     end
 
     def upload_metadata_from_local
