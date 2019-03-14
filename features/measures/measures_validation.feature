@@ -1,3 +1,4 @@
+@wip
 Feature: Validate create measure form fields on save or submit
 
   Scenario: Tariff manager cannot submit a blank create measure form
@@ -28,7 +29,6 @@ Feature: Validate create measure form fields on save or submit
       |regulation     |
       |measure_type   |
 
-
   Scenario Outline: Tariff manager can create a measure where start date is past, present or future
     Given I am on the tariff main menu
     When I open a new create measure form
@@ -41,11 +41,28 @@ Feature: Validate create measure form fields on save or submit
       |future   |
 
 
-  Scenario: Measure end date cannot be earlier than the measure's start date
+  Scenario: ME25 Measure end date cannot be earlier than the measure's start date
     Given I am on the tariff main menu
     When I open a new create measure form
     And I enter an end date which is earlier than the start date
-    Then an "end_date" error message is displayed
+    Then an "ME25" error message is displayed
+
+  Scenario: ME12 Additional code has no relationship with the measure type
+    Given I am on the tariff main menu
+    When I open a new create measure form
+    And I fill in the form for a "me12_additional_code"
+    Then an "ME12" error message is displayed
+
+  @wip
+  Scenario: ME1
+    Given I am on the tariff main menu
+    When I open a new create measure form
+    And I fill in the form for a "single_commodity_code"
+    Then I can review the measure
+    When I go back to the tariff main menu
+    And I open a new create measure form
+    And I fill in the form for a "single_commodity_code"
+    Then an "ME1" error message is displayed
 
   @wip @feature-not-implemented
   Scenario: Duty expression is mandatory where required by the selected measure type

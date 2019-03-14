@@ -13,6 +13,7 @@ require 'capybara-screenshot/cucumber'
 require 'pry'
 require_relative '../../spec/support/capybara_form_helper'
 
+CONFIG = YAML::load_file("#{File.dirname(__FILE__)}/../test_data.yaml")
 
 Capybara.configure do |config|
   config.ignore_hidden_elements = false #true by default
