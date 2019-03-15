@@ -12,20 +12,31 @@ module XmlGeneration
     end
 
     def run
-      upload_main_file
-      upload_metadata_file
+      if Rails.environment.development?
+        upload_in_dev_env
+      else
+        upload_in_non_dev_env
+      end
+    end
+
+    def s3
+      Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     end
 
     def bucket(remote_path)
-      s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
       s3.bucket(ENV['AWS_BUCKET_NAME']).object(remote_path)
     end
 
-    def upload_main_file
+    def upload_in_dev_env
+      upload_main_file_in_dev_env
+      upload_metadata_file_in_dev_env
+    end
+
+    def upload_main_file_in_dev_env
       bucket(main_file_remote_path).upload_file(local_main_file_path)
     end
 
-    def upload_metadata_file
+    def upload_metadata_file_in_dev_env
       bucket(metadata_remote_path).upload_file(local_metadata_file_path)
     end
 
@@ -58,18 +69,21 @@ module XmlGeneration
       "dev/xml_testing/#{remote_metadata_file_name}"
     end
 
-    def upload_on_non_dev_metadata
-      s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
-      metadata_filename = JSON.parse(record.meta_data)['id']
-      object = s3.bucket(ENV['AWS_BUCKET_NAME']).object("store/#{metadata_filename}")
-      object.copy_to(ENV['AWS_BUCKET_NAME'] + "/dev/xml_testing/#{remote_metadata_file_name}")
+    def upload_in_non_dev_env
+      upload_on_non_dev_mainfile
+      upload_on_non_dev_metadata
     end
 
     def upload_on_non_dev_mainfile
-      s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
       filename = record.xml.id
       object = s3.bucket(ENV['AWS_BUCKET_NAME']).object("store/#{filename}")
       object.copy_to(ENV['AWS_BUCKET_NAME'] + "/dev/xml_testing/#{remote_main_file_name}")
+    end
+
+    def upload_on_non_dev_metadata
+      metadata_filename = JSON.parse(record.meta_data)['id']
+      object = s3.bucket(ENV['AWS_BUCKET_NAME']).object("store/#{metadata_filename}")
+      object.copy_to(ENV['AWS_BUCKET_NAME'] + "/dev/xml_testing/#{remote_metadata_file_name}")
     end
   end
 end
