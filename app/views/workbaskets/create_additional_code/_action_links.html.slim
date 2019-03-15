@@ -1,7 +1,7 @@
 .form-actions
   h3.heading-medium
     | Finish
-
+    = render "workbaskets/shared/success_message", f: f
   .submit_group_for_cross_check_block
     button type="submit" name="submit_for_cross_check" class="button js-workbasket-base-continue-button js-workbasket-base-submit-button" v-on:click.prevent="submitCrossCheck" v-if="!submitting" :disabled="saving || submitting"
       | Submit for cross-check

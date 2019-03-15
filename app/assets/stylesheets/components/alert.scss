@@ -39,3 +39,19 @@
     top: -0.4em;
   }
 }
+
+/* Form actions */
+
+.form-actions {
+  .alert--success {
+    margin-top: 3rem;
+    top: 0;
+    font-size: 1.6rem;
+    font-weight: normal;
+    line-height: 3.6rem;
+  }
+  .icon {
+    width: 3.3rem;
+    top: 0;
+  }
+}

@@ -11,7 +11,6 @@
                         } do |f|
 
   = render "workbaskets/create_quota/steps/#{params[:step].to_s}", f: f
-  = render "workbaskets/shared/success_message", f: f
   = render "workbaskets/shared/errors_container", f: f
 
   - if step_pointer.configure_quota? || step_pointer.conditions_footnotes?
