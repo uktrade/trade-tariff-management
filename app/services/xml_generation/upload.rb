@@ -12,7 +12,7 @@ module XmlGeneration
     end
 
     def run
-      if Rails.environment.development?
+      if Rails.env.development?
         upload_in_dev_env
       else
         upload_in_non_dev_env
