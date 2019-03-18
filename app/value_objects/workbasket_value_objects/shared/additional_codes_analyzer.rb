@@ -8,7 +8,7 @@ module WorkbasketValueObjects
 
       def initialize(ops = {})
         @collection = nil
-        @start_date = get_start_date(ops) # FIXME start date not used, also should use TimeMachine.at in other places
+        @start_date = get_start_date(ops)
         @additional_codes = ops[:additional_codes]
 
         setup_collection!
@@ -21,7 +21,7 @@ module WorkbasketValueObjects
     private
 
       def get_start_date(ops)
-        ops[:start_date].present? ? (ops[:start_date].to_date rescue Date.today) : Date.today
+        ops[:start_date].to_date rescue Date.today
       end
 
       def setup_collection!
