@@ -25,7 +25,7 @@ module WorkbasketValueObjects
     private
 
       def get_start_date(ops)
-        ops[:start_date].present? ? (ops[:start_date].to_date rescue Date.today) : Date.today
+        ops[:start_date].to_date rescue Date.today
       end
 
       def setup_collection!
