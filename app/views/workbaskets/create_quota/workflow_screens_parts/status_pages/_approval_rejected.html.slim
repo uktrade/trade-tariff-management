@@ -3,12 +3,12 @@
     | Quota rejected
 
   h3.heading-medium
-    | You declined to approve the quota in workbasket
-    =<> "'#{workbasket.title}'"
+    | You declined to approve the quota with order number
+    =<> "#{workbasket.settings.main_step_settings['quota_ordernumber']}"
     | .
 
     br
     br
-    | The group has been returned to its creator for amendment. Measures will not be sent to CDS until approved.
+    | The quota has been returned to its creator for amendment. It will not be sent to CDS until approved.
 
 = render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

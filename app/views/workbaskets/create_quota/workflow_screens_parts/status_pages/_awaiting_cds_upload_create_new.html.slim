@@ -3,8 +3,8 @@
     | Quota approved
 
   h3.heading-medium
-    | Quota in the workbasket
-    =<> "'#{workbasket.title}'"
-    | have been approved and scheduled for export to CDS.
+    | The quota with order number
+    =<> "#{workbasket.settings.main_step_settings['quota_ordernumber']}"
+    | has been approved, but has not yet been sent through to CDS and has not been scheduled for export.
 
 = render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
