@@ -213,7 +213,7 @@ module Workbaskets
       def relevant_for_manager(current_user)
         if current_user.approver?
           where(
-            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval', 'awaiting_cds_upload_create_new', 'ready_for_export')",
+            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval', 'awaiting_cds_upload_create_new', 'ready_for_export', 'awaiting_cds_upload_edit')",
             current_user.id
           )
         else
