@@ -4,7 +4,7 @@
     <% if @nomenclature.commodity? %>
       <ul>
         <li>
-          Section <%= @nomenclature.section.numeral %>: <%= @nomenclature.section.title %>
+          Section <%= @nomenclature.section&.numeral %>: <%= @nomenclature.section&.title %>
           <ul>
             <li class="chapter-li">
               <div class="chapter-code">
@@ -27,7 +27,7 @@
     <% elsif @nomenclature.heading? %>
       <ul>
         <li>
-          Section <%= @nomenclature.section.numeral %>: <%= @nomenclature.section.title %>
+          Section <%= @nomenclature.section&.numeral %>: <%= @nomenclature.section&.title %>
           <ul>
             <li class="chapter-li">
               <div class="chapter-code">
@@ -49,7 +49,7 @@
     <% elsif @nomenclature.chapter? %>
       <ul>
         <li>
-          Section <%= @nomenclature.section.numeral %>: <%= @nomenclature.section.title %>
+          Section <%= @nomenclature.section&.numeral %>: <%= @nomenclature.section&.title %>
           <ul>
             <li class="chapter-li">
               <div class="chapter-code">
