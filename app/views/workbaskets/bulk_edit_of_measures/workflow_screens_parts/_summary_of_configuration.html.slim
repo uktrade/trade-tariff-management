@@ -1,0 +1,20 @@
+h3.heading-medium Summary of measures configuration
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Workbasket name
+      td
+        = workbasket.title
+
+    tr
+      td.heading_column
+        | Created by
+      td
+        = attributes_parser.created_by
+
+    tr
+      td.heading_column
+        | Reason for changes
+      td
+        = attributes_parser.reason_for_edit

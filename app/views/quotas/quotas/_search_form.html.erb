@@ -215,6 +215,22 @@
   <div class="find-items__row">
     <div class="find-items__checkbox-column">
       <div class="multiple-choice">
+        <input name="search[status][enabled]" id="toggle-status" type="checkbox" value="1" v-model="status.enabled" />
+        <label for="toggle-status">
+          Status
+        </label>
+      </div>
+    </div>
+    <div class="find-items__is">
+      <custom-select :options="conditionsForStatus" label-field="label" value-field="value"  v-model="status.operator"  name="search[status][operator]"></custom-select>
+    </div>
+    <div class="find-item__long">
+      <custom-select :options="statuses" label-field="label" value-field="value" placeholder="― select a status ―" v-model="status.value" name="search[status][value]"></custom-select>
+    </div>
+  </div>
+  <div class="find-items__row">
+    <div class="find-items__checkbox-column">
+      <div class="multiple-choice">
         <input name="search[author][enabled]" id="toggle-author" type="checkbox" value="1" v-model="author.enabled" />
         <label for="toggle-author">
           Author
