@@ -23,7 +23,6 @@ module WorkbasketValueObjects
       end
 
     private
-
       def get_start_date(ops)
         ops[:start_date].to_date rescue Date.today
       end
