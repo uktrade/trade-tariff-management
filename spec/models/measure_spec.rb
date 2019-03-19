@@ -1379,6 +1379,41 @@ describe Measure do
         expect(new_measure).not_to be_conformant
         expect(new_measure.conformance_errors).to have_key(:ME32)
       end
+
+      it "won't throw exception if no commodity code entered" do
+
+        _measure = create(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: goods_nomenclature.goods_nomenclature_item_id,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type: additional_code_type,
+          additional_code_id: additional_code.additional_code,
+          validity_start_date: 1.year.ago,
+          validity_end_date: Date.current + 1.month
+        )
+
+        new_measure = build(
+          :measure,
+          measure_type_id: measure_type.measure_type_id,
+          goods_nomenclature_item_id: nil,
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          additional_code_sid: additional_code.additional_code_sid,
+          additional_code_type: additional_code_type,
+          additional_code_id: additional_code.additional_code,
+          )
+
+        new_measure.validity_start_date = Date.current
+        new_measure.validity_end_date = nil
+
+        new_measure.justification_regulation_id = "abc"
+        new_measure.justification_regulation_role = 1
+
+        expect(new_measure.additional_code).not_to be(nil)
+        expect(new_measure).not_to be_conformant
+        expect(new_measure.conformance_errors).to_not have_key(:ME32)
+      end
     end
 
     describe 'ME33' do
