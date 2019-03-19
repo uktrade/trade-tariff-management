@@ -1,7 +1,7 @@
 
 
 # Require External Libraries
-require 'cucumber/rails'
+require 'rails'
 require 'capybara/cucumber'
 require 'capybara/rspec'
 require 'selenium-webdriver'
@@ -46,7 +46,12 @@ case ENV['BROWSER']
     Capybara.default_driver = :chrome
 end
 
-ENV['BASE_URL'] = 'https://tariffs-uat.london.cloudapps.digital'
+if ENV['ENV'] == 'uat'
+  ENV['BASE_URL'] = 'https://tariffs-uat.london.cloudapps.digital'
+else
+  ENV['BASE_URL'] = 'https://tariffs-dev.london.cloudapps.digital'
+end
+
 puts "#############################################################################################"
 puts "RUNNING TESTS ON ENVIRONMENT: #{ENV['BASE_URL']}"
 puts "#############################################################################################"

@@ -9,6 +9,7 @@ Feature: As a Tariff Manager
   Scenario Outline: Create measure with goods commodity code
     And I fill in the form for a "<scenario>"
     And I can review the measure
+    And I can review the measure for commodity codes
     And the summary lists the measures to be created
 #    And I submit the measure for crosscheck
 #    Then the measure is submitted
@@ -20,6 +21,7 @@ Feature: As a Tariff Manager
   Scenario Outline: Create measure with commodity code exceptions
     And I fill in the form for a "<scenario>"
     And I can review the measure
+    And I can review the measure for commodity codes
     And I can review the measure for goods exceptions
 #    And I submit the measure for crosscheck
 #    Then the measure is submitted
@@ -31,6 +33,7 @@ Feature: As a Tariff Manager
   Scenario Outline: Create measure with additional codes
     And I fill in the form for a "<scenario>"
     And I can review the measure
+    And I can review the measure for commodity codes
     And I can review the measure for additional codes
     And the summary lists the additional codes to be created
 #    And I submit the measure for crosscheck
@@ -50,6 +53,7 @@ Feature: As a Tariff Manager
   Scenario: Create measure with a footnote
     And I fill in the form for a "single_commodity_code"
     And I can review the measure
+    And I can review the measure for commodity codes
     And the measure to be created has a footnote
 #    And I submit the measure for crosscheck
 #    Then the measure is submitted
@@ -57,6 +61,7 @@ Feature: As a Tariff Manager
   Scenario Outline: Create measure with a condition
     And I fill in the form for a "<conditions>"
     And I can review the measure
+    And I can review the measure for commodity codes
     And the measure to be created has a condition
 #    And I submit the measure for crosscheck
 #    Then the measure is submitted
