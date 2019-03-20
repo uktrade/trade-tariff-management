@@ -1,13 +1,13 @@
 class SSOLoginPage < SitePrism::Page
-  set_url "https://sso.trade.uat.uktrade.io/login/"
-
+  set_url ENV['LOGIN']
+  
   element :username, "#id_username"
   element :password, "#id_password"
   element :login_button, "input[value='login']"
 
   def login
-    username.set 'oo.crosscheck@tradetariff.test'
-    password.set 'd5o0m766Lk8'
+    username.set ENV['USERNAME']
+    password.set ENV['PASSWORD']
     login_button.click
   end
 end
