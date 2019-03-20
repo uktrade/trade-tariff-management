@@ -16,10 +16,13 @@ quota_data:
   exceptions: "5209110000"
   section_duration: "1 year"
   measurement_unit: "KGM"
-  opening_balance: "1000000"
+  opening_balance: "1000000.0"
   maximum_precision: "2"
   footnote: {type: "CD", id: "001"}
   condition: {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
+  critical: "No"
+  licensed: "No"
+  criticality_threshold: "90"
 
 single_commodity_code: &generic
   <<: *default_data

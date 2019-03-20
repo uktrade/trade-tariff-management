@@ -7,7 +7,7 @@ class CreateQuotaPageElements < SitePrism::Page
   element :operation_date, "#operation_date"
   element :commodity_code, "#commodity_codes"
   element :exceptions, "#exceptions"
-  element :additional_codes, "//form/fieldset[9]//textarea"
+  element :additional_codes, :xpath, "//form/fieldset[9]//textarea"
   element :reduction_indicator, ".single-digit-field"
   element :erga_omnes_radio_button, ".origins-region #measure-origin-erga_omnes"
   element :country_groups_radio_button, ".origins-region #measure-origin-group"
@@ -54,7 +54,7 @@ class CreateQuotaPageElements < SitePrism::Page
     element :footnotes, "tr:nth-child(13) td:nth-child(2)"
   end
 
-  section :quotas_to_be_created, '.records-table .item-container' do
+  section :quotas_to_be_created, :xpath, '//div[@class="records-table-wrapper"][1]//*[@class="item-container"]' do
     elements :start_date, ".validity_start_date-column"
     elements :end_date, ".validity_end_date-column"
     elements :opening_balance, ".duties-column"
@@ -62,7 +62,7 @@ class CreateQuotaPageElements < SitePrism::Page
     elements :criticality_threshold, ".footnotes-column"
   end
 
-  section :measures_to_be_created, '.records-table .item-container' do
+  section :measures_to_be_created, :xpath, '//div[@class="records-table-wrapper"][2]//*[@class="item-container"]' do
     elements :start_date, ".validity_start_date-column"
     elements :end_date, ".validity_end_date-column"
     elements :commodity_codes, ".goods_nomenclature-column"

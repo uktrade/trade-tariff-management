@@ -27,6 +27,8 @@ When("I fill in the quota form for a {string}") do |scenario|
   @measurement_unit = test_data['measurement_unit']
   @opening_balance = test_data['opening_balance']
   @maximum_precision = test_data['maximum_precision']
+  @criticality_threshold = test_data['criticality_threshold']
+  @critical = test_data['critical']
 
   @create_quota_page.select_regulation @regulation
   @create_quota_page.enter_quota_order_number @quota_order_number
@@ -57,7 +59,8 @@ And("I can review the quota") do
   expect(@create_quota_page.quota_summary.order_number.text).to eq(@quota_order_number)
   expect(@create_quota_page.quota_summary.maximum_precision.text).to eq(@maximum_precision)
   expect(@create_quota_page.quota_summary.type.text).to include(@quota_type)
-  # expect(@create_quota_page.quota_summary.operation_date.text).to include(@start_date)
+  expect(@create_quota_page.quota_summary.operation_date.text).to eq(format_summary_date @start_date)
+  expect(@create_quota_page.quota_summary.licensed.text).to eq(format_summary_date @start_date)
   expect(@create_quota_page.quota_summary.regulation.text).to eq(format_regulation(@regulation))
   expect(@create_quota_page.quota_summary.origin.text).to include(@origin['name'])
 end
@@ -76,7 +79,6 @@ end
 
 And("I can review the quota for goods exceptions") do
   expect(to_array @create_quota_page.quota_summary.goods_exceptions.text).to eq(to_array @exceptions)
-  # expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).not_to include(to_array @exceptions)
 end
 
 And("I can review the quota for additional codes") do
@@ -85,10 +87,31 @@ end
 
 And("I submit the quota for crosscheck") do
   @create_quota_page.submit_measure_for_cross_check
-  binding.pry
 end
 
 Then("the quota is submitted") do
   expect(@create_quota_page.confirm_submission).to have_header
   expect(@create_quota_page.confirm_submission.message.text).to include(@quota_order_number)
 end
+
+And("the quota summary lists the quota periods to be created") do
+  expect(@create_quota_page.quotas_to_be_created.start_date.map(&:text)).to eq(to_array(format_item_date(@start_date)))
+  expect(@create_quota_page.quotas_to_be_created.opening_balance.map(&:text)).to eq(to_array(@opening_balance))
+  expect(@create_quota_page.quotas_to_be_created.criticality_threshold.map(&:text)).to eq(to_array(@criticality_threshold))
+  expect(@create_quota_page.quotas_to_be_created.critical.map(&:text)).to eq(to_array(@critical))
+end
+
+And("the quota summary lists the measures to be created") do
+  expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).to eq(to_array(@commodity_codes))
+end
+
+And("the quota summary lists the additional codes for measures to be created") do
+  expect(@create_measure_page.measures_to_be_created.additional_codes.map(&:text)).to eq(to_array(@additional_codes))
+end
+
+And("the quota summary lists dooes not include the goods exceptions") do
+  expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).not_to include(to_array @exceptions)
+end
+
+
+
