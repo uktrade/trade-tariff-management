@@ -315,7 +315,7 @@ GEM
     pry-rails (0.3.8)
       pry (>= 0.10.4)
     public_suffix (3.0.3)
-    puma (3.12.0)
+    puma (3.12.1)
     raabro (1.1.6)
     rabl (0.14.0)
       activesupport (>= 2.3.14)
@@ -564,7 +564,7 @@ DEPENDENCIES
   pikaday-gem
   pry
   pry-rails
-  puma (~> 3.12)
+  puma
   rabl (~> 0.12)
   rails (= 5.1.6.2)
   rails_12factor
