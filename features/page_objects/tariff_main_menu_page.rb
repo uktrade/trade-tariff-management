@@ -20,11 +20,11 @@ class TariffMainMenuPage < SitePrism::Page
   element :xml_generation_link, ""
   element :rollbacks_link, ""
 
-  def create_new_measure
+  def open_new_measure_form
     create_measures_link.click
   end
 
-  def create_new_quota
+  def open_new_quota_form
     create_quotas_link.click
   end
 end

@@ -1,3 +1,4 @@
+require_relative '../support/helper'
 require_relative 'create_measure_page_elements'
 
 class CreateMeasurePage < CreateMeasurePageElements
@@ -137,6 +138,7 @@ class CreateMeasurePage < CreateMeasurePageElements
       country_groups_options.first.click
     end
 
+    # Conditions
     def add_conditions(condition)
       select_condition_type condition['type']
       select_certificate_type condition['certificate_type'] unless condition['certificate_type'].nil?
@@ -146,7 +148,6 @@ class CreateMeasurePage < CreateMeasurePageElements
       enter_condition_duty_amount condition['duty_amount']
     end
 
-    # Conditions
     def select_condition_type(condition_type)
       within("#wrapper fieldset:nth-child(5) #measure-condition-0-condition") do
         select_dropdown_value(condition_type)
@@ -217,9 +218,5 @@ class CreateMeasurePage < CreateMeasurePageElements
 
     def submit_measure_for_cross_check
       submit_for_crosscheck_button.click
-    end
-
-    def format_date(date)
-      date.strftime("%d/%m/%Y")
     end
 end
