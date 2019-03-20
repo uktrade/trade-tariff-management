@@ -19,6 +19,7 @@ class SessionsController < ActionController::Base
     else
 
       session[:userinfo] = User.from_omniauth(auth)    # will create if doesn't exist
+      audit_session(session[:userinfo], action: "Login")
       session[:auth] = auth
 
       logger.debug "user.name = '" + session[:userinfo].name + "'"
@@ -44,6 +45,8 @@ class SessionsController < ActionController::Base
   # handle logout or unauthorised/access disabled
   def destroy
 
+    audit_session(session[:userinfo], action: "Logout")
+
     session[:userinfo] = nil
     session[:auth] = nil
 
@@ -60,6 +63,12 @@ class SessionsController < ActionController::Base
       redirect_to logout_path
     end
 
+  end
+
+  private
+
+  def audit_session(user_info, action:)
+    SessionAudit.create(user_id: user_info.id, uid: user_info.uid, name: user_info.name, email: user_info.email, action: action)
   end
 
 end
