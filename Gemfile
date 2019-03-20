@@ -15,7 +15,7 @@ gem "sequel", "~> 4.32"
 gem "sequel-rails", "~> 0.9", ">= 0.9.12"
 
 # Server
-gem "puma"
+gem "puma", "~> 3.12"
 
 # UI
 gem "sass-rails", "5.0.6"

@@ -564,7 +564,7 @@ DEPENDENCIES
   pikaday-gem
   pry
   pry-rails
-  puma
+  puma (~> 3.12)
   rabl (~> 0.12)
   rails (= 5.1.6.2)
   rails_12factor
