@@ -5,6 +5,14 @@ module Helper
     date.strftime("%d/%m/%Y")
   end
 
+  def format_summary_date(date)
+    date.strftime("%d %B %Y")
+  end
+
+  def format_item_date(date)
+    date.strftime("%d %b %Y")
+  end
+
   def random_future_date
     number = rand(1..365)
     number.days.from_now
@@ -28,11 +36,6 @@ module Helper
     all_codes = codes.split(",")
     all_codes.collect {|code| code.strip}
   end
-
-# def format_date(mdate)
-#   date = Date.parse(mdate)
-#   date.strftime("%m %B %Y")
-# end
 
   def format_regulation(regulation)
     year = regulation.slice(1..2)
