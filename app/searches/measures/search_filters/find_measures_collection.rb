@@ -4,7 +4,6 @@ module Measures
       include ::Shared::SearchFilters::FindCollection
 
       def by_start_date_and_measure_sid_reverse
-        where(status: 'published').
         order(
           Sequel.desc(:validity_start_date),
           Sequel.desc(:measure_sid)

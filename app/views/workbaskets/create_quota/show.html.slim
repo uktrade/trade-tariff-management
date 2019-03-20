@@ -1,1 +1,28 @@
-= render "workbaskets/shared/show_base"
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li
+      = link_to "Measures", measures_url
+
+    li aria-current="page"
+      | View quota workbasket
+
+header
+  h1.heading-large
+    | View quota workbasket
+
+  .view-workbasket-container
+    = render "workbaskets/create_quota/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/create_quota/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/create_quota/workflow_screens_parts/workbasket_details"
+
+    - if iam_workbasket_author? && workbasket_rejected?
+      = link_to "Edit quota", move_to_editing_mode_create_quotum_url(workbasket.id),
+                                 class: "secondary-button view-workbasket-edit-measures-link"
+
+    - if workbasket_awaiting_cross_check_or_rejected?
+      = render "workbaskets/create_quota/workflow_screens_parts/summary_of_configuration"
+
+    = render "workbaskets/shared/steps/review_and_submit/quotas", read_only: true, record_type: 'create_measures'

@@ -2,6 +2,7 @@
   h3.heading-medium
     - if step_pointer.has_next_step?
       | Next step
+      = render "workbaskets/shared/success_message", f: f
     - else
       | Finish
 

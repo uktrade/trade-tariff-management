@@ -3,11 +3,10 @@
     | Quota  cross-check rejected
 
   h3.heading-medium
-    | You indicated that the measures in workbasket
-    =<> "'#{workbasket.title}'"
-    | have problems.
+    = "You indicated that quota with order number #{workbasket.settings.main_step_settings['quota_ordernumber']} has problems"
+    
     br
 
-    | The author has been notified.
+    | The quota has been returned to it's creator for amendment. No measures have been created
 
 = render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "cross_check"

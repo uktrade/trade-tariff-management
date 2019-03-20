@@ -31,7 +31,7 @@ RSpec.describe 'cross check', :js do
       click_link 'Review for cross-check'
       select_approve
       click_button('Finish cross-check')
-      expect(page).to have_content('Quota cross-checked.')
+      expect(page).to have_content('Quota created')
       expect(workbasket.reload.status).to eq('awaiting_approval')
       expect(page).to_not have_content("Cross-check next workbasket")
     end
@@ -61,7 +61,7 @@ RSpec.describe 'cross check', :js do
         first(:link, 'Review for cross-check').click
         select_approve
         click_button('Finish cross-check')
-        expect(page).to have_content('Quota cross-checked')
+        expect(page).to have_content('Quota created')
         expect(page).to have_content('Cross-check next workbasket')
         click_link 'Cross-check next workbasket'
         expect(page).to have_content('Cross-check and create quota')
