@@ -64,3 +64,5 @@ Please check out the [Contributing guide](https://github.com/bitzesty/trade-tari
 ## Licence
 
 Trade Tariff is licenced under the [MIT licence](https://github.com/bitzesty/trade-tariff-management/blob/master/LICENCE.txt)
+
+Will this commit cause snyk to update?
