@@ -45,10 +45,10 @@ case ENV['BROWSER']
     Capybara.default_driver = :chrome
 end
 
-ENV['BASE_URL'] = 'https://tariffs-uat.london.cloudapps.digital'
+Capybara.app_host = ENV['BASE_URL']
+Capybara.save_path = "screenshots"
+
 puts "#############################################################################################"
 puts "RUNNING TESTS ON ENVIRONMENT: #{ENV['BASE_URL']}"
 puts "#############################################################################################"
 
-Capybara.app_host = ENV['BASE_URL']
-Capybara.save_path = "screenshots"

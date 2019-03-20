@@ -4,7 +4,7 @@ class CreateMeasurePage < CreateMeasurePageElements
 
     include CapybaraFormHelper
 
-    set_url "/create_measures/117/edit?step=main"
+    set_url ENV['MEASURE']
 
     NO_START_DATE_MESSAGE = "Start date can't be blank!"
     NO_WORKBASKET_NAME_MESSAGE = "Workbasket name can not be blank."
