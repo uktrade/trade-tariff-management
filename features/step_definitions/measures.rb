@@ -1,12 +1,23 @@
+
+require_relative '../support/helper'
+include Helper
+
 Given("I am on the tariff main menu") do
-
   @sso_login_page = SSOLoginPage.new
-  @sso_login_page.load
-  @sso_login_page.login
-
   @tarriff_main_menu = TariffMainMenuPage.new
-  @tarriff_main_menu.load
+  login
   expect(@tarriff_main_menu).to have_create_measures_link
+end
+
+def login
+  if ENV['ENV'] == 'uat'
+    @sso_login_page.load
+    @sso_login_page.uat_login
+    @tarriff_main_menu.load
+  else
+    @tarriff_main_menu.load
+    @sso_login_page.dev_login
+  end
 end
 
 And("I create a new measure") do
@@ -19,7 +30,8 @@ end
 
 And("I open a new create measure form") do
   @create_measure_page = CreateMeasurePage.new
-  @tarriff_main_menu.create_measures_link.click
+  # @tarriff_main_menu.create_measures_link.click
+  @tarriff_main_menu.open_new_measure_form
   expect(@create_measure_page).to have_measure_validity_start_date
 end
 
@@ -196,7 +208,6 @@ And("I can review the measure") do
   expect(@create_measure_page.measure_summary.regulation.text).to eq(format_regulation(@regulation))
   expect(@create_measure_page.measure_summary.type.text).to eq(@measure_type)
   expect(@create_measure_page.measure_summary.origin.text).to include(@origin['name'])
-  expect(to_array @create_measure_page.measure_summary.goods.text).to eq(to_array @commodity_codes)
   step 'the measure can be submitted for cross check'
 end
 
@@ -226,6 +237,10 @@ end
 
 And("I can review the measure for additional codes") do
   expect(to_array @create_measure_page.measure_summary.additional_codes.text).to eq(to_array @additional_codes)
+end
+
+And("I can review the measure for commodity codes") do
+  expect(to_array @create_measure_page.measure_summary.goods.text).to eq(to_array @commodity_codes)
 end
 
 And("I can review the measure for meursing codes") do
@@ -277,41 +292,3 @@ When("I go back to the tariff main menu") do
   @create_measure_page.return_to_main_menu
 end
 
-def random_future_date
-  number = rand(1..365)
-  number.days.from_now
-end
-
-def random_past_date
-  number = rand(1..365)
-  number.days.ago
-end
-
-def random_workbasket_name
-  number = random_number(6)
-  "ATT #{number}"
-end
-
-def random_number(number)
-  number.times.map{rand(9)}.join
-end
-
-def to_array(codes)
-  all_codes = codes.split(",")
-  all_codes.collect {|code| code.strip}
-end
-
-def format_date(mdate)
-  date = Date.parse(mdate)
-  date.strftime("%m %B %Y")
-end
-
-def format_regulation(regulation)
-  year = regulation.slice(1..2)
-  reg_id = regulation.slice(3..6)
-  "20#{year}/#{reg_id}"
-end
-
-def format_footnote(footnote)
-  "#{footnote['type']} - #{footnote['id']}"
-end
