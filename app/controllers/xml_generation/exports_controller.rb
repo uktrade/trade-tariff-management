@@ -47,7 +47,7 @@ module XmlGeneration
 
     def valid_workbasket?
       if Workbaskets::Workbasket[params[:workbasket_id]].present?
-        if Workbaskets::Workbasket[params[:workbasket_id]].status != :awaiting_cds_upload_create_new
+        unless Workbaskets::Workbasket[params[:workbasket_id]].ready_for_upload
           @form_error= "Workbasket status must be 'Awaiting CDS upload', currently it is '#{Workbaskets::Workbasket[params[:workbasket_id]].status.humanize}'."
         end
       else
