@@ -2,7 +2,7 @@
   <div class="records-table-wrapper">
     <div :class="classes">
       <div class="table__header">
-        <div class="table__column select-all-column" v-if="disableSelection !== true && oneOrMoreLockedItems() !== true">
+        <div class="table__column select-all-column" v-if="disableSelection !== true">
           <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" v-if="disableSelectAll !== true" />
         </div>
         <div v-for="column in enabledColumns" v-bind:class="'table__column ' + column.field + '-column'">
