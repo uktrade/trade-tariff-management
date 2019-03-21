@@ -363,6 +363,10 @@ module Workbaskets
       user.name
     end
 
+    def ready_for_upload
+      status == :awaiting_cds_upload_create_new || status == :awaiting_cds_upload_edit
+    end
+
     def ordered_events
       events.sort_by(&:created_at)
     end
