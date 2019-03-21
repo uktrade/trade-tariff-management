@@ -8,6 +8,11 @@ module WorkbasketInteractions
           current_user,
           :awaiting_approval
         )
+        workbasket.settings.measure_sids.each do |sid|
+          measure = Measure.find(measure_sid: sid)
+          measure.status = "awaiting_approval"
+          measure.save
+        end
       end
 
       def post_reject_action!
