@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.9
--- Dumped by pg_dump version 9.6.9
+-- Dumped from database version 11.1
+-- Dumped by pg_dump version 11.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -14,20 +14,6 @@ SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
 
 --
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
@@ -131,6 +117,7 @@ CREATE VIEW public.additional_code_description_periods AS
 --
 
 CREATE SEQUENCE public.additional_code_description_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -200,6 +187,7 @@ CREATE VIEW public.additional_code_descriptions AS
 --
 
 CREATE SEQUENCE public.additional_code_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -259,6 +247,7 @@ CREATE VIEW public.additional_code_type_descriptions AS
 --
 
 CREATE SEQUENCE public.additional_code_type_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -320,6 +309,7 @@ CREATE VIEW public.additional_code_type_measure_types AS
 --
 
 CREATE SEQUENCE public.additional_code_type_measure_types_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -383,6 +373,7 @@ CREATE VIEW public.additional_code_types AS
 --
 
 CREATE SEQUENCE public.additional_code_types_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -450,6 +441,7 @@ CREATE VIEW public.additional_codes AS
 --
 
 CREATE SEQUENCE public.additional_codes_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -569,6 +561,7 @@ CREATE TABLE public.audits (
 --
 
 CREATE SEQUENCE public.audits_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -666,6 +659,7 @@ CREATE VIEW public.base_regulations AS
 --
 
 CREATE SEQUENCE public.base_regulations_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -704,6 +698,7 @@ CREATE TABLE public.bulk_edit_of_additional_codes_settings (
 --
 
 CREATE SEQUENCE public.bulk_edit_of_additional_codes_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -732,7 +727,6 @@ CREATE TABLE public.bulk_edit_of_measures_settings (
     measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
     search_code text,
     initial_search_results_code text,
-    all_batched_loaded boolean DEFAULT false,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb
 );
@@ -743,6 +737,7 @@ CREATE TABLE public.bulk_edit_of_measures_settings (
 --
 
 CREATE SEQUENCE public.bulk_edit_of_measures_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -788,6 +783,7 @@ CREATE TABLE public.bulk_edit_of_quotas_settings (
 --
 
 CREATE SEQUENCE public.bulk_edit_of_quotas_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -855,6 +851,7 @@ CREATE VIEW public.certificate_description_periods AS
 --
 
 CREATE SEQUENCE public.certificate_description_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -922,6 +919,7 @@ CREATE VIEW public.certificate_descriptions AS
 --
 
 CREATE SEQUENCE public.certificate_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -981,6 +979,7 @@ CREATE VIEW public.certificate_type_descriptions AS
 --
 
 CREATE SEQUENCE public.certificate_type_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1040,6 +1039,7 @@ CREATE VIEW public.certificate_types AS
 --
 
 CREATE SEQUENCE public.certificate_types_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1107,6 +1107,7 @@ CREATE VIEW public.certificates AS
 --
 
 CREATE SEQUENCE public.certificates_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1138,6 +1139,7 @@ CREATE TABLE public.chapter_notes (
 --
 
 CREATE SEQUENCE public.chapter_notes_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1257,6 +1259,7 @@ CREATE TABLE public.chief_duty_expression (
 --
 
 CREATE SEQUENCE public.chief_duty_expression_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1318,6 +1321,7 @@ CREATE TABLE public.chief_measure_type_footnote (
 --
 
 CREATE SEQUENCE public.chief_measure_type_footnote_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1350,6 +1354,7 @@ CREATE TABLE public.chief_measurement_unit (
 --
 
 CREATE SEQUENCE public.chief_measurement_unit_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1543,6 +1548,7 @@ CREATE VIEW public.complete_abrogation_regulations AS
 --
 
 CREATE SEQUENCE public.complete_abrogation_regulations_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1576,6 +1582,7 @@ CREATE TABLE public.create_additional_code_workbasket_settings (
 --
 
 CREATE SEQUENCE public.create_additional_code_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1609,6 +1616,7 @@ CREATE TABLE public.create_certificates_workbasket_settings (
 --
 
 CREATE SEQUENCE public.create_certificates_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1642,6 +1650,7 @@ CREATE TABLE public.create_footnotes_workbasket_settings (
 --
 
 CREATE SEQUENCE public.create_footnotes_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1675,6 +1684,7 @@ CREATE TABLE public.create_geographical_area_workbasket_settings (
 --
 
 CREATE SEQUENCE public.create_geographical_area_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1711,6 +1721,7 @@ CREATE TABLE public.create_measures_workbasket_settings (
 --
 
 CREATE SEQUENCE public.create_measures_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1754,6 +1765,7 @@ CREATE TABLE public.create_quota_workbasket_settings (
 --
 
 CREATE SEQUENCE public.create_quota_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1787,6 +1799,7 @@ CREATE TABLE public.create_regulation_workbasket_settings (
 --
 
 CREATE SEQUENCE public.create_regulation_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1829,6 +1842,7 @@ CREATE TABLE public.db_rollbacks (
 --
 
 CREATE SEQUENCE public.db_rollbacks_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1886,6 +1900,7 @@ CREATE VIEW public.duty_expression_descriptions AS
 --
 
 CREATE SEQUENCE public.duty_expression_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1949,6 +1964,7 @@ CREATE VIEW public.duty_expressions AS
 --
 
 CREATE SEQUENCE public.duty_expressions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1984,6 +2000,7 @@ CREATE TABLE public.edit_certificates_workbasket_settings (
 --
 
 CREATE SEQUENCE public.edit_certificates_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2019,6 +2036,7 @@ CREATE TABLE public.edit_footnotes_workbasket_settings (
 --
 
 CREATE SEQUENCE public.edit_footnotes_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2054,6 +2072,7 @@ CREATE TABLE public.edit_geographical_areas_workbasket_settings (
 --
 
 CREATE SEQUENCE public.edit_geographical_areas_workbasket_settings_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2129,6 +2148,7 @@ CREATE VIEW public.explicit_abrogation_regulations AS
 --
 
 CREATE SEQUENCE public.explicit_abrogation_regulations_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2196,6 +2216,7 @@ CREATE VIEW public.export_refund_nomenclature_description_periods AS
 --
 
 CREATE SEQUENCE public.export_refund_nomenclature_description_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2263,6 +2284,7 @@ CREATE VIEW public.export_refund_nomenclature_descriptions AS
 --
 
 CREATE SEQUENCE public.export_refund_nomenclature_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2332,6 +2354,7 @@ CREATE VIEW public.export_refund_nomenclature_indents AS
 --
 
 CREATE SEQUENCE public.export_refund_nomenclature_indents_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2399,6 +2422,7 @@ CREATE VIEW public.export_refund_nomenclatures AS
 --
 
 CREATE SEQUENCE public.export_refund_nomenclatures_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2464,6 +2488,7 @@ CREATE VIEW public.footnote_association_additional_codes AS
 --
 
 CREATE SEQUENCE public.footnote_association_additional_codes_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2533,6 +2558,7 @@ CREATE VIEW public.footnote_association_erns AS
 --
 
 CREATE SEQUENCE public.footnote_association_erns_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2604,6 +2630,7 @@ CREATE VIEW public.footnote_association_goods_nomenclatures AS
 --
 
 CREATE SEQUENCE public.footnote_association_goods_nomenclatures_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2667,6 +2694,7 @@ CREATE VIEW public.footnote_association_measures AS
 --
 
 CREATE SEQUENCE public.footnote_association_measures_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2732,6 +2760,7 @@ CREATE VIEW public.footnote_association_meursing_headings AS
 --
 
 CREATE SEQUENCE public.footnote_association_meursing_headings_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2799,6 +2828,7 @@ CREATE VIEW public.footnote_description_periods AS
 --
 
 CREATE SEQUENCE public.footnote_description_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2866,6 +2896,7 @@ CREATE VIEW public.footnote_descriptions AS
 --
 
 CREATE SEQUENCE public.footnote_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2925,6 +2956,7 @@ CREATE VIEW public.footnote_type_descriptions AS
 --
 
 CREATE SEQUENCE public.footnote_type_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2986,6 +3018,7 @@ CREATE VIEW public.footnote_types AS
 --
 
 CREATE SEQUENCE public.footnote_types_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3051,6 +3084,7 @@ CREATE VIEW public.footnotes AS
 --
 
 CREATE SEQUENCE public.footnotes_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3110,6 +3144,7 @@ CREATE VIEW public.fts_regulation_actions AS
 --
 
 CREATE SEQUENCE public.fts_regulation_actions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3197,6 +3232,7 @@ CREATE VIEW public.full_temporary_stop_regulations AS
 --
 
 CREATE SEQUENCE public.full_temporary_stop_regulations_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3264,6 +3300,7 @@ CREATE VIEW public.geographical_area_description_periods AS
 --
 
 CREATE SEQUENCE public.geographical_area_description_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3331,6 +3368,7 @@ CREATE VIEW public.geographical_area_descriptions AS
 --
 
 CREATE SEQUENCE public.geographical_area_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3396,6 +3434,7 @@ CREATE VIEW public.geographical_area_memberships AS
 --
 
 CREATE SEQUENCE public.geographical_area_memberships_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3465,6 +3504,7 @@ CREATE VIEW public.geographical_areas AS
 --
 
 CREATE SEQUENCE public.geographical_areas_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3528,6 +3568,7 @@ CREATE VIEW public.goods_nomenclature_description_periods AS
 --
 
 CREATE SEQUENCE public.goods_nomenclature_description_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3591,6 +3632,7 @@ CREATE VIEW public.goods_nomenclature_descriptions AS
 --
 
 CREATE SEQUENCE public.goods_nomenclature_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3650,6 +3692,7 @@ CREATE VIEW public.goods_nomenclature_group_descriptions AS
 --
 
 CREATE SEQUENCE public.goods_nomenclature_group_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3711,6 +3754,7 @@ CREATE VIEW public.goods_nomenclature_groups AS
 --
 
 CREATE SEQUENCE public.goods_nomenclature_groups_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3776,6 +3820,7 @@ CREATE VIEW public.goods_nomenclature_indents AS
 --
 
 CREATE SEQUENCE public.goods_nomenclature_indents_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3837,6 +3882,7 @@ CREATE VIEW public.goods_nomenclature_origins AS
 --
 
 CREATE SEQUENCE public.goods_nomenclature_origins_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3898,6 +3944,7 @@ CREATE VIEW public.goods_nomenclature_successors AS
 --
 
 CREATE SEQUENCE public.goods_nomenclature_successors_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3961,6 +4008,7 @@ CREATE VIEW public.goods_nomenclatures AS
 --
 
 CREATE SEQUENCE public.goods_nomenclatures_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4028,6 +4076,7 @@ CREATE VIEW public.language_descriptions AS
 --
 
 CREATE SEQUENCE public.language_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4085,6 +4134,7 @@ CREATE VIEW public.languages AS
 --
 
 CREATE SEQUENCE public.languages_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4142,6 +4192,7 @@ CREATE VIEW public.measure_action_descriptions AS
 --
 
 CREATE SEQUENCE public.measure_action_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4199,6 +4250,7 @@ CREATE VIEW public.measure_actions AS
 --
 
 CREATE SEQUENCE public.measure_actions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4270,6 +4322,7 @@ CREATE VIEW public.measure_components AS
 --
 
 CREATE SEQUENCE public.measure_components_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4327,6 +4380,7 @@ CREATE VIEW public.measure_condition_code_descriptions AS
 --
 
 CREATE SEQUENCE public.measure_condition_code_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4384,6 +4438,7 @@ CREATE VIEW public.measure_condition_codes AS
 --
 
 CREATE SEQUENCE public.measure_condition_codes_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4455,6 +4510,7 @@ CREATE VIEW public.measure_condition_components AS
 --
 
 CREATE SEQUENCE public.measure_condition_components_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4536,6 +4592,7 @@ CREATE VIEW public.measure_conditions AS
 --
 
 CREATE SEQUENCE public.measure_conditions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4599,6 +4656,7 @@ CREATE VIEW public.measure_excluded_geographical_areas AS
 --
 
 CREATE SEQUENCE public.measure_excluded_geographical_areas_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4668,6 +4726,7 @@ CREATE VIEW public.measure_partial_temporary_stops AS
 --
 
 CREATE SEQUENCE public.measure_partial_temporary_stops_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4727,6 +4786,7 @@ CREATE VIEW public.measure_type_descriptions AS
 --
 
 CREATE SEQUENCE public.measure_type_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4824,6 +4884,7 @@ CREATE VIEW public.measure_type_series_descriptions AS
 --
 
 CREATE SEQUENCE public.measure_type_series_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4843,6 +4904,7 @@ ALTER SEQUENCE public.measure_type_series_descriptions_oid_seq OWNED BY public.m
 --
 
 CREATE SEQUENCE public.measure_type_series_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4918,6 +4980,7 @@ CREATE VIEW public.measure_types AS
 --
 
 CREATE SEQUENCE public.measure_types_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4949,6 +5012,7 @@ CREATE TABLE public.measurement_unit_abbreviations (
 --
 
 CREATE SEQUENCE public.measurement_unit_abbreviations_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5006,6 +5070,7 @@ CREATE VIEW public.measurement_unit_descriptions AS
 --
 
 CREATE SEQUENCE public.measurement_unit_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5063,6 +5128,7 @@ CREATE VIEW public.measurement_unit_qualifier_descriptions AS
 --
 
 CREATE SEQUENCE public.measurement_unit_qualifier_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5120,6 +5186,7 @@ CREATE VIEW public.measurement_unit_qualifiers AS
 --
 
 CREATE SEQUENCE public.measurement_unit_qualifiers_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5177,6 +5244,7 @@ CREATE VIEW public.measurement_units AS
 --
 
 CREATE SEQUENCE public.measurement_units_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5236,6 +5304,7 @@ CREATE VIEW public.measurements AS
 --
 
 CREATE SEQUENCE public.measurements_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5349,6 +5418,7 @@ CREATE VIEW public.measures AS
 --
 
 CREATE SEQUENCE public.measures_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5368,6 +5438,7 @@ ALTER SEQUENCE public.measures_oid_seq OWNED BY public.measures_oplog.oid;
 --
 
 CREATE SEQUENCE public.meursing_additional_codes_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5429,6 +5500,7 @@ CREATE VIEW public.meursing_heading_texts AS
 --
 
 CREATE SEQUENCE public.meursing_heading_texts_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5490,6 +5562,7 @@ CREATE VIEW public.meursing_headings AS
 --
 
 CREATE SEQUENCE public.meursing_headings_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5555,6 +5628,7 @@ CREATE VIEW public.meursing_subheadings AS
 --
 
 CREATE SEQUENCE public.meursing_subheadings_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5622,6 +5696,7 @@ CREATE VIEW public.meursing_table_cell_components AS
 --
 
 CREATE SEQUENCE public.meursing_table_cell_components_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5679,6 +5754,7 @@ CREATE VIEW public.meursing_table_plans AS
 --
 
 CREATE SEQUENCE public.meursing_table_plans_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5772,6 +5848,7 @@ CREATE VIEW public.modification_regulations AS
 --
 
 CREATE SEQUENCE public.modification_regulations_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5831,6 +5908,7 @@ CREATE VIEW public.monetary_exchange_periods AS
 --
 
 CREATE SEQUENCE public.monetary_exchange_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5888,6 +5966,7 @@ CREATE VIEW public.monetary_exchange_rates AS
 --
 
 CREATE SEQUENCE public.monetary_exchange_rates_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5945,6 +6024,7 @@ CREATE VIEW public.monetary_unit_descriptions AS
 --
 
 CREATE SEQUENCE public.monetary_unit_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6002,6 +6082,7 @@ CREATE VIEW public.monetary_units AS
 --
 
 CREATE SEQUENCE public.monetary_units_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6067,6 +6148,7 @@ CREATE VIEW public.nomenclature_group_memberships AS
 --
 
 CREATE SEQUENCE public.nomenclature_group_memberships_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6128,6 +6210,7 @@ CREATE VIEW public.prorogation_regulation_actions AS
 --
 
 CREATE SEQUENCE public.prorogation_regulation_actions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6201,6 +6284,7 @@ CREATE VIEW public.prorogation_regulations AS
 --
 
 CREATE SEQUENCE public.prorogation_regulations_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6264,6 +6348,7 @@ CREATE VIEW public.publication_sigles AS
 --
 
 CREATE SEQUENCE public.publication_sigles_oplog_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6329,6 +6414,7 @@ CREATE VIEW public.quota_associations AS
 --
 
 CREATE SEQUENCE public.quota_associations_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6392,6 +6478,7 @@ CREATE VIEW public.quota_balance_events AS
 --
 
 CREATE SEQUENCE public.quota_balance_events_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6455,6 +6542,7 @@ CREATE VIEW public.quota_blocking_periods AS
 --
 
 CREATE SEQUENCE public.quota_blocking_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6514,6 +6602,7 @@ CREATE VIEW public.quota_critical_events AS
 --
 
 CREATE SEQUENCE public.quota_critical_events_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6601,6 +6690,7 @@ CREATE VIEW public.quota_definitions AS
 --
 
 CREATE SEQUENCE public.quota_definitions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6658,6 +6748,7 @@ CREATE VIEW public.quota_exhaustion_events AS
 --
 
 CREATE SEQUENCE public.quota_exhaustion_events_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6719,6 +6810,7 @@ CREATE VIEW public.quota_order_number_origin_exclusions AS
 --
 
 CREATE SEQUENCE public.quota_order_number_origin_exclusions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6788,6 +6880,7 @@ CREATE VIEW public.quota_order_number_origins AS
 --
 
 CREATE SEQUENCE public.quota_order_number_origins_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6853,6 +6946,7 @@ CREATE VIEW public.quota_order_numbers AS
 --
 
 CREATE SEQUENCE public.quota_order_numbers_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6910,6 +7004,7 @@ CREATE VIEW public.quota_reopening_events AS
 --
 
 CREATE SEQUENCE public.quota_reopening_events_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6977,6 +7072,7 @@ CREATE VIEW public.quota_suspension_periods AS
 --
 
 CREATE SEQUENCE public.quota_suspension_periods_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7034,6 +7130,7 @@ CREATE VIEW public.quota_unblocking_events AS
 --
 
 CREATE SEQUENCE public.quota_unblocking_events_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7097,6 +7194,7 @@ CREATE VIEW public.quota_unsuspension_events AS
 --
 
 CREATE SEQUENCE public.quota_unsuspension_events_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7133,6 +7231,7 @@ CREATE TABLE public.regulation_documents (
 --
 
 CREATE SEQUENCE public.regulation_documents_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7192,6 +7291,7 @@ CREATE VIEW public.regulation_group_descriptions AS
 --
 
 CREATE SEQUENCE public.regulation_group_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7251,6 +7351,7 @@ CREATE VIEW public.regulation_groups AS
 --
 
 CREATE SEQUENCE public.regulation_groups_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7316,6 +7417,7 @@ CREATE VIEW public.regulation_replacements AS
 --
 
 CREATE SEQUENCE public.regulation_replacements_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7375,6 +7477,7 @@ CREATE VIEW public.regulation_role_type_descriptions AS
 --
 
 CREATE SEQUENCE public.regulation_role_type_descriptions_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7434,6 +7537,7 @@ CREATE VIEW public.regulation_role_types AS
 --
 
 CREATE SEQUENCE public.regulation_role_types_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7569,6 +7673,7 @@ CREATE TABLE public.rollbacks (
 --
 
 CREATE SEQUENCE public.rollbacks_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7609,6 +7714,7 @@ CREATE TABLE public.search_references (
 --
 
 CREATE SEQUENCE public.search_references_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7639,6 +7745,7 @@ CREATE TABLE public.section_notes (
 --
 
 CREATE SEQUENCE public.section_notes_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7672,6 +7779,7 @@ CREATE TABLE public.sections (
 --
 
 CREATE SEQUENCE public.sections_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7705,6 +7813,7 @@ CREATE TABLE public.tariff_update_conformance_errors (
 --
 
 CREATE SEQUENCE public.tariff_update_conformance_errors_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7783,6 +7892,7 @@ CREATE VIEW public.transmission_comments AS
 --
 
 CREATE SEQUENCE public.transmission_comments_oid_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7823,6 +7933,7 @@ CREATE TABLE public.users (
 --
 
 CREATE SEQUENCE public.users_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7863,6 +7974,7 @@ CREATE TABLE public.workbasket_items (
 --
 
 CREATE SEQUENCE public.workbasket_items_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7917,6 +8029,7 @@ CREATE TABLE public.workbaskets_events (
 --
 
 CREATE SEQUENCE public.workbaskets_events_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7936,6 +8049,7 @@ ALTER SEQUENCE public.workbaskets_events_id_seq OWNED BY public.workbaskets_even
 --
 
 CREATE SEQUENCE public.workbaskets_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7975,6 +8089,7 @@ CREATE TABLE public.xml_export_files (
 --
 
 CREATE SEQUENCE public.xml_export_files_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -12323,14 +12438,6 @@ CREATE UNIQUE INDEX xml_export_files_envelope_id_index ON public.xml_export_file
 
 
 --
--- Name: reassign_owned; Type: EVENT TRIGGER; Schema: -; Owner: -
---
-
-CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
-   EXECUTE PROCEDURE public.reassign_owned();
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -12387,6 +12494,29 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20130220094325_add_index_f
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221132447_make_effective_end_dates_timestamps.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221140444_change_export_refund_nomenclature_indent_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130417135357_add_users_table.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130809075350_change_chapter_note_foreign_key_type.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130916082304_add_foreign_keys_to_search_references.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20131113142525_add_search_references_polymorphic_association.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140410213345_create_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140424105255_add_columns_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140526161142_add_error_column_to_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140527124014_change_column_in_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140715224356_create_measurement_unit_abbreviations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140721090137_add_organisation_slug_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140722151202_add_error_backtrace_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140731161233_create_tariff_update_conformance_errors.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150114110937_quota_critical_events_oplog_primary_key.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150406165721_add_disabled_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150507133620_add_organisation_content_id_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214224024_add_model_views_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214230831_quota_critical_events_view_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20161209195324_alter_footnotes_foonote_id_lenght.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audits.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
@@ -12433,29 +12563,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130809075350_change_chapter_note_foreign_key_type.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130916082304_add_foreign_keys_to_search_references.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20131113142525_add_search_references_polymorphic_association.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140410213345_create_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140424105255_add_columns_to_tariff_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140526161142_add_error_column_to_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140527124014_change_column_in_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140715224356_create_measurement_unit_abbreviations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140721090137_add_organisation_slug_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140722151202_add_error_backtrace_to_tariff_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140731161233_create_tariff_update_conformance_errors.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150114110937_quota_critical_events_oplog_primary_key.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150406165721_add_disabled_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150507133620_add_organisation_content_id_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20151214224024_add_model_views_reloaded.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20151214230831_quota_critical_events_view_reloaded.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20161209195324_alter_footnotes_foonote_id_lenght.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audits.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180702142649_add_search_code_to_workbaskets.rb');
@@ -12469,6 +12576,7 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_vali
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure_sids_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180722185024_add_workbasket_attributes_to_db_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726104556_add_workbasket_attrs_to_measure_excluded_geographical_areas.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726140522_update_xml_exportable_data_with_workbasket_fields.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727172730_create_create_quota_workbasket_settings.rb');
@@ -12488,39 +12596,38 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approver_user_to_users.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflow_fields_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approver_user_to_users.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflow_fields_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011092756_change_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011184220_add_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011190000_add_more_search_indexes_to_speed_up.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012181311_rollback_duty_expression_indexes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012184040_add_updated_at_to_sections.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnote_id_characters_limit_in_associations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181016175408_add_workbasket_related_columns_to_geo_areas_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_settings_to_edit_quota.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017095105_create_create_footnotes_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017141845_create_certificate_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbasket_fileds_to_quota_relations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017165251_add_workbasket_related_columns_to_certificate_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019151225_edit_footnotes_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019161518_add_original_fields_to_edit_footnote_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181021085816_add_workbasket_fields_to_footnote_associations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181011092756_change_bulk_edit_of_quotas_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_settings_to_edit_quota.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbasket_fileds_to_quota_relations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit_certificate_settings_table.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164645_create_edit_geographical_areas_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_original_fields_to_edit_geographical_areas_workbasket_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181204111717_add_envelope_id_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190131153106_remove_unneeded_files_from_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_export_from_dates_to_workbasket.rb');
