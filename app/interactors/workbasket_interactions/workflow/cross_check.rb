@@ -13,6 +13,11 @@ module WorkbasketInteractions
           measure.status = "awaiting_approval"
           measure.save
         end
+        workbasket.settings.quota_period_sids.each do |sid|
+          quota = QuotaDefinition.find(quota_definition_sid: sid)
+          quota.status = "awaiting_approval"
+          quota.save
+        end
       end
 
       def post_reject_action!

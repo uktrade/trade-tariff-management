@@ -17,6 +17,11 @@ module WorkbasketInteractions
           end
           measure.save
         end
+        workbasket.settings.quota_period_sids.each do |sid|
+          quota = QuotaDefinition.find(quota_definition_sid: sid)
+          quota.status = "awaiting_cds_upload_create_new"
+          quota.save
+        end
       end
 
       def post_reject_action!
