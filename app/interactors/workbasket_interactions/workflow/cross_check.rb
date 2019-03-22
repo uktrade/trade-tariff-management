@@ -13,16 +13,30 @@ module WorkbasketInteractions
           measure.status = "awaiting_approval"
           measure.save
         end
-        workbasket.settings.quota_period_sids.each do |sid|
-          quota = QuotaDefinition.find(quota_definition_sid: sid)
-          quota.status = "awaiting_approval"
-          quota.save
+        if workbasket.settings.try(:quota_period_sids)
+          workbasket.settings.quota_period_sids.each do |sid|
+            quota = QuotaDefinition.find(quota_definition_sid: sid)
+            quota.status = "awaiting_approval"
+            quota.save
+          end
         end
       end
 
       def post_reject_action!
         workbasket.cross_checker_id = nil
         workbasket.save
+        workbasket.settings.measure_sids.each do |sid|
+          measure = Measure.find(measure_sid: sid)
+          measure.status = "cross_check_rejected"
+          measure.save
+        end
+        if workbasket.settings.try(:quota_period_sids)
+          workbasket.settings.quota_period_sids.each do |sid|
+            quota = QuotaDefinition.find(quota_definition_sid: sid)
+            quota.status = "cross_check_rejected"
+            quota.save
+          end
+        end
       end
 
       def approve_status

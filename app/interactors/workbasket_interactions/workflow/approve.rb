@@ -17,16 +17,30 @@ module WorkbasketInteractions
           end
           measure.save
         end
-        workbasket.settings.quota_period_sids.each do |sid|
-          quota = QuotaDefinition.find(quota_definition_sid: sid)
-          quota.status = "awaiting_cds_upload_create_new"
-          quota.save
+        if workbasket.settings.try(:quota_period_sids)
+          workbasket.settings.quota_period_sids.each do |sid|
+            quota = QuotaDefinition.find(quota_definition_sid: sid)
+            quota.status = "awaiting_cds_upload_create_new"
+            quota.save
+          end
         end
       end
 
       def post_reject_action!
         workbasket.approver_id = nil
         workbasket.save
+        workbasket.settings.measure_sids.each do |sid|
+          measure = Measure.find(measure_sid: sid)
+          measure.status = "approval_rejected"
+          measure.save
+        end
+        if workbasket.settings.try(:quota_period_sids)
+          workbasket.settings.quota_period_sids.each do |sid|
+            quota = QuotaDefinition.find(quota_definition_sid: sid)
+            quota.status = "approval_rejected"
+            quota.save
+          end
+        end
       end
 
       def approve_status
