@@ -90,6 +90,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     builder (3.2.3)
+    byebug (11.0.1)
     callsite (0.0.11)
     capybara (3.13.2)
       addressable
@@ -524,6 +525,7 @@ DEPENDENCIES
   bootstrap-datepicker-rails (~> 1.7.1.1)
   bootstrap-sass (~> 3.3.7)
   builder (~> 3.2)
+  byebug
   capybara
   capybara-screenshot
   chromedriver-helper
