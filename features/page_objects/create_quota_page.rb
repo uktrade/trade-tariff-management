@@ -5,7 +5,7 @@ class CreateQuotaPage < CreateQuotaPageElements
 
   include CapybaraFormHelper
 
-  set_url "/create_quota/1120/edit?step=main"
+  set_url ENV['QUOTA']
 
   def select_regulation(reg)
     regulation_dropdown.click

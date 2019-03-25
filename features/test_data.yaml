@@ -6,23 +6,22 @@ defaults: &default_data
   footnote: ~
   condition: ~
   duty_expression: {expression: "Amount €", amount: "12.5", unit: "KGM", qualifier: "Gross"}
+  section_duration: "1 year"
+  measurement_unit: "KGM"
+  opening_balance: "1000000.0"
+  maximum_precision: "2"
+  critical: "No"
+  licensed: "No"
+  criticality_threshold: "90"
 
 quota_data:
   <<: *default_data
   quota_type: "122"
   quota_period: "Annual"
   commodity_codes: "5209000000"
-  measure_type: "Tariff preference"
   exceptions: "5209110000"
-  section_duration: "1 year"
-  measurement_unit: "KGM"
-  opening_balance: "1000000.0"
-  maximum_precision: "2"
   footnote: {type: "CD", id: "001"}
   condition: {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
-  critical: "No"
-  licensed: "No"
-  criticality_threshold: "90"
 
 single_commodity_code: &generic
   <<: *default_data
