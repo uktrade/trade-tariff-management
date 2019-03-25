@@ -1,4 +1,4 @@
-@wip
+
 Feature: Validate create measure form fields on save or submit
 
   Scenario: Tariff manager cannot submit a blank create measure form
@@ -13,8 +13,7 @@ Feature: Validate create measure form fields on save or submit
     And I save progress
     Then errors indicating the mandatory fields are displayed
 
-  @TQ-181
-  @TQ-172
+  @ME2 @ME4 @ME86
   Scenario Outline: Tariff manager cannot submit create measure form when a mandatory field is missing
     Given I am on the tariff main menu
     When I open a new create measure form
@@ -40,20 +39,22 @@ Feature: Validate create measure form fields on save or submit
 #      |present   |
       |future   |
 
-
-  Scenario: ME25 Measure end date cannot be earlier than the measure's start date
+  @ME25
+  Scenario: Measure end date cannot be earlier than the measure's start date
     Given I am on the tariff main menu
     When I open a new create measure form
     And I enter an end date which is earlier than the start date
     Then an "ME25" error message is displayed
 
-  Scenario: ME12 Additional code has no relationship with the measure type
+  @ME12
+  Scenario: Additional code has no relationship with the measure type
     Given I am on the tariff main menu
     When I open a new create measure form
     And I fill in the form for a "me12_additional_code"
     Then an "ME12" error message is displayed
 
   @wip
+  @ME1
   Scenario: ME1
     Given I am on the tariff main menu
     When I open a new create measure form
@@ -64,7 +65,8 @@ Feature: Validate create measure form fields on save or submit
     And I fill in the form for a "single_commodity_code"
     Then an "ME1" error message is displayed
 
-  @wip @feature-not-implemented
+  @wip
+  @feature-not-implemented
   Scenario: Duty expression is mandatory where required by the selected measure type
     Given I am on the tariff main menu
     When I open a new create measure form
