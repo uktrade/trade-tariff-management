@@ -150,10 +150,12 @@ Vue.component("quota-section", {
       }
     },
     removePeriod: function(index) {
-      this.section.periods.splice(index, 1);
+      if(confirm('Are you sure?')) {
+        this.section.periods.splice(index, 1);
 
-      if (this.section.periods.length === 0) {
-        this.addPeriod();
+        if (this.section.periods.length === 0) {
+          this.addPeriod();
+        }
       }
     },
     addPeriod: function() {
