@@ -25,6 +25,13 @@ Rails.application.routes.draw do
     end
   end
 
+  # Need to prevent production server running these
+  if ENV['ALLOW_TESTER_TO_BYPASS_CDS'] == 'ALLOW'
+    namespace :admin do
+      resources :workbasket_status, only: [:index, :update]
+    end
+  end
+
   namespace :api do
     get "/v1/taricdelta(/:date)",   to: "xml_files#index"
     get "/v1/taricfile/:timestamp", to: "xml_files#show"
