@@ -1,0 +1,62 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
+
+    li aria-current="page"
+      | Workbasket Status Change
+
+h2.heading-large Workbasket Status Change
+
+h3 This page should NOT be visible nor used in production environment.
+
+- if notice
+  .confirmation-message
+    button.close
+    p
+      = notice
+
+table.table
+  colgroup
+    col width="80"
+    col width="*"
+    col width="180"
+    col width="100"
+    col width="100"
+    col width="100"
+    - if false
+      col width="1"
+
+  thead
+    tr
+      th
+        = sortable(:id, "ID", { q: params[:q] })
+      th
+        = sortable(:title, "Workbasket", { q: params[:q] })
+      th
+        = sortable(:type, "Type", { q: params[:q] })
+      th
+        = sortable(:status, "Status", { q: params[:q] })
+      th
+        | Publish
+      th
+        | Reject
+      - if false
+        th width="1"
+          | &nbsp;
+
+  tbody
+    - @workbaskets.map do |workbasket|
+      tr id="workbasket_#{workbasket.id}"
+        td
+          = workbasket.id
+        td
+          = workbasket.title
+        td
+          = workbasket.type
+        td
+          = workbasket.status
+        td
+          = button_to "Publish", admin_workbasket_status_url(workbasket.id), method: 'put', params: { status: 'published' }, class: :button
+        td
+          = button_to "Reject", admin_workbasket_status_url(workbasket.id), method: 'put', params: { status: 'cds_error' }, class: :button
