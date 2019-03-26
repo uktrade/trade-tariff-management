@@ -34,7 +34,7 @@ module AuthHelper
     else
       redirect_to login_path
     end
-
+    audit_session(current_user, request.original_url)
   end
 
   # User record is held in the session variable
@@ -69,4 +69,7 @@ module AuthHelper
     '/logout?disabled=1'
   end
 
+  def audit_session(user_info, action)
+    SessionAudit.create(user_id: user_info.id, uid: user_info.uid, name: user_info.name, email: user_info.email, action: action)
+  end
 end
