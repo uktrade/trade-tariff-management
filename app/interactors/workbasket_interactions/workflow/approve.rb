@@ -11,9 +11,9 @@ module WorkbasketInteractions
         workbasket.settings.measure_sids.each do |sid|
           measure = Measure.find(measure_sid: sid)
           measure.status = if workbasket.type == "bulk_edit_of_measures"
-            measure.status = "awaiting_cds_upload_edit"
+            "awaiting_cds_upload_edit"
           else
-            measure.status = "awaiting_cds_upload_create_new"
+            "awaiting_cds_upload_create_new"
           end
           measure.save
         end
