@@ -6,16 +6,16 @@ module Workbaskets
     expose(:settings_type) { :bulk_edit_of_measures }
 
     expose(:initial_step_url) do
-      edit_bulk_edit_of_measure_url(
+      edit_measures_bulk_url(
         workbasket.id,
-        step: :main
+        search_code: workbasket.settings.search_code
       )
     end
 
     expose(:previous_step_url) do
-      edit_bulk_edit_of_measure_url(
+      edit_measures_bulk_url(
         workbasket.id,
-        step: previous_step
+        search_code: workbasket.settings.search_code
       )
     end
 
