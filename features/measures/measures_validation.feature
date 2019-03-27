@@ -53,16 +53,14 @@ Feature: Validate create measure form fields on save or submit
     And I fill in the form for a "me12_additional_code"
     Then an "ME12" error message is displayed
 
-  @wip
   @ME1
-  Scenario: ME1
+  Scenario: Combination of start date, measure type, geographical area, commodity code must be unique
     Given I am on the tariff main menu
     When I open a new create measure form
-    And I fill in the form for a "single_commodity_code"
-    Then I can review the measure
+    And I fill the required fields and enter a "present" date
     When I go back to the tariff main menu
     And I open a new create measure form
-    And I fill in the form for a "single_commodity_code"
+    And I fill the required fields and enter a "present" date
     Then an "ME1" error message is displayed
 
   @wip

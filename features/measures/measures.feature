@@ -27,8 +27,9 @@ Feature: As a Tariff Manager
       |scenario                |
       |single_goods_exception  |
       |multiple_goods_exception|
+      |multiple_goods_single_exception|
 
-  @ME32
+  @ME32 @manual
   Scenario Outline: Create measure with additional codes
     And I fill in the form for a "<scenario>"
     And I can review the measure

@@ -43,6 +43,13 @@ single_goods_exception:
   exceptions: "5209110000"
   origin: {type: "group", name: "All third countries", exception: ~}
 
+multiple_goods_single_exception:
+  <<: *default_data
+  commodity_codes: "9607110000,9607190000,9607201010,9607201090,3004600000"
+  measure_type: "Tariff preference"
+  exceptions: "9607110000"
+  origin: {type: "group", name: "All third countries", exception: ~}
+
 multiple_goods_exception:
   <<: *default_data
   commodity_codes: "5209000000"

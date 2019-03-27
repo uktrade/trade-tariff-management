@@ -134,6 +134,8 @@ Then(/^an "([^"]*)" error message is displayed$/) do |string|
       expect(error_message).to match(/#{CreateMeasurePage::ME2_ERROR}/)
     when 'ME12'
       expect(error_message).to match(/#{CreateMeasurePage::ME12_ERROR}/)
+    when 'ME1'
+      expect(error_message).to match(/#{CreateMeasurePage::ME1_ERROR}/)
   end
 end
 
@@ -144,6 +146,7 @@ And(/^I enter an end date which is earlier than the start date$/) do
   commodity_code = test_data['commodity_codes']
   start_date = Date.today
   end_date = 3.days.ago
+  @workbasket = random_workbasket_name
 
   @create_measure_page.enter_measure_start_date start_date
   @create_measure_page.enter_measure_end_date end_date
@@ -169,6 +172,7 @@ When(/^I fill the required fields and enter a "([^"]*)" date$/) do |date|
   measure_type = 'Customs Union Duty'
   commodity_code = '1006400010'
   start_date = Date.today
+  @workbasket = random_workbasket_name
 
   case date
     when 'past'
@@ -185,7 +189,7 @@ end
 def common_steps(regulation, measure_type, commodity_code)
   @create_measure_page.select_regulation regulation
   @create_measure_page.select_measure_type measure_type
-  @create_measure_page.enter_workbasket_name random_workbasket_name
+  @create_measure_page.enter_workbasket_name @workbasket
   @create_measure_page.enter_commodity_codes commodity_code
   @create_measure_page.select_erga_omnes
 end
