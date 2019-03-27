@@ -31,10 +31,10 @@ module AuthHelper
       if current_user.disabled?
         redirect_to disabled_user_path
       end
+      audit_session(current_user, request.original_url)
     else
       redirect_to login_path
     end
-    audit_session(current_user, request.original_url)
   end
 
   # User record is held in the session variable
