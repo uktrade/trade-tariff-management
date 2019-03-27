@@ -17,9 +17,8 @@ module MeasureService
       when 'all'
         #
         # if selection_type is `all`, then `measure_sids` contains exclusions
-        #
-
-        all_measure_sids - measure_sids
+        # cannot select locked measures.
+        unlocked_measure_sids - measure_sids.map(&:to_i)
       when 'none'
         #
         # if selection_type is `none` then `measure_sids` contains selection
@@ -33,6 +32,10 @@ module MeasureService
 
     def all_measure_sids
       Rails.cache.read(search_code)
+    end
+
+    def unlocked_measure_sids
+      Measure.where(measure_sid: all_measure_sids).where("status = 'published'").pluck(:measure_sid)
     end
   end
 end
