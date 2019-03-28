@@ -41,11 +41,11 @@ module XmlGeneration
     end
 
     def remote_metadata_file_name
-      "DIT_TAQ01_V1_#{timestamp}_metadata.xml"
+      "DIT#{record.envelope_id}_metadata.xml"
     end
 
     def remote_main_file_name
-      "DIT_TAQ01_V1_#{timestamp}.xml"
+      "DIT#{record.envelope_id}.xml"
     end
 
     def local_main_file_path
