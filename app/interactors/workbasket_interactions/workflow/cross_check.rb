@@ -4,15 +4,11 @@ module WorkbasketInteractions
     private
 
       def post_approve_action!
-        workbasket.move_status_to!(
-          current_user,
-          :awaiting_approval
-        )
+        workbasket.submit_for_approval!(current_admin: current_user)
       end
 
       def post_reject_action!
-        workbasket.cross_checker_id = nil
-        workbasket.save
+        workbasket.reject_cross_check!(current_admin: current_user)
       end
 
       def approve_status
