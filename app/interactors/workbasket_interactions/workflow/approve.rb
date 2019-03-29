@@ -4,15 +4,11 @@ module WorkbasketInteractions
     private
 
       def post_approve_action!
-        if export_date.present?
-          workbasket.operation_date = export_date.to_date
-          workbasket.save
-        end
+        workbasket.confirm_approval!(current_admin: current_user)
       end
 
       def post_reject_action!
-        workbasket.approver_id = nil
-        workbasket.save
+        workbasket.reject_approval!(current_admin: current_user)
       end
 
       def approve_status
