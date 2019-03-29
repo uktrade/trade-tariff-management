@@ -299,6 +299,25 @@ module Workbaskets
             end
           end
 
+          def submit_for_approval!(current_admin:)
+            move_status_to!(current_admin, :awaiting_approval)
+
+            settings.collection.map do |item|
+              item.move_status_to!(:awaiting_approval)
+            end
+          end
+
+          def reject_cross_check!(current_admin:)
+            move_status_to!(current_admin, :cross_check_rejected)
+
+            workbasket.cross_checker_id = nil
+            workbasket.save
+
+            settings.collection.map do |item|
+              item.move_status_to!(:cross_check_rejected)
+            end
+          end
+
           def edit_type?
             EDIT_WORKABSKETS.include?(type)
           end
