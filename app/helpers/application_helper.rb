@@ -28,6 +28,6 @@ module ApplicationHelper
   end
 
   def application_version_identifier
-    ENV["GIT_COMMIT"]&.slice(0..6)
+    ENV["GIT_TAG"] || ENV["GIT_COMMIT"]&.slice(0..6)
   end
 end
