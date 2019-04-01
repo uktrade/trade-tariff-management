@@ -337,6 +337,14 @@ module Workbaskets
             end
           end
 
+          def testing_status_backdoor!(current_admin:, status:)
+            move_status_to!(current_admin, status, 'Tester backdoor')
+
+            settings.collection.map do |item|
+              item.move_status_to!(status)
+            end
+          end
+
           def edit_type?
             EDIT_WORKABSKETS.include?(type)
           end
