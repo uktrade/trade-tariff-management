@@ -208,10 +208,6 @@ class CreateMeasurePage < CreateMeasurePageElements
       end
     end
 
-    def return_tomain_menu
-
-    end
-
     def enter_condition_duty_amount(duty)
       conditions.duty_amount.set duty
     end
@@ -222,5 +218,15 @@ class CreateMeasurePage < CreateMeasurePageElements
 
     def return_to_main_menu
       exit_link.click
+    end
+
+    def view_commodity_code_description(code)
+      check_commodity_code_link.click
+      check_commodity_code_field.set code
+    end
+
+    def view_additional_code_description(code)
+      check_additional_code_link.click
+      check_additional_code_field.set code
     end
 end

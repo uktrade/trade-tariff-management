@@ -293,3 +293,24 @@ When(/^I go back to the tariff main menu$/) do
   @create_measure_page.return_to_main_menu
 end
 
+And(/^I check the description of a commodity code$/) do
+  test_data = CONFIG['single_additional_code']
+  @commodity_codes = test_data['commodity_codes']
+  @additional_codes = test_data['additional_codes']
+
+  @create_measure_page.view_commodity_code_description @commodity_codes
+end
+
+Then(/^the commodity code description is displayed$/) do
+  expect(@create_measure_page).to have_check_commodity_code_description
+end
+
+When(/^I check the description of an additional code$/) do
+  @create_measure_page.view_additional_code_description @additional_codes
+end
+
+Then(/^the additional code description is displayed$/) do
+  expect(@create_measure_page).to have_check_additional_code_description
+  expect(@create_measure_page.check_additional_code_description.text).to include @additional_codes
+end
+

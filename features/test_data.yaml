@@ -8,6 +8,7 @@ defaults: &default_data
   duty_expression: {expression: "Amount €", amount: "12.5", unit: "KGM", qualifier: "Gross"}
   section_duration: "1 year"
   measurement_unit: "KGM"
+  monetary_unit: ~
   opening_balance: "1000000.0"
   maximum_precision: "2"
   critical: "No"
@@ -23,6 +24,14 @@ quota_data:
   footnote: {type: "CD", id: "001"}
   condition: {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
 
+quota_monetary_unit:
+  <<: *default_data
+  quota_type: "122"
+  quota_period: "Annual"
+  commodity_codes: "5209000000"
+  monetary_unit: "EUROs"
+  measurement_unit: ~
+
 single_commodity_code: &generic
   <<: *default_data
   commodity_codes: "1902000000"
@@ -35,6 +44,12 @@ multiple_commodity_code:
   <<: *default_data
   commodity_codes: "1905000000,2007000000,2008000000,2103200000,2103909000"
   measure_type: "Third country duty"
+
+  multiple_commodity_code_multiple_exceptions:
+    <<: *default_data
+    commodity_codes: "1905000000,2007000000,2008000000,2103200000,2103909000"
+    measure_type: "Third country duty"
+    exceptions: "1905000000,2007000000"
 
 single_goods_exception:
   <<: *default_data

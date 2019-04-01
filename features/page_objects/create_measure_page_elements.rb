@@ -21,6 +21,12 @@ class CreateMeasurePageElements < SitePrism::Page
   element :exit_link, "a.js-workbasket-base-exit-button"
   element :previous_step_link, "a[class$='previous-step-link']"
   element :submit_for_crosscheck_button, "input[name='submit_for_cross_check']"
+  element :check_commodity_code_link, ".js-workbasket-check-code-description", text: "Check a commodity code description"
+  element :check_commodity_code_field, ".additional_code_check input"
+  element :check_commodity_code_description, ".additional_code_check div.tariff-breadcrumbs"
+  element :check_additional_code_link, ".js-workbasket-check-code-description", text: "Check an additional code description"
+  element :check_additional_code_field, :xpath, '//div[@class="js-workbasket-check-code-container"]//input'
+  element :check_additional_code_description, ".additional_code_preview_block"
 
   section :conditions, "#wrapper fieldset:nth-child(5)" do
     element :duty_amount, "#measure-condition-0-measure-condition-component-0-amount"
