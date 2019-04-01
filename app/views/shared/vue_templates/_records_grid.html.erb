@@ -2,9 +2,15 @@
   <div class="records-table-wrapper">
     <div :class="classes">
       <div class="table__header">
-        <div class="table__column select-all-column" v-if="disableSelection !== true">
-          <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" v-if="disableSelectAll !== true" />
+        <div class="table__column locked-column">
+          <span>Locked</span>
         </div>
+        <div class="table__column select-all-column">
+          <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" v-if="disableSelectAll !== true" />
+          <span v-else>
+            Select
+          </span>
+          </div>
         <div v-for="column in enabledColumns" v-bind:class="'table__column ' + column.field + '-column'">
           <a v-on:click.prevent="selectSorting(column)" v-if="column.sortable">
             {{column.title}}
@@ -20,14 +26,18 @@
       </div>
 
       <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item.row_id" :data-record-sid="item.row_id" v-for="(item, index) in sorted">
+        <div class="table__column locked-column">
+          <span>
+            <i v-if="locked(item)">&#x1F510;</i>
+          </span>
+        </div>
         <div class="table__column select-all-column" v-if="disableSelection !== true && singleSelection !== true">
           <input type="checkbox" name="records[]" :disabled="locked(item)" :value="item[primaryKey]" :checked="checked[item[primaryKey]] && !locked(item)" @change="sendCheckedTrigger" />
         </div>
-        <i v-if="locked(item)">&#x1F510;</i>
         <div class="table__column select-all-column" v-if="singleSelection === true">
           <input type="radio" name="selected_record" :disabled="locked(item)" :value="item[primaryKey]" :checked="selectedItem === item[primaryKey] && !locked(item)" @change="sendCheckedTrigger" />
         </div>
-        <grid-column v-for="column in enabledColumns" :item="item" :column="column.field" :changeProp="column.changeProp" :primary-key="primaryKey" :has-error="item.errors && item.errors.indexOf(column.field) > -1"></grid-column>
+        <grid-column v-for="(column, index) in enabledColumns" :key="index" :item="item" :column="column.field" :changeProp="column.changeProp" :primary-key="primaryKey" :has-error="item.errors && item.errors.indexOf(column.field) > -1"></grid-column>
       </div>
     </div>
   </div>

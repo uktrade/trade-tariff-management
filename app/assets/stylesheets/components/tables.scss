@@ -16,17 +16,20 @@ table {
 
 .quotas-table,
 .records-table.quotas {
-  min-width: 1500px !important;
+  min-width: 1700px !important;
 }
 
 .records-table {
   .table__row {
     border-bottom: 1px solid $border-colour;
-    display: flex;
 
     &.deleted {
       text-decoration: line-through;
     }
+  }
+
+  .table__row:last-child {
+    margin-bottom: 2em;
   }
 
   .table__column {
@@ -44,8 +47,8 @@ table {
 
   .sid-column,
   .measure_sid-column {
-    min-width: 80px;
-    max-width: 80px;
+    min-width: 70px;
+    max-width: 70px;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -61,24 +64,24 @@ table {
   }
 
   .validity_start_date-column {
-    min-width: 85px;
-    max-width: 85px;
+    min-width: 140px;
+    max-width: 140px;
   }
 
   .justification_regulation-column {
-    min-width: 100px;
-    max-width: 100px;
+    min-width: 90px;
+    max-width: 90px;
   }
 
   .validity_end_date-column {
-    min-width: 85px;
-    max-width: 85px;
+    min-width: 140px;
+    max-width: 140px;
   }
 
   .goods_nomenclature_id-column,
   .goods_nomenclature-column {
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 100px;
+    max-width: 100px;
   }
 
   .goods_nomenclatures-column {
@@ -143,13 +146,13 @@ table {
   }
 
   .last_updated-column {
-    min-width: 160px;
-    max-width: 160px;
+    min-width: 140px;
+    max-width: 140px;
   }
 
   .status-column {
-    min-width: 110px;
-    max-width: 110px;
+    min-width: 80px;
+    max-width: 80px;
   }
 
   .table__column {
