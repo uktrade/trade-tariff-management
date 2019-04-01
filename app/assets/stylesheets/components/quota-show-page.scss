@@ -3,19 +3,27 @@
 }
 
 .records-table.quotas-table {
-  .quota_order_number_id-column {
+  .locked-column {
+    min-width:50px !important;
+    max-width:50px !important;
+  }
+  .select-all-column {
     min-width: 60px !important;
     max-width: 60px !important;
   }
+  .quota_order_number_id-column {
+    min-width: 70px !important;
+    max-width: 70px !important;
+  }
 
   .quota_type_id-column {
-    min-width: 30px !important;
-    max-width: 30px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
   }
 
   .regulation_id-column {
-    min-width: 70px !important;
-    max-width: 70px !important;
+    min-width: 90px !important;
+    max-width: 90px !important;
   }
 
   .license-column {
@@ -39,13 +47,13 @@
   }
 
   .additional_code_ids-column {
-    min-width: 60px !important;
-    max-width: 60px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
   }
 
   .origin-column {
-    min-width: 40px !important;
-    max-width: 40px !important;
+    min-width: 70px !important;
+    max-width: 70px !important;
   }
 
   .origin_exclusions-column {
@@ -54,12 +62,12 @@
   }
 
   .last_updated-column {
-    min-width: 180px !important;
-    max-width: 180px !important;
+    min-width: 140px !important;
+    max-width: 140px !important;
   }
 
   .status-column {
-    min-width: 250px !important;
-    max-width: 250px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
   }
 }
