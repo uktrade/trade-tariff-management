@@ -25,7 +25,7 @@ namespace :importer do
       Sequel::Model.subclasses.each(&:unrestrict_primary_key)
       Sequel::Model.plugin :skip_create_refresh
       dummy_update = OpenStruct.new(file_path: ENV["TARGET"], issue_date: nil)
-      TaricImporter.new(dummy_update).imports3(validate: false)
+      TaricImporter.new(dummy_update).import(validate: false)
     end
 
   end
