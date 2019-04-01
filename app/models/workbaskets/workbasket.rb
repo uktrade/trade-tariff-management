@@ -299,6 +299,52 @@ module Workbaskets
             end
           end
 
+          def submit_for_approval!(current_admin:)
+            move_status_to!(current_admin, :awaiting_approval)
+
+            settings.collection.map do |item|
+              item.move_status_to!(:awaiting_approval)
+            end
+          end
+
+          def reject_cross_check!(current_admin:)
+            move_status_to!(current_admin, :cross_check_rejected)
+
+            cross_checker_id = nil
+            save
+
+            settings.collection.map do |item|
+              item.move_status_to!(:cross_check_rejected)
+            end
+          end
+
+          def confirm_approval!(current_admin:)
+            move_status_to!(current_admin, possible_approved_status)
+
+            settings.collection.map do |item|
+              item.move_status_to!(possible_approved_status)
+            end
+          end
+
+          def reject_approval!(current_admin:)
+            move_status_to!(current_admin, :approval_rejected)
+
+            approver_id = nil
+            save
+
+            settings.collection.map do |item|
+              item.move_status_to!(:approval_rejected)
+            end
+          end
+
+          def testing_status_backdoor!(current_admin:, status:)
+            move_status_to!(current_admin, status, 'Tester backdoor')
+
+            settings.collection.map do |item|
+              item.move_status_to!(status)
+            end
+          end
+
           def edit_type?
             EDIT_WORKABSKETS.include?(type)
           end

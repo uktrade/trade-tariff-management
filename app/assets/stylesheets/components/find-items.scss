@@ -131,7 +131,7 @@ $find-item-gutter: 5px;
 .records-table-wrapper,
 .measures-table-wrapper {
   width: 100%;
-
+  overflow: scroll;
   .recycle-list {
     max-height: 600px;
     overflow-y: auto;

@@ -327,10 +327,12 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_measure_url(workbasket.id)
     elsif workbasket.object.type == "create_quota"
       withdraw_workbasket_from_workflow_create_quotum_url(workbasket.id)
+    elsif workbasket.object.type == "bulk_edit_of_measures"
+      withdraw_workbasket_from_workflow_bulk_edit_of_measure_url(workbasket.id)
     end
   end
 
   def show_withdraw_edit?(workbasket)
-    workbasket.can_withdraw? && @current_user.author_of_workbasket?(workbasket) && (workbasket.object.type == "create_measures" || workbasket.object.type == "create_quota")
+    workbasket.can_withdraw? && @current_user.author_of_workbasket?(workbasket) && workbasket_edit_link(workbasket).present?
   end
 end
