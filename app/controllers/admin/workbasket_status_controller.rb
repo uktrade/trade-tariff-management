@@ -10,7 +10,7 @@ module Admin
     def update
       workbasket = Workbaskets::Workbasket[params[:id]]
       new_status = params[:status]
-      if allowed_status(new_status) && workbasket.move_status_to!(current_user, new_status, 'Tester backdoor')
+      if allowed_status(new_status) && workbasket.testing_status_backdoor!(current_admin: current_user, status: new_status)
         flash[:notice] = "Workbasket '#{workbasket.id}' status is now '#{workbasket.status}'"
       else
         flash[:notice] = "Status was not changed!"
@@ -21,7 +21,7 @@ module Admin
     private
 
     def allowed_status(new_status)
-      ['published', 'rejected'].include? new_status
+      ['published', 'cds_error'].include? new_status
     end
   end
 end
