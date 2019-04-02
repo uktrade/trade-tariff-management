@@ -1,19 +1,24 @@
 module CdsResponse
   class ResponseProcessor
-    def self.process(data_file:, metadata_file:)
-      doc = data_file.open { |f| Nokogiri::XML(f) }.remove_namespaces!
+    def self.process(file_contents)
 
-      workbasket = Workbaskets::Workbasket[get_workbasket_id(doc)]
+      file_contents.each do |filename, content|
+        unless filename.include? "meta"
+          doc = Nokogiri::XML(content).remove_namespaces!
 
-      if doc.xpath("//invalidTransactionData").present?
-        workbasket.cds_error!
-        return "invalid workbasket"
-      else
-        if doc.xpath("//validTransactionData").present?
-          workbasket.published!
-          return "published workbasket"
-        else
-          return "could not indentify repsonse from CDS"
+          workbasket = Workbaskets::Workbasket[get_workbasket_id(doc)]
+
+          if doc.xpath("//invalidTransactionData").present?
+            workbasket.cds_error!
+            return "invalid workbasket"
+          else
+            if doc.xpath("//validTransactionData").present?
+              workbasket.published!
+              return "published workbasket"
+            else
+              return "could not indentify repsonse from CDS"
+            end
+          end
         end
       end
     end

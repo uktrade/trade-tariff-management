@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.describe CdsResponse::ResponseProcessor do
   include_context 'create_measures_base_context'
 
-  let(:valid_transactions) { file_fixture("cds_response_samples/valid_transactions.xml") }
-  let(:invalid_transactions) { file_fixture("cds_response_samples/invalid_transactions.xml") }
-  let(:invalid_file) { file_fixture("cds_response_samples/invalid_file.xml") }
+  let(:valid_transactions) { file_fixture("cds_response_samples/valid_transactions.xml").read }
+  let(:invalid_transactions) { file_fixture("cds_response_samples/invalid_transactions.xml").read }
+  let(:invalid_file) { file_fixture("cds_response_samples/invalid_file.xml").read }
 
   before(:each) {
     @workbasket = workbasket_creating_measure(status: 'sent_to_cds')
@@ -14,7 +14,9 @@ RSpec.describe CdsResponse::ResponseProcessor do
   it "identifies a response for a valid workbasket" do
     create(:xml_export_file, envelope_id: 18023, workbasket_selected: @workbasket.id)
 
-    expect(described_class.process(data_file: valid_transactions, metadata_file: 'dummy')).to eq "published workbasket"
+    process_files = { "valid_response.xml" => valid_transactions }
+
+    expect(described_class.process(process_files)).to eq "published workbasket"
     expect(@workbasket.reload.status).to eq("published")
     expect(@workbasket.collection.first.status).to eq("published")
   end
@@ -22,13 +24,17 @@ RSpec.describe CdsResponse::ResponseProcessor do
   it "identifies a response for an invalid workbasket" do
     create(:xml_export_file, envelope_id: 18029, workbasket_selected: @workbasket.id)
 
-    expect(described_class.process(data_file: invalid_transactions, metadata_file: 'dummy')).to eq "invalid workbasket"
+    process_files = { "invalid_response.xml" => invalid_transactions }
+
+    expect(described_class.process(process_files)).to eq "invalid workbasket"
     expect(@workbasket.reload.status).to eq("cds_error")
     expect(@workbasket.collection.first.status).to eq("cds_error")
   end
 
   it "identifies a response without valid or invalid indicators" do
-    expect(described_class.process(data_file: invalid_file, metadata_file: 'dummy')).to eq "could not indentify repsonse from CDS"
+    process_files = { "invalid_file.xml" => invalid_file }
+
+    expect(described_class.process(process_files)).to eq "could not indentify repsonse from CDS"
   end
 
 end
