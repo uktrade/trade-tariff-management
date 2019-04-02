@@ -24,7 +24,7 @@ module XmlGeneration
 
     def get_xml_from_objects(objects)
       objects.map do |object_summary|
-        object_summary.object.get.body.string
+        { object_summary.key => object_summary.object.get.body.string }
       end
     end
 
