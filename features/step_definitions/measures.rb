@@ -6,9 +6,8 @@ Given(/^I am on the tariff main menu$/) do
   @sso_login_page = SSOLoginPage.new
   @tarriff_main_menu = TariffMainMenuPage.new
 
-  @sso_login_page.load
-  @sso_login_page.login
   @tarriff_main_menu.load
+  @sso_login_page.login
   expect(@tarriff_main_menu).to have_create_measures_link
 end
 
@@ -291,6 +290,10 @@ end
 
 When(/^I go back to the tariff main menu$/) do
   @create_measure_page.return_to_main_menu
+end
+
+When(/^I return to the tariff main menu$/) do
+  @tarriff_main_menu.load
 end
 
 And(/^I check the description of a commodity code$/) do

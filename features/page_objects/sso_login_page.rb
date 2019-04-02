@@ -11,8 +11,25 @@ class SSOLoginPage < SitePrism::Page
   element :sigin_button, "button[type='submit']"
 
   def login
-    username.set ENV['USERNAME']
-    password.set ENV['PASSWORD']
-    login_button.click
+    uid.set ENV['TARIFFMANAGER']
+    email.set "1"
+    first_name.set "1"
+    last_name.set "1"
+    sigin_button.click
+  end
+
+  def login_as(user)
+    case user
+      when 'tariff_manager'
+        uid.set ENV['TARIFFMANAGER']
+      when 'cross_checker'
+        uid.set ENV['CROSSCHECKER']
+      when 'approver'
+        uid.set ENV['APPROVER']
+    end
+    email.set "1"
+    first_name.set "1"
+    last_name.set "1"
+    sigin_button.click
   end
 end

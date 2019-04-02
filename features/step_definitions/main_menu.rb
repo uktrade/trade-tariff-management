@@ -1,0 +1,125 @@
+
+require_relative '../support/helper'
+include Helper
+
+Then(/^the main menu links are displayed$/) do
+  expect(@tarriff_main_menu).to have_logout_link
+  expect(@tarriff_main_menu).to have_create_measures_link
+  expect(@tarriff_main_menu).to have_find_edit_measures_link
+  expect(@tarriff_main_menu).to have_create_quotas_link
+  expect(@tarriff_main_menu).to have_find_edit_quotas_link
+  expect(@tarriff_main_menu).to have_find_edit_regulations_link
+  expect(@tarriff_main_menu).to have_create_reglutaions_link
+  expect(@tarriff_main_menu).to have_find_edit_additional_codes_link
+  expect(@tarriff_main_menu).to have_create_additional_codes_link
+  expect(@tarriff_main_menu).to have_find_edit_geo_areas_link
+  expect(@tarriff_main_menu).to have_create_geo_areas_link
+  expect(@tarriff_main_menu).to have_find_edit_certificates_link
+  expect(@tarriff_main_menu).to have_create_certificates_link
+  expect(@tarriff_main_menu).to have_find_edit_footnotes_link
+  expect(@tarriff_main_menu).to have_create_footnotes_link
+  expect(@tarriff_main_menu).to have_xml_generation_link
+  expect(@tarriff_main_menu).to have_rollbacks_link
+end
+
+When(/^I login as a "([^"]*)"$/) do |user|
+  step 'I return to the tariff main menu'
+  @tarriff_main_menu.logout
+  @tarriff_main_menu.load
+  @sso_login_page.login_as(user)
+end
+
+And(/^I can logout of the application$/) do
+  @tarriff_main_menu.logout
+  expect(@tarriff_main_menu).to have_logged_out_message
+end
+
+Then(/^the workbasket status is "([^"]*)"$/) do |status|
+  @basket = find_work_basket
+  expect(@basket.status.text).to eq status
+end
+
+And(/^the workbasket has next step "([^"]*)"$/) do |next_step|
+  case next_step
+    when 'Continue'
+      expect(@basket).to have_continue
+    when 'Delete'
+      expect(@basket).to have_delete
+    when 'Withdraw/edit'
+      expect(@basket).to have_withdraw_edit
+    when 'View'
+      expect(@basket).to have_view
+    when 'Review for cross-check'
+      expect(@basket).to have_cross_check
+  end
+end
+
+When(/^I click "([^"]*)"$/) do |link|
+  @basket = find_work_basket
+  case link
+    when "Continue"
+      @basket.continue.click
+    when "Delete"
+      @basket.delete.click
+    when 'Withdraw/edit'
+      @basket.withdraw_edit.click
+    when 'View'
+      @basket.view.click
+    when 'Review for cross-check'
+      @basket.cross_check.click
+  end
+end
+
+Then(/^I can delete the workbasket$/) do
+  @tarriff_main_menu.delete_confirmation_modal.confirm_button.click
+  expect(@tarriff_main_menu.work_baskets.map {|basket| basket.name.text}).not_to include(@workbasket)
+end
+
+And(/^I can view the workbasket$/) do
+  @work_basket_page = WorkBasketPage.new
+  step 'I click "View"'
+  expect(@work_basket_page).to have_work_basket_details
+  expect(@work_basket_page.work_basket_details.workbasket_name.text).to eq @workbasket
+  expect(@work_basket_page).to have_configuration_summary
+  expect(@work_basket_page).to have_measures_to_be_created
+end
+
+Then(/^I can withdraw the workbasket$/) do
+  step 'I click "Withdraw/edit"'
+  @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
+  expect(@create_measure_page.measure_validity_start_date.value).to eq format_date(@start_date)
+  step 'I go back to the tariff main menu'
+  @basket = find_work_basket
+  expect(@basket.status.text).to eq 'Editing'
+  step 'the workbasket has next step "Continue"'
+end
+
+Then(/^I can crosscheck and accept the workbasket$/) do
+  @cross_check_page = CrossCheckPage.new
+  expect(@cross_check_page.work_basket_details.work_basket_name.text).to eq @workbasket
+  @cross_check_page.accept_cross_check
+  expect(@cross_check_page.cross_check_confirmation.header.text).to eq CrossCheckPage::CROSS_CHECK_ACCEPTED_HEADER
+  expect(@cross_check_page.cross_check_confirmation.message.text).to include CrossCheckPage::CROSS_CHECK_ACCEPTED_MESSAGE
+  expect(@cross_check_page).to have_return_to_main_menu
+  expect(@cross_check_page).to have_view_these_measure
+  end
+
+Then(/^I can crosscheck and reject the workbasket$/) do
+  @cross_check_page = CrossCheckPage.new
+  expect(@cross_check_page.work_basket_details.work_basket_name.text).to eq @workbasket
+  @cross_check_page.reject_cross_check
+  expect(@cross_check_page.cross_check_confirmation.header.text).to eq CrossCheckPage::CROSS_CHECK_REJECTED_HEADER
+  expect(@cross_check_page.cross_check_confirmation.message.text).to include @workbasket
+  expect(@cross_check_page).to have_return_to_main_menu
+  expect(@cross_check_page).to have_cross_check_next_workbasket
+end
+
+Then(/^the workbasket is no longer displayed$/) do
+  expect(@tarriff_main_menu.work_baskets.map {|basket| basket.name.text}).not_to include(@workbasket)
+end
+
+def find_work_basket
+  @workbaskets = @tarriff_main_menu.work_baskets.select {|basket| basket.name.text == @workbasket}
+  @workbaskets.pop
+end
+
