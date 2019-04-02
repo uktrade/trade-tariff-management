@@ -12,7 +12,7 @@ input.date-picker {
 
 .error-summary {
   p {
-    font-size: 19px;
+    font-size: 16px;
   }
 }
 
@@ -61,7 +61,7 @@ input.date-picker {
   margin: 0 0 0.3em;
 
   @media (min-width: 641px) {
-    font-size: 19px;
+    font-size: 16px;
   }
 }
 
@@ -231,7 +231,7 @@ label abbr {
   }
 
   .form-control.parsley-error {
-    border: 2px solid $red;
+    border: 5px solid $red;
     background: #fff;
     color: #000;
   }
@@ -277,7 +277,7 @@ label abbr {
 }
 
 .remove-link {
-  color: $red;
+  color: $link-colour;
   text-decoration: underline;
 }
 

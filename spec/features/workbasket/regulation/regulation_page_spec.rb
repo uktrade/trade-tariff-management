@@ -10,7 +10,7 @@ describe 'create_regulation_page', js: true do
         expect(page).to have_content 'Create a new regulation'
 
         click_on 'Create a new regulation'
-        expect(page).to have_content 'Specify the regulation type'
+        expect(page).to have_content 'What is the regulation identifier'
       end
     end
   end
@@ -23,7 +23,7 @@ describe 'create_regulation_page', js: true do
         it 'shows validation error' do
           visit_create_regulation
           click_on 'Create regulation'
-          expect(page).to have_content 'You need to specify the regulation type!'
+          expect(page).to have_content "Legal ID can't be blank!"
         end
       end
     end

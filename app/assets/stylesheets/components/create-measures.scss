@@ -32,9 +32,10 @@ span.create-measures-sub_header {
 .create-measures-details-table {
   margin-bottom: 60px;
   overflow: hidden;
+  width: 640px;
 
   td {
-    font-size: 18px;
+    font-size: 16px;
 
     &.heading_column {
       font-weight: bold;
@@ -109,7 +110,7 @@ a.disabled, input[type='submit'].disabled {
 
 h3.create-measures-custom-errors-header {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 19px;
   margin-top: 15px;
   margin-bottom: 15px;
 }

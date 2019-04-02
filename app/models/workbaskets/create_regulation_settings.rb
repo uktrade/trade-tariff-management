@@ -18,7 +18,7 @@ module Workbaskets
     end
 
     def pdf_document
-      regulation.pdf_document_record
+      nil
     end
 
     def settings

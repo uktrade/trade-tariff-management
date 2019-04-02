@@ -5,22 +5,16 @@ describe "Measure search: date_of filter" do
 
   let(:search_key) { "date_of" }
 
-  let(:a_measure) do
+  let!(:a_measure) do
     create(:measure)
   end
 
-  let(:b_measure) do
+  let!(:b_measure) do
     create(:measure)
   end
 
-  let(:c_measure) do
+  let!(:c_measure) do
     create(:measure)
-  end
-
-  before do
-    a_measure
-    b_measure
-    c_measure
   end
 
   describe "Valid Search" do

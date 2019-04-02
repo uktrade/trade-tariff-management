@@ -49,10 +49,4 @@ class RegulationsController < ::BaseController
       format.json { render json: json_list, status: :ok }
     end
   end
-
-  def show
-    self.regulation = params[:target_class].constantize.filter(
-      oid: params[:id]
-    ).first
-  end
 end

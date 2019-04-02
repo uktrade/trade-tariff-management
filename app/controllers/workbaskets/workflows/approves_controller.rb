@@ -3,7 +3,6 @@ module Workbaskets
     class ApprovesController < Workbaskets::Workflows::BaseController
       before_action :require_to_be_approver!
       # before_action :require_approve_not_to_be_aready_started!, only: [:new]
-      # before_action :check_approve_permissions!, only: [:create, :show]
 
       expose(:checker) do
         ::WorkbasketInteractions::Workflow::Approve.new(
@@ -15,11 +14,12 @@ module Workbaskets
         approve_url(workbasket.id)
       end
 
-      def new
-        workbasket.assign_approver!(current_user)
+    private
+      def workbasket_is_editable?
+        false
       end
 
-    private
+      helper_method :workbasket_is_editable?
 
       def require_to_be_approver!
         unless current_user.approver?
@@ -30,18 +30,12 @@ module Workbaskets
 
       def require_approve_not_to_be_aready_started!
         if workbasket.approve_process_can_not_be_started? &&
-            !workbasket.can_continue_approve?(current_user)
+            !workbasket.awaiting_approval?
           redirect_to read_only_url
           false
         end
       end
 
-      def check_approve_permissions!
-        unless workbasket.approver_is?(current_user)
-          redirect_to read_only_url
-          false
-        end
-      end
     end
   end
 end

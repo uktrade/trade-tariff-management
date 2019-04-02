@@ -1,9 +1,0 @@
-fieldset v-if="dependentOnBaseRegulation"
-  h3.heading-medium
-    | Specify the base regulation
-  .row
-    .col-md-6
-      .form-group v-bind:class="{ 'form-group-error': errors.base_regulation_id }"
-        span.error-message v-if="errors.base_regulation_id" v-html="errors.base_regulation_id"
-        = f.input :base_regulation_role, as: :hidden, input_html: { "v-model" => "regulation.base_regulation_role" }
-        = content_tag "custom-select", "", { url: "/regulation_form_api/base_regulations", "allow-clear" => true, "code-field" => "regulation_id", "label-field" => "description", "value-field" => "regulation_id", "v-model" => "regulation.base_regulation_id", placeholder: "- select base regulation -", ":on-change" => "onBaseRegulationChange", "name" => "regulation_form[base_regulation_id]", "code-class-name" => "prefix--regulation" }

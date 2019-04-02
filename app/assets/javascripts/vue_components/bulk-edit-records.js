@@ -174,7 +174,7 @@ Vue.component("bulk-edit-records", {
       var self = this;
       var pk = this.primaryKey;
 
-      var url = window.location.href + "&page=" + page;
+      var url = window.location.href + "&page=" + page + ".json";
       var options = {
         type: "GET",
         url: url

@@ -64,10 +64,12 @@ Vue.component("quota-sections-manager", {
       });
     },
     removeSection: function(index) {
-      this.sections.splice(index, 1);
+      if (confirm('Are you sure?')) {
+        this.sections.splice(index, 1);
 
-      if (this.sections.length === 0) {
-        this.addSection();
+        if (this.sections.length === 0) {
+          this.addSection();
+        }
       }
     }
   }

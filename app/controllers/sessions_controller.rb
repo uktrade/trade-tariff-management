@@ -43,7 +43,6 @@ class SessionsController < ActionController::Base
 
   # handle logout or unauthorised/access disabled
   def destroy
-
     session[:userinfo] = nil
     session[:auth] = nil
 
@@ -61,5 +60,4 @@ class SessionsController < ActionController::Base
     end
 
   end
-
 end

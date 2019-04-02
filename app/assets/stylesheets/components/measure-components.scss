@@ -1,6 +1,12 @@
-.measure-component {
+.measure-components:last-child {
   border-bottom: 1px solid $border-colour;
+  a {
+    display: block;
+    margin-bottom: 1em;
+  }
+}
 
+.measure-component {
   .form-group {
     margin-bottom: 0 !important;
   }
@@ -20,7 +26,7 @@
   }
 
   .form-label {
-    font-size: 14px !important;
+    font-size: 16px !important;
   }
 }
 

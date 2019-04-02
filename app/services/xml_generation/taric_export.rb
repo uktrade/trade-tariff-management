@@ -27,6 +27,7 @@ module XmlGeneration
       else
         mark_export_process_as_empty!
       end
+      upload_xml
       mark_workbasket_as_sent!
     end
 
@@ -35,6 +36,10 @@ module XmlGeneration
     end
 
   private
+
+    def upload_xml
+      XmlGeneration::Upload.new(record, timestamp).run
+    end
 
     def mark_export_process_as_started!
       @extract_start_date_time = Time.now.utc

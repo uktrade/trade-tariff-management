@@ -60,9 +60,13 @@ module Sequel
 
         def duplicates_by_attributes
           good_nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: self.goods_nomenclature_item_id)
-          uptree_goods_nomenclature_item_ids = good_nomenclature.sti_instance.uptree.map(&:goods_nomenclature_item_id)
-          children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
-          goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
+          if good_nomenclature&.sti_instance == nil
+            goods_nomenclature_item_ids = []
+          else
+            uptree_goods_nomenclature_item_ids = good_nomenclature.sti_instance.uptree.map(&:goods_nomenclature_item_id)
+            children_goods_nomenclature_item_ids = good_nomenclature.sti_instance.children.map(&:goods_nomenclature_item_id)
+            goods_nomenclature_item_ids = uptree_goods_nomenclature_item_ids + children_goods_nomenclature_item_ids
+          end
 
           #p ""
           #p " CURRENT RECORD"

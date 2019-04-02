@@ -7,7 +7,7 @@ module WorkbasketValueObjects
 
       def initialize(ops = {})
         @collection = nil
-        @start_date = ops[:start_date].present? ? ops[:start_date].to_date : Date.today
+        @start_date = get_start_date(ops)
         @commodity_codes = ops[:commodity_codes]
         @commodity_codes_exclusions = ops[:commodity_codes_exclusions]
 
@@ -23,6 +23,10 @@ module WorkbasketValueObjects
       end
 
     private
+
+      def get_start_date(ops)
+        ops[:start_date].to_date rescue Date.today
+      end
 
       def setup_collection!
         if list_of_codes.present?

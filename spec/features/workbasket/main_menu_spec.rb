@@ -89,21 +89,52 @@ describe 'workbasket table', js: true do
                type: :create_quota,
                status: :awaiting_cross_check,)
       end
+      let(:current_user) { User.first }
 
-      it 'displays other users workbasket data' do
-        visit root_path
-        expect(page).to have_content(current_users_workbasket.title)
-        expect(page).to have_content('Create Measure')
-        expect(page).to have_content('New - in progress')
-        expect(page).to have_content(Date.today.strftime('%d %b %Y'))
-        expect(page).to have_content('Continue')
+      context 'current user is an approver' do
+        it 'does not display option to cross-check other users workbasket data' do
+          current_user.approver_user = true
+          current_user.save
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
 
-        expect(page).to have_content(other_users_awaiting_cross_check_workbasket.title)
-        expect(page).to have_content('Create Quota')
-        expect(page).to have_content('Awaiting cross-check')
-        expect(page).to have_content('View')
-        expect(page).to_not have_content('Withdraw/edit')
+          visit root_path
+          expect(page).to have_content(current_users_workbasket.title)
+          expect(page).to have_content('Create Measure')
+          expect(page).to have_content('New - in progress')
+          expect(page).to have_content(Date.today.strftime('%d %b %Y'))
+          expect(page).to have_content('Continue')
+
+          expect(page).to have_content(other_users_awaiting_cross_check_workbasket.title)
+          expect(page).to have_content('Create Quota')
+          expect(page).to have_content('Awaiting cross-check')
+          expect(page).to have_content('View')
+          expect(page).to_not have_content('Review for cross-check')
+          expect(page).to_not have_content('Withdraw/edit')
+        end
       end
+
+      context 'current user is not an approver' do
+        it 'displays option to cross-check other users workbasket data' do
+          current_user.approver_user = false
+          current_user.save
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
+
+          visit root_path
+          expect(page).to have_content(current_users_workbasket.title)
+          expect(page).to have_content('Create Measure')
+          expect(page).to have_content('New - in progress')
+          expect(page).to have_content(Date.today.strftime('%d %b %Y'))
+          expect(page).to have_content('Continue')
+
+          expect(page).to have_content(other_users_awaiting_cross_check_workbasket.title)
+          expect(page).to have_content('Create Quota')
+          expect(page).to have_content('Awaiting cross-check')
+          expect(page).to have_content('View')
+          expect(page).to have_content('Review for cross-check')
+          expect(page).to_not have_content('Withdraw/edit')
+        end
+      end
+
     end
 
     context 'another user has created a workbasket which is not awaiting cross check' do
@@ -163,7 +194,7 @@ describe 'workbasket table', js: true do
       end
 
       context 'current user is not an approver' do
-        it 'displays other users workbasket data' do
+        it 'does not display other users workbasket data' do
           current_user.approver_user = false
           current_user.save
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)

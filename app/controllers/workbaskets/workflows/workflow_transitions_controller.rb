@@ -12,7 +12,7 @@ module Workbaskets
     private
 
       def check_permissions!
-        unless current_user.author_of_workbasket?(workbasket) || current_user.approver? || workbasket.cross_checker_is?(current_user)
+        unless current_user.author_of_workbasket?(workbasket) || current_user.approver?
           redirect_to read_only_url
           false
         end

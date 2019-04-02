@@ -29,6 +29,10 @@ module WorkbasketValueObjects
           effective_end_date: :method_effective_end_date,
       }.freeze
 
+      SUB_FIELD_LEGAL_ID = 0
+      SUB_FIELD_REFERENCE_URL = 1
+      SUB_FIELD_DESCRIPTION = 2
+
       attr_accessor :ops,
                     :normalized_params,
                     :target_class
@@ -74,14 +78,8 @@ module WorkbasketValueObjects
         @normalized_params[:community_code] = 1 if target_class == BaseRegulation
       end
 
-      def fetch_regulation_number
-        base = "#{prefix}#{publication_year}#{regulation_number}"
-        base += number_suffix.to_s
-        base.delete(' ')
-      end
-
       def workbasket_name
-        fetch_regulation_number
+        base_regulation_id
       end
 
       def method_regulation_role(role)
@@ -103,7 +101,7 @@ module WorkbasketValueObjects
                         end
 
         ops[target_class.primary_key[1]] = role
-        ops[target_class.primary_key[0]] = fetch_regulation_number
+        ops[target_class.primary_key[0]] = base_regulation_id
 
         ops
       end
@@ -130,6 +128,22 @@ module WorkbasketValueObjects
 
       def abrogation_date_formatted
         date_to_format(abrogation_date)
+      end
+
+      def legal_id
+        extract_information_sub_field SUB_FIELD_LEGAL_ID
+      end
+
+      def description
+        extract_information_sub_field SUB_FIELD_DESCRIPTION
+      end
+
+      def reference_url
+        extract_information_sub_field SUB_FIELD_REFERENCE_URL
+      end
+
+      private def extract_information_sub_field(position)
+        information_text.split('|', -1)[position]
       end
     end
   end

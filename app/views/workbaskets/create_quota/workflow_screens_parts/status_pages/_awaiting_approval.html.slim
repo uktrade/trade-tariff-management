@@ -1,12 +1,13 @@
 .panel.panel--confirmation
   h1.heading-xlarge
-    | Quota cross-checked.
+    | Quota created
 
   h3.heading-medium
-    | The quota has been cross-checked but not yet sent through to CDS. It is currently pending approval.
+    = "A quota with order number #{workbasket.settings.main_step_settings['quota_ordernumber']} has been created."
 
     br
     br
-    | Once approved it will be made live.
+    =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
+    | associated measures were also created.
 
-= render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
+= render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "cross_check"

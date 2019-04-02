@@ -20,7 +20,7 @@ table.create-measures-details-table
       td.heading_column
         | Type
       td
-        = "#{first_measure.measure_type_id} #{attributes_parser.measure_type}"
+        = "#{first_measure.measure_type_id} #{attributes_parser.measure_type}" if first_measure
 
     tr
       td.heading_column
@@ -44,13 +44,13 @@ table.create-measures-details-table
       td.heading_column
         | Goods
       td
-        = attributes_parser.commodity_codes_formatted
+        = attributes_parser.commodity_codes
 
     tr
       td.heading_column
         | Goods exceptions
       td
-        = attributes_parser.exclusions_formatted
+        = attributes_parser.entered_exception_codes
 
     tr
       td.heading_column
@@ -80,19 +80,18 @@ table.create-measures-details-table
       td.heading_column
         | Conditions
       td
-        = first_measure.conditions_short_list
+        = first_measure.conditions_short_list if first_measure
 
     tr
       td.heading_column
         | Footnotes
       td
         ul.workbasket-review-and-submit-footnotes-list
-          - first_measure.footnotes.map.with_index do |footnote, index|
-            li class="#{index.zero? ? 'without_top_margin' : ''}"
-              = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
-              br
-              = footnote.description
-
+          - if first_measure && first_measure.footnotes
+            - first_measure.footnotes.map.with_index do |footnote, index|
+              li class="#{index.zero? ? 'without_top_margin' : ''}"
+                = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
+                br
+                = footnote.description
     tr
       td.heading_column
-

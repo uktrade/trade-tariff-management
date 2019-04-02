@@ -30,9 +30,6 @@ module Workbaskets
       :cross_check_rejected,           # Cross-check rejected
                                        # Did not pass cross-check, returned to submitter
                                        #
-      :ready_for_approval,             # Ready for approval
-                                       # Has passed cross-check but not yet submitted for approval
-                                       #
       :awaiting_approval,              # Awaiting approval
                                        # Submitted for approval, pending response from Approver
                                        #
@@ -216,7 +213,7 @@ module Workbaskets
       def relevant_for_manager(current_user)
         if current_user.approver?
           where(
-            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval', 'awaiting_cds_upload_create_new', 'ready_for_export')",
+            "user_id = ? OR status IN ('awaiting_cross_check', 'awaiting_approval', 'awaiting_cds_upload_create_new', 'ready_for_export', 'awaiting_cds_upload_edit')",
             current_user.id
           )
         else
@@ -318,26 +315,50 @@ module Workbaskets
             end
           end
 
-          def assign_cross_checker!(current_user)
-            add_event!(current_user, :cross_check_process_started)
+          def submit_for_approval!(current_admin:)
+            move_status_to!(current_admin, :awaiting_approval)
 
-            self.cross_checker_id = current_user.id
+            settings.collection.map do |item|
+              item.move_status_to!(:awaiting_approval)
+            end
+          end
+
+          def reject_cross_check!(current_admin:)
+            move_status_to!(current_admin, :cross_check_rejected)
+
+            cross_checker_id = nil
             save
+
+            settings.collection.map do |item|
+              item.move_status_to!(:cross_check_rejected)
+            end
           end
 
-          def assign_approver!(current_user)
-            add_event!(current_user, :approve_process_started)
+          def confirm_approval!(current_admin:)
+            move_status_to!(current_admin, possible_approved_status)
 
-            self.approver_id = current_user.id
+            settings.collection.map do |item|
+              item.move_status_to!(possible_approved_status)
+            end
+          end
+
+          def reject_approval!(current_admin:)
+            move_status_to!(current_admin, :approval_rejected)
+
+            approver_id = nil
             save
+
+            settings.collection.map do |item|
+              item.move_status_to!(:approval_rejected)
+            end
           end
 
-          def cross_checker_is?(current_user)
-            cross_checker_id.to_i == current_user.id
-          end
+          def testing_status_backdoor!(current_admin:, status:)
+            move_status_to!(current_admin, status, 'Tester backdoor')
 
-          def approver_is?(current_user)
-            approver_id.to_i == current_user.id
+            settings.collection.map do |item|
+              item.move_status_to!(status)
+            end
           end
 
           def edit_type?
@@ -378,15 +399,14 @@ module Workbaskets
           end
 
           def can_continue_cross_check?(current_user)
-            awaiting_cross_check? && !current_user.author_of_workbasket?(self)
+            return false if current_user.approver_user
+            return false if current_user.author_of_workbasket?(self)
+            return false unless awaiting_cross_check?
+            true
           end
 
           def approve_process_can_not_be_started?
             !approve_process_can_be_started?
-          end
-
-          def can_continue_approve?(current_user)
-            awaiting_approval? && current_user.approver?
           end
 
           def awaiting_cds_upload_new_or_edit_item?
@@ -405,12 +425,20 @@ module Workbaskets
       user.name
     end
 
+    def ready_for_upload
+      status == :awaiting_cds_upload_create_new || status == :awaiting_cds_upload_edit
+    end
+
     def ordered_events
       events.sort_by(&:created_at)
     end
 
     def submitted?
       !status.to_sym.in? %i[new_in_progress editing]
+    end
+
+    def is_bulk_edit?
+      type.start_with?("bulk_edit")
     end
 
     def move_status_to!(current_user, new_status, description = nil)

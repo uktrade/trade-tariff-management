@@ -1,10 +1,5 @@
 module Workbaskets
   class Event < Sequel::Model(:workbaskets_events)
-    EXTRA_STATES = %w(
-      cross_check_process_started
-      approve_process_started
-    ).freeze
-
     plugin :timestamps
 
     many_to_one :workbasket, key: :workbasket_id,
@@ -18,7 +13,7 @@ module Workbaskets
       presence_of :event_type,
                   :workbasket_id
 
-      inclusion_of :event_type, in: ::Workbaskets::Workbasket::STATUS_LIST.map(&:to_s) + EXTRA_STATES
+      inclusion_of :event_type, in: ::Workbaskets::Workbasket::STATUS_LIST.map(&:to_s)
     end
 
     def user_name

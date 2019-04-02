@@ -13,6 +13,10 @@ RSpec.describe XmlGeneration::TaricExport do
     )
   end
 
+  before(:example) do
+    allow_any_instance_of(XmlGeneration::Upload).to receive(:run) { true }
+  end
+
   it "generates valid XML" do
     create(:measure, :for_upload_today, workbasket_id: workbasket.id)
     parsed_xml = parsed_xml_for_export(xml_export_file)

@@ -29,6 +29,8 @@ config/trade_tariff_backend_secrets.yml
 *.iml
 REVISION
 *.org
+script/*
+screenshots/*
 
 # RVM
 .ruby-gemset

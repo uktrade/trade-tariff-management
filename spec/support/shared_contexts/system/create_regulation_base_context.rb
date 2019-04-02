@@ -6,20 +6,6 @@ shared_context 'create_regulation_base_context' do
   before do
     create(:regulation_role_type_description,
            regulation_role_type_id: 1, description: 'Base regulation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 2, description: 'Provisional anti-dumping/countervailing duty')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 3, description: 'Definitive anti-dumping/countervailing duty')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 4, description: 'Modification')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 5, description: 'Prorogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 6, description: 'Complete abrogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 7, description: 'Explicit abrogation')
-    create(:regulation_role_type_description,
-           regulation_role_type_id: 8, description: 'Regulation which temporarily suspends all another regulation (FTS - Full Temporary Stop)')
   end
 
   let!(:regulation_group) do
@@ -37,13 +23,8 @@ shared_context 'create_regulation_base_context' do
                Forgery(:basic).number(at_least: 10, at_most: 19).to_s +
                Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s +
                Forgery(:basic).number(at_least: 0, at_most: 9).to_s,
-           base_regulation_role: 1,
            replacement_indicator: 0,
            information_text: Forgery('lorem_ipsum').sentence)
-  end
-
-  let(:effective_end_date) do
-    validity_end_date + 1.day
   end
 
   let(:published_date) do
@@ -54,19 +35,17 @@ shared_context 'create_regulation_base_context' do
     validity_start_date
   end
 
-  let(:regulation_type) do
-    ''
-  end
-
   let(:base_required_fields) do
     [
-        'Prefix',
-        'Publication year',
-        'Regulation number',
-        'Number suffix',
-        # 'Replacement indicator', always filled
-        'Information text',
-        'Operation date',
+        # TODO: use base regulation id
+        # 'Prefix',
+        # 'Publication year',
+        # 'Regulation number',
+        # 'Number suffix',
+        { label: 'Regulation identifier', id: 'workbasket_forms_create_regulation_form_base_regulation_id' },
+        { label: 'Legal ID', id: 'workbasket_forms_create_regulation_form_legal_id' },
+        { label: 'Description', id: 'workbasket_forms_create_regulation_form_description' },
+        { label: 'Reference URL', id: 'workbasket_forms_create_regulation_form_reference_url' }
     ]
   end
 
@@ -76,13 +55,14 @@ shared_context 'create_regulation_base_context' do
 
   let(:base_required_filed_values) do
     [
-        { name: 'Prefix', value: "Decision", type: :select },
-        { name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text },
-        { name: 'Regulation number', value: Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s, type: :text },
-        { name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text },
-        # 'Replacement indicator', always filled
-        { name: 'Information text', value: Forgery('lorem_ipsum').sentence, type: :text },
-        { name: 'Operation date', value: operation_date, type: :date },
+        # { name: 'Prefix', value: "Decision", type: :select },
+        # { name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text },
+        # { name: 'Regulation number', value: Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s, type: :text },
+        # { name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text },
+        { name: 'Regulation identifier', id: 'workbasket_forms_create_regulation_form_base_regulation_id', value: 'C1234567', type: :text },
+        { name: 'Legal ID', id: 'workbasket_forms_create_regulation_form_legal_id', value: Forgery('lorem_ipsum').characters, type: :text },
+        { name: 'Description', id: 'workbasket_forms_create_regulation_form_description', value: Forgery('lorem_ipsum').sentence, type: :text },
+        { name: 'Reference URL', id: 'workbasket_forms_create_regulation_form_reference_url', value: Forgery(:internet).domain_name, type: :text }
     ]
   end
 
@@ -103,14 +83,10 @@ shared_context 'create_regulation_base_context' do
       it 'shows validation errors' do
         visit_create_regulation
 
-        within(find("fieldset", text: "Specify the regulation type")) do
-          select_dropdown_value(regulation_type)
-        end
-
         click_on 'Create regulation'
 
         required_fields.each do |field|
-          expect(page).to have_content "#{field} can't be blank!"
+          expect(page).to have_content "#{field[:label]} can't be blank!"
         end
       end
     end
@@ -120,10 +96,6 @@ shared_context 'create_regulation_base_context' do
         context 'click on Submit for cross-check' do
           it 'is okay' do
             visit_create_regulation
-
-            within(find("fieldset", text: "Specify the regulation type")) do
-              select_dropdown_value(regulation_type)
-            end
 
             fill_in_form(required_filed_values)
 
@@ -142,10 +114,6 @@ shared_context 'create_regulation_base_context' do
         context 'click on Submit for cross-check' do
           it 'is okay' do
             visit_create_regulation
-
-            within(find("fieldset", text: "Specify the regulation type")) do
-              select_dropdown_value(regulation_type)
-            end
 
             fill_in_form(filed_values)
 
@@ -166,13 +134,13 @@ shared_context 'create_regulation_base_context' do
     form_values.each do |value|
       case value[:type]
       when :text
-        fill_in value[:name], with: value[:value]
+        fill_in (value[:id] || value[:name]), with: value[:value]
       when :select
-        within(first(".form-group, fieldset", text: value[:name])) do
+        within(first(".form-group, fieldset", text: (value[:id] || value[:name]))) do
           select_dropdown_value(value[:value])
         end
       when :date
-        input_date(value[:name], value[:value])
+        input_date((value[:id] || value[:name]), value[:value])
       end
     end
   end

@@ -7,35 +7,28 @@ describe "Measure search: additional code filter" do
 
   let(:search_key) { "additional_code" }
 
-  let(:a_measure) do
+  let!(:a_measure) do
     set_searchable_data!(
       create(:measure, additional_code_type_id: "C", additional_code_id: "333")
     )
   end
 
-  let(:b_measure) do
+  let!(:b_measure) do
     set_searchable_data!(
       create(:measure, additional_code_type_id: "B", additional_code_id: "334")
     )
   end
 
-  let(:c_measure) do
+  let!(:c_measure) do
     set_searchable_data!(
       create(:measure, additional_code_id: "555")
     )
   end
 
-  let(:d_measure) do
+  let!(:d_measure) do
     set_searchable_data!(
       create(:measure)
     )
-  end
-
-  before do
-    a_measure
-    b_measure
-    c_measure
-    d_measure
   end
 
   describe "Valid Search" do

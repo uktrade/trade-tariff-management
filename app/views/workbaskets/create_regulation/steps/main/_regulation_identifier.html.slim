@@ -1,28 +1,10 @@
-h3.heading-medium
-  | Specify the regulation identifier
+fieldset
+  h3.heading-medium
+    = f.label :base_regulation_id, 'What is the regulation identifier'
 
-.row
-  .col-md-3
-    .form-group v-bind:class="{ 'form-group-error': errors.prefix }"
-      span.error-message v-if="errors.prefix" v-html="errors.prefix"
-      = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.prefix" } do
-        = f.input :prefix, as: :select, collection: form.prefixes, value_method: :first, label_method: :last, label: "Prefix", include_blank: true, prompt: "- select prefix -", "code-class-name" => "prefix--l1"
-  .col-md-3
-    .form-group v-bind:class="{ 'form-group-error': errors.publication_year }"
-      span.error-message v-if="errors.publication_year" v-html="errors.publication_year"
-      = f.input :publication_year, label: "Publication year", input_html: { placeholder: "YY", "v-model" => "regulation.publication_year" }
-  .col-md-3
-    .form-group v-bind:class="{ 'form-group-error': errors.regulation_number }"
-      span.error-message v-if="errors.regulation_number" v-html="errors.regulation_number"
-      = f.input :regulation_number, label: "Regulation number", input_html: { placeholder: "####", "v-model" => "regulation.regulation_number" }
-  .col-md-3
-    .form-group v-bind:class="{ 'form-group-error': errors.number_suffix }"
-      span.error-message v-if="errors.number_suffix" v-html="errors.number_suffix"
-      = f.input :number_suffix, label: "Number suffix", input_html: { placeholder: "#", "v-model" => "regulation.number_suffix" }
-
-.row
-  .col-md-4
-    .form-group v-bind:class="{ 'form-group-error': errors.replacement_indicator }"
-      span.error-message v-if="errors.replacement_indicator" v-html="errors.replacement_indicator"
-      = content_tag "custom-select", { "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.replacement_indicator", "code-class-name" => "prefix--l1" } do
-        = f.input :replacement_indicator, as: :select, collection: form.replacement_indicators, value_method: :first, label_method: :last, label: "Replacement indicator", include_blank: true, prompt: "- select replacement indicator -"
+  .bootstrap-row
+    .col-lg-6.col-md-8.col-sm-12.col-xs-12
+      .form-group v-bind:class="{ 'form-group-error': errors.base_regulation_id }"
+        span.error-message v-if="errors.base_regulation_id" v-html="errors.base_regulation_id"
+        = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.base_regulation_id" } do
+          = f.input :base_regulation_id, label: 'This must be exactly 8 characters long.', as: :string, input_html: { "v-model" => "regulation.base_regulation_id" }

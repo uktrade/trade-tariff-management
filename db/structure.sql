@@ -7687,6 +7687,41 @@ ALTER SEQUENCE public.sections_id_seq OWNED BY public.sections.id;
 
 
 --
+-- Name: session_audits; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session_audits (
+    id integer NOT NULL,
+    user_id integer,
+    uid text,
+    name text,
+    email text,
+    action text,
+    updated_at timestamp without time zone,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: session_audits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.session_audits_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: session_audits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.session_audits_id_seq OWNED BY public.session_audits.id;
+
+
+--
 -- Name: tariff_update_conformance_errors; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8851,6 +8886,13 @@ ALTER TABLE ONLY public.sections ALTER COLUMN id SET DEFAULT nextval('public.sec
 
 
 --
+-- Name: session_audits id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session_audits ALTER COLUMN id SET DEFAULT nextval('public.session_audits_id_seq'::regclass);
+
+
+--
 -- Name: tariff_update_conformance_errors id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9897,6 +9939,14 @@ ALTER TABLE ONLY public.section_notes
 
 ALTER TABLE ONLY public.sections
     ADD CONSTRAINT sections_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: session_audits session_audits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session_audits
+    ADD CONSTRAINT session_audits_pkey PRIMARY KEY (id);
 
 
 --
@@ -12525,3 +12575,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20181204111717_add_envelop
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190131153106_remove_unneeded_files_from_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_export_from_dates_to_workbasket.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190212163200_add_user_id_to_xml_export_files.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190320142706_create_session_audits.rb');

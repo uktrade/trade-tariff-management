@@ -3,33 +3,33 @@ require "rails_helper"
 describe "Measure search: simple filters" do
   include_context "measures_search_base_context"
 
-  let(:adam) do
+  let!(:adam) do
     create(:user)
   end
 
-  let(:bredd) do
+  let!(:bredd) do
     create(:user)
   end
 
-  let(:a_measure) do
-    create(:measure, added_by_id: adam.id, last_update_by_id: bredd.id)
+  let!(:a_measure) do
+    create(:measure, added_by_id: adam.id, last_update_by_id: bredd.id, status: 'published')
   end
 
-  let(:b_measure) do
-    create(:measure, added_by_id: bredd.id, last_update_by_id: adam.id)
+  let!(:b_measure) do
+    create(:measure, added_by_id: bredd.id, last_update_by_id: adam.id, status: 'published')
   end
 
-  let(:c_measure) do
-    create(:measure, added_by_id: adam.id, last_update_by_id: adam.id)
+  let!(:c_measure) do
+    create(:measure, added_by_id: adam.id, last_update_by_id: adam.id, status: 'published')
   end
 
-  before do
-    adam
-    bredd
+  describe "published measures" do
+    let(:search_key) { nil }
 
-    a_measure
-    b_measure
-    c_measure
+    it "shows all measures" do
+      res = search_results(enabled: true)
+      expect(res.count).to eq 3
+    end
   end
 
   describe "Author filter" do

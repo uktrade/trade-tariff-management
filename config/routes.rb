@@ -1,7 +1,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  mount Sidekiq::Web, at: "sidekiq"
+  if Rails.env.development?
+    mount Sidekiq::Web, at: "sidekiq"
+  end
 
   root to: 'workbaskets#index'
 
@@ -20,6 +22,13 @@ Rails.application.routes.draw do
   unless TradeTariffBackend.production?
     namespace :db do
       resources :rollbacks, only: [:index, :create]
+    end
+  end
+
+  # Need to prevent production server running these
+  if ENV['ALLOW_TESTER_TO_BYPASS_CDS'] == 'ALLOW'
+    namespace :admin do
+      resources :workbasket_status, only: [:index, :update]
     end
   end
 

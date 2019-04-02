@@ -16,9 +16,9 @@ table.create-measures-details-table class="#{'view-workbasket-details-block' if 
 
     tr
       td.heading_column
-        | Created on
+        | Reason for changes
       td
-        = workbasket.created_at.strftime("%d %B %Y")
+        = workbasket_settings.main_step_settings['reason']
 
     - workbasket.ordered_events.map do |event|
       = render "workbaskets/events/#{event.event_type}", event: event

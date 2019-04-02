@@ -5,18 +5,15 @@ $(document).ready(function() {
     return;
   }
 
+  const SUB_FIELD_LEGAL_ID = 0,
+        SUB_FIELD_URL = 1,
+        SUB_FIELD_DESCRIPTION = 2
+
   var app = new Vue({
     el: form,
     data: function() {
       var data = {
         savedSuccessfully: false,
-        antidumpingRoles: ["2", "3"],
-        communityCodes: [
-          { value: "1", text: "Economic" },
-          { value: "2", text: "Atomic" },
-          { value: "3", text: "Coal" },
-          { value: "4", text: "Economic/Coal"}
-        ],
         errors: []
       };
 
@@ -94,29 +91,6 @@ $(document).ready(function() {
       });
     },
     computed: {
-      dependentOnBaseRegulation: function() {
-        return $.inArray(this.regulation.role, ['4', '6', '7']) !== -1;
-      },
-      canHaveRelatedAntidumpingLink: function() {
-        var roles = ["2", "3"];
-
-        return roles.indexOf(this.regulation.role) > -1;
-      },
-      showCommunityCode: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
-      },
-      showValidityPeriod: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3", "4", "8"]) !== -1;
-      },
-      showRegulationGroup: function() {
-        return $.inArray(this.regulation.role, ["1", "2", "3"]) !== -1;
-      },
-      showPublishedDate: function() {
-        return $.inArray(this.regulation.role, ["5", "6", "7", "8"]) !== -1;
-      },
-      isExplicitAbrogation: function() {
-        return this.regulation.role === "7";
-      },
       hasErrors: function() {
         return this.errors.length > 0;
       }
@@ -141,12 +115,15 @@ $(document).ready(function() {
           antidumping_regulation_role: payload.antidumping_regulation_role,
           related_antidumping_regulation_id: payload.related_antidumping_regulation_id,
           published_date: payload.published_date,
-          abrogation_date: payload.abrogation_date
+          abrogation_date: payload.abrogation_date,
+          legal_id: this.extract_sub_field(payload.information_text, SUB_FIELD_LEGAL_ID),
+          description: this.extract_sub_field(payload.information_text, SUB_FIELD_DESCRIPTION),
+          reference_url: this.extract_sub_field(payload.information_text, SUB_FIELD_URL)
         };
       },
       emptyRegulation: function() {
         return {
-          role: null,
+          role: "1",
           prefix: null,
           publication_year: null,
           regulation_number: null,
@@ -165,18 +142,21 @@ $(document).ready(function() {
           antidumping_regulation_role: null,
           related_antidumping_regulation_id: null,
           published_date: null,
-          operation_date: null,
-          abrogation_date: null
+          operation_date: new Date().toLocaleDateString("en-GB"),
+          abrogation_date: null,
+          legal_id: null,
+          description: null,
+          reference_url: null
         }
       },
       createRegulationMainStepPayLoad: function() {
         return {
-          role: this.regulation.role,
+          role: "1",
           prefix: this.regulation.prefix,
           publication_year: this.regulation.publication_year,
           regulation_number: this.regulation.regulation_number,
           number_suffix: this.regulation.number_suffix,
-          information_text: this.regulation.information_text,
+          information_text: `${this.regulation.legal_id || ''}|${this.regulation.description || '' }|${this.regulation.reference_url || ''}`,
           effective_end_date: this.regulation.effective_end_date,
           regulation_group_id: this.regulation.regulation_group_id,
           base_regulation_id: this.regulation.base_regulation_id,
@@ -191,24 +171,16 @@ $(document).ready(function() {
           validity_start_date: this.regulation.validity_start_date,
           end_date: this.regulation.validity_end_date,
           validity_end_date: this.regulation.validity_end_date,
-          operation_date: this.regulation.operation_date,
+          operation_date: this.regulation.operation_date || new Date().toLocaleDateString("en-GB"),
           published_date: this.regulation.published_date,
           abrogation_date: this.regulation.abrogation_date
         };
       },
-      onBaseRegulationChange: function(item) {
-        if (!item) {
-          return;
+      extract_sub_field(string, field_position){
+        if (string === undefined) {
+          return undefined
         }
-
-        this.regulation.base_regulation_role = item.role;
-      },
-      onRelatedAntidumpingRegulationChange: function(item) {
-        if (!item) {
-          return;
-        }
-
-        this.regulation.antidumping_regulation_role = item.role;
+        return string.split("|")[field_position]
       }
     }
   });

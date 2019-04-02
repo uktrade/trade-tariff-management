@@ -1,7 +1,24 @@
-h3.heading-medium
-  | Give the regulation name
-.row
-  .col-md-12
-    .form-group v-bind:class="{ 'form-group-error': errors.information_text }"
-      span.error-message v-if="errors.information_text" v-html="errors.information_text"
-      = f.input :information_text, label: "Information text", as: :text, input_html: { rows: 4, "v-model" => "regulation.information_text" }
+fieldset
+  h3.heading-medium
+    | Legal Id
+  .bootstrap-row
+    .col-lg-6.col-md-8.col-sm-12.col-xs-12
+      .form-group v-bind:class="{ 'form-group-error': errors.legal_id }"
+        span.error-message v-if="errors.legal_id" v-html="errors.legal_id"
+        = f.input :legal_id, label: false, as: :string, input_html: { "v-model" => "regulation.legal_id" }
+fieldset
+  h3.heading-medium
+    | Description
+  .bootstrap-row
+    .col-lg-6.col-md-8.col-sm-12.col-xs-12
+      .form-group v-bind:class="{ 'form-group-error': errors.description }"
+        span.error-message v-if="errors.description" v-html="errors.description"
+        = f.input :description, label: false, as: :text, input_html: { "v-model" => "regulation.description" }
+fieldset
+  h3.heading-medium
+    | Reference URL
+  .bootstrap-row
+    .col-lg-6.col-md-8.col-sm-12.col-xs-12
+      .form-group v-bind:class="{ 'form-group-error': errors.reference_url }"
+        span.error-message v-if="errors.reference_url" v-html="errors.reference_url"
+        = f.input :reference_url, label: false, as: :string, input_html: { "v-model" => "regulation.reference_url" }

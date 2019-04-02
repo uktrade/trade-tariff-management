@@ -14,23 +14,11 @@ table.create-measures-details-table
       td
         = form.regulation_roles[attributes_parser.role]
 
-    tr v-if="dependentOnBaseRegulation"
-      td.heading_column
-        | Base regulation
-      td
-        = attributes_parser.base_regulation_id
-
-    tr v-if="canHaveRelatedAntidumpingLink"
-      td.heading_column
-        | Related antidumping regulation
-      td
-        = attributes_parser.related_antidumping_regulation_id
-
     tr
       td.heading_column
         | Regulation
       td
-        = attributes_parser.fetch_regulation_number
+        = attributes_parser.base_regulation_id
 
     tr
       td.heading_column
@@ -40,42 +28,42 @@ table.create-measures-details-table
 
     tr
       td.heading_column
-        | Regulation name
+        | Legal ID
       td
-        = attributes_parser.information_text
+        = attributes_parser.legal_id
 
-    tr v-if="showValidityPeriod"
+    tr
+      td.heading_column
+        | Description
+      td
+        = attributes_parser.description
+
+    tr
+      td.heading_column
+        | Reference URL
+      td
+        = attributes_parser.reference_url
+
+    tr
       td.heading_column
         | Start date
       td
         = attributes_parser.start_date_formatted
 
-    tr v-if="showValidityPeriod"
+    tr
       td.heading_column
         | End date
       td
         = attributes_parser.end_date_formatted
 
-    tr v-if="showValidityPeriod"
+    tr
       td.heading_column
         | Effective end date
       td
         = attributes_parser.effective_end_date_formatted
 
-    tr v-if="showValidityPeriod && showRegulationGroup"
+    tr
       td.heading_column
         | Regulation group
       td
         = attributes_parser.regulation_group_id
-
-    tr v-if="showPublishedDate"
-      td.heading_column
-        | Published date
-      td
-        = attributes_parser.published_date_formatted
-
-    tr v-if="isExplicitAbrogation"
-      td.heading_column
-        | Abrogation date
-      td
-        = attributes_parser.abrogation_date_formatted

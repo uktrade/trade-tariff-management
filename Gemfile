@@ -7,7 +7,7 @@ end
 
 ruby "~> 2.5.0"
 
-gem "rails", "5.1.6.1"
+gem "rails", "5.1.6.2"
 
 # DB
 gem 'pg', '~> 1.1', '>= 1.1.3'
@@ -97,6 +97,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'byebug'
   gem "dotenv-rails"
   gem "factory_bot_rails", require: false
   gem "pry"
@@ -117,4 +118,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'launchy'
   gem "chromedriver-helper"
+  gem 'cucumber-rails', require: false
+  gem 'site_prism'
+  gem 'capybara-screenshot'
 end
