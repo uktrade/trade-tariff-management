@@ -19,8 +19,9 @@ header
     = render "workbaskets/create_quota/workflow_screens_parts/workbasket_details"
 
     - if iam_workbasket_author? && workbasket_rejected?
-      = link_to "Edit quota", move_to_editing_mode_create_quotum_url(workbasket.id),
-                                 class: "secondary-button view-workbasket-edit-measures-link"
+      = link_to "Edit quota", '#',
+              data: {target_url: move_to_editing_mode_create_quotum_url(workbasket.id)},
+              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
     - if workbasket_awaiting_cross_check_or_rejected?
       = render "workbaskets/create_quota/workflow_screens_parts/summary_of_configuration"
