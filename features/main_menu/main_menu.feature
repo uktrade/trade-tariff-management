@@ -7,7 +7,7 @@ Feature: As a Tariff Manager
     Given I am on the tariff main menu
     Then the main menu links are displayed
     And I can logout of the application
-
+  
   Scenario: Tariff Manager can save a work basket
     Given I am on the tariff main menu
     When I open a new create measure form
@@ -87,6 +87,8 @@ Feature: As a Tariff Manager
     Then the workbasket is no longer displayed
     When I login as a "tariff_manager"
     Then the workbasket status is "Cross-check rejected"
+    And the workbasket has next step "View"
+    And the workbasket has next step "Withdraw/edit"
 
   Scenario: Approver can reject a work basket
     Given I am on the tariff main menu
@@ -110,4 +112,5 @@ Feature: As a Tariff Manager
     When I login as a "tariff_manager"
     Then the workbasket status is "Approval rejected"
     And the workbasket has next step "View"
+    And the workbasket has next step "Withdraw/edit"
 
