@@ -19,8 +19,9 @@ header
     = render "workbaskets/bulk_edit_of_measures/workflow_screens_parts/workbasket_details"
 
     - if iam_workbasket_author? && workbasket_rejected?
-      = link_to "Edit measures", move_to_editing_mode_bulk_edit_of_measure_url(workbasket.id),
-                                 class: "secondary-button view-workbasket-edit-measures-link"
+      = link_to "Edit measures", '#',
+              data: {target_url: move_to_editing_mode_bulk_edit_of_measure_url(workbasket.id)},
+              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
     h3.heading-medium Measures to be updated after cross-check
 
