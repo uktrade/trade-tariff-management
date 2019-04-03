@@ -291,6 +291,22 @@ module Workbaskets
     end
 
     begin :workflow_related_helpers
+          def cds_error!
+            move_status_to!(nil, :cds_error)
+
+            settings.collection.map do |item|
+              item.move_status_to!(:cds_error)
+            end
+          end
+
+          def published!
+            move_status_to!(nil, :published)
+
+            settings.collection.map do |item|
+              item.move_status_to!(:published)
+            end
+          end
+
           def submit_for_cross_check!(current_admin:)
             move_status_to!(current_admin, :awaiting_cross_check)
 
@@ -430,7 +446,7 @@ module Workbaskets
       add_event!(current_user, new_status, description)
 
       self.status = new_status
-      self.last_update_by_id = current_user.id
+      self.last_update_by_id = current_user&.id
       self.last_status_change_at = Time.zone.now
 
       reset_settings_step_validations if new_status.to_sym == :editing
@@ -441,7 +457,7 @@ module Workbaskets
     def add_event!(current_user, new_status, description = nil)
       event = Workbaskets::Event.new(
         workbasket_id: self.id,
-        user_id: current_user.id,
+        user_id: current_user&.id,
         event_type: new_status,
         description: description
       )

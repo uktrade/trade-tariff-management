@@ -6,7 +6,7 @@ module XmlGeneration
       object_collection = get_objects_from_bucket
       xml_collection = get_xml_from_objects(object_collection)
       move_objects_to_processed_directory(object_collection)
-      xml_collection
+      CdsResponse::ResponseProcessor.process(xml_collection)
     end
 
     def bucket

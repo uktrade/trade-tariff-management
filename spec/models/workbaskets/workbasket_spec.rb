@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe(Workbaskets::Workbasket) do
+  include_context 'create_measures_base_context'
+
   describe "#can_withdraw?" do
     valid_states = described_class::APPROVER_SCOPE | described_class::STATES_WITH_ERROR
     invalid_states = described_class::STATUS_LIST.reject { |status| status.in?(valid_states) }
@@ -80,6 +82,28 @@ RSpec.describe(Workbaskets::Workbasket) do
           expect(described_class.first_operation_date).to eq operation_date
         end
       end
+    end
+  end
+
+  describe "#cds_error!" do
+    it "updates all collection items to be cds_error" do
+      workbasket = create(:workbasket, :create_measures)
+      measure = create(:measure, status: "awaiting_cross_check", workbasket_id: workbasket.id, measure_type: measure_type, geographical_area: geographical_area)
+      workbasket.cds_error!
+
+      expect(workbasket.status).to eq("cds_error")
+      expect(workbasket.collection.first.status).to eq("cds_error")
+    end
+  end
+
+  describe "#published!" do
+    it "updates all collection items to be published" do
+      workbasket = create(:workbasket, :create_measures)
+      measure = create(:measure, status: "awaiting_cross_check", workbasket_id: workbasket.id, measure_type: measure_type, geographical_area: geographical_area)
+      workbasket.published!
+
+      expect(workbasket.status).to eq("published")
+      expect(workbasket.collection.first.status).to eq("published")
     end
   end
 

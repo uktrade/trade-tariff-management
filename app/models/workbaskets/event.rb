@@ -11,7 +11,6 @@ module Workbaskets
 
     validates do
       presence_of :event_type,
-                  :user_id,
                   :workbasket_id
 
       inclusion_of :event_type, in: ::Workbaskets::Workbasket::STATUS_LIST.map(&:to_s)
