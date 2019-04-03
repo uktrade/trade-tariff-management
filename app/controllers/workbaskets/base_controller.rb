@@ -92,8 +92,7 @@ module Workbaskets
     end
 
     def move_to_editing_mode
-      workbasket.move_status_to!(current_user, "editing")
-      workbasket_settings.clean_up_temporary_data!
+      workbasket.move_to_editing!(current_admin: current_user)
 
       redirect_to initial_step_url
     end
