@@ -21,6 +21,9 @@ class TariffMainMenuPage < SitePrism::Page
   element :xml_generation_link, "#main-menu a", text: "XML generation"
   element :rollbacks_link, "#main-menu a", text: "Rollbacks"
 
+  element :search_field, "input[name='q']"
+  element :search_button, "button.button"
+
   element :logged_out_message, "#content h1", text: "You have been logged out"
 
   section :delete_confirmation_modal, "#main-menu-delete_confirmation_popup .workbasket-confirmation-modal" do
@@ -42,6 +45,7 @@ class TariffMainMenuPage < SitePrism::Page
     element :view, "td:nth-child(6) a", text: "View"
     element :withdraw_edit, "td:nth-child(6) a", text: "Withdraw/edit"
     element :cross_check, "td:nth-child(6) a", text: "Review for cross-check"
+    element :approve, "td:nth-child(6) a", text: "Review for approval"
   end
 
   def open_new_measure_form
@@ -54,5 +58,9 @@ class TariffMainMenuPage < SitePrism::Page
 
   def logout
     logout_link.click
+  end
+
+  def generate_xml
+    xml_generation_link.click
   end
 end

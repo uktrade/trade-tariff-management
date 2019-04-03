@@ -36,6 +36,7 @@ end
 
 Then(/^the workbasket status is "([^"]*)"$/) do |status|
   @basket = find_work_basket
+  @basket_id = @basket.id.text
   expect(@basket.status.text).to eq status
 end
 
@@ -51,6 +52,8 @@ And(/^the workbasket has next step "([^"]*)"$/) do |next_step|
       expect(@basket).to have_view
     when 'Review for cross-check'
       expect(@basket).to have_cross_check
+    when 'Review for approval'
+      expect(@basket).to have_approve
   end
 end
 
@@ -67,6 +70,8 @@ When(/^I click "([^"]*)"$/) do |link|
       @basket.view.click
     when 'Review for cross-check'
       @basket.cross_check.click
+    when 'Review for approval'
+      @basket.approve.click
   end
 end
 
@@ -88,10 +93,6 @@ Then(/^I can withdraw the workbasket$/) do
   step 'I click "Withdraw/edit"'
   @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
   expect(@create_measure_page.measure_validity_start_date.value).to eq format_date(@start_date)
-  step 'I go back to the tariff main menu'
-  @basket = find_work_basket
-  expect(@basket.status.text).to eq 'Editing'
-  step 'the workbasket has next step "Continue"'
 end
 
 Then(/^I can crosscheck and accept the workbasket$/) do
@@ -102,7 +103,27 @@ Then(/^I can crosscheck and accept the workbasket$/) do
   expect(@cross_check_page.cross_check_confirmation.message.text).to include CrossCheckPage::CROSS_CHECK_ACCEPTED_MESSAGE
   expect(@cross_check_page).to have_return_to_main_menu
   expect(@cross_check_page).to have_view_these_measure
-  end
+end
+
+And(/^I approve the workbasket$/) do
+  expect(@cross_check_page.work_basket_details.work_basket_name.text).to eq @workbasket
+  @cross_check_page.accept_approval
+  expect(@cross_check_page.cross_check_confirmation.header.text).to eq CrossCheckPage::APPROVAL_ACCEPTED_HEADER
+  expect(@cross_check_page.cross_check_confirmation.message.text).to include @workbasket
+  expect(@cross_check_page).to have_return_to_main_menu
+  expect(@cross_check_page).to have_view_these_measure
+  expect(@cross_check_page).to have_approve_next_workbasket
+end
+
+And(/^I do not approve the workbasket$/) do
+  expect(@cross_check_page.work_basket_details.work_basket_name.text).to eq @workbasket
+  @cross_check_page.reject_approval
+  expect(@cross_check_page.cross_check_confirmation.header.text).to eq CrossCheckPage::APPROVAL_REJECTED_HEADER
+  expect(@cross_check_page.cross_check_confirmation.message.text).to include CrossCheckPage::APPROVAL_REJECTED_MESSAGE
+  expect(@cross_check_page.cross_check_confirmation.message.text).to include @workbasket
+  expect(@cross_check_page).to have_return_to_main_menu
+  expect(@cross_check_page).to have_approve_next_workbasket
+end
 
 Then(/^I can crosscheck and reject the workbasket$/) do
   @cross_check_page = CrossCheckPage.new
@@ -116,6 +137,10 @@ end
 
 Then(/^the workbasket is no longer displayed$/) do
   expect(@tarriff_main_menu.work_baskets.map {|basket| basket.name.text}).not_to include(@workbasket)
+end
+
+When(/^I click on XML generation$/) do
+  @tarriff_main_menu.generate_xml
 end
 
 def find_work_basket

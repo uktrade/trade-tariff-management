@@ -1,4 +1,4 @@
-@ola
+
 Feature: As a Tariff Manager
   I want to log in to the Tariff application main menu
 
@@ -34,8 +34,10 @@ Feature: As a Tariff Manager
     And I can view the workbasket
     When I return to the tariff main menu
     Then I can withdraw the workbasket
+    When I go back to the tariff main menu
+    Then the workbasket status is "Editing"
 
-  Scenario: Cross Checker can accept a work basket
+  Scenario: Cross check, approve and generate xml for a work basket
     Given I am on the tariff main menu
     When I open a new create measure form
     And I fill in the form for a "single_commodity_code"
@@ -52,7 +54,25 @@ Feature: As a Tariff Manager
     Then the workbasket is no longer displayed
     When I login as a "tariff_manager"
     Then the workbasket status is "Awaiting approval"
-#    Do approval here
+    And the workbasket has next step "View"
+    And the workbasket has next step "Withdraw/edit"
+    When I login as a "approver"
+    Then the workbasket status is "Awaiting approval"
+    And the workbasket has next step "View"
+    And the workbasket has next step "Review for approval"
+    When I click "Review for approval"
+    And I approve the workbasket
+    And I return to the tariff main menu
+    Then the workbasket status is "Awaiting CDS upload - create new"
+    And the workbasket has next step "View"
+    When I login as a "tariff_manager"
+    Then the workbasket status is "Awaiting CDS upload - create new"
+    And the workbasket has next step "View"
+    When I click on XML generation
+    And I schedule the basket for export
+    And I return to the tariff main menu
+    Then the workbasket status is "Sent to CDS"
+    And the XML is generated
 
   Scenario: Cross Checker can reject a work basket
     Given I am on the tariff main menu
@@ -68,8 +88,26 @@ Feature: As a Tariff Manager
     When I login as a "tariff_manager"
     Then the workbasket status is "Cross-check rejected"
 
-  Scenario: Approver  - Approval accepted
+  Scenario: Approver can reject a work basket
+    Given I am on the tariff main menu
+    When I open a new create measure form
+    And I fill in the form for a "single_commodity_code"
+    Then I can submit the measure for cross check
+    When I login as a "cross_checker"
+    Then the workbasket status is "Awaiting cross-check"
+    And the workbasket has next step "View"
+    And the workbasket has next step "Review for cross-check"
+    And I can view the workbasket
+    When I return to the tariff main menu
+    And I click "Review for cross-check"
+    Then I can crosscheck and accept the workbasket
+    When I login as a "approver"
+    Then the workbasket status is "Awaiting approval"
+    When I click "Review for approval"
+    And I do not approve the workbasket
+    When I return to the tariff main menu
+    Then the workbasket is no longer displayed
+    When I login as a "tariff_manager"
+    Then the workbasket status is "Approval rejected"
+    And the workbasket has next step "View"
 
-  Scenario: Approver  - Approval rejected
-
-  Scenario: Approver  - Awaiting CDS uplaod
