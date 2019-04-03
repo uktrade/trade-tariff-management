@@ -315,6 +315,16 @@ module Workbaskets
             end
           end
 
+          def move_to_editing!(current_admin:)
+            move_status_to!(current_admin, "editing")
+
+            settings.collection.map do |item|
+              item.move_status_to!(:editing)
+            end
+
+            settings.clean_up_temporary_data!
+          end
+
           def submit_for_approval!(current_admin:)
             move_status_to!(current_admin, :awaiting_approval)
 
@@ -358,6 +368,14 @@ module Workbaskets
 
             settings.collection.map do |item|
               item.move_status_to!(status)
+            end
+          end
+
+          def confirm_sent_to_cds!(current_admin:)
+            move_status_to!(current_admin, :sent_to_cds)
+
+            settings.collection.map do |item|
+              item.move_status_to!(:sent_to_cds)
             end
           end
 

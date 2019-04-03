@@ -55,7 +55,7 @@ module XmlGeneration
     end
 
     def mark_workbasket_as_sent!
-      Workbaskets::Workbasket[@record.workbasket_selected].move_status_to!(User[@record.user_id], :sent_to_cds)
+      Workbaskets::Workbasket[@record.workbasket_selected].confirm_sent_to_cds!(current_admin: User[@record.user_id])
     end
 
     # data is a XmlGeneration::NodeEnvelope object
