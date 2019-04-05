@@ -55,10 +55,15 @@ script
       div v-if="!isLoading"
         = simple_form_for :search, url: quotas_bulks_url(ops), method: :post do |f|
           = content_tag :input, nil, { type: "hidden", "name" => "quota_sids[]", ":value" => "selectedItem" }
-          p
+          p.clearfix
             = content_tag "button", "Work with selected quota", { class: "button", ":disabled" => "noSelectedQuota", type: :submit }
             | &nbsp
             = content_tag "button", "Clone and edit selected quota", { class: "button", ":disabled" => "noSelectedQuota", type: :submit, name: "clone", value: "true" }
+
+            span.number-of-records-badge
+              = pluralize(search_results.total_count, 'quota', 'quotas')
+              =<> "found"
+
         = render "quotas_table" if quotas_search.present?
 
       = content_tag "loading-indicator", nil, { "v-if" => "isLoading", ":metadata" => "pagination" } do
