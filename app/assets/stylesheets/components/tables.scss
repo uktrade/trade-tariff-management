@@ -6,14 +6,14 @@ table {
 
 .records-table.measures,
 .measures-table {
-  min-width: 1700px !important;
+  min-width: 1800px !important;
   .locked-column {
     min-width: 50px !important;
     max-width: 50px !important;
   }
   .select-all-column {
-    min-width: 60px !important;
-    max-width: 60px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
   }
   .measure_type_id-column {
     min-width: 50px !important;
@@ -63,8 +63,8 @@ table {
     max-width: 160px !important;
   }
   .footnotes-column {
-    min-width: 100px !important;
-    max-width: 100px !important;
+    min-width: 70px !important;
+    max-width: 70px !important;
   }
   .last_updated-column {
     min-width: 140px;
