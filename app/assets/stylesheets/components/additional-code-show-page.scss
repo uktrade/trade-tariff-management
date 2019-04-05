@@ -4,6 +4,16 @@
 
 .records-table.additional-codes-table,
 .records-table.additional_codes {
+  .locked-column {
+    min-width: 50px !important;
+    max-width: 50px !important;
+  }
+
+  .select-all-column {
+    min-width: 40px !important;
+    max-width: 40px !important;
+  }
+
   .type_id-column {
     min-width: 60px !important;
     max-width: 60px !important;
@@ -35,7 +45,7 @@
   }
 
   .status-column {
-    min-width: 250px !important;
-    max-width: 250px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
   }
 }
