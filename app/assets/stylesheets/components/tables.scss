@@ -7,6 +7,73 @@ table {
 .records-table.measures,
 .measures-table {
   min-width: 1700px !important;
+  .locked-column {
+    min-width: 50px !important;
+    max-width: 50px !important;
+  }
+  .select-all-column {
+    min-width: 60px !important;
+    max-width: 60px !important;
+  }
+  .measure_type_id-column {
+    min-width: 50px !important;
+    max-width: 50px !important;
+  }
+  .measure_sid-column {
+    min-width: 70px !important;
+    max-width: 70px !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .regulation-column {
+    min-width: 90px !important;
+    max-width: 90px !important;
+  }
+  .validity_start_date-column {
+    min-width: 140px !important;
+    max-width: 140px !important;
+  }
+  .validity_end_date-column {
+    min-width: 140px !important;
+    max-width: 140px !important;
+  }
+  .goods_nomenclature_item_ids-column {
+    min-width: 300px !important;
+    max-width: 300px !important;
+  }
+  .additional_code_id-column,
+  .additional_code-column {
+    min-width: 70px !important;
+    max-width: 70px !important;
+  }
+  .geographical_area-column {
+    min-width: 45px !important;
+    max-width: 45px !important;
+  }
+  .excluded_geographical_areas-column {
+    min-width: 100px !important;
+    max-width: 100px !important;
+  }
+  .duties-column {
+    min-width: 180px !important;
+    max-width: 180px !important;
+  }
+  .conditions-column {
+    min-width: 160px !important;
+    max-width: 160px !important;
+  }
+  .footnotes-column {
+    min-width: 100px !important;
+    max-width: 100px !important;
+  }
+  .last_updated-column {
+    min-width: 140px;
+    max-width: 140px;
+  }
+  .status-column {
+    min-width: 80px;
+    max-width: 80px;
+  }
 }
 
 .additional-codes-table,
