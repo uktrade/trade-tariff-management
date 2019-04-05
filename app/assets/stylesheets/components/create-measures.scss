@@ -31,8 +31,7 @@ span.create-measures-sub_header {
 
 .create-measures-details-table {
   margin-bottom: 60px;
-  overflow: hidden;
-  width: 640px;
+  overflow: scroll;
 
   td {
     font-size: 16px;
