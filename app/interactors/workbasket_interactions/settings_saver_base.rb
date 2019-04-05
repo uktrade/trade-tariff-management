@@ -140,6 +140,11 @@ module WorkbasketInteractions
       end
 
       if self.class::WORKBASKET_TYPE == "CreateQuota"
+
+        if workbasket.title.blank?
+          general_errors[:quota_description] = "Quota Description can't be blank!"
+        end
+
         if geographical_area_id.present?
           if candidates.flatten.compact.blank?
             general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
