@@ -321,8 +321,6 @@ module Workbaskets
             settings.collection.map do |item|
               item.move_status_to!(:editing)
             end
-
-            settings.clean_up_temporary_data!
           end
 
           def submit_for_approval!(current_admin:)
