@@ -30,6 +30,7 @@ When(/^I fill in the quota form for a "([^"]*)"$/) do |scenario|
   @criticality_threshold = test_data['criticality_threshold']
   @critical = test_data['critical']
   @licensed = test_data['licensed']
+  @monetary_unit = test_data['monetary_unit']
 
   @create_quota_page.select_regulation @regulation
   @create_quota_page.enter_quota_order_number @quota_order_number
@@ -46,7 +47,8 @@ When(/^I fill in the quota form for a "([^"]*)"$/) do |scenario|
   @create_quota_page.select_quota_period_type @quota_period
   @create_quota_page.enter_section_start_date @start_date
   @create_quota_page.select_section_duration @section_duration
-  @create_quota_page.select_measurement_unit @measurement_unit
+  @create_quota_page.select_measurement_unit @measurement_unit unless @measurement_unit.nil?
+  @create_quota_page.select_monetary_unit @monetary_unit unless @monetary_unit.nil?
   @create_quota_page.enter_opening_balance @opening_balance
   @create_quota_page.add_duty_expression @duty_expression unless @duty_expression.nil?
   @create_quota_page.continue
@@ -119,5 +121,25 @@ And(/^the quota summary lists dooes not include the goods exceptions$/) do
   expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).not_to include(to_array @exceptions)
 end
 
+And(/^I check the description of a commodity code.$/) do
+  test_data = CONFIG['single_additional_code']
+  @commodity_codes = test_data['commodity_codes']
+  @additional_codes = test_data['additional_codes']
+
+  @create_quota_page.view_commodity_code_description @commodity_codes
+end
+
+Then(/^the commodity code description is displayed.$/) do
+  expect(@create_quota_page).to have_check_commodity_code_description
+end
+
+When(/^I check the description of an additional code.$/) do
+  @create_quota_page.view_additional_code_description @additional_codes
+end
+
+Then(/^the additional code description is displayed.$/) do
+  expect(@create_quota_page).to have_check_additional_code_description
+  expect(@create_quota_page.check_additional_code_description.text).to include @additional_codes
+end
 
 

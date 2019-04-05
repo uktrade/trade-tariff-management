@@ -116,13 +116,20 @@ class CreateQuotaPage < CreateQuotaPageElements
     within("#measurement-unit-code") do
       select_dropdown_value(unit)
     end
-    end
+  end
 
   def select_monetary_unit(unit)
-    within("##monetary-unit-code") do
-      select_dropdown_value(unit)
+    within("#monetary-unit-code") do
+      select_dropdown(unit)
+      # select_dropdown_value(unit)
     end
   end
+  #
+  # def select_monetary_unit(unit)
+  #   within("#monetary-unit-code") do
+  #     select_dropdown_value(unit)
+  #   end
+  # end
 
   def enter_opening_balance(balance)
     quota_section.opening_balance.set balance
@@ -215,5 +222,15 @@ class CreateQuotaPage < CreateQuotaPageElements
 
   def submit_measure_for_cross_check
     submit_for_crosscheck_button.click
+  end
+
+  def view_commodity_code_description(code)
+    check_commodity_code_link.click
+    check_commodity_code_field.set code
+  end
+
+  def view_additional_code_description(code)
+    check_additional_code_link.click
+    check_additional_code_field.set code
   end
 end

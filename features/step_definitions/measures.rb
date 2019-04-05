@@ -6,9 +6,8 @@ Given(/^I am on the tariff main menu$/) do
   @sso_login_page = SSOLoginPage.new
   @tarriff_main_menu = TariffMainMenuPage.new
 
-  @sso_login_page.load
-  @sso_login_page.login
   @tarriff_main_menu.load
+  @sso_login_page.login
   expect(@tarriff_main_menu).to have_create_measures_link
 end
 
@@ -134,6 +133,8 @@ Then(/^an "([^"]*)" error message is displayed$/) do |string|
       expect(error_message).to match(/#{CreateMeasurePage::ME2_ERROR}/)
     when 'ME12'
       expect(error_message).to match(/#{CreateMeasurePage::ME12_ERROR}/)
+    when 'ME1'
+      expect(error_message).to match(/#{CreateMeasurePage::ME1_ERROR}/)
   end
 end
 
@@ -144,6 +145,7 @@ And(/^I enter an end date which is earlier than the start date$/) do
   commodity_code = test_data['commodity_codes']
   start_date = Date.today
   end_date = 3.days.ago
+  @workbasket = random_workbasket_name
 
   @create_measure_page.enter_measure_start_date start_date
   @create_measure_page.enter_measure_end_date end_date
@@ -169,6 +171,7 @@ When(/^I fill the required fields and enter a "([^"]*)" date$/) do |date|
   measure_type = 'Customs Union Duty'
   commodity_code = '1006400010'
   start_date = Date.today
+  @workbasket = random_workbasket_name
 
   case date
     when 'past'
@@ -185,7 +188,7 @@ end
 def common_steps(regulation, measure_type, commodity_code)
   @create_measure_page.select_regulation regulation
   @create_measure_page.select_measure_type measure_type
-  @create_measure_page.enter_workbasket_name random_workbasket_name
+  @create_measure_page.enter_workbasket_name @workbasket
   @create_measure_page.enter_commodity_codes commodity_code
   @create_measure_page.select_erga_omnes
 end
@@ -287,5 +290,30 @@ end
 
 When(/^I go back to the tariff main menu$/) do
   @create_measure_page.return_to_main_menu
+end
+
+When(/^I return to the tariff main menu$/) do
+  @tarriff_main_menu.load
+end
+
+And(/^I check the description of a commodity code$/) do
+  test_data = CONFIG['single_additional_code']
+  @commodity_codes = test_data['commodity_codes']
+  @additional_codes = test_data['additional_codes']
+
+  @create_measure_page.view_commodity_code_description @commodity_codes
+end
+
+Then(/^the commodity code description is displayed$/) do
+  expect(@create_measure_page).to have_check_commodity_code_description
+end
+
+When(/^I check the description of an additional code$/) do
+  @create_measure_page.view_additional_code_description @additional_codes
+end
+
+Then(/^the additional code description is displayed$/) do
+  expect(@create_measure_page).to have_check_additional_code_description
+  expect(@create_measure_page.check_additional_code_description.text).to include @additional_codes
 end
 

@@ -18,7 +18,7 @@ class CreateMeasurePage < CreateMeasurePageElements
     ME2_ERROR = "ME2: The measure type must exist.,{:goods_nomenclature_code=>\"\\w+\", :additional_code=>nil, :geographical_area_id=>\"\\w+\"}"
     ME88_ERROR = "ME88: The level of the goods code, if present, cannot exceed the explosion level of the measure type.,{:goods_nomenclature_code=>\"\\w+\", :additional_code=>nil, :geographical_area_id=>\"\\w+\"}"
     ME12_ERROR = "ME12: If the additional code is specified then the additional code type must have a relationship with the measure type. { measure_sid=>\"\\w+\" },{:goods_nomenclature_code=>\"\\w+\", :additional_code=>\"\\w+\", :geographical_area_id=>\"\\w+\"}"
-
+    ME1_ERROR = "ME1: The combination of measure type \\+ geographical area \\+ goods nomenclature item id \\+ additional code type \\+ additional code \\+ order number \\+ reduction indicator \\+ start date must be unique.,{:goods_nomenclature_code=>\"\\w+\", :additional_code=>nil, :geographical_area_id=>\"\\w+\"}"
 
     def continue
       continue_button.click
@@ -208,15 +208,25 @@ class CreateMeasurePage < CreateMeasurePageElements
       end
     end
 
-    def return_tomain_menu
-
-    end
-
     def enter_condition_duty_amount(duty)
       conditions.duty_amount.set duty
     end
 
     def submit_measure_for_cross_check
       submit_for_crosscheck_button.click
+    end
+
+    def return_to_main_menu
+      exit_link.click
+    end
+
+    def view_commodity_code_description(code)
+      check_commodity_code_link.click
+      check_commodity_code_field.set code
+    end
+
+    def view_additional_code_description(code)
+      check_additional_code_link.click
+      check_additional_code_field.set code
     end
 end

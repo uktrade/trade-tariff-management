@@ -27,8 +27,9 @@ Feature: As a Tariff Manager
       |scenario                |
       |single_goods_exception  |
       |multiple_goods_exception|
+      |multiple_goods_single_exception|
 
-  @ME32
+  @ME32 @manual
   Scenario Outline: Create measure with additional codes
     And I fill in the form for a "<scenario>"
     And I can review the measure
@@ -65,6 +66,11 @@ Feature: As a Tariff Manager
       |condition_with_certificate   |
       |condition_with_no_certificate|
 
+  Scenario: Check commodity and additional codes description
+    And I check the description of a commodity code
+    Then the commodity code description is displayed
+    When I check the description of an additional code
+    Then the additional code description is displayed
 
 
 

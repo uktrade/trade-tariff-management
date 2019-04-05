@@ -6,6 +6,7 @@
 !/log/.keep
 /tmp/*
 .byebug_history
+report.html
 
 # Local tariff files
 data/*/*.xml
