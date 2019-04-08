@@ -8,6 +8,9 @@
 input.datepicker,
 input.date-picker {
   max-width: 140px;
+  background: image-url("calendar-alt-regular.svg") no-repeat center center;
+  background-position-x: 95%;
+  background-size: 10%;
 }
 
 .error-summary {
