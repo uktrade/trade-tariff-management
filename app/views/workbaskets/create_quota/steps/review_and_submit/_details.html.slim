@@ -20,13 +20,7 @@ table.create-measures-details-table
       td.heading_column
         | Type
       td
-        = "#{first_measure.measure_type_id} #{attributes_parser.measure_type}" if first_measure
-
-    tr
-      td.heading_column
-        | Operation date
-      td
-        = attributes_parser.operation_date_formatted
+        = "#{first_measure.measure_type_id} - #{attributes_parser.measure_type}" if first_measure
 
     tr
       td.heading_column
