@@ -27,3 +27,5 @@ header
       = render "workbaskets/create_quota/workflow_screens_parts/summary_of_configuration"
 
     = render "workbaskets/shared/steps/review_and_submit/quotas", read_only: true, record_type: 'create_quota'
+
+    = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-workbasket-base-exit-button"
