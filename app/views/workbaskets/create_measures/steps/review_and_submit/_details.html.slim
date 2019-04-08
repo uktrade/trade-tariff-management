@@ -10,12 +10,6 @@ table.create-measures-details-table
 
     tr
       td.heading_column
-        | Operation date
-      td
-        = attributes_parser.operation_date_formatted
-
-    tr
-      td.heading_column
         | Regulation
       td
         = attributes_parser.regulation
@@ -36,7 +30,7 @@ table.create-measures-details-table
       td.heading_column
         | Type
       td
-        = attributes_parser.measure_type
+        = "#{attributes_parser.measure_type_id} - #{attributes_parser.measure_type}"
 
     tr
       td.heading_column

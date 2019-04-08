@@ -16,6 +16,10 @@ module WorkbasketValueObjects
         end
       end
 
+    def measure_type_id
+      ops['measure_type_id']
+    end
+
     private
 
       def prepare_ops
