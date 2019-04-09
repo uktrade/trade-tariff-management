@@ -21,7 +21,7 @@ RSpec.describe "adding quotas", :js do
     let(:test_order_number) { '090909' }
     let(:workbasket_description) { "test quota description" }
 
-    it 'creates new quota order number ' do
+    it 'doesnt create a new quota order number ' do
       create_required_model_instances
       stub_measure_types_controller
 
@@ -31,7 +31,8 @@ RSpec.describe "adding quotas", :js do
       fill_out_create_quota_form
       fill_out_configure_quota_form
 
-      expect(page).to have_content 'The following commodity codes are incorrect, please check: ["Bananas", "Widgets"]'
+      expect(page).to have_content 'The following Commodity Codes are incorrect, please check: ["Bananas", "Widgets"]'
+      expect(page).to have_content 'The following Additional Codes are incorrect, please check: ["Ninja", "Samurai"]'
     end
   end
 
@@ -62,6 +63,9 @@ RSpec.describe "adding quotas", :js do
     input_date('operation_date', Date.today.beginning_of_year)
 
     fill_in("Goods commodity codes", with: "Bananas, #{commodity.goods_nomenclature_item_id}, Widgets")
+
+    fill_in("Additional codes", with: "Ninja, Samurai")
+
     select_radio("Erga Omnes")
     click_button('Continue')
   end
