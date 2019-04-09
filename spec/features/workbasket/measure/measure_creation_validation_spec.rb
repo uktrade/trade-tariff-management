@@ -33,15 +33,16 @@ RSpec.describe "adding measures", :js do
     fill_in("What is the name of this workbasket?", with: workbasket_name)
     fill_in("Goods commodity codes", with: "Bananas, #{commodity.goods_nomenclature_item_id}, Widgets")
     fill_in("Exceptions", with: "Sticks, Stones")
+    fill_in("Additional codes", with: "Ninja, Samurai")
 
     select_radio("Erga Omnes")
     click_on("Continue")
 
     click_on("Continue")
 
-    expect(page).to have_content 'The following commodity codes are incorrect, please check: ["Bananas", "Widgets"]'
-    expect(page).to have_content 'The following Exception commodity codes are incorrect, please check: ["Sticks", "Stones"]'
-
+    expect(page).to have_content 'The following Commodity Codes are incorrect, please check: ["Bananas", "Widgets"]'
+    expect(page).to have_content 'The following Exception Commodity Codes are incorrect, please check: ["Sticks", "Stones"]'
+    expect(page).to have_content 'The following Additional Codes are incorrect, please check: ["Ninja", "Samurai"]'
   end
 
   private

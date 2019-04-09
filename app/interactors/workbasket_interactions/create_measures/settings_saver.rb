@@ -132,21 +132,21 @@ module WorkbasketInteractions
         if commodity_codes.present?
           invalid_commodity_codes = get_invalid_commodity_codes(CodeParsingService.csv_string_to_array(commodity_codes))
           if invalid_commodity_codes.present?
-            general_errors[:commodity_codes] = "The following commodity codes are incorrect, please check: #{invalid_commodity_codes}"
+            general_errors[:commodity_codes] = "The following Commodity Codes are incorrect, please check: #{invalid_commodity_codes}"
           end
         end
 
         if commodity_codes_exclusions.present?
           invalid_commodity_codes = get_invalid_commodity_codes(commodity_codes_exclusions)
           if invalid_commodity_codes.present?
-            general_errors[:exclusion_commodity_codes] = "The following Exception commodity codes are incorrect, please check: #{invalid_commodity_codes}"
+            general_errors[:exclusion_commodity_codes] = "The following Exception Commodity Codes are incorrect, please check: #{invalid_commodity_codes}"
           end
         end
 
         if additional_codes.present?
           invalid_additional_codes = get_invalid_additional_codes(CodeParsingService.csv_string_to_array(additional_codes))
           if invalid_additional_codes.present?
-            general_errors[:additional_codes] = "The following additional codes are incorrect, please check: #{invalid_additional_codes}"
+            general_errors[:additional_codes] = "The following Additional Codes are incorrect, please check: #{invalid_additional_codes}"
           end
         end
 

@@ -3,7 +3,7 @@ fieldset.js-workbasket-check-code-parent-container
     = "Which additional code(s) will the #{record_type} apply to?"
 
   .form-group
-    label.form-label
+    label.form-label for="additional_codes"
       span.create-measures-sub_header
         | Additional codes
 
@@ -15,7 +15,7 @@ fieldset.js-workbasket-check-code-parent-container
 
     .row
       .col-xs-12.col-md-8.col-lg-6
-        textarea.form-control*{ "v-model" => "measure.additional_codes", rows: 4 }
+        textarea.form-control*{ "v-model" => "measure.additional_codes", rows: 4, id: "additional_codes" }
 
     = render "workbaskets/shared/steps/main/check_a_additional_code_description"
 
