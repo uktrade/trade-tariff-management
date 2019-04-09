@@ -71,7 +71,7 @@ module WorkbasketInteractions
 
     def save!
       if step_pointer.main_step?
-        workbasket.title = workbasket_name if workbasket.title.blank?
+        workbasket.title = workbasket_name if workbasket.title != workbasket_name
         workbasket.operation_date = operation_date.try(:to_date)
         workbasket.save
       end
