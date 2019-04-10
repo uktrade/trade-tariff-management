@@ -9,7 +9,7 @@ RSpec.describe "version identifier" do
     it "git tag is displayed in the footer" do
       version_identifier = "v0.0.1"
 
-      with_environment("GIT_TAG" => version_identifier) do
+      with_environment("GIT_BRANCH" => version_identifier) do
         visit root_path
       end
 
