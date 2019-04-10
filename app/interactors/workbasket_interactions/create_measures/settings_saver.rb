@@ -116,6 +116,10 @@ module WorkbasketInteractions
         settings.main_step_settings['measure_type_id']
       end
 
+      def geographical_area_id
+        settings.main_step_settings['geographical_area_id']
+      end
+
       def check_required_params!
         general_errors = {}
 
@@ -172,6 +176,10 @@ module WorkbasketInteractions
 
         unless measure_type.present?
           general_errors[:measure_type] = "Measure type cannot be blank. Please enter a measure type."
+        end
+
+        unless geographical_area_id.present?
+          general_errors[:geographical_area] = "Origin cannot be blank. Please enter an origin."
         end
 
         if general_errors.present?
