@@ -60,8 +60,6 @@ RSpec.describe "adding quotas", :js do
 
     fill_in :quota_description, with: workbasket_description
 
-    input_date('operation_date', Date.today.beginning_of_year)
-
     fill_in("Goods commodity codes", with: "Bananas, #{commodity.goods_nomenclature_item_id}, Widgets")
 
     fill_in("Additional codes", with: "Ninja, Samurai")

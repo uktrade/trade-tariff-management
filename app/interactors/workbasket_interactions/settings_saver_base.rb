@@ -2,7 +2,6 @@ module WorkbasketInteractions
   class SettingsSaverBase
     REQUIRED_PARAMS = %w(
       start_date
-      operation_date
     ).freeze
 
     ATTRS_PARSER_METHODS = %w(
