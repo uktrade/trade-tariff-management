@@ -108,6 +108,10 @@ module WorkbasketInteractions
         end
       end
 
+      def regulation_id
+        settings.main_step_settings['regulation_id']
+      end
+
       def check_required_params!
         general_errors = {}
 
@@ -156,6 +160,10 @@ module WorkbasketInteractions
           ) && candidates.flatten.compact.blank?
 
           @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
+        end
+
+        unless regulation_id.present?
+          general_errors[:regulation] = "Regulation cannot be blank. Please enter the regulation that gives legal force to these measures."
         end
 
         if general_errors.present?
