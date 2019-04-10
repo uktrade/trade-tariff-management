@@ -112,6 +112,10 @@ module WorkbasketInteractions
         settings.main_step_settings['regulation_id']
       end
 
+      def measure_type
+        settings.main_step_settings['measure_type_id']
+      end
+
       def check_required_params!
         general_errors = {}
 
@@ -164,6 +168,10 @@ module WorkbasketInteractions
 
         unless regulation_id.present?
           general_errors[:regulation] = "Regulation cannot be blank. Please enter the regulation that gives legal force to these measures."
+        end
+
+        unless measure_type.present?
+          general_errors[:measure_type] = "Measure type cannot be blank. Please enter a measure type."
         end
 
         if general_errors.present?
