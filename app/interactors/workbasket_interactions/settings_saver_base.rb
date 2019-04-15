@@ -205,6 +205,10 @@ module WorkbasketInteractions
         end
       end
 
+      if settings.main_step_settings['quota_is_licensed'] == "true"
+        general_errors[:license] = "Please select the license that relates to this quota!" if settings.main_step_settings['quota_licence'].blank?
+      end
+
       if general_errors.present?
         if step_pointer.main_step?
           general_errors.map do |k, v|
