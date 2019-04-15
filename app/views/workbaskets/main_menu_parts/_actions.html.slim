@@ -18,11 +18,3 @@
   - if workbasket.awaiting_approval?
     | &nbsp;|&nbsp;
     = link_to "Review for approval", new_approve_url(workbasket.id)
-
-  - elsif workbasket.ready_for_export?
-    | &nbsp;|&nbsp;
-    = link_to "Schedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
-
-  - elsif workbasket.operation_date_can_be_rescheduled?
-    | &nbsp;|&nbsp;
-    = link_to "Reschedule export to CDS", new_schedule_export_to_cds_url(workbasket.id), remote: true
