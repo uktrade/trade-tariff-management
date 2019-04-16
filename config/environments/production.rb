@@ -49,7 +49,12 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :info
+  if ENV[“LOG_LEVEL”].present?
+    config.log_level = ENV[“LOG_LEVEL”]
+  else
+    config.log_level = :info
+  end
+
   config.assets.quiet = true
 
 
