@@ -29,8 +29,8 @@ describe DatesService do
           end_date: Date.new(2019, 2, 20)
         },
         {
-          start_date: Date.new(2019, 2, 20),
-          end_date: Date.new(2019, 2, 21)
+          start_date: Date.new(2019, 2, 21),
+          end_date: Date.new(2019, 2, 22)
         }
       ]
     end

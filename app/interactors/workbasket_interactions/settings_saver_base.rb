@@ -106,6 +106,10 @@ module WorkbasketInteractions
       ops
     end
 
+    def quota_period_type
+      settings.configure_quota_step_settings['quota_periods'].values.first['type']
+    end
+
     def dates_of_periods
       periods = settings.configure_quota_step_settings['quota_periods'].map {|period| period.last['periods'].values}
       periods.flatten.map {|p| { start_date:p['start_date'], end_date: p['end_date'] }}
@@ -209,8 +213,8 @@ module WorkbasketInteractions
           general_errors[:quota_ordernumber] = errors_translator(:quota_ordernumber)
         end
 
-        if DatesService.overlap?(dates_of_periods)
-          general_errors[:quota_period_dates] = "The dates of the quota periods cannot overlap!"
+        if quota_period_type == "custom"
+          general_errors[:quota_period_dates] = "The dates of the quota periods cannot overlap!" if DatesService.overlap?(dates_of_periods)
         end
       end
 
