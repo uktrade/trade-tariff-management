@@ -318,6 +318,8 @@ module Workbaskets
           def move_to_editing!(current_admin:)
             move_status_to!(current_admin, "editing")
 
+            clean_up_temporary_measures! if type == "bulk_edit_of_measures"
+
             settings.collection.map do |item|
               item.move_status_to!(:editing)
             end
@@ -361,6 +363,19 @@ module Workbaskets
             settings.collection.map do |item|
               item.move_status_to!(:sent_to_cds)
             end
+          end
+
+          def clean_up_temporary_measures!
+            measures = settings.collection.select { |item| item.class == Measure }
+            measure_count = measures.count
+            sorted_measures = measures.sort_by{ |m| m.measure_sid }.reverse
+            newly_created_measures = sorted_measures.slice!(0, measure_count/2)
+
+            newly_created_measures.map(&:destroy)
+            settings.measure_sids_jsonb = [].to_json
+            settings.quota_period_sids_jsonb = [].to_json if defined?(quota_period_sids_jsonb)
+
+            settings.save
           end
 
           def edit_type?
