@@ -41,10 +41,13 @@ end
 
 Then(/^errors indicating the mandatory fields are displayed$/) do
   expect(@create_measure_page).to have_error_summary
-  expect(@create_measure_page.error_summary.errors.size).to eq 3
+  expect(@create_measure_page.error_summary.errors.size).to eq 6
   expect(@create_measure_page.error_summary.errors.map(&:text)).to eq([CreateMeasurePage::NO_START_DATE_MESSAGE,
                                                                        CreateMeasurePage::NO_WORKBASKET_NAME_MESSAGE,
-                                                                       CreateMeasurePage::NO_COMMODITY_CODE_MESSAGE])
+                                                                       CreateMeasurePage::NO_COMMODITY_CODE_MESSAGE,
+                                                                       CreateMeasurePage::NO_REGULATION_MESSAGE,
+                                                                       CreateMeasurePage::NO_MEASURE_TYPE_MESSAGE,
+                                                                       CreateMeasurePage::NO_ORIGIN_MESSAGE])
 end
 
 When(/^I enter all mandatory fields except "([^"]*)"$/) do |string|
@@ -122,15 +125,15 @@ Then(/^an "([^"]*)" error message is displayed$/) do |string|
     when 'workbasket_name'
       expect(error_message).to eq(CreateMeasurePage::NO_WORKBASKET_NAME_MESSAGE)
     when 'origin'
-      expect(error_message).to eq(CreateMeasurePage::ME4_ERROR)
+      expect(error_message).to eq(CreateMeasurePage::NO_ORIGIN_MESSAGE)
     when 'regulation'
-      expect(error_message).to match(/#{CreateMeasurePage::ME86_ERROR}/)
+      expect(error_message).to match(/#{CreateMeasurePage::NO_REGULATION_MESSAGE}/)
     when 'ME25'
       expect(error_message).to match(/#{CreateMeasurePage::ME25_ERROR}/)
     when 'duty_expression'
       expect(error_message).to match()
     when 'measure_type'
-      expect(error_message).to match(/#{CreateMeasurePage::ME2_ERROR}/)
+      expect(error_message).to match(/#{CreateMeasurePage::NO_MEASURE_TYPE_MESSAGE}/)
     when 'ME12'
       expect(error_message).to match(/#{CreateMeasurePage::ME12_ERROR}/)
     when 'ME1'
@@ -201,7 +204,7 @@ end
 And(/^I can review the measure$/) do
   expect(@create_measure_page.measure_summary.workbasket_name.text).to eq(@workbasket)
   expect(@create_measure_page.measure_summary.regulation.text).to eq(format_regulation(@regulation))
-  expect(@create_measure_page.measure_summary.type.text).to eq(@measure_type)
+  expect(@create_measure_page.measure_summary.type.text).to include(@measure_type)
   expect(@create_measure_page.measure_summary.origin.text).to include(@origin['name'])
   step 'the measure can be submitted for cross check'
 end

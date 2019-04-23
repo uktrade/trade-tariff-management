@@ -11,6 +11,7 @@ end
 When(/^I fill in the quota form for a "([^"]*)"$/) do |scenario|
 
   test_data = CONFIG[scenario]
+  @workbasket = random_workbasket_name
   @commodity_codes = test_data['commodity_codes']
   @regulation = test_data['regulation']
   @exceptions = test_data['exceptions']
@@ -36,9 +37,8 @@ When(/^I fill in the quota form for a "([^"]*)"$/) do |scenario|
   @create_quota_page.enter_quota_order_number @quota_order_number
   @create_quota_page.select_maximum_precision @maximum_precision
   @create_quota_page.select_quota_type @quota_type
-  @create_quota_page.enter_quota_description "ATT #{@quota_order_number}"
-  @create_quota_page.enter_operation_date @start_date
-  @create_quota_page.enter_commodity_codes @commodity_codes
+  @create_quota_page.enter_quota_description @workbasket
+  @create_quota_page.enter_commodity_codes @commodity_codes unless @commodity_codes.nil?
   @create_quota_page.enter_exceptions @exceptions unless @exceptions.nil?
   @create_quota_page.enter_additional_codes @additional_codes unless @additional_codes.nil?
   @create_quota_page.select_origin @origin
@@ -62,7 +62,6 @@ And(/^I can review the quota$/) do
   expect(@create_quota_page.quota_summary.order_number.text).to eq(@quota_order_number)
   expect(@create_quota_page.quota_summary.maximum_precision.text).to eq(@maximum_precision)
   expect(@create_quota_page.quota_summary.type.text).to include(@quota_type)
-  expect(@create_quota_page.quota_summary.operation_date.text).to eq(format_summary_date @start_date)
   expect(@create_quota_page.quota_summary.licensed.text).to eq(@licensed)
   expect(@create_quota_page.quota_summary.regulation.text).to eq(format_regulation(@regulation))
   expect(@create_quota_page.quota_summary.origin.text).to include(@origin['name'])
@@ -114,10 +113,10 @@ And(/^the quota summary lists the measures to be created$/) do
 end
 
 And(/^the quota summary lists the additional codes for measures to be created$/) do
-  expect(@create_measure_page.measures_to_be_created.additional_codes.map(&:text)).to eq(to_array(@additional_codes))
+  expect(@create_quota_page.measures_to_be_created.additional_codes.map(&:text)).to eq(to_array(@additional_codes))
 end
 
-And(/^the quota summary lists dooes not include the goods exceptions$/) do
+And(/^the quota summary lists does not include the goods exceptions$/) do
   expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).not_to include(to_array @exceptions)
 end
 
@@ -140,6 +139,23 @@ end
 Then(/^the additional code description is displayed.$/) do
   expect(@create_quota_page).to have_check_additional_code_description
   expect(@create_quota_page.check_additional_code_description.text).to include @additional_codes
+end
+
+And(/^I search for the quota$/) do
+  @find_edit_quota_page = FindEditQuotaPage.new
+  expect(@find_edit_quota_page).to have_description_field
+  @find_edit_quota_page.find_quota @workbasket
+end
+
+Then(/^the quota should be locked in the search result$/) do
+  expect(@find_edit_quota_page).to have_quota_search_results
+  @found_quota = find_quota
+  expect(@found_quota).to have_lock
+end
+
+def find_quota
+  @results = @find_edit_quota_page.quota_search_results.select {|quota| quota.order_number.text == format_order_number(@quota_order_number)}
+  @results.pop
 end
 
 
