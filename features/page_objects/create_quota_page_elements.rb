@@ -7,7 +7,7 @@ class CreateQuotaPageElements < SitePrism::Page
   element :operation_date, "#operation_date"
   element :commodity_code, "#commodity_codes"
   element :exceptions, "#exceptions"
-  element :additional_codes, :xpath, "//form/fieldset[9]//textarea"
+  element :additional_codes, "#additional_codes"
   element :reduction_indicator, ".single-digit-field"
   element :erga_omnes_radio_button, ".origins-region #measure-origin-erga_omnes"
   element :country_groups_radio_button, ".origins-region #measure-origin-group"
@@ -45,10 +45,10 @@ class CreateQuotaPageElements < SitePrism::Page
   end
 
   section :quota_summary, '.create-measures-details-table' do
-    element :order_number, "tr:nth-child(1) td:nth-child(2)"
-    element :maximum_precision, "tr:nth-child(2) td:nth-child(2)"
-    element :type, "tr:nth-child(3) td:nth-child(2)"
-    element :operation_date, "tr:nth-child(4) td:nth-child(2)"
+    element :workbasket_name, "tr:nth-child(1) td:nth-child(2)"
+    element :order_number, "tr:nth-child(2) td:nth-child(2)"
+    element :maximum_precision, "tr:nth-child(3) td:nth-child(2)"
+    element :type, "tr:nth-child(4) td:nth-child(2)"
     element :licensed, "tr:nth-child(5) td:nth-child(2)"
     element :regulation, "tr:nth-child(6) td:nth-child(2)"
     element :goods, "tr:nth-child(7) td:nth-child(2)"

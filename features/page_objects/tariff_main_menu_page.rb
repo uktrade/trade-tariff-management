@@ -63,4 +63,8 @@ class TariffMainMenuPage < SitePrism::Page
   def generate_xml
     xml_generation_link.click
   end
+
+  def find_edit_quota
+    find_edit_quotas_link.click
+  end
 end

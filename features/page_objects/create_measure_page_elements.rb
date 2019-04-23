@@ -39,16 +39,15 @@ class CreateMeasurePageElements < SitePrism::Page
 
   section :measure_summary, '.create-measures-details-table' do
     element :workbasket_name, "tr:nth-child(1) td:nth-child(2)"
-    element :operation_date, "tr:nth-child(2) td:nth-child(2)"
-    element :regulation, "tr:nth-child(3) td:nth-child(2)"
-    element :start_date, "tr:nth-child(4) td:nth-child(2)"
-    element :end_date, "tr:nth-child(5) td:nth-child(2)"
-    element :type, "tr:nth-child(6) td:nth-child(2)"
-    element :goods, "tr:nth-child(7) td:nth-child(2)"
-    element :goods_exceptions, "tr:nth-child(8) td:nth-child(2)"
-    element :additional_codes, "tr:nth-child(9) td:nth-child(2)"
-    element :origin, "tr:nth-child(10) td:nth-child(2)"
-    element :origin_exceptions, "tr:nth-child(11) td:nth-child(2)"
+    element :regulation, "tr:nth-child(2) td:nth-child(2)"
+    element :start_date, "tr:nth-child(3) td:nth-child(2)"
+    element :end_date, "tr:nth-child(4) td:nth-child(2)"
+    element :type, "tr:nth-child(5) td:nth-child(2)"
+    element :goods, "tr:nth-child(6) td:nth-child(2)"
+    element :goods_exceptions, "tr:nth-child(7) td:nth-child(2)"
+    element :additional_codes, "tr:nth-child(8) td:nth-child(2)"
+    element :origin, "tr:nth-child(9) td:nth-child(2)"
+    element :origin_exceptions, "tr:nth-child(10) td:nth-child(2)"
   end
 
   section :measures_to_be_created, '.records-table .item-container' do

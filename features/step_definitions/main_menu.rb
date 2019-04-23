@@ -95,6 +95,12 @@ Then(/^I can withdraw the workbasket$/) do
   expect(@create_measure_page.measure_validity_start_date.value).to eq format_date(@start_date)
 end
 
+Then(/^I can withdraw the workbasket for the quota$/) do
+  step 'I click "Withdraw/edit"'
+  @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
+  expect(@create_quota_page.quota_order_number.value).to eq @quota_order_number
+end
+
 Then(/^I can crosscheck and accept the workbasket$/) do
   @cross_check_page = CrossCheckPage.new
   expect(@cross_check_page.work_basket_details.work_basket_name.text).to eq @workbasket
@@ -141,6 +147,10 @@ end
 
 When(/^I click on XML generation$/) do
   @tarriff_main_menu.generate_xml
+end
+
+And(/^I click the find and edit quota link$/) do
+  @tarriff_main_menu.find_edit_quota
 end
 
 def find_work_basket

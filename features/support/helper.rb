@@ -54,4 +54,8 @@ module Helper
   def random_quota_number
     "09#{random_number(4)}"
   end
+
+  def format_order_number(order_number)
+    "#{order_number.slice(0..1)}.#{order_number.slice(2..5)}"
+  end
 end
