@@ -1,29 +1,26 @@
+/ fieldset
+/   h3.heading-medium
+/     = "Which origin will the #{record_type} apply to?"
+/
+/   span.form-hint
+/     | You can specify a single country or territory, or a pre-defined group of countries, or select
+/     br
+/     | 'Erga Omnes' to apply the quota to all origins. If the group you need is not in the list, you
+/     br
+/
+/     | can&nbsp;
+/     = link_to "add it from here", new_create_geographical_area_url
+/     |.
+/
+/   .controls.origins-region
+/     = content_tag "measure-origin", "", { kind: "erga_omnes", placeholder: "― select a country or region ―", ":origin" => "origins.erga_omnes", ":multiple" => false }
+/     = content_tag "measure-origin", "", { kind: "group", placeholder: "― select a group of countries ―", ":origin" => "origins.group", ":multiple" => false }
+/     = content_tag "measure-origin", "", { kind: "country", placeholder: "― select a country or region ―", ":origin" => "origins.country", ":multiple" => multiple_countries }
+
 fieldset
-  h3.heading-medium
-    = "Which origin will the #{record_type} apply to?"
-
-  span.form-hint
-    | You can specify a single country or territory, or a pre-defined group of countries, or select
-    br
-    | 'Erga Omnes' to apply the quota to all origins. If the group you need is not in the list, you
-    br
-
-    | can&nbsp;
-    = link_to "add it from here", new_create_geographical_area_url
-    |.
-
-  .controls.origins-region
-    = content_tag "measure-origin", "", { kind: "erga_omnes", placeholder: "― select a country or region ―", ":origin" => "origins.erga_omnes", ":multiple" => false }
-    = content_tag "measure-origin", "", { kind: "group", placeholder: "― select a group of countries ―", ":origin" => "origins.group", ":multiple" => false }
-    = content_tag "measure-origin", "", { kind: "country", placeholder: "― select a country or region ―", ":origin" => "origins.country", ":multiple" => multiple_countries }
-
-fieldset
-  h3.heading-medium
-    | Hello
-
-    = content_tag "origin", "", { \
-            record_type:        record_type, \
-            ":origins" =>       "origins", \
-            ":multiple_countries" => multiple_countries, \
-            new_area_url:       new_create_geographical_area_url \
-          }
+  = content_tag "origin", "", { \
+          record_type:        record_type, \
+          ":origins_model" => "origins", \
+          ":multiple_countries" => multiple_countries, \
+          new_area_url:       new_create_geographical_area_url \
+        }
