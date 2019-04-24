@@ -133,10 +133,6 @@ module WorkbasketInteractions
           general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
         end
 
-        if candidates.flatten.compact.blank?
-          general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
-        end
-
         if commodity_codes.blank? && commodity_codes_exclusions.present?
           general_errors[:commodity_codes_exclusions] = errors_translator(:commodity_codes_exclusions)
         end
@@ -166,7 +162,7 @@ module WorkbasketInteractions
             commodity_codes.present? ||
             additional_codes.present?
           ) && candidates.flatten.compact.blank?
-
+          
           @errors[:commodity_codes] = errors_translator(:commodity_codes_invalid)
         end
 
@@ -180,6 +176,10 @@ module WorkbasketInteractions
 
         unless geographical_area_id.present?
           general_errors[:geographical_area] = "Origin cannot be blank. Please enter an origin."
+        end
+
+        if candidates.flatten.compact.blank? && general_errors.blank?
+          general_errors[:commodity_codes] = errors_translator(:blank_commodity_and_additional_codes)
         end
 
         if general_errors.present?
