@@ -49,8 +49,8 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  if ENV[“LOG_LEVEL”].present?
-    config.log_level = ENV[“LOG_LEVEL”]
+  if ENV["LOG_LEVEL"].present?
+    config.log_level = ENV["LOG_LEVEL"]
   else
     config.log_level = :info
   end
