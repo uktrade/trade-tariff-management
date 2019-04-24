@@ -24,8 +24,8 @@ table.create-measures-details-table
       td.heading_column
         | Type
       td
-        = attributes_parser.measure_type
-
+        = "#{workbasket.settings.main_step_settings['measure_type_id']} - #{attributes_parser.measure_type}"
+        
     tr
       td.heading_column
         | Goods
