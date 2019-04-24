@@ -16,3 +16,14 @@ fieldset
     = content_tag "measure-origin", "", { kind: "erga_omnes", placeholder: "― select a country or region ―", ":origin" => "origins.erga_omnes", ":multiple" => false }
     = content_tag "measure-origin", "", { kind: "group", placeholder: "― select a group of countries ―", ":origin" => "origins.group", ":multiple" => false }
     = content_tag "measure-origin", "", { kind: "country", placeholder: "― select a country or region ―", ":origin" => "origins.country", ":multiple" => multiple_countries }
+
+fieldset
+  h3.heading-medium
+    | Hello
+
+    = content_tag "origin", "", { \
+            record_type:        record_type, \
+            ":origins" =>       "origins", \
+            ":multiple_countries" => multiple_countries, \
+            new_area_url:       new_create_geographical_area_url \
+          }
