@@ -15,8 +15,7 @@ h3.heading-medium
 
 ul class="list"
   li
-    a href="#"
-      | Withdraw submission/edit this quota (not implemented)
+    = link_to "Withdraw submission/edit quota", withdraw_workbasket_from_workflow_create_quotum_url(workbasket.id)
   li
     = link_to "View this quota", read_only_section_url
   li
