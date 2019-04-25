@@ -4,7 +4,14 @@ require "spec_helper"
 
 require 'webmock/rspec'
 
-WebMock.disable_net_connect!(allow: "codeclimate.com", allow_localhost: true)
+allowed_sites = [
+  "https://codeclimate.com",
+  "https://chromedriver.storage.googleapis.com",
+  "https://github.com/mozilla/geckodriver/releases",
+  "https://selenium-release.storage.googleapis.com",
+  "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver"
+]
+WebMock.disable_net_connect!(allow: allowed_sites, allow_localhost: true)
 
 # SimpleCov.add_filter "vendor"
 #

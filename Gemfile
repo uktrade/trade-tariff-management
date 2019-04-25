@@ -117,7 +117,7 @@ group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
   gem 'launchy'
-  gem "chromedriver-helper"
+  gem 'webdrivers'
   gem 'cucumber-rails', require: false
   gem 'site_prism'
   gem 'capybara-screenshot'
