@@ -31,6 +31,7 @@ $(document).ready(function() {
           { value: "reopened", label: "Reopened" }
         ],
         origins: {
+          origin_type_selected: "",
           country: {
             geographical_area_id: null,
             exclusions: [],
@@ -87,6 +88,7 @@ $(document).ready(function() {
 
         if (window.all_settings.geographical_area_id) {
           if (window.all_settings.geographical_area_id == '1011') {
+            data.origins.origin_type_selected = "Erga Omnes";
             data.origins.erga_omnes.selected = true;
             data.origins.erga_omnes.geographical_area_id = window.all_settings.geographical_area_id;
 
@@ -102,9 +104,11 @@ $(document).ready(function() {
             // country
             if (window.all_settings.geographical_area_id instanceof Array || window.geographical_areas_json[window.all_settings.geographical_area_id].length === 0) {
               data.origins.country.selected = true;
+              data.origins.origin_type_selected = "Country";
               data.origins.country.geographical_area_id = window.all_settings.geographical_area_id;
             } else {
               data.origins.group.selected = true;
+              data.origins.origin_type_selected = "Group";
               data.origins.group.geographical_area_id = window.all_settings.geographical_area_id;
 
               if (window.all_settings.excluded_geographical_areas) {
@@ -545,17 +549,17 @@ $(document).ready(function() {
 
         };
 
-        if (this.origins.country.selected) {
+        if (this.origins.origin_type_selected == "Country") {
           payload.geographical_area_id = this.origins.country.geographical_area_id;
           payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
             return e.geographical_area_id;
           });
-        } else if (this.origins.group.selected) {
+        } else if (this.origins.origin_type_selected == "Group") {
           payload.geographical_area_id = this.origins.group.geographical_area_id;
           payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
             return e.geographical_area_id;
           });
-        } else if (this.origins.erga_omnes.selected) {
+        } else if (this.origins.origin_type_selected == "Erga Omnes") {
           payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
           payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
             return e.geographical_area_id;
@@ -610,131 +614,6 @@ $(document).ready(function() {
           });
         } catch (e) {
           console.error(e);
-        }
-
-        return payload;
-      },
-      preparePayload: function() {
-        var payload = {
-          operation_date: this.measure.operation_date,
-
-          start_date: this.measure.validity_start_date,
-          end_date: this.measure.validity_end_date,
-          regulation_id: this.measure.regulation_id,
-          measure_type_series_id: this.measure.measure_type_series_id,
-          measure_type_id: this.measure.measure_type_id,
-          goods_nomenclature_code: this.measure.goods_nomenclature_code,
-          additional_code: this.measure.additional_code,
-          additional_code_type_id: this.measure.additional_code_type_id,
-          goods_nomenclature_code_description: this.measure.goods_nomenclature_code_description,
-          additional_code_description: this.measure.additional_code_description,
-          footnotes: this.measure.footnotes,
-
-          workbasket_name: this.measure.workbasket_name,
-          reduction_indicator: this.measure.reduction_indicator,
-          additional_codes: this.measure.additional_codes,
-          commodity_codes: this.measure.commodity_codes,
-          commodity_codes_exclusions: this.measure.commodity_codes_exclusions,
-
-          existing_quota: this.measure.existing_quota === "existing",
-          quota_status: this.measure.quota_status,
-          quota_ordernumber: this.measure.quota_ordernumber,
-          quota_criticality_threshold: this.measure.quota_criticality_threshold,
-          quota_description: this.measure.quota_description
-        };
-
-        try {
-          if (this.showDuties) {
-            payload.measure_components = this.measure.measure_components.map(function(component) {
-              var c = clone(component);
-
-              if (c.duty_expression_id) {
-                c.original_duty_expression_id = c.duty_expression_id.slice(0);
-                // to ignore A and B
-                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
-              }
-
-              return c;
-            });
-          }
-        } catch (e) {
-          console.error(e);
-        }
-
-        try {
-          payload.conditions = this.measure.conditions.map(function(condition) {
-            var c = clone(condition);
-
-            c.original_measure_condition_code = c.condition_code.slice(0);
-            c.condition_code = c.condition_code.substring(0, 1);
-
-            c.measure_condition_components = c.measure_condition_components.map(function(component) {
-              var c = clone(component);
-              if (c.duty_expression_id) {
-                c.original_duty_expression_id = c.duty_expression_id.slice(0);
-                // to ignore A and B
-                c.duty_expression_id = c.duty_expression_id.substring(0, 2);
-              }
-
-              return c;
-            });
-
-            return c;
-          });
-        } catch (e) {
-          console.error(e);
-        }
-
-        if (this.origins.country.selected) {
-          payload.geographical_area_id = this.origins.country.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        } else if (this.origins.group.selected) {
-          payload.geographical_area_id = this.origins.group.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        } else if (this.origins.erga_omnes.selected) {
-          payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
-          payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
-            return e.geographical_area_id;
-          });
-        }
-
-        if (this.measure.quota_periods.length > 0 && this.measure.quota_periods[0].type) {
-          var periodPayload = {};
-
-          switch (this.measure.quota_periods[0].type) {
-            case "custom":
-              var t = this.measure.quota_periods[0].type;
-
-              periodPayload[t] = this.measure.quota_periods.map(function(period) {
-                return {
-                  amount1: period.custom.amount1,
-                  start_date: period.start_date,
-                  end_date: period.end_date,
-                  measurement_unit_code: period.measurement_unit_code,
-                  measurement_unit_qualifier_code: period.measurement_unit_qualifier_code
-                };
-              });
-
-              break;
-            default:
-              var t = this.measure.quota_periods[0].type;
-
-              periodPayload[t] = this.measure.quota_periods[0][t];
-              periodPayload[t].start_date = this.measure.quota_periods[0].start_date;
-              periodPayload[t].end_date = this.measure.quota_periods[0].end_date;
-              periodPayload[t].measurement_unit_code = this.measure.quota_periods[0].measurement_unit_code;
-              periodPayload[t].measurement_unit_qualifier_code = this.measure.quota_periods[0].measurement_unit_qualifier_code;
-
-              break;
-          }
-
-          payload.quota_periods = periodPayload;
-        } else {
-          payload.quota_periods = {};
         }
 
         return payload;

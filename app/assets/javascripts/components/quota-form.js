@@ -30,6 +30,7 @@ $(document).ready(function() {
           { value: "reopened", label: "Reopened" }
         ],
         origins: {
+          origin_type_selected: "",
           country: {
             geographical_area_id: [],
             exclusions: [],
@@ -93,6 +94,7 @@ $(document).ready(function() {
 
         if (window.all_settings.geographical_area_id) {
           if (window.all_settings.geographical_area_id == '1011') {
+            data.origins.origin_type_selected = "Erga Omnes";
             data.origins.erga_omnes.selected = true;
             data.origins.erga_omnes.geographical_area_id = window.all_settings.geographical_area_id;
 
@@ -108,9 +110,11 @@ $(document).ready(function() {
             // country
             if (window.all_settings.geographical_area_id instanceof Array || window.geographical_areas_json[window.all_settings.geographical_area_id].length === 0) {
               data.origins.country.selected = true;
+              data.origins.origin_type_selected = "Country";
               data.origins.country.geographical_area_id = window.all_settings.geographical_area_id;
             } else {
               data.origins.group.selected = true;
+              data.origins.origin_type_selected = "Group";
               data.origins.group.geographical_area_id = window.all_settings.geographical_area_id;
 
               if (window.all_settings.excluded_geographical_areas) {
@@ -605,17 +609,17 @@ $(document).ready(function() {
           commodity_codes_exclusions: this.measure.commodity_codes_exclusions
         };
 
-        if (this.origins.country.selected) {
+        if (this.origins.origin_type_selected == "Country") {
           payload.geographical_area_id = this.origins.country.geographical_area_id;
           payload.excluded_geographical_areas = this.origins.country.exclusions.map(function(e) {
             return e.geographical_area_id;
           });
-        } else if (this.origins.group.selected) {
+        } else if (this.origins.origin_type_selected == "Group") {
           payload.geographical_area_id = this.origins.group.geographical_area_id;
           payload.excluded_geographical_areas = this.origins.group.exclusions.map(function(e) {
             return e.geographical_area_id;
           });
-        } else if (this.origins.erga_omnes.selected) {
+        } else if (this.origins.origin_type_selected == "Erga Omnes") {
           payload.geographical_area_id = this.origins.erga_omnes.geographical_area_id;
           payload.excluded_geographical_areas = this.origins.erga_omnes.exclusions.map(function(e) {
             return e.geographical_area_id;

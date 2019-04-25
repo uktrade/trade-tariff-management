@@ -1,3 +1,9 @@
+const OriginTypes = Object.freeze({
+  ERGA_OMNES: "Erga Omnes",
+  GROUP:      "Group",
+  COUNTRY:    "Country"
+});
+
 Vue.component("origin", {
   props: {
     record_type: String,  // 'measure' or 'quota'
@@ -19,42 +25,46 @@ Vue.component("origin", {
         </span>
         <div class="measure-origin">
           <div class="multiple-choice">
-            <input type="radio" id="measure-origin-erga_omnes" v-model="origin_type" name="geographical_area_type2" value="erga_omnes" class="radio-inline-group">
+            <input type="radio" id="measure-origin-erga_omnes" v-model="origins_model.origin_type_selected" name="geographical_area_type2" :value="OriginTypes.ERGA_OMNES" class="radio-inline-group">
             <label for="measure-origin-erga_omnes">Erga Omnes (all origins)</label>
           </div>
-          <origin-exclusions :origins_selected="origins_model.erga_omnes" v-if="origin_type == 'erga_omnes'"></origin-exclusions>
+          <origin-exclusions :origins_selected="origins_model.erga_omnes" v-if="origins_model.origin_type_selected == OriginTypes.ERGA_OMNES"></origin-exclusions>
         </div>
 
         <div class="measure-origin">
           <div class="multiple-choice">
-            <input type="radio" id="measure-origin-group" v-model="origin_type" name="geographical_area_type2" value="group" class="radio-inline-group">
+            <input type="radio" id="measure-origin-group" v-model="origins_model.origin_type_selected" name="geographical_area_type2" :value="OriginTypes.GROUP" class="radio-inline-group">
             <label>
               <custom-select :options="geographical_groups" label-field="description" code-field="geographical_area_id" value-field="geographical_area_id" placeholder="― select a group of countries ―" v-model="origins_model.group.geographical_area_id" class="origin-select" code-class-name="prefix--region" :on-change="geographicalAreaChanged"></custom-select>
             </label>
           </div>
-          <origin-exclusions :origins_selected="origins_model.group" v-if="origin_type == 'group'"></origin-exclusions>
+          <origin-exclusions :origins_selected="origins_model.group" v-if="origins_model.origin_type_selected == OriginTypes.GROUP"></origin-exclusions>
         </div>
 
         <div class="measure-origin">
           <div class="multiple-choice">
-            <input type="radio" id="measure-origin-country" v-model="origin_type" name="geographical_area_type2" value="country" class="radio-inline-group">
+            <input type="radio" id="measure-origin-country" v-model="origins_model.origin_type_selected" name="geographical_area_type2" :value="OriginTypes.COUNTRY" class="radio-inline-group">
             <label v-if="multiple_countries">
-<!--              <p v-for="(o, idx) in origins">-->
-<!--                = content_tag "sub-origin", { ":origin" => "o", ":already_selected" => "alreadySelected", ":key" => "o.key"} do-->
-<!--                  template slot-scope="slotProps"-->
-<!--                    = content_tag "custom-select", "", { ":options" => "slotProps.availableOptions", "label-field" => "description", "code-field" => "geographical_area_id", "value-field" => "geographical_area_id", ":placeholder": "o.placeholder", "v-model" => "o.id", class: "origin-select", "code-class-name" => "prefix&#45;&#45;region", ":on-change" => "geographicalAreaChanged" }-->
-<!--                    a.secondary-button href="#" v-on:click.prevent="removeSubOrigin(idx)" v-if="origins.length > 1 && origin.selected"-->
-<!--                 Remove-->
-<!--              </p>-->
-<!--              <p v-if="origin.selected">-->
-<!--                <a href="#" v-on:click.prevent="addCountryOrTerritory">-->
-<!--                  Add another country-->
-<!--                </a>-->
-<!--                &nbsp;|&nbsp;-->
-<!--                <a href="#" v-on:click.prevent="addGroup">-->
-<!--                  Add another group-->
-<!--                </a>        -->
-<!--              </p>            -->
+              <p v-for="(o, idx) in origins">
+                <sub-origin :origin= "o" :already_selected="alreadySelected" :key="o.key">
+                Hello
+                  <template slot-scope="slotProps">
+                    <custom-select :options="slotProps.availableOptions" label-field="description" code-field="geographical_area_id" value-field="geographical_area_id" :placeholder="o.placeholder" v-model="o.id" class="origin-select" code-class-name="prefix--region"></custom-select>
+                    <a class="secondary-button" href="#" v-on:click.prevent="removeSubOrigin(idx)" v-if="origins.length > 1 && origins_model.origin_type_selected == OriginTypes.COUNTRY">
+                      Remove
+                    </a>
+                  </template>
+                </sub-origin>
+              </p>
+              <p v-if="origins_model.origin_type_selected == OriginTypes.COUNTRY">
+                <a href="#" v-on:click.prevent="addCountryOrTerritory">
+                  Add another country
+                </a>
+                &nbsp;|&nbsp;
+                <a href="#" v-on:click.prevent="addGroup">
+                  Add another group
+                </a>        
+              </p>            
             </label>
             <label v-else>
               <custom-select :options="all_countries" label-field="description" code-field="geographical_area_id" value-field="geographical_area_id" placeholder="― select a country or region ―" v-model="origins_model.country.geographical_area_id" class="origin-select" code-class-name="prefix--region" :on-change="countryChanged"></custom-select>
@@ -66,53 +76,101 @@ Vue.component("origin", {
     </div>
     `,
   data: function () {
-    const data = {
+    let data = {
       geographical_groups: window.geographical_groups_except_erga_omnes,
       all_countries: window.all_geographical_countries,
-      origin_type: null,
-      key: 2,
+      OriginTypes: OriginTypes,
+      origins: [{
+        type: "country",
+        placeholder: "― select a country or region ―",
+        id: null,
+        options: window.all_geographical_countries,
+        key: 1
+      }],
+      key: 2
     };
+
+    if (this.origins_model.country.geographical_area_id instanceof Array && this.origins_model.country.geographical_area_id.length > 0) {
+      var arr = [];
+      var selected_ids = this.origins_model.country.geographical_area_id;
+
+      selected_ids.forEach(function (id) {
+        var isCountry = window.geographical_areas_json[id].length === 0;
+        var exclusions = selected_ids.slice(0).filter(function (e) {
+          return e != id;
+        });
+
+        var options = isCountry ? window.all_geographical_countries : window.geographical_groups_except_erga_omnes;
+        var opts = options.filter(function (o) {
+          return exclusions.indexOf(o.geographical_area_id) === -1;
+        });
+
+        arr.push({
+          type: "country",
+          placeholder: isCountry ? "― select a country or region ―" : "― select a group of countries ―",
+          id: id,
+          key: data.key++,
+          options: opts
+        });
+      });
+
+      data.origins = arr;
+    }
     return data;
   },
   mounted: function () {
-    if (this.origins_model.erga_omnes.selected) {
-      this.origin_type = "erga_omnes";
-    } else if (this.origins_model.group.selected) {
-      this.origin_type = "group";
-    } else if (this.origins_model.country.selected) {
-      this.origin_type = "country";
-    } else {
-      this.origin_type = null;
+    this.origins_model.erga_omnes.geographical_area_id = "1011";
+  },
+  computed: {
+    alreadySelected: function() {
+      return this.origins.map(function(o) {
+        return o.id;
+      });
     }
   },
-  computed: {},
   watch: {
-    origin_type: function(newVal, oldVal) {
-      if (newVal == "erga_omnes") {
-        this.origins_model.erga_omnes.geographical_area_id = "1011";
-        this.origins_model.erga_omnes.selected = true;
-        this.origins_model.group.selected = false;
-        this.origins_model.country.selected = false;
-      } else if (newVal == "group") {
-        this.origins_model.erga_omnes.selected = false;
-        this.origins_model.group.selected = true;
-        this.origins_model.country.selected = false;
-      } else if (newVal == "country") {
-        this.origins_model.erga_omnes.selected = false;
-        this.origins_model.group.selected = false;
-        this.origins_model.country.selected = true;
+    alreadySelected: function() {
+      if (!this.multiple_countries) {
+        return;
       }
+
+      this.origins_model.country.geographical_area_id = this.origins.map(function(o) {
+        return o.id;
+      });
+
+      this.origins_model.origin_type_selected = OriginTypes.COUNTRY;
     }
   },
   methods: {
     geographicalAreaChanged: function(newGeographicalArea) {
-      this.origin_type = "group";
+      this.origins_model.origin_type_selected = OriginTypes.GROUP;
       this.origins_model.group.geographical_area_id = newGeographicalArea;
     },
     countryChanged: function(newCountry) {
-      this.origin_type = "country";
+      this.origins_model.origin_type_selected = OriginTypes.COUNTRY;
       this.origins_model.country.geographical_area_id = newCountry;
     },
+    addCountryOrTerritory: function() {
+      this.origins.push({
+        type: "country",
+        placeholder: "― select a country or region ―",
+        id: null,
+        options: window.all_geographical_countries,
+        key: this.key++
+      });
+    },
+    addGroup: function() {
+      this.origins.push({
+        type: "group",
+        placeholder: "― select a group of countries ―",
+        id: null,
+        options: window.geographical_groups_except_erga_omnes,
+        key: this.key++
+      });
+    },
+    removeSubOrigin: function(index) {
+      this.origins.splice(index, 1);
+    }
   }
 });
 
