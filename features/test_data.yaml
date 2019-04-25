@@ -22,7 +22,8 @@ quota_condition_footnote:
   commodity_codes: "5209000000"
   exceptions: "5209110000"
   footnote: {type: "CD", id: "001"}
-  condition: {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
+  condition:
+  - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
 
 quota_additional_codes_only:
   <<: *default_data
@@ -46,6 +47,66 @@ quota_monetary_unit:
   monetary_unit: "EUROs"
   measurement_unit: ~
 
+106_customs_union:
+  <<: *default_data
+  commodity_codes: "1905908000"
+  measure_type: "106"
+
+110_suplemantary_unit:
+  <<: *default_data
+  commodity_codes: "1701910000"
+  measure_type: "110"
+  origin: {type: "country", name: "IR", exception: ~}
+  duty_expression: {expression: "Supplementary unit", unit: "NAR", qualifier: "Gross"}
+
+141_preferential_suspension:
+  <<: *default_data
+  commodity_codes: "2203000100"
+  measure_type: "141"
+  origin: {type: "country", name: "Ceuta", exception: ~}
+  duty_expression: {expression: "ad valorem", amount: "0.0", unit: ~, qualifier: ~}
+
+277_import_prohibition:
+  <<: *default_data
+  commodity_codes: "0406907300"
+  measure_type: "277"
+  duty_expression: ~
+  footnote: ~
+
+465_restriction_on_entry_free_circulation:
+  <<: *default_data
+  commodity_codes: "0104201000"
+  measure_type: "465"
+  duty_expression: ~
+  origin: {type: "country", name: "Lao", exception: ~}
+
+420_entry_free_circulation:
+  <<: *default_data
+  commodity_codes: "7207198010"
+  measure_type: "420"
+  duty_expression: ~
+  origin: {type: "group", name: "All third countries", exception: ~}
+  condition:
+  - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
+
+551_provisional_anti_dumping_duty:
+  <<: *default_data
+  commodity_codes: ~
+  measure_type: "465"
+  duty_expression: {expression: "Amount €", amount: "82.17", unit: "NAR", qualifier: "Gross"}
+  origin: {type: "country", name: "China", exception: ~}
+  additional_codes: "C480"
+
+103_third_country_duty_parent_leaf:
+  <<: *default_data
+  commodity_codes: "0601000000"
+  measure_type: "103"
+
+103_third_country_duty_child_leaf:
+  <<: *default_data
+  commodity_codes: "0601102000"
+  measure_type: "103"
+
 single_commodity_code: &generic
   <<: *default_data
   commodity_codes: "1902000000"
@@ -59,11 +120,11 @@ multiple_commodity_code:
   commodity_codes: "1905000000,2007000000,2008000000,2103200000,2103909000"
   measure_type: "103"
 
-  multiple_commodity_code_multiple_exceptions:
-    <<: *default_data
-    commodity_codes: "1905000000,2007000000,2008000000,2103200000,2103909000"
-    measure_type: "103"
-    exceptions: "1905000000,2007000000"
+multiple_commodity_code_multiple_exceptions:
+  <<: *default_data
+  commodity_codes: "1905000000,2007000000,2008000000,2103200000,2103909000"
+  measure_type: "103"
+  exceptions: "1905000000,2007000000"
 
 single_goods_exception:
   <<: *default_data
@@ -116,9 +177,13 @@ me12_additional_code:
 
 condition_with_certificate:
   <<: *generic
-  condition: {type: "B", certificate_type: "Certificate of authenticity", certificate: "004", action: "01", duty_expression: "01%", duty_amount: "12"}
+  condition:
+  - {type: "B", certificate_type: "Certificate of authenticity", certificate: "004", action: "01", duty_expression: "01%", duty_amount: "12"}
 
 condition_with_no_certificate:
   <<: *generic
   commodity_code: "2704001900"
-  condition: {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
+  condition:
+  - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
+  - {type: "Intended for processing", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "15"}
+  - {type: "B", certificate_type: "Certificate of authenticity", certificate: "004", action: "01", duty_expression: "01%", duty_amount: "12"}

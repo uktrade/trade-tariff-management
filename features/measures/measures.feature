@@ -29,7 +29,6 @@ Feature: As a Tariff Manager
       |multiple_goods_exception|
       |multiple_goods_single_exception|
 
-  @ME32 @manual
   Scenario Outline: Create measure with additional codes
     And I fill in the form for a "<scenario>"
     And I can review the measure
@@ -72,5 +71,30 @@ Feature: As a Tariff Manager
     When I check the description of an additional code
     Then the additional code description is displayed
 
+  Scenario Outline: Create measure of various measure types (Commodity codes only)
+    And I fill in the form for a "<scenario>"
+    And I can review the measure
+    And I can review the measure for commodity codes
+    And the summary lists the measures to be created
+    And I can submit the measure for cross check
+    Examples:
+      |scenario               |
+      |106_customs_union|
+      |110_suplemantary_unit|
+      |141_preferential_suspension|
+      |277_import_prohibition|
+      |465_restriction_on_entry_free_circulation|
+      |420_entry_free_circulation|
+#       420 Needs 3 conditions
+
+  Scenario Outline: Create measure of various measure types (Additional codes only)
+    And I fill in the form for a "<scenario>"
+    And I can review the measure
+    And I can review the measure for additional codes
+    And the summary lists the additional codes to be created
+    And I can submit the measure for cross check
+    Examples:
+      |scenario               |
+      |551_provisional_anti_dumping_duty|
 
 

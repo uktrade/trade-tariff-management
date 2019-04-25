@@ -165,7 +165,8 @@ class CreateQuotaPage < CreateQuotaPageElements
     end
   end
 
-  def add_conditions(condition)
+  def add_conditions(condition_array)
+    condition = condition_array.first
     select_condition_type condition['type']
     select_certificate_type condition['certificate_type'] unless condition['certificate_type'].nil?
     select_certificate condition['certificate'] unless condition['certificate'].nil?
