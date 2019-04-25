@@ -22,6 +22,7 @@ class CreateMeasurePage < CreateMeasurePageElements
     ME88_ERROR = "ME88: The level of the goods code, if present, cannot exceed the explosion level of the measure type.,{:goods_nomenclature_code=>\"\\w+\", :additional_code=>nil, :geographical_area_id=>\"\\w+\"}"
     ME12_ERROR = "ME12: If the additional code is specified then the additional code type must have a relationship with the measure type. { measure_sid=>\"\\w+\" },{:goods_nomenclature_code=>\"\\w+\", :additional_code=>\"\\w+\", :geographical_area_id=>\"\\w+\"}"
     ME1_ERROR = "ME1: The combination of measure type \\+ geographical area \\+ goods nomenclature item id \\+ additional code type \\+ additional code \\+ order number \\+ reduction indicator \\+ start date must be unique.,{:goods_nomenclature_code=>\"\\w+\", :additional_code=>nil, :geographical_area_id=>\"\\w+\"}"
+    ME32_ERROR = ""
 
     def continue
       continue_button.click
@@ -142,49 +143,84 @@ class CreateMeasurePage < CreateMeasurePageElements
     end
 
     # Conditions
-    def add_conditions(condition)
-      select_condition_type condition['type']
-      select_certificate_type condition['certificate_type'] unless condition['certificate_type'].nil?
-      select_certificate condition['certificate'] unless condition['certificate'].nil?
-      select_condition_action condition['action']
-      select_condition_duty_expression condition['duty_expression']
-      enter_condition_duty_amount condition['duty_amount']
+    def add_conditions(condition_array)
+      # condition = condition_array.first
+      # select_condition_type condition['type']
+      # select_certificate_type condition['certificate_type'] unless condition['certificate_type'].nil?
+      # select_certificate condition['certificate'] unless condition['certificate'].nil?
+      # select_condition_action condition['action']
+      # select_condition_duty_expression condition['duty_expression']
+      # enter_condition_duty_amount condition['duty_amount']
+
+      condition_array.each do |condition|
+        index = condition_array.find_index(condition)
+        select_condition_type condition['type'], index
+        select_certificate_type condition['certificate_type'], index unless condition['certificate_type'].nil?
+        select_certificate condition['certificate'], index unless condition['certificate'].nil?
+        select_condition_action condition['action'], index
+        select_condition_duty_expression condition['duty_expression'], index
+        enter_condition_duty_amount condition['duty_amount'], index
+        add_more_conditions
+      end
     end
 
-    def select_condition_type(condition_type)
-      within("#wrapper fieldset:nth-child(5) #measure-condition-0-condition") do
+    def select_condition_type(condition_type, index)
+      position = index
+      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-condition") do
+      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-condition") do
         select_dropdown_value(condition_type)
       end
     end
 
-    def select_certificate_type(certificate_type)
-      within("#wrapper fieldset:nth-child(5) #measure-condition-0-certificate-type") do
+    def select_certificate_type(certificate_type, index)
+      position = index
+      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-certificate-type") do
+      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-certificate-type") do
         select_dropdown_value(certificate_type)
       end
     end
 
-    def select_certificate(certificate)
-      within("#wrapper fieldset:nth-child(5) #measure-condition-0-certificate") do
+    def select_certificate(certificate, index)
+      position = index
+      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-certificate") do
+      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-certificate") do
         select_dropdown_value(certificate)
       end
     end
 
-    def select_condition_action(action)
-      within("#wrapper fieldset:nth-child(5) #measure-condition-0-action") do
+    def select_condition_action(action, index)
+      position = index
+      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-action") do
+      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-action") do
         select_dropdown_value(action)
       end
     end
 
-    def select_condition_duty_expression(duty_expression)
-      within("#wrapper fieldset:nth-child(5) #measure-condition-0-measure-condition-component-0-duty-expression") do
+    def select_condition_duty_expression(duty_expression, index)
+      position = index
+      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-measure-condition-component-0-duty-expression") do
+      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-measure-condition-component-0-duty-expression") do
         select_dropdown_value(duty_expression)
       end
+    end
+
+    # def enter_condition_duty_amount(duty)
+    #   conditions.duty_amount.set duty
+    # end
+
+    def enter_condition_duty_amount(duty, index)
+      position = index
+      find("#measure-condition-#{position}-measure-condition-component-0-amount").set duty
+    end
+
+    def add_more_conditions
+      add_another_condition.click
     end
 
     # Duty Expressions
     def add_duty_expression(duty)
       select_duty_expression duty['expression']
-      enter_duty_amount duty['amount']
+      enter_duty_amount duty['amount'] unless duty['amount'].nil?
       select_unit_of_measure duty['unit'] unless duty['unit'].nil?
       select_qualifier duty['qualifier'] unless duty['qualifier'].nil?
     end
@@ -209,10 +245,6 @@ class CreateMeasurePage < CreateMeasurePageElements
       within("#wrapper fieldset:nth-child(4) .measure-components #measure-component-0-measurement-unit-qualifier") do
         select_dropdown_value(qualifier)
       end
-    end
-
-    def enter_condition_duty_amount(duty)
-      conditions.duty_amount.set duty
     end
 
     def submit_measure_for_cross_check

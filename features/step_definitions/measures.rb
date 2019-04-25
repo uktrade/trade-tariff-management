@@ -138,6 +138,8 @@ Then(/^an "([^"]*)" error message is displayed$/) do |string|
       expect(error_message).to match(/#{CreateMeasurePage::ME12_ERROR}/)
     when 'ME1'
       expect(error_message).to match(/#{CreateMeasurePage::ME1_ERROR}/)
+    when 'ME32'
+      expect(error_message).to match(/#{CreateMeasurePage::ME32_ERROR}/)
   end
 end
 
@@ -204,6 +206,7 @@ end
 And(/^I can review the measure$/) do
   expect(@create_measure_page.measure_summary.workbasket_name.text).to eq(@workbasket)
   expect(@create_measure_page.measure_summary.regulation.text).to eq(format_regulation(@regulation))
+  expect(@create_measure_page.measure_summary.start_date.text).to eq(format_summary_date(@start_date))
   expect(@create_measure_page.measure_summary.type.text).to include(@measure_type)
   expect(@create_measure_page.measure_summary.origin.text).to include(@origin['name'])
   step 'the measure can be submitted for cross check'
@@ -224,7 +227,8 @@ end
 
 And(/^the measure to be created has a condition$/) do
   step 'the summary lists the measures to be created'
-  condition_match = "#{@condition['type']}. .#{@condition['certificate']} #{@condition['action']}"
+  expected_condition = @condition.first
+  condition_match = "#{expected_condition['type']}. .#{expected_condition['certificate']} #{expected_condition['action']}"
   expect(@create_measure_page.measures_to_be_created.conditions.map(&:text).pop).to match(/#{condition_match}/)
 end
 
@@ -247,7 +251,6 @@ And(/^I can review the measure for meursing codes$/) do
 end
 
 When(/^I fill in the form for a "([^"]*)"$/) do |scenario|
-
   test_data = CONFIG[scenario]
   @workbasket = random_workbasket_name
   @commodity_codes = test_data['commodity_codes']

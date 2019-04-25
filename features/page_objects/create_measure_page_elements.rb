@@ -27,6 +27,7 @@ class CreateMeasurePageElements < SitePrism::Page
   element :check_additional_code_link, ".js-workbasket-check-code-description", text: "Check an additional code description"
   element :check_additional_code_field, :xpath, '//div[@class="js-workbasket-check-code-container"]//input'
   element :check_additional_code_description, ".additional_code_preview_block"
+  element :add_another_condition, "a", text: "Add another condition"
 
   section :conditions, "#wrapper fieldset:nth-child(5)" do
     element :duty_amount, "#measure-condition-0-measure-condition-component-0-amount"

@@ -76,7 +76,8 @@ And(/^I can review the quota for footnotes$/) do
 end
 
 And(/^I can review the quota for conditions$/) do
-  expect(@create_quota_page.quota_summary.conditions.text).to include(format_conditions @condition)
+  expected_condition = @condition.first
+  expect(@create_quota_page.quota_summary.conditions.text).to include(format_conditions expected_condition)
 end
 
 And(/^I can review the quota for goods exceptions$/) do
