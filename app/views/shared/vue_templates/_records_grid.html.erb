@@ -15,10 +15,10 @@
           <a v-on:click.prevent="selectSorting(column)" v-if="column.sortable">
             {{column.title}}
 
-            <span v-if="column.field == sortBy">
+            <div class="sort-arrow" v-if="column.field == sortBy">
               <arrow-down v-if="sortDir === 'desc'"></arrow-down>
               <arrow-up v-if="sortDir === 'asc'"></arrow-up>
-            </span>
+            </div>
           </a>
 
           <span v-if="!column.sortable">{{column.title}}</span>
