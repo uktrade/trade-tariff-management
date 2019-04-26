@@ -20,8 +20,8 @@ table {
     max-width: 50px !important;
   }
   .measure_sid-column {
-    min-width: 70px !important;
-    max-width: 70px !important;
+    min-width: 60px !important;
+    max-width: 60px !important;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -43,8 +43,8 @@ table {
   }
   .additional_code_id-column,
   .additional_code-column {
-    min-width: 80px !important;
-    max-width: 80px !important;
+    min-width: 90px !important;
+    max-width: 90px !important;
   }
   .geographical_area-column {
     min-width: 90px !important;
@@ -114,8 +114,8 @@ table {
 
   .sid-column,
   .measure_sid-column {
-    min-width: 70px;
-    max-width: 70px;
+    min-width: 60px;
+    max-width: 60px;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -168,8 +168,8 @@ table {
 
   .additional_code_id-column,
   .additional_code-column {
-    min-width: 70px;
-    max-width: 70px;
+    min-width: 90px;
+    max-width: 90px;
   }
 
   .geographical_area-column {
@@ -260,6 +260,6 @@ table {
 .sort-arrow {
   float: right;
   position: absolute;
-  right: 0;
+  right: 5px;
   bottom: 7px;
 }
