@@ -235,13 +235,6 @@ table {
       cursor: pointer;
     }
 
-    .arrow-down,
-    .arrow-up {
-      position: absolute;
-      right: 4px;
-      top: 3px;
-    }
-
     a {
       color: $blue !important;
       position: relative;
@@ -262,4 +255,11 @@ table {
 
 .table-top {
   margin-bottom: 20px;
+}
+
+.sort-arrow {
+  float: right;
+  position: absolute;
+  right: 0;
+  bottom: 7px;
 }
