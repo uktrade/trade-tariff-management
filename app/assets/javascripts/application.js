@@ -14,3 +14,14 @@
 //= require ./components/utils
 //= require_tree .
 
+$(function () {
+  if (window.__pagination_metadata) {
+    if(window.__pagination_metadata.total_count) {
+      setTimeout(function () {
+        $(window).scrollTop($('.records-table-wrapper').offset().top);
+      }, 1000);
+    } else if ($('.loading-indicator').length > 0) {
+      $(window).scrollTop($('.search__results').offset().top);
+    }
+  }
+});
