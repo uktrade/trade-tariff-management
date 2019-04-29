@@ -16,10 +16,19 @@
 
 $(function () {
   if (window.__pagination_metadata) {
-    if(window.__pagination_metadata.total_count) {
-      setTimeout(function () {
-        $(window).scrollTop($('.records-table-wrapper').offset().top);
-      }, 1000);
+    if (window.__pagination_metadata.total_count) {
+      function startTimer() {
+        var timer = window.setTimeout(function () {
+          try {
+            $(window).scrollTop($('.records-table-wrapper').offset().top);
+            window.clearTimeout(timer);
+          } catch {
+            window.clearTimeout(timer);
+            startTimer();
+          }
+        }, 500);
+      };
+      startTimer();
     } else if ($('.loading-indicator').length > 0) {
       $(window).scrollTop($('.search__results').offset().top);
     }
