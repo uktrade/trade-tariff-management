@@ -18,6 +18,9 @@ header
     = render "workbaskets/create_quota/workflow_screens_parts/actions_allowed"
     = render "workbaskets/create_quota/workflow_screens_parts/workbasket_details"
 
+    - if workbasket.status == 'editing'
+      = controller.redirect_to edit_create_quotum_path
+
     - if iam_workbasket_author? && workbasket_rejected?
       = link_to "Edit quota", '#',
               data: {target_url: move_to_editing_mode_create_quotum_url(workbasket.id)},
