@@ -54,7 +54,7 @@
         </form-group>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-2" v-if="roomCertificateType">
-        <form-group v-if="showCertificateType">
+        <form-group v-if="showCertificateType && condition.certificate_type">
           <label class="form-label" v-if="index == 0">
             Certificate type(s)
           </label>
@@ -68,7 +68,7 @@
         </form-group>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-1" v-if="roomCertificate">
-        <form-group v-if="showCertificate">
+        <form-group v-if="showCertificate && condition.certificate">
           <label class="form-label" v-if="index == 0">
             Certificate
           </label>
