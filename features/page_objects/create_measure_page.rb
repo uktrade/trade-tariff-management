@@ -144,14 +144,6 @@ class CreateMeasurePage < CreateMeasurePageElements
 
     # Conditions
     def add_conditions(condition_array)
-      # condition = condition_array.first
-      # select_condition_type condition['type']
-      # select_certificate_type condition['certificate_type'] unless condition['certificate_type'].nil?
-      # select_certificate condition['certificate'] unless condition['certificate'].nil?
-      # select_condition_action condition['action']
-      # select_condition_duty_expression condition['duty_expression']
-      # enter_condition_duty_amount condition['duty_amount']
-
       condition_array.each do |condition|
         index = condition_array.find_index(condition)
         select_condition_type condition['type'], index
@@ -167,7 +159,6 @@ class CreateMeasurePage < CreateMeasurePageElements
     def select_condition_type(condition_type, index)
       position = index
       within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-condition") do
-      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-condition") do
         select_dropdown_value(condition_type)
       end
     end
@@ -175,7 +166,6 @@ class CreateMeasurePage < CreateMeasurePageElements
     def select_certificate_type(certificate_type, index)
       position = index
       within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-certificate-type") do
-      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-certificate-type") do
         select_dropdown_value(certificate_type)
       end
     end
@@ -183,7 +173,6 @@ class CreateMeasurePage < CreateMeasurePageElements
     def select_certificate(certificate, index)
       position = index
       within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-certificate") do
-      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-certificate") do
         select_dropdown_value(certificate)
       end
     end
@@ -191,7 +180,6 @@ class CreateMeasurePage < CreateMeasurePageElements
     def select_condition_action(action, index)
       position = index
       within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-action") do
-      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-action") do
         select_dropdown_value(action)
       end
     end
@@ -199,14 +187,9 @@ class CreateMeasurePage < CreateMeasurePageElements
     def select_condition_duty_expression(duty_expression, index)
       position = index
       within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-measure-condition-component-0-duty-expression") do
-      # within("#wrapper fieldset:nth-child(5) #measure-condition-0-measure-condition-component-0-duty-expression") do
         select_dropdown_value(duty_expression)
       end
     end
-
-    # def enter_condition_duty_amount(duty)
-    #   conditions.duty_amount.set duty
-    # end
 
     def enter_condition_duty_amount(duty, index)
       position = index
