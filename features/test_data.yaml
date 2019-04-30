@@ -151,14 +151,14 @@ single_additional_code:
   commodity_codes: "8714913035"
   regulation: "R1801960"
   measure_type: "553"
-  additional_codes: "8835"
+  additional_codes: "B987"
 
 multiple_additional_code:
   <<: *default_data
   commodity_codes: "6302210081"
   regulation: "R1801960"
   measure_type: "562"
-  additional_codes: "8042,8044,8046,8047,8092,8900"
+  additional_codes: "B972,B973,B974,B975,B976,B977"
   origin: {type: "country", name: "Albania", exception: ~}
 
 meursing_code:
@@ -185,5 +185,4 @@ condition_with_no_certificate:
   commodity_code: "2704001900"
   condition:
   - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
-  - {type: "Intended for processing", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "15"}
-  - {type: "B", certificate_type: "Certificate of authenticity", certificate: "004", action: "01", duty_expression: "01%", duty_amount: "12"}
+
