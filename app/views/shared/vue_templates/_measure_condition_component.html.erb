@@ -6,7 +6,7 @@
           Duty expression
         </label>
 
-        <custom-select url="/duty_expressions" label-field="description" value-field="duty_expression_id" code-field="duty_expression_code" v-model="measureConditionComponent.duty_expression_id" placeholder="―" code-class-name="prefix--duty-expression" abbreviation-class-name="abbreviation--duty-expression" :options-filter="expressionsFriendlyDuplicate" :on-change="onDutyExpressionSelected" :compact="true" :showCompactAbbreviation="true" :id="prefix + 'duty-expression'"></custom-select>
+        <custom-select url="/duty_expressions" label-field="description" value-field="duty_expression_id" code-field="duty_expression_code" v-model="measureConditionComponent.duty_expression_id" placeholder="―" code-class-name="prefix--duty-expression" abbreviation-class-name="abbreviation--duty-expression" :options-filter="expressionsFriendlyDuplicate" :on-change="onDutyExpressionSelected" :compact="true" :showCompactAbbreviation="true" :disabled="disabled" :id="prefix + 'duty-expression'"></custom-select>
       </form-group>
     </div>
 
@@ -30,7 +30,7 @@
         <label class="form-label" v-if="index == 0">
           Monetary unit
         </label>
-        <custom-select url="/monetary_units" label-field="description" value-field="monetary_unit_code" code-field="monetary_unit_code" v-model="measureConditionComponent.monetary_unit_code" placeholder="―" date-sensitive="true" code-class-name="prefix--monetary-unit" :on-change="onMonetaryUnitSelected" :compact="true" :id="prefix + 'monetary-unit'"></custom-select>
+        <custom-select url="/monetary_units" label-field="description" value-field="monetary_unit_code" code-field="monetary_unit_code" v-model="measureConditionComponent.monetary_unit_code" placeholder="―" date-sensitive="true" code-class-name="prefix--monetary-unit" :on-change="onMonetaryUnitSelected" :compact="true" :disabled="disabled" :id="prefix + 'monetary-unit'"></custom-select>
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index == 0">
