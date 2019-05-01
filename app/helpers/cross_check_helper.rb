@@ -13,7 +13,7 @@ module CrossCheckHelper
     elsif workbasket.type == 'create_quota'
       "workbaskets/shared/steps/review_and_submit/quotas"
     elsif workbasket.type == 'bulk_edit_of_measures'
-      "workbaskets/shared/steps/review_and_submit/measures"
+      "workbaskets/shared/steps/review_and_submit/bulk_edit_measures"
     end
   end
 

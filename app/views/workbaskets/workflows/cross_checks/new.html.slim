@@ -17,16 +17,5 @@ header
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/block", screen_type: :cross_check
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/workbasket_details"
 
-    - if workbasket.is_bulk_edit?
-      .review-bulk-edit-measures.submitted-for-cross-check-view
-        review-bulk-edit-records workbasket_id="#{workbasket.id}" primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
-      = render "shared/vue_templates/review_bulk_edit_records.html.erb"
-
-      script
-        == "window.__workbasket_id = #{workbasket.id};"
-        == "window.__pagination_metadata = {page: 1, total_count: 1, per_page: 1000};"
-        == "window.all_settings = #{workbasket_settings.settings.to_json};"
-        == "window.current_step_settings = {};"
-
-
+    = render table_partial(workbasket), read_only: true, record_type: workbasket.type
     = render "workbaskets/workflows/cross_checks/form"
