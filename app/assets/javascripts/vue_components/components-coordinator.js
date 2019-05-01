@@ -1,7 +1,7 @@
 var template = [
   '<div>',
     '<div :class="classes" v-for="(component, idx) in components">',
-      '<measure-condition-component :id="\'measure-condition-\' + index + \'-measure-condition-component-\' + idx" v-if="isMeasureConditionComponent" :measure-condition-component="component" :prefix="(prefix ? prefix + \'-\' : \'\') + \'measure-condition-\' + index + \'-measure-condition-component-\' + idx + \'-\'" :index="Math.max(idx,index)" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit" :room-monetary-unit="showMonetaryUnit">',
+      '<measure-condition-component :id="\'measure-condition-\' + index + \'-measure-condition-component-\' + idx" v-if="isMeasureConditionComponent" :disabled="isDisabled" :measure-condition-component="component" :prefix="(prefix ? prefix + \'-\' : \'\') + \'measure-condition-\' + index + \'-measure-condition-component-\' + idx + \'-\'" :index="Math.max(idx,index)" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit" :room-monetary-unit="showMonetaryUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
@@ -11,7 +11,7 @@ var template = [
           '</div>',
         '</div>',
       '</measure-condition-component>',
-      '<measure-component :id="(prefix ? prefix + \'-\' : \'\') + \'measure-component-\' + idx" :prefix="(prefix ? prefix + \'-\' : \'\') + \'measure-component-\' + idx" v-if="isMeasureComponent" :measure-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit">',
+      '<measure-component :id="(prefix ? prefix + \'-\' : \'\') + \'measure-component-\' + idx" :prefix="(prefix ? prefix + \'-\' : \'\') + \'measure-component-\' + idx" v-if="isMeasureComponent" :disabled="isDisabled" :measure-component="component" :index="Math.max(idx,index)" :room-monetary-unit="showMonetaryUnit" :room-duty-amount="showDutyAmount" :room-measurement-unit="showMeasurementUnit">',
         '<div class="col-md-1 align-bottom" v-if="canRemoveComponent">',
           '<div class="form-group">',
             '<label for="" class="form-label" v-if="index == 0 && idx == 0">&nbsp;</label>',
@@ -31,6 +31,7 @@ Vue.component("components-coordinator", {
   template: template,
   props: [
     "components",
+    "conditions",
     "type",
     "classes",
     "index",
@@ -62,6 +63,17 @@ Vue.component("components-coordinator", {
     }
   },
   computed: {
+    isDisabled: function() {
+      if (this.conditions === undefined) {
+        return;
+      }
+      console.log('here')
+      console.log(this)
+      var expressions_ids = this.conditions[0].measure_condition_components.map(function(component) {
+        return component.duty_expression_id == undefined
+      })
+      return expressions_ids.includes(false);
+    },
     canRemoveComponent: function() {
       return this.components.length > 1;
     },
