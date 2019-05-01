@@ -178,12 +178,14 @@ Vue.component("change-conditions-popup", {
             if (!condition.condition_code) {
               return;
             }
-
+            
             condition.original_measure_condition_code = condition.condition_code.slice(0);
             condition.condition_code = condition.condition_code.substring(0, 1);
 
             condition.measure_condition_components.forEach(function(mcc) {
-              mcc.original_duty_expression_id = mcc.duty_expression_id.slice(0);
+              if (mcc.original_duty_expression_id) {
+                mcc.original_duty_expression_id = mcc.duty_expression_id.slice(0);
+              }
               mcc.duty_expression_id = mcc.duty_expression_id.substring(0,2);
               mcc.duty_expression.duty_expression_id = mcc.duty_expression.duty_expression_id.substring(0,2);
             });
