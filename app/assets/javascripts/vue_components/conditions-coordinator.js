@@ -20,7 +20,7 @@ var template = [
 
 Vue.component("conditions-coordinator", {
   template: template,
-  props: ["conditions", "hideHelp"],
+  props: ["conditions", "hideHelp", "components"],
   data: function() {
     return {
 

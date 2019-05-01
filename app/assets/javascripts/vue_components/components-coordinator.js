@@ -67,8 +67,6 @@ Vue.component("components-coordinator", {
       if (this.conditions === undefined) {
         return;
       }
-      console.log('here')
-      console.log(this)
       var expressions_ids = this.conditions[0].measure_condition_components.map(function(component) {
         return component.duty_expression_id == undefined
       })

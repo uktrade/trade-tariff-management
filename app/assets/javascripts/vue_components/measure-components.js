@@ -64,7 +64,8 @@ Vue.component("measure-component", $.extend({}, {
     "roomDutyAmount",
     "roomMonetaryUnit",
     "roomMeasurementUnit",
-    "prefix"
+    "prefix",
+    "disabled"
   ],
   data: function() {
     return {
@@ -99,7 +100,8 @@ Vue.component("measure-condition-component", $.extend({}, {
     "roomDutyAmount",
     "roomMonetaryUnit",
     "roomMeasurementUnit",
-    "prefix"
+    "prefix",
+    "disabled"
   ],
   data: function() {
     return {

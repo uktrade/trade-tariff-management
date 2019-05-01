@@ -1,4 +1,4 @@
 script type="text/x-template" id="selectize-template"
   div
     slot
-      select v-model="value" :name="name" :class="{ allowClear: allowClear }"
+      select v-model="value" :name="name" :class="{ allowClear: allowClear }" :disabled="disabled"
