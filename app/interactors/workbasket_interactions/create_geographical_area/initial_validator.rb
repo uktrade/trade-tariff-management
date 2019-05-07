@@ -41,7 +41,6 @@ module WorkbasketInteractions
         check_area_id!
         check_description!
         check_validity_period!
-        check_operation_date!
 
         errors
       end
@@ -112,13 +111,6 @@ module WorkbasketInteractions
 
           @errors[:validity_end_date] = errors_translator(:validity_end_date_earlier_than_start_date)
           @errors_summary = errors_translator(:summary_invalid_fields)
-        end
-      end
-
-      def check_operation_date!
-        if operation_date.blank?
-          @errors[:operation_date] = errors_translator(:operation_date_blank)
-          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
       end
 
