@@ -12,15 +12,92 @@ defaults: &default_data
   opening_balance: "1000000.0"
   maximum_precision: "2"
   critical: "No"
-  licensed: "No"
+  licensed: {yes_no: "No", type: ~}
   criticality_threshold: "90"
+
+annual_quota_without_licence:
+  <<: *default_data
+  maximum_precision: "1"
+  quota_type: "122"
+  quota_period: "Annual"
+  commodity_codes: "6808000000"
+  measurement_unit: "CCT"
+  opening_balance: "2000.0"
+  duty_expression: {expression: "% (ad valorem)", amount: "0", unit: ~, qualifier: ~}
+
+annual_quota_with_licence:
+  <<: *default_data
+  maximum_precision: "1"
+  quota_type: "122"
+  quota_period: "Annual"
+  commodity_codes: "6808000000"
+  measurement_unit: "ASV"
+  opening_balance: "5000.0"
+  duty_expression: {expression: "% (ad valorem)", amount: "0", unit: ~, qualifier: ~}
+  licensed: {yes_no: "Yes", type: "001"}
+
+annual_quota_with_multiple_commodity_codes_and_licence:
+  <<: *default_data
+  maximum_precision: "2"
+  quota_type: "122"
+  quota_period: "Annual"
+  commodity_codes: "4903000000,5209000000,6808000000"
+  measurement_unit: "ASV"
+  opening_balance: "4000.0"
+  duty_expression: {expression: "% (ad valorem)", amount: "0", unit: ~, qualifier: ~}
+  licensed: {yes_no: "Yes", type: "001"}
+
+biannual_quota_with_licence:
+  <<: *default_data
+  maximum_precision: "3"
+  quota_type: "122"
+  quota_period: "Bi-annual"
+  commodity_codes: "4903000000"
+  measurement_unit: "CEN"
+  opening_balance: "5000.0"
+  duty_expression: {expression: "% (ad valorem)", amount: "0", unit: ~, qualifier: ~}
+  licensed: {yes_no: "Yes", type: "001"}
+
+quarterly_quota_with_good_exception_no_licence:
+  <<: *default_data
+  maximum_precision: "3"
+  quota_type: "122"
+  quota_period: "Quarterly"
+  commodity_codes: "4903000000,6808000000"
+  measurement_unit: "CEN"
+  opening_balance: "3000.0"
+  duty_expression: {expression: "% (ad valorem)", amount: "0", unit: ~, qualifier: ~}
+  exceptions: "4903000000"
+
+monthly_quota_with_multiple_commodity_codes:
+  <<: *default_data
+  maximum_precision: "2"
+  quota_type: "122"
+  quota_period: "Monthly"
+  commodity_codes: "5209000000,4903000000,6808000000"
+  measurement_unit: "ASV"
+  opening_balance: "7000.0"
+  duty_expression: {expression: "% (ad valorem)", amount: "0", unit: ~, qualifier: ~}
+
+custom_quota_with_condition_and_footnote:
+  <<: *default_data
+  maximum_precision: "2"
+  quota_type: "122"
+  quota_period: "Custom"
+  commodity_codes: "5209000000"
+  measurement_unit: "ASV"
+  opening_balance: "7000.0"
+  duty_expression: {expression: "% (ad valorem)", amount: "0", unit: ~, qualifier: ~}
+  footnote: {type: "CD", id: "001"}
+  condition:
+  - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
 
 quota_condition_footnote:
   <<: *default_data
   quota_type: "122"
   quota_period: "Annual"
   commodity_codes: "5209000000"
-  exceptions: "5209110000"
+  exceptions: ~
   footnote: {type: "CD", id: "001"}
   condition:
   - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}

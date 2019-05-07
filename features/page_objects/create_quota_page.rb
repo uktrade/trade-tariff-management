@@ -48,9 +48,8 @@ class CreateQuotaPage < CreateQuotaPageElements
   end
 
   def select_quota_licence(licence)
-    check_licensed_quota
     within(".workbasket_forms_create_quota_form_quota_licence") do
-      select_dropdown_value(licence)
+      select_dropdown_value(licence['type'])
     end
   end
 
@@ -118,27 +117,53 @@ class CreateQuotaPage < CreateQuotaPageElements
     end
   end
 
+  def select_custom_period_measurement_unit(unit)
+    within(".custom-period .col-md-3:nth-of-type(1)") do
+      select_dropdown_value(unit)
+    end
+  end
+
+  def select_measurement_qualifier(qualifier)
+    within("") do
+      select_dropdown_value(qualifier)
+    end
+  end
+
   def select_monetary_unit(unit)
     within("#monetary-unit-code") do
       select_dropdown(unit)
-      # select_dropdown_value(unit)
     end
   end
-  #
-  # def select_monetary_unit(unit)
-  #   within("#monetary-unit-code") do
-  #     select_dropdown_value(unit)
-  #   end
-  # end
 
-  def enter_opening_balance(balance)
-    quota_section.opening_balance.set balance
+  def enter_annual_opening_balance(balance)
+    quota_section.annual_opening_balance.set balance
+  end
+
+  def enter_periods_opening_balances(balance)
+    balance_fields = find_all(".opening-balances > div > .form-group:nth-of-type(1) .row input:nth-of-type(1)")
+    balance_fields.each {|balance_field| balance_field.set balance}
+  end
+
+  def enter_start_date_year(year)
+    section_start_date_year.set year
+  end
+
+  def enter_custom_period_start_date
+    date_fields = find_all(".quota-section .custom-period input.date-picker")
+    date_fields.first.set format_date(Date.today)
+    date_fields.last.set format_date(random_future_date)
   end
 
   # Duty Expressions
-  def add_duty_expression(duty)
-    select_duty_expression duty['expression']
-    enter_duty_amount duty['amount']
+  def add_duty_expression(duty, quota_period)
+    case quota_period
+      when 'Custom'
+        select_custom_period_duty_expression duty['expression']
+        enter_custom_period_duty_amount duty['amount']
+      else
+        select_duty_expression duty['expression']
+        enter_duty_amount duty['amount']
+    end
     select_unit_of_measure duty['unit'] unless duty['unit'].nil?
     select_qualifier duty['qualifier'] unless duty['qualifier'].nil?
   end
@@ -147,10 +172,20 @@ class CreateQuotaPage < CreateQuotaPageElements
     within("#quota-section-0-measure-component-0-duty-expression") do
       select_dropdown_value(duty_expression)
     end
+    end
+
+  def select_custom_period_duty_expression(duty_expression)
+    within("#quota-section-0-period-0-measure-component-0-duty-expression") do
+      select_dropdown_value(duty_expression)
+    end
   end
 
   def enter_duty_amount(amount)
     quota_section.duty_amount.set amount
+    end
+
+  def enter_custom_period_duty_amount(amount)
+    quota_section.custom_period_duty_amount.set amount
   end
 
   def select_unit_of_measure(unit)

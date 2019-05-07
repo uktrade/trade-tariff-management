@@ -4,7 +4,6 @@ class CreateQuotaPageElements < SitePrism::Page
   elements :regulations_options, ".selectize-dropdown-content .option"
   element :quota_order_number, "input[name='quota_order_number']"
   element :quota_description, "#quota_description"
-  element :operation_date, "#operation_date"
   element :commodity_code, "#commodity_codes"
   element :exceptions, "#exceptions"
   element :additional_codes, "#additional_codes"
@@ -13,7 +12,6 @@ class CreateQuotaPageElements < SitePrism::Page
   element :country_groups_radio_button, ".origins-region #measure-origin-group"
   element :country_region_radio_button, ".origins-region #measure-origin-country"
   element :licenced_quota_check_box, "#toggle-type"
-  # element :licenced_quota_dropdown, ".workbasket_forms_create_quota_form_quota_licence"
   element :footnote_text_field, "#footnote-0-footnote"
   element :footnote_text_suggestion, "#footnote-0-suggestion-0-use-button"
   element :add_footnote_link, ""
@@ -29,15 +27,18 @@ class CreateQuotaPageElements < SitePrism::Page
   element :check_additional_code_field, :xpath, '//div[@class="js-workbasket-check-code-container"]//input'
   element :check_additional_code_description, ".additional_code_preview_block"
 
+  element :section_start_date_year, "#quota-period-year"
+
   section :quota_section, ".quota-section" do
     element :start_date, "#annual_start_date"
     element :section_staged_checkbox, "#period-0-staged"
     element :different_criticality_checkbox, ""
     element :different_duty_checkbox, "#period-0-duties_each_period"
-    element :opening_balance, "#annual-opening-balance"
+    element :annual_opening_balance, "#annual-opening-balance"
     element :start_quota_critical_checkbox, "#single-balance-critical"
     element :quota_criticality_threshold, ""
     element :duty_amount, "#quota-section-0-measure-component-0-amount"
+    element :custom_period_duty_amount, "#quota-section-0-period-0-measure-component-0-amount"
   end
 
   section :conditions, "#wrapper fieldset:nth-child(4)" do

@@ -37,6 +37,8 @@ When(/^I fill in the quota form for a "([^"]*)"$/) do |scenario|
   @create_quota_page.enter_quota_order_number @quota_order_number
   @create_quota_page.select_maximum_precision @maximum_precision
   @create_quota_page.select_quota_type @quota_type
+  @create_quota_page.check_licensed_quota unless @licensed['yes_no'] == 'No'
+  @create_quota_page.select_quota_licence(@licensed) unless @licensed['yes_no'] == 'No'
   @create_quota_page.enter_quota_description @workbasket
   @create_quota_page.enter_commodity_codes @commodity_codes unless @commodity_codes.nil?
   @create_quota_page.enter_exceptions @exceptions unless @exceptions.nil?
@@ -45,12 +47,31 @@ When(/^I fill in the quota form for a "([^"]*)"$/) do |scenario|
   @create_quota_page.continue
 
   @create_quota_page.select_quota_period_type @quota_period
-  @create_quota_page.enter_section_start_date @start_date
-  @create_quota_page.select_section_duration @section_duration
-  @create_quota_page.select_measurement_unit @measurement_unit unless @measurement_unit.nil?
+
+  # Quota period start date
+  case @quota_period
+    when 'Annual'
+      @create_quota_page.enter_section_start_date @start_date
+    when 'Custom'
+      @create_quota_page.enter_custom_period_start_date
+    else
+      @create_quota_page.enter_start_date_year current_year
+  end
+
+  @create_quota_page.select_section_duration @section_duration unless @quota_period == "Custom"
+  @create_quota_page.select_measurement_unit @measurement_unit unless @measurement_unit.nil? or @quota_period == "Custom"
+  @create_quota_page.select_custom_period_measurement_unit @measurement_unit if @quota_period == "Custom"
   @create_quota_page.select_monetary_unit @monetary_unit unless @monetary_unit.nil?
-  @create_quota_page.enter_opening_balance @opening_balance
-  @create_quota_page.add_duty_expression @duty_expression unless @duty_expression.nil?
+
+  # Opening balance
+  case @quota_period
+    when 'Annual'
+      @create_quota_page.enter_annual_opening_balance @opening_balance
+    else
+      @create_quota_page.enter_periods_opening_balances @opening_balance
+  end
+
+  @create_quota_page.add_duty_expression @duty_expression,@quota_period  unless @duty_expression.nil?
   @create_quota_page.continue
 
   @create_quota_page.add_conditions @condition unless @condition.nil?
@@ -62,7 +83,7 @@ And(/^I can review the quota$/) do
   expect(@create_quota_page.quota_summary.order_number.text).to eq(@quota_order_number)
   expect(@create_quota_page.quota_summary.maximum_precision.text).to eq(@maximum_precision)
   expect(@create_quota_page.quota_summary.type.text).to include(@quota_type)
-  expect(@create_quota_page.quota_summary.licensed.text).to eq(@licensed)
+  expect(@create_quota_page.quota_summary.licensed.text).to eq(@licensed['yes_no'])
   expect(@create_quota_page.quota_summary.regulation.text).to eq(format_regulation(@regulation))
   expect(@create_quota_page.quota_summary.origin.text).to include(@origin['name'])
 end
@@ -103,14 +124,27 @@ And (/^I can submit the quota for cross check$/) do
 end
 
 And(/^the quota summary lists the quota periods to be created$/) do
-  expect(@create_quota_page.quotas_to_be_created.start_date.map(&:text)).to eq(to_array(format_item_date(@start_date)))
-  expect(@create_quota_page.quotas_to_be_created.opening_balance.map(&:text)).to eq(to_array(@opening_balance))
-  expect(@create_quota_page.quotas_to_be_created.criticality_threshold.map(&:text)).to eq(to_array(@criticality_threshold))
-  expect(@create_quota_page.quotas_to_be_created.critical.map(&:text)).to eq(to_array(@critical))
+  case @quota_period
+    when 'Annual'
+      expect(@create_quota_page.quotas_to_be_created.start_date.size).to eq 1
+      expect(@create_quota_page.quotas_to_be_created.start_date.map(&:text)).to eq(to_array(format_item_date(@start_date)))
+      expect(@create_quota_page.quotas_to_be_created.opening_balance.map(&:text)).to eq(to_array(@opening_balance))
+      expect(@create_quota_page.quotas_to_be_created.criticality_threshold.map(&:text)).to eq(to_array(@criticality_threshold))
+      expect(@create_quota_page.quotas_to_be_created.critical.map(&:text)).to eq(to_array(@critical))
+    else
+      expect(@create_quota_page.quotas_to_be_created.start_date.size).to eq periods(@quota_period)
+  end
 end
 
 And(/^the quota summary lists the measures to be created$/) do
-  expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).to eq(to_array(@commodity_codes))
+  case @quota_period
+    when 'Annual'
+      expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).to eq(to_array(@commodity_codes))
+    else
+      expected_number_of_measures = periods(@quota_period) * number_of_codes(@commodity_codes) if @exceptions.nil?
+      expected_number_of_measures = (periods(@quota_period) * number_of_codes(@commodity_codes)) - (periods(@quota_period) * number_of_codes(@exceptions)) unless @exceptions.nil?
+      expect(@create_quota_page.measures_to_be_created.commodity_codes.size).to eq expected_number_of_measures
+  end
 end
 
 And(/^the quota summary lists the additional codes for measures to be created$/) do
