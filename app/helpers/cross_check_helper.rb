@@ -4,6 +4,8 @@ module CrossCheckHelper
       'Cross-check and create measures'
     elsif workbasket.type == 'create_quota'
       'Cross-check and create quota'
+    elsif workbasket.type == 'create_geographical_area'
+      'Cross-check and create geographical area'
     end
   end
 
@@ -14,6 +16,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/quotas"
     elsif workbasket.type == 'bulk_edit_of_measures'
       "workbaskets/shared/steps/review_and_submit/bulk_edit_measures"
+    elsif workbasket.type == 'create_geographical_area'
+      "workbaskets/shared/steps/review_and_submit/geographical_areas"
     end
   end
 

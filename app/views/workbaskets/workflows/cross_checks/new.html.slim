@@ -12,7 +12,6 @@
 header
   h1.heading-large
     = cross_check_title(workbasket)
-
   .view-workbasket-container
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/block", screen_type: :cross_check
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/workbasket_details"
