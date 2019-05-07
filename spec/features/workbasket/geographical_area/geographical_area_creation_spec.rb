@@ -11,7 +11,6 @@ RSpec.describe "adding geographical areas", :js do
     fill_in("What code will identify this area?", with: "EU27")
     fill_in("What is the area description?", with: "A description")
     input_date("When is the area valid from?", 3.days.from_now)
-    input_date("Specify the operation date", 3.days.from_now)
 
     click_on "Submit for cross-check"
 
@@ -31,7 +30,6 @@ RSpec.describe "adding geographical areas", :js do
     fill_in("What code will identify this area?", with: "GE")
     fill_in("What is the area description?", with: "A description")
     input_date("When is the area valid from?", 3.days.from_now)
-    input_date("Specify the operation date", 3.days.from_now)
 
     click_on("Add memberships")
 
