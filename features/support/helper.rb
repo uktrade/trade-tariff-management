@@ -14,13 +14,26 @@ module Helper
   end
 
   def random_future_date
-    number = rand(1..365)
+    number = rand(2..365)
     number.days.from_now
   end
 
   def random_past_date
-    number = rand(1..365)
+    number = rand(2..365)
     number.days.ago
+  end
+
+  def periods(key)
+    periods = {"Annual" => 1, "Bi-annual" => 2, "Quarterly" => 4, "Monthly" => 12, "Custom" => 1}
+    periods[key]
+  end
+
+  def number_of_codes(commodity_codes)
+    to_array(commodity_codes).size
+  end
+
+  def current_year
+    Date.today.year
   end
 
   def random_workbasket_name
