@@ -3,13 +3,13 @@
     | Geographical area approval rejected
 
   h3.heading-medium
-    | You indicated that the new
-    =<> geographical_area.decorate.type
+    | A new
+    =<> workbasket.settings.main_step_settings['geographical_code']
     | with code
-    =<> "'#{geographical_area.geographical_area_id}'"
+    =<> "'#{workbasket.settings.main_step_settings['geographical_area_id'].upcase}'"
     | and description
     br
-    =<> "'#{geographical_area.description}'"
+    =<> "'#{workbasket.settings.main_step_settings['description'].capitalize}'"
     | has problems. It has not been approved. The submitter has been notified.
 
 = render "workbaskets/create_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
