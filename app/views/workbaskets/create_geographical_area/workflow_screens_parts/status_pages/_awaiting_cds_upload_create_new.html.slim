@@ -4,12 +4,12 @@
 
   h3.heading-medium
     | A new
-    =<> geographical_area.decorate.type
+    =<> workbasket.settings.main_step_settings['geographical_code']
     | with code
-    =<> "'#{geographical_area.geographical_area_id}'"
+    =<> "'#{workbasket.settings.main_step_settings['geographical_area_id'].upcase}'"
     | and description
     br
-    =<> "'#{geographical_area.description}'"
+    =<> "'#{workbasket.settings.main_step_settings['description'].capitalize}'"
     | has been approved. It has been scheduled for export CDS
     =< "in the next batch."
 
