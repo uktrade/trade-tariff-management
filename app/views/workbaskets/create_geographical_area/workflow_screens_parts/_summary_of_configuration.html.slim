@@ -1,0 +1,33 @@
+h3.heading-medium Summary of measures configuration
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Name
+      td
+        = workbasket.settings.main_step_settings['description'].capitalize
+
+    tr
+      td.heading_column
+        | Start date
+      td
+        = workbasket.settings.main_step_settings['validity_start_date']
+
+    tr
+      td.heading_column
+        | End date
+      td
+        = workbasket.settings.main_step_settings['validity_end_date']
+
+    tr
+      td.heading_column
+        | Code
+      td
+        = workbasket.settings.main_step_settings['geographical_area_id'].upcase
+
+    tr
+      td.heading_column
+        | Area Type
+      td
+        = workbasket.settings.main_step_settings['geographical_code'].capitalize
