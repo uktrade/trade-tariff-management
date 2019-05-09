@@ -1,0 +1,41 @@
+.records-table-wrapper
+  .records-table
+    .table__header
+      .table__column.additional_code_type-column
+        a Commodity code
+
+      .table__column.additional_code-column
+        a Additional code
+
+      .table__column.description-column
+        a Description
+
+      .table__column.validity_start_date-column
+        a Start date
+
+      .table__column.validity_end_date-column
+        a End date
+
+
+    .virtual-scroller
+      .item-container
+        .items style=("margin-top: 0px;")
+
+          - workbasket_settings.additional_codes.map do |item|
+            .table__row data-measure-sid="-485562" height="45"
+
+              .table__column.additional_code_type-column
+                = item.additional_code_type_id
+
+              .table__column.additional_code-column
+                = item.additional_code
+
+              .table__column.description-column
+                / = item.goods_nomenclature_item_id
+                = item.description
+
+              .table__column.validity_start_date-column
+                = item.validity_start_date.strftime("%Y-%m-%d")
+
+              .table__column.validity_end_date-column
+                = item.validity_end_date.try(:strftime, "%Y-%m-%d")
