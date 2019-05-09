@@ -1,0 +1,11 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Additional codes approved
+
+  h3.heading-medium
+    => pluralize(workbasket_settings.additional_codes.count, "additional code", "additional codes")
+    | in the workbasket
+    =<> "'#{workbasket.title}'"
+    | has/have been approved and scheduled for export to CDS.
+
+= render "workbaskets/create_additional_code/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

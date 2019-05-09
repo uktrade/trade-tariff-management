@@ -1,0 +1,13 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Additional Codes cross-check rejected
+
+  h3.heading-medium
+    | You indicated that the Additional Codes in workbasket
+    =<> "'#{workbasket.title}'"
+    | have problems.
+    br
+
+    | The author has been notified.
+
+= render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "cross_check"
