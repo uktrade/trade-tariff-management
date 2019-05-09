@@ -22,8 +22,7 @@ Vue.component('custom-select', {
     "disabled",
     "compact",
     "showCompactAbbreviation",
-    "scopeDate",
-    "disabled"
+    "scopeDate"
   ],
   data: function() {
     return {

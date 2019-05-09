@@ -60,6 +60,9 @@ Vue.component("components-coordinator", {
         measurement_unit_code: null,
         measurement_unit_qualifier_code: null
       });
+    },
+    flattenArray: function(arrays) {
+      return [].concat.apply([], arrays)
     }
   },
   computed: {
@@ -67,10 +70,12 @@ Vue.component("components-coordinator", {
       if (this.conditions === undefined) {
         return;
       }
-      var expressions_ids = this.conditions[0].measure_condition_components.map(function(component) {
-        return component.duty_expression_id == undefined
+      var conditions_allow_duty = this.conditions.map(function(condition) {
+        return condition.measure_condition_components.map(function (component) {
+          return (component.duty_expression_id == undefined || component.duty_expression_id == "")
+        })
       })
-      return expressions_ids.includes(false);
+      return this.flatten_array(conditions_allow_duty).includes(false);
     },
     canRemoveComponent: function() {
       return this.components.length > 1;
