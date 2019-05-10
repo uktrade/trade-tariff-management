@@ -21,7 +21,7 @@ $(function () {
       function startTimer() {
         var timer = window.setTimeout(function () {
           try {
-            $(window).scrollTop($('.records-table-wrapper').offset().top);
+            $(window).scrollTop($('.records-table-wrapper').offset().top - 200);
             window.clearTimeout(timer);
           } catch(e) {
             window.clearTimeout(timer);
@@ -31,7 +31,7 @@ $(function () {
       };
       startTimer();
     } else if ($('.loading-indicator').length > 0) {
-      $(window).scrollTop($('.search__results').offset().top);
+      $(window).scrollTop($('.search__results').offset().top - 200);
     }
   }
 });
