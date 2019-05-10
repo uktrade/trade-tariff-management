@@ -60,17 +60,19 @@ module WorkbasketInteractions
       end
 
       def check_additional_codes!
-        additional_codes_errors = {}
-        filtered_additional_codes.each do |index, item|
-          @errors["additional_code_additional_code_type_id_#{index}"] = "\##{index.to_i + 1} - Additional code type can't be blank" if item['additional_code_type_id'].blank?
-          if item['additional_code_type_id'].blank?
-            @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can't be blank"
-          else
-            @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can contain only numbers and characters" if item['additional_code_type_id'].upcase =~ /[^A-Z0-9]/
+        if filtered_additional_codes.size == 0
+          @errors["additional_code_additional_code_type_id_0"] = "\#1 - At least one code must be entered"
+        else
+          filtered_additional_codes.each do |index, item|
+            @errors["additional_code_additional_code_type_id_#{index}"] = "\##{index.to_i + 1} - Additional code type can't be blank" if item['additional_code_type_id'].blank?
+            if item['additional_code_type_id'].blank?
+              @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can't be blank"
+            else
+              @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can contain only numbers and characters" if item['additional_code_type_id'].upcase =~ /[^A-Z0-9]/
+            end
+            @errors["additional_code_description_#{index}"] = "\##{index.to_i + 1} - Description can't be blank" if item['description'].blank? && !attrs_parser.meursing?(item)
           end
-          @errors["additional_code_description_#{index}"] = "\##{index.to_i + 1} - Description can't be blank" if item['description'].blank? && !attrs_parser.meursing?(item)
         end
-        errors[:additional_codes] = additional_codes_errors if additional_codes_errors.present?
       end
 
       def build_additional_codes!
