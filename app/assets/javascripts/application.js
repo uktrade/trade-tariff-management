@@ -23,7 +23,7 @@ $(function () {
           try {
             $(window).scrollTop($('.records-table-wrapper').offset().top);
             window.clearTimeout(timer);
-          } catch {
+          } catch(e) {
             window.clearTimeout(timer);
             startTimer();
           }
