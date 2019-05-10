@@ -1,30 +1,29 @@
-var template = `
-<div class="parent-quota-opening-balances">
-  <div v-if="section.parent_quota.balances && section.parent_quota.balances.length > 0">
-    <div class="bootstrap-row" v-if="single || noPerPeriod">
-      <div class="col-xs-5 col-sm-4 col-md-3 col-lg-2">
-        <div class="form-group" v-for="(balance, index) in section.parent_quota.balances">
-          <input type="text" class="form-control" v-model="balance.balance"/>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="!single && !noPerPeriod">
-      <div class="bootstrap-row parent-quota-balance" v-for="(balance, index) in section.parent_quota.balances">
-        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-1">
-          <label>Year {{index + 1}}</label>
-        </div>
-
-        <div class="col-xs-5 col-sm-4 col-md-3 col-lg-2">
-          <div class="form-group">
-            <input type="text" class="form-control" v-model="balance.balance"/>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
+var template = '\
+<div class="parent-quota-opening-balances">\
+  <div v-if="section.parent_quota.balances && section.parent_quota.balances.length > 0">\
+    <div class="bootstrap-row" v-if="single || noPerPeriod">\
+      <div class="col-xs-5 col-sm-4 col-md-3 col-lg-2">\
+        <div class="form-group" v-for="(balance, index) in section.parent_quota.balances">\
+          <input type="text" class="form-control" v-model="balance.balance"/>\
+        </div>\
+      </div>\
+    </div>\
+\
+    <div v-if="!single && !noPerPeriod">\
+      <div class="bootstrap-row parent-quota-balance" v-for="(balance, index) in section.parent_quota.balances">\
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-1">\
+          <label>Year {{index + 1}}</label>\
+        </div>\
+\
+        <div class="col-xs-5 col-sm-4 col-md-3 col-lg-2">\
+          <div class="form-group">\
+            <input type="text" class="form-control" v-model="balance.balance"/>\
+          </div>\
+        </div>\
+      </div>\
+    </div>\
+  </div>\
+</div>';
 
 Vue.component("parent-quota-opening-balances", {
   template: template,
