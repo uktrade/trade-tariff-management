@@ -1,6 +1,4 @@
-var template = `
-<div :class="classObj"><slot v-bind:error="error" v-bind:hasError="hasError"></slot></div>
-`;
+var template = '<div :class="classObj"><slot v-bind:error="error" v-bind:hasError="hasError"></slot></div>';
 
 Vue.component("form-group", {
   template: template,
