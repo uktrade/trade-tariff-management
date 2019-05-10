@@ -176,7 +176,7 @@ $(document).ready(function() {
           abrogation_date: this.regulation.abrogation_date
         };
       },
-      extract_sub_field(string, field_position){
+      extract_sub_field: function(string, field_position){
         if (string === undefined) {
           return undefined
         }
