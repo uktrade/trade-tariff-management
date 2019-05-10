@@ -53,7 +53,7 @@ Vue.component('date-select', {
       this.applyMinMax();
     }
   },
-  destroyed() {
+  destroyed: function() {
     $(document).off("datepicker:reposition", this.repositionHandler);
   }
 });
