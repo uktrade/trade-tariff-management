@@ -156,7 +156,7 @@ $(document).ready(function() {
           publication_year: this.regulation.publication_year,
           regulation_number: this.regulation.regulation_number,
           number_suffix: this.regulation.number_suffix,
-          information_text: `${this.regulation.legal_id || ''}|${this.regulation.description || '' }|${this.regulation.reference_url || ''}`,
+          information_text: (this.regulation.legal_id || '') + '|' (this.regulation.description || '') + '|' + (this.regulation.reference_url || ''),
           effective_end_date: this.regulation.effective_end_date,
           regulation_group_id: this.regulation.regulation_group_id,
           base_regulation_id: this.regulation.base_regulation_id,
