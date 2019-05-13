@@ -5,4 +5,8 @@
     background-size:40% !important;    
     background-position: 115% !important;
   }
+
+  .selectize-control.select .selectize-input input {
+    width: auto !important;
+  }
 }
