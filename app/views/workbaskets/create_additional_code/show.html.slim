@@ -14,6 +14,6 @@
   - if workbasket.submitted?
     = render "workbaskets/create_additional_code/steps/main/details"
 
-    records-grid table-class="additional-codes-table" primary-key="additional_code_sid" :data="additional_codes" :columns="columns" :client-sorting="true"
+    records-grid table-class="additional-codes-table" primary-key="additional_code_sid" :data="additional_codes" :columns="columns" :client-sorting="true" :disable-selection="true"
 
 = render "shared/vue_templates/records_grid"
