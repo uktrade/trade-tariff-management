@@ -31,7 +31,7 @@
                     <input value="January" disabled class='form-control string'>
                   </div>
                   <div class="col-md-4">
-                    <input :value="section.start_date && section.start_date.split('/')[2]" @input="section.start_date = `01/01/${$event.target.value}`" class='form-control string' id='quota-period-year'>
+                    <input :value="section.start_date && section.start_date.split('/')[2]" @input="section.start_date = '01/01/'+$event.target.value;" class='form-control string' id='quota-period-year'>
                   </div>
                 </div>
             </div>
