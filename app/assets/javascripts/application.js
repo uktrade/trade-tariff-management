@@ -1,4 +1,5 @@
 //= require ./polyfills/polyfill.min
+//= require ./polyfills/matches
 //= require jquery
 //= require jquery_ujs
 //= require moment
