@@ -57,7 +57,7 @@
         <label class="form-label" v-if="index === 0">
           Qualifier
         </label>
-        <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="measureComponent.measurement_unit_qualifier_code" date-sensitive="true" code-class-name="prefix--measurement-unit-qualifier" :on-change="onMeasurementUnitQualifierSelected" :compact="true" placeholder="―" disabled="disabled" :id="(prefix ? prefix : '') + '-measurement-unit-qualifier'"></custom-select>
+        <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="measureComponent.measurement_unit_qualifier_code" date-sensitive="true" code-class-name="prefix--measurement-unit-qualifier" :on-change="onMeasurementUnitQualifierSelected" :compact="true" placeholder="―" :disabled="disabled" :id="(prefix ? prefix : '') + '-measurement-unit-qualifier'"></custom-select>
       </form-group>
       <form-group v-else="">
         <label class="form-label" v-if="index === 0">
