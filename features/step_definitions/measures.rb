@@ -41,10 +41,9 @@ end
 
 Then(/^errors indicating the mandatory fields are displayed$/) do
   expect(@create_measure_page).to have_error_summary
-  expect(@create_measure_page.error_summary.errors.size).to eq 6
+  expect(@create_measure_page.error_summary.errors.size).to eq 5
   expect(@create_measure_page.error_summary.errors.map(&:text)).to eq([CreateMeasurePage::NO_START_DATE_MESSAGE,
                                                                        CreateMeasurePage::NO_WORKBASKET_NAME_MESSAGE,
-                                                                       CreateMeasurePage::NO_COMMODITY_CODE_MESSAGE,
                                                                        CreateMeasurePage::NO_REGULATION_MESSAGE,
                                                                        CreateMeasurePage::NO_MEASURE_TYPE_MESSAGE,
                                                                        CreateMeasurePage::NO_ORIGIN_MESSAGE])

@@ -188,9 +188,10 @@ single_commodity_code: &generic
   <<: *default_data
   commodity_codes: "1902000000"
   measure_type: "103"
-  origin: {type: "country", name: "Andorra", exception: ~}
+  origin: {type: "country", name: "Andorra", exception: ~ , code: "AD" }
   footnote: {type: "CD", id: "001"}
-  duty_expression: {expression: "ad valorem", amount: "10.5", unit: ~, qualifier: ~}
+  duty_expression: {expression: "ad valorem", amount: "10.50", unit: ~, qualifier: ~}
+  additional_codes: "B987"
 
 multiple_commodity_code:
   <<: *default_data

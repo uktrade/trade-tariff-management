@@ -19,7 +19,7 @@ module Helper
   end
 
   def random_past_date
-    number = rand(2..365)
+    number = rand(60..90)
     number.days.ago
   end
 
@@ -37,7 +37,7 @@ module Helper
   end
 
   def random_workbasket_name
-    number = random_number(6)
+    number = random_number(8)
     "ATT #{number}"
   end
 
@@ -70,5 +70,15 @@ module Helper
 
   def format_order_number(order_number)
     "#{order_number.slice(0..1)}.#{order_number.slice(2..5)}"
+  end
+
+  def search_for_value(select_value)
+    find(".selectize-control input").click.send_keys(select_value)
+    find(".selectize-dropdown-content .selection", text: select_value).click
+  end
+
+  def select_dropdown(value)
+    find(".selectize-control").click
+    find(".selectize-dropdown-content .option", text: value).click
   end
 end

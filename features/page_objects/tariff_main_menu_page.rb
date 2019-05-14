@@ -66,5 +66,9 @@ class TariffMainMenuPage < SitePrism::Page
 
   def find_edit_quota
     find_edit_quotas_link.click
+    end
+
+  def find_edit_measure
+    find_edit_measures_link.click
   end
 end

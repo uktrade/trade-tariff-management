@@ -137,14 +137,16 @@ And(/^the quota summary lists the quota periods to be created$/) do
 end
 
 And(/^the quota summary lists the measures to be created$/) do
-  case @quota_period
-    when 'Annual'
-      expect(@create_quota_page.measures_to_be_created.commodity_codes.map(&:text)).to eq(to_array(@commodity_codes))
-    else
-      expected_number_of_measures = periods(@quota_period) * number_of_codes(@commodity_codes) if @exceptions.nil?
-      expected_number_of_measures = (periods(@quota_period) * number_of_codes(@commodity_codes)) - (periods(@quota_period) * number_of_codes(@exceptions)) unless @exceptions.nil?
-      expect(@create_quota_page.measures_to_be_created.commodity_codes.size).to eq expected_number_of_measures
+  if @commodity_codes.nil?
+    expected_number_of_measures = periods(@quota_period) * number_of_codes(@additional_codes)
+  elsif @additional_codes.nil? and @exceptions.nil?
+    expected_number_of_measures = periods(@quota_period) * number_of_codes(@commodity_codes)
+  elsif @exceptions
+    expected_number_of_measures = (periods(@quota_period) * number_of_codes(@commodity_codes)) - (periods(@quota_period) * number_of_codes(@exceptions))
+  else
+    expected_number_of_measures = periods(@quota_period) * number_of_codes(@commodity_codes) * number_of_codes(@additional_codes)
   end
+  expect(@create_quota_page.measures_to_be_created.commodity_codes.size).to eq expected_number_of_measures
 end
 
 And(/^the quota summary lists the additional codes for measures to be created$/) do
