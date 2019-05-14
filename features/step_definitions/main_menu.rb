@@ -153,6 +153,10 @@ And(/^I click the find and edit quota link$/) do
   @tarriff_main_menu.find_edit_quota
 end
 
+And(/^I click the find and edit measure link$/) do
+  @tarriff_main_menu.find_edit_measure
+end
+
 def find_work_basket
   @workbaskets = @tarriff_main_menu.work_baskets.select {|basket| basket.name.text == @workbasket}
   @workbaskets.pop

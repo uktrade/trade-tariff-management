@@ -100,10 +100,10 @@ class CreateQuotaPage < CreateQuotaPageElements
     end
   end
 
-  def select_dropdown(value)
-    find(".selectize-control").click
-    find(".selectize-dropdown-content .option", text: value).click
-  end
+  # def select_dropdown(value)
+  #   find(".selectize-control").click
+  #   find(".selectize-dropdown-content .option", text: value).click
+  # end
 
   def select_section_duration(duration)
     within("#wrapper fieldset:nth-child(1) .col-md-2") do

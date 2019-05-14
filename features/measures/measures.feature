@@ -1,6 +1,5 @@
 
-Feature: As a Tariff Manager
-  I want to create measures with different parameters
+Feature: Create Measures
 
   Background:
     Given I am on the tariff main menu
@@ -96,5 +95,3 @@ Feature: As a Tariff Manager
     Examples:
       |scenario               |
       |551_provisional_anti_dumping_duty|
-
-

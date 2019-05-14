@@ -1,5 +1,5 @@
 
-Feature: Validate create measure form fields on save or submit
+Feature: Validation and Conformance Errors for Measures
 
 
   Background:
