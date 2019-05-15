@@ -4,6 +4,7 @@ class EditMeasurePage < SitePrism::Page
 
   include CapybaraFormHelper
 
+
   element :start_date, "input.date-picker"
   element :regulation, ".selectize-control"
   element :not_from_regulation_checkbox, "#not-from-regulation"
@@ -14,6 +15,7 @@ class EditMeasurePage < SitePrism::Page
   element :save_progress_button, ".js-bulk-edit-of-records-save-progress"
   element :bulk_action_dropdown, ".button-dropdown:nth-of-type(1) button"
   elements :bulk_action_options, ".button-dropdown:nth-of-type(1) li"
+  element :selected_measure_alert, ".alert--info p:nth-of-type(1)"
 
   # Bulk edit modal elements
   element :erga_omnes_radio_button, ".origins-region #measure-origin-erga_omnes"
@@ -75,8 +77,8 @@ class EditMeasurePage < SitePrism::Page
     not_from_regulation_checkbox.click
   end
 
-  def enter_reason_for_change
-    reason_for_change.set "Edit measure change reason"
+  def enter_reason_for_change(reason)
+    reason_for_change.set reason
   end
 
   def enter_workbasket_name(workbasket)
@@ -182,6 +184,64 @@ class EditMeasurePage < SitePrism::Page
     end
     footnote_field.set footnote['id']
     use_this_footnote.click
-    replace_footnotes
+    if has_replace_existing_footnotes?
+      replace_footnotes
+    end
+  end
+
+  def add_conditions(condition_array)
+    condition_array.each do |condition|
+      index = condition_array.find_index(condition)
+      select_condition_type condition['type'], index
+      select_certificate_type condition['certificate_type'], index unless condition['certificate_type'].nil?
+      select_certificate condition['certificate'], index unless condition['certificate'].nil?
+      select_condition_action condition['action'], index
+      select_condition_duty_expression condition['duty_expression'], index
+      enter_condition_duty_amount condition['duty_amount'], index
+    end
+  end
+
+  def select_condition_type(condition_type, index)
+    position = index
+    within("#measure-condition-#{position}-condition") do
+      select_dropdown_value(condition_type)
+    end
+  end
+
+  def select_certificate_type(certificate_type, index)
+    position = index
+    within("#measure-condition-#{position}-certificate-type") do
+      select_dropdown_value(certificate_type)
+    end
+  end
+
+  def select_certificate(certificate, index)
+    position = index
+    within("#measure-condition-#{position}-certificate") do
+      select_dropdown_value(certificate)
+    end
+  end
+
+  def select_condition_action(action, index)
+    position = index
+    within("#measure-condition-#{position}-action") do
+      select_dropdown_value(action)
+    end
+  end
+
+  def select_condition_duty_expression(duty_expression, index)
+    position = index
+    within("#measure-condition-#{position}-measure-condition-component-0-duty-expression") do
+      select_dropdown_value(duty_expression)
+    end
+  end
+
+  def enter_condition_duty_amount(duty, index)
+    position = index
+    find("#measure-condition-#{position}-measure-condition-component-0-amount").set duty
+  end
+
+  def selected_measures_alert
+    selected_measure_alert.text
   end
 end
