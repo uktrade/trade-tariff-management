@@ -107,6 +107,7 @@ module WorkbasketInteractions
 
       def validate_additional_codes!
         additional_code_errors = {}
+        additional_code_errors.merge!(check_duplicates_in_basket)
         records.each_with_index do |record, index|
           validator = validator(record)
           if validator.present?
@@ -133,6 +134,21 @@ module WorkbasketInteractions
         "#{record.class.name}Validator".constantize
       rescue StandardError
         nil
+      end
+
+      def check_duplicates_in_basket
+        type_codes = Set.new
+        records.each do |record|
+          if record.class == AdditionalCode
+            combined_key = [record.additional_code_type_id, record.additional_code]
+            if type_codes.include?(combined_key)
+              return {"0": "ACN10: The combination of additional code type + additional code + start date must be unique."}
+            else
+              type_codes << combined_key
+            end
+          end
+        end
+        {}
       end
     end
   end
