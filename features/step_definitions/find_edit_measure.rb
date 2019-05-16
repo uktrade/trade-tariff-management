@@ -162,35 +162,35 @@ end
 
 And(/^the measure is updated with the "([^"]*)" change$/) do |bulk_action|
   case bulk_action
-    when 'origin'
+    when 'Change origin'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.origin.text).to eq @test_data['origin']['code']
       end
-    when 'commodity code'
+    when 'Change commodity codes'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.commodity_code.text).to eq @test_data['commodity_codes']
       end
-    when 'additional code'
+    when 'Change additional code'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.additional_code.text).to eq @test_data['additional_codes']
       end
-    when 'duties'
+    when 'Change duties'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.duties.text).to eq "#{@test_data['duty_expression']['amount']} %"
       end
-    when 'condition'
+    when 'Change conditions'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.conditions.text).to eq format_conditions @expected_condition
       end
-    when 'footnote'
+    when 'Change footnotes'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.footnotes.text).to eq format_footnote @test_data['footnote']
       end
-    when 'regulation'
+    when 'Change generating regulation'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.regulation.text).to eq format_regulation @new_regulation
       end
-    when 'validity period'
+    when 'Change validity period'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.start_date.text).to eq format_item_date @start_date
         expect(measure.end_date.text).to eq format_item_date @end_date
