@@ -4,7 +4,6 @@ class EditMeasurePage < SitePrism::Page
 
   include CapybaraFormHelper
 
-
   element :start_date, "input.date-picker"
   element :regulation, ".selectize-control"
   element :not_from_regulation_checkbox, "#not-from-regulation"

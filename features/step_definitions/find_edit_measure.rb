@@ -201,7 +201,3 @@ And(/^the measure is updated with the "([^"]*)" change$/) do |bulk_action|
   @edit_measure_page.ok_no_conformance_errors
 end
 
-def find_measure
-  @results = @find_measure_page.measure_search_results.select {|measure| measure.id.text == @measure_sid}
-  @results.pop
-end
