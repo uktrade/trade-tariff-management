@@ -106,6 +106,7 @@ module WorkbasketInteractions
 
       def add_membership!
         GeographicalAreaMembership.unrestrict_primary_key
+
         if memberships
           memberships.each do |m|
             membership_data = m.last['geographical_area']
@@ -116,8 +117,14 @@ module WorkbasketInteractions
       end
 
       def new_membership(membership_data)
-        group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
-        geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        if geographical_code == 'group'
+          geographical_area = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+          group = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        else
+          group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+          geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        end
+
         GeographicalAreaMembership.new(
           geographical_area_sid: geographical_area.geographical_area_sid,
           geographical_area_group_sid: group[:geographical_area_sid],
