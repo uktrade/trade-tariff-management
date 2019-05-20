@@ -75,6 +75,10 @@ module WorkbasketInteractions
 
     private
 
+      def memberships
+        settings.main_step_settings['geographical_area_memberships']
+      end
+
       def validate!
         check_initial_validation_rules!
         check_conformance_rules! if @errors.blank?
@@ -94,9 +98,32 @@ module WorkbasketInteractions
           add_geographical_area!
           add_geographical_area_description_period!
           add_geographical_area_description!
+          add_membership!
 
           parse_and_format_conformance_rules
         end
+      end
+
+      def add_membership!
+        GeographicalAreaMembership.unrestrict_primary_key
+        if memberships
+          memberships.each do |m|
+            membership_data = m.last['geographical_area']
+            @membership = new_membership(membership_data)
+            @membership.save if persist_mode?
+          end
+        end
+      end
+
+      def new_membership(membership_data)
+        group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+        geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        GeographicalAreaMembership.new(
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          geographical_area_group_sid: group[:geographical_area_sid],
+          validity_start_date: membership_data['validity_start_date'],
+          validity_end_date: membership_data['validity_end_date']
+        )
       end
 
       def parse_and_format_conformance_rules
