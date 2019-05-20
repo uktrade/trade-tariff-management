@@ -43,9 +43,16 @@ RSpec.describe "adding geographical areas", :js do
     click_on "Submit for cross-check"
 
     expect(page).to have_content "Geographical area submitted"
+    expect_memberships_to_have_been_persisted(group)
   end
 
   private
+
+  def expect_memberships_to_have_been_persisted(group)
+    country = GeographicalArea.find(geographical_area_id: "GE")
+    membership_sids = country.member_of_following_geographical_areas.map { |geo_area| geo_area.geographical_area_sid }
+    membership_sids.include?(group.geographical_area_sid)
+  end
 
   def area_membership_codes
     memberships_table.all("tbody tr td:first-of-type").map(&:text)
