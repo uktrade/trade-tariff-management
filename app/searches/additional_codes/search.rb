@@ -7,12 +7,8 @@ module AdditionalCodes
       type
       code
       valid_from
-      valid_to
       description
       status
-      author
-      date_of
-      last_updated_by
     ).freeze
 
     attr_reader *(%i[relation search_ops page] + ALLOWED_FILTERS)

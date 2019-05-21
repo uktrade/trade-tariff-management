@@ -73,22 +73,6 @@
   <div class="find-items__row">
     <div class="find-items__checkbox-column">
       <div class="multiple-choice">
-        <input name="search[valid_to][enabled]" id="toggle-validity-end-date" type="checkbox" value="1" v-model="valid_to.enabled" />
-        <label for="toggle-validity-end-date">
-          Valid to
-        </label>
-      </div>
-    </div>
-    <div class="find-items__is">
-      <custom-select :options="conditionsForValidityEndDate" label-field="label" value-field="value"  v-model="valid_to.operator" name="search[valid_to][operator]"></custom-select>
-    </div>
-    <div class="find-item__date">
-      <date-select :value.sync="valid_to.value" name="search[valid_to][value]" v-bind:disabled="validityEndDateValueDisabled" />
-    </div>
-  </div>
-  <div class="find-items__row">
-    <div class="find-items__checkbox-column">
-      <div class="multiple-choice">
         <input name="search[description][enabled]" id="toggle-description" type="checkbox" value="1" v-model="description.enabled" />
         <label for="toggle-description">
           Description
@@ -116,58 +100,6 @@
     </div>
     <div class="find-item__long">
       <custom-select :options="statuses" label-field="label" value-field="value" placeholder="― select a status ―" v-model="status.value" name="search[status][value]"></custom-select>
-    </div>
-  </div>
-  <div class="find-items__row">
-    <div class="find-items__checkbox-column">
-      <div class="multiple-choice">
-        <input name="search[author][enabled]" id="toggle-author" type="checkbox" value="1" v-model="author.enabled" />
-        <label for="toggle-author">
-          Author
-        </label>
-      </div>
-    </div>
-    <div class="find-items__is">
-      <custom-select :options="conditionsForAuthor" label-field="label" value-field="value"  v-model="author.operator" name="search[author][operator]"></custom-select>
-    </div>
-    <div class="find-item__long">
-      <custom-select url="/users" label-field="name" value-field="id" placeholder="― select a user ―" v-model="author.value" name="search[author][value]"></custom-select>
-    </div>
-  </div>
-  <div class="find-items__row">
-    <div class="find-items__checkbox-column">
-      <div class="multiple-choice">
-        <input name="search[date_of][enabled]" id="toggle-date" type="checkbox" value="1" v-model="date_of.enabled" />
-        <label for="toggle-date">
-          Date of
-        </label>
-      </div>
-    </div>
-    <div class="find-items__type">
-      <custom-select :options="typesForDate" label-field="label" value-field="value"  v-model="date_of.mode" name="search[date_of][mode]"></custom-select>
-    </div>
-    <div class="find-items__is">
-      <custom-select :options="conditionsForDate" label-field="label" value-field="value"  v-model="date_of.operator" name="search[date_of][operator]"></custom-select>
-    </div>
-    <div class="find-item__date">
-      <date-select :value.sync="date_of.value" name="search[date_of][value]" />
-    </div>
-  </div>
-
-  <div class="find-items__row">
-    <div class="find-items__checkbox-column">
-      <div class="multiple-choice">
-        <input name="search[last_updated_by][enabled]" id="toggle-last-updated-by" type="checkbox" value="1" v-model="last_updated_by.enabled" />
-        <label for="toggle-last-updated-by">
-          Last updated by
-        </label>
-      </div>
-    </div>
-    <div class="find-items__is">
-      <custom-select :options="conditionsForLastUpdatedBy" label-field="label" value-field="value"  v-model="last_updated_by.operator" name="search[last_updated_by][operator]"></custom-select>
-    </div>
-    <div class="find-item__long">
-      <custom-select url="/users" label-field="name" value-field="id" placeholder="― select a user ―" v-model="last_updated_by.value" name="search[last_updated_by][value]"></custom-select>
     </div>
   </div>
 

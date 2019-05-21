@@ -2,9 +2,7 @@ module AdditionalCodes
   module SearchFilters
     class Description
       OPERATORS_WITH_REQUIRED_PARAMS = %w(
-        is
-        is_not
-        starts_with
+        contains
       ).freeze
 
       attr_accessor :operator,
@@ -18,7 +16,7 @@ module AdditionalCodes
       def sql_rules
         return nil if required_options_are_blank?
 
-        clause
+        [contains_clause, description]
       end
 
     private
@@ -28,62 +26,9 @@ module AdditionalCodes
           description.blank?
       end
 
-      def clause
-        case operator
-        when "is"
-
-          [is_clause, value]
-        when "is_not"
-
-          [is_not_clause, value]
-        when "is_not_specified"
-
-          is_not_specified_clause
-        when "is_not_unspecified"
-
-          is_not_unspecified_clause
-        when "starts_with"
-
-          [starts_with_clause, value]
-        end
-      end
-
-      def value
-        if operator == "starts_with"
-          "#{description}%"
-        else
-          description
-        end
-      end
-
-      def is_clause
+      def contains_clause
         <<-eos
-            all_additional_codes.description = ?
-        eos
-      end
-
-      def is_not_clause
-        <<-eos
-            #{is_not_specified_clause} OR
-            all_additional_codes.description != ?
-        eos
-      end
-
-      def starts_with_clause
-        <<-eos
-            all_additional_codes.description ilike ?
-        eos
-      end
-
-      def is_not_specified_clause
-        <<-eos
-            all_additional_codes.description IS NULL
-        eos
-      end
-
-      def is_not_unspecified_clause
-        <<-eos
-            all_additional_codes.description IS NOT NULL
+            all_additional_codes.description ILIKE '%' || ? || '%'
         eos
       end
     end

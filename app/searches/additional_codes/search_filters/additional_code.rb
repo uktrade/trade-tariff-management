@@ -61,12 +61,6 @@ module AdditionalCodes
         when "is_not"
 
           [is_not_clause, value]
-        when "is_not_specified"
-
-          is_not_specified_clause
-        when "is_not_unspecified"
-
-          is_not_unspecified_clause
         when "starts_with"
 
           [starts_with_clause, value]
@@ -100,17 +94,6 @@ module AdditionalCodes
         eos
       end
 
-      def is_not_specified_clause
-        <<-eos
-          all_additional_codes.additional_code IS NULL
-        eos
-      end
-
-      def is_not_unspecified_clause
-        <<-eos
-          all_additional_codes.additional_code IS NOT NULL
-        eos
-      end
     end
   end
 end
