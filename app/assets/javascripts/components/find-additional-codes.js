@@ -43,22 +43,12 @@ $(document).ready(function() {
           {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
 
-        typesForDate: [
-          { value: "creation", label: "creation" },
-          { value: "authoring", label: "authoring" },
-          { value: "last_status_change", label: "last status change" }
-        ],
-
         conditionsForWorbasketName: [ conditions.is, conditions.starts_with, conditions.contains ],
         conditionsForStatus: [ conditions.is, conditions.is_not ],
-        conditionsForAuthor: [ conditions.is, conditions.is_not ],
-        conditionsForDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not ],
-        conditionsForLastUpdatedBy: [ conditions.is, conditions.is_not ],
         conditionsForType: [ conditions.is, conditions.is_not ],
-        conditionsForValidityStartDate: [ conditions.is, conditions.is_after, conditions.is_before, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
-        conditionsForValidityEndDate: [ conditions.is, conditions.is_after, conditions.is_after_or_nil, conditions.is_before, conditions.is_before_or_nil, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified ],
-        conditionsForDescription: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
-        conditionsForCode: [ conditions.is, conditions.is_not, conditions.is_not_specified, conditions.is_not_unspecified, conditions.starts_with ],
+        conditionsForValidityStartDate: [ conditions.is, conditions.is_after, conditions.is_before ],
+        conditionsForDescription: [ conditions.contains ],
+        conditionsForCode: [ conditions.is, conditions.is_not, conditions.starts_with ],
 
         disableValue: [
           conditions.is_not_specified.value,
@@ -106,26 +96,10 @@ $(document).ready(function() {
         },
         description: {
           enabled: false,
-          operator: "is",
+          operator: "contains",
           value: null
         },
         status: {
-          enabled: false,
-          operator: "is",
-          value: null
-        },
-        author: {
-          enabled: false,
-          operator: "is",
-          value: null
-        },
-        date_of: {
-          enabled: false,
-          operator: "is",
-          value: null,
-          mode: "creation"
-        },
-        last_updated_by: {
           enabled: false,
           operator: "is",
           value: null
@@ -141,12 +115,6 @@ $(document).ready(function() {
           value: null,
           mode: "creation"
         },
-        valid_to: {
-          enabled: false,
-          operator: "is",
-          value: null,
-          mode: "creation"
-        },
         code: {
           enabled: false,
           operator: "is",
@@ -157,12 +125,8 @@ $(document).ready(function() {
       var fields = [
         "workbasket_name",
         "status",
-        "author",
-        "date_of",
-        "last_updated_by",
         "type",
         "valid_from",
-        "valid_to",
         "code",
         "description"
       ];
@@ -184,13 +148,9 @@ $(document).ready(function() {
         var mapping = {
           workbasket_name: "workbasket_name",
           status: "status",
-          author: "author",
-          date_of: "date_of",
-          last_updated_by: "last_updated_by",
           description: "description",
           type: "type",
           valid_from: "valid_from",
-          valid_to: "valid_to",
           code: "code"
         };
 
@@ -369,21 +329,6 @@ $(document).ready(function() {
           this.description.enabled = true;
         }
       },
-      "date_of.mode": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
-      "date_of.operator": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
-      "date_of.value": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
       "valid_from.operator": function(val) {
         if (val) {
           this.valid_from.enabled = true;
@@ -392,16 +337,6 @@ $(document).ready(function() {
       "valid_from.value": function(val) {
         if (val) {
           this.valid_from.enabled = true;
-        }
-      },
-      "valid_to.operator": function(val) {
-        if (val) {
-          this.valid_to.enabled = true;
-        }
-      },
-      "valid_to.value": function(val) {
-        if (val) {
-          this.valid_to.enabled = true;
         }
       },
       "code.operator": function(val) {
@@ -424,31 +359,6 @@ $(document).ready(function() {
           this.status.enabled = true;
         }
       },
-      "author.value": function(val) {
-        if (val) {
-          this.author.enabled = true;
-        }
-      },
-      "date_of.mode": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
-      "date_of.operator": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
-      "date_of.value": function(val) {
-        if (val) {
-          this.date_of.enabled = true;
-        }
-      },
-      "last_updated_by.value": function(val) {
-        if (val) {
-          this.last_updated_by.enabled = true;
-        }
-      }
     }
   });
 });

@@ -25,8 +25,8 @@ module AdditionalCodes
         q_rules.present? ? self.join(:workbaskets, id: :all_additional_codes__workbasket_id).where(q_rules) : self
       end
 
-      def operator_search_by_description(operator, _description)
-        operator_search_where_clause("Description", operator, additional_code)
+      def operator_search_by_description(operator, description)
+        operator_search_where_clause("Description", operator, description)
       end
 
     private
