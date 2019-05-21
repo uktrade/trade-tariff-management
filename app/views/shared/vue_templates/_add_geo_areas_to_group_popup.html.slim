@@ -23,7 +23,7 @@ script type="text/x-template" id="add-geo-areas-to-group-popup-template"
           span.error-message v-if="slotProps.hasError" v-cloak=""
             | {{slotProps.error}}
 
-        textarea.form-control rows="4" v-model="codes"
+        textarea.form-control rows="4" v-model="codes" id="country_codes_text"
 
     form-group :errors="errors" error-key="join_date"
       template slot-scope="slotProps"
