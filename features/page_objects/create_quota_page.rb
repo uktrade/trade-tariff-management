@@ -7,6 +7,8 @@ class CreateQuotaPage < CreateQuotaPageElements
 
   set_url ENV['QUOTA']
 
+  QUOTA_ERROR = "Need to specify at least of one valid quota period. Period type, Start date, Length of period, Balance and either Measurement or Monetary Unit are required!"
+
   def select_regulation(reg)
     regulation_dropdown.click
     regulation_dropdown.set reg

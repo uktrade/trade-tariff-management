@@ -16,24 +16,25 @@ class EditMeasurePage < SitePrism::Page
   elements :bulk_action_options, ".button-dropdown:nth-of-type(1) li"
   element :selected_measure_alert, ".alert--info p:nth-of-type(1)"
 
-  # Bulk edit modal elements
-  element :erga_omnes_radio_button, ".origins-region #measure-origin-erga_omnes"
-  element :country_groups_radio_button, ".origins-region #measure-origin-group"
-  element :country_region_radio_button, ".origins-region #measure-origin-country"
-  element :duty_amount, "#measure-component-0-amount"
-  elements :commodity_code_fields, "input[id^='commodity_code_input_']"
-  element :additional_code, ".text-input-wrapper input"
-  element :remove_additional_code_checkbox, ".multiple-choice input"
-
-  element :updated_selected_measures_button, ".button", text: "Update selected measures"
   element :ok_button, "#bem-save-progress-summary a.button", text: "OK"
-  element :progress_saved, "h2.modal__title", text: "Your progress successfully saved!"
   element :no_conformance_errors, ".alert .js-bem-popup-data-container", text: "There are no conformance errors"
-  element :add_to_existing_footnotes, "#add-to-any-existing"
-  element :replace_existing_footnotes, "#replace-any-existing"
-  element :footnote_type, "#footnote-0-footnote-type"
-  element :footnote_field, "#footnote-0-footnote"
-  element :use_this_footnote, "#footnote-0-suggestion-0-use-button"
+  element :progress_saved, "h2.modal__title", text: "Your progress successfully saved!"
+
+  section :bulk_edit_popup, "#modal-1 .modal__container" do
+    element :erga_omnes_radio_button, ".origins-region #measure-origin-erga_omnes"
+    element :country_groups_radio_button, ".origins-region #measure-origin-group"
+    element :country_region_radio_button, ".origins-region #measure-origin-country"
+    element :duty_amount, "#measure-component-0-amount"
+    elements :commodity_code_fields, "input[id^='commodity_code_input_']"
+    element :additional_code, ".text-input-wrapper input"
+    element :remove_additional_code_checkbox, ".multiple-choice input"
+    element :updated_selected_measures_button, ".button", text: "Update selected measures"
+    element :add_to_existing_footnotes, "#add-to-any-existing"
+    element :replace_existing_footnotes, "#replace-any-existing"
+    element :footnote_type, "#footnote-0-footnote-type"
+    element :footnote_field, "#footnote-0-footnote"
+    element :use_this_footnote, "#footnote-0-suggestion-0-use-button"
+  end
 
   sections :bulk_edit_measures, "div.records-table div.table__row" do
     element :select, ".select-all-column input"
@@ -59,6 +60,11 @@ class EditMeasurePage < SitePrism::Page
     element :operation_date, "tr:nth-child(2) td:nth-child(2)"
     element :reason_for_change, "tr:nth-child(3) td:nth-child(2)"
     element :regulation, "tr:nth-child(4) td:nth-child(2)"
+  end
+
+  section :confirm_submission, '.panel--confirmation' do
+    element :header, "h1", text: "Measures submitted"
+    element :message, "h3"
   end
 
   def enter_change_start_date(date)
@@ -106,12 +112,12 @@ class EditMeasurePage < SitePrism::Page
   def select_origin(origin)
     case origin['type']
       when 'erga_omnes'
-        erga_omnes_radio_button.click
+        bulk_edit_popup.erga_omnes_radio_button.click
       when 'group'
-        country_groups_radio_button.click
+        bulk_edit_popup.country_groups_radio_button.click
         select_origin_group origin['name']
       when 'country'
-        country_region_radio_button.click
+        bulk_edit_popup.country_region_radio_button.click
         select_origin_country origin['name']
     end
   end
@@ -129,7 +135,7 @@ class EditMeasurePage < SitePrism::Page
   end
 
   def updated_selected_measures
-    updated_selected_measures_button.click
+    bulk_edit_popup.updated_selected_measures_button.click
   end
 
   def add_duty_expression(duty)
@@ -144,11 +150,11 @@ class EditMeasurePage < SitePrism::Page
   end
 
   def enter_duty_amount(amount)
-    duty_amount.set amount
+    bulk_edit_popup.duty_amount.set amount
   end
 
   def enter_commodity_code(code)
-    commodity_code_fields.each {|field| field.set code}
+    bulk_edit_popup.commodity_code_fields.each {|field| field.set code}
   end
 
   def ok_no_conformance_errors
@@ -156,7 +162,7 @@ class EditMeasurePage < SitePrism::Page
   end
 
   def enter_additional_code(code)
-    additional_code.set code
+    bulk_edit_popup.additional_code.set code
   end
 
   def enter_start_date(date)
@@ -170,20 +176,20 @@ class EditMeasurePage < SitePrism::Page
   end
 
   def add_to_footnotes
-    add_to_existing_footnotes.click
+    bulk_edit_popup.add_to_existing_footnotes.click
   end
 
   def replace_footnotes
-    replace_existing_footnotes.click
+    bulk_edit_popup.replace_existing_footnotes.click
   end
 
   def add_footnote(footnote)
-    within(footnote_type) do
+    within(bulk_edit_popup.footnote_type) do
       select_dropdown_value(footnote['type'])
     end
-    footnote_field.set footnote['id']
-    use_this_footnote.click
-    if has_replace_existing_footnotes?
+    bulk_edit_popup.footnote_field.set footnote['id']
+    bulk_edit_popup.use_this_footnote.click
+    if bulk_edit_popup.has_replace_existing_footnotes?
       replace_footnotes
     end
   end

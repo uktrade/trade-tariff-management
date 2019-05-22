@@ -129,3 +129,21 @@ Feature: As a Tariff Manager
     And the workbasket has next step "View"
     And the workbasket has next step "Withdraw/edit"
 
+  @manual
+#  Comment out the @manual tag above to run this test.
+  Scenario: Bulk edit measures - Workbasket rejected in cross-check has View and Withdraw/edit links
+    Given I am on the tariff main menu
+    When I click the find and edit measure link
+    And I search for multiple measures by measure sid "3646"
+    And I select the first available measure to work with
+    And I bulk edit the selected measures with action "Change origin"
+    Then the measure is updated with the "Change origin" change
+    When I submit the bulk edit measure for cross-check
+    And I login as a "cross_checker"
+    Then the workbasket status is "Awaiting cross-check"
+    When I click "Review for cross-check"
+    And I can crosscheck and reject the workbasket
+    And I login as a "tariff_manager"
+    Then the workbasket status is "Cross-check rejected"
+    And the workbasket has next step "View"
+    And the workbasket has next step "Withdraw/edit"

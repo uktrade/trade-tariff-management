@@ -1,7 +1,6 @@
 class CrossCheckPage < SitePrism::Page
 
   section :work_basket_details, :xpath, '//table[@class="create-measures-details-table"][1]' do
-  # section :work_basket_details, ".create-measures-details-table" do
     element :work_basket_name, "tr:nth-child(1) td:nth-child(2)"
   end
 

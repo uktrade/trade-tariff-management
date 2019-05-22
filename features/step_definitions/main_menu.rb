@@ -92,7 +92,6 @@ end
 Then(/^I can withdraw the workbasket$/) do
   step 'I click "Withdraw/edit"'
   @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
-  expect(@create_measure_page.measure_validity_start_date.value).to eq format_date(@start_date)
 end
 
 Then(/^I can withdraw the workbasket for the quota$/) do
@@ -105,8 +104,8 @@ Then(/^I can crosscheck and accept the workbasket$/) do
   @cross_check_page = CrossCheckPage.new
   expect(@cross_check_page.work_basket_details.work_basket_name.text).to eq @workbasket
   @cross_check_page.accept_cross_check
-  expect(@cross_check_page.cross_check_confirmation.header.text).to eq CrossCheckPage::CROSS_CHECK_ACCEPTED_HEADER
-  expect(@cross_check_page.cross_check_confirmation.message.text).to include CrossCheckPage::CROSS_CHECK_ACCEPTED_MESSAGE
+  expect(@cross_check_page.cross_check_confirmation).to have_header
+  expect(@cross_check_page.cross_check_confirmation).to have_message
   expect(@cross_check_page).to have_return_to_main_menu
   expect(@cross_check_page).to have_view_these_measure
 end

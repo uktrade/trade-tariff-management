@@ -82,4 +82,8 @@ class CreateQuotaPageElements < SitePrism::Page
     element :header, "h1", text: "Quota submitted"
     element :message, "h3"
   end
+
+  section :error_summary, "div.js-custom-errors-block" do
+    elements :errors, "li div"
+  end
 end

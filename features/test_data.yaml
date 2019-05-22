@@ -124,6 +124,14 @@ quota_monetary_unit:
   monetary_unit: "EUROs"
   measurement_unit: ~
 
+quota_with_monetary_and_measurement_unit:
+  <<: *default_data
+  quota_type: "122"
+  quota_period: "Annual"
+  commodity_codes: "5209000000"
+  monetary_unit: "EUROs"
+  measurement_unit: "KGM"
+
 106_customs_union:
   <<: *default_data
   commodity_codes: "1905908000"

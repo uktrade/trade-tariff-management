@@ -1,5 +1,5 @@
 
-And(/^I search for the measure$/) do
+And(/^I search for the measure by workbasket$/) do
   @find_measure_page = FindMeasurePage.new
   expect(@find_measure_page).to have_measure_sid
   @find_measure_page.find_measure @workbasket
@@ -21,7 +21,6 @@ And(/^I search for multiple measures by measure sid "([^"]*)"$/) do |sid|
   @find_measure_page = FindMeasurePage.new
   @measure_sid = sid
   @find_measure_page.find_measure_by_sid @measure_sid
-  expect(@find_measure_page.measure_search_results.size).to be > 1
 end
 
 And(/^I enter a quota type in the measure type field$/) do
@@ -87,6 +86,30 @@ And(/^I select measures to work with$/) do
 
   @find_measure_page.press_work_with_selected_measures
   expect(@edit_measure_page.selected_measures_alert).to include "You are about to work with #{number_of_measures} selected measures."
+  @edit_measure_page.enter_change_start_date @change_start_date
+  @edit_measure_page.select_regulation @regulation
+  @edit_measure_page.enter_reason_for_change @edit_reason
+  @edit_measure_page.enter_workbasket_name @workbasket
+  @edit_measure_page.proceed
+end
+
+
+And(/^I select the first available measure to work with$/) do
+  @workbasket = random_workbasket_name
+  @change_start_date = random_past_date
+  @regulation = "R1803160"
+  @edit_measure_page = EditMeasurePage.new
+  @edit_reason = "Edit measure change reason"
+
+  # select first available measure
+  @find_measure_page.deselect_all_measures
+  @find_measure_page.measure_search_results.each do |measure|
+    if measure.has_no_lock?
+      measure.select.click
+      break
+    end
+  end
+  @find_measure_page.press_work_with_selected_measures
   @edit_measure_page.enter_change_start_date @change_start_date
   @edit_measure_page.select_regulation @regulation
   @edit_measure_page.enter_reason_for_change @edit_reason
@@ -199,5 +222,28 @@ And(/^the measure is updated with the "([^"]*)" change$/) do |bulk_action|
   @edit_measure_page.save_progress
   expect(@edit_measure_page).to have_no_conformance_errors
   @edit_measure_page.ok_no_conformance_errors
+end
+
+And(/^I submit the bulk edit measure for cross-check$/) do
+  @edit_measure_page.submit_for_crosscheck
+  expect(@edit_measure_page.confirm_submission.message.text).to include "#{@workbasket}"
+end
+
+Then(/^the search results are displayed$/) do
+  expect(@find_measure_page.measure_search_results.size).to be >= 1
+  @number_of_measures_found = @find_measure_page.number_of_search_results
+end
+
+Then(/^there is "([^"]*)" measure in the search result$/) do |number|
+  expect(@find_measure_page.measure_search_results.size).to eq number.to_i
+end
+
+Then(/^the search returns the same number of measures$/) do
+  expect(@find_measure_page.number_of_search_results).to eq @number_of_measures_found
+end
+
+And(/^I continue with submission for cross-check$/) do
+  step 'I click "Continue"'
+  @edit_measure_page.submit_for_crosscheck
 end
 
