@@ -1,6 +1,7 @@
 ## Git workflow ##
 
 - Pull requests must contain a succint, clear summary of what the user need is driving this feature change.
+- Use our git [commit template](./git_commit_msg.txt). To do that simply run `git config commit.template git_commit_msg.txt` from root path
 - Follow our [Git styleguide](https://github.com/alphagov/styleguides/blob/master/git.md)
 - Make a feature branch
 - Ensure your branch contains logical atomic commits before sending a pull request - follow our [Git styleguide](https://github.com/alphagov/styleguides/blob/master/git.md)

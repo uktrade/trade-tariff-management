@@ -39,9 +39,9 @@ window.DutyExpressionFormatter = {
       case "25":
       case "27":
       case "29":
-        if (duty_expression_abbreviation !== null) {
+        if (duty_expression_abbreviation) {
           output.push(duty_expression_abbreviation);
-        } else if (duty_expression_description !== null) {
+        } else if (duty_expression_description) {
           output.push(duty_expression_description);
         }
         break;
@@ -52,23 +52,23 @@ window.DutyExpressionFormatter = {
       case "19":
       case "20":
       case "36":
-        if (duty_expression_abbreviation !== null) {
-          output.push(duty_expression_abbreviation.replace("%", "").replace("€", ""));
-        } else if (duty_expression_description !== null) {
+        if (duty_expression_abbreviation) {
+          output.push(duty_expression_abbreviation.replace("%", "").replace("€", "").replace("≤", "MAX"));
+        } else if (duty_expression_description) {
           output.push(duty_expression_description);
         }
 
-        if (duty_amount !== null) {
+        if (duty_amount) {
           output.push(this.prettify(duty_amount));
         }
 
-        if (monetary_unit !== null) {
+        if (monetary_unit) {
           output.push(monetary_unit);
         } else {
           output.push("%");
         }
 
-        if (measurement_unit_abbreviation !== null) {
+        if (measurement_unit_abbreviation) {
           if (opts.formatted) {
             output.push("/ <abbr title='" + measurement_unit.description + "'>" + measurement_unit_abbreviation + "</abbr>");
           } else {
@@ -78,13 +78,13 @@ window.DutyExpressionFormatter = {
 
         break;
       default:
-        if (duty_amount !== null) {
+        if (duty_amount) {
           output.push(this.prettify(duty_amount));
         }
 
-        if (duty_expression_abbreviation !== null && !monetary_unit) {
+        if (duty_expression_abbreviation && !monetary_unit) {
           output.push(duty_expression_abbreviation);
-        } else if (duty_expression_description !== null && !monetary_unit) {
+        } else if (duty_expression_description && !monetary_unit) {
           output.push(duty_expression_description);
         } else if (duty_expression_description === null) {
           output.push("%");
