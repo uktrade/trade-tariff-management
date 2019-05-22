@@ -190,6 +190,16 @@ Then(/^the quota should be locked in the search result$/) do
   expect(@found_quota).to have_lock
 end
 
+Then(/^an "([^"]*)" error message is displayed on the quota form$/) do |string|
+  expect(@create_quota_page.error_summary.errors.size).to eq 1
+  error_message = @create_quota_page.error_summary.errors.map(&:text).pop
+
+  case string
+    when 'monetary_and_measurement_unit'
+      expect(error_message).to eq(CreateQuotaPage::QUOTA_ERROR)
+  end
+end
+
 def find_quota
   @results = @find_edit_quota_page.quota_search_results.select {|quota| quota.order_number.text == format_order_number(@quota_order_number)}
   @results.pop

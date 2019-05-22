@@ -12,6 +12,7 @@ class FindMeasurePage < SitePrism::Page
   element :clear, "div.form-actions a"
   element :select_all, ".table__header .select-all-column input"
   element :work_with_selected_measures, ".clearfix .button", text: "Work with selected measures"
+  element :number_of_measures, ".clearfix .number-of-records-badge"
 
   section :measure_type, "div.find-items__row:nth-of-type(3) div.find-item__short" do
     element :input, "input"
@@ -42,11 +43,13 @@ class FindMeasurePage < SitePrism::Page
   end
 
   def find_measure(workbasket)
+    clear.click
     group_name.set workbasket
     search_button.click
   end
 
   def find_measure_by_type(measure_type)
+    clear.click
     within("div.find-items__row:nth-of-type(3) div.find-item__short") do
       search_for_value(measure_type)
     end
@@ -54,6 +57,7 @@ class FindMeasurePage < SitePrism::Page
   end
 
   def find_measure_by_sid(sid)
+    clear.click
     if sid.size < 7
       filter_by_contains
       measure_sid.set sid
@@ -76,5 +80,9 @@ class FindMeasurePage < SitePrism::Page
     within(measure_sid_dropdown) do
       select_dropdown("contains")
     end
+  end
+
+  def number_of_search_results
+    number_of_measures.text
   end
 end
