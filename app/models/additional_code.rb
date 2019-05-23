@@ -62,7 +62,9 @@ class AdditionalCode < Sequel::Model
   end
 
   def additional_code_description
-    additional_code_descriptions(reload: true).first
+    TimeMachine.at(validity_start_date) do
+      additional_code_descriptions(reload: true).last
+    end
   end
 
   one_to_one :export_refund_nomenclature, key: :export_refund_code,
