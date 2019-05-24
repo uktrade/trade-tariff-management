@@ -226,7 +226,15 @@ $(document).ready(function() {
       },
       editMembership: function(membership) {
         this.editingMembership = membership;
-      }
+      },
+      removeMembership: function(membership) {
+        var ids = this.geographical_area.geographical_area_memberships.map( m => m.geographical_area_id )
+
+        var index = ids.indexOf(membership.geographical_area_id)
+        if (index !== -1) {
+          this.geographical_area.geographical_area_memberships.splice(index, 1);
+        }
+      },
     }
   });
 });

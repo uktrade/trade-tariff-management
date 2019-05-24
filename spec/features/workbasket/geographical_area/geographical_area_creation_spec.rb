@@ -75,6 +75,32 @@ RSpec.describe "adding geographical areas", :js do
     expect_to_have_member(country)
   end
 
+  it "allows user to remove default groups from new country" do
+    erga_omnes = create(:geographical_area, :erga_omnes)
+    third_countries = create(:geographical_area, :third_countries)
+
+    visit(root_path)
+
+    click_on("Create a new geographical area")
+
+    select_radio("A country")
+    fill_in("What code will identify this area?", with: "GE")
+    fill_in("What is the area description?", with: "A description")
+    input_date("When is the area valid from?", 3.days.from_now)
+
+    expect(page).to have_content("1008")
+
+    all("#remove-group").last.click
+
+    expect(page).to_not have_content("1008")
+
+    click_on "Submit for cross-check"
+
+    expect(page).to have_content "Geographical area submitted"
+    expect_to_not_be_a_member(third_countries)
+    expect_to_be_a_member(erga_omnes)
+  end
+
   private
 
   def expect_to_be_a_member(group)
@@ -86,6 +112,12 @@ RSpec.describe "adding geographical areas", :js do
   def expect_to_have_member(country)
     group = GeographicalArea.find(geographical_area_id: "0000")
     membership_sids = group.contained_geographical_areas.map { |geo_area| geo_area.geographical_area_sid }
+    membership_sids.include?(country.geographical_area_sid)
+  end
+
+  def expect_to_not_be_a_member(group)
+    country = GeographicalArea.find(geographical_area_id: "GE")
+    membership_sids = country.member_of_following_geographical_areas.map { |geo_area| geo_area.geographical_area_sid }
     membership_sids.include?(country.geographical_area_sid)
   end
 
