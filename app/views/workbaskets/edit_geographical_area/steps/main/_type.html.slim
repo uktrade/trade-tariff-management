@@ -45,9 +45,9 @@ fieldset
                   p
                     - if original_geographical_area.parent_geographical_area_group_sid.present? && original_geographical_area.parent_geographical_area.present?
                       | This group's current parent is
-                      =<> "'#{original_geographical_area.parent_geographical_area.geographical_area_id}'"
+                      =<> "'#{original_geographical_area.parent_geographical_area.geographical_area_id}"
                       =< original_geographical_area.parent_geographical_area.description
-                      | .
+                      | '.
                     - else
                       | This group does not currently have a parent.
 

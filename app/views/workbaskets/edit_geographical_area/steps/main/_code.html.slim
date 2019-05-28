@@ -1,10 +1,10 @@
-fieldset.disabled_area.disabled
+fieldset
   form-group
     template slot-scope="slotProps"
       h3.heading-medium
         | What code will identify this area?
 
-      label.form-label
+      label.form-label.disabled
         span.form-hint
           | This must be unique and either a two-letter ISO code (for a country or region) or a string of four
           br
@@ -12,4 +12,4 @@ fieldset.disabled_area.disabled
 
       .bootstrap-row
         .col-xs-2.col-md-2.col-lg-2
-          input.form-control maxlength="4" v-model="geographical_area.geographical_area_id"
+          input.form-control maxlength="4" v-model="geographical_area.geographical_area_id" disabled="disabled"
