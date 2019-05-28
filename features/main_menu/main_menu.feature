@@ -131,10 +131,10 @@ Feature: As a Tariff Manager
 
   @manual
 #  Comment out the @manual tag above to run this test.
-  Scenario: Bulk edit measures - Workbasket rejected in cross-check has View and Withdraw/edit links
+  Scenario: Bulk edit measures - Cross-check rejected workbasket should have the View and Withdraw/edit links
     Given I am on the tariff main menu
     When I click the find and edit measure link
-    And I search for multiple measures by measure sid "3646"
+    And I search for multiple measures by measure sid "3647"
     And I select the first available measure to work with
     And I bulk edit the selected measures with action "Change origin"
     Then the measure is updated with the "Change origin" change

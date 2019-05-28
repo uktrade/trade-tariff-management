@@ -63,14 +63,14 @@ Feature: Find and Edit Measures
   Scenario: Historical measures should not be deleted after withdrawing a bulk-edit workbasket sent for cross-check
     Given I am on the tariff main menu
     When I click the find and edit measure link
-    And I search for multiple measures by measure sid "3646"
+    And I search for multiple measures by measure sid "3647"
     And I select the first available measure to work with
     And I bulk edit the selected measures with action "Change origin"
     Then the measure is updated with the "Change origin" change
     When I submit the bulk edit measure for cross-check
     When I return to the tariff main menu
     When I click the find and edit measure link
-    And I search for multiple measures by measure sid "3646"
+    And I search for multiple measures by measure sid "3647"
     Then the search results are displayed
     And I search for the measure by workbasket
     Then there is "1" measure in the search result
@@ -78,7 +78,7 @@ Feature: Find and Edit Measures
     Then I can withdraw the workbasket
     When I return to the tariff main menu
     And I click the find and edit measure link
-    And I search for multiple measures by measure sid "3646"
+    And I search for multiple measures by measure sid "3647"
     Then the search returns the same number of measures
     When I search for the measure by workbasket
     Then there is "0" measure in the search result
@@ -89,14 +89,14 @@ Feature: Find and Edit Measures
   Scenario: Additional measures should not be created after rejecting (cross-check) and withdrawing a bulk-edit workbasket
     Given I am on the tariff main menu
     When I click the find and edit measure link
-    And I search for multiple measures by measure sid "3646"
+    And I search for multiple measures by measure sid "3647"
     And I select the first available measure to work with
     And I bulk edit the selected measures with action "Change origin"
     Then the measure is updated with the "Change origin" change
     When I submit the bulk edit measure for cross-check
     When I return to the tariff main menu
     When I click the find and edit measure link
-    And I search for multiple measures by measure sid "3646"
+    And I search for multiple measures by measure sid "3647"
     Then the search results are displayed
     And I search for the measure by workbasket
     Then there is "1" measure in the search result
@@ -113,7 +113,7 @@ Feature: Find and Edit Measures
     Then I can crosscheck and accept the workbasket
     When I return to the tariff main menu
     And I click the find and edit measure link
-    And I search for multiple measures by measure sid "3646"
+    And I search for multiple measures by measure sid "3647"
     Then the search returns the same number of measures
     When I search for the measure by workbasket
     Then there is "1" measure in the search result
