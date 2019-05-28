@@ -238,7 +238,7 @@ AdditionalCodesValidator.prototype.setLevel = function(level) {
 };
 
 AdditionalCodesValidator.prototype.parseConformanceMessage = function(message) {
-  var regex = new RegExp(/(^[\w]+)\:\s([\w\s]*)/gm);
+  var regex = new RegExp(/(^[\w]+)\:\s(.*)/gm);
   var matches = regex.exec(message);
 
   if (!matches) {
