@@ -65,5 +65,25 @@ module Workbaskets
         geographical_areas_list.first
       end || original_geographical_area
     end
+
+    def validity_start_date
+      settings[:validity_start_date]
+    end
+
+    def validity_end_date
+      settings[:validity_end_date]
+    end
+
+    def description
+      settings[:description]
+    end
+
+    def geographical_area_id
+      settings[:original_geographical_area_id]
+    end
+
+    def geographical_code
+      original_geographical_area.geographical_code
+    end
   end
 end

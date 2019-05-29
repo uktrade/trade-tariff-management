@@ -1,0 +1,16 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Geographical area approved
+
+  h3.heading-medium
+    | An edited
+    =<> workbasket.settings.original_geographical_area.geographical_code.capitalize
+    | with code
+    =<> "'#{workbasket.settings[:original_geographical_area_id].upcase}'"
+    | and description
+    br
+    =<> "'#{workbasket.settings.main_step_settings['description'].capitalize}'"
+    | has been approved. It has been scheduled for export CDS
+    =< "in the next batch."
+
+= render "workbaskets/create_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
