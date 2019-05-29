@@ -106,11 +106,12 @@ module WorkbasketInteractions
 
       def add_membership!
         GeographicalAreaMembership.unrestrict_primary_key
-
         if memberships
           memberships.each do |m|
             membership_data = m.last['geographical_area']
             @membership = new_membership(membership_data)
+            assign_system_ops!(@membership)
+            set_primary_key!(@membership)
             @membership.save if persist_mode?
           end
         end
@@ -124,12 +125,12 @@ module WorkbasketInteractions
           group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
           geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
         end
-
         GeographicalAreaMembership.new(
           geographical_area_sid: geographical_area.geographical_area_sid,
           geographical_area_group_sid: group[:geographical_area_sid],
           validity_start_date: membership_data['validity_start_date'],
-          validity_end_date: membership_data['validity_end_date']
+          validity_end_date: membership_data['validity_end_date'],
+          workbasket_id: workbasket.id
         )
       end
 
