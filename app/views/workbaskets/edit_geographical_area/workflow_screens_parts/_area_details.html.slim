@@ -1,0 +1,56 @@
+h3.heading-medium Geographical area details
+
+- g_area = geographical_area.decorate
+
+.view-workbasket-geographical-area-details-container
+  .bootstrap-row
+    .col-md-6.heading_column.pull-left
+      | Geographical area valid from
+    .col-md-6
+      = g_area.start_date
+
+  .bootstrap-row
+    .col-md-6.heading_column.pull-left
+      | Geographical area valid to
+    .col-md-6
+      = g_area.end_date
+
+  .bootstrap-row
+    .col-md-6.heading_column.pull-left
+      | Geographical area type
+    .col-md-6
+      = g_area.type
+
+  .bootstrap-row
+    .col-md-6.heading_column.pull-left
+      | Geographical area code
+    .col-md-6
+      = g_area.geographical_area_id
+
+  - if g_area.parent_geographical_area.present?
+    .bootstrap-row
+      .col-md-6.heading_column.pull-left
+        | Parent geographical area group
+      .col-md-6
+        = g_area.parent_geographical_area.decorate.title
+
+  .bootstrap-row
+    .col-md-6.heading_column.pull-left
+      | Current description
+    .col-md-6
+      = g_area.current_description
+
+  .bootstrap-row
+    .col-md-6.heading_column.pull-left
+      | Description valid from
+    .col-md-6
+      = g_area.current_description_valid_from
+
+  .bootstrap-row
+    .col-md-6.heading_column.pull-left
+      | Description valid to
+    .col-md-6
+      = g_area.current_description_valid_to
+
+  = render "workbaskets/create_geographical_area/workflow_screens_parts/other_descriptions", g_area: g_area
+  = render "workbaskets/create_geographical_area/workflow_screens_parts/memberships", g_area: g_area
