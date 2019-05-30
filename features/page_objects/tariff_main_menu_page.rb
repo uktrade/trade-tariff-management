@@ -56,6 +56,10 @@ class TariffMainMenuPage < SitePrism::Page
     create_quotas_link.click
   end
 
+  def open_new_additional_code_form
+    create_additional_codes_link.click
+  end
+
   def logout
     logout_link.click
   end
