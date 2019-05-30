@@ -23,7 +23,7 @@ module WorkbasketInteractions
         @settings = settings
 
         @type = squish_it(geographical_code)
-        @area_id = squish_it(geographical_area_id).upcase
+        @area_id = squish_it(geographical_area_id)
         @start_date = parse_date(:validity_start_date)
         @end_date = parse_date(:validity_end_date)
 
@@ -65,7 +65,6 @@ module WorkbasketInteractions
               @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_group_code)
               @errors_summary = errors_translator(:summary_invalid_fields)
             end
-
             if %w[country region].include?(type) && area_id.match(/^[A-Z]{2}$/).blank?
               @errors[:geographical_area_id] = errors_translator(:geographical_area_id_invalid_country_code)
               @errors_summary = errors_translator(:summary_invalid_fields)
