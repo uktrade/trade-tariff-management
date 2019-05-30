@@ -3,6 +3,45 @@
     li
       = link_to "Main menu", root_url
 
+div
+  - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'suspend_quota'
+
+    div class="govuk-box-highlight"
+      h1 class="heading-xlarge"
+        | Request complete
+
+      p class="font-large"
+        | You have requested that quota
+        strong class="bold"
+          |  #{previous_workbasket.settings.quota_definition.quota_order_number_id}
+        |  with workbasket name '#{previous_workbasket.title}', be suspended from
+        strong class="bold"
+          |  #{previous_workbasket.operation_date.strftime('%d %b %Y')}
+        | #{((' to ' + previous_workbasket.settings.main_step_settings['suspension_date']) if previous_workbasket.settings.main_step_settings['suspension_date'].present?)}
+        | .
+
+  - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'remove_suspension'
+
+    div class="govuk-box-highlight"
+      h1 class="heading-xlarge"
+        | Request complete
+
+      p class="font-large"
+        | You have requested that quota suspension on quota
+        strong class="bold"
+          |  #{previous_workbasket.settings.quota_definition.quota_order_number_id}
+        |  be removed on #{previous_workbasket.operation_date.strftime('%d %b %Y')}, with workbasket name '#{previous_workbasket.title}'
+
+  - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'stop_quota'
+
+      div class="govuk-box-highlight"
+        h1 class="heading-xlarge"
+          | Request complete
+
+        p class="font-large"
+          | A stop quota has been requested for quota #{('<strong>' + previous_workbasket.settings.quota_definition.quota_order_number_id + '<strong>') if previous_workbasket.settings.quota_definition.present?},
+          |  with workbasket name '#{previous_workbasket.title}'.&nbsp;
+
 h2.heading-large
   | Find a quota
   small
@@ -16,35 +55,6 @@ script
   = render "search_form"
 
   .search__results
-    - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'suspend_quota'
-      .confirmation-message
-        button.close
-        p
-          | You have requested that quota #{previous_workbasket.settings.quota_definition.quota_order_number_id},&nbsp;
-          | with workbasket name '#{previous_workbasket.title}', be suspended from #{previous_workbasket.operation_date.strftime('%d %b %Y')}
-          | #{((' to ' + previous_workbasket.settings.main_step_settings['suspension_date']) if previous_workbasket.settings.main_step_settings['suspension_date'].present?)}
-          | .&nbsp;
-          a href="#"
-            | Withdraw request...
-
-    - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'remove_suspension'
-      .confirmation-message
-        button.close
-        p
-          | You have requested that quota suspension on quota #{previous_workbasket.settings.quota_definition.quota_order_number_id},&nbsp;
-          | be removed on #{previous_workbasket.operation_date.strftime('%d %b %Y')}, with workbasket name '#{previous_workbasket.title}'.&nbsp;
-          a href="#"
-            | Withdraw request...
-
-    - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'stop_quota'
-      .confirmation-message
-        button.close
-        p
-          | A stop quota has been requested for quota#{(' ' + previous_workbasket.settings.quota_definition.quota_order_number_id) if previous_workbasket.settings.quota_definition.present?},&nbsp;
-          | with workbasket name '#{previous_workbasket.title}'.&nbsp;
-          a href="#"
-            | Withdraw request...
-
     - ops = {}
     - ops[:search_code] = params[:search_code] if params[:search_code].present?
 
