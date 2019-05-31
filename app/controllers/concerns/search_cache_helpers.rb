@@ -12,7 +12,9 @@ module SearchCacheHelpers
 
     expose(:cached_search_ops) do
       Rails.cache.read(params[:search_code]).merge(
-        page: current_page
+        page: current_page,
+        order_col: order_col,
+        order_dir: order_dir
       )
     end
 
@@ -43,6 +45,14 @@ module SearchCacheHelpers
 
     expose(:current_page) do
       params[:page] || 1
+    end
+
+    expose(:order_col) do
+      params[:order_col]
+    end
+
+    expose(:order_dir) do
+      params[:order_dir] || 'asc'
     end
   end
 

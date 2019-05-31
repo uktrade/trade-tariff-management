@@ -1,13 +1,8 @@
-#main-menu
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-7.col-lg-8
-      .breadcrumbs
-        ol
-          li
-            = link_to "Main menu", root_url
-    .col-xs-12.col-sm-12.col-md-5.col-lg-4
-      p.text-right
-        = "Logged in as: #{current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe
+= render "shared/breadcrumbs" do
+  .breadcrumbs
+    ol
+      li
+        = link_to "Main menu", root_url
 
 h2.heading-large
   | Find and edit additional codes
@@ -44,4 +39,4 @@ script
         br
         = content_tag "loading-spinner", nil
 
-= render "shared/vue_templates/records_grid"
+= render "shared/vue_templates/records_grid", backEndSort: true

@@ -19,7 +19,8 @@ Vue.component("records-grid", {
     "disableSelection",
     "disableSelectAll",
     "singleSelection",
-    "selectedItem"
+    "selectedItem",
+    "back-end-sort"
   ],
   data: function() {
     var self = this;
@@ -41,8 +42,8 @@ Vue.component("records-grid", {
     }
 
     return {
-      sortBy: this.columns[0].field,
-      sortDir: "desc",
+      sortBy: parseQueryString(window.location.search.substring(1)).order_col || this.columns[0].field,
+      sortDir: parseQueryString(window.location.search.substring(1)).order_dir || "asc",
       selectAll: selectAll,
       firstLoad: true,
       indirectSelectAll: false,
@@ -54,13 +55,13 @@ Vue.component("records-grid", {
       return(item.status !== 'Published')
     },
     selectSorting: function(column) {
-      var f = column.field;
-
-      if (f == this.sortBy) {
+      if (this.backEndSort) {
+        this.$parent.onPageChange(column.field);
+      } else if (column.field == this.sortBy) {
         this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
       } else {
         this.sortDir = "desc";
-        this.sortBy = f;
+        this.sortBy = column.field;
       }
     },
     sendCheckedTrigger: function(event) {
