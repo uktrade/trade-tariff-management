@@ -39,7 +39,6 @@ $(document).ready(function() {
           {enabled: true, title: "Description", field: "description", sortable: true, type: "string" },
           {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date" },
           {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date" },
-          {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "string" },
           {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
 
@@ -221,16 +220,22 @@ $(document).ready(function() {
           this.selectedItems.splice(index, 1);
         }
       },
-      onPageChange: function(page) {
+      onPageChange: function(change_selector) {
         var self = this;
 
         var params = parseQueryString(window.location.search.substring(1));
-        params.page = page;
-        this.pagination.page = page;
+        if (Number.isInteger(change_selector)) {
+          params.page = change_selector;
+          this.pagination.page = change_selector;
+        } else if (params.order_col == change_selector) {
+          params.order_dir = (params.order_dir == 'asc' ? 'desc' : 'asc');
+        } else {
+          params.order_col = change_selector;
+        }
 
-        var newQueryString = "?search_code=" + params.search_code + "&page=" + params.page;
+        var newQueryString = "?search_code=" + params.search_code + "&page=" + params.page + "&order_col=" + params.order_col + "&order_dir=" + params.order_dir;
 
-        window.history.pushState(params, "Find and edit additional codes - Page " + page, newQueryString);
+        window.history.pushState(params, "Find and edit additional codes - Page " + params.page, newQueryString);
 
         this.loadItems(function() {
           self.scrollUp();

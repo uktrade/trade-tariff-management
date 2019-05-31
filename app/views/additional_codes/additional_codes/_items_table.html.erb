@@ -1,3 +1,3 @@
-<records-grid table-class="additional-codes-table" primary-key="additional_code_sid" :selected-rows="selectedItems" :disable-scroller="true" :on-item-selected="onItemsSelected" :on-item-deselected="onItemsDeselected" :data="items" :columns="columns" :client-sorting="false" :on-select-all-changed="changeSelectionType" :selection-type="selectionType" :singleSelection="false"></records-grid>
+<records-grid table-class="additional-codes-table" primary-key="additional_code_sid" :selected-rows="selectedItems" :disable-scroller="true" :on-item-selected="onItemsSelected" :on-item-deselected="onItemsDeselected" :data="items" :columns="columns" :client-sorting="false" :on-select-all-changed="changeSelectionType" :selection-type="selectionType" :singleSelection="false" :back-end-sort="true"></records-grid>
 
 <table-pagination :page="pagination.page" :total="pagination.total_count" :per-page="pagination.per_page" :on-click="onPageChange"></table-pagination>

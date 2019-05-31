@@ -19,7 +19,7 @@ module AdditionalCodes
     end
 
     def results(paginated_query = true)
-      @relation = AllAdditionalCode.by_start_date_and_additional_code_sid_reverse
+      @relation = AllAdditionalCode.order_by(search_ops[:order_col], search_ops[:order_dir])
       @relation = relation.page(page) if paginated_query
       search_ops.select do |k, v|
         ALLOWED_FILTERS.include?(k.to_s) &&

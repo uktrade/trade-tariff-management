@@ -3,11 +3,24 @@ module AdditionalCodes
     module FindAdditionalCodesCollection
       include ::Shared::SearchFilters::FindCollection
 
-      def by_start_date_and_additional_code_sid_reverse
-        order(
-          Sequel.desc(:all_additional_codes__validity_start_date),
-            Sequel.desc(:all_additional_codes__additional_code_sid)
-        )
+      def order_by(field, direction)
+        if (field)
+          if field == "type_id"
+            field = "additional_code_type_id"
+          end
+
+          order_symbol = "all_additional_codes__#{field}".to_sym
+          direction = (direction == 'desc' ? 'desc' : 'asc')
+
+          order(Sequel.send(direction, order_symbol),
+                Sequel.asc(:all_additional_codes__additional_code_type_id),
+                Sequel.asc(:all_additional_codes__additional_code)
+          )
+        else
+          order(Sequel.asc(:all_additional_codes__additional_code_type_id),
+                Sequel.asc(:all_additional_codes__additional_code)
+          )
+        end
       end
 
       def operator_search_by_additional_code_type(operator, additional_code_type_id = nil)

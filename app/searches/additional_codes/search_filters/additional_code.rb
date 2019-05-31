@@ -83,7 +83,6 @@ module AdditionalCodes
 
       def is_not_clause
         <<-eos
-            #{is_not_specified_clause} OR
             all_additional_codes.additional_code != ?
         eos
       end
