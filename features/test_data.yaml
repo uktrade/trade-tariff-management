@@ -282,7 +282,7 @@ condition_with_no_certificate:
   condition:
   - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
 
-create_additional_codes:
+multiple_additional_codes:
   additional_codes:
   - {type: "Dual Use", description: "Other"}
   - {type: "Restrictions", description: "Other"}
