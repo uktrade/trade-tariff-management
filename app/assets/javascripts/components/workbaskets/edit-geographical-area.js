@@ -269,7 +269,7 @@ $(document).ready(function() {
           validity_start_date: payload.validity_start_date,
           validity_end_date: payload.validity_end_date,
           remove_parent_group_association: payload.remove_parent_group_association,
-          geographical_area_memberships: objectToArray(payload.geographical_area_memberships)
+          geographical_area_memberships: payload.geographical_area_memberships
         };
       },
       emptyGeographicalArea: function() {

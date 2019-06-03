@@ -32,8 +32,18 @@ module Workbaskets
 
       res[:geographical_code] = original_geographical_area.geographical_code
       res[:geographical_area_id] = original_geographical_area.geographical_area_id
-
+      res[:geographical_area_memberships] = memberships
       res
+    end
+
+    def memberships
+      original_geographical_area.member_of_following_geographical_areas.map do |area|
+        hash = area.to_hash
+        hash[:geographical_area] = {
+          'description' => area.description
+        }
+        hash
+      end
     end
 
     def prepare_collection(list, data_field_name)
