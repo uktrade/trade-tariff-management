@@ -177,6 +177,8 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
+    font-awesome-rails (4.7.0.5)
+      railties (>= 3.2, < 6.1)
     foreman (0.85.0)
       thor (~> 0.19.1)
     forgery (0.7.0)
@@ -540,6 +542,7 @@ DEPENDENCIES
   factory_bot_rails
   fakefs
   ffi (~> 1.9.24)
+  font-awesome-rails
   foreman
   forgery
   govspeak (~> 5.6.0)

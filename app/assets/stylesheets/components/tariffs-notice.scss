@@ -1,0 +1,12 @@
+// custom notice overrides govuk-elements in order to mach provided designs
+.tariffs-modal-notice {
+  color: $link-hover-colour;
+  .icon {
+    top: 1.8rem;
+    font-size: 2em;
+  }
+
+  strong {
+    font-weight: normal;
+  }
+}
