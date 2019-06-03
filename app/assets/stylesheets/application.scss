@@ -20,7 +20,6 @@
 @import 'elements/layout';
 @import 'elements/elements-typography';
 @import 'elements/buttons';
-// @import 'elements/icons'
 @import 'elements/lists';
 @import 'elements/tables';
 @import 'elements/details';
@@ -45,3 +44,8 @@
 @import "variables";
 @import "components/*";
 @import "ie11";
+@import "font-awesome";
+
+// components/icon generic .icon style is overwritting elements/icons so it has
+// been added afterward to fix styles
+@import 'elements/icons';

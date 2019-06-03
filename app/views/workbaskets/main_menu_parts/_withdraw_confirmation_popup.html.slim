@@ -1,0 +1,32 @@
+.modal aria-hidden="true" id="main-menu-#{modal_id}"
+  .modal__overlay tabindex="-1"
+    .modal__container.workbasket-main-menu-modal.workbasket-confirmation-modal aria-modal="true" role="dialog"
+      header.modal__header
+        h2.modal__title
+          slot name="title"
+            | Withdraw from workflow
+
+      .modal__content
+        slot
+
+          div class="notice tariffs-modal-notice"
+            i class="icon fa fa-info-circle"
+              span class="visually-hidden"
+                | Warning
+
+            strong
+              | The workbasket '#{workbasket.title}' will be withdrawn from workflow and returned to you. Its status will
+              | be reset to either 'New - in progress' (if it has never been sent to CDS), or 'Editing' (if it is already
+              | on CDS). You will be able to edit it as required, then re-submit for cross-check when ready.
+
+          h4 class="heading-small"
+            | Are you sure you want to withdraw this workbasket from workflow?
+
+          .form-actions
+            .save_progress_block
+              = link_to "Yes - withdraw from workflow", "#", class: "button js-main-menu-confirm-action"
+              .js-workbasket-base-save-progress-spinner.spinner_block.hidden
+                = render "measures/bulks/loading_spinner", message: "Saving..."
+
+            = link_to "No cancel", "#", class: "secondary-button js-main-menu-close-popup",
+                                     data: { popup_id: modal_id }

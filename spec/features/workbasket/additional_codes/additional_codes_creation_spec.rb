@@ -5,7 +5,7 @@ RSpec.describe "adding additional codes", :js do
   let (:code_type) { create(:additional_code_type) }
   let (:new_code) { '888' }
   let (:new_description) { 'New code description' }
-  
+
   it "allows a new code to be created" do
     visit(root_path)
     click_on("Create new additional codes")

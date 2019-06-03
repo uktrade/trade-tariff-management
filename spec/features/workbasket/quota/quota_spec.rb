@@ -135,7 +135,7 @@ RSpec.describe "quotas", :js do
   def navigate_to_edit_form
     click_link 'Return to main menu'
     click_link 'Withdraw/edit'
-    click_link 'Confirm'
+    click_link 'Yes - withdraw from workflow'
   end
 
   def change_precision_quota_and_submit

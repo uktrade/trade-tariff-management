@@ -32,6 +32,7 @@ gem 'momentjs-rails'
 gem "pikaday-gem"
 gem "selectize-rails"
 gem "parsley-rails"
+gem "font-awesome-rails"
 
 # Single sign on
 gem 'omniauth-oauth2'

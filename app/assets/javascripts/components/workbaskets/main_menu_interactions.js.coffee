@@ -21,12 +21,12 @@ window.MainMenuInteractions =
   withdrawWorkbasketConfirmationPopupInit: () ->
     $(document).on 'click', '.js-main-menu-show-withdraw-confirmation-link', ->
       target_url = $(this).data("target-url")
-      confirm_link = $("#main-menu-withdraw_confirmation_popup .js-main-menu-confirm-action")
+      confirm_link = $("#main-menu-withdraw_confirmation_popup_" + $(this).data("target-modal") + " .js-main-menu-confirm-action")
       confirm_link.attr('href', target_url)
       confirm_link.attr('data-method', 'get')
 
-      MainMenuInteractions.setSpinnerText("main-menu-withdraw_confirmation_popup", "Processing")
-      MainMenuInteractions.openModal('main-menu-withdraw_confirmation_popup')
+      MainMenuInteractions.setSpinnerText("main-menu-withdraw_confirmation_popup_" + $(this).data("target-modal"), "Processing")
+      MainMenuInteractions.openModal("main-menu-withdraw_confirmation_popup_" + $(this).data("target-modal"))
 
       return false
 
