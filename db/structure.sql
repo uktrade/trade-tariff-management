@@ -543,10 +543,27 @@ UNION
     additional_codes.added_by_id,
     additional_codes.added_at,
     additional_codes."national"
-   FROM public.additional_codes,
-    public.additional_code_description_periods,
-    public.additional_code_descriptions
-  WHERE ((additional_code_description_periods.additional_code_sid = additional_codes.additional_code_sid) AND ((additional_code_description_periods.additional_code_type_id)::text = (additional_codes.additional_code_type_id)::text) AND ((additional_code_description_periods.additional_code)::text = (additional_codes.additional_code)::text) AND (additional_code_descriptions.additional_code_description_period_sid = additional_code_description_periods.additional_code_description_period_sid));
+   FROM ((public.additional_codes
+     JOIN ( SELECT additional_code_description_periods_1.additional_code_description_period_sid,
+            additional_code_description_periods_1.additional_code_sid,
+            additional_code_description_periods_1.additional_code_type_id,
+            additional_code_description_periods_1.additional_code,
+            additional_code_description_periods_1.validity_start_date,
+            additional_code_description_periods_1.validity_end_date,
+            additional_code_description_periods_1.oid,
+            additional_code_description_periods_1.operation,
+            additional_code_description_periods_1.operation_date,
+            additional_code_description_periods_1.status,
+            additional_code_description_periods_1.workbasket_id,
+            additional_code_description_periods_1.workbasket_sequence_number,
+            additional_code_description_periods_1.added_by_id,
+            additional_code_description_periods_1.added_at,
+            additional_code_description_periods_1."national"
+           FROM public.additional_code_description_periods additional_code_description_periods_1
+          WHERE (additional_code_description_periods_1.additional_code_description_period_sid IN ( SELECT max(additional_code_description_periods_2.additional_code_description_period_sid) AS max
+                   FROM public.additional_code_description_periods additional_code_description_periods_2
+                  GROUP BY additional_code_description_periods_2.additional_code_type_id, additional_code_description_periods_2.additional_code))) additional_code_description_periods ON (((additional_code_description_periods.additional_code_sid = additional_codes.additional_code_sid) AND ((additional_code_description_periods.additional_code_type_id)::text = (additional_codes.additional_code_type_id)::text) AND ((additional_code_description_periods.additional_code)::text = (additional_codes.additional_code)::text))))
+     JOIN public.additional_code_descriptions ON ((additional_code_descriptions.additional_code_description_period_sid = additional_code_description_periods.additional_code_description_period_sid)));
 
 
 --
@@ -12576,3 +12593,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20190131153106_remove_unne
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_export_from_dates_to_workbasket.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190212163200_add_user_id_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190320142706_create_session_audits.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190603135337_replace_all_additional_codes_view.rb');
