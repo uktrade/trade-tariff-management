@@ -19,7 +19,8 @@ $(document).ready(function() {
         editingMembership: null,
         sortBy: "geographical_area_id",
         sortDir: "desc",
-        parentGroupsList: window.__geographical_area_groups_json
+        parentGroupsList: window.__geographical_area_groups_json,
+        removed_memberships: []
       };
 
       if (!$.isEmptyObject(window.__geographical_area_json)) {
@@ -307,7 +308,9 @@ $(document).ready(function() {
           parent_geographical_area_group_id: $("select[name='geographical_area[parent_geographical_area_group_id]']").val(),
           validity_start_date: this.geographical_area.validity_start_date,
           validity_end_date: this.geographical_area.validity_end_date,
-          remove_parent_group_association: remove_parent_group_association
+          remove_parent_group_association: remove_parent_group_association,
+          geographical_area_memberships: this.geographical_area.geographical_area_memberships,
+          removed_memberships: this.removed_memberships,
         };
       },
       triggerAddMemberships: function() {
@@ -346,7 +349,16 @@ $(document).ready(function() {
       },
       editMembership: function(membership) {
         this.editingMembership = membership;
-      }
+      },
+      removeMembership: function(membership) {
+        var ids = this.geographical_area.geographical_area_memberships.map( m => m.geographical_area_id )
+
+        var index = ids.indexOf(membership.geographical_area_id)
+        if (index !== -1) {
+          this.removed_memberships.push(this.geographical_area.geographical_area_memberships[index])
+          this.geographical_area.geographical_area_memberships.splice(index, 1);
+        }
+      },
     }
   });
 });
