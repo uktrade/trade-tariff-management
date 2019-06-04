@@ -157,13 +157,13 @@ $(document).ready(function() {
         return Object.keys(this.conformanceErrors).length > 0;
       },
       isGroup: function() {
-        return this.geographical_area.geographical_code === 'group';
+        return (this.geographical_area.geographical_code === 'group' || this.geographical_area.geographical_code === '1');
       },
       isRegion: function() {
-        return this.geographical_area.geographical_code === 'region';
+        return (this.geographical_area.geographical_code === 'region' || this.geographical_area.geographical_code === '2');
       },
       isCountry: function() {
-        return this.geographical_area.geographical_code === 'country';
+        return (this.geographical_area.geographical_code === 'country' || this.geographical_area.geographical_code === '0');
       },
       sortedMemberships: function() {
         var memberships = this.geographical_area.geographical_area_memberships.slice(0);
