@@ -21,4 +21,14 @@ class GeographicalAreaMembership < Sequel::Model
   def subrecord_code
     "15".freeze
   end
+
+  dataset_module do
+    def started_memberships
+      where{validity_start_date <= Date.today}
+    end
+
+    def not_end_dated
+      where("validity_end_date > :date or validity_end_date is NULL", date: Date.today)
+    end
+  end
 end

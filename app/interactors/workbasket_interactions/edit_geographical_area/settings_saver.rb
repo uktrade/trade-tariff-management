@@ -83,7 +83,8 @@ module WorkbasketInteractions
       def validate!
         check_initial_validation_rules!
         check_if_nothing_changed! if @errors.blank?
-        check_conformance_rules! if @errors.blank?
+        edit_memberships! if @errors.blank? && only_memberships_changed?
+        check_conformance_rules! if @errors.blank? && !only_memberships_changed?
       end
 
       def check_initial_validation_rules!
@@ -115,7 +116,28 @@ module WorkbasketInteractions
         original_geographical_area.description.to_s.squish == description.to_s.squish &&
           original_geographical_area.validity_start_date.strftime("%Y-%m-%d") == validity_start_date.try(:strftime, "%Y-%m-%d") &&
           original_geographical_area.validity_end_date.try(:strftime, "%Y-%m-%d") == validity_end_date.try(:strftime, "%Y-%m-%d") &&
-          original_geographical_area.parent_geographical_area_group_sid.to_s == parent_geographical_area_group_sid.to_s
+          original_geographical_area.parent_geographical_area_group_sid.to_s == parent_geographical_area_group_sid.to_s &&
+          memberships_have_no_changes?
+      end
+
+      def only_memberships_changed?
+        original_geographical_area.description.to_s.squish == description.to_s.squish &&
+          original_geographical_area.validity_start_date.strftime("%Y-%m-%d") == validity_start_date.try(:strftime, "%Y-%m-%d") &&
+          original_geographical_area.validity_end_date.try(:strftime, "%Y-%m-%d") == validity_end_date.try(:strftime, "%Y-%m-%d") &&
+          original_geographical_area.parent_geographical_area_group_sid.to_s == parent_geographical_area_group_sid.to_s &&
+          !memberships_have_no_changes?
+      end
+
+      def memberships_have_no_changes?
+        original_membership_sids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_sid }
+        new_membership_sids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_sid"].to_i}
+        original_membership_sids == new_membership_sids
+      end
+
+      def new_membership_sids
+        original_membership_sids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_sid }
+        new_membership_sids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_sid"].to_i}
+        new_membership_sids.select { |m| !original_membership_sids.include?(m) }
       end
 
       def check_conformance_rules!
@@ -133,7 +155,6 @@ module WorkbasketInteractions
             end_date_existing_geographical_area_desription_period!
             add_next_geographical_area_description_period!
             add_next_geographical_area_description!
-
           else
 
             p ""
@@ -154,10 +175,53 @@ module WorkbasketInteractions
               add_next_geographical_area_description_period!
               add_next_geographical_area_description!
             end
+
+            edit_memberships! unless memberships_have_no_changes?
           end
 
           parse_and_format_conformance_rules
         end
+      end
+
+      def edit_memberships!
+        unless new_membership_sids.empty?
+          add_new_memberships!
+        end
+        if membership_removed?
+          end_date_existing_memberships!
+        end
+      end
+
+      def membership_removed?
+        settings_params['removed_memberships']
+      end
+
+      def add_new_memberships!
+        new_membership_sids = new_membership_sids
+        new_memberships = settings_params["geographical_area_memberships"].values.select {|area| new_membership_sids.includes?(area['geographical_area_sid'])}
+        new_memberships.each do |m|
+          @membership = new_membership(m)
+          assign_system_ops!(@membership)
+          set_primary_key!(@membership)
+          @membership.save if persist_mode?
+        end
+      end
+
+      def new_membership(membership_data)
+        if geographical_code == 'group'
+          geographical_area = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+          group = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        else
+          group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+          geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        end
+        GeographicalAreaMembership.new(
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          geographical_area_group_sid: group[:geographical_area_sid],
+          validity_start_date: membership_data['validity_start_date'],
+          validity_end_date: membership_data['validity_end_date'],
+          workbasket_id: workbasket.id
+        )
       end
 
       def parse_and_format_conformance_rules
@@ -224,7 +288,8 @@ module WorkbasketInteractions
           original_geographical_area.description.to_s.squish != description.to_s.squish &&
             original_geographical_area.validity_start_date.strftime("%Y-%m-%d") == validity_start_date.try(:strftime, "%Y-%m-%d") &&
             original_geographical_area.validity_end_date.try(:strftime, "%Y-%m-%d") == validity_end_date.try(:strftime, "%Y-%m-%d") &&
-            original_geographical_area.parent_geographical_area_group_sid.to_s == parent_geographical_area_group_sid.to_s
+            original_geographical_area.parent_geographical_area_group_sid.to_s == parent_geographical_area_group_sid.to_s &&
+            memberships_have_no_changes?
         end
       end
 
@@ -237,6 +302,14 @@ module WorkbasketInteractions
           ).assign!(false)
 
           original_geographical_area.save
+        end
+      end
+
+      def end_date_existing_memberships!
+        settings_params['removed_memberships'].values.each do |area|
+          existing_membership = GeographicalAreaMembership.find(geographical_area_sid: original_geographical_area.geographical_area_sid, geographical_area_group_sid: area['geographical_area_sid'])
+          existing_membership.validity_end_date = operation_date
+          existing_membership.save
         end
       end
 
@@ -336,6 +409,36 @@ module WorkbasketInteractions
         assign_system_ops!(next_geographical_area_description)
 
         next_geographical_area_description.save if persist_mode?
+      end
+
+      def add_membership!
+        GeographicalAreaMembership.unrestrict_primary_key
+        if memberships
+          memberships.each do |m|
+            membership_data = m.last['geographical_area']
+            @membership = new_membership(membership_data)
+            assign_system_ops!(@membership)
+            set_primary_key!(@membership)
+            @membership.save if persist_mode?
+          end
+        end
+      end
+
+      def new_membership(membership_data)
+        if geographical_code == 'group'
+          geographical_area = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+          group = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        else
+          group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+          geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
+        end
+        GeographicalAreaMembership.new(
+          geographical_area_sid: geographical_area.geographical_area_sid,
+          geographical_area_group_sid: group[:geographical_area_sid],
+          validity_start_date: membership_data['validity_start_date'],
+          validity_end_date: membership_data['validity_end_date'],
+          workbasket_id: workbasket.id
+        )
       end
 
       def persist_mode?

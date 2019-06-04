@@ -76,6 +76,11 @@ class GeographicalArea < Sequel::Model
     geographical_code == GEOGRAPHICAL_REGION_CODE
   end
 
+  def currently_member_of
+    group_sids = GeographicalAreaMembership.started_memberships.not_end_dated.where(geographical_area_sid: geographical_area_sid).pluck(:geographical_area_group_sid)
+    GeographicalArea.where(geographical_area_sid: group_sids).all
+  end
+
   dataset_module do
     def by_id(id)
       where(geographical_area_id: id)
