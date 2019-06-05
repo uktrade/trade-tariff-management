@@ -14,11 +14,23 @@ class GeographicalAreaMembership < Sequel::Model
   one_to_one :geographical_area, key: :geographical_area_sid,
                                  primary_key: :geographical_area_sid
 
+  subset(:not_end_dated){validity_start_date}
+
   def record_code
     "250".freeze
   end
 
   def subrecord_code
     "15".freeze
+  end
+
+  dataset_module do
+    def started_memberships
+      where{validity_start_date <= Date.today}
+    end
+
+    def not_end_dated
+      where("validity_end_date > :date or validity_end_date is NULL", date: Date.today)
+    end
   end
 end

@@ -37,7 +37,7 @@ module Workbaskets
     end
 
     def memberships
-      original_geographical_area.member_of_following_geographical_areas.map do |area|
+      original_geographical_area.member_of_now.map do |area|
         hash = area.to_hash
         hash[:geographical_area] = {
           'description' => area.description

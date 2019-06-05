@@ -13,6 +13,7 @@ module Workbaskets
 
     def settings
       JSON.parse(main_step_settings_jsonb)
+      #  todo, put updated memberships in here.
     end
 
     def measure_sids_jsonb

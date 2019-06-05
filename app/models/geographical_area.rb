@@ -59,6 +59,8 @@ class GeographicalArea < Sequel::Model
     ds.with_actual(GeographicalAreaMembership).order(Sequel.asc(:geographical_area_id))
   end
 
+  #     ds.with_actual(GeographicalAreaMembership).where('geographical_area_memberships.validity_end_date = ? OR geographical_area_memberships.validity_end_date > ?', nil, Date.today).order(Sequel.asc(:geographical_area_id))
+
   one_to_many :measures, key: :geographical_area_sid,
                          primary_key: :geographical_area_sid do |ds|
     ds.with_actual(Measure)
@@ -74,6 +76,11 @@ class GeographicalArea < Sequel::Model
 
   def region?
     geographical_code == GEOGRAPHICAL_REGION_CODE
+  end
+
+  def member_of_now
+    group_sids = GeographicalAreaMembership.started_memberships.not_end_dated.where(geographical_area_sid: geographical_area_sid).pluck(:geographical_area_group_sid)
+    GeographicalArea.where(geographical_area_sid: group_sids).all
   end
 
   dataset_module do
