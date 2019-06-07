@@ -205,10 +205,12 @@ Vue.component('custom-select', {
       if (codeField) {
         options["render"] = {
           option: function(data) {
-            var abbreviationSpan = "";
+            var abbreviationSpan = '';
 
-            if (abbreviationClassName) {
+            if (abbreviationClassName && data.showAbbreviationInDD) {
               abbreviationSpan = "<span class='abbreviation " + abbreviationClassName + "'>" + (data.abbreviation || "&nbsp;") + "</span>";
+            } else if(abbreviationClassName) {
+              abbreviationSpan = '<span class="abbreviation ' + abbreviationClassName + '">&nbsp;</span>';
             }
 
             return "<span class='selection'><span class='option-prefix " + codeClassName + "'>" + data[codeField] + "</span>" + abbreviationSpan + "<span>" + data[options.labelField] + "</span></span>";
@@ -216,7 +218,7 @@ Vue.component('custom-select', {
           item: function(data) {
             var abbreviation = "";
 
-            if (abbreviationClassName && data.abbreviation) {
+            if (abbreviationClassName && data.showAbbreviationInDD) {
               abbreviation = data.abbreviation;
             }
 
