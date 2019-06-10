@@ -19,10 +19,12 @@ ul class="list"
 
   - if iam_workbasket_author? && workbasket.can_withdraw?
     li
-      = link_to "Withdraw submission/edit measures", "#", data: { target_url: withdraw_workbasket_from_workflow_bulk_edit_of_measure_url(workbasket.id) }, class: "js-main-menu-show-withdraw-confirmation-link"
+      = link_to "Withdraw submission/edit measures", "#",
+      data: { target_url: withdraw_workbasket_from_workflow_bulk_edit_of_measure_url(workbasket.id), target_modal: workbasket.id },
+      class: "js-main-menu-show-withdraw-confirmation-link"
   li
     = link_to "Return to main menu", root_url
 br
 br
 
-= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup", workbasket: workbasket
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
