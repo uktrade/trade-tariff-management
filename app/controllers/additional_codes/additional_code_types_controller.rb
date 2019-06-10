@@ -10,7 +10,7 @@ module AdditionalCodes
       scope = if measure_type.present?
                 measure_type.additional_code_types
               else
-                AdditionalCodeType.actual.order(:additional_code_type_id)
+                AdditionalCodeType.actual.order(:additional_code_type_id).all
               end
 
       if params[:q].present?
