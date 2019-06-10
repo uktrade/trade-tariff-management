@@ -9,7 +9,7 @@ class MeursingAdditionalCode < Sequel::Model
   set_primary_key [:meursing_additional_code_sid]
 
   def code
-    "7#{additional_code}"
+    "#{additional_code_type_id}#{additional_code}"
   end
 
   def record_code
@@ -18,6 +18,15 @@ class MeursingAdditionalCode < Sequel::Model
 
   def subrecord_code
     "00".freeze
+  end
+
+  def additional_code_type_id
+    "7"
+  end
+
+  def description
+    # Meursing doesn't have a description
+    ""
   end
 
   def status_title
