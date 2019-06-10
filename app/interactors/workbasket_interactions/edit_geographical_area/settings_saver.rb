@@ -201,12 +201,15 @@ module WorkbasketInteractions
           unless new_membership_sids.empty?
             add_new_memberships!
           end
+          if membership_removed?
+            end_date_existing_memberships_for_group!
+          end
         else
           unless new_membership_sids.empty?
             add_new_memberships!
           end
           if membership_removed?
-            end_date_existing_memberships!
+            end_date_existing_memberships_for_non_group!
           end
         end
       end
@@ -349,12 +352,32 @@ module WorkbasketInteractions
         end
       end
 
-      def end_date_existing_memberships!
+      def end_date_existing_memberships_for_non_group!
         settings_params['removed_memberships'].values.each do |area|
           existing_membership = GeographicalAreaMembership.find(geographical_area_sid: original_geographical_area.geographical_area_sid, geographical_area_group_sid: area['geographical_area_sid'])
           existing_membership.validity_end_date = operation_date
           existing_membership.save
         end
+      end
+
+      def end_date_existing_memberships_for_group!
+        new_memberships = GeographicalArea.where(geographical_area_sid: new_sids).all
+        new_memberships.each do |member|
+          existing_membership = GeographicalAreaMembership.find(geographical_area_sid: member.geographical_area_sid, geographical_area_group_sid: original_geographical_area.geographical_area_sid)
+          existing_membership.validity_end_date = operation_date
+          existing_membership.save
+        end
+      end
+
+      def add_country_to_group(member)
+        GeographicalAreaMembership.unrestrict_primary_key
+        GeographicalAreaMembership.new(
+          geographical_area_sid: member.geographical_area_sid,
+          geographical_area_group_sid: original_geographical_area.geographical_area_sid,
+          validity_start_date: settings_params["operation_date"],
+          validity_end_date: nil,
+          workbasket_id: workbasket.id
+        )
       end
 
       def end_date_existing_geographical_area_desription_period!

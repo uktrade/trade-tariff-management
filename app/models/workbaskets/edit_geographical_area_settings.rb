@@ -38,7 +38,7 @@ module Workbaskets
 
     def memberships
       if original_geographical_area.group?
-        areas = original_geographical_area.contained_geographical_areas.map do |area|
+        areas = original_geographical_area.currently_contains.map do |area|
           hash = area.to_hash
           hash[:geographical_area] = {
             'description' => area.description
