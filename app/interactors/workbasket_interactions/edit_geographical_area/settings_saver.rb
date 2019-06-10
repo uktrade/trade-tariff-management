@@ -129,15 +129,28 @@ module WorkbasketInteractions
       end
 
       def memberships_have_no_changes?
-        original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
-        new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
-        original_membership_ids == new_membership_ids
+        if original_geographical_area.geographical_code == '1'
+          original_member_sids = original_geographical_area.contained_geographical_areas.map { |area| area.geographical_area_sid }
+          new_member_sids = settings_params["geographical_area_memberships"].values.map{|area| GeographicalArea.find(geographical_area_id: area["geographical_area_id"]).geographical_area_sid}
+          original_member_sids == new_member_sids
+        else
+          original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
+          new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
+          original_membership_ids == new_membership_ids
+        end
       end
 
-      def new_membership_ids
-        original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
-        new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
-        new_membership_ids.select { |m| !original_membership_ids.include?(m) }
+      def new_membership_sids
+        if original_geographical_area.geographical_code == '1'
+          original_member_sids = original_geographical_area.contained_geographical_areas.map { |area| area.geographical_area_sid }
+          new_member_sids = settings_params["geographical_area_memberships"].values.map{|area| GeographicalArea.find(geographical_area_id: area["geographical_area_id"]).geographical_area_sid}
+          new_sids = new_member_sids.select { |m| !original_member_sids.include?(m) }
+        else
+          original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
+          new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
+          new_membership_ids.select { |m| !original_membership_ids.include?(m) }
+        end
+        new_sids
       end
 
       def check_conformance_rules!
@@ -184,11 +197,17 @@ module WorkbasketInteractions
       end
 
       def edit_memberships!
-        unless new_membership_ids.empty?
-          add_new_memberships!
-        end
-        if membership_removed?
-          end_date_existing_memberships!
+        if original_geographical_area.geographical_code == '1'
+          unless new_membership_sids.empty?
+            add_new_memberships!
+          end
+        else
+          unless new_membership_sids.empty?
+            add_new_memberships!
+          end
+          if membership_removed?
+            end_date_existing_memberships!
+          end
         end
       end
 
@@ -198,27 +217,45 @@ module WorkbasketInteractions
 
       def add_new_memberships!
         new_ids = new_membership_ids
-        new_memberships = settings_params["geographical_area_memberships"].values.select {|area| new_membership_ids.include?(area['geographical_area_id'])}
-        new_memberships.each do |m|
-          @membership = new_membership(m)
-          assign_system_ops!(@membership)
-          set_primary_key!(@membership)
-          @membership.save if persist_mode?
+        if original_geographical_area.geographical_code == '1'
+          new_memberships = GeographicalArea.where(geographical_area_sid: new_sids).all
+          new_memberships.each do |m|
+            @membership = add_country_to_group(m)
+            assign_system_ops!(@membership)
+            set_primary_key!(@membership)
+            @membership.save if persist_mode?
+          end
+        else
+          new_memberships = settings_params["geographical_area_memberships"].values.select {|area| new_membership_ids.include?(area['geographical_area_id'])}
+          new_memberships.each do |m|
+            @membership = add_group_to_country(m)
+            assign_system_ops!(@membership)
+            set_primary_key!(@membership)
+            @membership.save if persist_mode?
+          end
         end
       end
 
-      def new_membership(membership_data)
-        if geographical_code == 'group'
-          geographical_area = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
-          group = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
-        else
-          group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
-        end
+      def add_group_to_country(membership_data)
+        GeographicalAreaMembership.unrestrict_primary_key
+        group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
+        geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
         GeographicalAreaMembership.new(
           geographical_area_sid: original_geographical_area.geographical_area_sid,
           geographical_area_group_sid: group[:geographical_area_sid],
           validity_start_date: membership_data['validity_start_date'],
           validity_end_date: membership_data['validity_end_date'],
+          workbasket_id: workbasket.id
+        )
+      end
+
+      def add_country_to_group(member)
+        GeographicalAreaMembership.unrestrict_primary_key
+        GeographicalAreaMembership.new(
+          geographical_area_sid: member.geographical_area_sid,
+          geographical_area_group_sid: original_geographical_area.geographical_area_sid,
+          validity_start_date: settings_params["operation_date"],
+          validity_end_date: nil,
           workbasket_id: workbasket.id
         )
       end
