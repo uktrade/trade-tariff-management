@@ -129,24 +129,26 @@ module WorkbasketInteractions
       end
 
       def memberships_have_no_changes?
+        return false if membership_removed?
         if original_geographical_area.geographical_code == '1'
-          original_member_ids = original_geographical_area.contained_geographical_areas.map { |area| area.geographical_area_id }
+          original_member_ids = original_geographical_area.currently_contains.map { |area| area.geographical_area_id }
           new_member_ids = settings_params["geographical_area_memberships"].values.map{|area| area['geographical_area_id']}
           original_member_ids == new_member_ids
         else
-          original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
+          original_membership_ids = original_geographical_area.currently_member_of.map { |area| area.geographical_area_id }
           new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
           original_membership_ids == new_membership_ids
         end
       end
 
       def new_membership_ids
+        return [] unless settings_params["geographical_area_memberships"]
         if original_geographical_area.geographical_code == '1'
-          original_member_ids = original_geographical_area.contained_geographical_areas.map { |area| area.geographical_area_id }
+          original_member_ids = original_geographical_area.currently_contains.map { |area| area.geographical_area_id }
           new_member_ids = settings_params["geographical_area_memberships"].values.map{|area| GeographicalArea.find(geographical_area_id: area["geographical_area_id"]).geographical_area_id}
           new_ids = new_member_ids.select { |m| !original_member_ids.include?(m) }
         else
-          original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
+          original_membership_ids = original_geographical_area.currently_member_of.map { |area| area.geographical_area_id }
           new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
           new_ids = new_membership_ids.select { |m| !original_membership_ids.include?(m) }
         end
@@ -197,25 +199,20 @@ module WorkbasketInteractions
       end
 
       def edit_memberships!
-        if original_geographical_area.geographical_code == '1'
-          unless new_membership_ids.empty?
-            add_new_memberships!
-          end
-          if membership_removed?
-            end_date_existing_memberships_for_group!
-          end
-        else
-          unless new_membership_ids.empty?
-            add_new_memberships!
-          end
-          if membership_removed?
-            end_date_existing_memberships_for_non_group!
-          end
-        end
+        add_new_memberships! unless new_membership_ids.empty?
+        handle_removing_of_memberships if membership_removed?
       end
 
       def membership_removed?
         settings_params['removed_memberships']
+      end
+
+      def handle_removing_of_memberships
+        if original_geographical_area.geographical_code == '1'
+          end_date_existing_memberships_for_group!
+        else
+          end_date_existing_memberships_for_non_group!
+        end
       end
 
       def add_new_memberships!
@@ -364,17 +361,6 @@ module WorkbasketInteractions
           existing_membership.validity_end_date = operation_date
           existing_membership.save
         end
-      end
-
-      def add_country_to_group(member)
-        GeographicalAreaMembership.unrestrict_primary_key
-        GeographicalAreaMembership.new(
-          geographical_area_sid: member.geographical_area_sid,
-          geographical_area_group_sid: original_geographical_area.geographical_area_sid,
-          validity_start_date: settings_params["operation_date"],
-          validity_end_date: nil,
-          workbasket_id: workbasket.id
-        )
       end
 
       def end_date_existing_geographical_area_desription_period!
