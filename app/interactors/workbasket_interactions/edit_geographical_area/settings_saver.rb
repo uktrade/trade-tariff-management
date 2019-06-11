@@ -351,6 +351,11 @@ module WorkbasketInteractions
         settings_params['removed_memberships'].values.each do |area|
           existing_membership = GeographicalAreaMembership.find(geographical_area_sid: original_geographical_area.geographical_area_sid, geographical_area_group_sid: area['geographical_area_sid'].to_i)
           existing_membership.validity_end_date = operation_date
+
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            existing_membership, system_ops.merge(operation: "U")
+          ).assign!(false)
+
           existing_membership.save
         end
       end
@@ -359,6 +364,11 @@ module WorkbasketInteractions
         settings_params['removed_memberships'].values.each do |area|
           existing_membership = GeographicalAreaMembership.find(geographical_area_sid: area['geographical_area_sid'].to_i, geographical_area_group_sid: original_geographical_area.geographical_area_sid)
           existing_membership.validity_end_date = operation_date
+
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            existing_membership, system_ops.merge(operation: "U")
+          ).assign!(false)
+          
           existing_membership.save
         end
       end
