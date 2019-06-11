@@ -129,15 +129,15 @@ module WorkbasketInteractions
       end
 
       def memberships_have_no_changes?
-        original_membership_sids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_sid }
-        new_membership_sids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_sid"].to_i}
-        original_membership_sids == new_membership_sids
+        original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
+        new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
+        original_membership_ids == new_membership_ids
       end
 
-      def new_membership_sids
-        original_membership_sids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_sid }
-        new_membership_sids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_sid"].to_i}
-        new_membership_sids.select { |m| !original_membership_sids.include?(m) }
+      def new_membership_ids
+        original_membership_ids = original_geographical_area.member_of_following_geographical_areas.map { |area| area.geographical_area_id }
+        new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
+        new_membership_ids.select { |m| !original_membership_ids.include?(m) }
       end
 
       def check_conformance_rules!
@@ -184,7 +184,7 @@ module WorkbasketInteractions
       end
 
       def edit_memberships!
-        unless new_membership_sids.empty?
+        unless new_membership_ids.empty?
           add_new_memberships!
         end
         if membership_removed?
@@ -197,8 +197,8 @@ module WorkbasketInteractions
       end
 
       def add_new_memberships!
-        new_membership_sids = new_membership_sids
-        new_memberships = settings_params["geographical_area_memberships"].values.select {|area| new_membership_sids.includes?(area['geographical_area_sid'])}
+        new_ids = new_membership_ids
+        new_memberships = settings_params["geographical_area_memberships"].values.select {|area| new_membership_ids.include?(area['geographical_area_id'])}
         new_memberships.each do |m|
           @membership = new_membership(m)
           assign_system_ops!(@membership)
@@ -213,10 +213,9 @@ module WorkbasketInteractions
           group = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
         else
           group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
-          geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
         end
         GeographicalAreaMembership.new(
-          geographical_area_sid: geographical_area.geographical_area_sid,
+          geographical_area_sid: original_geographical_area.geographical_area_sid,
           geographical_area_group_sid: group[:geographical_area_sid],
           validity_start_date: membership_data['validity_start_date'],
           validity_end_date: membership_data['validity_end_date'],
@@ -412,7 +411,6 @@ module WorkbasketInteractions
       end
 
       def add_membership!
-        GeographicalAreaMembership.unrestrict_primary_key
         if memberships
           memberships.each do |m|
             membership_data = m.last['geographical_area']
@@ -425,15 +423,16 @@ module WorkbasketInteractions
       end
 
       def new_membership(membership_data)
-        if geographical_code == 'group'
+        if original_geographical_area.geographical_code == 'group'
           geographical_area = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
           group = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
         else
           group = GeographicalArea.where(geographical_area_id: membership_data['geographical_area_id']).first
           geographical_area = GeographicalArea.find(geographical_area_id: settings.main_step_settings['geographical_area_id'])
         end
+        GeographicalAreaMembership.unrestrict_primary_key
         GeographicalAreaMembership.new(
-          geographical_area_sid: geographical_area.geographical_area_sid,
+          geographical_area_sid: original_geographical_area.geographical_area_sid,
           geographical_area_group_sid: group[:geographical_area_sid],
           validity_start_date: membership_data['validity_start_date'],
           validity_end_date: membership_data['validity_end_date'],
