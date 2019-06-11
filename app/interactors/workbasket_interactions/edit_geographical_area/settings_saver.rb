@@ -197,25 +197,20 @@ module WorkbasketInteractions
       end
 
       def edit_memberships!
-        if original_geographical_area.geographical_code == '1'
-          unless new_membership_ids.empty?
-            add_new_memberships!
-          end
-          if membership_removed?
-            end_date_existing_memberships_for_group!
-          end
-        else
-          unless new_membership_ids.empty?
-            add_new_memberships!
-          end
-          if membership_removed?
-            end_date_existing_memberships_for_non_group!
-          end
-        end
+        add_new_memberships! unless new_membership_ids.empty?
+        handle_removing_of_memberships if membership_removed?
       end
 
       def membership_removed?
         settings_params['removed_memberships']
+      end
+
+      def handle_removing_of_memberships
+        if original_geographical_area.geographical_code == '1'
+          end_date_existing_memberships_for_group!
+        else
+          end_date_existing_memberships_for_non_group!
+        end
       end
 
       def add_new_memberships!
@@ -364,17 +359,6 @@ module WorkbasketInteractions
           existing_membership.validity_end_date = operation_date
           existing_membership.save
         end
-      end
-
-      def add_country_to_group(member)
-        GeographicalAreaMembership.unrestrict_primary_key
-        GeographicalAreaMembership.new(
-          geographical_area_sid: member.geographical_area_sid,
-          geographical_area_group_sid: original_geographical_area.geographical_area_sid,
-          validity_start_date: settings_params["operation_date"],
-          validity_end_date: nil,
-          workbasket_id: workbasket.id
-        )
       end
 
       def end_date_existing_geographical_area_desription_period!

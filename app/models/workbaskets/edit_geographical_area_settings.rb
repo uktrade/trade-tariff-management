@@ -36,25 +36,22 @@ module Workbaskets
       res
     end
 
-    def memberships
+    def current_memberships
       if original_geographical_area.group?
-        areas = original_geographical_area.currently_contains.map do |area|
-          hash = area.to_hash
-          hash[:geographical_area] = {
-            'description' => area.description
-          }
-          hash
-        end
+        original_geographical_area.currently_contains
       else
-        areas = original_geographical_area.currently_member_of.map do |area|
-          hash = area.to_hash
-          hash[:geographical_area] = {
-            'description' => area.description
-          }
-          hash
-        end
+        original_geographical_area.currently_member_of
       end
-      areas
+    end
+
+    def memberships
+      current_memberships.map do |area|
+        hash = area.to_hash
+        hash[:geographical_area] = {
+          'description' => area.description
+        }
+        hash
+      end
     end
 
     def prepare_collection(list, data_field_name)
