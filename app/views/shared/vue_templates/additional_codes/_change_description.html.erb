@@ -45,11 +45,6 @@
               <span class="error-message" v-if="slotProps.hasError" v-cloak="">
                 {{slotProps.error}}
               </span>
-
-              <span class="form-hint">
-                This is the start of the codes' validity period.
-                This will be delayed for any codes that are not approved in time.
-              </span>
             </label>
 
             <textarea class="form-control" v-model="description" rows="5"></textarea>
@@ -70,7 +65,8 @@
               </span>
 
               <span class="form-hint">
-                This is the date when the new description will take effect, subject to being approved in time. If This must be within the narrowest of the selected codes’ validity periods.
+                This is the date when the new description will take effect, subject to being approved in time.<br/>
+                This must be within the narrowest of the selected codes’ validity periods.
               </span>
             </label>
 

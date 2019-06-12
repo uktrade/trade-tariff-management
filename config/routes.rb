@@ -60,6 +60,7 @@ Rails.application.routes.draw do
         get '/work_with_selected', to: "bulks#work_with_selected"
         post '/work_with_selected', to: "bulks#persist_work_with_selected"
         get :submitted_for_cross_check
+        get :withdraw_workbasket_from_workflow
 
         resources :bulk_items, only: [] do
           collection do

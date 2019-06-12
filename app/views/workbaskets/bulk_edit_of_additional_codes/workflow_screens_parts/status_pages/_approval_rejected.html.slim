@@ -1,0 +1,14 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Additional codes rejected
+
+  h3.heading-medium
+    | You declined to approve the additional codes in workbasket
+    =<> "'#{workbasket.title}'"
+    | .
+
+    br
+    br
+    | The group has been returned to its creator for amendment. Additional codes will not be sent to CDS until approved.
+
+= render "workbaskets/bulk_edit_of_additional_codes/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
