@@ -67,6 +67,7 @@ Vue.component("change-additional-codes-validity-period-popup", {
 
       var self = this;
       var isValid = true;
+      var todaysDate = moment();
       var startDate = moment(this.startDate, "DD/MM/YYYY", true);
       var endDate = moment(this.endDate, "DD/MM/YYYY", true);
       var makeOpenEnded = this.makeOpenEnded;
@@ -76,6 +77,9 @@ Vue.component("change-additional-codes-validity-period-popup", {
       if (startDate.isValid() === false) {
         isValid = false;
         errors.startDate = "You must specify a start date.";
+      } else if (startDate.diff(todaysDate, "days") <= 0) {
+        isValid = false;
+        errors.startDate = "Start date must be in the future.";
       }
 
       if (!makeOpenEnded) {

@@ -93,6 +93,26 @@ module AdditionalCodes
       )
     end
 
+    expose(:json_collection) do
+      workbasket_container.collection
+    end
+
+    expose(:json_response) do
+      {
+        collection: json_collection,
+        total_pages: search_results.total_pages,
+        current_page: search_results.current_page,
+        has_more: !search_results.last_page?
+      }
+    end
+
+    def show
+      respond_to do |format|
+        format.json { render json: json_response }
+        format.html
+      end
+    end
+
     def edit
       if search_mode?
         respond_to do |format|
@@ -158,6 +178,16 @@ module AdditionalCodes
       workbasket.destroy
 
       render json: {}, head: :ok
+    end
+
+    def move_to_editing_mode
+      workbasket.move_to_editing!(current_admin: current_user)
+
+      redirect_to edit_additional_codes_bulk_url
+    end
+
+    def withdraw_workbasket_from_workflow
+      move_to_editing_mode
     end
   end
 end

@@ -16,8 +16,6 @@ h2.heading-large
   - else
     = workbasket_author? ? 'Edit additional codes' : 'Review additional codes'
 
-= render "additional_codes/bulks/details"
-
 script
   == "window.__workbasket_id = #{workbasket.id};"
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"

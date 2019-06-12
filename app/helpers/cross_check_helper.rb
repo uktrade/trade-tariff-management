@@ -24,6 +24,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/geographical_areas"
     elsif workbasket.type == 'create_additional_code'
       "workbaskets/shared/steps/review_and_submit/additional_code"
+    elsif workbasket.type == 'bulk_edit_of_additional_codes'
+      "workbaskets/shared/steps/review_and_submit/bulk_edit_additional_codes"
     end
   end
 
