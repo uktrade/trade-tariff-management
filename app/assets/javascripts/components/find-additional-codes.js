@@ -56,6 +56,8 @@ $(document).ready(function() {
           conditions.are_not_unspecified.value
         ],
 
+        errors: [],
+
         statuses: [
           { value: "new_in_progress", label: "New - in progress" },
           { value: "editing", label: "Editing" },
@@ -194,6 +196,35 @@ $(document).ready(function() {
       }
     },
     methods: {
+      confirmChanges: function(e) {
+        this.disableSubmit = true;
+
+        if (!this.validate()) {
+          this.disableSubmit = false;
+          e.preventDefault();
+        }
+        return true;
+      },
+      validate: function() {
+        this.clearErrors();
+
+        var isValid = true;
+        var errors = {};
+
+        if (this.valid_from.enabled) {
+          if (moment(this.valid_from.value, "DD/MM/YYYY", true).isValid() === false) {
+            isValid = false;
+            errors.startDate = "You must specify a valid start date.";
+          }
+        }
+
+        this.errors = errors;
+
+        return isValid;
+      },
+      clearErrors: function() {
+        this.errors = {};
+      },
       onItemsSelected: function(sid) {
         if (this.selectionType !== "none") {
           var index = this.selectedItems.indexOf(sid);
