@@ -67,6 +67,9 @@
       <custom-select :options="conditionsForValidityStartDate" label-field="label" value-field="value"  v-model="valid_from.operator" name="search[valid_from][operator]"></custom-select>
     </div>
     <div class="find-item__date">
+      <span class="error-message" v-if="errors['startDate']" v-cloak="">
+        You must specify a valid start date.
+      </span>
       <date-select :value.sync="valid_from.value" name="search[valid_from][value]" v-bind:disabled="validityStartDateValueDisabled" />
     </div>
   </div>
@@ -104,7 +107,7 @@
   </div>
 
   <div class="form-actions">
-    <button type="submit" class='button' data-disable-with='Searching'>
+    <button type="submit" class="button" v-on:click="confirmChanges" data-disable-with='Searching'>
       Search
     </button>
 
