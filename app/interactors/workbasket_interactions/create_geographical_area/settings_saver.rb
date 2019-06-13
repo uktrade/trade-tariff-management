@@ -46,7 +46,7 @@ module WorkbasketInteractions
       end
 
       def save!
-        workbasket.title = geographical_area_id
+        workbasket.title = description
         workbasket.operation_date = operation_date
         workbasket.save
 
