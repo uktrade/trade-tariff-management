@@ -283,4 +283,8 @@ Rails.application.routes.draw do
   end
 
   resources :users, only: [:index]
+
+  scope module: :nomenclature do
+    resources :sections, only: [:index]
+  end
 end

@@ -1,0 +1,229 @@
+.gem-c-search {
+  position: relative;
+  margin-bottom: 30px
+}
+
+.gem-c-search__label {
+  display: block
+}
+
+.gem-c-search__label h1 {
+  font-family: "nta", Arial, sans-serif;
+  font-weight: 400;
+  text-transform: none;
+  font-size: 16px;
+  line-height: 40px;
+  margin: 0
+}
+
+@media (min-width: 641px) {
+  .gem-c-search__label h1 {
+    font-size: 19px;
+    line-height: 40px
+  }
+}
+
+.gem-c-search__input[type="search"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: "nta", Arial, sans-serif;
+  font-weight: 400;
+  text-transform: none;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 6px;
+  margin: .5em 0;
+  width: 100%;
+  height: 40px;
+  border: 0;
+  background: #fff;
+  border-radius: 0
+}
+
+@media (min-width: 641px) {
+  .gem-c-search__input[type="search"] {
+    font-size: 19px;
+    line-height: 1.4736842105
+  }
+}
+
+.gem-c-search__input[type="search"]:focus {
+  outline: 3px solid #ffbf47;
+  outline-offset: 0
+}
+
+.gem-c-search__submit {
+  padding: 6px;
+  border: 0;
+  cursor: pointer;
+  border-radius: 0
+}
+
+.gem-c-search__submit:focus {
+  outline: 3px solid #ffbf47;
+  outline-offset: 0
+}
+
+.js-enabled .gem-c-search__label {
+  font-family: "nta", Arial, sans-serif;
+  font-weight: 400;
+  text-transform: none;
+  font-size: 16px;
+  line-height: 40px;
+  position: absolute;
+  left: 15px;
+  top: 1px;
+  z-index: 1;
+  color: #6f777b
+}
+
+@media (min-width: 641px) {
+  .js-enabled .gem-c-search__label {
+    font-size: 19px;
+    line-height: 40px
+  }
+}
+
+.gem-c-search__item-wrapper {
+  display: table;
+  width: 100%;
+  background: #fff
+}
+
+.gem-c-search__item {
+  position: relative;
+  display: table-cell;
+  vertical-align: top
+}
+
+.gem-c-search__input[type="search"] {
+  margin: 0
+}
+
+.gem-c-search__input[type="search"]:focus,
+.gem-c-search__input[type="search"].focus {
+  z-index: 2
+}
+
+.gem-c-search__submit-wrapper {
+  width: 1%
+}
+
+.gem-c-search__submit {
+  position: relative;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  background-image: url(https://assets.publishing.service.gov.uk/frontend/govuk_publishing_components/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png);
+  background-repeat: no-repeat;
+  background-position: 2px 50%;
+  text-indent: -5000px;
+  overflow: hidden
+}
+
+.gem-c-search__submit:focus {
+  z-index: 2
+}
+
+.gem-c-search__submit::-moz-focus-inner {
+  border: 0
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 20 / 10),
+only screen and (min-device-pixel-ratio: 2),
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx) {
+  .gem-c-search__submit {
+    background-size: 52.5px auto;
+    background-position: 115% 50%
+  }
+}
+
+.gem-c-search--on-govuk-blue .gem-c-search__label {
+  color: #fff
+}
+
+.gem-c-search--on-govuk-blue .gem-c-search__submit {
+  background-color: #0b0c0c;
+  color: #fff
+}
+
+.gem-c-search--on-govuk-blue .gem-c-search__submit:hover {
+  background-color: #171919
+}
+
+.js-enabled .gem-c-search--on-govuk-blue .gem-c-search__label {
+  color: #6f777b
+}
+
+.gem-c-search--on-white .gem-c-search__label {
+  color: #0b0c0c
+}
+
+.gem-c-search--on-white .gem-c-search__input[type="search"] {
+  border: solid 1px #bfc1c3
+}
+
+.gem-c-search--on-white .gem-c-search__submit {
+  background-color: #0b0c0c;
+  color: #fff
+}
+
+.gem-c-search--on-white .gem-c-search__submit:hover {
+  background-color: #0b0c0c;
+}
+
+.gem-c-search--on-white .gem-c-search__input[type="search"] {
+  border-right: 0
+}
+
+.js-enabled .gem-c-search--on-white .gem-c-search__label {
+  color: #6f777b
+}
+
+.gem-c-search--large .gem-c-search__label {
+  font-family: "nta", Arial, sans-serif;
+  font-weight: 400;
+  text-transform: none;
+  font-size: 16px;
+  line-height: 50px
+}
+
+@media (min-width: 641px) {
+  .gem-c-search--large .gem-c-search__label {
+    font-size: 19px;
+    line-height: 50px
+  }
+}
+
+.gem-c-search--large .gem-c-search__input[type="search"] {
+  height: 50px
+}
+
+.gem-c-search--large .gem-c-search__submit {
+  width: 50px;
+  height: 50px;
+  background-position: 8px 50%
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 20 / 10),
+only screen and (min-device-pixel-ratio: 2),
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx) {
+  .gem-c-search--large .gem-c-search__submit {
+    background-size: 60px auto;
+    background-position: 160% 50%
+  }
+}
+
+.gem-c-search--separate-label .gem-c-search__label {
+  position: relative;
+  left: auto
+}

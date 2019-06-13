@@ -77,11 +77,15 @@
 
     <div id="global-header-bar"></div>
 
-    <div id="wrapper">
-      <%= content_for?(:before_content) ? yield(:before_content) : yield %>
+    <main id="content">
+      <div class="grid-row">
+        <div class="column-full">
+            <%= content_for?(:before_content) ? yield(:before_content) : yield %>
 
-      <%= content_for?(:content) ? yield(:content) : yield %>
-    </div>
+            <%= content_for?(:content) ? yield(:content) : yield %>
+        </div>
+      </div>
+    </main>
 
     <footer class="group js-footer" id="footer" role="contentinfo">
 
