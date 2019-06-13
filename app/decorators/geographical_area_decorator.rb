@@ -42,6 +42,14 @@ class GeographicalAreaDecorator < ApplicationDecorator
     false # TODO
   end
 
+  def memberships
+    if type == "Group"
+      object.currently_contains.map {|country| "#{country.geographical_area_id} - #{country.geographical_area_description.description}" }.join(' ')
+    else
+      object.currently_member_of.map {|group| "#{group.geographical_area_id} - #{group.geographical_area_description.description}" }.join(' ')
+    end
+  end
+
 private
 
   def to_date(value)
