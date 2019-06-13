@@ -51,7 +51,7 @@ module WorkbasketInteractions
       end
 
       def save!
-        workbasket.title = original_geographical_area.geographical_area_id
+        workbasket.title = description
         workbasket.operation_date = (Date.strptime(operation_date, "%d/%m/%Y") rescue nil)
         workbasket.save
 
@@ -368,7 +368,7 @@ module WorkbasketInteractions
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
             existing_membership, system_ops.merge(operation: "U")
           ).assign!(false)
-          
+
           existing_membership.save
         end
       end
