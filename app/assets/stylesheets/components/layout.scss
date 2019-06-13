@@ -28,11 +28,9 @@ html {
 #global-cookie-message p,
 #footer .footer-wrapper,
 .header-wrapper,
-#wrapper {
+#content {
   max-width: 1280px !important;
   min-width: 1280px !important;
-  margin: 0 0 0 15px !important;
-  padding: 0;
 }
 
 .desktop-title {
@@ -107,4 +105,8 @@ html {
 
 .text-danger {
   color: $red;
+}
+
+.column-three-quarters {
+  @include grid-column(3 / 4);
 }
