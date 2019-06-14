@@ -1,32 +1,5 @@
 <% content_for :content do %>
-  <%= link_to "Back", root_url, :class => "link-back" %>
-
-  <h1 class="heading-xlarge">Manage good clasification</h1>
-
-
-  <div class="grid-row">
-    <div class="column-one-half">
-      <%= form_tag({}, { method: :get }) do %>
-        <div class="form-group gem-c-search gem-c-search--on-white" data-module="gem-toggle-input-class-on-focus">
-          <label for="search-commodity" class="form-label">
-            Enter commodity code you want to work with
-          </label>
-          <div class="gem-c-search__item-wrapper">
-            <input type="search" value="" id="search-commodity"title="Search" class="gem-c-search__item gem-c-search--on-white gem-c-search__input">
-            <div class="gem-c-search__item gem-c-search__submit-wrapper">
-              <button type="submit" class="gem-c-search__submit">Search</button>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="panel panel-border-wide">
-    <p>
-      You are currently viewing the good clasification for <%= Date.current.to_formatted_s(:long_ordinal) %>
-    </p>
-  </div>
+  <%= render partial: "nomenclature/sections_header" %>
 
   <% if @sections %>
     <div class="grid-row">
