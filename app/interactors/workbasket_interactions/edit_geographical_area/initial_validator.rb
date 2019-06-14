@@ -44,7 +44,8 @@ module WorkbasketInteractions
         check_description!
         check_description_validity_start_date!
         check_validity_period!
-
+        check_memberships!
+        
         errors
       end
 
@@ -53,6 +54,28 @@ module WorkbasketInteractions
       end
 
     private
+
+    def check_memberships!
+      return unless settings["geographical_area_memberships"]
+
+      members_are_groups = settings["geographical_area_memberships"].values.map do |area|
+        geo_area_id = area["geographical_area"]["geographical_area_id"]
+        GeographicalArea.find(geographical_area_id: geo_area_id).group?
+      end
+
+      if geographical_code == "group"
+        if members_are_groups.include?(true)
+          @errors[:memberships] = "A group cannot be a member of another group!"
+          @errors_summary = "A group cannot be a member of another group!"
+        end
+      else
+        if members_are_groups.include?(false)
+          @errors[:memberships] = "A country cannot be another country or group!"
+          @errors_summary = "A group cannot be a member of another group!"
+        end
+      end
+    end
+
 
       def check_reason_for_changes!
         if reason_for_changes.blank?
@@ -111,6 +134,9 @@ module WorkbasketInteractions
             @errors_summary = errors_translator(:summary_minimal_required_fields)
           end
         end
+      end
+
+      def check_membership_type
       end
 
       def check_validity_period!
