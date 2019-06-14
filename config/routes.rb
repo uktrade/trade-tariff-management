@@ -286,5 +286,6 @@ Rails.application.routes.draw do
 
   scope module: :nomenclature do
     resources :sections, only: [:index]
+    resources :section_chapters, only: [:index]
   end
 end

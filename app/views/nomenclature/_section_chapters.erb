@@ -1,0 +1,69 @@
+<% content_for :content do %>
+  <%= render partial: "nomenclature/sections_header" %>
+
+<div class="grid-row">
+  <div class="column-three-quarters">
+    <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
+      <nav>
+        <%= link_to "All sections", "../sections", :class => "all-sections-link"  %>
+        <div class="desktop-only">
+          <%# TODO: PP. This nested lists will be redner dynamically with the use of BE %>
+          <ul>
+            <li>
+              <a class="section-link" href="">Section VI: Products of the chemical or allied industries</a>
+              <ul>
+                <li class="chapter-li">
+                  <%# <div class="chapter-code">
+                    <div class="code-text">02</div>
+                  </div> %>
+                  <a href="/chapters/02">290000000 Organic chemicals</a>
+                  <ul>
+                    <li class="heading-li">
+                      <%# <div class="heading-code">
+                        <div class="code-text">02</div>
+                      </div> %>
+                      <h1>290000000 - Acrylic hydrocarbons</h1>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <%# TODO: PP. Here we will need to render chapter details instead of sections
+    based on the clicked link in `sections`
+   %>
+  <% if @sections %>
+    <div class="grid-row">
+      <div class="column-three-quarters">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Code</th>
+              <th scope="col">Suffix</th>
+              <th scope="col">Description</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @sections.each do |section| %>
+              <tr>
+                <th scope="row">02 02 10 00 11</th>
+                <td> - </td>
+                <td><a href="#"><%= section.title %></a></td>
+                <td><a href="#">Manage</a></td>
+              </tr>
+            <%end %>
+          </tbody>
+        </table>
+      </div>
+  </div>
+  <% end %>
+<% end %>
+
+<%= render template: "layouts/application" %>
