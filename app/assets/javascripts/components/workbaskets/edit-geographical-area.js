@@ -259,11 +259,12 @@ $(document).ready(function() {
         }
       },
       parseGeographicalAreaPayload: function(payload) {
+        let operation_date = payload.operation_date || moment(new Date()).format('DD/MM/YYYY');
         return {
           geographical_code: payload.geographical_code,
           geographical_area_id: payload.geographical_area_id,
           reason_for_changes: payload.reason_for_changes,
-          operation_date: payload.operation_date,
+          operation_date: operation_date,
           description: payload.description,
           description_validity_start_date: payload.description_validity_start_date,
           parent_geographical_area_group_id: payload.parent_geographical_area_group_id,
