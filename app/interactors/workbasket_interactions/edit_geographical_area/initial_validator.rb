@@ -45,7 +45,7 @@ module WorkbasketInteractions
         check_description_validity_start_date!
         check_validity_period!
         check_memberships!
-        
+
         errors
       end
 
@@ -59,11 +59,15 @@ module WorkbasketInteractions
       return unless settings["geographical_area_memberships"]
 
       members_are_groups = settings["geographical_area_memberships"].values.map do |area|
-        geo_area_id = area["geographical_area"]["geographical_area_id"]
-        GeographicalArea.find(geographical_area_id: geo_area_id).group?
+        if area["geographical_area_sid"]
+          GeographicalArea.find(geographical_area_sid: area["geographical_area_sid"])
+        else
+          geo_area_id = area["geographical_area"]["geographical_area_id"]
+          GeographicalArea.find(geographical_area_id: geo_area_id).group?
+        end
       end
 
-      if geographical_code == "group"
+      if original_geographical_area.geographical_code == "group"
         if members_are_groups.include?(true)
           @errors[:memberships] = "A group cannot be a member of another group!"
           @errors_summary = "A group cannot be a member of another group!"
