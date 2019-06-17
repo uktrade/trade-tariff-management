@@ -264,7 +264,10 @@ $(document).ready(function() {
           params.order_col = change_selector;
         }
 
-        var newQueryString = "?search_code=" + params.search_code + "&page=" + params.page + "&order_col=" + params.order_col + "&order_dir=" + params.order_dir;
+        var newQueryString = "?search_code=" + params.search_code + "&page=" + params.page;
+        if (params.order_col) {
+          newQueryString += "&order_col=" + params.order_col + "&order_dir=" + params.order_dir;
+        }
 
         window.history.pushState(params, "Find and edit additional codes - Page " + params.page, newQueryString);
 
