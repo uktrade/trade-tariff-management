@@ -50,6 +50,8 @@ module Workbaskets
         hash[:geographical_area] = {
           'description' => area.description
         }
+        hash[:validity_start_date] = area.validity_start_date.to_date.to_formatted_s(:rfc822) if area.validity_start_date
+        hash[:validity_end_date] = area.validity_end_date.to_date.to_formatted_s(:rfc822) if area.validity_end_date
         hash
       end
     end
