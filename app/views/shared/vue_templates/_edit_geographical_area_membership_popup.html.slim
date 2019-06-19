@@ -25,11 +25,6 @@ script type="text/x-template" id="edit-geographical-area-membership-popup-templa
           span.error-message v-if="slotProps.hasError" v-cloak=""
             | {{slotProps.error}}
 
-        .multiple-choice
-          input id="delete-membership" type="checkbox" v-model="toDelete" :checked="toDelete"
-          label for="delete-membership"
-            | Delete this membership
-
     form-group :errors="errors" error-key="join_date"
       template slot-scope="slotProps"
         label.form-label
