@@ -63,4 +63,4 @@ fieldset
 
               .parent-group-target
                 .parent-group-select
-                  = content_tag "custom-select", "", { ":options" => "groups_list" , "allow-clear" => true, "code-field" => "geographical_area_id", "label-field" => "description", "value-field" => "geographical_area_id", "v-model" => "geographical_area.parent_geographical_area_group_id", placeholder: "― select group ―", "name" => "geographical_area[parent_geographical_area_group_id]", "code-class-name" => "prefix--country" }
+                  = content_tag "custom-select", "", { "v-if" => "!geographical_area.remove_parent_group_association", ":options" => "groups_list" , "allow-clear" => true, "code-field" => "geographical_area_id", "label-field" => "description", "value-field" => "geographical_area_id", "v-model" => "geographical_area.parent_geographical_area_group_id", placeholder: "― select group ―", "name" => "geographical_area[parent_geographical_area_group_id]", "code-class-name" => "prefix--country" }
