@@ -75,7 +75,7 @@ Vue.component("components-coordinator", {
           return (component.duty_expression_id == undefined || component.duty_expression_id == "")
         })
       })
-      return this.flatten_array(conditions_allow_duty).includes(false);
+      return this.flattenArray(conditions_allow_duty).includes(false);
     },
     canRemoveComponent: function() {
       return this.components.length > 1;
