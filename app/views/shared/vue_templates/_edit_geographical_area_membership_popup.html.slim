@@ -15,20 +15,15 @@ script type="text/x-template" id="edit-geographical-area-membership-popup-templa
 
 
     info-message v-if="isGroup"
-      | You are editing the membership of {{membership.geographical_area_id}} {{membership.geographical_area.description}} within {{geographicalArea.geographical_area_id}} {{geographicalArea.description}}. To delete the membership, unset (clear) the join date.
+      | You are editing the membership of {{membership.geographical_area_id}} {{membership.geographical_area.description}} within {{geographicalArea.geographical_area_id}} {{geographicalArea.description}}.
     info-message v-else=""
-      | You are editing the membership of {{geographicalArea.geographical_area_id}} {{geographicalArea.description}} within group {{membership.geographical_area_id}} {{membership.geographical_area.description}}. To delete the membership, unset (clear) the join date.
+      | You are editing the membership of {{geographicalArea.geographical_area_id}} {{geographicalArea.description}} within group {{membership.geographical_area_id}} {{membership.geographical_area.description}}.
 
     form-group :errors="errors" error-key="toDelete"
       template slot-scope="slotProps"
         label.form-label
           span.error-message v-if="slotProps.hasError" v-cloak=""
             | {{slotProps.error}}
-
-        .multiple-choice
-          input id="delete-membership" type="checkbox" v-model="toDelete" :checked="toDelete"
-          label for="delete-membership"
-            | Delete this membership
 
     form-group :errors="errors" error-key="join_date"
       template slot-scope="slotProps"
