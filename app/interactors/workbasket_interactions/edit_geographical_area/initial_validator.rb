@@ -21,13 +21,15 @@ module WorkbasketInteractions
                     :errors,
                     :errors_summary,
                     :start_date,
-                    :end_date
+                    :end_date,
+                    :operation_date
 
       def initialize(original_geographical_area, settings)
         @errors = {}
         @original_geographical_area = original_geographical_area
         @settings = settings
 
+        @operation_date = parse_date(:operation_date)
         @start_date = parse_date(:validity_start_date)
         @end_date = parse_date(:validity_end_date)
       end
@@ -176,6 +178,7 @@ module WorkbasketInteractions
         rescue Exception => e
           if date_in_string.present?
             @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
+            @errors_summary = errors_translator("#{option_name}_wrong_format".to_sym)
           end
 
           nil

@@ -21,13 +21,12 @@ module WorkbasketInteractions
 
       def initialize(settings)
         @settings = settings
+        @errors = {}
 
         @type = squish_it(geographical_code)
         @area_id = squish_it(geographical_area_id)
         @start_date = parse_date(:validity_start_date)
         @end_date = parse_date(:validity_end_date)
-
-        @errors = {}
       end
 
       ALLOWED_OPS.map do |option_name|
@@ -150,6 +149,7 @@ module WorkbasketInteractions
         rescue Exception => e
           if public_send(option_name).present?
             @errors[option_name] = errors_translator("#{option_name}_wrong_format".to_sym)
+            @errors_summary = errors_translator("#{option_name}_wrong_format".to_sym)
           end
 
           nil
