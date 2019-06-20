@@ -67,7 +67,7 @@ Vue.component("change-additional-codes-validity-period-popup", {
 
       var self = this;
       var isValid = true;
-      var todaysDate = moment();
+      var todaysDate = moment().startOf('day');
       var startDate = moment(this.startDate, "DD/MM/YYYY", true);
       var endDate = moment(this.endDate, "DD/MM/YYYY", true);
       var makeOpenEnded = this.makeOpenEnded;
