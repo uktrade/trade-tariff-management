@@ -27,15 +27,30 @@ class GeographicalAreaDecorator < ApplicationDecorator
   end
 
   def current_description
-    area.try(:description)
+    if area
+      area.description
+    else
+      area_description = GeographicalAreaDescription.where(geographical_area_sid: object.geographical_area_sid).last
+      area_description.description if area_description
+    end
   end
 
   def current_description_valid_from
-    to_date(area.try(:validity_start_date))
+    if area
+      to_date(area.try(:validity_start_date))
+    else
+      area_description = GeographicalAreaDescription.where(geographical_area_sid: object.geographical_area_sid).last
+      to_date(area_description.geographical_area_description_period.validity_start_date) if area_description
+    end
   end
 
   def current_description_valid_to
-    to_date(area.try(:validity_end_date))
+    if area
+      to_date(area.try(:validity_end_date))
+    else
+      area_description = GeographicalAreaDescription.where(geographical_area_sid: object.geographical_area_sid).last
+      to_date(area_description.geographical_area_description_period.validity_end_date) if area_description && area_description.geographical_area_description_period.validity_end_date
+    end
   end
 
   def locked?
