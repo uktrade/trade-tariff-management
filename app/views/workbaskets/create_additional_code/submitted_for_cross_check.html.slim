@@ -12,8 +12,8 @@ h3.heading-medium
 
 ul.list.next-steps
   li
-    a.disabled href="#"
-      | Withdraw submission/edit additional codes (not implemented)
+    = link_to "Withdraw submission/edit additional codes", withdraw_workbasket_from_workflow_create_additional_code_url
+
   li
     = link_to "Create more additional codes", new_create_additional_code_url
   li
