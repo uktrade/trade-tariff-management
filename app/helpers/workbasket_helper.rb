@@ -333,6 +333,10 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_additional_code_url(workbasket.id)
     elsif workbasket.object.type == "bulk_edit_of_additional_codes"
       withdraw_workbasket_from_workflow_additional_codes_bulk_url(workbasket.id)
+    elsif workbasket.object.type == "create_geographical_area"
+      withdraw_workbasket_from_workflow_create_geographical_area_url(workbasket.id)
+    elsif workbasket.object.type == "edit_geographical_area"
+      withdraw_workbasket_from_workflow_edit_geographical_area_url(workbasket.id)
     end
   end
 
