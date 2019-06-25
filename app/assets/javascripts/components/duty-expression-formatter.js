@@ -88,10 +88,8 @@ window.DutyExpressionFormatter = {
           output.push(duty_expression_description);
         } else if (duty_expression_description === null) {
           output.push("%");
-        }
-
-        if (monetary_unit) {
-          output.push(monetary_unit.monetary_unit_code);
+        } else if (monetary_unit) {
+          output.push(monetary_unit);
         }
 
         if (measurement_unit_abbreviation) {
