@@ -37,7 +37,7 @@ Rails.application.routes.draw do
     get "/v1/taricfile/:timestamp", to: "xml_files#show"
   end
 
-  resources :goods_nomenclatures, only: [:index]
+  resources :goods_nomenclatures, only: [:index, :show]
   resources :regulations, only: [:index]
   resources :duty_expressions, only: [:index]
   resources :quota_order_numbers, only: [:index]
@@ -285,7 +285,7 @@ Rails.application.routes.draw do
   resources :users, only: [:index]
 
   scope module: :nomenclature do
-    resources :sections, only: [:index]
-    resources :section_chapters, only: [:index]
+    resources :sections, only: [:index, :show]
+    resources :chapters, only: [:show]
   end
 end

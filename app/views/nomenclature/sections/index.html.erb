@@ -20,10 +20,9 @@
                 <% if section.chapter_from ===  section.chapter_to %>
                   <td><%= section.chapter_to %></td>
                 <% else %>
-                  <td><%= section.chapter_from %> to <%= section.chapter_to %></td>
+                  <td><%= section.chapter_from.delete_prefix("0") %> to <%= section.chapter_to.delete_prefix("0") %></td>
                 <%end %>
-                <td><a href="#"><%= section.title %></a></td>
-                <td><a href="#">Manage</a></td>
+                <td><%= link_to section.title, section %></td>
               </tr>
             <%end %>
           </tbody>
@@ -32,7 +31,3 @@
   </div>
   <% end %>
 <% end %>
-
-<%= render template: "layouts/application" %>
-
-

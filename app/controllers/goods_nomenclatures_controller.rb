@@ -13,4 +13,10 @@ class GoodsNomenclaturesController < ApplicationController
       head :not_found
     end
   end
+
+  def show
+    @nomenclature = GoodsNomenclature.actual.where(goods_nomenclature_item_id: params[:id]).first.try(:sti_instance)
+    @nomenclature_tree = NomenclatureTreeService.nomenclature_tree(params[:id])
+  end
+
 end
