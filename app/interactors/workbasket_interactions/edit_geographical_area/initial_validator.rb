@@ -69,7 +69,7 @@ module WorkbasketInteractions
         end
       end
 
-      if original_geographical_area.geographical_code == "group"
+      if original_geographical_area.geographical_code == "group" || original_geographical_area.geographical_code == "1"
         if members_are_groups.include?(true)
           @errors[:memberships] = "A group cannot be a member of another group!"
           @errors_summary = "A group cannot be a member of another group!"
