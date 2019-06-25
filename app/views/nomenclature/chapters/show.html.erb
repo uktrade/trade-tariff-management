@@ -1,0 +1,56 @@
+<% content_for :content do %>
+  <%= render partial: "nomenclature/sections_header" %>
+
+<div class="grid-row">
+  <div class="column-three-quarters">
+    <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
+      <nav>
+        <%= link_to "All sections", sections_path, :class => "all-sections-link"  %>
+        <div class="desktop-only">
+          <ul>
+            <li>
+              <h1><%= link_to "Section #{@chapter.section.numeral}: #{@chapter.section.title}", @chapter.section %></h1>
+              <ul>
+                <li class="chapter-li">
+                  <div class="chapter-code">
+                    <div class="code-text"><%= @chapter.short_code %></div>
+                  </div>
+                  <%= @chapter.description.capitalize %>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <% if @chapter.headings %>
+    <div class="grid-row">
+      <div class="column-three-quarters">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Code</th>
+              <th scope="col">Suffix</th>
+              <th scope="col">Description</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @chapter.headings.each do |heading| %>
+            <tr>
+              <th scope="row"><%= format_nomenclature_code(heading.goods_nomenclature_item_id) %></th>
+              <th scope="row"><%= heading.producline_suffix == '80' ? '-' : heading.producline_suffix %></th>
+              <td><%= link_to heading.description, goods_nomenclature_path(heading.goods_nomenclature_item_id) %></a></td>
+              <td>Manage</td>
+            </tr>
+            <%end %>
+          </tbody>
+        </table>
+      </div>
+  </div>
+  <% end %>
+<% end %>

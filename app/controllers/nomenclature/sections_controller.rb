@@ -4,11 +4,10 @@ class Nomenclature::SectionsController < ApplicationController
 
   def index
     @sections = Section.all
-
-    if @sections.present?
-      render partial: "nomenclature/sections"
-    else
-      head :not_found
-    end
   end
+
+  def show
+    @section = Section.first(id: params[:id])
+  end
+
 end

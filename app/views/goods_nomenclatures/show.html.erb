@@ -1,0 +1,63 @@
+<% content_for :content do %>
+  <%= render partial: "nomenclature/sections_header" %>
+
+  <div class="grid-row">
+    <div class="column-three-quarters">
+      <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
+        <nav>
+          <%= link_to "All sections", sections_path, :class => "all-sections-link" %>
+          <div class="desktop-only">
+            <ul>
+              <li>
+                <h1><%= link_to "Section #{@nomenclature.chapter.section.numeral}: #{@nomenclature.chapter.section.title}", @nomenclature.chapter.section %></h1>
+                <ul>
+                  <li class="chapter-li">
+                    <div class="chapter-code">
+                      <div class="code-text"><%= @nomenclature.chapter.short_code %></div>
+                    </div>
+                    <%= @nomenclature.chapter.description.capitalize %>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <% if @nomenclature_tree %>
+    <div class="grid-row">
+      <div class="column-three-quarters">
+        <table>
+          <thead>
+          <tr>
+            <th scope="col">Code</th>
+            <th scope="col">Suffix</th>
+            <th scope="col">Description</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @nomenclature_tree.each do |nomenclature| %>
+            <% nomenclature = nomenclature.content  %>
+            <% if nomenclature[:number_indents] > 0 %>
+              <tr>
+                <td>
+  <!--            change this to use some opening/closing mechanism-->
+                  <% nomenclature[:number_indents].times do %>
+                  ->
+                  <% end %>
+                  <%= format_nomenclature_code(nomenclature[:goods_nomenclature_item_id]) %>
+                </td>
+                <td><%= nomenclature[:producline_suffix] == '80' ? '-' : nomenclature[:producline_suffix] %></td>
+                <td><%= nomenclature[:description].capitalize %></td>
+                <td>Manage</td>
+              </tr>
+            <% end %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,45 @@
+<% content_for :content do %>
+  <%= render partial: "nomenclature/sections_header" %>
+
+<div class="grid-row">
+  <div class="column-three-quarters">
+    <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
+      <nav>
+        <%= link_to "All sections", sections_path, :class => "all-sections-link"  %>
+        <div class="desktop-only">
+          <ul>
+            <li>
+              <h1><%= @section.title %></h1>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <% if @section.chapters %>
+    <div class="grid-row">
+      <div class="column-three-quarters">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Code</th>
+              <th scope="col">Description</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @section.chapters.each do |chapter| %>
+            <tr>
+              <th scope="row"><%= chapter.goods_nomenclature_item_id[0..1] %></th>
+              <td><%= link_to chapter.description.capitalize, chapter_path(chapter.goods_nomenclature_item_id) %></a></td>
+              <td>Manage</td>
+            </tr>
+            <%end %>
+          </tbody>
+        </table>
+      </div>
+  </div>
+  <% end %>
+<% end %>
