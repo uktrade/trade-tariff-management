@@ -1,0 +1,49 @@
+#goods-list-header {
+  border-bottom: 1px solid #bfc1c3;
+  margin-bottom: 1em;
+}
+
+#nomenclatures-goods-list{
+  details summary {
+    display: block;
+    margin-right:25px;
+    margin-bottom: 0;
+    .row {
+      border-bottom: 1px solid #eee;
+      padding: 0.9rem 0 0.9rem 0;
+    }&:hover {
+      background: #eaeaea;
+    }
+  }
+
+  ul {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  li.commodity {
+    .row {
+      border-bottom: 1px solid #eee;
+      padding: 0.9rem 0 0.9rem 0;
+    }&:hover {
+      background: #eaeaea;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .col-md-1 {
+      max-width: 100px;
+      flex-basis: calc(100px);
+    }
+
+    .col-md-2 {
+      max-width: 190px;
+      flex-basis: calc(190px);
+    }
+  }
+
+  @media (min-width: 641px) {
+
+  }
+
+}
