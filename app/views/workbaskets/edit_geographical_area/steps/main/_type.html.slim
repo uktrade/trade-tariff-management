@@ -6,24 +6,24 @@ fieldset
     .bootstrap-row
       .controls
         .geographical-area-type
-          .multiple-choice.disabled_area data-type-value="0"
-            input#geographical-area-type-country.radio-inline-group.js-geographical-area-type name="geographical_area[geographical_code]" type="radio" value="country"
+          .multiple-choice data-type-value="0"
+            input#geographical-area-type-country.radio-inline-group.js-geographical-area-type disabled="disabled" name="geographical_area[geographical_code]" type="radio" value="country"
 
             label.with_bigger_font-size for="geographical-area-type-country"
               | A country
               span.form-hint.with_bigger_font-size This will have two-letter ISO code. You can add countires to geographical area groups, but a country cannot itself be a group.
 
         .geographical-area-type
-          .multiple-choice.disabled_area data-type-value="2"
-            input#geographical-area-type-region.radio-inline-group.js-geographical-area-type name="geographical_area[geographical_code]" type="radio" value="region"
+          .multiple-choice data-type-value="2"
+            input#geographical-area-type-region.radio-inline-group.js-geographical-area-type disabled="disabled" name="geographical_area[geographical_code]" type="radio" value="region"
 
             label.with_bigger_font-size for="geographical-area-type-region"
               | A region
               span.form-hint.with_bigger_font-size Use this only in exceptional cases, to represent a geographical entity that is not a country. Functionally, a region is the same as a country.
 
         .geographical-area-type
-          .multiple-choice.disabled_area data-type-value="1"
-            input#geographical-area-type-group.radio-inline-group.js-geographical-area-type name="geographical_area[geographical_code]" type="radio" value="group"
+          .multiple-choice data-type-value="1"
+            input#geographical-area-type-group.radio-inline-group.js-geographical-area-type disabled="disabled" name="geographical_area[geographical_code]" type="radio" value="group"
 
             label.with_bigger_font-size for="geographical-area-type-group"
               | A group
