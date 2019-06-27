@@ -52,11 +52,5 @@ h3.heading-medium Geographical area details
     .col-md-6
       = g_area.current_description_valid_to
 
-  .bootstrap-row
-    .col-md-6.heading_column.pull-left
-      | Description valid to
-    .col-md-6
-      = g_area.current_description_valid_to
-
   = render "workbaskets/create_geographical_area/workflow_screens_parts/other_descriptions", g_area: g_area
   = render "workbaskets/create_geographical_area/workflow_screens_parts/memberships", g_area: g_area
