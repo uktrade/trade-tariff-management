@@ -1,0 +1,22 @@
+<% if node.has_children? %>
+  <li>
+    <details>
+      <summary>
+        <%= render partial: 'tree_node_content', locals: {node: node} %>
+      </summary>
+      <div>
+        <ul>
+          <% node.children.each do |sub_node| %>
+            <%= render partial: 'tree_node', locals: {node: sub_node} %>
+          <% end %>
+        </ul>
+      </div>
+    </details>
+  </li>
+
+<% else %>
+
+  <li class='commodity' >
+    <%= render partial: 'tree_node_content', locals: {node: node} %>
+  </li>
+<% end %>
