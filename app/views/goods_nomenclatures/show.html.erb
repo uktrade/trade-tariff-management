@@ -16,6 +16,15 @@
                       <div class="code-text"><%= @nomenclature.chapter.short_code %></div>
                     </div>
                     <%= @nomenclature.chapter.description.capitalize %>
+                    <ul>
+                      <li class="chapter-li">
+                        <div class="chapter-code">
+                          <div class="code-text"><%= @nomenclature.short_code[2..3] %></div>
+                        </div>
+                        <%= @nomenclature.description.capitalize %>
+                      </li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -25,149 +34,6 @@
     </div>
   </div>
 
-
-  <!-- Demo -->
-  <!-- Headers -->
-  <div id="goods-list-header" class="row">
-      <div class="col-md-6 heading-small">Description
-      </div>
-      <div class="col-md-1 heading-small">Suffix
-      </div>
-      <div class="col-md-2 heading-small">Code
-      </div>
-      <div class="col-md-1"></div>
-      <div class="col-md-1"></div>
-  </div>
-  <!-- ./= Headers -->
-
-  <ul id="nomenclatures-goods-list">
-    <li>
-      <details>
-        <summary>
-          <div class="row">
-              <div class="col-md-6"><span class="summary">Carcases and half-carcases</span></div>
-              <div class="col-md-1">10</div>
-              <div class="col-md-2">02 02 10 00 00</div>
-              <div class="col-md-1"><a href="#">Manage</a></div>
-              <div class="col-md-2"><a href="#">View measures</a></div>
-          </div>
-        </summary>
-       <div>
-          <ul>
-              <li>
-                <details>
-                  <summary>
-                      <div class="row">
-                          <div class="col-md-6"><span class="summary">High quality beef and veal</span></div>
-                          <div class="col-md-1">10</div>
-                          <div class="col-md-2">02 02 10 00 00</div>
-                          <div class="col-md-1"><a href="#">Manage</a></div>
-                          <div class="col-md-2"><a href="#">View measures</a></div>
-                      </div>
-                  </summary>
-                <div>
-                    <ul>
-                        <!-- leaf li item -->
-                        <li class="commodity">
-                            <div class="row">
-                                <div class="col-md-6">High quality beef and veal</div>
-                                <div class="col-md-1">10</div>
-                                <div class="col-md-2">02 02 10 00 00</div>
-                                <div class="col-md-1"><a href="#">Manage</a></div>
-                                <div class="col-md-2"><a href="#">View measures</a></div>
-                            </div>
-                        </li>
-                        <li>
-                            <details>
-                                <summary>
-                                  <div class="row">
-                                      <div class="col-md-6"><span class="summary">Other</span></div>
-                                      <div class="col-md-1">10</div>
-                                      <div class="col-md-2">02 02 10 00 00</div>
-                                      <div class="col-md-1"><a href="#">Manage</a></div>
-                                      <div class="col-md-2"><a href="#">View measures</a></div>
-                                  </div>
-                              </summary>
-                              <div>
-                                  <ul>
-                                      <li class="commodity">
-                                          <div class="row">
-                                              <div class="col-md-6">High quality beef and veal</div>
-                                              <div class="col-md-1">10</div>
-                                              <div class="col-md-2">02 02 10 00 00</div>
-                                              <div class="col-md-1"><a href="#">Manage</a></div>
-                                              <div class="col-md-2"><a href="#">View measures</a></div>
-                                          </div>
-                                      </li>
-                                      <li class="commodity">
-                                          <div class="row">
-                                              <div class="col-md-6">High quality beef and veal</div>
-                                              <div class="col-md-1">10</div>
-                                              <div class="col-md-2">02 02 10 00 00</div>
-                                              <div class="col-md-1"><a href="#">Manage</a></div>
-                                              <div class="col-md-2"><a href="#">View measures</a></div>
-                                          </div>
-                                      </li>
-                                    </ul>
-                                </div>
-                            </details>
-                        </li>
-                      </ul>
-                  </div>
-                </details>
-              </li>
-              <li>
-                <details>
-                  <summary>
-                      <div class="row">
-                          <div class="col-md-6"><span class="summary">Of bison</span></div>
-                          <div class="col-md-1">10</div>
-                          <div class="col-md-2">02 02 10 00 00</div>
-                          <div class="col-md-1"><a href="#">Manage</a></div>
-                          <div class="col-md-2"><a href="#">View measures</a></div>
-                      </div>
-                  </summary>
-                  <div>
-                    <ul>
-                      <li class="commodity">
-                        <div class="row">
-                            <div class="col-md-6"><span class="summary">Of bison</span></div>
-                            <div class="col-md-1">10</div>
-                            <div class="col-md-2">02 02 10 00 00</div>
-                            <div class="col-md-1"><a href="#">Manage</a></div>
-                            <div class="col-md-2"><a href="#">View measures</a></div>
-                        </div>
-                      </li>
-                      <li class="commodity">
-                          <div class="row">
-                              <div class="col-md-6"><span class="summary">Other</span></div>
-                              <div class="col-md-1">10</div>
-                              <div class="col-md-2">02 02 10 00 00</div>
-                              <div class="col-md-1"><a href="#">Manage</a></div>
-                              <div class="col-md-2"><a href="#">View measures</a></div>
-                          </div>
-                      </li>
-                    </ul>
-                  </div>
-                </details>
-              </li>
-            </ul>
-        </div>
-      </details>
-    </li>
-    <li class="commodity">
-      <div class="row">
-        <div class="col-md-6"><span class="summary">Of bison</span></div>
-        <div class="col-md-1">10</div>
-        <div class="col-md-2">02 02 10 00 00</div>
-        <div class="col-md-1"><a href="#">Manage</a></div>
-        <div class="col-md-2"><a href="#">View measures</a></div>
-      </div>
-    </li>
-
-  </ul>
-  <!-- ./= Demo -->
-
   <% if @nomenclature_tree %>
     <ul id="nomenclatures-goods-list">
       <% @nomenclature_tree.children.each do |sub_header| %>
@@ -176,45 +42,6 @@
     </ul>
   <%end %>
 
-  <% if @nomenclature_tree %>
-    <div class="grid-row">
-      <div class="column-three-quarters">
-        <table>
-          <thead>
-          <tr>
-            <th scope="col">Code</th>
-            <th scope="col">Suffix</th>
-            <th scope="col">Description</th>
-            <th scope="col"></th>
-          </tr>
-          </thead>
-          <tbody>
-          <% @nomenclature_tree.each do |nomenclature| %>
-            <% nomenclature = nomenclature.content  %>
-            <% if nomenclature[:number_indents] > 0 %>
-              <tr>
-                <td>
-  <!--            change this to use some opening/closing mechanism  class="p-l-<%= nomenclature[:number_indents] %>0"-->
-                  <!-- <% nomenclature[:number_indents].times do %>
-                  ->d
-                  <% end %> -->
-                  <%= format_nomenclature_code(nomenclature[:goods_nomenclature_item_id]) %>
-                </td>
-                <td><%= nomenclature[:producline_suffix] == '80' ? '-' : nomenclature[:producline_suffix] %></td>
-                <td>
-                    <% (nomenclature[:number_indents]-1).times do %>
-                    <span class="p-r-5">-</span>
-                    <% end %>
-                  <%= nomenclature[:description].capitalize %></td>
-                <td>Manage</td>
-              </tr>
-            <% end %>
-          <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  <% end %>
 <% end %>
 
 
