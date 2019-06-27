@@ -1,20 +1,25 @@
 .records-table-wrapper
   .records-table
     .table__header
-      .table__column.additional_code_type-column
-        a Commodity code
+      .row
+        .col-2
+          .table__column.additional_code_type-column
+            a Commodity code
+        .col-1
+          .table__column.additional_code-column
+            a Additional code
 
-      .table__column.additional_code-column
-        a Additional code
+        .col-3
+          .table__column.description-column
+            a Description
 
-      .table__column.description-column
-        a Description
+        .col-1
+          .table__column.validity_start_date-column
+            a Start date
 
-      .table__column.validity_start_date-column
-        a Start date
-
-      .table__column.validity_end_date-column
-        a End date
+        .col-1
+          .table__column.validity_end_date-column
+            a End date
 
 
     .virtual-scroller
@@ -23,18 +28,23 @@
 
           - workbasket_settings.additional_codes.map do |item|
             .table__row data-measure-sid="-485562" height="45"
+              .row
+                .col-2
+                  .table__column.additional_code_type-column
+                    = item.additional_code_type_id
 
-              .table__column.additional_code_type-column
-                = item.additional_code_type_id
+                .col-1
+                  .table__column.additional_code-column
+                    = item.additional_code
 
-              .table__column.additional_code-column
-                = item.additional_code
+                .col-3
+                  .table__column.description-column
+                    = item.description
 
-              .table__column.description-column
-                = item.description
+                .col-1
+                  .table__column.validity_start_date-column
+                    = item.validity_start_date.strftime("%Y-%m-%d")
 
-              .table__column.validity_start_date-column
-                = item.validity_start_date.strftime("%Y-%m-%d")
-
-              .table__column.validity_end_date-column
-                = item.validity_end_date.try(:strftime, "%Y-%m-%d")
+                .col-1
+                  .table__column.validity_end_date-column
+                    = item.validity_end_date.try(:strftime, "%Y-%m-%d")
