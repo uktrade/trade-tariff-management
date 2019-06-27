@@ -1,0 +1,26 @@
+- if g_area.other_descriptions.present?
+  = link_to "Show other descriptions for this geographical area", "#", class: "js-workbasket-geographical-area-show-hide-descriptions"
+
+  .js-view-geographical-area-other-descriptions-block.hidden
+    - total_number = g_area.other_descriptions.count
+
+    - g_area.other_descriptions.map.with_index do |item, index|
+      - item = item.decorate
+
+      .bootstrap-row
+        .col-md-6.heading_column.pull-left
+          | Description
+        .col-md-6
+          = item.description
+
+      .bootstrap-row
+        .col-md-6.heading_column.pull-left
+          | Description valid from
+        .col-md-6
+          = item.start_date
+
+      .bootstrap-row class="#{'final_row' if total_number == index + 1}"
+        .col-md-6.heading_column.pull-left
+          | Description valid to
+        .col-md-6
+          = item.end_date
