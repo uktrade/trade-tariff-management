@@ -155,8 +155,26 @@
         </div>
       </details>
     </li>
+    <li class="commodity">
+      <div class="row">
+        <div class="col-md-6"><span class="summary">Of bison</span></div>
+        <div class="col-md-1">10</div>
+        <div class="col-md-2">02 02 10 00 00</div>
+        <div class="col-md-1"><a href="#">Manage</a></div>
+        <div class="col-md-2"><a href="#">View measures</a></div>
+      </div>
+    </li>
+
   </ul>
   <!-- ./= Demo -->
+
+  <% if @nomenclature_tree %>
+    <ul id="nomenclatures-goods-list">
+      <% @nomenclature_tree.children.each do |sub_header| %>
+        <%= render partial: 'tree_node', locals: {node: sub_header} %>
+      <% end %>
+    </ul>
+  <%end %>
 
   <% if @nomenclature_tree %>
     <div class="grid-row">
