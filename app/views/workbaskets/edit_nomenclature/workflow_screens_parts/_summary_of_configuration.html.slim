@@ -1,0 +1,23 @@
+h3.heading-medium Summary of measures configuration
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Name
+      td
+        = workbasket.settings.main_step_settings['description'].capitalize
+
+    tr
+      td.heading_column
+        | Start date
+      td
+        = workbasket.settings.main_step_settings['validity_start_date']
+
+    tr
+      td.heading_column
+        | End date
+      td
+        = workbasket.settings.main_step_settings['validity_end_date']
+
+    | TO DO
