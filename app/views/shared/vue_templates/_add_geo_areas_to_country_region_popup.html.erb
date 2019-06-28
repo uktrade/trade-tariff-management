@@ -1,7 +1,7 @@
 <script type="text/x-template" id="add-geo-areas-to-country-region-popup-template">
   <pop-up :open="open" :on-close="triggerClose">
     <template slot="title">
-      Add this {{geographicalArea.geographical_code}} to geographical area group(s)
+      Add this country/region to geographical area group(s)
     </template>
 
     <div class="error-summary" role="alert" aria-labelledby="memberships-popup-error-heading" tabindex="-1" v-cloak v-if="!valid">
@@ -20,7 +20,7 @@
     </div>
 
     <info-message>
-      You can add this {{geographicalArea.geographical_code}} to one or more area groups here. It will automatically be added to the parents/ancestors of each group you specify here, so you do not need to do that manually.
+      You can add this country/region to one or more area groups here. It will automatically be added to the parents/ancestors of each group you specify here, so you do not need to do that manually.
     </info-message>
 
     <form-group :errors="errors" error-key="memberships">
