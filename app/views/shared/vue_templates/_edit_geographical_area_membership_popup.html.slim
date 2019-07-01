@@ -43,7 +43,7 @@ script type="text/x-template" id="edit-geographical-area-membership-popup-templa
           span.error-message v-if="slotProps.hasError" v-cloak=""
             | {{slotProps.error}}
 
-        date-select :value.sync="leave_date" :disabled="disableLeaveDate"
+        date-select :value.sync="leave_date"
 
     .form-actions
       button.button @click.prevent="updateMembership" :disabled="processing"
