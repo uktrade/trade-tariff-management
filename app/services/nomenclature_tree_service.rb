@@ -30,22 +30,22 @@ class NomenclatureTreeService
     root_node = nil
     current_path = []
     Sequel::Model.db.fetch(nomenclature_children_sql, "#{nomenclature_code[0..3]}______").each do |nomenclature|
-      new_node = Tree::TreeNode.new(nomenclature[:goods_nomenclature_item_id], nomenclature)
+      new_node = TreeNode.new(nomenclature[:goods_nomenclature_item_id], nomenclature)
       if root_node == nil
         root_node = new_node
         current_path = [root_node]
       elsif (nomenclature[:number_indents] -1 == current_path[-1].content[:number_indents])
         # new_node is a child of the current path end
-        current_path[-1] << new_node
+        current_path[-1].children << new_node
         current_path << new_node
       elsif (nomenclature[:number_indents] == current_path[-1].content[:number_indents])
         # new_node is a sibling of the current path end
-        current_path[-2] << new_node
+        current_path[-2].children << new_node
         current_path[-1] = new_node
       elsif (nomenclature[:number_indents] < current_path[-1].content[:number_indents])
         # new_node is a sibling of a higher point in the current path
         jump_up = current_path[-1].content[:number_indents] - nomenclature[:number_indents]
-        current_path[-2-jump_up] << new_node
+        current_path[-2-jump_up].children << new_node
         current_path[-1-jump_up..-1] = new_node
       end
     end

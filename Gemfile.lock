@@ -491,7 +491,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    structured_warnings (0.3.0)
     temple (0.8.0)
     thor (0.19.4)
     thread_safe (0.3.6)
@@ -585,7 +584,6 @@ DEPENDENCIES
   responders (~> 2.1, >= 2.1.0)
   rspec-rails
   rspec_junit_formatter
-  rubytree
   rubyzip (~> 1.2.2)
   sass-rails (= 5.0.6)
   selectize-rails

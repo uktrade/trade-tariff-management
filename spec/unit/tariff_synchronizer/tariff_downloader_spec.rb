@@ -131,7 +131,6 @@ describe TariffSynchronizer::TariffDownloader do
           end
 
           it "Logs the creating of the ChiefUpdate record with missing state" do
-skip
             tariff_synchronizer_logger_listener
             tariff_downloader.perform
             expect(@logger.logged(:warn).size).to eq 1
@@ -158,7 +157,6 @@ skip
           end
 
           it "Logs the creating of the ChiefUpdate record with failed state" do
-            skip
             tariff_synchronizer_logger_listener
             tariff_downloader.perform
             expect(@logger.logged(:warn).size).to eq 1
