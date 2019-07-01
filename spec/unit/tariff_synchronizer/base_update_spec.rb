@@ -62,7 +62,6 @@ describe TariffSynchronizer::BaseUpdate do
     end
 
     it "logs and send email about several missing updates in a row" do
-      skip
       create :chief_update, :missing, issue_date: 1.day.ago
       create :chief_update, :missing, issue_date: 2.days.ago
       create :chief_update, :missing, issue_date: 3.days.ago

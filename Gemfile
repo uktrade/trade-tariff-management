@@ -59,7 +59,6 @@ gem 'kaminari-sequel'
 gem "simple_form", "~> 3.5"
 gem "jbuilder"
 gem "enumerize"
-gem "rubytree"
 
 # Decorators & Exposing named methods
 gem 'draper'

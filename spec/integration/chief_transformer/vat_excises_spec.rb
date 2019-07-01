@@ -114,7 +114,6 @@ describe "CHIEF: VAT and Excises" do
     end
 
     it "creates measures for 0202020200" do
-      skip
       m = Measure.where(goods_nomenclature_item_id: "0202020200", validity_start_date: DateTime.parse("2006-06-01 00:00:00")).first
       expect(m.goods_nomenclature_item_id).to eq "0202020200"
       expect(m.measure_components.first.duty_amount).to eq 22.0
