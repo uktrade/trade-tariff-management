@@ -28,15 +28,12 @@ $(document).ready(function() {
 
         area_code = data.geographical_area.geographical_code;
 
-        if (area_code.length > 0) {
-          setTimeout(function setAreaCode() {
-            radion_button = $(".geographical-area-type .multiple-choice[data-type-value='" + area_code + "'] label");
-            radion_button.trigger('click');
+        // disable radio buttons
+        $(".radio-inline-group").attr('disabled', 'disabled');
 
-            setTimeout(function disableRadioButtons() {
-              $(".multiple-choice.disabled_area").addClass('disabled');
-            }, 300);
-          }, 300);
+        if (area_code.length > 0) {
+          radion_button = $(".geographical-area-type .multiple-choice[data-type-value='" + area_code + "'] input");
+          radion_button.attr('checked', true);
         }
       } else {
         data.geographical_area = this.emptyGeographicalArea();
