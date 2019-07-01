@@ -50,7 +50,6 @@ $(document).ready(function() {
           {enabled: true, title: "Additional code(s)", field: "additional_code_ids"},
           {enabled: true, title: "Origin", field: "origin"},
           {enabled: true, title: "Origin exclusions", field: "origin_exclusions"},
-          {enabled: true, title: "Last updated", field: "last_updated"},
           {enabled: true, title: "Status", field: "status"}
         ],
 

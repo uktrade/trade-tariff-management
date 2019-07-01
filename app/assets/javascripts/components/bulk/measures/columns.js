@@ -12,6 +12,5 @@ window.BulkEditing.Measures.Columns = [
   {enabled: true, title: "Duties", field: "duties", sortable: true, type: "duties", changeProp: "duties" },
   {enabled: true, title: "Conditions", field: "conditions", sortable: true, type: "comma_string", changeProp: "conditions" },
   {enabled: true, title: "Footnotes", field: "footnotes", sortable: true, type: "comma_string", changeProp: "footnotes" },
-  {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "date", changeProp: "last_updated" },
   {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
 ];

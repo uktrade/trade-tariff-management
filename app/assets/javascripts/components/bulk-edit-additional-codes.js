@@ -16,7 +16,6 @@ $(document).ready(function() {
           {enabled: true, title: "Description", field: "description", sortable: true, type: "string", changeProp: "description" },
           {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date", changeProp: "validity_start_date" },
           {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date", changeProp: "validity_end_date" },
-          {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "string" },
           {enabled: true, title: "Status", field: "status", sortable: true, type: "string", changeProp: "status" }
         ],
         actions: [

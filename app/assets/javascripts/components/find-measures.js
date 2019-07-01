@@ -47,7 +47,6 @@ $(document).ready(function() {
           {enabled: true, title: "Duties", field: "duties"},
           {enabled: true, title: "Conditions", field: "conditions"},
           {enabled: true, title: "Footnotes", field: "footnotes"},
-          {enabled: true, title: "Last updated", field: "last_updated"},
           {enabled: true, title: "Status", field: "status"}
         ],
 

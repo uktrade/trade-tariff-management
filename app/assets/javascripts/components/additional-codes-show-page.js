@@ -14,8 +14,7 @@ $(document).ready(function() {
           {enabled: true, title: "Code", field: "additional_code", sortable: true, type: "string" },
           {enabled: true, title: "Description", field: "description", sortable: true, type: "string" },
           {enabled: true, title: "Valid from", field: "validity_start_date", sortable: true, type: "date" },
-          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date" },
-          {enabled: true, title: "Last updated", field: "last_updated", sortable: true, type: "string" }
+          {enabled: true, title: "Valid to", field: "validity_end_date", sortable: true, type: "date" }
         ],
         raw_codes: window.additional_codes
       };
