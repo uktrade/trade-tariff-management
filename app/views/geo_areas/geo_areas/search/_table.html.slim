@@ -12,20 +12,15 @@ table.table
   thead
     tr
       th
-        | Code
-        / = sortable(:geographical_area_id, "Code", { search: search_ops })
+        = sortable(:geographical_area_id, "Code", { search: search_ops })
       th
-        | Description
-        /= sortable(:description, "Description", { search: search_ops })
+        = sortable(:description, "Description", { search: search_ops })
       th
-        | Type
-        /= sortable(:geographical_code, "Type", { search: search_ops })
+        = sortable(:geographical_code, "Type", { search: search_ops })
       th
-        | Start date
-        / = sortable(:validity_start_date, "Start date", { search: search_ops })
+        = sortable(:validity_start_date, "Start date", { search: search_ops })
       th
-        | End date
-        / = sortable(:validity_end_date, "End date", { search: search_ops })
+        = sortable(:validity_end_date, "End date", { search: search_ops })
 
       - if false
         th width="1"

@@ -128,10 +128,31 @@ class GeographicalArea < Sequel::Model
     end
 
     begin :search_functionality
-          def default_order
-            distinct(:geographical_areas__geographical_area_id).order(
-              Sequel.asc(:geographical_areas__geographical_area_id)
-            )
+          def order_by(sort_dir, sort_by)
+            if sort_by === "description"
+              @refString = "geographical_area_descriptions__description".to_sym
+            else
+              @refString = "geographical_areas__#{sort_by}".to_sym
+            end
+
+            case sort_by
+              when "geographical_area_id", "description"
+                distinct(@refString).order(
+                  if sort_dir === 'asc'
+                    Sequel.asc(@refString)
+                  else
+                    Sequel.desc(@refString)
+                  end
+                )
+            else
+              order(
+                if sort_dir === 'asc'
+                  Sequel.asc(@refString)
+                else
+                  Sequel.desc(@refString)
+                end
+              )
+            end
           end
 
           def by_code(code)

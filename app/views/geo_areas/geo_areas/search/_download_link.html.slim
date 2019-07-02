@@ -2,7 +2,5 @@
 / Free icon was downloaded from https://icons8.com/icon/set/bootstrap-download/all
 /
 
-.bootstrap-row
-  .col-lg-5.col-md-7
-    = link_to geo_areas_url({ format: :csv, search: params[:search] }), class: "search-results-download-link" do
-      = image_tag "download_icon.png", alt: "Download search results"
+= link_to geo_areas_url({ format: :csv, search: params[:search] }), class: "search-results-download-link" do
+  = image_tag "download_icon.png", alt: "Download search results"
