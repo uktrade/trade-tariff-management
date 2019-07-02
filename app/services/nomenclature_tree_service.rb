@@ -9,7 +9,7 @@ class NomenclatureTreeService
              gni.number_indents,
              (select description
               from goods_nomenclature_descriptions
-              where goods_nomenclature_item_id = gn.goods_nomenclature_item_id
+              where goods_nomenclature_sid = gn.goods_nomenclature_sid
               order by oid desc
               limit 1)
       from goods_nomenclatures gn
