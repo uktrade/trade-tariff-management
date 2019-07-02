@@ -69,7 +69,6 @@ module Workbaskets
 
     def original_geographical_area
       @original_geographical_area ||= GeographicalArea.where(
-        geographical_area_sid: original_geographical_area_sid,
         geographical_area_id: original_geographical_area_id
       ).first
     end
