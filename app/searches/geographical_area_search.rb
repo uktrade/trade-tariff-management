@@ -20,7 +20,11 @@ class GeographicalAreaSearch
   end
 
   def results(paginate = true)
-    @relation = GeographicalArea.default_order
+    if !search_ops['sort_by']
+      @relation = GeographicalArea.order_by('asc', 'geographical_area_id')
+    else
+      @relation = GeographicalArea.order_by(search_ops['sort_dir'] ,search_ops['sort_by'])
+    end
 
     search_ops.select do |k, v|
       ALLOWED_FILTERS.include?(k.to_s) && v.present?
