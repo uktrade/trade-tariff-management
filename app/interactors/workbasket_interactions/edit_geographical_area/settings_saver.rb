@@ -180,12 +180,7 @@ module WorkbasketInteractions
             p "*" * 100
             p ""
 
-            end_date_existing_geographical_area!
-
-            add_geographical_area!
-            add_geographical_area_description_period!
-            add_geographical_area_description!
-
+            update_geographical_area! if settings_params['validity_end_date']
             if description_validity_start_date.present?
               add_next_geographical_area_description_period!
               add_next_geographical_area_description!
@@ -268,6 +263,7 @@ module WorkbasketInteractions
 
       def parse_and_format_conformance_rules
         @conformance_errors = {}
+        geographical_area ||= original_geographical_area
 
         if it_is_just_description_changed?
 
@@ -335,16 +331,15 @@ module WorkbasketInteractions
         end
       end
 
-      def end_date_existing_geographical_area!
-        unless original_geographical_area.already_end_dated?
-          original_geographical_area.validity_end_date = validity_start_date
+      def update_geographical_area!
+        return if original_geographical_area.validity_end_date == validity_end_date
+        original_geographical_area.validity_end_date = validity_end_date
 
-          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            original_geographical_area, system_ops.merge(operation: "U")
-          ).assign!(false)
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          original_geographical_area, system_ops.merge(operation: "U")
+        ).assign!(false)
 
-          original_geographical_area.save
-        end
+        original_geographical_area.save
       end
 
       def end_date_existing_memberships_for_non_group!
