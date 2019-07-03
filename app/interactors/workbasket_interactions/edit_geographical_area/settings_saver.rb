@@ -128,6 +128,10 @@ module WorkbasketInteractions
           !memberships_have_no_changes?
       end
 
+      def description_changed?
+        original_geographical_area.description.to_s.squish != description.to_s.squish
+      end
+
       def memberships_have_no_changes?
         return false if membership_removed?
         if original_geographical_area.geographical_code == '1'
@@ -166,7 +170,6 @@ module WorkbasketInteractions
             p ""
             p "*" * 100
             p ""
-
             end_date_existing_geographical_area_desription_period!
             add_next_geographical_area_description_period!
             add_next_geographical_area_description!
@@ -180,8 +183,13 @@ module WorkbasketInteractions
             p "*" * 100
             p ""
 
+
             update_geographical_area! if settings_params['validity_end_date']
-            if description_validity_start_date.present?
+
+
+            if description_validity_start_date.present? && description_changed?
+              add_geographical_area_description_period!
+              add_geographical_area_description!
               add_next_geographical_area_description_period!
               add_next_geographical_area_description!
             end
@@ -297,21 +305,23 @@ module WorkbasketInteractions
             @conformance_errors.merge!(get_conformance_errors(geographical_area))
           end
 
-          unless geographical_area_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
-          end
-
-          unless geographical_area_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
-          end
-
-          if description_validity_start_date.present?
-            unless next_geographical_area_description_period.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
+          if description_changed?
+            @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period)) unless geographical_area_description_period.conformant?
+            unless geographical_area_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
+            end
+            unless geographical_area_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
             end
 
-            unless next_geographical_area_description.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
+            if description_validity_start_date.present?
+              unless next_geographical_area_description_period.conformant?
+                @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
+              end
+
+              unless next_geographical_area_description.conformant?
+                @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
+              end
             end
           end
         end
@@ -332,14 +342,15 @@ module WorkbasketInteractions
       end
 
       def update_geographical_area!
-        return if original_geographical_area.validity_end_date == validity_end_date
-        original_geographical_area.validity_end_date = validity_end_date
+        g_area = GeographicalArea.find(geographical_area_id: original_geographical_area.geographical_area_id)
+        return if g_area.validity_end_date == validity_end_date
+        g_area.validity_end_date = validity_end_date
 
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
           original_geographical_area, system_ops.merge(operation: "U")
         ).assign!(false)
 
-        original_geographical_area.save
+        g_area.save
       end
 
       def end_date_existing_memberships_for_non_group!
@@ -412,8 +423,8 @@ module WorkbasketInteractions
           validity_end_date: (description_validity_start_date || validity_end_date)
         )
 
-        geographical_area_description_period.geographical_area_id = geographical_area.geographical_area_id
-        geographical_area_description_period.geographical_area_sid = geographical_area.geographical_area_sid
+        geographical_area_description_period.geographical_area_id = original_geographical_area.geographical_area_id
+        geographical_area_description_period.geographical_area_sid = original_geographical_area.geographical_area_sid
 
         assign_system_ops!(geographical_area_description_period)
         set_primary_key!(geographical_area_description_period)
