@@ -204,7 +204,7 @@ describe GeographicalArea do
         geographical_area = create :geographical_area,
                                    validity_end_date: Date.today + 5.days
         geographical_area_description = geographical_area.geographical_area_description
-        geographical_area_description.geographical_area_description_period.validity_end_date = Date.today + 10.days
+        geographical_area_description.geographical_area_description_period.validity_start_date = Date.today + 10.days
         expect(geographical_area).not_to be_conformant
         expect(geographical_area.conformance_errors).to have_key(:GA3)
       end
