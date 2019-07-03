@@ -271,7 +271,7 @@ module WorkbasketInteractions
 
       def parse_and_format_conformance_rules
         @conformance_errors = {}
-        geographical_area ||= original_geographical_area
+        @geographical_area ||= original_geographical_area
 
         if it_is_just_description_changed?
 
@@ -438,8 +438,8 @@ module WorkbasketInteractions
           language_id: "EN"
         )
 
-        geographical_area_description.geographical_area_id = geographical_area.geographical_area_id
-        geographical_area_description.geographical_area_sid = geographical_area.geographical_area_sid
+        geographical_area_description.geographical_area_id = original_geographical_area.geographical_area_id
+        geographical_area_description.geographical_area_sid = original_geographical_area.geographical_area_sid
         geographical_area_description.geographical_area_description_period_sid = geographical_area_description_period.geographical_area_description_period_sid
 
         assign_system_ops!(geographical_area_description)
