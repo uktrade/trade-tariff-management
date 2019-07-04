@@ -1,0 +1,49 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    # Save the docker postgres data onto our local machine
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB=tariff_management_development
+
+  redis:
+    image: redis
+    command: redis-server /usr/local/etc/redis/redis.conf --port 6379
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - '6379:6379'
+
+  sidekiq:
+    depends_on:
+      - 'db'
+      - 'redis'
+    build: .
+    # Uncomment below if you want to run sidekick locally
+    # command: sidekiq -C config/sidekiq.yml
+    volumes:
+      - '.:/myapp'
+    env_file:
+      - '.env'
+    links:
+      - redis
+
+  tariffs:
+    build: .
+    command: bash -c "bundle exec rake assets:precompile; rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+      - redis
+      - sidekiq
+    env_file:
+      - '.env'
+    links:
+      - redis
