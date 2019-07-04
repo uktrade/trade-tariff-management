@@ -4,6 +4,53 @@
 
 ## Development
 
+1. Update `.env` file with valid data (or copy .sample.env)
+2. Ask for a copy of database dump file.
+
+## Using Docker
+1. Install and run Docker from [https://docs.docker.com/install/](https://docs.docker.com/install/)
+2. Run the below command inside root folder:
+```
+    docker-compose run tariffs  . --force --no-deps --database=postgresql
+```
+3. Run:
+```
+    docker-compose up
+```
+4. Run the below command to create databases:
+```
+    docker-compose run tariffs rake db:create
+```
+5. Run the below command to copy your database dump file inside the db container:
+```
+     docker cp /Absolute_Path_To_File/tariff_management_development.dump trade-tariff-management_db_1:/
+```
+6. Depending the format of your dump file run either one of the below commands for
+  importing data to the db
+```
+    docker exec trade-tariff-management_db_1 psql -U postgres -d tariff_management_development /tariff_management_development.dump
+```
+
+```
+    docker exec trade-tariff-management_db_1 pg_restore -U postgres -d tariff_management_development /tariff_management_development.dump
+```
+
+### Docker help
+1. If you want to stop the containers run:
+```
+    docker-compose down
+```
+2. If you want to start the containers run:
+```
+    docker-compose up
+```
+3. If you want to re-build containers run:
+```
+    docker-compose build
+```
+
+## Manual Set up
+
 ### Dependencies
 
   - Ruby
@@ -17,13 +64,11 @@
 
     bin/setup
 
-2. Update `.env` file with valid data (or copy .env.test)
-
-3. Start Foreman.
+2. Start Foreman.
 
     foreman start
 
-4. Verify that the app is up and running.
+3. Verify that the app is up and running.
 
     open http://localhost:3020/healthcheck
 
@@ -59,8 +104,8 @@ NB: In the newer Diego architecture from CloudFoundry, no-route skips creating a
 
 ## Contributing
 
-Please check out the [Contributing guide](https://github.com/bitzesty/trade-tariff-management/blob/master/CONTRIBUTING.md)
+Please check out the [Contributing guide](https://github.com/uktrade/trade-tariff-management/blob/master/CONTRIBUTING.md)
 
 ## Licence
 
-Trade Tariff is licenced under the [MIT licence](https://github.com/bitzesty/trade-tariff-management/blob/master/LICENCE.txt)
+Trade Tariff is licenced under the [MIT licence](https://github.com/uktrade/trade-tariff-management/blob/master/LICENCE.txt)

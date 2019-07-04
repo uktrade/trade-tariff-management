@@ -5,6 +5,9 @@ default: &default
 
 development:
   <<: *default
+  host: <%= ENV['DATABASE_HOST'] %>
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASS'] %>
   database: tariff_management_development
 
 test:
