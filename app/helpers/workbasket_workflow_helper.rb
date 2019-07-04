@@ -29,4 +29,16 @@ module WorkbasketWorkflowHelper
   def iam_workbasket_author?
     workbasket.user_id == @current_user.id
   end
+
+  def underlying_object_link
+    if workbasket.type.include?("geographical_area")
+      link_to "Geographical Areas", geo_areas_url
+    elsif workbasket.type.include?("additional_code")
+      link_to "Additional Codes", additional_codes_url
+    elsif workbasket.type.include?("quot")
+      link_to "Quotas", quotas_url
+    else
+      link_to "Measures", measures_url
+    end
+  end
 end
