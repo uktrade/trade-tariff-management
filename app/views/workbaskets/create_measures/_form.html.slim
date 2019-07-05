@@ -10,10 +10,11 @@
                           } \
                         } do |f|
 
-  = render "workbaskets/create_measures/steps/#{params[:step].to_s}", f: f
-  = render "workbaskets/shared/errors_container", f: f
-
   - if step_pointer.duties_conditions_footnotes?
     = render "workbaskets/shared/custom_errors_block", f: f
+  - else
+    = render "workbaskets/shared/errors_container", f: f
+
+  = render "workbaskets/create_measures/steps/#{params[:step].to_s}", f: f
 
   = render "workbaskets/shared/action_links", f: f
