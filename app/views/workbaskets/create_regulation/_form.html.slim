@@ -1,6 +1,7 @@
 script
   == "window.__regulation_json = #{workbasket_settings.settings.to_json};"
 
+
 = simple_form_for form, url: create_regulation_url(id: workbasket.id),
                         html: { \
                           class: "regulation-form create-measures-v2", \
@@ -8,9 +9,8 @@ script
                             attach_pdf_url: attach_pdf_create_regulation_url(workbasket.id) \
                           } \
                         } do |f|
-
+  = render "workbaskets/shared/errors_container", f: f
   = render "workbaskets/create_regulation/steps/#{params[:step].to_s}", f: f
   = render "workbaskets/shared/success_message", f: f
-  = render "workbaskets/shared/errors_container", f: f
 
   = render "workbaskets/create_regulation/action_links", f: f

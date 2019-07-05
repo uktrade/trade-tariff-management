@@ -56,7 +56,7 @@ $(document).ready(function() {
           { text: "2", value: 2 },
           { text: "3", value: 3 }
         ],
-        errors: []
+        errors: {}
       };
 
       var default_quota = {
@@ -244,7 +244,7 @@ $(document).ready(function() {
           settings: payload
         };
 
-        self.errors = [];
+        self.errors = {};
 
         $.ajax({
           url: window.save_url,
@@ -257,7 +257,9 @@ $(document).ready(function() {
           },
           error: function(response) {
             self.savedSuccessfully = true;
+            self.errors = response.responseJSON.errors;
             WorkbasketBaseValidationErrorsHandler.handleErrorsResponse(response, self);
+            $(document).scrollTop($("#content").offset().top);
           }
         });
       };
@@ -821,7 +823,7 @@ $(document).ready(function() {
         return this.measure.conditions.length === 0;
       },
       hasErrors: function() {
-        return this.errors.length > 0;
+        return Object.keys(this.errors).length > 0;
       },
       canRemoveQuota: function() {
         return this.measure.quota_periods.length > 1;

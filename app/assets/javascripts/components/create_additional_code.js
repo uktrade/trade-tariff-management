@@ -57,6 +57,10 @@ $(document).ready(function() {
       },
       submitCrossCheck: function() {
         if (!this.validate("submit_for_cross_check")) {
+          // focus to summary if errors, do not if only conformance errors
+          if (this.hasErrors) {
+            $(document).scrollTop($("#content").offset().top);
+          }
           return;
         }
 
@@ -161,6 +165,10 @@ $(document).ready(function() {
         this.errors = results.errors;
         this.conformanceErrors = validator.conformanceErrors;
         this.errorsSummary = results.summary;
+        // focus to summary if errors, do not if only conformance errors
+        if (this.hasErrors) {
+          $(document).scrollTop($("#content").offset().top);
+        }
 
         return results.valid;
       }

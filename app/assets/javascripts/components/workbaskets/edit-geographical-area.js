@@ -124,6 +124,10 @@ $(document).ready(function() {
             self.errorsSummary = json_resp.errors_summary;
             self.errors = json_resp.errors;
             self.conformanceErrors = json_resp.conformance_errors;
+            // focus to summary if errors, do not if only conformance errors
+            if (self.hasErrors) {
+              $(document).scrollTop($("#content").offset().top);
+            }
           }
         });
 

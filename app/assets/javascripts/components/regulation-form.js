@@ -14,7 +14,7 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
-        errors: []
+        errors: {}
       };
 
       if (window.__regulation_json) {
@@ -47,7 +47,7 @@ $(document).ready(function() {
             var payload = self.createRegulationMainStepPayLoad();
           }
 
-          self.errors = [];
+          self.errors = {};
 
           $.ajax({
             url: window.save_url,
@@ -85,6 +85,9 @@ $(document).ready(function() {
               WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
               self.errors = response.responseJSON.errors;
               WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
+
+              // focus to summary if errors
+              $(document).scrollTop($("#content").offset().top);
             }
           });
         });
@@ -92,7 +95,7 @@ $(document).ready(function() {
     },
     computed: {
       hasErrors: function() {
-        return this.errors.length > 0;
+        return Object.keys(this.errors).length > 0;
       }
     },
     methods: {
