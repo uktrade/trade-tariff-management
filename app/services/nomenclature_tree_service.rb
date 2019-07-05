@@ -5,26 +5,21 @@ class NomenclatureTreeService
       SELECT gn.goods_nomenclature_sid,
              gn.goods_nomenclature_item_id,
              gn.producline_suffix,
-             gni.goods_nomenclature_indent_sid,
-             gni.number_indents,
+             (select number_indents
+              from goods_nomenclature_indents
+              where goods_nomenclature_sid = gn.goods_nomenclature_sid
+              order by oid desc
+              limit 1),
              (select description
               from goods_nomenclature_descriptions
               where goods_nomenclature_sid = gn.goods_nomenclature_sid
               order by oid desc
               limit 1)
       from goods_nomenclatures gn
-               --     goods indent join
-               left join goods_nomenclature_indents gni
-                         on (gn.goods_nomenclature_sid = gni.goods_nomenclature_sid)
-                             --   indents validity
-                             and(gni.validity_end_date is null or gni.validity_end_date > current_date)
-           --
-      
       where (gn.validity_end_date is null or gn.validity_end_date >= current_date)
         and gn.validity_start_date <= current_date
         and gn.goods_nomenclature_item_id like ?
-      
-      order by gn.goods_nomenclature_item_id, gn.producline_suffix, gni.number_indents;
+      order by gn.goods_nomenclature_item_id, gn.producline_suffix;
     SQL
 
     root_node = nil
