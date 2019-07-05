@@ -136,11 +136,11 @@ module WorkbasketInteractions
         return false if membership_removed?
         if original_geographical_area.geographical_code == '1'
           original_member_ids = original_geographical_area.currently_contains.map { |area| area.geographical_area_id }
-          new_member_ids = settings_params["geographical_area_memberships"].values.map{|area| area['geographical_area_id']}
+          new_member_ids = settings_params["geographical_area_memberships"] ? settings_params["geographical_area_memberships"].values.map{|area| area['geographical_area_id']} : []
           original_member_ids == new_member_ids
         else
           original_membership_ids = original_geographical_area.currently_member_of.map { |area| area.geographical_area_id }
-          new_membership_ids = settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]}
+          new_membership_ids = settings_params["geographical_area_memberships"] ? settings_params["geographical_area_memberships"].values.map{|area| area["geographical_area_id"]} : []
           original_membership_ids == new_membership_ids
         end
       end
