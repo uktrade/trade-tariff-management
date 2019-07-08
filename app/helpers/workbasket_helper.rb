@@ -38,6 +38,13 @@ module WorkbasketHelper
     end
   end
 
+  def edit_nomenclature_section_header
+    case current_step
+    when "main"
+      "Work with selected commodity code"
+    end
+  end
+
   def edit_certificate_section_header
     case current_step
     when "main"
@@ -288,6 +295,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :edit_nomenclature
+      edit_edit_nomenclature_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
@@ -346,5 +359,9 @@ module WorkbasketHelper
 
   def show_delete?(workbasket)
      @current_user.author_of_workbasket?(workbasket) && (workbasket.editing? || workbasket.new_in_progress? || workbasket.cross_check_rejected? || workbasket.approval_rejected?)
+  end
+
+  def format_date(date)
+    date&.strftime("%d/%m/%Y")
   end
 end

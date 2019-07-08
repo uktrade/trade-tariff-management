@@ -1,0 +1,16 @@
+= simple_form_for form, url: edit_nomenclature_url(id: workbasket.id),
+                        html: { \
+                          class: "js-edit-nomenclature-form create-measures-v2", \
+                          method: :put \
+                        } do |f|
+
+  = render "workbaskets/edit_nomenclature/errors_summary"
+
+  - if workbasket.submitted?
+    = render "workbaskets/edit_nomenclature/steps/main/details"
+
+  = render "workbaskets/edit_nomenclature/steps/#{params[:step].to_s}", f: f
+  = render "workbaskets/shared/success_message", f: f
+  = render "workbaskets/edit_nomenclature/conformance_rules_container", f: f
+
+  = render "workbaskets/edit_nomenclature/action_links", f: f

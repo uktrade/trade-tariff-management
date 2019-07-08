@@ -1,0 +1,84 @@
+<div class="breadcrumbs">
+  <ol>
+    <li>
+      <%= link_to "Main menu", root_url %>
+    </li>
+  </ol>
+</div>
+
+<h1 class="heading-xlarge m-b-5">
+  Work with selected commodity code
+</h1>
+
+<div class="panel panel-border-wide m-b-60">
+  <p>
+    <%= @nomenclature.goods_nomenclature_item_id %> - <%= @nomenclature.description %>
+  </p>
+</div>
+
+<%= simple_form_for @manage_nomenclature_form, url: manage_nomenclature_path, html: {method: :post} do |f| %>
+
+  <fieldset>
+  <div class="bootstrap-row">
+    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+      <%= f.hidden_field :original_nomenclature, value: @nomenclature.goods_nomenclature_sid %>
+    </div>
+  </div>
+  <div class="bootstrap-row">
+    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+      <%= f.input :workbasket_name, label: 'What is the name of this workbasket?', required: true %>
+    </div>
+  </div>
+  <div class="bootstrap-row">
+    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+      <%= f.input :reason_for_changes, label: 'What is the reason for these changes?', as: :text %>
+    </div>
+  </div>
+  <div class="bootstrap-row">
+    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+      <%= f.input :description_validity_start_date, label: 'should these changes take effect?', as: :date %>
+    </div>
+  </div>
+
+  <div class="bootstrap-row">
+    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+
+      <div class="form-group">
+        <label class="form-label">
+          What do you want to do with this commodity code
+        </label>
+      </div>
+      <div class="multiple-choice">
+        <input type='radio' id="amend_description" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="amend_description">
+        <label for="amend_description">
+          Amend description
+        </label>
+      </div>
+      <div class="multiple-choice">
+        <input type='radio' id="new_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="new_nomenclature">
+        <label for="new_nomenclature">
+          Add new code (structural)
+        </label>
+      </div>
+      <div class="multiple-choice">
+        <input type='radio' id="remove_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="remove_nomenclature">
+        <label for="remove_nomenclature">
+          Remove this code (structural)
+        </label>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+
+  <div>
+    <div class="form-actions">
+      <button type="submit" class='button' data-disable-with='Processing'>
+        Continue
+      </button>
+
+      <%= link_to "Cancel", @nomenclature, class: "secondary-button" %>
+    </div>
+  </div>
+<% end %>
+
+
