@@ -30,6 +30,8 @@ module Workbaskets
         "Edit Certificate"
       when "edit_geographical_area"
         "Edit Geographical Area"
+      when "edit_nomenclature"
+        "Edit Nomenclature"
       end
     end
 

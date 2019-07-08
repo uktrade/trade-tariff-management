@@ -2086,6 +2086,42 @@ ALTER SEQUENCE public.edit_geographical_areas_workbasket_settings_id_seq OWNED B
 
 
 --
+-- Name: edit_nomenclature_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_nomenclature_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    workbasket_name text,
+    reason_for_changes text,
+    validity_start_date date,
+    description text,
+    original_nomenclature text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: edit_nomenclature_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_nomenclature_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_nomenclature_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_nomenclature_workbasket_settings_id_seq OWNED BY public.edit_nomenclature_workbasket_settings.id;
+
+
+--
 -- Name: explicit_abrogation_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8280,6 +8316,13 @@ ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings ALTER COLUMN
 
 
 --
+-- Name: edit_nomenclature_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_nomenclature_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_nomenclature_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: explicit_abrogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9236,6 +9279,14 @@ ALTER TABLE ONLY public.edit_footnotes_workbasket_settings
 
 ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings
     ADD CONSTRAINT edit_geographical_areas_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edit_nomenclature_workbasket_settings edit_nomenclature_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_nomenclature_workbasket_settings
+    ADD CONSTRAINT edit_nomenclature_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12586,3 +12637,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190212163200_add_user_id_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190320142706_create_session_audits.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190603135337_replace_all_additional_codes_view.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190625152340_create_edit_nomenclature_workbasket_settings.rb');

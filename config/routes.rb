@@ -267,6 +267,16 @@ Rails.application.routes.draw do
         get :withdraw_workbasket_from_workflow
       end
     end
+
+    resource :manage_nomenclature, only: [:new, :create]
+
+    resources :edit_nomenclature, only: [:edit, :update, :show] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
   end
 
   scope module: :geo_areas do

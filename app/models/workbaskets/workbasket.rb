@@ -15,6 +15,7 @@ module Workbaskets
       create_certificate
       edit_certificate
       edit_geographical_area
+      edit_nomenclature
     ].freeze
 
     STATUS_LIST = [
@@ -107,6 +108,7 @@ module Workbaskets
       edit_footnote
       edit_certificate
       edit_geographical_area
+      edit_nomenclature
     ).freeze
 
     one_to_many :events, key: :workbasket_id,
@@ -152,6 +154,9 @@ module Workbaskets
 
     one_to_one :edit_geographical_area_settings, key: :workbasket_id,
                                                  class_name: "Workbaskets::EditGeographicalAreaSettings"
+
+    one_to_one :edit_nomenclature_settings, key: :workbasket_id,
+               class_name: "Workbaskets::EditNomenclatureSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -523,6 +528,8 @@ module Workbaskets
         edit_certificate_settings
       when :edit_geographical_area
         edit_geographical_area_settings
+      when :edit_nomenclature
+        edit_nomenclature_settings
       end
     end
 
@@ -625,6 +632,7 @@ module Workbaskets
           edit_footnote
           edit_certificate
           edit_geographical_area
+          edit_nomenclature
         ).map do |type_name|
           by_type(type_name).map(&:clean_up_workbasket!)
         end
@@ -661,6 +669,8 @@ module Workbaskets
                        ::Workbaskets::EditCertificateSettings
                      when :edit_geographical_area
                        ::Workbaskets::EditGeographicalAreaSettings
+                     when :edit_nomenclature
+                       ::Workbaskets::EditNomenclatureSettings
       end
 
       settings = target_class.new(

@@ -1,5 +1,6 @@
 class GoodsNomenclatureDescriptionPeriod < Sequel::Model
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :oplog, primary_key: :geographical_area_description_period_sid

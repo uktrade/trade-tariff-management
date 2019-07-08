@@ -1,6 +1,7 @@
 class GoodsNomenclatureDescription < Sequel::Model
   include Formatter
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :time_machine
   plugin :oplog, primary_key: %i[goods_nomenclature_sid

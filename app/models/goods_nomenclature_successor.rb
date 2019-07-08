@@ -1,5 +1,6 @@
 class GoodsNomenclatureSuccessor < Sequel::Model
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
   plugin :oplog, primary_key: %i[goods_nomenclature_sid
                                  absorbed_goods_nomenclature_item_id

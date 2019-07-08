@@ -1,0 +1,20 @@
+.panel.panel--confirmation
+  h3.heading-medium
+    | Amended commodity code
+    =<> "#{workbasket.settings.description}"
+    | has been submitted for cross-check.
+
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  li
+    a href="#"
+      | Withdraw submission / edit nomenclature (not implemented)
+  li
+    = link_to "Edit another nomenclature", sections_url
+  li
+    = link_to "Return to main menu", root_url
+br
+br

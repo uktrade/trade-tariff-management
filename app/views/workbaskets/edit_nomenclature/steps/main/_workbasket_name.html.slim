@@ -1,0 +1,39 @@
+fieldset
+  h3.heading-medium
+    label for="edit_nomenclature_workbasket_name"
+      | What is the name of this workbasket?
+
+    .bootstrap-row
+      .col-md-9
+        input.form-control id='edit_nomenclature_workbasket_name'
+
+  h3.heading-medium
+    label for="edit_nomenclature_workbasket_name"
+      | What is the reason for these changes?
+    .bootstrap-row
+      .col-md-9
+        textarea.form-control rows=4  id="reasons_for_change"
+
+  h3.heading-medium
+    label for="edit_nomenclature_workbasket_name"
+      | When should these changes take effect?
+    .bootstrap-row
+      .col-md-1
+        h3.heading-medium
+          label for="valid_from_day"
+            | Day
+      .col-md-1
+        h3.heading-medium
+          label for="valid_from_month"
+            | Month
+      .col-md-1
+        h3.heading-medium
+          label for="valid_from_year"
+            | Year
+    .bootstrap-row
+      .col-md-1
+        input.form-control id='valid_from_day'
+      .col-md-1
+        input.form-control id='valid_from_month'
+      .col-md-1
+        input.form-control id='valid_from_year'
