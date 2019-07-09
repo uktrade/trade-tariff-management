@@ -343,4 +343,8 @@ module WorkbasketHelper
   def show_withdraw_edit?(workbasket)
     workbasket.can_withdraw? && @current_user.author_of_workbasket?(workbasket) && workbasket_edit_link(workbasket).present?
   end
+
+  def show_delete?(workbasket)
+     @current_user.author_of_workbasket?(workbasket) && (workbasket.editing? || workbasket.new_in_progress? || workbasket.cross_check_rejected? || workbasket.approval_rejected?)
+  end
 end
