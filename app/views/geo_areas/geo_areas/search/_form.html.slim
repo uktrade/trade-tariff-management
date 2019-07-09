@@ -4,7 +4,7 @@
                                html: { class: "js-search-geographical-areas-form", "data-parsley-validate" => true } do |f|
 
   .bootstrap-row
-    .col-lg-5.col-md-7.col-sm-10.col-xs-12
+    .col-lg-6.col-md-7.col-sm-10.col-xs-12
       = render "geo_areas/geo_areas/search/errors_summary"
 
       fieldset
@@ -34,7 +34,7 @@
               span.form-hint
 
               .bootstrap-row
-                .col-lg-5.col-md-7.col-sm-10.col-xs-12
+                .col-lg-6.col-md-7.col-sm-10.col-xs-12
                   = f.input :start_date, label: false, input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.start_date" }
 
       fieldset
@@ -49,7 +49,7 @@
               span.form-hint
 
             .bootstrap-row
-              .col-lg-5.col-md-7.col-sm-10.col-xs-12
+              .col-lg-6.col-md-7.col-sm-10.col-xs-12
                 = f.input :end_date, label: false, input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.end_date" }
 
       fieldset
@@ -64,7 +64,7 @@
               span.form-hint
 
             .bootstrap-row
-              .col-lg-5.col-md-7.col-sm-10.col-xs-12
+              .col-lg-6.col-md-7.col-sm-10.col-xs-12
                 .find-items__row.without_border
                   .find-items__checkbox-column
                     .multiple-choice
@@ -87,7 +87,7 @@
                         | Group
 
       .bootstrap-row
-        .col-lg-5.col-md-7.col-sm-10.col-xs-12
+        .col-lg-6.col-md-7.col-sm-10.col-xs-12
           .form-actions
             .submit_group_for_cross_check_block
               = link_to "Search", "#", name: "save_progress", class: "button js-validate-geographical-areas-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"

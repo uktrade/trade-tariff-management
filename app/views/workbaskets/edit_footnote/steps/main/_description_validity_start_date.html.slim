@@ -12,7 +12,7 @@ fieldset
             | You have edited the footnote description. Please specify the date when this change should apply, if different from the change-date already given above.
 
         .bootstrap-row
-          .col-lg-5.col-md-7.col-sm-10.col-xs-12
+          .col-lg-6.col-md-7.col-sm-10.col-xs-12
             = f.input :description_validity_start_date, label: false, input_html: { class: "js-description-validity-period-date", "v-model" => "footnote.description_validity_start_date" }
 
         label.form-label

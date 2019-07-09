@@ -11,5 +11,5 @@ fieldset
           | Note: this does not change the certificate's validity period - edit the fields below if you need to do that.
 
       .bootstrap-row
-        .col-lg-5.col-md-7.col-sm-10.col-xs-12
+        .col-lg-6.col-md-7.col-sm-10.col-xs-12
           = f.input :operation_date, label: false, input_html: { class: "js-changes_take_effect_date_input", "v-model" => "certificate.operation_date" }
