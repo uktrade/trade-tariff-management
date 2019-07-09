@@ -1,7 +1,9 @@
-.js-workbasket-errors-container.alert.alert-danger v-cloak="" v-if="hasErrors"
-  h3.workbasket-form-errors-header
+.error-summary role="alert" aria-labelledby="workbasket-errors" tabindex="-1" v-cloak="" v-if="hasErrors"
+
+  h2.heading-medium.error-summary-heading#workbasket-errors
     | Please, review the following errors:
 
-  ul
-    li v-for="error in errors"
-      .workbasket-error-block :data-error-message="error" v-html="error"
+  ul.error-summary-list
+    li v-for="(error, key) in errors"
+      a :href="['#' + key]" :data-error-message="error"
+        | {{ error }}

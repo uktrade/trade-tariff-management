@@ -5,7 +5,7 @@ fieldset
   = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "regulation.validity_start_date" }
   = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "regulation.validity_end_date" }
   .form-group v-bind:class="{ 'form-group-error': errors.validity_start_date }"
-    label.form-label for="start_date"
+    label.form-label for="start_date" id="validity_start_date"
       | Start date
     span.error-message v-if="errors.validity_start_date" v-html="errors.validity_start_date"
     = content_tag "date-select", "",
@@ -13,7 +13,7 @@ fieldset
         id: "start_date" }
 
   .form-group v-bind:class="{ 'form-group-error': errors.validity_end_date }"
-    label.form-label for="end_date"
+    label.form-label for="end_date" id="validity_end_date"
       | End date
       span.form-hint
         | Optional - leave blank if the regulation will remain in force indefinitely.
@@ -23,7 +23,7 @@ fieldset
         id: "end_date" }
 
 fieldset
-  h3.heading-medium
+  h3.heading-medium id="regulation_group_id"
     | Specify the regulation group
 
   .row

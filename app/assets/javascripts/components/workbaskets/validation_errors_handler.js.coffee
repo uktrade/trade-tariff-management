@@ -48,7 +48,7 @@ window.WorkbasketBaseValidationErrorsHandler =
       group_block.removeClass('hidden')
       list_block = group_block.find("ul")
       $.each errors_collection, (key, value) ->
-        list_block.append("<li><div class='workbasket-error-block with_left_margin'>" + value + "</div></li>")
+        list_block.append('<li><div class="workbasket-error-block with_left_margin"><a href="#'+key+'">' + value + '</a></div></li>')
 
   customErrorHtml: (error) ->
     text = error[0]

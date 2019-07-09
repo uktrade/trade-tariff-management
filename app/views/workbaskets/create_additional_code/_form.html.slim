@@ -11,6 +11,12 @@
     p
       | See individual fields for details.
 
+    ul.error-summary-list
+        li v-for="(error, key) in errors"
+          a :href="['#' + key]"
+            | {{ error }}
+
+
   - if workbasket.submitted?
     = render "workbaskets/create_additional_code/steps/main/details"
 
