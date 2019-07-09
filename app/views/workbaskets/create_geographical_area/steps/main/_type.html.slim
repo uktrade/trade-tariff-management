@@ -1,10 +1,10 @@
 fieldset
-  form-group :errors="errors" error-key="geographical_code"
+  form-group :errors="errors" error-key="geographical_area_id"
     template slot-scope="slotProps"
       h3.heading-medium
         | What type of geographical area are you creating?
 
-      label.form-label
+      label.form-label id="geographical_area_id"
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}
 

@@ -1,6 +1,6 @@
 fieldset
   h3.heading-medium
-    label for="additional_code_valid_from"
+    label for="additional_code_valid_from" id="validity_start_date"
       | When are these new codes valid from?
 
   form-group :errors="errors" error-key="validity_start_date"
@@ -13,7 +13,7 @@ fieldset
 
 fieldset
   h3.heading-medium
-    label for="additional_code_valid_until"
+    label for="additional_code_valid_until" id="validity_end_date"
       | When are these new codes valid until?
 
   form-group :errors="errors" error-key="validity_end_date"

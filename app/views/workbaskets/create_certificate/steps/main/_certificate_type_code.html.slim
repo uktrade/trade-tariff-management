@@ -4,7 +4,7 @@ fieldset
 
   form-group :errors="errors" error-key="certificate_type_code"
     template slot-scope="slotProps"
-      label.form-label
+      label.form-label id="certificate_type_code"
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}
 

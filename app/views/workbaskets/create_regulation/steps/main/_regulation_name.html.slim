@@ -1,5 +1,5 @@
 fieldset
-  h3.heading-medium
+  h3.heading-medium id="legal_id"
     | Legal Id
   .bootstrap-row
     .col-lg-6.col-md-8.col-sm-12.col-xs-12
@@ -7,7 +7,7 @@ fieldset
         span.error-message v-if="errors.legal_id" v-html="errors.legal_id"
         = f.input :legal_id, label: false, as: :string, input_html: { "v-model" => "regulation.legal_id" }
 fieldset
-  h3.heading-medium
+  h3.heading-medium id="description"
     | Description
   .bootstrap-row
     .col-lg-6.col-md-8.col-sm-12.col-xs-12
@@ -15,7 +15,7 @@ fieldset
         span.error-message v-if="errors.description" v-html="errors.description"
         = f.input :description, label: false, as: :text, input_html: { "v-model" => "regulation.description" }
 fieldset
-  h3.heading-medium
+  h3.heading-medium id="reference_url"
     | Reference URL
   .bootstrap-row
     .col-lg-6.col-md-8.col-sm-12.col-xs-12

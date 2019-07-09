@@ -5,3 +5,8 @@
 
   p
     | {{errorsSummary}}
+
+  ul.error-summary-list
+    li v-for="(error, key) in errors"
+      a :href="['#' + key]"
+        | {{ error }}
