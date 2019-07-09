@@ -99,7 +99,8 @@
         .col-lg-6.col-md-7.col-sm-10.col-xs-12
           .form-actions
             .submit_group_for_cross_check_block
-              = link_to "Search", "#", name: "save_progress", class: "button js-validate-footnotes-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
+              button type="submit" name="save_progress" class="button js-validate-footnotes-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
+                | Search
 
               .js-workbasket-base-continue-spinner.spinner_block.hidden
                 = render "measures/bulks/loading_spinner", message: "Loading..."
