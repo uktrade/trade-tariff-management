@@ -2,15 +2,14 @@
   = link_to "Continue", workbasket_continue_link_based_on_type(workbasket)
 - else
   = link_to "View", workbasket_view_link_based_on_type(workbasket)
-
 - if show_withdraw_edit?(workbasket)
   | &nbsp;|&nbsp;
   = link_to "Withdraw/edit", "#",
     data: { target_url: workbasket_edit_link(workbasket), target_modal: workbasket.id },
     class: "js-main-menu-show-withdraw-confirmation-link"
-- elsif workbasket.new_in_progress?
+- if show_delete?(workbasket)
   | &nbsp;|&nbsp;
-  = link_to "Delete", "#", data: { target_url: workbasket_view_link_based_on_type(workbasket) }, class: "js-main-menu-show-delete-confirmation-link"
+  = link_to "Delete", "#{workbasket.object.type}/#{workbasket.id}", data: { confirm: "Are you sure you want to delete this workbasket?" }, method: :delete
 
 - if workbasket.can_continue_cross_check?(@current_user)
   | &nbsp;|&nbsp;

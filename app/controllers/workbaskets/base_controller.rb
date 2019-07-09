@@ -10,7 +10,7 @@ module Workbaskets
     before_action :clean_up_persisted_data_on_update!,
                   :handle_submit_for_cross_check!, only: [:update]
 
-    before_action :require_workbasket_to_be_new_in_progress!, only: [:destroy]
+    before_action :require_workbasket_to_be_with_creator!, only: [:destroy]
 
     expose(:workbasket_settings) do
       workbasket.settings
@@ -115,6 +115,10 @@ module Workbaskets
         redirect_to root_url
         false
       end
+    end
+
+    def require_workbasket_to_be_with_creator!
+      workbasket.new_in_progress? || workbasket.new_in_progress? || workbasket.cross_check_rejected? || workbasket.approval_rejected?
     end
 
     def status_check!
