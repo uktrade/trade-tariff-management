@@ -9,7 +9,10 @@
     class: "js-main-menu-show-withdraw-confirmation-link"
 - if show_delete?(workbasket)
   | &nbsp;|&nbsp;
-  = link_to "Delete", "#{workbasket.object.type}/#{workbasket.id}", data: { confirm: "Are you sure you want to delete this workbasket?" }, method: :delete
+  = link_to "Delete", "#",
+    data: { target_url:  workbasket_view_link_based_on_type(workbasket), target_modal: workbasket.id },
+    class: "js-main-menu-show-delete-confirmation-link"
+
 
 - if workbasket.can_continue_cross_check?(@current_user)
   | &nbsp;|&nbsp;
@@ -22,5 +25,5 @@
 
 
 = render "workbaskets/main_menu_parts/schedule_export_to_cds_popup"
-= render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "delete_confirmation_popup", title: "You are going to delete workbasket"
+= render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "delete_confirmation_popup_#{workbasket.id}", title: "You are going to delete workbasket"
 = render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
