@@ -9,12 +9,12 @@ window.MainMenuInteractions =
   deleteWorkbasketConfirmationPopupInit: () ->
     $(document).on 'click', '.js-main-menu-show-delete-confirmation-link', ->
       target_url = $(this).data("target-url")
-      confirm_link = $("#main-menu-delete_confirmation_popup .js-main-menu-confirm-action")
+      confirm_link = $("#main-menu-delete_confirmation_popup_" + $(this).data("target-modal") + " .js-main-menu-confirm-action")
       confirm_link.attr('href', target_url)
       confirm_link.attr('data-method', 'delete')
 
-      MainMenuInteractions.setSpinnerText("main-menu-delete_confirmation_popup", "Deletion")
-      MainMenuInteractions.openModal('main-menu-delete_confirmation_popup')
+      MainMenuInteractions.setSpinnerText("main-menu-delete_confirmation_popup_", + $(this).data("target-modal"), "Deletion")
+      MainMenuInteractions.openModal('main-menu-delete_confirmation_popup_' + $(this).data("target-modal"))
 
       return false
 
