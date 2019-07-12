@@ -72,7 +72,7 @@ $(document).ready(function() {
 
       window.js_end_date_pikaday_instance = changes_take_effect_date_picker;
 
-      this.initialCheckOfDescriptionBlock();
+      this.showDescriptionValidityStartDateBlock();
 
       $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
         e.preventDefault();
@@ -210,11 +210,7 @@ $(document).ready(function() {
     },
     watch: {
       "geographical_area.description": function(newVal) {
-        if (newVal && newVal == window.__original_geographical_area_description) {
-          this.hideDescriptionValidityStartDateBlock();
-        } else {
           this.showDescriptionValidityStartDateBlock();
-        }
       },
       "geographical_area.geographical_code": function(val, oldVal) {
         this.geographical_area.geographical_area_memberships = [];
@@ -245,19 +241,6 @@ $(document).ready(function() {
       showDescriptionValidityStartDateBlock: function() {
         $(".edit-geographical_area-description-validity-period-block").removeClass('hidden');
         $(".js-validity-period-start-date-block").removeClass("without_top_margin");
-      },
-      hideDescriptionValidityStartDateBlock: function() {
-        $(".edit-geographical_area-description-validity-period-block").addClass('hidden');
-        $(".js-validity-period-start-date-block").addClass("without_top_margin");
-      },
-      initialCheckOfDescriptionBlock: function() {
-        current_geographical_area_description = $(".js-geographical_area-description-textarea").val();
-
-        if (current_geographical_area_description !== window.__original_geographical_area_description) {
-          this.showDescriptionValidityStartDateBlock();
-        } else {
-          this.hideDescriptionValidityStartDateBlock();
-        }
       },
       parseGeographicalAreaPayload: function(payload) {
         let operation_date = payload.operation_date || moment(new Date()).format('DD/MM/YYYY');
