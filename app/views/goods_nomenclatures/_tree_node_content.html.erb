@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-6"><span class="summary"><%= node.content[:description] %></span></div>
+  <div class="col-md-6"><%= node.content[:description] %></div>
   <div class="col-md-1"><%= node.content[:producline_suffix] == '80' ? '-' : node.content[:producline_suffix] %></div>
   <div class="col-md-2"><%= format_nomenclature_code(node.content[:goods_nomenclature_item_id]) %></div>
   <div class="col-md-1"><%= link_to "Manage", new_manage_nomenclature_path(item_id: node.content[:goods_nomenclature_item_id], suffix: node.content[:producline_suffix]) %></div>
