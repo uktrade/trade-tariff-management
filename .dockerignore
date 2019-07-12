@@ -1,4 +1,8 @@
-tmp/*
+public/*
+tmp/db/*
+tmp/data/*
+tmp/pids/*
+tmp/sockets/*
 log/*
 .vscode
 .git
