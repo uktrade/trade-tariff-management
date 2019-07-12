@@ -10,100 +10,112 @@
   Amend code description
 </h1>
 
-<div class="panel panel-border-wide m-b-60">
+<div class="panel panel-border-narrow p-t-5 p-b-5">
   <p>
     <%= original_nomenclature.goods_nomenclature_item_id %> - <%= original_nomenclature.description %>
   </p>
 </div>
 
-<details>
-  <summary>
-    Workbasket details
-  </summary>
-  <div class="panel panel-border-wide m-b-60">
-    <table>
-      <tr>
-        <td class="heading_column">Workbasket name</td>
-        <td><%= workbasket.title %></td>
-      </tr>
-      <tr>
-        <td class="heading_column">Reason for changes</td>
-        <td><%= workbasket.settings.reason_for_changes %></td>
-      </tr>
-      <tr>
-        <td class="heading_column">Changes take effect on</td>
-        <td><%= workbasket.settings.validity_start_date %></td>
-      </tr>
-    </table>
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <details>
+      <summary>
+        Workbasket details
+      </summary>
+      <div class="panel panel-border-narrow m-b-60">
+        <table>
+          <caption class="heading-small">Dates and amounts</caption>
+          <tbody>
+            <tr>
+              <td class="bold-small">Workbasket name</td>
+              <td><%= workbasket.title %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Reason for changes</td>
+              <td><%= workbasket.settings.reason_for_changes %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Changes take effect on</td>
+              <td><%= workbasket.settings.validity_start_date %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
   </div>
-</details>
+</div>
+
 
 
 <%= simple_form_for @edit_nomenclature_form, url: edit_nomenclature_path, html: {method: :patch, novalidate: false} do |f| %>
+<div class="grid-row">
+  <div class="column-two-thirds">
 
-  <h2>Existing code details</h2>
-  <hr>
+    <table>
+      <caption class="heading-medium m-t-25">Existing code details</caption>
+      <tbody>
+        <tr>
+          <td class="bold-small">Commodity code</td>
+          <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
+        </tr>
+        <tr>
+          <td class="bold-small">Commodity name</td>
+          <td>
+            <%= original_nomenclature.description %>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="panel panel-border-narrow">
+              <!-- <label class="form-label" for="example-phone-number">Mobile phone number</label>
+                  <input class="form-control" id="example-phone-number" name="example-phone-number" type="tel"> -->
+              <%= f.input :description, label: 'Enter new description', required: true, :as => :text, :input_html => { rows: 6 } %>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="bold-small">Product line suffix</td>
+          <td>
+            <%= original_nomenclature.producline_suffix %>
+          </td>
+        </tr>
+        <tr>
+          <td class="bold-small">Indents</td>
+          <td>
+            <%= original_nomenclature.number_indents %>
+          </td>
+        </tr>
+        <tr>
+          <td class="bold-small">Footnotes</td>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <td class="bold-small">Code valid from</td>
+          <td>
+            <%= format_date(original_nomenclature.validity_start_date) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="bold-small">Code valid until</td>
+          <td>
+            <%= format_date(original_nomenclature.validity_end_date) %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-  <table>
-    <tr>
-      <td class="heading_column">Commodity code</td>
-      <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
-    </tr>
-    <tr>
-      <td class="heading_column">Commodity name</td>
-      <td>
-        <%= original_nomenclature.description %>
-      </td>
-    </tr>
-  </table>
+    <div>
+      <div class="form-actions">
+        <button type="submit"
+                class='button'
+                data-disable-with='Processing'>
+          Submit for cross-check
+        </button>
 
-  <fieldset>
-    <div class="bootstrap-row">
-      <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
-        <%= f.input :description, label: 'Enter new description', required: true, :as => :text, :input_html => { rows: 6 } %>
+        <%= link_to "Cancel", root_path, class: "secondary-button" %>
       </div>
     </div>
-  </fieldset>
-
-  <table>
-    <tr>
-      <td class="heading_column">Product line suffix</td>
-      <td>
-        <%= original_nomenclature.producline_suffix %>
-      </td>
-    </tr>
-    <tr>
-      <td class="heading_column">Indents</td>
-      <td>
-        <%= original_nomenclature.number_indents %>
-      </td>
-    </tr>
-    <tr>
-      <td class="heading_column">Footnotes</td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td class="heading_column">Code valid from</td>
-      <td>
-        <%= format_date(original_nomenclature.validity_start_date) %>
-      </td>
-    </tr>
-    <tr>
-      <td class="heading_column">Code valid until</td>
-      <td>
-        <%= format_date(original_nomenclature.validity_end_date) %>
-      </td>
-    </tr>
-  </table>
-
-  <div>
-    <div class="form-actions">
-      <button type="submit" class='button' data-disable-with='Processing'>
-        Continue
-      </button>
-
-      <%= link_to "Cancel", root_path, class: "secondary-button" %>
-    </div>
   </div>
+</div>
 <% end %>
