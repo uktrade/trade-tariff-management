@@ -16,7 +16,7 @@
   </p>
 </div>
 
-<%= simple_form_for @manage_nomenclature_form, url: manage_nomenclature_path, html: {method: :post} do |f| %>
+<%= simple_form_for @manage_nomenclature_form, url: manage_nomenclature_path, html: {method: :post, novalidate: false} do |f| %>
 
   <fieldset>
   <div class="bootstrap-row">
@@ -31,7 +31,7 @@
   </div>
   <div class="bootstrap-row">
     <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
-      <%= f.input :reason_for_changes, label: 'What is the reason for these changes?', as: :text %>
+      <%= f.input :reason_for_changes, label: 'What is the reason for these changes?', as: :text, required: true %>
     </div>
   </div>
   <div class="bootstrap-row">
@@ -76,7 +76,7 @@
         Continue
       </button>
 
-      <%= link_to "Cancel", @nomenclature, class: "secondary-button" %>
+      <%= link_to "Cancel", root_path, class: "secondary-button" %>
     </div>
   </div>
 <% end %>
