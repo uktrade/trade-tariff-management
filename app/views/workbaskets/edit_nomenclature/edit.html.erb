@@ -39,7 +39,7 @@
 </details>
 
 
-<%= simple_form_for @edit_nomenclature_form, url: edit_nomenclature_path, html: {method: :patch} do |f| %>
+<%= simple_form_for @edit_nomenclature_form, url: edit_nomenclature_path, html: {method: :patch, novalidate: false} do |f| %>
 
   <h2>Existing code details</h2>
   <hr>
@@ -103,7 +103,7 @@
         Continue
       </button>
 
-      <%= link_to "Cancel", @nomenclature, class: "secondary-button" %>
+      <%= link_to "Cancel", root_path, class: "secondary-button" %>
     </div>
   </div>
 <% end %>
