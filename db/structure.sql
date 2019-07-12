@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.9
--- Dumped by pg_dump version 9.6.9
+-- Dumped from database version 9.6.14
+-- Dumped by pg_dump version 11.4 (Debian 11.4-1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -12,65 +12,9 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
-
-
---
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
-
-
---
--- Name: reassign_owned(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-	begin
-		-- do not execute if member of rds_superuser
-		IF EXISTS (select 1 from pg_catalog.pg_roles where rolname = 'rds_superuser')
-		AND pg_has_role(current_user, 'rds_superuser', 'member') THEN
-			RETURN;
-		END IF;
-
-		-- do not execute if not member of manager role
-		IF NOT pg_has_role(current_user, 'rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager', 'member') THEN
-			RETURN;
-		END IF;
-
-		-- do not execute if superuser
-		IF EXISTS (SELECT 1 FROM pg_user WHERE usename = current_user and usesuper = true) THEN
-			RETURN;
-		END IF;
-
-		EXECUTE 'reassign owned by "' || current_user || '" to "rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager"';
-	end
-	$$;
-
 
 SET default_tablespace = '';
 
@@ -749,7 +693,6 @@ CREATE TABLE public.bulk_edit_of_measures_settings (
     measure_sids_jsonb jsonb DEFAULT '{}'::jsonb,
     search_code text,
     initial_search_results_code text,
-    all_batched_loaded boolean DEFAULT false,
     initial_items_populated boolean DEFAULT false,
     batches_loaded jsonb DEFAULT '{}'::jsonb
 );
@@ -12390,14 +12333,6 @@ CREATE UNIQUE INDEX xml_export_files_envelope_id_index ON public.xml_export_file
 
 
 --
--- Name: reassign_owned; Type: EVENT TRIGGER; Schema: -; Owner: -
---
-
-CREATE EVENT TRIGGER reassign_owned ON ddl_command_end
-   EXECUTE PROCEDURE public.reassign_owned();
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -12454,6 +12389,29 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20130220094325_add_index_f
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221132447_make_effective_end_dates_timestamps.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130221140444_change_export_refund_nomenclature_indent_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20130417135357_add_users_table.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130809075350_change_chapter_note_foreign_key_type.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20130916082304_add_foreign_keys_to_search_references.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20131113142525_add_search_references_polymorphic_association.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140410213345_create_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140424105255_add_columns_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140526161142_add_error_column_to_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140527124014_change_column_in_rollbacks.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140715224356_create_measurement_unit_abbreviations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140721090137_add_organisation_slug_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140722151202_add_error_backtrace_to_tariff_updates.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20140731161233_create_tariff_update_conformance_errors.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150114110937_quota_critical_events_oplog_primary_key.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150406165721_add_disabled_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20150507133620_add_organisation_content_id_to_user.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214224024_add_model_views_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20151214230831_quota_critical_events_view_reloaded.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20161209195324_alter_footnotes_foonote_id_lenght.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audits.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180212145253_create_initial_schema.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180228181242_create_xml_exports.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180301160928_add_xml_data_to_xml_export_files.rb');
@@ -12500,29 +12458,6 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133140_add_data_to
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626133556_add_record_key_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626154859_add_initial_items_populated_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180626174214_add_batches_loaded_to_workbaskets.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130418073137_rename_permission_column.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130801074451_increase_quota_balance_events_precision.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130808103859_extend_user_table_with_additional_fields.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130809075350_change_chapter_note_foreign_key_type.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20130916082304_add_foreign_keys_to_search_references.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20131113142525_add_search_references_polymorphic_association.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140410213345_create_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140424105255_add_columns_to_tariff_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140526161142_add_error_column_to_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140527124014_change_column_in_rollbacks.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140715224356_create_measurement_unit_abbreviations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140721090137_add_organisation_slug_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140722151202_add_error_backtrace_to_tariff_updates.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20140731161233_create_tariff_update_conformance_errors.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150114110937_quota_critical_events_oplog_primary_key.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150406165721_add_disabled_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20150507133620_add_organisation_content_id_to_user.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20151214224024_add_model_views_reloaded.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20151214230831_quota_critical_events_view_reloaded.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20161209195324_alter_footnotes_foonote_id_lenght.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20170117212158_create_audits.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20170331125740_create_data_migrations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20171228082821_create_publication_sigles.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629173432_change_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180629174201_add_changed_and_validation_errors_to_workbasket_items.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180702142649_add_search_code_to_workbaskets.rb');
@@ -12536,6 +12471,7 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180718101124_change_vali
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180718174824_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180720100558_add_measure_sids_to_create_measures_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180722185024_add_workbasket_attributes_to_db_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnote_id_characters_limit_in_associations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726104556_add_workbasket_attrs_to_measure_excluded_geographical_areas.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180726140522_update_xml_exportable_data_with_workbasket_fields.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180727172730_create_create_quota_workbasket_settings.rb');
@@ -12555,39 +12491,38 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20180914160726_add_workbas
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180918204647_add_errors_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180924103425_add_system_fileds_to_quota_assotiation.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180925161300_add_parent_quota_period_sids_to_create_quota_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180926170510_create_create_additional_code_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20180928120642_add_added_at_and_added_by_id_to_additional_codes.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approver_user_to_users.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflow_fields_to_workbaskets.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20180928163638_create_create_geographical_area_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181003132323_create_bulk_edit_of_additional_codes_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181004201410_create_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181006113320_add_approver_user_to_users.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181006161913_add_workflow_fields_to_workbaskets.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009114102_add_ordernumber_index_to_measures.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181009122123_add_indexes_to_measures.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011092756_change_bulk_edit_of_quotas_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011184220_add_search_indexes_to_speed_up.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181011190000_add_more_search_indexes_to_speed_up.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012181311_rollback_duty_expression_indexes.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181012184040_add_updated_at_to_sections.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20180724155759_fix_footnote_id_characters_limit_in_associations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181011140533_change_operation_date_type.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181012133937_create_all_additional_codes_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181016175408_add_workbasket_related_columns_to_geo_areas_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_settings_to_edit_quota.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017095105_create_create_footnotes_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017141845_create_certificate_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbasket_fileds_to_quota_relations.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181017165251_add_workbasket_related_columns_to_certificate_tables.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019151225_edit_footnotes_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181019161518_add_original_fields_to_edit_footnote_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181021085816_add_workbasket_fields_to_footnote_associations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181011092756_change_bulk_edit_of_quotas_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181016202844_add_quota_settings_to_edit_quota.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181017151545_add_workbasket_fileds_to_quota_relations.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181019094231_modify_quota_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181019153740_add_row_id_to_workbasket_item.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022065914_create_edit_certificate_settings_table.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022074953_add_original_fields_to_edit_certificates_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164645_create_edit_geographical_areas_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181022164836_add_original_fields_to_edit_geographical_areas_workbasket_settings.rb');
-INSERT INTO "schema_migrations" ("filename") VALUES ('20181022112903_change_bulk_edit_of_quota_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20181204111717_add_envelope_id_to_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190131153106_remove_unneeded_files_from_xml_export_files.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190201161401_change_xml_export_from_dates_to_workbasket.rb');

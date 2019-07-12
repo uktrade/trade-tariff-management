@@ -1,7 +1,9 @@
 version: '3'
 services:
   db:
-    image: postgres
+    # Required to use 9.6 version as it is the same version been used on debian
+    # at Redis:2.5 image
+    image: postgres:9.6-alpine
     # Save the docker postgres data onto our local machine
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
