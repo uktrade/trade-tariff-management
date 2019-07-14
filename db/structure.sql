@@ -59,63 +59,6 @@ CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
 	$$;
 
 
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
-
-
---
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
-
-
---
--- Name: reassign_owned(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-	begin
-		-- do not execute if member of rds_superuser
-		IF EXISTS (select 1 from pg_catalog.pg_roles where rolname = 'rds_superuser')
-		AND pg_has_role(current_user, 'rds_superuser', 'member') THEN
-			RETURN;
-		END IF;
-
-		-- do not execute if not member of manager role
-		IF NOT pg_has_role(current_user, 'rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager', 'member') THEN
-			RETURN;
-		END IF;
-
-		-- do not execute if superuser
-		IF EXISTS (SELECT 1 FROM pg_user WHERE usename = current_user and usesuper = true) THEN
-			RETURN;
-		END IF;
-
-		EXECUTE 'reassign owned by "' || current_user || '" to "rdsbroker_7f53a659_8eed_49ba_b1cc_e36b227b84cd_manager"';
-	end
-	$$;
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
