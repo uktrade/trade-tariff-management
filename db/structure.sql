@@ -3549,7 +3549,10 @@ CREATE TABLE public.goods_nomenclature_description_periods_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -3569,7 +3572,10 @@ CREATE VIEW public.goods_nomenclature_description_periods AS
     goods_nomenclature_description_periods1.operation_date,
     goods_nomenclature_description_periods1.status,
     goods_nomenclature_description_periods1.workbasket_id,
-    goods_nomenclature_description_periods1.workbasket_sequence_number
+    goods_nomenclature_description_periods1.workbasket_sequence_number,
+    goods_nomenclature_description_periods1.added_by_id,
+    goods_nomenclature_description_periods1.added_at,
+    goods_nomenclature_description_periods1."national"
    FROM public.goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods1
   WHERE ((goods_nomenclature_description_periods1.oid IN ( SELECT max(goods_nomenclature_description_periods2.oid) AS max
            FROM public.goods_nomenclature_description_periods_oplog goods_nomenclature_description_periods2
@@ -3612,7 +3618,10 @@ CREATE TABLE public.goods_nomenclature_descriptions_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -3632,7 +3641,10 @@ CREATE VIEW public.goods_nomenclature_descriptions AS
     goods_nomenclature_descriptions1.operation_date,
     goods_nomenclature_descriptions1.status,
     goods_nomenclature_descriptions1.workbasket_id,
-    goods_nomenclature_descriptions1.workbasket_sequence_number
+    goods_nomenclature_descriptions1.workbasket_sequence_number,
+    goods_nomenclature_descriptions1.added_by_id,
+    goods_nomenclature_descriptions1.added_at,
+    goods_nomenclature_descriptions1."national"
    FROM public.goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions1
   WHERE ((goods_nomenclature_descriptions1.oid IN ( SELECT max(goods_nomenclature_descriptions2.oid) AS max
            FROM public.goods_nomenclature_descriptions_oplog goods_nomenclature_descriptions2
@@ -12638,3 +12650,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20190212163200_add_user_id
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190320142706_create_session_audits.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190603135337_replace_all_additional_codes_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190625152340_create_edit_nomenclature_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190712143348_add_workbasket_fields_goods_nomenclature_description.rb');

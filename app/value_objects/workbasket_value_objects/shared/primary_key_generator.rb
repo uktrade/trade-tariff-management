@@ -14,7 +14,9 @@ module WorkbasketValueObjects
         "QuotaSuspensionPeriod" => :quota_suspension_period_sid,
         "GeographicalArea" => :geographical_area_sid,
         "GeographicalAreaDescriptionPeriod" => :geographical_area_description_period_sid,
-        "CertificateDescriptionPeriod" => :certificate_description_period_sid
+        "CertificateDescriptionPeriod" => :certificate_description_period_sid,
+        "GoodsNomenclatureDescriptionPeriod" => :goods_nomenclature_description_period_sid,
+        "GoodsNomenclatureDescription" => :goods_nomenclature_description_sid
       }.freeze
 
       attr_accessor :record,

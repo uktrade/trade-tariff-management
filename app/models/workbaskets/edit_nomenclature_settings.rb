@@ -21,5 +21,8 @@ module Workbaskets
       '{}'
     end
 
+    def clean_up_temporary_data!
+    end
+
   end
 end
