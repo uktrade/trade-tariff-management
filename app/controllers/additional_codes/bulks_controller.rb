@@ -175,9 +175,9 @@ module AdditionalCodes
     end
 
     def destroy
-      workbasket.destroy
+      workbasket.clean_up_workbasket!
 
-      render json: {}, head: :ok
+      redirect_to root_url
     end
 
     def move_to_editing_mode

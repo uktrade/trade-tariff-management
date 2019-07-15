@@ -159,9 +159,9 @@ module Measures
     end
 
     def destroy
-      workbasket.destroy
+      workbasket.clean_up_workbasket!
 
-      render json: {}, head: :ok
+      redirect_to root_url
     end
   end
 end
