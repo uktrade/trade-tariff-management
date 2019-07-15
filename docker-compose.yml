@@ -1,6 +1,6 @@
 version: '3'
 services:
-  db:
+  management_db:
     # Required to use 9.6 version as it is the same version been used on debian
     # at Redis:2.5 image
     image: postgres:9.6-alpine
@@ -12,7 +12,7 @@ services:
     environment:
       - POSTGRES_DB=tariff_management_development
 
-  redis:
+  management_redis:
     image: redis
     command: redis-server /usr/local/etc/redis/redis.conf --port 6379
     volumes:
@@ -20,32 +20,32 @@ services:
     ports:
       - '6379:6379'
 
-  sidekiq:
+  management_sidekiq:
     depends_on:
-      - 'db'
-      - 'redis'
+      - management_db
+      - management_redis
     build: .
     # Uncomment below if you want to run sidekick locally
     # command: sidekiq -C config/sidekiq.yml
     volumes:
-      - '.:/myapp'
+      - '.:/app'
     env_file:
       - '.env'
     links:
-      - redis
+      - management_redis
 
-  tariffs:
+  management:
     build: .
     command: bash -c "bundle exec rake assets:precompile; rails s -p 3000 -b '0.0.0.0'"
     volumes:
-      - .:/myapp
+      - .:/app
     ports:
       - '3000:3000'
     depends_on:
-      - db
-      - redis
-      - sidekiq
+      - management_db
+      - management_redis
+      - management_sidekiq
     env_file:
       - '.env'
     links:
-      - redis
+      - management_redis
