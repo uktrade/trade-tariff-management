@@ -1,4 +1,5 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/4a91c7c33582ec9ea2fd/maintainability)](https://codeclimate.com/github/uktrade/trade-tariff-management/maintainability)
+[![CircleCI](https://circleci.com/gh/uktrade/trade-tariff-management.svg?style=svg)](https://circleci.com/gh/uktrade/trade-tariff-management)
 
 # Trade Tariff Management
 
