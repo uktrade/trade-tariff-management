@@ -4,6 +4,6 @@ class TestWorker
   include Sidekiq::Worker
 
   def perform
-    TestMailer.welcome("rusllonrails@bitzesty.com").deliver!
+    TestMailer.welcome("vincent.lim@digital.trade.gov.uk").deliver!
   end
 end
