@@ -2,10 +2,10 @@
 set -e
 
 # Remove a potentially pre-existing server.pid for Rails.
-rm -f /myapp/tmp/pids/server.pid
+rm -f /app/tmp/pids/server.pid
 
 # Wait-for-postgres to be available
-host="db"
+host="management_db"
 
 until psql -h "$host" -U "postgres" -c '\q'; do
   >&2 echo "Postgres is unavailable - sleeping"

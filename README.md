@@ -12,28 +12,28 @@
 1. Install and run Docker from [https://docs.docker.com/install/](https://docs.docker.com/install/)
 2. Update `.env` values with the ones below
 ```
-    REDIS_URL=redis://redis:6379/0
-    DATABASE_HOST=db
+    REDIS_URL=redis://management_redis:6379/0
+    DATABASE_HOST=management_db
     DATABASE_USER=postgres
     DATABASE_PASS=
+    COMPOSE_PROJECT_NAME=tariff
+    COMPOSE_IGNORE_ORPHANS=True
+    TARIFF_TRADE_APPLICATION_URL=http://localhost:8000
+
 ```
-3. Run the below command inside root folder:
-```
-    docker-compose run tariffs  . --force --no-deps --database=postgresql
-```
-4. Run:
+3. Run:
 ```
     docker-compose up
 ```
 
-5. <a name="5"></a> Run the below command to copy your database dump file inside the db container:
+4. <a name="4"></a> Run the below command to copy your database dump file inside the db container:
 ```
-     docker cp /Absolute_Path_To_File/tariff_management_development.dump trade-tariff-management_db_1:/
+     docker cp /Absolute_Path_To_File/tariff_management_development.dump tariff_management_db_1:/
 ```
-6. <a name="6"></a> Import database
+5. <a name="5"></a> Import database
     1. Enter the database container
     ```
-        docker exec -i -t trade-tariff-management_db_1  /bin/bash
+        docker exec -it tariff_management_db_1  /bin/bash
     ```
 
     2. Import the database that we have copied before
@@ -45,9 +45,9 @@
     ```
         exit
     ```
-7. <a name="7"></a> Run the below command to drop an event trigger that is not needed in development and prevents app from running. This step can be remove in the future.
+6. <a name="6"></a> Run the below command to drop an event trigger that is not needed in development and prevents app from running. This step can be remove in the future.
 ```
-    docker exec trade-tariff-management_db_1 psql -U postgres -c "drop event trigger reassign_owned;"
+    docker exec tariff_management_db_1 psql -U postgres -c "drop event trigger reassign_owned;"
 ```
 
 More details can be found at [https://docs.docker.com/compose/rails/](https://docs.docker.com/compose/rails/)
@@ -67,11 +67,11 @@ More details can be found at [https://docs.docker.com/compose/rails/](https://do
 ```
 4. Migrate database
 ```
-    docker exec trade-tariff-management_tariffs_1 rake db:migrate
+    docker exec tariff_management_1 rake db:migrate
 ```
 5. Run the below command to create databases:
 ```
-    docker exec trade-tariff-management_tariffs_1 rake db:create
+    docker exec tariff_management_1 rake db:create
 ```
 
 ### Docker troubleshooting
@@ -101,12 +101,9 @@ An easy solution would be:
         ```
             docker-compose build
         ```
-    2.4. Assuming that you have found a better copy of the db repeat steps [5](#5), [6](#6) and [7](#7)
+    2.4. Assuming that you have found a better copy of the db repeat steps [4](#4), [5](#5) and [6](#6)
 
-3. Container names are based on your app folder name. We are assuming that you are using the default
-    when you cloned the repo. If for some reason you have renamed the folder, you will need to amend all the
-    above references to reflect that. For example: `trade-tariff-management_tariffs_1` should be renamed to
-    `MY_CUSTOM_APP_FOLDER_NAME_tariffs_1`
+3. Container names are prefixed with the project name which is set using the environment variable `COMPOSE_PROJECT_NAME`.
 
 ## Manual Set up
 
@@ -130,6 +127,15 @@ An easy solution would be:
 3. Verify that the app is up and running.
 
     open http://localhost:3020/healthcheck
+
+## Trade reference application
+
+The trade reference application can run alongside the trade tariff management application.
+The applications both need to share a database so setting `COMPOSE_PROJECT_NAME` in both projects
+to `tariff` allows the both sets of containers to communicate with each other.
+Setting `COMPOSE_IGNORE_ORPHANS` will ignore the containers of the trade reference application
+when bringing the environment up.
+
 
 ## Test
 
