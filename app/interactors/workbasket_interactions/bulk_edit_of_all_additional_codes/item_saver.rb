@@ -17,13 +17,7 @@ module WorkbasketInteractions
       def persist!
         params = workbasket_item.hash_data
 
-        if validity_dates_changed?(params)
-          @records << if meursing?(params)
-                        update_meursing_additional_code!(params)
-                      else
-                        update_additional_code!(params)
-                      end
-        end
+        update_additional_code_dates!(params) if validity_dates_changed?(params)
 
         if params['changes'].include?('description') && !meursing?(params)
           @records = @records + build_additional_code_description!(params)
@@ -52,6 +46,14 @@ module WorkbasketInteractions
 
     private
 
+      def update_additional_code_dates!(params)
+        @records << if meursing?(params)
+                      update_meursing_additional_code!(params)
+                    else
+                      update_additional_code!(params)
+                    end
+      end
+
       def validity_dates_changed?(params)
         params['changes'].include?('validity_start_date') || params['changes'].include?('validity_end_date')
       end
@@ -62,10 +64,10 @@ module WorkbasketInteractions
 
       def update_meursing_additional_code!(params)
         MeursingAdditionalCode.unrestrict_primary_key
-        code = MeursingAdditionalCode.find(meursing_additional_code_sid: existing.meursing_additional_code_sid)
+        code = MeursingAdditionalCode.find(meursing_additional_code_sid: existing.additional_code_sid)
 
-        assign_start_date(code)
-        assign_end_date(code)
+        assign_start_date(code, params)
+        assign_end_date(code, params)
         return code
       end
 
