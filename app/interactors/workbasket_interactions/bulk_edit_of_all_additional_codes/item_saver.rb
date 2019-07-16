@@ -17,15 +17,11 @@ module WorkbasketInteractions
       def persist!
         params = workbasket_item.hash_data
 
-        if workbasket_item.deleted?
-          params['validity_end_date'] = operation_date
-        end
-
-        if params['changes'].include?('validity_end_date') || workbasket_item.deleted?
+        if validity_dates_changed?(params)
           @records << if meursing?(params)
-                        build_meursing_additional_code!(params)
+                        update_meursing_additional_code!(params)
                       else
-                        build_additional_code!(params)
+                        update_additional_code!(params)
                       end
         end
 
@@ -45,7 +41,7 @@ module WorkbasketInteractions
         return { validity_start_date: "Start date can't be blank!" } if params[:validity_start_date].blank?
 
         if params['changes'].include?('validity_end_date') && !meursing?(params)
-          additional_code = build_additional_code!(params)
+          additional_code = update_additional_code!(params)
           ::WorkbasketValueObjects::Shared::ConformanceErrorsParser.new(
             additional_code,
               AdditionalCodeValidator,
@@ -56,30 +52,41 @@ module WorkbasketInteractions
 
     private
 
+      def validity_dates_changed?(params)
+        params['changes'].include?('validity_start_date') || params['changes'].include?('validity_end_date')
+      end
+
       def meursing?(params)
         AdditionalCodeType.find(additional_code_type_id: params['type_id']).meursing?
       end
 
-      def build_meursing_additional_code!(params)
+      def update_meursing_additional_code!(params)
         MeursingAdditionalCode.unrestrict_primary_key
-        MeursingAdditionalCode.new(
-          meursing_additional_code_sid: existing.additional_code_sid,
-          additional_code: existing.additional_code,
-          validity_start_date: params['validity_start_date'].to_date,
-          validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
-        )
+        code = MeursingAdditionalCode.find(meursing_additional_code_sid: existing.meursing_additional_code_sid)
+
+        assign_start_date(code)
+        assign_end_date(code)
+        return code
       end
 
-      def build_additional_code!(params)
+      def update_additional_code!(params)
         AdditionalCode.unrestrict_primary_key
-        AdditionalCode.new(
-          additional_code_sid: existing.additional_code_sid,
-          additional_code_type_id: existing.additional_code_type_id,
-          additional_code: existing.additional_code,
-          validity_start_date: params['validity_start_date'].to_date,
-          validity_end_date: params['validity_end_date'].blank? || params['validity_end_date'] == '-' ? nil : params['validity_end_date'].to_date
-)
+        code = AdditionalCode.find(additional_code_sid: existing.additional_code_sid)
+
+        assign_start_date(code, params)
+        assign_end_date(code, params)
+        return code
       end
+
+      def assign_start_date(code, params)
+        code.validity_start_date = params['validity_start_date'] if params['changes'].include?('validity_start_date')
+      end
+
+      def assign_end_date(code, params)
+        code.validity_end_date = operation_date if workbasket_item.deleted?
+        code.validity_end_date = params['validity_end_date'] if params['changes'].include?('validity_end_date')
+      end
+
 
       def build_additional_code_description!(params)
         AdditionalCodeDescription.unrestrict_primary_key
