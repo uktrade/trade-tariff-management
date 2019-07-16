@@ -61,7 +61,7 @@ Feature: Create Measures
     And I can submit the measure for cross check
     Examples:
       |conditions                   |
-      |condition_with_certificate   |
+#      |condition_with_certificate   |
       |condition_with_no_certificate|
 
   Scenario: Check commodity and additional codes description

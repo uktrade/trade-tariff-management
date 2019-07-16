@@ -97,6 +97,7 @@ quota_condition_footnote:
   quota_type: "122"
   quota_period: "Annual"
   commodity_codes: "5209000000"
+  origin: {type: "country", name: "IR", exception: ~}
   exceptions: ~
   footnote: {type: "CD", id: "001"}
   condition:
@@ -195,9 +196,25 @@ bulk_edit_measure: &generic
   condition:
   - {type: "W", certificate_type: ~, certificate: ~, action: "01", duty_expression: "01%", duty_amount: "12"}
 
+single_commodity_code1: &generic
+    <<: *default_data
+    commodity_codes: "5201001000"
+    measure_type: "103"
+    origin: {type: "country", name: "Andorra", exception: ~}
+    footnote: {type: "CD", id: "001"}
+    duty_expression: {expression: "ad valorem", amount: "10.50", unit: ~, qualifier: ~}
+
+single_commodity_code2: &generic
+    <<: *default_data
+    commodity_codes: "5605000000"
+    measure_type: "103"
+    origin: {type: "country", name: "Andorra", exception: ~}
+    footnote: {type: "CD", id: "001"}
+    duty_expression: {expression: "ad valorem", amount: "10.50", unit: ~, qualifier: ~}
+
 single_commodity_code: &generic
   <<: *default_data
-  commodity_codes: "1902000000"
+  commodity_codes: "7101100000"
   measure_type: "103"
   origin: {type: "country", name: "Andorra", exception: ~}
   footnote: {type: "CD", id: "001"}

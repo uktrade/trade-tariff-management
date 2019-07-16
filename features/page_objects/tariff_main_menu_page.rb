@@ -2,7 +2,7 @@ class TariffMainMenuPage < SitePrism::Page
 
   set_url ENV['BASE_URL']
 
-  element :logout_link, "#wrapper a", text: "Logout"
+  element :logout_link, ".logout-section a", text: "Logout"
   # section :work_baskets, TariffWorkBasketsSection, '.workbaskets .table tbody'
   element :create_measures_link, "#main-menu a", text: "Create measures"
   element :find_edit_measures_link, "#main-menu a", text: "Find and edit measures"
@@ -56,6 +56,10 @@ class TariffMainMenuPage < SitePrism::Page
     create_quotas_link.click
   end
 
+  def open_new_additional_code_form
+    create_additional_codes_link.click
+  end
+
   def logout
     logout_link.click
   end
@@ -66,9 +70,22 @@ class TariffMainMenuPage < SitePrism::Page
 
   def find_edit_quota
     find_edit_quotas_link.click
-    end
+  end
 
   def find_edit_measure
     find_edit_measures_link.click
+  end
+
+  def confirm_delete_measure
+    within(find_all(".modal.is-open .workbasket-confirmation-modal").first) do
+      find(".save_progress_block a").click
+    end
+  end
+
+  def confirm_withdraw_measure
+    within(find_all("div[id^='main-menu-withdraw_confirmation_popup'] .workbasket-confirmation-modal").first) do
+      # within(find_all("#main-menu-withdraw_confirmation_popup .workbasket-confirmation-modal").first) do
+      find(".save_progress_block a").click
+    end
   end
 end

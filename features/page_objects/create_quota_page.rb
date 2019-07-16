@@ -7,6 +7,8 @@ class CreateQuotaPage < CreateQuotaPageElements
 
   set_url ENV['QUOTA']
 
+  QUOTA_ERROR = "Need to specify at least of one valid quota period. Period type, Start date, Length of period, Balance and either Measurement or Monetary Unit are required!"
+
   def select_regulation(reg)
     regulation_dropdown.click
     regulation_dropdown.set reg
@@ -18,13 +20,13 @@ class CreateQuotaPage < CreateQuotaPageElements
   end
 
   def select_maximum_precision(precision)
-    within("#wrapper fieldset:nth-child(6) .col-md-2") do
+    within("#content fieldset:nth-child(6) .col-md-2") do
       select_dropdown(precision)
     end
   end
 
   def select_quota_type(quota_type)
-    within("#wrapper fieldset:nth-child(7)") do
+    within("#content fieldset:nth-child(7)") do
       select_dropdown_value(quota_type)
     end
   end
@@ -36,7 +38,7 @@ class CreateQuotaPage < CreateQuotaPageElements
   def enter_operation_date(date)
     operation_date.set format_date(date)
     find("body").click
-    end
+  end
 
   def enter_section_start_date(date)
     quota_section.start_date.set format_date(date)
@@ -71,14 +73,14 @@ class CreateQuotaPage < CreateQuotaPageElements
 
   def select_origin(origin)
     case origin['type']
-      when 'erga_omnes'
-        erga_omnes_radio_button.click
-      when 'group'
-        country_groups_radio_button.click
-        select_origin_group origin['name']
-      when 'country'
-        country_region_radio_button.click
-        select_origin_country origin['name']
+    when 'erga_omnes'
+      erga_omnes_radio_button.click
+    when 'group'
+      country_groups_radio_button.click
+      select_origin_group origin['name']
+    when 'country'
+      country_region_radio_button.click
+      select_origin_country origin['name']
     end
   end
 
@@ -106,7 +108,7 @@ class CreateQuotaPage < CreateQuotaPageElements
   # end
 
   def select_section_duration(duration)
-    within("#wrapper fieldset:nth-child(1) .col-md-2") do
+    within("#content fieldset:nth-child(1) .col-md-2") do
       select_dropdown(duration)
     end
   end
@@ -157,12 +159,12 @@ class CreateQuotaPage < CreateQuotaPageElements
   # Duty Expressions
   def add_duty_expression(duty, quota_period)
     case quota_period
-      when 'Custom'
-        select_custom_period_duty_expression duty['expression']
-        enter_custom_period_duty_amount duty['amount']
-      else
-        select_duty_expression duty['expression']
-        enter_duty_amount duty['amount']
+    when 'Custom'
+      select_custom_period_duty_expression duty['expression']
+      enter_custom_period_duty_amount duty['amount']
+    else
+      select_duty_expression duty['expression']
+      enter_duty_amount duty['amount']
     end
     select_unit_of_measure duty['unit'] unless duty['unit'].nil?
     select_qualifier duty['qualifier'] unless duty['qualifier'].nil?
@@ -172,7 +174,7 @@ class CreateQuotaPage < CreateQuotaPageElements
     within("#quota-section-0-measure-component-0-duty-expression") do
       select_dropdown_value(duty_expression)
     end
-    end
+  end
 
   def select_custom_period_duty_expression(duty_expression)
     within("#quota-section-0-period-0-measure-component-0-duty-expression") do
@@ -182,7 +184,7 @@ class CreateQuotaPage < CreateQuotaPageElements
 
   def enter_duty_amount(amount)
     quota_section.duty_amount.set amount
-    end
+  end
 
   def enter_custom_period_duty_amount(amount)
     quota_section.custom_period_duty_amount.set amount
@@ -211,41 +213,42 @@ class CreateQuotaPage < CreateQuotaPageElements
   end
 
   def select_condition_type(condition_type)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-condition") do
+    within("#content fieldset:nth-child(5) #measure-condition-0-condition") do
       select_dropdown_value(condition_type)
     end
   end
 
   def select_certificate_type(certificate_type)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-certificate-type") do
+    within("#content fieldset:nth-child(4) #measure-condition-0-certificate-type") do
       select_dropdown_value(certificate_type)
     end
   end
 
   def select_certificate(certificate)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-certificate") do
+    within("#content fieldset:nth-child(4) #measure-condition-0-certificate") do
       select_dropdown_value(certificate)
     end
   end
 
   def select_condition_action(action)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-action") do
+    within("#content fieldset:nth-child(5) #measure-condition-0-action") do
       select_dropdown_value(action)
     end
   end
 
   def select_condition_duty_expression(duty_expression)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-measure-condition-component-0-duty-expression") do
+    within("#content fieldset:nth-child(5) #measure-condition-0-measure-condition-component-0-duty-expression") do
       select_dropdown_value(duty_expression)
     end
   end
 
   def enter_condition_duty_amount(duty)
+
     conditions.duty_amount.set duty
   end
 
   def add_footnote(footnote)
-    within("#wrapper fieldset:nth-child(6)") do
+    within("#content fieldset:nth-child(7)") do
       select_dropdown_value(footnote['type'])
     end
     footnote_text_field.set footnote['id']

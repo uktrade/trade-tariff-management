@@ -1,6 +1,6 @@
 class CreateQuotaPageElements < SitePrism::Page
 
-  element :regulation_dropdown, "#wrapper fieldset:nth-child(4) .selectize-control input"
+  element :regulation_dropdown, "#content fieldset:nth-child(4) .selectize-control input"
   elements :regulations_options, ".selectize-dropdown-content .option"
   element :quota_order_number, "input[name='quota_order_number']"
   element :quota_description, "#quota_description"
@@ -41,7 +41,7 @@ class CreateQuotaPageElements < SitePrism::Page
     element :custom_period_duty_amount, "#quota-section-0-period-0-measure-component-0-amount"
   end
 
-  section :conditions, "#wrapper fieldset:nth-child(4)" do
+  section :conditions, "#content fieldset:nth-child(5)" do
     element :duty_amount, "#measure-condition-0-measure-condition-component-0-amount"
   end
 
@@ -81,5 +81,9 @@ class CreateQuotaPageElements < SitePrism::Page
   section :confirm_submission, '.panel--confirmation' do
     element :header, "h1", text: "Quota submitted"
     element :message, "h3"
+  end
+
+  section :error_summary, "div.js-custom-errors-block" do
+    elements :errors, "li div"
   end
 end

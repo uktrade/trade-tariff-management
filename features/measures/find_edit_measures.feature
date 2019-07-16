@@ -4,7 +4,7 @@ Feature: Find and Edit Measures
   Scenario: Find measures and display search result
     Given I am on the tariff main menu
     When I click the find and edit measure link
-    And I search for a measure by measure sid "3647071"
+    And I search for a measure by measure sid "3647072"
     Then each row has a checkbox which is "checked"
     And the work_with_selected_measure button is "enabled"
     When I deselect all measures
@@ -17,10 +17,11 @@ Feature: Find and Edit Measures
     And I enter a quota type in the measure type field
     Then there is no option displayed for the quota type
 
+
   Scenario Outline: Edit a single measure
     Given I am on the tariff main menu
     When I click the find and edit measure link
-    And I search for a measure by measure sid "3647071"
+    And I search for a measure by measure sid "3110501"
     And I select measures to work with
     And I bulk edit the selected measures with action "<bulk_action>"
     And the measure is updated with the "<bulk_action>" change

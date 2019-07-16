@@ -272,9 +272,10 @@ When(/^I fill in the form for a "([^"]*)"$/) do |scenario|
   @create_measure_page.enter_exceptions @exceptions unless @exceptions.nil?
   @create_measure_page.enter_additional_codes @additional_codes unless @additional_codes.nil?
   @create_measure_page.select_origin @origin
+
   @create_measure_page.continue
   @create_measure_page.add_duty_expression @duty_expression unless @duty_expression.nil?
-  @create_measure_page.add_conditions @condition unless @condition.nil?
+ # @create_measure_page.add_conditions @condition unless @condition.nil?
   @create_measure_page.add_footnote @footnote unless @footnote.nil?
   @create_measure_page.continue
 end
@@ -289,8 +290,11 @@ Then(/^the measure is submitted$/) do
 end
 
 And (/^I can submit the measure for cross check$/) do
+sleep 3
   step 'I submit the measure for crosscheck'
+sleep 3
   step 'the measure is submitted'
+  sleep 3
 end
 
 When(/^I go back to the tariff main menu$/) do

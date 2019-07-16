@@ -3,7 +3,7 @@ class CreateMeasurePageElements < SitePrism::Page
   element :find_edit_existing_measures_link, ".heading-large a"
   element :measure_validity_start_date, "#measure_validity_start_date"
   element :measure_validity_end_date, :xpath, "//form/fieldset[2]//input"
-  element :regulation_dropdown, "#wrapper fieldset:nth-child(6) .selectize-control input"
+  element :regulation_dropdown, "#content fieldset:nth-child(6) .selectize-control input"
   elements :regulations_options, ".selectize-dropdown-content .option"
   element :workbasket_name, "#workbasket_name"
   element :commodity_code, "#commodity_codes"
@@ -13,7 +13,7 @@ class CreateMeasurePageElements < SitePrism::Page
   element :erga_omnes_radio_button, ".origins-region #measure-origin-erga_omnes"
   element :country_groups_radio_button, ".origins-region #measure-origin-group"
   element :country_region_radio_button, ".origins-region #measure-origin-country"
-  element :footnote_text_field, "#footnote-0-footnote"
+  element :footnote_text_field, "div#footnote-0-footnote-type"
   element :footnote_text_suggestion, "#footnote-0-suggestion-0-use-button"
   element :add_footnote_link, "div.footnote .selectize-input input"
   element :save_button, "input[name='save_progress']"
@@ -29,11 +29,10 @@ class CreateMeasurePageElements < SitePrism::Page
   element :check_additional_code_description, ".additional_code_preview_block"
   element :add_another_condition, "a", text: "Add another condition"
 
-  section :conditions, "#wrapper fieldset:nth-child(5)" do
+  section :conditions, "#content fieldset:nth-child(5)" do
     element :duty_amount, "#measure-condition-0-measure-condition-component-0-amount"
   end
-
-  section :duty_expressions, "#wrapper fieldset:nth-child(4) .measure-components" do
+  section :duty_expressions, "#content fieldset:nth-child(6) .measure-components" do
     element :add_duty_expression_link, "a"
     element :duty_amount, "#measure-component-0-amount"
   end

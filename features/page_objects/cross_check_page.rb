@@ -1,7 +1,6 @@
 class CrossCheckPage < SitePrism::Page
 
   section :work_basket_details, :xpath, '//table[@class="create-measures-details-table"][1]' do
-  # section :work_basket_details, ".create-measures-details-table" do
     element :work_basket_name, "tr:nth-child(1) td:nth-child(2)"
   end
 
@@ -23,10 +22,10 @@ class CrossCheckPage < SitePrism::Page
   element :reject_approval_reason, "#approve_reject_reasons"
 
   element :finish_cross_check_button, "input[name='submit_for_cross_check']"
-  element :return_to_main_menu, "#wrapper a", text: "Return to main menu"
-  element :view_these_measure, "#wrapper a", text: "View these measures"
-  element :cross_check_next_workbasket, "#wrapper a", text: "Cross-check next workbasket"
-  element :approve_next_workbasket, "#wrapper a", text: "Approve next workbasket"
+  element :return_to_main_menu, "#content a", text: "Return to main menu"
+  element :view_these_measure, "#content a", text: "View these measures"
+  element :cross_check_next_workbasket, "#content a", text: "Cross-check next workbasket"
+  element :approve_next_workbasket, "#content a", text: "Approve next workbasket"
 
   CROSS_CHECK_REJECTED_HEADER = "Measures cross-check rejected"
   CROSS_CHECK_ACCEPTED_HEADER = "Measures cross-checked."

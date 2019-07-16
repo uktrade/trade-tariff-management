@@ -11,6 +11,7 @@ class FindMeasurePage < SitePrism::Page
   element :search_button, "div.form-actions button"
   element :clear, "div.form-actions a"
   element :select_all, ".table__header .select-all-column input"
+  elements :select_one,  "div.table__column.select-all-column input"
   element :work_with_selected_measures, ".clearfix .button", text: "Work with selected measures"
 
   section :measure_type, "div.find-items__row:nth-of-type(3) div.find-item__short" do
@@ -35,6 +36,7 @@ class FindMeasurePage < SitePrism::Page
     element :footnotes, ".footnotes-column"
     element :last_updated, ".last_updated-column"
     element :status, ".status-column"
+
   end
 
   def enter_measure_type(type)

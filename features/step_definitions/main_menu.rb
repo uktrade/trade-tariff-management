@@ -1,4 +1,3 @@
-
 require_relative '../support/helper'
 include Helper
 
@@ -35,48 +34,50 @@ And(/^I can logout of the application$/) do
 end
 
 Then(/^the workbasket status is "([^"]*)"$/) do |status|
-  @basket = find_work_basket
+
+  @workbaskets = @tarriff_main_menu.work_baskets.select {|basket| basket.name.text == @workbasket}
+  @basket = @workbaskets[0]
   @basket_id = @basket.id.text
   expect(@basket.status.text).to eq status
 end
 
 And(/^the workbasket has next step "([^"]*)"$/) do |next_step|
   case next_step
-    when 'Continue'
-      expect(@basket).to have_continue
-    when 'Delete'
-      expect(@basket).to have_delete
-    when 'Withdraw/edit'
-      expect(@basket).to have_withdraw_edit
-    when 'View'
-      expect(@basket).to have_view
-    when 'Review for cross-check'
-      expect(@basket).to have_cross_check
-    when 'Review for approval'
-      expect(@basket).to have_approve
+  when 'Continue'
+    expect(@basket).to have_continue
+  when 'Delete'
+    expect(@basket).to have_delete
+  when 'Withdraw/edit'
+    expect(@basket).to have_withdraw_edit
+  when 'View'
+    expect(@basket).to have_view
+  when 'Review for cross-check'
+    expect(@basket).to have_cross_check
+  when 'Review for approval'
+    expect(@basket).to have_approve
   end
 end
 
 When(/^I click "([^"]*)"$/) do |link|
   @basket = find_work_basket
   case link
-    when "Continue"
-      @basket.continue.click
-    when "Delete"
-      @basket.delete.click
-    when 'Withdraw/edit'
-      @basket.withdraw_edit.click
-    when 'View'
-      @basket.view.click
-    when 'Review for cross-check'
-      @basket.cross_check.click
-    when 'Review for approval'
-      @basket.approve.click
+  when "Continue"
+    @basket.continue.click
+  when "Delete"
+    @basket.delete.click
+  when 'Withdraw/edit'
+    @basket.withdraw_edit.click
+  when 'View'
+    @basket.view.click
+  when 'Review for cross-check'
+    @basket.cross_check.click
+  when 'Review for approval'
+    @basket.approve.click
   end
 end
 
 Then(/^I can delete the workbasket$/) do
-  @tarriff_main_menu.delete_confirmation_modal.confirm_button.click
+  @tarriff_main_menu.confirm_delete_measure
   expect(@tarriff_main_menu.work_baskets.map {|basket| basket.name.text}).not_to include(@workbasket)
 end
 
@@ -91,13 +92,12 @@ end
 
 Then(/^I can withdraw the workbasket$/) do
   step 'I click "Withdraw/edit"'
-  @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
-  expect(@create_measure_page.measure_validity_start_date.value).to eq format_date(@start_date)
+  @tarriff_main_menu.confirm_withdraw_measure
 end
 
 Then(/^I can withdraw the workbasket for the quota$/) do
   step 'I click "Withdraw/edit"'
-  @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
+  @tarriff_main_menu.confirm_withdraw_measure
   expect(@create_quota_page.quota_order_number.value).to eq @quota_order_number
 end
 
@@ -105,8 +105,8 @@ Then(/^I can crosscheck and accept the workbasket$/) do
   @cross_check_page = CrossCheckPage.new
   expect(@cross_check_page.work_basket_details.work_basket_name.text).to eq @workbasket
   @cross_check_page.accept_cross_check
-  expect(@cross_check_page.cross_check_confirmation.header.text).to eq CrossCheckPage::CROSS_CHECK_ACCEPTED_HEADER
-  expect(@cross_check_page.cross_check_confirmation.message.text).to include CrossCheckPage::CROSS_CHECK_ACCEPTED_MESSAGE
+  expect(@cross_check_page.cross_check_confirmation).to have_header
+  expect(@cross_check_page.cross_check_confirmation).to have_message
   expect(@cross_check_page).to have_return_to_main_menu
   expect(@cross_check_page).to have_view_these_measure
 end
@@ -161,4 +161,3 @@ def find_work_basket
   @workbaskets = @tarriff_main_menu.work_baskets.select {|basket| basket.name.text == @workbasket}
   @workbaskets.pop
 end
-

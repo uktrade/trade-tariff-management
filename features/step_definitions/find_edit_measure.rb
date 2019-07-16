@@ -43,7 +43,7 @@ end
 And(/^each row has a checkbox which is "([^"]*)"$/) do |status|
   expect(@find_measure_page.measure_search_results.size).to eq 1
   case status
-    when 'checked'
+  when 'checked'
       @find_measure_page.measure_search_results.each do |result|
         expect(result).not_to have_lock
         expect(result.select).to be_checked
@@ -65,6 +65,32 @@ And(/^the work_with_selected_measure button is "([^"]*)"$/) do |status|
     when 'disabled'
       expect(@find_measure_page.work_with_selected_measures).to be_disabled
   end
+end
+And(/^I select the first available measure to work with$/) do
+
+   @find_measure_page.select_all.click
+  for i in 1..@find_measure_page.select_one.length
+  @find_measure_page.select_one[i].click if  (@find_measure_page.select_one[i].disabled?).eql?(false)
+    break if (@find_measure_page.select_one[i].disabled?).eql?(false)
+    i = i+1
+  end
+  @find_measure_page.work_with_selected_measures.click
+   @workbasket = random_workbasket_name
+   @change_start_date = random_past_date
+   @regulation = "R1803160"
+   @new_regulation = "R1803100"
+   @edit_measure_page = EditMeasurePage.new
+   number_of_measures = @find_measure_page.measure_search_results.size
+   @edit_reason = "Edit measure change reason"
+   @edit_measure_page.enter_change_start_date @change_start_date
+   @edit_measure_page.select_regulation @regulation
+   @edit_measure_page.enter_reason_for_change @edit_reason
+   @edit_measure_page.enter_workbasket_name @workbasket
+   @edit_measure_page.proceed
+end
+
+When(/^I submit the bulk edit measure for cross\-check$/) do
+  @edit_measure_page.submit_for_crosscheck_button.click
 end
 
 When(/^I deselect all measures$/) do
@@ -178,7 +204,7 @@ And(/^the measure is updated with the "([^"]*)" change$/) do |bulk_action|
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.duties.text).to eq "#{@test_data['duty_expression']['amount']} %"
       end
-    when 'Change conditions'
+  when 'Change conditions'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.conditions.text).to eq format_conditions @expected_condition
       end
@@ -186,7 +212,7 @@ And(/^the measure is updated with the "([^"]*)" change$/) do |bulk_action|
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.footnotes.text).to eq format_footnote @test_data['footnote']
       end
-    when 'Change generating regulation'
+  when 'Change generating regulation'
       @edit_measure_page.bulk_edit_measures.each do |measure|
         expect(measure.regulation.text).to eq format_regulation @new_regulation
       end

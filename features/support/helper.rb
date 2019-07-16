@@ -61,7 +61,7 @@ module Helper
     end
 
   def format_conditions(condition)
-    "#{condition['type']}1 - #{condition['action']}"
+    "#{condition['type']} - #{condition['action']}"
   end
 
   def random_quota_number

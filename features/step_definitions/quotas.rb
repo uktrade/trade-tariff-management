@@ -32,7 +32,6 @@ When(/^I fill in the quota form for a "([^"]*)"$/) do |scenario|
   @critical = test_data['critical']
   @licensed = test_data['licensed']
   @monetary_unit = test_data['monetary_unit']
-
   @create_quota_page.select_regulation @regulation
   @create_quota_page.enter_quota_order_number @quota_order_number
   @create_quota_page.select_maximum_precision @maximum_precision
@@ -119,8 +118,11 @@ Then(/^the quota is submitted$/) do
 end
 
 And (/^I can submit the quota for cross check$/) do
+  sleep 3
   step 'I submit the quota for crosscheck'
+  sleep 3
   step 'the quota is submitted'
+  sleep 3
 end
 
 And(/^the quota summary lists the quota periods to be created$/) do
@@ -196,3 +198,10 @@ def find_quota
 end
 
 
+When("I open a new quota form and submit with blank fields") do
+
+end
+
+Then("a message is displayed") do
+
+end

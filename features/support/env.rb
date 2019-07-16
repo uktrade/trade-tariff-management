@@ -14,6 +14,11 @@ require 'pry'
 require_relative '../../spec/support/capybara_form_helper'
 
 CONFIG = YAML::load_file("#{File.dirname(__FILE__)}/../test_data.yaml")
+Capybara.register_driver :firefox do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  profile.native_events = true
+  Capybara::Selenium::Driver.new(app, :browser => :firefox)
+end
 
 Capybara.configure do |config|
   config.ignore_hidden_elements = false #true by default
@@ -35,7 +40,7 @@ Capybara.register_driver :headless_chrome do |app|
 end
 
 #Capture screenshots by default in failing tests
-Capybara::Screenshot.register_driver(:chrome) do |driver, path|
+Capybara::Screenshot.register_driver(:firefox) do |driver, path|
   driver.browser.save_screenshot(path)
 end
 
@@ -43,7 +48,7 @@ case ENV['BROWSER']
   when 'headless'
     Capybara.javascript_driver = Capybara.default_driver = :headless_chrome
   else
-    Capybara.default_driver = :chrome
+    Capybara.default_driver = :firefox
 end
 
 Capybara.app_host = ENV['BASE_URL']

@@ -7,11 +7,11 @@ Feature: As a Tariff Manager
     Given I am on the tariff main menu
     Then the main menu links are displayed
     And I can logout of the application
-  
+
   Scenario: Tariff Manager can save a work basket
     Given I am on the tariff main menu
     When I open a new create measure form
-    And I fill in the form for a "single_commodity_code"
+    And I fill in the form for a "single_commodity_code1"
     When I go back to the tariff main menu
     Then the workbasket status is "New - in progress"
     And the workbasket has next step "Continue"
@@ -108,7 +108,7 @@ Feature: As a Tariff Manager
   Scenario: Approver can reject a work basket
     Given I am on the tariff main menu
     When I open a new create measure form
-    And I fill in the form for a "single_commodity_code"
+    And I fill in the form for a "single_commodity_code2"
     Then I can submit the measure for cross check
     When I login as a "cross_checker"
     Then the workbasket status is "Awaiting cross-check"
@@ -129,3 +129,21 @@ Feature: As a Tariff Manager
     And the workbasket has next step "View"
     And the workbasket has next step "Withdraw/edit"
 
+
+#  Comment out the @manual tag above to run this test.
+  Scenario: Bulk edit measures - Cross-check rejected workbasket should have the View and Withdraw/edit links
+    Given I am on the tariff main menu
+    When I click the find and edit measure link
+    And I search for multiple measures by measure sid "3647"
+    And I select the first available measure to work with
+    And I bulk edit the selected measures with action "Change origin"
+    Then the measure is updated with the "Change origin" change
+    When I submit the bulk edit measure for cross-check
+    And I login as a "cross_checker"
+    Then the workbasket status is "Awaiting cross-check"
+    When I click "Review for cross-check"
+    And I can crosscheck and reject the workbasket
+    And I login as a "tariff_manager"
+    Then the workbasket status is "Cross-check rejected"
+    And the workbasket has next step "View"
+    And the workbasket has next step "Withdraw/edit"
