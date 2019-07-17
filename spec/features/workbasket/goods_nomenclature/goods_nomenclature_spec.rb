@@ -21,7 +21,7 @@ RSpec.describe "edit description" do
     fill_in("Enter new description", with: "Shiny new description")
     click_on("Submit for cross-check")
 
-    expect(page).to have_content('Amended commodity description "Shiny new description" has been submitted for cross-check.')
+    expect(page).to have_content("Amended commodity description 'Shiny new description' has been submitted for cross-check.")
 
   end
 end
