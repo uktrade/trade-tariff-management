@@ -14,6 +14,7 @@ class Chapter < GoodsNomenclature
     Heading.actual
            .filter("goods_nomenclature_item_id LIKE ? AND goods_nomenclature_item_id NOT LIKE '__00______'", relevant_headings)
            .where(Sequel.~(goods_nomenclatures__goods_nomenclature_item_id: HiddenGoodsNomenclature.codes))
+           .order(Sequel.asc(:goods_nomenclatures__goods_nomenclature_item_id), Sequel.asc(:goods_nomenclatures__producline_suffix))
   }
 
   one_to_one :chapter_note, primary_key: :to_param
