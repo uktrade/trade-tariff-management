@@ -22,10 +22,10 @@ class CrossCheckPage < SitePrism::Page
   element :reject_approval_reason, "#approve_reject_reasons"
 
   element :finish_cross_check_button, "input[name='submit_for_cross_check']"
-  element :return_to_main_menu, "#wrapper a", text: "Return to main menu"
-  element :view_these_measure, "#wrapper a", text: "View these measures"
-  element :cross_check_next_workbasket, "#wrapper a", text: "Cross-check next workbasket"
-  element :approve_next_workbasket, "#wrapper a", text: "Approve next workbasket"
+  element :return_to_main_menu, "#next-steps a", text: "Return to main menu"
+  element :view_these_measure, "#next-steps a", text: "View these measures"
+  element :cross_check_next_workbasket, "#next-steps a", text: "Cross-check next workbasket"
+  element :approve_next_workbasket, "#next-steps a", text: "Approve next workbasket"
 
   CROSS_CHECK_REJECTED_HEADER = "Measures cross-check rejected"
   CROSS_CHECK_ACCEPTED_HEADER = "Measures cross-checked."

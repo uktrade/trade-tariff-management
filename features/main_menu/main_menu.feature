@@ -7,7 +7,7 @@ Feature: As a Tariff Manager
     Given I am on the tariff main menu
     Then the main menu links are displayed
     And I can logout of the application
-  
+
   Scenario: Tariff Manager can save a work basket
     Given I am on the tariff main menu
     When I open a new create measure form
@@ -129,8 +129,6 @@ Feature: As a Tariff Manager
     And the workbasket has next step "View"
     And the workbasket has next step "Withdraw/edit"
 
-  @manual
-#  Comment out the @manual tag above to run this test.
   Scenario: Bulk edit measures - Cross-check rejected workbasket should have the View and Withdraw/edit links
     Given I am on the tariff main menu
     When I click the find and edit measure link

@@ -20,13 +20,13 @@ class CreateQuotaPage < CreateQuotaPageElements
   end
 
   def select_maximum_precision(precision)
-    within("#wrapper fieldset:nth-child(6) .col-md-2") do
+    within("#maximum_precision") do
       select_dropdown(precision)
     end
   end
 
   def select_quota_type(quota_type)
-    within("#wrapper fieldset:nth-child(7)") do
+    within("#record_type_dropdown") do
       select_dropdown_value(quota_type)
     end
   end
@@ -108,7 +108,7 @@ class CreateQuotaPage < CreateQuotaPageElements
   # end
 
   def select_section_duration(duration)
-    within("#wrapper fieldset:nth-child(1) .col-md-2") do
+    within("#quota-duration") do
       select_dropdown(duration)
     end
   end
@@ -120,13 +120,13 @@ class CreateQuotaPage < CreateQuotaPageElements
   end
 
   def select_custom_period_measurement_unit(unit)
-    within(".custom-period .col-md-3:nth-of-type(1)") do
+    within("#measurement-units") do
       select_dropdown_value(unit)
     end
   end
 
   def select_measurement_qualifier(qualifier)
-    within("") do
+    within("#measurement-units-qualifier") do
       select_dropdown_value(qualifier)
     end
   end
@@ -153,7 +153,11 @@ class CreateQuotaPage < CreateQuotaPageElements
   def enter_custom_period_start_date
     date_fields = find_all(".quota-section .custom-period input.date-picker")
     date_fields.first.set format_date(Date.today)
+    # Close the date picker
+    find('#footer').click
     date_fields.last.set format_date(random_future_date)
+    # Close the date picker
+    find('#footer').click
   end
 
   # Duty Expressions
@@ -213,31 +217,31 @@ class CreateQuotaPage < CreateQuotaPageElements
   end
 
   def select_condition_type(condition_type)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-condition") do
+    within("#measure-condition-0-condition") do
       select_dropdown_value(condition_type)
     end
   end
 
   def select_certificate_type(certificate_type)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-certificate-type") do
+    within("#measure-condition-0-certificate-type") do
       select_dropdown_value(certificate_type)
     end
   end
 
   def select_certificate(certificate)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-certificate") do
+    within("#measure-condition-0-certificate") do
       select_dropdown_value(certificate)
     end
   end
 
   def select_condition_action(action)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-action") do
+    within("#measure-condition-0-action") do
       select_dropdown_value(action)
     end
   end
 
   def select_condition_duty_expression(duty_expression)
-    within("#wrapper fieldset:nth-child(4) #measure-condition-0-measure-condition-component-0-duty-expression") do
+    within("#measure-condition-0-measure-condition-component-0-duty-expression") do
       select_dropdown_value(duty_expression)
     end
   end
@@ -247,7 +251,7 @@ class CreateQuotaPage < CreateQuotaPageElements
   end
 
   def add_footnote(footnote)
-    within("#wrapper fieldset:nth-child(6)") do
+    within("#footnote-0-footnote-type") do
       select_dropdown_value(footnote['type'])
     end
     footnote_text_field.set footnote['id']

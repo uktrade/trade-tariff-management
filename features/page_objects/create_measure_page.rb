@@ -46,11 +46,14 @@ class CreateMeasurePage < CreateMeasurePageElements
 
     def enter_measure_start_date(date)
       measure_validity_start_date.set format_date(date)
+      # click anywhere to close the datepicker
       find("body").click
     end
 
     def enter_measure_end_date(date)
       measure_validity_end_date.set format_date(date)
+      # click anywhere to close the datepicker
+      find('#footer').click
     end
 
     def select_regulation(reg)
@@ -84,7 +87,7 @@ class CreateMeasurePage < CreateMeasurePageElements
     end
 
     def add_footnote(footnote)
-      within("#wrapper fieldset:nth-child(6)") do
+      within("#footnote-0-footnote-type") do
         select_dropdown_value(footnote['type'])
       end
       footnote_text_field.set footnote['id']
@@ -158,35 +161,35 @@ class CreateMeasurePage < CreateMeasurePageElements
 
     def select_condition_type(condition_type, index)
       position = index
-      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-condition") do
+      within("#measure-condition-#{position}-condition") do
         select_dropdown_value(condition_type)
       end
     end
 
     def select_certificate_type(certificate_type, index)
       position = index
-      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-certificate-type") do
+      within("#measure-condition-#{position}-certificate-type") do
         select_dropdown_value(certificate_type)
       end
     end
 
     def select_certificate(certificate, index)
       position = index
-      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-certificate") do
+      within("#measure-condition-#{position}-certificate") do
         select_dropdown_value(certificate)
       end
     end
 
     def select_condition_action(action, index)
       position = index
-      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-action") do
+      within("#measure-condition-#{position}-action") do
         select_dropdown_value(action)
       end
     end
 
     def select_condition_duty_expression(duty_expression, index)
       position = index
-      within("#wrapper fieldset:nth-child(5) #measure-condition-#{position}-measure-condition-component-0-duty-expression") do
+      within("#measure-condition-#{position}-measure-condition-component-0-duty-expression") do
         select_dropdown_value(duty_expression)
       end
     end
@@ -209,7 +212,7 @@ class CreateMeasurePage < CreateMeasurePageElements
     end
 
     def select_duty_expression(duty_expression)
-      within("#wrapper fieldset:nth-child(4) .measure-components #measure-component-0-duty-expression") do
+      within("#measure-component-0-duty-expression") do
         select_dropdown_value(duty_expression)
       end
     end
@@ -219,13 +222,13 @@ class CreateMeasurePage < CreateMeasurePageElements
     end
 
     def select_unit_of_measure(unit)
-      within("#wrapper fieldset:nth-child(4) .measure-components #measure-component-0-measurement-unit") do
+      within("#measure-component-0-measurement-unit") do
         select_dropdown_value(unit)
       end
     end
 
     def select_qualifier(qualifier)
-      within("#wrapper fieldset:nth-child(4) .measure-components #measure-component-0-measurement-unit-qualifier") do
+      within("#measure-component-0-measurement-unit-qualifier") do
         select_dropdown_value(qualifier)
       end
     end

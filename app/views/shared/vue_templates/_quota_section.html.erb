@@ -44,7 +44,7 @@
 
           <div class="row">
             <div class="col-md-2">
-              <custom-select :options="periods" label-field="label" value-field="id" v-model="section.period"></custom-select>
+              <custom-select id="quota-duration" :options="periods" label-field="label" value-field="id" v-model="section.period"></custom-select>
             </div>
           </div>
         </div>
@@ -153,10 +153,10 @@
             </label>
 
             <div class="row">
-              <div class="col-md-3">
-                <custom-select url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="period.measurement_unit_code" placeholder="― select measurement unit ―" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit"></custom-select>
+              <div id="measurement-units" class="col-md-3">
+                <custom-select  url="/measurement_units" label-field="description" value-field="measurement_unit_code" code-field="measurement_unit_code" v-model="period.measurement_unit_code" placeholder="― select measurement unit ―" date-sensitive="true" code-class-name="prefix--measurement-unit" abbreviation-class-name="abbreviation--measurement-unit"></custom-select>
               </div>
-              <div class="col-md-3">
+              <div id="measurement-units-qualifier" class="col-md-3">
                 <custom-select url="/measurement_unit_qualifiers" label-field="description" value-field="measurement_unit_qualifier_code" code-field="measurement_unit_qualifier_code" v-model="period.measurement_unit_qualifier_code" placeholder="― optionally select qualifier ―" date-sensitive=true code-class-name="prefix--measurement-unit-qualifier"></custom-select>
               </div>
             </div>

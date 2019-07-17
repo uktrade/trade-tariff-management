@@ -1,9 +1,7 @@
 version: '3'
 services:
   management_db:
-    # Required to use 9.6 version as it is the same version been used on debian
-    # at Redis:2.5 image
-    image: postgres:9.6-alpine
+    image: postgres:11-alpine
     # Save the docker postgres data onto our local machine
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
@@ -25,8 +23,7 @@ services:
       - management_db
       - management_redis
     build: .
-    # Uncomment below if you want to run sidekick locally
-    # command: sidekiq -C config/sidekiq.yml
+    command: bundle exec sidekiq -C config/sidekiq.yml
     volumes:
       - '.:/app'
     env_file:

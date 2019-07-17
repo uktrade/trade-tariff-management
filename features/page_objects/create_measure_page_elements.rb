@@ -3,7 +3,7 @@ class CreateMeasurePageElements < SitePrism::Page
   element :find_edit_existing_measures_link, ".heading-large a"
   element :measure_validity_start_date, "#measure_validity_start_date"
   element :measure_validity_end_date, :xpath, "//form/fieldset[2]//input"
-  element :regulation_dropdown, "#wrapper fieldset:nth-child(6) .selectize-control input"
+  element :regulation_dropdown, "#regulations .selectize-control input"
   elements :regulations_options, ".selectize-dropdown-content .option"
   element :workbasket_name, "#workbasket_name"
   element :commodity_code, "#commodity_codes"
@@ -33,7 +33,7 @@ class CreateMeasurePageElements < SitePrism::Page
     element :duty_amount, "#measure-condition-0-measure-condition-component-0-amount"
   end
 
-  section :duty_expressions, "#wrapper fieldset:nth-child(4) .measure-components" do
+  section :duty_expressions, "#measure-component-0" do
     element :add_duty_expression_link, "a"
     element :duty_amount, "#measure-component-0-amount"
   end
