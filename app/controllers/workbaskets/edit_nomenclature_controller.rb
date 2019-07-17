@@ -27,7 +27,7 @@ module Workbaskets
     end
 
     expose(:original_nomenclature) do
-      find_original_nomenclature(workbasket_settings.original_nomenclature)
+      find_original_nomenclature(workbasket.settings.original_nomenclature)
     end
 
     def new
@@ -62,8 +62,6 @@ module Workbaskets
     end
 
     def update_edit_nomenclature_workbasket
-
-      workbasket = Workbasket::Ed
 
       workbasket = Workbaskets::Workbasket.new(
         title: workbasket_params[:workbasket_name],

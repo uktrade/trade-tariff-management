@@ -1,0 +1,12 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Nomenclature cross-checked
+
+  h3.heading-medium
+    | Nomenclature
+    = workbasket.settings.description
+    | has passed cross-check.
+    br
+    | It has not yet been submitted for approval.
+
+= render "workbaskets/edit_nomenclature/workflow_screens_parts/status_pages/next_step_links", mode: "cross_check"

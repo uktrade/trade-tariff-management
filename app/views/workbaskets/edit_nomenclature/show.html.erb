@@ -1,0 +1,106 @@
+<div class="breadcrumbs">
+  <ol>
+    <li>
+      <%= link_to "Main menu", root_url %>
+    </li>
+  </ol>
+</div>
+
+<h1 class="heading-xlarge m-b-5">
+  Amend code description
+</h1>
+
+<div class="panel panel-border-narrow p-t-5 p-b-5">
+  <p>
+    <%= original_nomenclature.goods_nomenclature_item_id %> - <%= original_nomenclature.description %>
+  </p>
+</div>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <table>
+      <caption class="heading-small">Workbasket details</caption>
+      <tbody>
+        <tr>
+          <td class="heading_column">Workbasket name</td>
+          <td><%= workbasket.title %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Reason for changes</td>
+          <td><%= workbasket.settings.reason_for_changes %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Changes take effect on</td>
+          <td><%= workbasket.settings.validity_start_date %></td>
+        </tr>
+
+        <% workbasket.ordered_events.map do |event|  %>
+          <%= render "workbaskets/events/#{event.event_type}", event: event %>
+        <% end %>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+
+    <table>
+      <caption class="heading-medium m-t-25">Existing code details</caption>
+      <tbody>
+        <tr>
+          <td class="heading_column">Commodity code</td>
+          <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Description</td>
+          <td>
+            <%= workbasket_settings.description %>
+            <details>
+              <summary>
+                Original description
+              </summary>
+              <div class="panel panel-border-narrow p-t-5 p-b-5">
+                <%= original_nomenclature.description %>
+              </div>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <td class="heading_column">Product line suffix</td>
+          <td>
+            <%= original_nomenclature.producline_suffix %>
+          </td>
+        </tr>
+        <tr>
+          <td class="heading_column">Indents</td>
+          <td>
+            <%= original_nomenclature.number_indents %>
+          </td>
+        </tr>
+        <tr>
+          <td class="heading_column">Footnotes</td>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <td class="heading_column">Code valid from</td>
+          <td>
+            <%= format_date(original_nomenclature.validity_start_date) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="heading_column">Code valid until</td>
+          <td>
+            <%= format_date(original_nomenclature.validity_end_date) %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div>
+      <%= link_to "Back", root_path, class: "secondary-button" %>
+    </div>
+  </div>
+</div>

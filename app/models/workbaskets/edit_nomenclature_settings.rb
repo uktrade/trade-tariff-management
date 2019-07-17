@@ -21,7 +21,8 @@ module Workbaskets
       '{}'
     end
 
-    def clean_up_temporary_data!
+    def main_step_settings_jsonb
+      '{}'
     end
 
   end

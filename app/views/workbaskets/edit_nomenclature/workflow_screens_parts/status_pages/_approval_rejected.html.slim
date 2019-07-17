@@ -1,0 +1,10 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Nomenclature approval rejected
+
+  h3.heading-medium
+    | You indicated that the new Nomenclature
+    = workbasket.settings.description
+    | had problems and has not been approved. The submitter has been notified.
+
+= render "workbaskets/edit_nomenclature/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -270,7 +270,7 @@ Rails.application.routes.draw do
 
     resource :manage_nomenclature, only: [:new, :create]
 
-    resources :edit_nomenclature, only: [:edit, :update, :show] do
+    resources :edit_nomenclature, only: [:edit, :update, :show, :destroy] do
       member do
         get :submitted_for_cross_check
         get :move_to_editing_mode
