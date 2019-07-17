@@ -4,7 +4,7 @@
 
   h3.heading-medium
     | Nomenclature
-    = workbasket.settings.add_additional_code_description
+    =<> "'#{workbasket.settings.description}'"
     | is approved It has not yet been sent through to CDS and has not been scheduled for export.
 
 = render "workbaskets/edit_nomenclature/workflow_screens_parts/status_pages/next_step_links", mode: "cross_check"
