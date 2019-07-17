@@ -26,6 +26,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/additional_code"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "workbaskets/shared/steps/review_and_submit/bulk_edit_additional_codes"
+    elsif workbasket.type == 'edit_nomenclature'
+      "workbaskets/shared/steps/review_and_submit/edit_nomenclatures"
     end
   end
 

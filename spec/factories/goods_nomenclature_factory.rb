@@ -94,6 +94,17 @@ FactoryBot.define do
         FactoryBot.create(:heading, goods_nomenclature_item_id: "#{commodity.goods_nomenclature_item_id.first(4)}000000")
       }
     end
+
+    trait :with_description do
+      before(:create) { |gono, evaluator|
+        FactoryBot.create(:goods_nomenclature_description, goods_nomenclature_sid: gono.goods_nomenclature_sid,
+                          goods_nomenclature_item_id: gono.goods_nomenclature_item_id,
+                          validity_start_date: gono.validity_start_date,
+                          validity_end_date: gono.validity_end_date,
+                          description: evaluator.description)
+      }
+    end
+
   end
 
   factory :heading, parent: :goods_nomenclature, class: Heading do
@@ -124,6 +135,17 @@ FactoryBot.define do
                                                 goods_nomenclature_item_id: heading.chapter_id)
       }
     end
+
+    trait :with_description do
+      before(:create) { |gono, evaluator|
+        FactoryBot.create(:goods_nomenclature_description, goods_nomenclature_sid: gono.goods_nomenclature_sid,
+                          goods_nomenclature_item_id: gono.goods_nomenclature_item_id,
+                          validity_start_date: gono.validity_start_date,
+                          validity_end_date: gono.validity_end_date,
+                          description: evaluator.description)
+      }
+    end
+
   end
 
   factory :goods_nomenclature_indent do

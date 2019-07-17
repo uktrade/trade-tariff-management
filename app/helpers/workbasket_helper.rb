@@ -332,6 +332,8 @@ module WorkbasketHelper
       edit_certificate_url(workbasket.id)
     when :edit_geographical_area
       edit_geographical_area_url(workbasket.id)
+    when :edit_nomenclature
+      edit_nomenclature_url(workbasket.id)
     end
   end
 
@@ -350,6 +352,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_geographical_area_url(workbasket.id)
     elsif workbasket.object.type == "edit_geographical_area"
       withdraw_workbasket_from_workflow_edit_geographical_area_url(workbasket.id)
+    elsif workbasket.object.type == "edit_nomenclature"
+      withdraw_workbasket_from_workflow_edit_nomenclature_url(workbasket.id)
     end
   end
 
