@@ -20,14 +20,7 @@ module WorkbasketInteractions
         update_additional_code_dates!(params) if validity_dates_changed?(params)
 
         if params['changes'].include?('description') && !meursing?(params)
-          @records = @records + build_additional_code_description!(params)
-        end
-
-        @records.each do |record|
-          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            record, system_ops
-          ).assign!
-          record.save
+          build_additional_code_description!(params)
         end
       end
 
@@ -68,7 +61,11 @@ module WorkbasketInteractions
 
         assign_start_date(code, params)
         assign_end_date(code, params)
-        return code
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          code, system_ops.merge(operation: "U")
+        ).assign!(false)
+
+        code.save
       end
 
       def update_additional_code!(params)
@@ -77,7 +74,11 @@ module WorkbasketInteractions
 
         assign_start_date(code, params)
         assign_end_date(code, params)
-        return code
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          code, system_ops.merge(operation: "U")
+        ).assign!(false)
+
+        code.save
       end
 
       def assign_start_date(code, params)
@@ -94,7 +95,7 @@ module WorkbasketInteractions
         AdditionalCodeDescription.unrestrict_primary_key
         AdditionalCodeDescriptionPeriod.unrestrict_primary_key
         description = existing.additional_code_description
-        [
+        records = [
             AdditionalCodeDescription.new(
               additional_code_description_period_sid: description.additional_code_description_period_sid,
               additional_code_sid: description.additional_code_sid,
@@ -111,6 +112,13 @@ module WorkbasketInteractions
               validity_start_date: params['additional_code_description']['validity_start_date'].to_date
 )
         ]
+
+        records.each do |record|
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            record, system_ops
+          ).assign!
+          record.save
+        end
       end
 
       def system_ops
