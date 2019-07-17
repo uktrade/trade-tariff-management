@@ -2,7 +2,7 @@ br
 h3.heading-medium
   | Next steps
 
-ul class="list"
+ul id="next-steps" class="list"
   - if mode == "cross_check" && next_cross_check.present? && workbasket.id != next_cross_check.id
     li
       = link_to "Cross-check next workbasket", new_cross_check_url(next_cross_check.id)

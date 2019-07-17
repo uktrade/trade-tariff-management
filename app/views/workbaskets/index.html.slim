@@ -6,7 +6,7 @@
           | Main menu
       .col-xs-12.col-sm-4.col-md-4.align-bottom
         p.text-right.logout-section
-          = "Logged in as: #{@current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe
+          = "Logged in as: #{@current_user.name} | #{link_to("Logout", gds_sign_out_path, id: "log-out")}".html_safe
 
   = render "workbaskets/main_menu_parts/main_menu"
 

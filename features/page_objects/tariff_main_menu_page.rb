@@ -2,7 +2,7 @@ class TariffMainMenuPage < SitePrism::Page
 
   set_url ENV['BASE_URL']
 
-  element :logout_link, "#wrapper a", text: "Logout"
+  element :logout_link, "#log-out", text: "Logout"
   # section :work_baskets, TariffWorkBasketsSection, '.workbaskets .table tbody'
   element :create_measures_link, "#main-menu a", text: "Create measures"
   element :find_edit_measures_link, "#main-menu a", text: "Find and edit measures"
@@ -26,11 +26,7 @@ class TariffMainMenuPage < SitePrism::Page
 
   element :logged_out_message, "#content h1", text: "You have been logged out"
 
-  section :delete_confirmation_modal, "#main-menu-delete_confirmation_popup .workbasket-confirmation-modal" do
-    element :confirm_button, ".save_progress_block a"
-  end
-
-  section :withdraw_confirmation_modal, "#main-menu-withdraw_confirmation_popup .workbasket-confirmation-modal" do
+  section :confirmation_modal, ".modal.is-open" do
     element :confirm_button, ".save_progress_block a"
   end
 

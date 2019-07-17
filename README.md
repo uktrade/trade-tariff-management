@@ -94,6 +94,18 @@ More details can be found at [https://docs.docker.com/compose/rails/](https://do
 ```
     docker exec -it tariff_management_1 bundle exec rspec ./spec/features
 ```
+6. To run all cucumber tests
+```
+    docker exec -it tariff_management_1 rake cucumber
+```
+7. To run all RSpec tests
+```
+    docker exec -it tariff_management_1 bundle exec rspec
+```
+8. To only run RSpec feature tests
+```
+    docker exec -it tariff_management_1 bundle exec rspec ./spec/features
+```
 
 ### Docker troubleshooting
 1. If you end up in an infinity loop of `"Postgres is unavailable - sleeping"` then stop and restart

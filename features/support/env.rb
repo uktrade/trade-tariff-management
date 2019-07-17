@@ -18,7 +18,7 @@ FileUtils.rm_rf(Dir['screenshots/cucumber/*'])
 
 Capybara.configure do |config|
   config.ignore_hidden_elements = false #true by default
-  config.default_max_wait_time = 30
+  config.default_max_wait_time = 50
 end
 
 Capybara.register_driver :chrome do |app|
@@ -53,6 +53,15 @@ case ENV['BROWSER']
   else
     Capybara.default_driver = :chrome
 end
+
+###############################
+# Uncomment below to point to a different enviroment while developing.
+# You will need to set the UIDs for all three different type of users
+# ENV['BASE_URL'] = ''
+# ENV['TARIFFMANAGER'] =
+# ENV['CROSSCHECKER'] =
+# ENV['APPROVER'] =
+###############################
 
 Capybara.app_host = ENV['BASE_URL']
 Capybara.save_path = "screenshots/cucumber"

@@ -31,7 +31,7 @@ end
 
 And(/^I can logout of the application$/) do
   @tarriff_main_menu.logout
-  expect(@tarriff_main_menu).to have_logged_out_message
+  expect(page.current_url).to have_content('auth/developer')
 end
 
 Then(/^the workbasket status is "([^"]*)"$/) do |status|
@@ -76,7 +76,7 @@ When(/^I click "([^"]*)"$/) do |link|
 end
 
 Then(/^I can delete the workbasket$/) do
-  @tarriff_main_menu.delete_confirmation_modal.confirm_button.click
+  @tarriff_main_menu.confirmation_modal.confirm_button.click
   expect(@tarriff_main_menu.work_baskets.map {|basket| basket.name.text}).not_to include(@workbasket)
 end
 
@@ -91,12 +91,12 @@ end
 
 Then(/^I can withdraw the workbasket$/) do
   step 'I click "Withdraw/edit"'
-  @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
+  @tarriff_main_menu.confirmation_modal.confirm_button.click
 end
 
 Then(/^I can withdraw the workbasket for the quota$/) do
   step 'I click "Withdraw/edit"'
-  @tarriff_main_menu.withdraw_confirmation_modal.confirm_button.click
+  @tarriff_main_menu.confirmation_modal.confirm_button.click
   expect(@create_quota_page.quota_order_number.value).to eq @quota_order_number
 end
 
@@ -117,7 +117,6 @@ And(/^I approve the workbasket$/) do
   expect(@cross_check_page.cross_check_confirmation.message.text).to include @workbasket
   expect(@cross_check_page).to have_return_to_main_menu
   expect(@cross_check_page).to have_view_these_measure
-  expect(@cross_check_page).to have_approve_next_workbasket
 end
 
 And(/^I do not approve the workbasket$/) do
@@ -127,7 +126,6 @@ And(/^I do not approve the workbasket$/) do
   expect(@cross_check_page.cross_check_confirmation.message.text).to include CrossCheckPage::APPROVAL_REJECTED_MESSAGE
   expect(@cross_check_page.cross_check_confirmation.message.text).to include @workbasket
   expect(@cross_check_page).to have_return_to_main_menu
-  expect(@cross_check_page).to have_approve_next_workbasket
 end
 
 Then(/^I can crosscheck and reject the workbasket$/) do

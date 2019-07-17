@@ -14,7 +14,7 @@ class EditMeasurePage < SitePrism::Page
   element :save_progress_button, ".js-bulk-edit-of-records-save-progress"
   element :bulk_action_dropdown, ".button-dropdown:nth-of-type(1) button"
   elements :bulk_action_options, ".button-dropdown:nth-of-type(1) li"
-  element :selected_measure_alert, ".alert--info p:nth-of-type(1)"
+  element :selected_measure_alert, ".alert--info"
 
   element :ok_button, "#bem-save-progress-summary a.button", text: "OK"
   element :no_conformance_errors, ".alert .js-bem-popup-data-container", text: "There are no conformance errors"

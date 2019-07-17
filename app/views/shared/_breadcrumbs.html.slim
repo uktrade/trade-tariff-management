@@ -4,4 +4,4 @@
       = yield
     .col-xs-12.col-sm-12.col-md-5.col-lg-4
       p.text-right.logout
-        = "Logged in as: #{@current_user.name} | #{link_to("Logout", gds_sign_out_path)}".html_safe
+        = "Logged in as: #{@current_user.name} | #{link_to("Logout", gds_sign_out_path, id: "log-out")}".html_safe

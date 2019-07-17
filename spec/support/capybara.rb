@@ -34,5 +34,5 @@ Capybara::Screenshot.register_driver(:chrome_headless) do |driver, path|
 end
 
 Capybara.javascript_driver = :chrome_headless
-Capybara.default_max_wait_time = 10
+Capybara.default_max_wait_time = 30
 Capybara.server = :puma, { Silent: !ENV.key?("DEBUG") }
