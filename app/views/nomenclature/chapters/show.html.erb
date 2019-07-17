@@ -44,7 +44,13 @@
             <tr>
               <th scope="row"><%= format_nomenclature_code(heading.goods_nomenclature_item_id) %></th>
               <th scope="row"><%= heading.producline_suffix == '80' ? '-' : heading.producline_suffix %></th>
-              <td><%= link_to heading.description, goods_nomenclature_path(heading.goods_nomenclature_item_id) %></a></td>
+              <td>
+                <% if heading.producline_suffix == '80' %>
+                  <%= link_to heading.description, goods_nomenclature_path(heading.goods_nomenclature_item_id) %></a>
+                <% else %>
+                  <%= heading.description %></a>
+                <% end %>
+              </td>
               <td>Manage</td>
             </tr>
             <%end %>

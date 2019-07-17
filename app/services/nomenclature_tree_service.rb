@@ -27,8 +27,12 @@ class NomenclatureTreeService
     Sequel::Model.db.fetch(nomenclature_children_sql, "#{nomenclature_code[0..3]}______").each do |nomenclature|
       new_node = TreeNode.new(nomenclature[:goods_nomenclature_item_id], nomenclature)
       if root_node == nil
-        root_node = new_node
-        current_path = [root_node]
+        if nomenclature[:producline_suffix] != "10"
+          root_node = new_node
+          current_path = [root_node]
+        else
+          # item is a heading group - do nothing (e.g. see 7101000000 which has an item suffix 10 as a group heading)
+        end
       elsif (nomenclature[:number_indents] -1 == current_path[-1].content[:number_indents])
         # new_node is a child of the current path end
         current_path[-1].children << new_node
