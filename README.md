@@ -19,6 +19,14 @@
     COMPOSE_PROJECT_NAME=tariff
     COMPOSE_IGNORE_ORPHANS=True
     TARIFF_TRADE_APPLICATION_URL=http://localhost:8000
+    # Required for running cucumber tests
+    DATABASE_URL=postgresql://postgres@localhost:5432/tariff_management_test
+    BASE_URL=http://localhost:3000
+    BROWSER=headless
+    # Below numbers refer to users UID
+    TARIFFMANAGER=1
+    CROSSCHECKER=2
+    APPROVER=3
 
 ```
 3. Run:
@@ -47,8 +55,9 @@
     ```
 6. <a name="6"></a> Run the below command to drop an event trigger that is not needed in development and prevents app from running. This step can be remove in the future.
 ```
-    docker exec tariff_management_db_1 psql -U postgres -c "drop event trigger reassign_owned;"
+    docker exec tariff_management_db_1 psql -U postgres -d tariff_management_development -c "drop event trigger reassign_owned;"
 ```
+7. Run database  [migrate script](#migrate) to be up to date
 
 More details can be found at [https://docs.docker.com/compose/rails/](https://docs.docker.com/compose/rails/)
 
@@ -65,13 +74,25 @@ More details can be found at [https://docs.docker.com/compose/rails/](https://do
 ```
     docker-compose build
 ```
-4. Migrate database
+4. <a name="migrate"></a>Migrate database
 ```
-    docker exec tariff_management_1 rake db:migrate
+    docker exec tariff_management_1 bundle exec rake db:migrate
 ```
 5. Run the below command to create databases:
 ```
-    docker exec tariff_management_1 rake db:create
+    docker exec tariff_management_1 bundle exec rake db:create
+```
+6. To run all cucumber tests
+```
+    docker exec -it tariff_management_1 bundle exec rake cucumber
+```
+7. To run all RSpec tests
+```
+    docker exec -it tariff_management_1 bundle exec rspec
+```
+8. To only run RSpec feature tests
+```
+    docker exec -it tariff_management_1 bundle exec rspec ./spec/features
 ```
 
 ### Docker troubleshooting

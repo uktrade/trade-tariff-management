@@ -49,3 +49,4 @@ services:
       - '.env'
     links:
       - management_redis
+      - management_db
