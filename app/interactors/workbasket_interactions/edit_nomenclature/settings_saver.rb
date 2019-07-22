@@ -66,10 +66,11 @@ module WorkbasketInteractions
         GoodsNomenclatureDescription.unrestrict_primary_key
         goods_nomenclature_description = GoodsNomenclatureDescription.new(
           language_id: 'EN',
+          goods_nomenclature_description_period_sid: goods_nomenclature_description_period.goods_nomenclature_description_period_sid,
           goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
           goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
           productline_suffix: original_nomenclature.producline_suffix,
-          description: workbasket.settings.validity_start_date
+          description: workbasket.settings.description
         )
         @records << goods_nomenclature_description
 
