@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "edit additional codes", :js do
-  it 'updates existing additional code' do
+  xit 'updates existing additional code' do
     create(:additional_code_type, additional_code_type_id: 'A')
 
     additional_code_1 = create(:additional_code,
