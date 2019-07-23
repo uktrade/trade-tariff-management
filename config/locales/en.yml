@@ -192,3 +192,7 @@ en:
     summary_invalid_fields: "The geographical area could not be submitted because invalid data has been entered for one or more fields."
     summary_conformance_rules: "The geographical area could not be submitted because there are conformance errors."
     nothing_changed: "The geographical area could not be submitted because you have to change something!"
+
+  edit_nomenclature:
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    validity_start_date_blank: "Valid from date must be specified."

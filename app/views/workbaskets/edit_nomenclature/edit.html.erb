@@ -34,10 +34,6 @@
               <td class="bold-small">Reason for changes</td>
               <td><%= workbasket.settings.reason_for_changes %></td>
             </tr>
-            <tr>
-              <td class="bold-small">Changes take effect on</td>
-              <td><%= workbasket.settings.validity_start_date %></td>
-            </tr>
           </tbody>
         </table>
       </div>
@@ -66,10 +62,24 @@
         </tr>
         <tr>
           <td colspan="2">
-            <div class="panel panel-border-narrow">
-              <!-- <label class="form-label" for="example-phone-number">Mobile phone number</label>
-                  <input class="form-control" id="example-phone-number" name="example-phone-number" type="tel"> -->
+            <div class="panel panel-border-narrow <%= 'form-group-error' if saver&.errors[:description] %>">
+              <% if saver&.errors[:description]  %>
+                <span class="error-message"><%= saver&.errors[:description] %></span>
+              <% end %>
               <%= f.input :description, label: 'Enter new description', required: true, :as => :text, :input_html => { rows: 6 } %>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="panel panel-border-narrow <%= 'form-group-error' if (saver&.errors[:validity_start_date].present? || saver&.conformance_errors.present?) %>">
+              <% if (saver&.errors[:validity_start_date] || saver&.conformance_errors)  %>
+                <span class="error-message">
+                  <%= saver&.errors[:validity_start_date] %>
+                  <%= saver&.conformance_errors&.values[0] %>
+                </span>
+              <% end %>
+              <%= f.input :validity_start_date, label: 'Description valid from date', :as => :date %>
             </div>
           </td>
         </tr>

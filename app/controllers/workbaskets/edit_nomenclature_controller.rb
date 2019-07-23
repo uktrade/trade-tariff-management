@@ -44,15 +44,19 @@ module Workbaskets
     end
 
     def edit
-      @edit_nomenclature_form = WorkbasketForms::EditNomenclatureForm.new(original_nomenclature)
+      @edit_nomenclature_form = WorkbasketForms::EditNomenclatureForm.new(original_nomenclature, workbasket.settings)
     end
 
     def update
       params[:settings] = params[:workbasket_forms_edit_nomenclature_form]
-      saver.save!
+      if saver.save!
 
-      workbasket.submit_for_cross_check!(current_admin: current_user)
-      redirect_to submitted_for_cross_check_edit_nomenclature_url(workbasket.id)
+        workbasket.submit_for_cross_check!(current_admin: current_user)
+        redirect_to submitted_for_cross_check_edit_nomenclature_url(workbasket.id)
+      else
+        @edit_nomenclature_form = WorkbasketForms::EditNomenclatureForm.new(original_nomenclature, workbasket.settings)
+        render :edit
+      end
     end
 
   private
@@ -61,27 +65,7 @@ module Workbaskets
       true
     end
 
-    def update_edit_nomenclature_workbasket
-
-      workbasket = Workbaskets::Workbasket.new(
-        title: workbasket_params[:workbasket_name],
-        status: :new_in_progress,
-        type: :edit_nomenclature,
-        user: current_user
-      )
-
-      if workbasket.save
-        workbasket.settings.update(
-          workbasket_id: workbasket.id,
-          workbasket_name: workbasket_params[:workbasket_name],
-          reason_for_changes: workbasket_params[:reason_for_changes],
-          validity_start_date: extract_date_from_params(workbasket_params)
-        )
-      end
-      workbasket
-    end
-
-    private def find_original_nomenclature(nomenclature_sid)
+    def find_original_nomenclature(nomenclature_sid)
       GoodsNomenclature.find(goods_nomenclature_sid: nomenclature_sid)
     end
 

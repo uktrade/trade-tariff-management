@@ -37,7 +37,6 @@ module Workbaskets
           workbasket_id: workbasket.id,
           workbasket_name: workbasket_params[:workbasket_name],
           reason_for_changes: workbasket_params[:reason_for_changes],
-          validity_start_date: extract_date_from_params(workbasket_params),
           original_nomenclature: find_original_nomenclature(workbasket_params[:original_nomenclature]).goods_nomenclature_sid
         )
       end
@@ -46,10 +45,6 @@ module Workbaskets
 
     private def workbasket_params
       params.require(:workbasket_forms_manage_nomenclature_form).permit(:workbasket_name, :reason_for_changes, :description_validity_start_date, :original_nomenclature, :action)
-    end
-
-    private def extract_date_from_params(params)
-      Date.new params["description_validity_start_date(1i)"].to_i, params["description_validity_start_date(2i)"].to_i, params["description_validity_start_date(3i)"].to_i
     end
 
     private def find_original_nomenclature(nomenclature_sid)

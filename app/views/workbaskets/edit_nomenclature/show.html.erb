@@ -29,10 +29,6 @@
           <td class="heading_column">Reason for changes</td>
           <td><%= workbasket.settings.reason_for_changes %></td>
         </tr>
-        <tr>
-          <td class="heading_column">Changes take effect on</td>
-          <td><%= workbasket.settings.validity_start_date %></td>
-        </tr>
 
         <% workbasket.ordered_events.map do |event|  %>
           <%= render "workbaskets/events/#{event.event_type}", event: event %>
