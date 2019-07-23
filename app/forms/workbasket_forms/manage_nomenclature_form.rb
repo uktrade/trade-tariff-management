@@ -5,10 +5,7 @@ module WorkbasketForms
 
     attr_accessor :workbasket_name,
                   :reason_for_changes,
-                  :description,
-                  :description_validity_start_date,
-                  :action,
-                  :age
+                  :action
 
 
     def initialize(original_nomenclature)
