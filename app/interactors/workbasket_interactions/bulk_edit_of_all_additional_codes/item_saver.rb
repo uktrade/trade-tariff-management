@@ -90,29 +90,58 @@ module WorkbasketInteractions
         code.validity_end_date = params['validity_end_date'] if params['changes'].include?('validity_end_date')
       end
 
+      def description_periods
+        AdditionalCodeDescriptionPeriod.where(additional_code_sid: existing.additional_code_sid).all
+      end
+
+      def existing_description_period_on_same_day(params)
+        periods = description_periods.select do |period|
+          period.validity_start_date.strftime('%d %b %Y') == params['additional_code_description']['validity_start_date']
+        end
+      end
 
       def build_additional_code_description!(params)
         AdditionalCodeDescription.unrestrict_primary_key
         AdditionalCodeDescriptionPeriod.unrestrict_primary_key
+
+        existing_description_period_on_same_day = existing_description_period_on_same_day(params)
+
+        unless existing_description_period_on_same_day.empty?
+          update_description!(params, existing_description_period_on_same_day)
+        else
+          add_new_description_and_description_period!(params)
+        end
+      end
+
+      def update_description!(params, existing_description_period_on_same_day)
+        description = existing_description_period_on_same_day.first.additional_code_description
+        description.description = params['additional_code_description']['description']
+
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          description, system_ops.merge(operation: "U")
+        ).assign!
+        description.save
+      end
+
+      def add_new_description_and_description_period!(params)
         description = existing.additional_code_description
         records = [
-            AdditionalCodeDescription.new(
-              additional_code_description_period_sid: description.additional_code_description_period_sid,
-              additional_code_sid: description.additional_code_sid,
-              additional_code_type_id: description.additional_code_type_id,
-              additional_code: description.additional_code,
-              language_id: description.language_id,
-              description: params['additional_code_description']['description']
-),
-            AdditionalCodeDescriptionPeriod.new(
-              additional_code_description_period_sid: description.additional_code_description_period_sid,
-              additional_code_sid: description.additional_code_sid,
-              additional_code_type_id: description.additional_code_type_id,
-              additional_code: description.additional_code,
-              validity_start_date: params['additional_code_description']['validity_start_date'].to_date
-)
+          AdditionalCodeDescription.new(
+            additional_code_description_period_sid: description.additional_code_description_period_sid,
+            additional_code_sid: description.additional_code_sid,
+            additional_code_type_id: description.additional_code_type_id,
+            additional_code: description.additional_code,
+            language_id: description.language_id,
+            description: params['additional_code_description']['description']
+          ),
+          AdditionalCodeDescriptionPeriod.new(
+            additional_code_description_period_sid: description.additional_code_description_period_sid,
+            additional_code_sid: description.additional_code_sid,
+            additional_code_type_id: description.additional_code_type_id,
+            additional_code: description.additional_code,
+            validity_start_date: params['additional_code_description']['validity_start_date'].to_date
+          )
         ]
-
         records.each do |record|
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
             record, system_ops
