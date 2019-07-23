@@ -63,9 +63,6 @@ Vue.component("change-additional-codes-description-popup", {
       if (!validityDate.isValid()) {
         isValid = false;
         errors.validityDate = "You must specify a valid date.";
-      } else if (validityDate.diff(latestStartDate, "days") <= 0) {
-        isValid = false;
-        errors.validityDate = "The start date must be later than the start date of the current description period (" + this.latestStartDate + ").";
       }
 
       if (description.trim().length === 0) {
