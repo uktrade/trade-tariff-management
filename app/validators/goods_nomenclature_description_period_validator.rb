@@ -1,5 +1,6 @@
 class GoodsNomenclatureDescriptionPeriodValidator < TradeTariffBackend::Validator
-  validation :NIG12, ' No two associated description periods may have the same start date.' do
+
+  validation :NIG12, 'No two associated description periods may have the same start date.' do
     validates :uniqueness, of: %i[goods_nomenclature_sid validity_start_date]
   end
 
