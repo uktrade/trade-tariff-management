@@ -84,7 +84,7 @@ module WorkbasketInteractions
         check_initial_validation_rules!
         check_if_nothing_changed! if @errors.blank?
         edit_memberships! if @errors.blank? && only_memberships_changed?
-        check_conformance_rules! if @errors.blank? && !only_memberships_changed?
+        edit_geographical_area! if @errors.blank? && !only_memberships_changed?
       end
 
       def check_initial_validation_rules!
@@ -98,15 +98,6 @@ module WorkbasketInteractions
 
       def check_if_nothing_changed!
         if nothing_changed?
-
-          p ""
-          p "*" * 100
-          p ""
-          p " NOTHING CHANGED!"
-          p ""
-          p "*" * 100
-          p ""
-
           @errors[:general] = "Nothing changed"
           @errors_summary = initial_validator.errors_translator(:nothing_changed)
         end
@@ -159,34 +150,14 @@ module WorkbasketInteractions
         new_ids
       end
 
-      def check_conformance_rules!
+      def edit_geographical_area!
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           if it_is_just_description_changed?
-
-            p ""
-            p "*" * 100
-            p ""
-            p " JUST DESC CHANGED 1!"
-            p ""
-            p "*" * 100
-            p ""
-            end_date_existing_geographical_area_desription_period!
+            end_date_existing_geographical_area_description_period!
             add_next_geographical_area_description_period!
             add_next_geographical_area_description!
           else
-
-            p ""
-            p "*" * 100
-            p ""
-            p " ALL CHANGED 1!"
-            p ""
-            p "*" * 100
-            p ""
-
-
             update_geographical_area! if settings_params['validity_end_date']
-
-
             if description_validity_start_date.present? && description_changed?
               add_geographical_area_description_period!
               add_geographical_area_description!
@@ -274,60 +245,48 @@ module WorkbasketInteractions
         @geographical_area ||= original_geographical_area
 
         if it_is_just_description_changed?
-
-          p ""
-          p "*" * 100
-          p ""
-          p " JUST DESC CHANGED 2!"
-          p ""
-          p "*" * 100
-          p ""
-
-          unless next_geographical_area_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
-          end
-
-          unless next_geographical_area_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
-          end
-
+          check_for_description_only_conformance_errors
         else
-
-          p ""
-          p "*" * 100
-          p ""
-          p " ALL CHANGED 2!"
-          p ""
-          p "*" * 100
-          p ""
-
-          unless geographical_area.conformant?
-            @conformance_errors.merge!(get_conformance_errors(geographical_area))
-          end
-
-          if description_changed?
-            @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period)) unless geographical_area_description_period.conformant?
-            unless geographical_area_description_period.conformant?
-              @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
-            end
-            unless geographical_area_description.conformant?
-              @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
-            end
-
-            if description_validity_start_date.present?
-              unless next_geographical_area_description_period.conformant?
-                @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
-              end
-
-              unless next_geographical_area_description.conformant?
-                @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
-              end
-            end
-          end
+          check_for_full_conformance_errors
         end
 
         if conformance_errors.present?
           @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
+        end
+      end
+
+      def check_for_description_only_conformance_errors
+        unless next_geographical_area_description_period.conformant?
+          @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
+        end
+
+        unless next_geographical_area_description.conformant?
+          @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
+        end
+      end
+
+      def check_for_full_conformance_errors
+        unless geographical_area.conformant?
+          @conformance_errors.merge!(get_conformance_errors(geographical_area))
+        end
+        if description_changed?
+          @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period)) unless geographical_area_description_period.conformant?
+          unless geographical_area_description_period.conformant?
+            @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
+          end
+          unless geographical_area_description.conformant?
+            @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
+          end
+
+          if description_validity_start_date.present?
+            unless next_geographical_area_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
+            end
+
+            unless next_geographical_area_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
+            end
+          end
         end
       end
 
@@ -379,7 +338,7 @@ module WorkbasketInteractions
         end
       end
 
-      def end_date_existing_geographical_area_desription_period!
+      def end_date_existing_geographical_area_description_period!
         geographical_area_description_period = original_geographical_area.geographical_area_description
                                                                          .geographical_area_description_period
 
