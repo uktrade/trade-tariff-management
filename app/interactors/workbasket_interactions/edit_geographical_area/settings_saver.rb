@@ -153,16 +153,24 @@ module WorkbasketInteractions
       def edit_geographical_area!
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           if it_is_just_description_changed?
-            end_date_existing_geographical_area_description_period!
-            add_next_geographical_area_description_period!
-            add_next_geographical_area_description!
+            if existing_description_period_on_same_day.empty?
+              end_date_existing_geographical_area_description_period!
+              add_next_geographical_area_description_period!
+              add_next_geographical_area_description!
+            else
+              update_existing_description!(existing_description_period_on_same_day)
+            end
           else
             update_geographical_area! if settings_params['validity_end_date']
             if description_validity_start_date.present? && description_changed?
-              add_geographical_area_description_period!
-              add_geographical_area_description!
-              add_next_geographical_area_description_period!
-              add_next_geographical_area_description!
+              if existing_description_period_on_same_day.empty?
+                add_geographical_area_description_period!
+                add_geographical_area_description!
+                add_next_geographical_area_description_period!
+                add_next_geographical_area_description!
+              else
+                update_existing_description!(existing_description_period_on_same_day)
+              end
             end
 
             edit_memberships! unless memberships_have_no_changes?
@@ -170,6 +178,21 @@ module WorkbasketInteractions
 
           parse_and_format_conformance_rules
         end
+      end
+
+      def update_existing_description!(same_day_description_period)
+        description = same_day_description_period.first.geographical_area_description
+        description.description = settings_params['description']
+
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          description, system_ops.merge(operation: "U")
+        ).assign!(false)
+
+        description.save
+      end
+
+      def existing_description_period_on_same_day
+        GeographicalAreaDescriptionPeriod.where(geographical_area_sid: original_geographical_area.geographical_area_sid).all.select {|period| period.validity_start_date === settings_params['description_validity_start_date']}
       end
 
       def edit_memberships!
@@ -244,8 +267,10 @@ module WorkbasketInteractions
         @conformance_errors = {}
         @geographical_area ||= original_geographical_area
 
-        if it_is_just_description_changed?
+        if it_is_just_description_changed? && existing_description_period_on_same_day.empty?
           check_for_description_only_conformance_errors
+        elsif it_is_just_description_changed?
+          check_for_updated_description_conformance_errors
         else
           check_for_full_conformance_errors
         end
@@ -265,6 +290,11 @@ module WorkbasketInteractions
         end
       end
 
+      def check_for_updated_description_conformance_errors
+        existing_description = existing_description_period_on_same_day.first.geographical_area_description
+        @conformance_errors.merge!(get_conformance_errors(existing_description))
+      end
+
       def check_for_full_conformance_errors
         unless geographical_area.conformant?
           @conformance_errors.merge!(get_conformance_errors(geographical_area))
@@ -278,7 +308,7 @@ module WorkbasketInteractions
             @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
           end
 
-          if description_validity_start_date.present?
+          if description_validity_start_date.present? && existing_description_period_on_same_day.empty?
             unless next_geographical_area_description_period.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
             end
@@ -286,6 +316,10 @@ module WorkbasketInteractions
             unless next_geographical_area_description.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
             end
+          end
+
+          unless existing_description_period_on_same_day.empty?
+            check_for_updated_description_conformance_errors
           end
         end
       end
