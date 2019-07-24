@@ -76,16 +76,13 @@ module WorkbasketInteractions
         @records = []
         original_nomenclature = Commodity.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature)
 
-        GoodsNomenclatureDescriptionPeriod.unrestrict_primary_key
-        @goods_nomenclature_description_period = GoodsNomenclatureDescriptionPeriod.new(
-          goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
-          goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
-          productline_suffix: original_nomenclature.producline_suffix,
-          validity_start_date: workbasket.settings.validity_start_date
-        )
-        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(goods_nomenclature_description_period).assign!
-        goods_nomenclature_description_period_sid = goods_nomenclature_description_period.goods_nomenclature_description_period_sid
-        @records << goods_nomenclature_description_period
+
+        @goods_nomenclature_description_period = find_existing_description_period(original_nomenclature, workbasket.settings.validity_start_date)
+        description_operation = "U"
+        if goods_nomenclature_description_period.nil?
+          @records << create_description_period(original_nomenclature)
+          description_operation = "C"
+        end
 
         GoodsNomenclatureDescription.unrestrict_primary_key
         @goods_nomenclature_description = GoodsNomenclatureDescription.new(
@@ -94,12 +91,29 @@ module WorkbasketInteractions
           goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
           goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
           productline_suffix: original_nomenclature.producline_suffix,
+          operation: description_operation,
           description: workbasket.settings.description
         )
-        @records << goods_nomenclature_description
+        @records << @goods_nomenclature_description
 
         operation_date = workbasket.settings.validity_start_date
         save_nomenclature_description!
+      end
+
+      def find_existing_description_period(original_nomenclature, validity_start_date)
+        GoodsNomenclatureDescriptionPeriod.find(goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid, validity_start_date: validity_start_date)
+      end
+
+      def create_description_period(original_nomenclature)
+        GoodsNomenclatureDescriptionPeriod.unrestrict_primary_key
+        @goods_nomenclature_description_period = GoodsNomenclatureDescriptionPeriod.new(
+          goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
+          goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
+          productline_suffix: original_nomenclature.producline_suffix,
+          validity_start_date: workbasket.settings.validity_start_date
+        )
+        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(goods_nomenclature_description_period).assign!
+        @goods_nomenclature_description_period
       end
 
       def check_conformance_rules!
@@ -140,7 +154,9 @@ module WorkbasketInteractions
 
       def save_nomenclature_description!
         records.each do |record|
-          assign_system_ops!(record)
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            record, system_ops.merge(operation: record[:operation])
+          ).assign!
           record.save
         end
       end
