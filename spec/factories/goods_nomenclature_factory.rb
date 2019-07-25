@@ -16,12 +16,14 @@ FactoryBot.define do
     producline_suffix   { "80" }
     validity_start_date { Date.today.ago(2.years) }
     validity_end_date   { nil }
+    status              { 'published' }
 
     after(:build) { |gono, evaluator|
       FactoryBot.create(:goods_nomenclature_indent, goods_nomenclature_sid: gono.goods_nomenclature_sid,
                                                      validity_start_date: gono.validity_start_date,
                                                      validity_end_date: gono.validity_end_date,
-                                                     number_indents: evaluator.indents)
+                                                     number_indents: evaluator.indents,
+                                                     status: 'pubilshed')
     }
 
     trait :actual do
@@ -52,7 +54,8 @@ FactoryBot.define do
                                                             goods_nomenclature_item_id: gono.goods_nomenclature_item_id,
                                                             validity_start_date: gono.validity_start_date,
                                                             validity_end_date: gono.validity_end_date,
-                                                            description: evaluator.description)
+                                                            description: evaluator.description,
+                                                            status: 'published')
       }
     end
 
@@ -79,7 +82,8 @@ FactoryBot.define do
                            validity_start_date: commodity.validity_start_date,
                            validity_end_date: commodity.validity_end_date,
                            productline_suffix: commodity.producline_suffix,
-                           number_indents: evaluator.indents)
+                           number_indents: evaluator.indents,
+                           status: 'published')
       }
     end
 
@@ -101,7 +105,8 @@ FactoryBot.define do
                           goods_nomenclature_item_id: gono.goods_nomenclature_item_id,
                           validity_start_date: gono.validity_start_date,
                           validity_end_date: gono.validity_end_date,
-                          description: evaluator.description)
+                          description: evaluator.description,
+                          status: 'published')
       }
     end
 
@@ -142,7 +147,8 @@ FactoryBot.define do
                           goods_nomenclature_item_id: gono.goods_nomenclature_item_id,
                           validity_start_date: gono.validity_start_date,
                           validity_end_date: gono.validity_end_date,
-                          description: evaluator.description)
+                          description: evaluator.description,
+                          status: 'published')
       }
     end
 
@@ -154,6 +160,7 @@ FactoryBot.define do
     number_indents { Forgery(:basic).number }
     validity_start_date { Date.today.ago(3.years) }
     validity_end_date   { nil }
+    status { 'published' }
 
     trait :xml do
       goods_nomenclature_item_id     { Forgery(:basic).text(exactly: 2) }
@@ -184,13 +191,15 @@ FactoryBot.define do
     goods_nomenclature_sid { generate(:sid) }
     description { Forgery(:basic).text }
     goods_nomenclature_description_period_sid { generate(:sid) }
+    status { 'published'}
 
     before(:create) { |gono_description, evaluator|
       FactoryBot.create(:goods_nomenclature_description_period, goods_nomenclature_description_period_sid: gono_description.goods_nomenclature_description_period_sid,
                                                               goods_nomenclature_sid: gono_description.goods_nomenclature_sid,
                                                               goods_nomenclature_item_id: gono_description.goods_nomenclature_item_id,
                                                               validity_start_date: evaluator.validity_start_date,
-                                                              validity_end_date: evaluator.validity_end_date)
+                                                              validity_end_date: evaluator.validity_end_date,
+                                                              status: 'published')
     }
 
     trait :xml do

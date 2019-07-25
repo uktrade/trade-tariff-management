@@ -3,6 +3,7 @@ FactoryBot.define do
     goods_nomenclature_sid { generate(:goods_nomenclature_sid) }
     goods_nomenclature_item_id { "#{2.times.map { Random.rand(9) }.join}00000000" }
     validity_start_date { Date.today.ago(2.years) }
+    status { 'published' }
 
     trait :with_section do
       after(:create) { |chapter, _evaluator|
@@ -24,7 +25,8 @@ FactoryBot.define do
                           goods_nomenclature_item_id: chapter.goods_nomenclature_item_id,
                           validity_start_date: chapter.validity_start_date,
                           validity_end_date: chapter.validity_end_date,
-                          description: evaluator.description)
+                          description: evaluator.description,
+                          status: 'published')
       }
     end
 

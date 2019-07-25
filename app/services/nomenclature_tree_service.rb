@@ -13,6 +13,7 @@ class NomenclatureTreeService
              (select description
               from goods_nomenclature_descriptions
               where goods_nomenclature_sid = gn.goods_nomenclature_sid
+              and status = 'published'
               order by oid desc
               limit 1)
       from goods_nomenclatures gn

@@ -33,11 +33,13 @@ module Workbaskets
       )
 
       if workbasket.save
+        original_nomenclature = find_original_nomenclature(workbasket_params[:original_nomenclature])
         workbasket.settings.update(
           workbasket_id: workbasket.id,
           workbasket_name: workbasket_params[:workbasket_name],
           reason_for_changes: workbasket_params[:reason_for_changes],
-          original_nomenclature: find_original_nomenclature(workbasket_params[:original_nomenclature]).goods_nomenclature_sid
+          original_nomenclature: original_nomenclature.goods_nomenclature_sid,
+          original_description: original_nomenclature.description
         )
       end
       workbasket
