@@ -2100,7 +2100,8 @@ CREATE TABLE public.edit_nomenclature_workbasket_settings (
     original_nomenclature text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    main_step_validation_passed boolean DEFAULT false
+    main_step_validation_passed boolean DEFAULT false,
+    original_description text
 );
 
 
@@ -12654,3 +12655,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20190603135337_replace_all
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190625152340_create_edit_nomenclature_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190712143348_add_workbasket_fields_goods_nomenclature_description.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190716105325_add_main_step_validation_passed_to_edit_nomenclature_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190725135752_add_original_description_to_edit_nomenclature_workbasket_settings.rb');

@@ -36,10 +36,6 @@ module Workbaskets
         user: current_user
       )
 
-      workbasket_settings.update(
-        original_nomenclature_id: params[:nomenclature_id]
-      )
-
       redirect_to initial_step_url
     end
 
