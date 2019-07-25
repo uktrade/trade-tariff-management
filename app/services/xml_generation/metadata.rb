@@ -53,8 +53,8 @@ module XmlGeneration
   private
 
     def get_md5_checksum(file_path)
-      md5 = Digest::MD5.file(file_path)
-      md5.hexdigest
+      file = File.read(file_path)
+      Digest::MD5.hexdigest(file)
     end
 
     def template_name
