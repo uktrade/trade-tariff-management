@@ -19,6 +19,7 @@ fieldset
           col width="*"
           col width="120"
           col width="120"
+          col
         thead
           tr
             th colspan="2"
@@ -41,6 +42,7 @@ fieldset
                 span v-if="'leave_date' == sortBy"
                   arrow-down v-if="sortDir === 'desc'"
                   arrow-up v-if="sortDir === 'asc'"
+            th
         tbody
           tr v-for="(membership, index) in sortedMemberships"
             td
@@ -54,8 +56,10 @@ fieldset
             td
               | {{membership.validity_end_date}}
             td
-              a href="#" role="button" v-on:click.prevent="removeMembership(membership)" id="remove-group"
+              a href="#" id="remove-group" role="button" v-on:click.prevent="removeMembershipTrigger(membership)"
                 | Remove
+
+  remove-geo-membership-popup :on-close="closePopups" :open="true" :remove="removeMembership" :membership="removingMembership" v-if="removingMembership !== null"
 
   add-geo-areas-to-group-popup :validity-start-date="geographical_area.validity_start_date" :geographical-area="geographical_area" :on-close="closePopups" :open="true" v-if="addingMembers"
 

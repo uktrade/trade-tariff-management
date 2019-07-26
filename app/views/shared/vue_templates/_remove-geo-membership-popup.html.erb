@@ -1,0 +1,16 @@
+<script type="text/x-template" id="remove-geo-membership-popup-template">
+  <pop-up :open="open" :on-close="triggerClose">
+      <template slot="title">
+          You are going to delete membership!
+      </template>
+
+      <div class="form-actions">
+        <button class="button" @click.prevent="deleteMembership" :disabled="processing">
+          Confirm
+        </button>
+        <a class="secondary-button" href="#" @click.prevent="onClose" data-micromodal-close>
+          Cancel
+        </a>
+      </div>
+  </pop-up>
+</script>
