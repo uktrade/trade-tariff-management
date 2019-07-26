@@ -62,7 +62,7 @@ RSpec.describe "adding geographical areas", :js do
 
     click_on("Add memberships")
 
-    within(".modal") do
+    within("#modal-1") do
       find("#country_codes_text").set("XX")
       click_on("Add memberships")
     end
@@ -91,6 +91,11 @@ RSpec.describe "adding geographical areas", :js do
     expect(page).to have_content("1008")
 
     all("#remove-group").last.click
+
+    within("#modal-1") do
+      expect(page).to have_content "You are going to delete membership!"
+      click_on("Confirm")
+    end
 
     expect(page).to_not have_content("1008")
 
