@@ -40,7 +40,7 @@ module WorkbasketInteractions
 
       def save!
         workbasket.settings.description = @settings_params[:description]
-        workbasket.settings.validity_start_date = Date.new(@settings_params["validity_start_date(1i)"].to_i, @settings_params["validity_start_date(2i)"].to_i, @settings_params["validity_start_date(3i)"].to_i)
+        workbasket.settings.validity_start_date = set_date
 
         workbasket.settings.save
         if valid?
@@ -56,6 +56,12 @@ module WorkbasketInteractions
       end
 
       private
+
+      def set_date
+        Date.new(@settings_params["validity_start_date_year"].to_i, @settings_params["validity_start_date_month"].to_i, @settings_params["validity_start_date_day"].to_i)
+      rescue ArgumentError
+        nil
+      end
 
       def validate!
         check_initial_validation_rules!
