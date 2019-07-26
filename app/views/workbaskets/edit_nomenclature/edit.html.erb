@@ -79,7 +79,9 @@
                   <%= saver&.conformance_errors&.values[0] %>
                 </span>
               <% end %>
-              <%= f.input :validity_start_date, label: 'Description valid from date', :as => :date %>
+              <%= f.input :validity_start_date_day, label: 'Day', required: true  %>
+              <%= f.input :validity_start_date_month, label: 'Month', required: true %>
+              <%= f.input :validity_start_date_year, label: 'Year', required: true %>
             </div>
           </td>
         </tr>
