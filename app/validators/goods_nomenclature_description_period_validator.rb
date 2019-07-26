@@ -9,4 +9,8 @@ class GoodsNomenclatureDescriptionPeriodValidator < TradeTariffBackend::Validato
       (record.goods_nomenclature.validity_end_date >= record.validity_start_date)
     end
 
+  validation :NIG12, 'The start date must be later than or equal to the start date of the nomenclature.' do |record|
+    (record.goods_nomenclature.validity_start_date <= record.validity_start_date)
+  end
+
 end
