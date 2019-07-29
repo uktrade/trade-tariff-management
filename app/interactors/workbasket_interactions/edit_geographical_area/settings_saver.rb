@@ -296,31 +296,36 @@ module WorkbasketInteractions
       end
 
       def check_for_full_conformance_errors
-        unless geographical_area.conformant?
-          @conformance_errors.merge!(get_conformance_errors(geographical_area))
-        end
+        check_geo_area_conformance
+
         if description_changed?
-          @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period)) unless geographical_area_description_period.conformant?
-          unless geographical_area_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
-          end
-          unless geographical_area_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
-          end
-
-          if description_validity_start_date.present? && existing_description_period_on_same_day.empty?
-            unless next_geographical_area_description_period.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
+          if  existing_description_period_on_same_day.empty?
+            @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period)) unless geographical_area_description_period.conformant?
+            unless geographical_area_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
+            end
+            unless geographical_area_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(geographical_area_description))
             end
 
-            unless next_geographical_area_description.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
-            end
-          end
+            if description_validity_start_date.present?
+              unless next_geographical_area_description_period.conformant?
+                @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description_period))
+              end
 
-          unless existing_description_period_on_same_day.empty?
+              unless next_geographical_area_description.conformant?
+                @conformance_errors.merge!(get_conformance_errors(next_geographical_area_description))
+              end
+            end
+          else
             check_for_updated_description_conformance_errors
           end
+        end
+      end
+
+      def check_geo_area_conformance
+        unless geographical_area.conformant?
+          @conformance_errors.merge!(get_conformance_errors(geographical_area))
         end
       end
 
