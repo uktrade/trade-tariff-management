@@ -392,29 +392,6 @@ module WorkbasketInteractions
         end
       end
 
-      def add_geographical_area!
-        @geographical_area = GeographicalArea.new(
-          validity_start_date: validity_start_date,
-          validity_end_date: validity_end_date
-        )
-
-        geographical_area.geographical_code = original_geographical_area.geographical_code
-        geographical_area.geographical_area_id = original_geographical_area.geographical_area_id
-
-        if remove_parent_group_association.present?
-          geographical_area.parent_geographical_area_group_sid = nil
-        end
-
-        if original_geographical_area.group? && parent_geographical_area_group_id.present?
-          geographical_area.parent_geographical_area_group_sid = parent_geographical_area_group_sid
-        end
-
-        assign_system_ops!(geographical_area)
-        set_primary_key!(geographical_area)
-
-        geographical_area.save if persist_mode?
-      end
-
       def add_geographical_area_description_period!
         @geographical_area_description_period = GeographicalAreaDescriptionPeriod.new(
           validity_start_date: validity_start_date,
