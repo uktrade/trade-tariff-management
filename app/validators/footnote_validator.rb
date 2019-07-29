@@ -32,14 +32,14 @@ class FootnoteValidator < TradeTariffBackend::Validator
     end
   end
 
-  validation :FO6, 'When a footnote is used in a goods nomenclature the validity period of the footnote must span the validity period of the association with the goods nomenclature.', on: %i[create update] do |record|
+  validation :FO6, 'When a footnote is used in a goods classification the validity period of the footnote must span the validity period of the association with the goods classification.', on: %i[create update] do |record|
     record.footnote_association_goods_nomenclatures_dataset.where { |o|
       (o.validity_start_date < record.validity_start_date) &
         (o.validity_end_date > record.validity_end_date)
     }.none?
   end
 
-  validation :FO7, 'When a footnote is used in an Export refund nomenclature code the validity period of the footnote must span the validity period of the association with the Export refund code.', on: %i[create update] do |record|
+  validation :FO7, 'When a footnote is used in an Export refund goods classification code the validity period of the footnote must span the validity period of the association with the Export refund code.', on: %i[create update] do |record|
     record.footnote_association_erns_dataset.where { |o|
       (o.validity_start_date < record.validity_start_date) &
         (o.validity_end_date > record.validity_end_date)
@@ -61,7 +61,7 @@ class FootnoteValidator < TradeTariffBackend::Validator
     record.measures.none?
   end
 
-  validation :FO12, 'When a footnote is used in a goods nomenclature then the footnote may not be deleted.', on: [:destroy] do |record|
+  validation :FO12, 'When a footnote is used in a goods classification then the footnote may not be deleted.', on: [:destroy] do |record|
     record.goods_nomenclatures.none?
   end
 

@@ -1,5 +1,5 @@
 class MeasureValidator < TradeTariffBackend::Validator
-  validation :ME1, 'The combination of measure type + geographical area + goods nomenclature item id + additional code type + additional code + order number + reduction indicator + start date must be unique.', on: %i[create update], if: ->(record) { record.not_update_of_the_same_measure? } do
+  validation :ME1, 'The combination of measure type + geographical area + goods classification item id + additional code type + additional code + order number + reduction indicator + start date must be unique.', on: %i[create update], if: ->(record) { record.not_update_of_the_same_measure? } do
     validates :uniqueness, of: %i[measure_type_id geographical_area_sid goods_nomenclature_sid additional_code_type_id additional_code_id ordernumber reduction_indicator validity_start_date]
   end
 
@@ -39,7 +39,7 @@ class MeasureValidator < TradeTariffBackend::Validator
     validates :presence, of: :goods_nomenclature
   end
 
-  validation :ME7, 'The goods nomenclature code must be a product code; that is, it may not be an intermediate line.', on: %i[create update] do |record|
+  validation :ME7, 'The goods classification code must be a product code; that is, it may not be an intermediate line.', on: %i[create update] do |record|
     # NOTE wont apply to national invalidates Measures
     # Taric may delete a Goods Code and national measures will be invalid.
     (record.national? && record.invalidated?) ||
@@ -196,7 +196,7 @@ class MeasureValidator < TradeTariffBackend::Validator
 
   validation :ME32,
     %(There may be no overlap in time with other measure occurrences with a goods code in the
-     same nomenclature hierarchy which references the same measure type, geo area, order number,
+     same goods classification hierarchy which references the same measure type, geo area, order number,
      additional code and reduction indicator. This rule is not applicable for Meursing additional
      codes.),
      on: %i[create update],
