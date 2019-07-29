@@ -22,7 +22,8 @@ Vue.component('custom-select', {
     "disabled",
     "compact",
     "showCompactAbbreviation",
-    "scopeDate"
+    "scopeDate",
+    "defaultValue"
   ],
   data: function() {
     return {
@@ -33,7 +34,14 @@ Vue.component('custom-select', {
   },
   template: "#selectize-template",
   mounted: function () {
+    var vm = this;
+
     this.initializeSelect();
+    this.$nextTick(function () {
+      if (vm.defaultValue) {
+        this.applyValueInSelect(vm.defaultValue);
+      }
+    })
   },
   watch: {
     disabled: function(value) {

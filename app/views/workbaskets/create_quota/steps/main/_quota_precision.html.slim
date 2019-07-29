@@ -5,8 +5,8 @@ fieldset
   .form-group
     label.form-label
       span.form-hint
-        | This is the maximum number of decimal places that a trader can enter on the SAD form in respect of the quantity being imported under this quota. Unless explicitly otherwise specified, please enter the value “3” in the box below.
+        | This is the maximum number of decimal places that a trader can enter on the SAD form in respect of the quantity being imported under this quota. Unless explicitly otherwise specified, the default value is set to "3" in the box below.
 
     .bootstrap-row
       .col-xs-2.col-md-2.col-lg-1
-        custom-select id="maximum_precision" v-model="measure.quota_precision" :options="precisions" placeholder="—"
+        custom-select id="maximum_precision" v-model="measure.quota_precision" :options="precisions" placeholder="—" default-value="3"

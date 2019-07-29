@@ -9,6 +9,8 @@ module CapybaraFormHelper
   end
 
   def search_for_value(type_value:, select_value:)
+    find(".selectize-control .selectize-input").click
+    find(".selectize-control input").set ''
     find(".selectize-control input").click.send_keys(type_value)
     find(".selectize-dropdown-content .option", text: select_value).click
   end
