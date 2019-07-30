@@ -50,6 +50,12 @@ class GoodsNomenclature < Sequel::Model
       .order(Sequel.desc(:goods_nomenclature_indents__validity_start_date))
   end
 
+  one_to_many :goods_nomenclature_description_periods, key: :goods_nomenclature_sid,
+                                           primary_key: :goods_nomenclature_sid do |ds|
+    ds.with_actual(GoodsNomenclatureDescriptionPeriod, self)
+      .order(Sequel.desc(:goods_nomenclature_description_periods__validity_start_date))
+  end
+
   def goods_nomenclature_indent
     goods_nomenclature_indents(reload: true).first
   end
@@ -131,6 +137,18 @@ class GoodsNomenclature < Sequel::Model
 
   def to_s
     "#{number_indents}: #{goods_nomenclature_item_id}: #{description}"
+  end
+
+  def current_description_period
+    past_description_periods.sort_by {|period| period.validity_start_date}.last
+  end
+
+  def past_description_periods
+    goods_nomenclature_description_periods.select {|period| period.validity_start_date.to_date <= Date.today}
+  end
+
+  def current_description
+    goods_nomenclature_description.description
   end
 
   def heading_id
