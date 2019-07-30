@@ -25,16 +25,16 @@ table.create-measures-details-table
         | Type
       td
         = "#{workbasket.settings.main_step_settings['measure_type_id']} - #{attributes_parser.measure_type}"
-        
+
     tr
       td.heading_column
-        | Goods
+        | Goods commodity
       td
         = attributes_parser.commodity_codes
 
     tr
       td.heading_column
-        | Goods exceptions
+        | Goods commodity exceptions
       td
         = attributes_parser.entered_exception_codes
 

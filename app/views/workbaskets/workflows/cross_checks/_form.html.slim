@@ -25,14 +25,14 @@ script
             .multiple-choice
               input type='radio' id="radioID" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" value="approve" required="true"
                 label.with_bigger_font-size for='radioID'
-                  | I confirm that I have checked the above details and am satisfied this has been configured correctly and reflect the requirements.
+                  | I confirm that I have checked the above details and am satisfied that they are correct.
                   span.form-hint.with_bigger_font-size
-                    | Selecting this option will have the system generate the measure(s). There will be a further approval step before they are sent to CDS.
+                    | There will be a further approval step before they are sent to CDS.
           .cross-check-decision
             .multiple-choice
               input type='radio' id="radioID2" class="radio-inline-group js-cross-check-decision" name="cross_check[mode]" value="reject" required="true"
                 label.with_bigger_font-size for='radioID2'
-                  | I am not happy.
+                  | I am not satisfied with the above details.
 
             .panel.panel-border-narrow.hidden.js-cross-check-reject-details-block id="cross-check-rejection-reason"
               label.form-label for="rejection_reason"

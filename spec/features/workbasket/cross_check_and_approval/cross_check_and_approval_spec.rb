@@ -121,21 +121,21 @@ RSpec.describe 'cross check', :js do
   end
 
   def select_approve
-    find("label", text:'I confirm that I have checked the above details and am satisfied this has been configured correctly and reflect the requirements.').click
+    find("label", text:'I confirm that I have checked the above details and am satisfied that they are correct.').click
   end
 
   def select_reject_and_give_reason
-    find("label", text:'I am not happy').click
+    find("label", text:'I am not satisfied with the above details.').click
     fill_in("Provide your reasons and/or state the changes required:", with: "Computer says no")
   end
 
   def confirm_approval
-    find("label", text:'Approve.').click
+    find("label", text:'I confirm that I have checked the above details and am satisfied that they are correct.').click
     click_button 'Finish approval'
   end
 
   def reject_approval
-    find("label", text:'I am not happy').click
+    find("label", text:'I am not satisfied with the above details.').click
     fill_in("Provide your reasons and/or state the changes required:", with: "Computer says no")
     click_button 'Finish approval'
   end
