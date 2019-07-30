@@ -15,7 +15,7 @@
                   <div class="chapter-code">
                     <div class="code-text"><%= @chapter.short_code %></div>
                   </div>
-                  <%= @chapter.description.capitalize %>
+                  <%= @chapter.current_description.capitalize %>
                   </ul>
                 </li>
               </ul>
@@ -46,9 +46,9 @@
               <th scope="row"><%= heading.producline_suffix == '80' ? '-' : heading.producline_suffix %></th>
               <td>
                 <% if heading.producline_suffix == '80' %>
-                  <%= link_to heading.description, goods_nomenclature_path(heading.goods_nomenclature_item_id) %></a>
+                  <%= link_to heading.current_description, goods_nomenclature_path(heading.goods_nomenclature_item_id) %></a>
                 <% else %>
-                  <%= heading.description %></a>
+                  <%= heading.current_description %></a>
                 <% end %>
               </td>
               <td>Manage</td>

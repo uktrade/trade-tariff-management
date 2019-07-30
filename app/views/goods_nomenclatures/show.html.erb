@@ -15,13 +15,13 @@
                     <div class="chapter-code">
                       <div class="code-text"><%= @nomenclature.chapter.short_code %></div>
                     </div>
-                    <%= @nomenclature.chapter.description.capitalize %>
+                    <%= @nomenclature.chapter.current_description.capitalize %>
                     <ul>
                       <li class="chapter-li">
                         <div class="chapter-code">
                           <div class="code-text"><%= @nomenclature.short_code[2..3] %></div>
                         </div>
-                        <%= @nomenclature.description.capitalize %>
+                        <%= @nomenclature.current_description.capitalize %>
                       </li>
                     </ul>
                   </li>
@@ -43,5 +43,3 @@
   <%end %>
 
 <% end %>
-
-
