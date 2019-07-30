@@ -26,12 +26,12 @@ script
               .multiple-choice
                 input type='radio' id="approve-decision-approve" class="radio-inline-group" name="approve[mode]" value="approve" required="true"
                   label.with_bigger_font-size for="approve-decision-approve"
-                    | Approve.
+                    | I confirm that I have checked the above details and am satisfied that they are correct.
             .approve-decision
               .multiple-choice
                 input type='radio' id="approve-decision-reject" class="radio-inline-group" name="approve[mode]" value="reject" required="true"
                   label.with_bigger_font-size for="approve-decision-reject"
-                    | I am not happy.
+                    | I am not satisfied with the above details.
 
               .panel.panel-border-narrow.hidden.js-approve-reject-details-block id="approval-rejection-reason"
                 label.form-label for="approve_reject_reasons"

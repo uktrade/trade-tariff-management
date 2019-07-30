@@ -12,7 +12,7 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
     workbasket = workbasket_creating_measure(status: :awaiting_cross_check)
 
     visit new_cross_check_path(workbasket.id)
-    select_radio(/I confirm that I have checked the above details?/i)
+    select_radio(/I confirm that I have checked the above details and am satisfied that they are correct.?/i)
     click_on("Finish cross-check")
 
     expect(page).to have_content "Measures cross-checked"
@@ -22,7 +22,7 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
     workbasket = workbasket_creating_measure(status: :awaiting_cross_check)
 
     visit new_cross_check_path(workbasket.id)
-    select_radio('I am not happy.')
+    select_radio('I am not satisfied with the above details.')
     click_on("Finish cross-check")
 
     message = page.find("#rejection_reason").native.attribute("validationMessage")
@@ -39,7 +39,7 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
     workbasket = workbasket_creating_measure(status: :awaiting_approval)
 
     visit new_approve_path(workbasket.id)
-    find("label", text:'Approve.').click
+    find("label", text:'I confirm that I have checked the above details and am satisfied that they are correct.').click
     click_on("Finish approval")
 
     expect(page).to have_content "Measures approved"
@@ -50,7 +50,7 @@ RSpec.describe "approval process for a Create Measure workbasket", :js do
 
     visit new_approve_path(workbasket.id)
 
-    find("label", text:'I am not happy.').click
+    find("label", text:'I am not satisfied with the above details.').click
     click_on("Finish approval")
 
     message = page.find("#approve_reject_reasons").native.attribute("validationMessage")

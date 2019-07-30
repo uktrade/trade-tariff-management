@@ -8,6 +8,8 @@ module CrossCheckHelper
       'Cross-check and create geographical area'
     elsif workbasket.type == 'create_additional_code'
       "Cross-check and create additional codes"
+    elsif workbasket.type == 'edit_nomenclature'
+      "Cross-check and edit goods classification"
     end
   end
 
