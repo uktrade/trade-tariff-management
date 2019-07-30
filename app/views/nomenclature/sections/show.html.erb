@@ -33,7 +33,7 @@
             <% @section.chapters.each do |chapter| %>
             <tr>
               <th scope="row"><%= chapter.goods_nomenclature_item_id[0..1] %></th>
-              <td><%= link_to chapter.description.capitalize, chapter_path(chapter.goods_nomenclature_item_id) %></a></td>
+              <td><%= link_to chapter.current_description.capitalize, chapter_path(chapter.goods_nomenclature_item_id) %></a></td>
               <td>Manage</td>
             </tr>
             <%end %>
