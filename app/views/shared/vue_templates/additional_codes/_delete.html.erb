@@ -10,10 +10,10 @@
 
     <info-message>
       <span v-if="recordsNotSentToCDSCount == 0">
-        All additional codes in the selection have been sent to CDS or previously submitted into workflow. Therefore they will be immediately end-dated (stopped) but will not be deleted from the system.
+        No additional codes in the selection have yet been sent through to CDS or submitted into workflow. Therefore they will be deleted from the system. This cannot be undone.
       </span>
       <span v-if="recordsSentToCDSCount == 0">
-        No additional codes in the selection have yet been sent through to CDS or submitted into workflow. Therefore they will be deleted from the system. This cannot be undone.
+        All the codes in the section have been send to CDS or previously submitted in to the workflow. Therefore they will be immediately end dated (stopped) but will not be deleted from the system
       </span>
       <span v-if="recordsSentToCDSCount > 0 && recordsNotSentToCDSCount > 0">
         The selection contains some additional codes that are draft (not yet submitted into workflow or sent through to CDS) and some that have been sent to CDS or previously submitted into workflow. Draft additional codes will be permanently deleted from the system; other additional codes will be immediately end-dated (stopped) but will not be deleted from the system.
