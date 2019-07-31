@@ -37,6 +37,8 @@ module WorkbasketWorkflowHelper
       link_to "Additional Codes", additional_codes_url
     elsif workbasket.type.include?("quot")
       link_to "Quotas", quotas_url
+    elsif workbasket.type.include?("nomenclature")
+      link_to "Goods classification", sections_url
     else
       link_to "Measures", measures_url
     end
