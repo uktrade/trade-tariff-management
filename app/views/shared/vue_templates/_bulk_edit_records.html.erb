@@ -3,6 +3,15 @@
   <div class="bulk-edit-records">
     <%= render "shared/bulks/table_top" %>
 
+    <div class="notice m-t-30  m-b-30" v-if="!noSelectedRecords">
+      <i class="icon icon-important">
+        <span class="visually-hidden">Warning</span>
+      </i>
+      <strong class="bold-small">
+        Changes will only apply to selected rows.
+      </strong>
+    </div>
+
     <div v-if="pagination.total_count > 0">
       <records-grid :table-class="tableClass" :primary-key="primaryKey" :on-item-selected="onItemSelected" :on-item-deselected="onItemDeselected" :data="visibleRecordsPage" :columns="columns" :selected-rows="selectedRecords" v-if="!isLoading" selection-type="none" :client-selection="true" :on-select-all-changed="selectAllHasChanged" :disable-scroller="true" :sort-by-changed="onSortByChange" :sort-dir-changed="onSortDirChanged"></records-grid>
 
