@@ -31,7 +31,7 @@ RSpec.describe "adding measures", :js do
 
     workbasket_name = "create-measure-wb"
     fill_in("What is the name of this workbasket?", with: workbasket_name)
-    fill_in("Goods commodity codes", with: "Bananas, #{commodity.goods_nomenclature_item_id}, Widgets")
+    fill_in("Goods commodity code(s)", with: "Bananas, #{commodity.goods_nomenclature_item_id}, Widgets")
     fill_in("Exceptions", with: "Sticks, Stones")
     fill_in("Additional codes", with: "Ninja, Samurai")
 
