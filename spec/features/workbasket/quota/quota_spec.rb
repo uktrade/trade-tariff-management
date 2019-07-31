@@ -96,7 +96,7 @@ RSpec.describe "quotas", :js do
 
     fill_in :quota_description, with: workbasket_description
 
-    fill_in("Goods commodity codes", with: commodity.goods_nomenclature_item_id)
+    fill_in("Goods commodity code(s)", with: commodity.goods_nomenclature_item_id)
     select_radio("Erga Omnes")
     click_button('Continue')
   end

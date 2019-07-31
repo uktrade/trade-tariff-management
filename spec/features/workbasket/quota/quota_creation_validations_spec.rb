@@ -60,7 +60,7 @@ RSpec.describe "adding quotas", :js do
 
     fill_in :quota_description, with: workbasket_description
 
-    fill_in("Goods commodity codes", with: "Bananas, #{commodity.goods_nomenclature_item_id}, Widgets")
+    fill_in("Goods commodity code(s)", with: "Bananas, #{commodity.goods_nomenclature_item_id}, Widgets")
 
     fill_in("Additional codes", with: "Ninja, Samurai")
 
