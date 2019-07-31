@@ -1,7 +1,7 @@
 <div class="table-top" v-if="!isLoading">
   <% if workbasket_is_editable? %>
     <button-dropdown :disabled="noSelectedRecords" id='bulk-action-dropdown'>
-      <template slot="text">&ndash; select bulk action &ndash;</template>
+      <template slot="text">&ndash; select action &ndash;</template>
 
       <ul>
         <li v-for="action in actions">
