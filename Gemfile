@@ -26,7 +26,7 @@ gem "uglifier", "~> 2.7"
 gem 'govuk_template', '>= 0.23.0'
 gem 'govuk_elements_rails', '>= 3.1.3'
 gem 'govuk_frontend_toolkit', :git => "https://github.com/alphagov/govuk_frontend_toolkit_gem.git", :submodules => true
-gem 'bootstrap-sass', '~> 3.4.1'
+gem 'bootstrap-sass', '>= 3.4.1'
 gem "bootstrap-datepicker-rails", "~> 1.7.1.1"
 gem 'momentjs-rails'
 gem "pikaday-gem"
