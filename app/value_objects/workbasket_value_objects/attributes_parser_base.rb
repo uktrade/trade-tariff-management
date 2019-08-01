@@ -120,6 +120,16 @@ module WorkbasketValueObjects
             regulation.formatted_id
           end
 
+          def regulation_description
+            regulation_id = ops[:regulation_id]
+
+            regulation = BaseRegulation.not_replaced_and_partially_replaced
+                                       .actual_or_starts_in_future
+                                       .where(base_regulation_id: regulation_id).first
+
+            regulation.information_text
+          end
+
           def operation_date_formatted
             date_to_format(ops[:operation_date])
           end
