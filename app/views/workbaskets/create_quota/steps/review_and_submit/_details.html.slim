@@ -39,7 +39,8 @@ table.create-measures-details-table
         | Regulation
       td
         = attributes_parser.regulation
-
+        p
+          = attributes_parser.regulation_description
     tr
       td.heading_column
         | Goods commodity code(s)
@@ -93,5 +94,3 @@ table.create-measures-details-table
                 = "#{footnote.footnote_type_id} - #{footnote.footnote_id}"
                 br
                 = footnote.description
-    tr
-      td.heading_column
