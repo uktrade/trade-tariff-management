@@ -34,30 +34,32 @@
     docker-compose up
 ```
 
-4. <a name="4"></a> Run the below command to copy your database dump file inside the db container:
-```
-     docker cp /Absolute_Path_To_File/tariff_management_development.dump tariff_management_db_1:/
-```
-5. <a name="5"></a> Import database
-    1. Enter the database container
+4. <a name="4"></a> Import database
+
+    1. Run the below command to copy your database dump file inside the db container:
+    ```
+        docker cp /Absolute_Path_To_File/tariff_management_development.dump tariff_management_db_1:/
+    ```
+
+    2. Enter the database container
     ```
         docker exec -it tariff_management_db_1  /bin/bash
     ```
 
-    2. Import the database that we have copied before
+    3. Import the database that we have copied before
     ```
         psql -U postgres -d tariff_management_development < tariff_management_development.dump
     ```
 
-    3. Exit container
+    4. Exit container
     ```
         exit
     ```
-6. <a name="6"></a> Run the below command to drop an event trigger that is not needed in development and prevents app from running. This step can be remove in the future.
+5. <a name="5"></a> Run the below command to drop an event trigger that is not needed in development and prevents app from running. This step can be remove in the future.
 ```
     docker exec tariff_management_db_1 psql -U postgres -d tariff_management_development -c "drop event trigger reassign_owned;"
 ```
-7. Run database  [migrate script](#migrate) to be up to date
+6. Run database  [migrate script](#migrate) to be up to date
 
 More details can be found at [https://docs.docker.com/compose/rails/](https://docs.docker.com/compose/rails/)
 
