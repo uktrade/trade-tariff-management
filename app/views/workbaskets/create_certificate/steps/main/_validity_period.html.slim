@@ -1,6 +1,6 @@
 fieldset
   h3.heading-medium
-    | When is the certiticate valid from?
+    | When is the certiticate's start date?
 
   form-group :errors="errors" error-key="validity_start_date"
     template slot-scope="slotProps"
@@ -15,7 +15,7 @@ fieldset
 
 fieldset
   h3.heading-medium
-    | When is the certiticate valid until?
+    | When is the certiticate's end date?
 
   form-group :errors="errors" error-key="validity_end_date"
     template slot-scope="slotProps"

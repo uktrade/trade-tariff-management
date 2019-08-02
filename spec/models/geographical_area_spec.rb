@@ -326,7 +326,7 @@ describe GeographicalArea do
       end
 
       context "valid" do
-        context "with end date" do
+        context "with end date to" do
           let(:parent) {
             create(:geographical_area,
                    validity_end_date: Date.current,

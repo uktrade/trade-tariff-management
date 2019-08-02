@@ -26,7 +26,7 @@
         form-group :errors="errors" error-key="start_date"
           template slot-scope="slotProps"
             h3.heading-medium
-              | Optionally search for geographical areas that are valid from
+              | Optionally search for geographical areas with start date from
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -41,7 +41,7 @@
         form-group :errors="errors" error-key="end_date"
           template slot-scope="slotProps"
             h3.heading-medium.with_smaller_top_border
-              | Optionally search for geographical areas that are valid until
+              | Optionally search for geographical areas with end date to
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""

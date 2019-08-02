@@ -1,7 +1,7 @@
 fieldset
   h3.heading-medium
     label for="additional_code_valid_from" id="validity_start_date"
-      | When are these new codes valid from?
+      | When are these new codes' start date?
 
   form-group :errors="errors" error-key="validity_start_date"
     template slot-scope="slotProps"
@@ -14,7 +14,7 @@ fieldset
 fieldset
   h3.heading-medium
     label for="additional_code_valid_until" id="validity_end_date"
-      | When are these new codes valid until?
+      | When are these new codes' end date?
 
   form-group :errors="errors" error-key="validity_end_date"
     template slot-scope="slotProps"

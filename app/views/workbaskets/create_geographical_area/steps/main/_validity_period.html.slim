@@ -3,7 +3,7 @@ fieldset
     template slot-scope="slotProps"
       h3.heading-medium
         label for="geographical_area_validity_start_date"
-          | When is the area valid from?
+          | When is the area's start date?
 
       label.form-label id="validity_start_date"
         span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -21,7 +21,7 @@ fieldset
     template slot-scope="slotProps"
       h3.heading-medium
         label for="geographical_area_validity_end_date"
-          | When is the area valid until?
+          | When is the area's end date?
 
       label.form-label id="validity_end_date"
         span.error-message v-if="slotProps.hasError" v-cloak=""

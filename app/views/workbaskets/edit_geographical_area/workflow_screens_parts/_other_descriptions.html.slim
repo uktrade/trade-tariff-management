@@ -15,12 +15,12 @@
 
       .bootstrap-row
         .col-md-6.heading_column.pull-left
-          | Description valid from
+          | Description start date
         .col-md-6
           = item.start_date
 
       .bootstrap-row class="#{'final_row' if total_number == index + 1}"
         .col-md-6.heading_column.pull-left
-          | Description valid to
+          | Description end date
         .col-md-6
           = item.end_date
