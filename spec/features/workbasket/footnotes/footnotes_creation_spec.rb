@@ -20,7 +20,7 @@ RSpec.describe "adding footnotes", :js do
     end
 
     fill_in("What is the footnote description?", with: footnote_description)
-    input_date("When is the footnote valid from?", footnote_valid_from)
+    input_date("When is the footnote's start date?", footnote_valid_from)
     input_date("Specify the operation date", footnote_operational_from)
 
     click_on "Submit for cross-check"

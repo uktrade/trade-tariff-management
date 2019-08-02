@@ -11,7 +11,7 @@ RSpec.describe "adding additional codes", :js do
     click_on("Create new additional codes")
 
     fill_in("What is the name of this workbasket?", with: "workbasket description")
-    input_date("When are these new codes valid from?", Date.today)
+    input_date("When are these new codes' start date?", Date.today)
     within(first("div.additional-code-row")) do
       select_dropdown_value(code_type.additional_code_type_id)
     end

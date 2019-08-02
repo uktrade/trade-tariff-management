@@ -3,7 +3,7 @@ fieldset
     template slot-scope="slotProps"
       h3.heading-medium
         label for="footnote_validity_date"
-          | When is the footnote valid from?
+          | When is the footnote's start date?
 
       label.form-label id="validity_start_date"
         span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -18,7 +18,7 @@ fieldset
   form-group :errors="errors" error-key="validity_end_date"
     template slot-scope="slotProps"
       h3.heading-medium
-        | When is the footnote valid until?
+        | When is the footnote's end date?
 
       label.form-label id="validity_end_date"
         span.error-message v-if="slotProps.hasError" v-cloak=""
