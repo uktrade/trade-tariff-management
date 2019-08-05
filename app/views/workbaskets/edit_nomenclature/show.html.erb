@@ -84,6 +84,7 @@
         <tr>
           <td class="heading_column">Footnotes</td>
           <td>
+            <%= original_nomenclature.footnotes.map(&:code).join(", ") %>
           </td>
         </tr>
         <tr>
