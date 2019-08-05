@@ -105,19 +105,7 @@ module WorkbasketValueObjects
 
     begin :decoration_methods
           def regulation
-            regulation_id = ops[:regulation_id]
-
-            regulation = BaseRegulation.not_replaced_and_partially_replaced
-                                       .actual_or_starts_in_future
-                                       .where(base_regulation_id: regulation_id).first
-
-            if regulation.blank?
-              regulation = ModificationRegulation.not_replaced_and_partially_replaced
-                                                 .actual_or_starts_in_future
-                                                 .where(modification_regulation_id: regulation_id).first
-            end
-
-            regulation.formatted_id
+            ops[:regulation_id]
           end
 
           def regulation_description
@@ -126,6 +114,12 @@ module WorkbasketValueObjects
             regulation = BaseRegulation.not_replaced_and_partially_replaced
                                        .actual_or_starts_in_future
                                        .where(base_regulation_id: regulation_id).first
+
+            if regulation.blank?
+              regulation = ModificationRegulation.not_replaced_and_partially_replaced
+                                                .actual_or_starts_in_future
+                                                .where(modification_regulation_id: regulation_id).first
+            end
 
             regulation.information_text
           end
