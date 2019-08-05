@@ -90,8 +90,6 @@
     <footer class="group js-footer" id="footer" role="contentinfo">
 
       <div class="footer-wrapper">
-        <%= yield :footer_top %>
-
         <div class="footer-meta">
           <div class="footer-meta-inner">
             <%= yield :footer_support_links %>
@@ -117,10 +115,8 @@
 
     <div id="global-app-error" class="app-error hidden"></div>
 
-    <%= javascript_include_tag "govuk-template.js", integrity: true, crossorigin: "anonymous" %>
-
     <%= yield :body_end %>
-
+    <%= javascript_include_tag "govuk-template.js", integrity: true, crossorigin: "anonymous" %>
     <%# if no GOVUK-namespaced module has loaded we can assume JS has failed and remove the class %>
     <script>if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
   </body>

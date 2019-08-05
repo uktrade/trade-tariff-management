@@ -21,7 +21,9 @@
 <%= content_for :proposition_header do %>
   <div class="tma_header">
     <ul>
+      <% if current_user %>
       <li><%= link_to 'Sign out', gds_sign_out_path, id: 'sign-out' %></li>
+      <% end %>
     </ul>
   </div>
 <% end %>
@@ -35,7 +37,7 @@
   </div>
 <% end %>
 
-<% content_for :footer_top do %>
+<% content_for :body_end do %>
   <%= render "shared/vue_templates/condition" %>
   <%= render "shared/vue_templates/selectize" %>
   <%= render "shared/vue_templates/quota_period" %>
