@@ -44,11 +44,11 @@ module Workbaskets
       when :awaiting_cross_check
         "Awaiting cross-check"
       when :cross_check_rejected
-        "Cross-check rejected"
+        "Failed cross-check"
       when :awaiting_approval
         "Awaiting approval"
       when :approval_rejected
-        "Approval rejected"
+        "Failed approval"
       when :ready_for_export
         "Ready for export"
       when :awaiting_cds_upload_create_new

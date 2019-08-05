@@ -28,13 +28,13 @@ module Workbaskets
       :awaiting_cross_check,           # Awaiting cross-check
                                        # Check Submitted into workflow, not yet cross-checked
                                        #
-      :cross_check_rejected,           # Cross-check rejected
+      :cross_check_rejected,           # Failed cross-check
                                        # Did not pass cross-check, returned to submitter
                                        #
       :awaiting_approval,              # Awaiting approval
                                        # Submitted for approval, pending response from Approver
                                        #
-      :approval_rejected,              # Approval rejected
+      :approval_rejected,              # Failed approval
                                        # Was not approved, returned to submitter
                                        #
       :ready_for_export,               # Ready for export
