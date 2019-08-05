@@ -26,8 +26,7 @@ header
               data: {target_url: move_to_editing_mode_create_quotum_url(workbasket.id)},
               class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
-    - if workbasket_awaiting_cross_check_or_rejected?
-      = render "workbaskets/create_quota/workflow_screens_parts/summary_of_configuration"
+    = render "workbaskets/create_quota/workflow_screens_parts/summary_of_configuration"
 
     = render "workbaskets/shared/steps/review_and_submit/quotas", read_only: true, record_type: 'create_quota'
 
