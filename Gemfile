@@ -37,6 +37,9 @@ gem "font-awesome-rails"
 # Single sign on
 gem 'omniauth-oauth2'
 
+# needed to mitigate against CVE-2015-9284
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
+
 # File uploads and AWS
 gem "shrine"
 gem "aws-sdk-rails"
