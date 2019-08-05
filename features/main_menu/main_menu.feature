@@ -101,7 +101,7 @@ Feature: As a Tariff Manager
     When I return to the tariff main menu
     Then the workbasket is no longer displayed
     When I login as a "tariff_manager"
-    Then the workbasket status is "Cross-check rejected"
+    Then the workbasket status is "Failed cross-check"
     And the workbasket has next step "View"
     And the workbasket has next step "Withdraw/edit"
 
@@ -125,11 +125,11 @@ Feature: As a Tariff Manager
     When I return to the tariff main menu
     Then the workbasket is no longer displayed
     When I login as a "tariff_manager"
-    Then the workbasket status is "Approval rejected"
+    Then the workbasket status is "Failed approval"
     And the workbasket has next step "View"
     And the workbasket has next step "Withdraw/edit"
 
-  Scenario: Bulk edit measures - Cross-check rejected workbasket should have the View and Withdraw/edit links
+  Scenario: Bulk edit measures - Failed cross-check workbasket should have the View and Withdraw/edit links
     Given I am on the tariff main menu
     When I click the find and edit measure link
     And I search for multiple measures by measure sid "3647"
@@ -142,6 +142,6 @@ Feature: As a Tariff Manager
     When I click "Review for cross-check"
     And I can crosscheck and reject the workbasket
     And I login as a "tariff_manager"
-    Then the workbasket status is "Cross-check rejected"
+    Then the workbasket status is "Failed cross-check"
     And the workbasket has next step "View"
     And the workbasket has next step "Withdraw/edit"

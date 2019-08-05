@@ -54,7 +54,7 @@ class CrossCheckPage < SitePrism::Page
 
   def reject_approval
     reject_approval_option.click
-    reject_approval_reason.set "Automated test. Approval rejected."
+    reject_approval_reason.set "Automated test. Failed approval."
     finish_cross_check_button.click
   end
 end
