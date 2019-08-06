@@ -39,6 +39,7 @@ class User < Sequel::Model
     else
       Rails.logger.debug "user does not exist in system"
       Rails.logger.debug user_params_from_auth(auth)
+      User.unrestrict_primary_key
       user = create(user_params_from_auth(auth))
     end
 
@@ -53,6 +54,7 @@ class User < Sequel::Model
 
     # return a set of parameters to create the user record
     {
+        'id' => User.count + 1,
         'uid' => auth.uid,
         'email' => auth.info.email,
         # perhaps add these separate fields in the future?
