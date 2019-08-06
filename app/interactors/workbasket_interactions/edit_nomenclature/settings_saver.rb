@@ -80,7 +80,7 @@ module WorkbasketInteractions
 
       def create_nomenclature_description!
         @records = []
-        original_nomenclature = Commodity.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature)
+        original_nomenclature = GoodsNomenclature.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature)
 
 
         @goods_nomenclature_description_period = find_existing_description_period(original_nomenclature, workbasket.settings.validity_start_date)

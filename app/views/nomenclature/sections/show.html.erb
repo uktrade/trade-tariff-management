@@ -34,7 +34,9 @@
             <tr>
               <th scope="row"><%= chapter.goods_nomenclature_item_id[0..1] %></th>
               <td><%= link_to chapter.current_description.capitalize, chapter_path(chapter.goods_nomenclature_item_id) %></a></td>
-              <td>Manage</td>
+              <td>
+                <div class="col-md-1"><%= link_to "Manage", new_manage_nomenclature_path(item_id: chapter.goods_nomenclature_item_id, suffix: chapter.producline_suffix) %></div>
+              </td>
             </tr>
             <%end %>
           </tbody>
