@@ -51,7 +51,9 @@
                   <%= heading.current_description %></a>
                 <% end %>
               </td>
-              <td>Manage</td>
+              <td>
+                <div class="col-md-1"><%= link_to "Manage", new_manage_nomenclature_path(item_id: heading.goods_nomenclature_item_id, suffix: heading.producline_suffix) %></div>
+              </td>
             </tr>
             <%end %>
           </tbody>
