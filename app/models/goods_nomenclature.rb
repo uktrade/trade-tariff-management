@@ -66,6 +66,7 @@ class GoodsNomenclature < Sequel::Model
                                                  right_key: %i[goods_nomenclature_description_period_sid goods_nomenclature_sid],
                                                  right_primary_key: %i[goods_nomenclature_description_period_sid goods_nomenclature_sid] do |ds|
     ds.with_actual(GoodsNomenclatureDescriptionPeriod, self)
+      .where(goods_nomenclature_descriptions__status: 'published')
       .order(Sequel.desc(:goods_nomenclature_description_periods__validity_start_date))
   end
 
