@@ -59,7 +59,20 @@ module CommoditiesHelper
     end
   end
 
-private
+  def search_in_measures_by_commodity_rule(item)
+    {
+      search: {
+        commodity_code: {
+          enabled: "1",
+          operator: "is",
+          value: item[:goods_nomenclature_item_id]
+        }
+      }
+    }
+  end
+
+
+  private
 
   def chapter_and_heading_codes(code)
     "<div class='chapter-code'>
