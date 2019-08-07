@@ -31,7 +31,7 @@ module AuthHelper
       if current_user.disabled?
         redirect_to disabled_user_path
       end
-      audit_session(current_user, request.original_url)
+      # audit_session(current_user, request.original_url)
     else
       redirect_to log_in_path
     end
