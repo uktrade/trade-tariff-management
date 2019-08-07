@@ -64,11 +64,13 @@ RSpec.configure do |config|
   config.before(:example, :type => :request) do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(create(:user))
     allow_any_instance_of(ApplicationController).to receive(:token_expired?).and_return(false)
+    allow_any_instance_of(ApplicationController).to receive(:audit_session).and_return(nil)
   end
 
   config.before(:example, :type => :feature) do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(create(:user))
     allow_any_instance_of(ApplicationController).to receive(:token_expired?).and_return(false)
+    allow_any_instance_of(ApplicationController).to receive(:audit_session).and_return(nil)
   end
 
   config.before(:suite) do
