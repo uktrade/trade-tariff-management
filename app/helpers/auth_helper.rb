@@ -31,7 +31,7 @@ module AuthHelper
       if current_user.disabled?
         redirect_to disabled_user_path
       end
-      # audit_session(current_user, request.original_url)
+      audit_session(current_user, request.original_url)
     else
       redirect_to log_in_path
     end
@@ -68,6 +68,8 @@ module AuthHelper
   end
 
   def audit_session(user_info, action)
-    SessionAudit.create(user_id: user_info.id, uid: user_info.uid, name: user_info.name, email: user_info.email, action: action)
+    if user_info
+      SessionAudit.create(user_id: user_info.id, uid: user_info.uid, name: user_info.name, email: user_info.email, action: action)
+    end
   end
 end
