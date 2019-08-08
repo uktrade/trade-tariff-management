@@ -125,7 +125,8 @@ Vue.component("records-grid", {
   },
   computed: {
     classes: function() {
-      var classes = ['records-table'];
+      // var classes = ['records-table'];
+      var classes = [];
 
       if (this.tableClass) {
         classes.push(this.tableClass);

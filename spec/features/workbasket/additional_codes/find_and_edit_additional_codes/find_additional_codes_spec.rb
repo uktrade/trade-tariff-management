@@ -53,13 +53,13 @@ RSpec.describe "find additional codes", :js do
 
     expect(page).to have_content "2 additional codes found"
     descriptions = page.all('.description-column')
-    expect(descriptions[1].text).to eq(description_1)
-    expect(descriptions[2].text).to eq(description_3)
+    expect(descriptions[0].text).to eq(description_1)
+    expect(descriptions[1].text).to eq(description_3)
 
     # Check sorting
     find("a", :text => "Description").click
     descriptions = page.all('.description-column')
-    expect(descriptions[1].text).to eq(description_3)
-    expect(descriptions[2].text).to eq(description_1)
+    expect(descriptions[0].text).to eq(description_3)
+    expect(descriptions[1].text).to eq(description_1)
   end
 end

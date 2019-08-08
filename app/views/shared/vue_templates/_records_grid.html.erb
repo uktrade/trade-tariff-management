@@ -1,44 +1,48 @@
 <script type="text/x-template" id="records-grid-template">
   <div class="records-table-wrapper">
     <div :class="classes">
-      <div class="table__header">
-        <div class="table__column locked-column">
-          <span>Locked</span>
-        </div>
-        <div class="table__column select-all-column"  v-if="disableSelection !== true">
-          <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" v-if="disableSelectAll !== true" />
-          <span v-else>
-            Select
-          </span>
-          </div>
-        <div v-for="column in enabledColumns" v-bind:class="'table__column ' + column.field + '-column'">
-          <a v-on:click.prevent="selectSorting(column)" v-if="column.sortable">
-            {{column.title}}
+      <table class="table" id="records-table">
+          <thead class="actions">
+            <tr>
+              <th class="locked-column">
+                  <span>Locked</span>
+              </th>
+              <th class="select-all-column" v-if="disableSelection !== true">
+                  <input type="checkbox" class="select-all" value='1' v-model="selectAll" :checked="selectionType == 'all'" v-if="disableSelectAll !== true" />
+                  <span v-else>
+                    Select
+                  </span>
+              </th>
+              <th v-for="column in enabledColumns" v-bind:class="''">
+                  <a v-on:click.prevent="selectSorting(column)" v-if="column.sortable">
+                      {{column.title}}
 
-            <div class="sort-arrow" v-if="column.field == sortBy">
-              <arrow-down v-if="sortDir === 'desc'"></arrow-down>
-              <arrow-up v-if="sortDir === 'asc'"></arrow-up>
-            </div>
-          </a>
-
-          <span v-if="!column.sortable">{{column.title}}</span>
-        </div>
-      </div>
-
-      <div class='table__row' :class="{ deleted: item.deleted }" :data-measure-sid="item.row_id" :data-record-sid="item.row_id" v-for="(item, index) in sorted">
-        <div class="table__column locked-column">
-          <span>
-            <i v-if="locked(item)">&#x1F510;</i>
-          </span>
-        </div>
-        <div class="table__column select-all-column" v-if="disableSelection !== true && singleSelection !== true">
-          <input type="checkbox" name="records[]" :disabled="locked(item)" :value="item[primaryKey]" :checked="checked[item[primaryKey]] && !locked(item)" @change="sendCheckedTrigger" />
-        </div>
-        <div class="table__column select-all-column" v-if="singleSelection === true">
-          <input type="radio" name="selected_record" :disabled="locked(item)" :value="item[primaryKey]" :checked="selectedItem === item[primaryKey] && !locked(item)" @change="sendCheckedTrigger" />
-        </div>
-        <grid-column v-for="(column, index) in enabledColumns" :key="index" :item="item" :column="column.field" :changeProp="column.changeProp" :primary-key="primaryKey" :has-error="item.errors && item.errors.indexOf(column.field) > -1"></grid-column>
-      </div>
+                      <div class="sort-arrow" v-if="column.field == sortBy">
+                        <arrow-down v-if="sortDir === 'desc'"></arrow-down>
+                        <arrow-up v-if="sortDir === 'asc'"></arrow-up>
+                      </div>
+                    </a>
+                    <span v-if="!column.sortable">{{column.title}}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr :class="{ deleted: item.deleted }" :data-measure-sid="item.row_id" :data-record-sid="item.row_id" v-for="(item, index) in sorted">
+                <td class="locked-column">
+                  <span>
+                    <i v-if="locked(item)">&#x1F510;</i>
+                  </span>
+                </td>
+                <td class="select-all-column" v-if="disableSelection !== true && singleSelection !== true">
+                  <input type="checkbox" name="records[]" :disabled="locked(item)" :value="item[primaryKey]" :checked="checked[item[primaryKey]] && !locked(item)" @change="sendCheckedTrigger" />
+                </td>
+                <td class="select-all-column" v-if="singleSelection === true">
+                  <input type="radio" name="selected_record" :disabled="locked(item)" :value="item[primaryKey]" :checked="selectedItem === item[primaryKey] && !locked(item)" @change="sendCheckedTrigger" />
+                </td>
+                <table-column v-for="(column, index) in enabledColumns" :key="index" :item="item" :column="column.field" :changeProp="column.changeProp" :primary-key="primaryKey" :has-error="item.errors && item.errors.indexOf(column.field) > -1"></table-column>
+              </tr>
+          </tbody>
+      </table>
     </div>
   </div>
 </script>

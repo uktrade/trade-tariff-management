@@ -31,7 +31,7 @@ end
 
 And(/^I can logout of the application$/) do
   @tarriff_main_menu.logout
-  expect(page.current_url).to have_content('auth/developer')
+  expect(page.current_url).to have_content('log_in')
 end
 
 Then(/^the workbasket status is "([^"]*)"$/) do |status|

@@ -56,7 +56,7 @@ window.BulkEditAdditionalCodesSaveActions =
   cleanUpErrorBlocks: (response) ->
     $.each response.collection_row_ids, (index, row_id) ->
       measure_parent_div = $("[data-record-sid='" + row_id + "']")
-      measure_parent_div.find(".table__column")
+      measure_parent_div.find(".has-validation-errors")
                         .removeClass('has-validation-errors')
 
   handleErrors: (response) ->
@@ -73,8 +73,8 @@ window.BulkEditAdditionalCodesSaveActions =
                           .addClass('has-validation-errors')
 
   getValidationErrors: ->
-    $(document).on 'click', '.records-table.additional_codes .has-validation-errors', ->
-      row_id = $(this).closest(".table__row")
+    $(document).on 'click', '.additional_codes .has-validation-errors', ->
+      row_id = $(this).closest("tr")
                            .attr("data-record-sid")
 
       type = $(this).attr("class")
