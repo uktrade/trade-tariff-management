@@ -60,7 +60,7 @@ window.BulkEditOfMeasuresSaveActions =
 
     $.each response.collection_row_ids, (index, row_id) ->
       measure_parent_div = $("[data-record-sid='" + row_id + "']")
-      measure_parent_div.find(".table__column")
+      measure_parent_div.find(".has-validation-errors")
                         .removeClass('has-validation-errors')
 
   handleErrors: (response) ->
@@ -74,7 +74,7 @@ window.BulkEditOfMeasuresSaveActions =
 
   getValidationErrors: ->
     $(document).on 'click', '.bulk-edit-measures .has-validation-errors', ->
-      row_id = $(this).closest(".table__row")
+      row_id = $(this).closest("tr")
                            .attr("data-record-sid")
 
       type = $(this).attr("class")

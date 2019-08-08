@@ -2,6 +2,25 @@ table {
   td {
     max-width: 400px;
   }
+  td.has-validation-errors {
+    background-color: #f2dede;
+    cursor: pointer;
+  }
+
+  colgroup {
+    @for $i from 1 through 12 {
+      .w-#{$i} {
+        width: percentage(1 / $i);
+      }
+    }
+  }
+
+  thead.actions {
+    a {
+      color: $light-blue;
+      cursor: pointer;
+    }
+  }
 }
 
 .records-table.measures,

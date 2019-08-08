@@ -1,5 +1,5 @@
-Vue.component("grid-column", {
-  template: '<div v-html="content" :class="classObj"></div>',
+Vue.component("table-column", {
+  template: '<td v-html="content" :class="classObj"></td>',
   props: ["column", "item", "changeProp", "primaryKey", "hasError"],
   computed: {
     changed: function() {
@@ -14,7 +14,6 @@ Vue.component("grid-column", {
     },
     classObj: function() {
       var classes = {
-        'table__column': true,
         'table__column--highlight': this.changed,
         "has-validation-errors": this.hasError
       };

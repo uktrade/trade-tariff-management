@@ -1,50 +1,27 @@
 .records-table-wrapper
-  .records-table
-    .table__header
-      .row
-        .col-2
-          .table__column.additional_code_type-column
-            a Commodity code
-        .col-1
-          .table__column.additional_code-column
-            a Additional code
-
-        .col-3
-          .table__column.description-column
-            a Description
-
-        .col-1
-          .table__column.validity_start_date-column
-            a Start date
-
-        .col-1
-          .table__column.validity_end_date-column
-            a End date
-
-
-    .virtual-scroller
-      .item-container
-        .items style=("margin-top: 0px;")
-
-          - workbasket_settings.additional_codes.map do |item|
-            .table__row data-measure-sid="-485562" height="45"
-              .row
-                .col-2
-                  .table__column.additional_code_type-column
-                    = item.additional_code_type_id
-
-                .col-1
-                  .table__column.additional_code-column
-                    = item.additional_code
-
-                .col-3
-                  .table__column.description-column
-                    = item.description
-
-                .col-1
-                  .table__column.validity_start_date-column
-                    = item.validity_start_date.strftime("%Y-%m-%d")
-
-                .col-1
-                  .table__column.validity_end_date-column
-                    = item.validity_end_date.try(:strftime, "%Y-%m-%d")
+  table class="table"  id="records-table"
+    thead
+      tr
+        th.additional_code_type-column
+          | Commodity code
+        th.additional_code-column
+          | Additional code
+        th.description-column
+          | Description
+        th.validity_start_date-column
+          | Start date
+        th.validity_end_date-column
+          | End date
+    tbody
+      - workbasket_settings.additional_codes.map do |item|
+        tr
+          td.additional_code_type-column
+            = item.additional_code_type_id
+          td.additional_code-column
+            = item.additional_code
+          td.description-column
+            = item.description
+          td.validity_start_date-column
+            = item.validity_start_date.strftime("%Y-%m-%d")
+          td.validity_end_date-column
+            = item.validity_end_date.try(:strftime, "%Y-%m-%d")

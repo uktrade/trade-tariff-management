@@ -517,7 +517,7 @@ $(document).ready(function() {
 
         setTimeout(function() {
           $("html,body").animate({
-            scrollTop: $(".records-table").offset().top - 200
+            scrollTop: $("#records-table").offset().top - 200
           });
         }, 200);
       },

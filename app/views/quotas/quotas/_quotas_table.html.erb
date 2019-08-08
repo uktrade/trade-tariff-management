@@ -1,3 +1,3 @@
-<records-grid table-class="quotas-table" primary-key="quota_definition_sid" :on-item-selected="onQuotasSelected" :on-item-deselected="onQuotasDeselected" :data="quotas" :columns="columns" :client-sorting="false" :disable-select-all="true" :single-selection="true"></records-grid>
+<records-grid id="quotas-table" table-class="quotas-table" primary-key="quota_definition_sid" :on-item-selected="onQuotasSelected" :on-item-deselected="onQuotasDeselected" :data="quotas" :columns="columns" :client-sorting="false" :disable-select-all="true" :single-selection="true"></records-grid>
 
 <table-pagination :page="pagination.page" :total="pagination.total_count" :per-page="pagination.per_page" :on-click="onPageChange"></table-pagination>

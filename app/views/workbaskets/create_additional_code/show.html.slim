@@ -16,6 +16,6 @@
     = render "workbaskets/create_additional_code/workflow_screens_parts/actions_allowed"
     = render "workbaskets/create_additional_code/workflow_screens_parts/workbasket_details", screen_type: :view
 
-    records-grid table-class="additional-codes-table" primary-key="additional_code_sid" :data="additional_codes" :columns="columns" :client-sorting="true" :disable-selection="true"
+    records-grid primary-key="additional_code_sid" :data="additional_codes" :columns="columns" :client-sorting="true" :disable-selection="true"
 
 = render "shared/vue_templates/records_grid"
