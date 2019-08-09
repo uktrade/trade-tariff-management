@@ -1,5 +1,5 @@
 <% content_for :content do %>
-  <%= render partial: "nomenclature/sections_header" %>
+  <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: chapter_path(@chapter) } %>
 
 <div class="grid-row">
   <div class="column-three-quarters">

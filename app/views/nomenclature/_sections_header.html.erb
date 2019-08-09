@@ -4,8 +4,18 @@
 
 <div class="panel panel-border-wide m-b-60">
   <p>
-    You are currently viewing the goods classification for <%= Date.current.to_formatted_s(:long_ordinal) %> <a href="#" class="bold p-l-10">Change (Not implemented)</a>
+    You are currently viewing the goods classification for <%= @view_date.to_formatted_s(:long_ordinal) %>
   </p>
+  <details id="change_nomenclature_date">
+  <summary>Change Date</summary>
+
+  <%#= form_tag goods_nomenclature_path(@nomenclature.goods_nomenclature_item_id), method: :get do %>
+  <%= form_tag change_date_base_path, method: :get do %>
+    <%= select_date @view_date %>
+    <%= submit_tag("Set date") %>
+  <% end  %>
+  </details>
+
 </div>
 
 <div class="grid-row">
