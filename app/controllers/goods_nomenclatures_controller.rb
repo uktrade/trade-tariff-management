@@ -15,8 +15,9 @@ class GoodsNomenclaturesController < ApplicationController
   end
 
   def show
+    set_nomenclature_view_date
     @nomenclature = GoodsNomenclature.actual.where(goods_nomenclature_item_id: params[:id]).first.try(:sti_instance)
-    @nomenclature_tree = NomenclatureTreeService.nomenclature_tree(params[:id])
+    @nomenclature_tree = NomenclatureTreeService.nomenclature_tree(params[:id], @view_date)
   end
 
 end

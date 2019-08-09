@@ -19,7 +19,7 @@ describe NomenclatureTreeService do
       create(:goods_nomenclature, goods_nomenclature_item_id: '0805108010', producline_suffix: '80', indents: 3)
       create(:goods_nomenclature, goods_nomenclature_item_id: '0805108090', producline_suffix: '80', indents: 3)
 
-      root_node = described_class.nomenclature_tree('0805000000')
+      root_node = described_class.nomenclature_tree('0805000000', Date.today)
 
       expect(root_node.name).to eq("0805000000")
       expect(root_node.children.count).to eq(1)

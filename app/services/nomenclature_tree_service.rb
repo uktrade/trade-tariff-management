@@ -1,5 +1,5 @@
 class NomenclatureTreeService
-  def self.nomenclature_tree(nomenclature_code)
+  def self.nomenclature_tree(nomenclature_code, view_date)
 
     nomenclature_children_sql = <<-SQL
       SELECT gn.goods_nomenclature_sid,
@@ -10,22 +10,26 @@ class NomenclatureTreeService
               where goods_nomenclature_sid = gn.goods_nomenclature_sid
               order by oid desc
               limit 1),
-             (select description
-              from goods_nomenclature_descriptions
-              where goods_nomenclature_sid = gn.goods_nomenclature_sid
-              and status = 'published'
-              order by oid desc
+             (select gnd.description
+              from goods_nomenclature_descriptions gnd, 
+                   goods_nomenclature_description_periods gndp 
+              where gnd.goods_nomenclature_sid = gn.goods_nomenclature_sid
+              and gnd.goods_nomenclature_description_period_sid = gndp.goods_nomenclature_description_period_sid
+              and (gndp.validity_end_date is null or gndp.validity_end_date >= :view_date)
+              and gndp.validity_start_date <= :view_date  
+              and gnd.status = 'published'
+              order by gnd.oid desc
               limit 1)
       from goods_nomenclatures gn
-      where (gn.validity_end_date is null or gn.validity_end_date >= current_date)
-        and gn.validity_start_date <= current_date
-        and gn.goods_nomenclature_item_id like ?
+      where (gn.validity_end_date is null or gn.validity_end_date >= :view_date)
+        and gn.validity_start_date <= :view_date
+        and gn.goods_nomenclature_item_id like :nomenclature_code
       order by gn.goods_nomenclature_item_id, gn.producline_suffix;
     SQL
 
     root_node = nil
     current_path = []
-    Sequel::Model.db.fetch(nomenclature_children_sql, "#{nomenclature_code[0..3]}______").each do |nomenclature|
+    Sequel::Model.db.fetch(nomenclature_children_sql, nomenclature_code: "#{nomenclature_code[0..3]}______", view_date: view_date).each do |nomenclature|
       new_node = TreeNode.new(nomenclature[:goods_nomenclature_item_id], nomenclature)
       if root_node == nil
         if nomenclature[:producline_suffix] != "10"
