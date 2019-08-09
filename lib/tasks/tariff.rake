@@ -291,6 +291,31 @@ namespace :tariff do
       puts "compeled"
       puts not_on_eu
     end
+
+    desc "Set objects to published if missed in the upload"
+    task set_objects_to_published: %w[environment] do
+
+      opslogs_with_status_sql = <<-SQL
+        select t.table_name
+        from information_schema.tables t
+                 inner join information_schema.columns c on c.table_name = t.table_name
+            and c.table_schema = t.table_schema
+        where c.column_name = 'status'
+          and t.table_schema not in ('information_schema', 'pg_catalog')
+          and t.table_type = 'BASE TABLE'
+          and t.table_name like '%oplog'
+        order by t.table_name;
+      SQL
+
+      Sequel::Model.db.fetch(opslogs_with_status_sql).each do |table_with_status|
+        update_status_to_published_sql = <<-SQL
+          update #{table_with_status[:table_name]}
+          set status = 'published'
+          where status is null;
+        SQL
+        Sequel::Model.db.run(update_status_to_published_sql)
+      end
+    end
   end
 
   namespace :audit do
