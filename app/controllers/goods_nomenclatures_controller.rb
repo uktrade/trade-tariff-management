@@ -14,10 +14,23 @@ class GoodsNomenclaturesController < ApplicationController
     end
   end
 
+  def search
+    redirect_to goods_nomenclature_path(params[:search_commodity])
+  end
+
   def show
     set_nomenclature_view_date
-    @nomenclature = GoodsNomenclature.actual.where(goods_nomenclature_item_id: params[:id]).first.try(:sti_instance)
+    @search_value = params[:id]
+    @nomenclature = GoodsNomenclature.actual.where(goods_nomenclature_item_id: @search_value).first.try(:sti_instance)
     @nomenclature_tree = NomenclatureTreeService.nomenclature_tree(params[:id], @view_date)
+
+    if @nomenclature
+      heading_code = "#{@search_value[0..3]}000000"
+      @heading = GoodsNomenclature.actual.where(goods_nomenclature_item_id: heading_code).first.try(:sti_instance)
+      @nomenclature_tree = NomenclatureTreeService.nomenclature_tree(heading_code, @view_date)
+    else
+      @errors = "Could not find a matching commodity '#{@search_value}'."
+    end
   end
 
 end
