@@ -1,6 +1,6 @@
 <% if node.has_children? %>
   <li>
-    <details>
+    <details <%= node.is_ancestor_of?(@nomenclature) ? 'open' : '' %> >
       <summary>
         <%= render partial: 'tree_node_content', locals: {node: node} %>
       </summary>

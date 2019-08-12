@@ -38,7 +38,11 @@ Rails.application.routes.draw do
     get "/v1/taricfile/:timestamp", to: "xml_files#show"
   end
 
-  resources :goods_nomenclatures, only: [:index, :show]
+  resources :goods_nomenclatures, only: [:index, :show] do
+    collection do
+      post :search
+    end
+  end
   resources :regulations, only: [:index]
   resources :duty_expressions, only: [:index]
   resources :quota_order_numbers, only: [:index]

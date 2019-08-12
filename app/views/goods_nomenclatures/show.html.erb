@@ -1,45 +1,49 @@
 <% content_for :content do %>
   <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: goods_nomenclature_path(@nomenclature.goods_nomenclature_item_id) } %>
 
-  <div class="grid-row">
-    <div class="column-three-quarters">
-      <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
-        <nav>
-          <%= link_to "All sections", sections_path, :class => "all-sections-link" %>
-          <div class="desktop-only">
-            <ul>
-              <li>
-                <h1><%= link_to "Section #{@nomenclature.chapter.section.numeral}: #{@nomenclature.chapter.section.title}", @nomenclature.chapter.section %></h1>
-                <ul>
-                  <li class="chapter-li">
-                    <div class="chapter-code">
-                      <div class="code-text"><%= @nomenclature.chapter.short_code %></div>
-                    </div>
-                    <%= @nomenclature.chapter.current_description.capitalize %>
-                    <ul>
-                      <li class="chapter-li">
-                        <div class="chapter-code">
-                          <div class="code-text"><%= @nomenclature.short_code[2..3] %></div>
-                        </div>
-                        <%= @nomenclature.current_description.capitalize %>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </nav>
+  <% if @errors.present? %>
+    <%= @errors %>
+  <% else %>
+    <div class="grid-row">
+      <div class="column-three-quarters">
+        <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
+          <nav>
+            <%= link_to "All sections", sections_path, :class => "all-sections-link" %>
+            <div class="desktop-only">
+              <ul>
+                <li>
+                  <h1><%= link_to "Section #{@heading.chapter.section.numeral}: #{@heading.chapter.section.title}", @heading.chapter.section %></h1>
+                  <ul>
+                    <li class="chapter-li">
+                      <div class="chapter-code">
+                        <div class="code-text"><%= @heading.chapter.short_code %></div>
+                      </div>
+                      <%= @heading.chapter.current_description.capitalize %>
+                      <ul>
+                        <li class="chapter-li">
+                          <div class="chapter-code">
+                            <div class="code-text"><%= @heading.short_code[2..3] %></div>
+                          </div>
+                          <%= @heading.current_description.capitalize %>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
       </div>
     </div>
-  </div>
 
-  <% if @nomenclature_tree %>
-    <ul id="nomenclatures-goods-list">
-      <% @nomenclature_tree.children.each do |sub_header| %>
-        <%= render partial: 'tree_node', locals: {node: sub_header} %>
-      <% end %>
-    </ul>
-  <%end %>
+    <% if @nomenclature_tree %>
+      <ul id="nomenclatures-goods-list">
+        <% @nomenclature_tree.children.each do |sub_header| %>
+          <%= render partial: 'tree_node', locals: {node: sub_header} %>
+        <% end %>
+      </ul>
+    <%end %>
 
+  <% end %>
 <% end %>

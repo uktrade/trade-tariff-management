@@ -20,13 +20,13 @@
 
 <div class="grid-row">
   <div class="column-one-half">
-    <%= form_tag({}, { method: :get }) do %>
+    <%= form_tag(search_goods_nomenclatures_path) do %>
       <div class="form-group gem-c-search gem-c-search--on-white" data-module="gem-toggle-input-class-on-focus">
         <label for="search-commodity" class="form-label">
-          Enter commodity code you want to work with (Not implemented)
+          Enter commodity code you want to work with
         </label>
         <div class="gem-c-search__item-wrapper">
-          <input type="search" value="" id="search-commodity"title="Search" class="gem-c-search__item gem-c-search--on-white gem-c-search__input">
+          <input type="search" value="" id="search-commodity" title="Search" name="search_commodity" class="gem-c-search__item gem-c-search--on-white gem-c-search__input">
           <div class="gem-c-search__item gem-c-search__submit-wrapper">
             <button type="submit" class="gem-c-search__submit">Search</button>
           </div>
