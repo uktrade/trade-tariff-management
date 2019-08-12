@@ -62,7 +62,8 @@ class BaseRegulation < Sequel::Model
     year = Date.strptime(base_regulation_id.slice(1, 2), "%y").strftime("%Y");
     number = base_regulation_id.slice(3, 4)
 
-    "#{year}/#{number}"
+    # "#{year}/#{number}"
+    base_regulation_id
   end
 
   def to_json(_options = {})
