@@ -27,8 +27,8 @@ describe "Regulations listing" do
 
     expect(page).to have_content("Enter criteria to help locate a regulation")
     expect(page).to have_content("Select the regulation group")
-    expect(page).to have_content("Select date from")
-    expect(page).to have_content("Select date to")
+    expect(page).to have_content("Select start date")
+    expect(page).to have_content("Select end date")
     expect(page).to have_content("Enter keyword(s)")
     expect(page).to have_content("If you know the ID of the regulation, then you can enter the ID in the box below. Alternatively, enter any other keyword(s) to help locate the regulation.")
   end
@@ -37,8 +37,8 @@ describe "Regulations listing" do
     visit regulations_path
 
     select("Various", from: "Select the regulation group")
-    fill_in("Select date from", with: Date.today.strftime("%d/%m/%Y"))
-    fill_in("Select date to", with: (Date.today + 2.days).strftime("%d/%m/%Y"))
+    fill_in("Select start date", with: Date.today.strftime("%d/%m/%Y"))
+    fill_in("Select end date", with: (Date.today + 2.days).strftime("%d/%m/%Y"))
     fill_in("Enter keyword(s)", with: base_regulation.base_regulation_id)
 
     find(".form-actions .button").click
