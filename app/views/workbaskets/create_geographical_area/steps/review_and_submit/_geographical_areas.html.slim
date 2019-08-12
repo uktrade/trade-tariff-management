@@ -22,9 +22,9 @@
     tbody
       tr
         td.validity_start_date-column
-          = g_area.validity_start_date
+          = format_date(g_area.validity_start_date)
         td.validity_end_date-column
-          = g_area.validity_end_date
+          = format_date(g_area.validity_end_date)
         td.name-column
           = workbasket.settings.main_step_settings['description']
         td.code-column
