@@ -40,7 +40,8 @@ class ModificationRegulation < Sequel::Model
     year = Date.strptime(modification_regulation_id.slice(1, 2), "%y").strftime("%Y");
     number = modification_regulation_id.slice(3, 4)
 
-    "#{year}/#{number}"
+    # "#{year}/#{number}"
+    modification_regulation_id
   end
 
   def last_fts_regulation
