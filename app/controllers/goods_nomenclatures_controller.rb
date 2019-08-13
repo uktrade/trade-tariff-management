@@ -20,7 +20,7 @@ class GoodsNomenclaturesController < ApplicationController
 
   def show
     set_nomenclature_view_date
-    @search_value = params[:id]
+    @search_value = params[:id].delete('^0-9')
     @nomenclature = GoodsNomenclature.actual.where(goods_nomenclature_item_id: @search_value).first.try(:sti_instance)
     @nomenclature_tree = NomenclatureTreeService.nomenclature_tree(params[:id], @view_date)
 

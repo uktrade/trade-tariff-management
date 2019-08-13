@@ -1,9 +1,9 @@
 <% content_for :content do %>
-  <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: goods_nomenclature_path(@nomenclature.goods_nomenclature_item_id) } %>
-
   <% if @errors.present? %>
+    <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: goods_nomenclatures_path } %>
     <%= @errors %>
   <% else %>
+    <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: goods_nomenclature_path(@nomenclature.goods_nomenclature_item_id) } %>
     <div class="grid-row">
       <div class="column-three-quarters">
         <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
