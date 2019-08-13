@@ -3,7 +3,7 @@ h3.heading-medium
   | Next steps
 
 ul class="list"
-  - if next_cross_check.present? && workbasket.id != next_cross_check.id
+  - if !current_user.approver_user && next_cross_check.present? && workbasket.id != next_cross_check.id
     li
       = link_to "Cross-check next workbasket", new_cross_check_url(next_cross_check.id)
 
