@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get  "/auth/:provider/callback", to: "sessions#create"
   post "/auth/:provider/callback", to: "sessions#create"
   get  "/logout",                  to: "sessions#destroy", as: "gds_sign_out"
+  get  "/log_in",                  to: "log_in#index", as: "log_in"
 
   resources :workbaskets, only: [:index]
 

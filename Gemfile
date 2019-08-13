@@ -36,6 +36,8 @@ gem "parsley-rails"
 # Single sign on
 gem 'omniauth-oauth2'
 
+gem "omniauth-rails_csrf_protection"
+
 # File uploads and AWS
 gem "shrine"
 gem "aws-sdk-rails"

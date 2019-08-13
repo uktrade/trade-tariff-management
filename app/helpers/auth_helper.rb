@@ -26,14 +26,14 @@ module AuthHelper
     @current_user = current_user
     if user_signed_in?
       if token_expired?
-        redirect_to login_path
+        redirect_to log_in_path
       end
       if current_user.disabled?
         redirect_to disabled_user_path
       end
       audit_session(current_user, request.original_url)
     else
-      redirect_to login_path
+      redirect_to log_in_path
     end
   end
 
@@ -46,7 +46,7 @@ module AuthHelper
 
 
   # The login page depends on the authentication provider [ditsso internal or the omniauth developer]
-  def login_path
+  def oauth_login_path
 
     if ENV['DITSSO_INTERNAL_PROVIDER'].present?
       '/auth/ditsso_internal/'
