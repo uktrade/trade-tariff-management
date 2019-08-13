@@ -18,5 +18,5 @@ header
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/workbasket_details"
     = render "workbaskets/#{workbasket.type}/workflow_screens_parts/summary_of_configuration"
 
-    = render table_partial(workbasket), read_only: true, record_type: workbasket.type
+    = render approval_table_partial(workbasket), read_only: true, record_type: workbasket.type
     = render "workbaskets/workflows/approves/form"
