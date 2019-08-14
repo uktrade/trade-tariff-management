@@ -1,21 +1,4 @@
 - prefix = attributes_parser.commodity_codes_formatted.present? ? "commodity" : "additional"
 
 p
-  | You are about to create
-  =<> pluralize(attributes_parser.candidates.count, "#{prefix} code", "#{prefix} codes")
-
-  - if attributes_parser.commodity_codes_exclusions.present?
-    | (with
-    =<> pluralize(attributes_parser.commodity_codes_exclusions.count, "exception", "exceptions")
-    | ), comprising
-
-  =<> workbasket_quota_periods_overview
-  | over
-
-  =< workbasket_quota_periods_years_length
-  | .
-
-p
-  | This quota will have
-  =< pluralize(workbasket_settings.measure_sids.count, "associated measure", "associated measures")
-  | .
+  | Please check that the amendments below are as intended and correctly reflect the requirement, then either confirm or reject.

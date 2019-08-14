@@ -1,0 +1,12 @@
+h3.heading-medium Bulk additional codes to be created after approval
+
+.bulk-edit-additional-codes.submitted-for-cross-check-view
+  review-bulk-edit-records workbasket_id="#{workbasket.id}" primary-key="additional_code_sid" initial-sort-key="type_id" :bulk-actions="bulkActions" thing="additional_codes" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
+    template slot-scope="slotProps"
+
+= render "shared/vue_templates/review_bulk_edit_records.html.erb"
+script
+  == "window.__workbasket_id = #{workbasket.id};"
+  == "window.__pagination_metadata = {page: 1, total_count: 1, per_page: 1000};"
+  == "window.all_settings = #{workbasket_settings.settings.to_json};"
+  == "window.current_step_settings = {};"

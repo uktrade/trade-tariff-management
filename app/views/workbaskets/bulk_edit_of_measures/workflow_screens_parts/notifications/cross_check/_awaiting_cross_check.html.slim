@@ -2,17 +2,6 @@
 - additional_codes_count = workbasket_settings.additional_codes_covered.compact.count
 
 p
-  | You are about to update
-  =< pluralize(workbasket.items.count, "measure", "measures")
-  | , covering
-
-  - msg = []
-  - if commodity_codes_count > 0
-    - msg << pluralize(commodity_codes_count, "commodity code", "commodity codes")
-  - if additional_codes_count > 0
-    - msg << pluralize(additional_codes_count, "additional code", "additional codes")
-  =< msg.join(" and ")
-
-  | .
+  | Please check that the amendments below are as intended and correctly reflect the requirement, then either confirm or reject.
 
 

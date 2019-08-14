@@ -1,6 +1,22 @@
+<div class="breadcrumbs">
+  <nav>
+    <ol>
+      <li>
+       <%= link_to "Tariff Management", root_url %>
+      </li>
+      <li>
+        <%= link_to "Measures", measures_url %>
+      </li>
+      <li>
+          Bulk edit measures
+      </li>
+    </ol>
+  </nav>
+</div>
+
 <div class="work-with-selected-measures">
   <%= form_tag({}, { method: :post }) do %>
-    <h1 class="heading-xlarge">
+    <h1 class="heading-large">
       Work with selected measures
     </h1>
 
@@ -86,8 +102,6 @@
       </div>
     </div>
 
-    <br>
-
     <div class="form-group">
       <button type="submit" class="button" :disabled="disableSubmit">
         Proceed to selected measures
@@ -95,10 +109,10 @@
       <a href="/" class="secondary-button">
         Cancel
       </a>
-      <br>
-      <label for="" class="form-label"><span class="form-hint">
+
+      <span class="form-hint m-t-20">
         When you proceed, the regulation (if any) and start date specified above will be applied to all of the selected measures. You will be able to edit those fields for any or all of the measures if you need to.
-      </span></label>
+      </span>
     </div>
   <% end %>
 </div>
