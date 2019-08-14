@@ -620,7 +620,7 @@ class Measure < Sequel::Model
   def to_table_json
     {
       measure_sid: measure_sid,
-      regulation: generating_regulation_code,
+      regulation: measure_generating_regulation_id,
       justification_regulation: (generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?),
       measure_type_id: measure_type_id,
       order_number: ordernumber,
@@ -650,7 +650,7 @@ class Measure < Sequel::Model
       validity_start_date: validity_start_date.strftime("%d %b %Y"),
       validity_end_date: value_or_default(validity_end_date.try(:strftime, "%d %b %Y")),
 
-      regulation: generating_regulation_code,
+      regulation: measure_generating_regulation_id,
       justification_regulation: value_or_default(justification_regulation_info),
 
       goods_nomenclature_id: goods_nomenclature_item_id,
@@ -672,7 +672,7 @@ class Measure < Sequel::Model
   def to_json(_options = {})
     {
       measure_sid: measure_sid,
-      regulation: generating_regulation.to_json,
+      regulation: measure_generating_regulation_id.to_json,
       justification_regulation: (justification_regulation.to_json if justification_regulation.present?),
       measure_type: measure_type.to_json,
       order_number: ordernumber,
