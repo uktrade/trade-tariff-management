@@ -51,7 +51,7 @@ describe "Measure search: regulation filter" do
       res = search_results(
         enabled: true,
         operator: 'is',
-        value: "R1578/17"
+        value: "R1715780"
       )
 
       expect(res.count).to be_eql(1)
@@ -86,7 +86,7 @@ describe "Measure search: regulation filter" do
       res = search_results(
         enabled: true,
         operator: 'contains',
-        value: "R157"
+        value: "R1715780"
       )
 
       expect(res.count).to be_eql(1)

@@ -422,7 +422,7 @@ class Measure < Sequel::Model
   end
 
   def generating_regulation_code(regulation_code = measure_generating_regulation_id)
-    "#{regulation_code.first}#{regulation_code[3..6]}/#{regulation_code[1..2]}"
+    regulation_code
   end
 
   def generating_regulation_url(for_suspending_regulation = false)
