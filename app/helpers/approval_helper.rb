@@ -24,6 +24,12 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/additional_code"
     elsif workbasket.type == 'edit_nomenclature'
       "workbaskets/shared/steps/review_and_submit/approval/edit_nomenclatures"
+    elsif workbasket.type == 'bulk_edit_of_measures'
+      "workbaskets/shared/steps/review_and_submit/approval/bulk_edit_measures"
+    elsif workbasket.type == 'bulk_edit_of_additional_codes'
+      "workbaskets/shared/steps/review_and_submit/approval/bulk_edit_additional_codes"
+    elsif workbasket.type == 'edit_geographical_area'
+      "workbaskets/shared/steps/review_and_submit/approval/geographical_areas"
     end
   end
 end
