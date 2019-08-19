@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  var form = document.querySelector(".work-with-selected-quota");
+  var form = document.querySelector("#work-with-selected-quota");
 
   if (!form) {
     return;
