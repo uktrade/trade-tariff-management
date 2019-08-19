@@ -1,27 +1,26 @@
-.panel.panel--confirmation
-  h1.heading-xlarge
-    | Footnote submitted
+.breadcrumbs
+  ol
+    li
+      = link_to "Tariff Management", root_url
 
-  h3.heading-medium
-    | A new footnote of type
-    =<> "'#{footnote.decorate.footnote_type_description}'"
-    | and ID
-    =<> "'#{footnote.footnote_id}'"
-    | has been submitted for cross-check.
+    li
+      = link_to "Footnote", footnotes_url
 
-br
-h3.heading-medium
-  | Next steps
+    li aria-current="page"
+      | View Footnote
 
-ul class="list"
-  li
-    a href="#"
-      | Withdraw submission / edit footnote (not implemented)
-  li
-    = link_to "View this footnote", read_only_section_url
-  li
-    = link_to "Create another footnote", new_create_footnote_url
-  li
-    = link_to "Return to main menu", root_url
-br
-br
+header
+  h1.heading-large
+    | View footnote
+
+  .view-workbasket-container
+    = render "workbaskets/create_footnote/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/create_footnote/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/create_footnote/workflow_screens_parts/workbasket_details"
+
+    - if iam_workbasket_author? && workbasket_rejected?
+      = link_to "Edit footnote", '#',
+              data: {target_url: move_to_editing_mode_create_footnote_url(workbasket.id)},
+              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
+
+    = render "workbaskets/create_footnote/workflow_screens_parts/summary_of_configuration"

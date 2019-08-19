@@ -354,6 +354,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_edit_geographical_area_url(workbasket.id)
     elsif workbasket.object.type == "edit_nomenclature"
       withdraw_workbasket_from_workflow_edit_nomenclature_url(workbasket.id)
+    elsif workbasket.object.type == "create_footnote"
+      withdraw_workbasket_from_workflow_create_footnote_url(workbasket.id)
     end
   end
 

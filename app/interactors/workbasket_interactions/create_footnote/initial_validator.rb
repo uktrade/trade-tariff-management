@@ -45,7 +45,6 @@ module WorkbasketInteractions
         check_footnote_type_id!
         check_description!
         check_validity_period!
-        check_operation_date!
         check_commodity_codes!
         check_measures!
 
@@ -98,13 +97,6 @@ module WorkbasketInteractions
            end
 
           @errors_summary = errors_translator(:summary_invalid_validity_period) if @errors_summary.blank?
-        end
-      end
-
-      def check_operation_date!
-        if operation_date.blank?
-          @errors[:operation_date] = errors_translator(:operation_date_blank)
-          @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
       end
 

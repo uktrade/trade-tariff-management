@@ -1,0 +1,15 @@
+- footnote = footnote ? footnote : Footnote.find(workbasket_id: workbasket.id)
+
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Geographical area cross-check rejected
+
+  h3.heading-medium
+    | You indicated that the new footnote
+    | with type
+    = footnote.footnote_type_id
+    |  and ID
+    = footnote.footnote_id
+    |  has problems. It has not passed cross-check. The submitter has been notified.
+
+= render "workbaskets/create_footnote/workflow_screens_parts/status_pages/next_step_links", mode: "cross_check"

@@ -30,6 +30,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/bulk_edit_additional_codes"
     elsif workbasket.type == 'edit_geographical_area'
       "workbaskets/shared/steps/review_and_submit/approval/geographical_areas"
+    elsif workbasket.type == 'create_footnote'
+      "workbaskets/shared/steps/review_and_submit/approval/create_footnote"
     end
   end
 end
