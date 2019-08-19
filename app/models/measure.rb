@@ -639,6 +639,45 @@ class Measure < Sequel::Model
     }
   end
 
+  def to_table_array
+    [
+      measure_sid,
+      generating_regulation_code, #regulation
+      (generating_regulation_code(justification_regulation_id) if justification_regulation_id.present?), #justification_regulation
+      measure_type_id,
+      validity_start_date.strftime("%d %b %Y"),
+      validity_end_date.try(:strftime, "%d %b %Y") || "-",
+      goods_nomenclature_item_id,
+      additional_code_title, #additional_code_id:
+      geographical_area.try(:geographical_area_id), #geographical_area:
+      excluded_geographical_areas.map(&:geographical_area_id).join(", ") || "-", #excluded_geographical_areas
+      duty_expression, #duties
+      conditions_short_list, #conditions
+      footnotes.map(&:abbreviation).join(", "), #footnotes
+      (updated_at || added_at).try(:strftime, "%d %b %Y") || "-", #last_updated
+      status_title #status
+    ].map{|element| element == "" ? nil : element }
+  end
+
+  def self.table_array_headers
+    [
+      'ID',
+      'Regulation',
+      'Justification regulation',
+      'Type',
+      'Start date',
+      'End date',
+      'Commodity code',
+      'Additional code',
+      'Origin',
+      'Origin exclusions',
+      'Duties',
+      'Conditions',
+      'Footnotes',
+      'Status'
+    ]
+  end
+
   #
   # TODO: set using of V2 after reindex of data
   #
