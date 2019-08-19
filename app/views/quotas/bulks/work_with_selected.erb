@@ -14,7 +14,7 @@
   </div>
 <% end %>
 
-<div class="work-with-selected-quota">
+<div id="work-with-selected-quota">
   <%= form_tag({}, { method: :post }) do %>
     <h1 class="heading-xlarge">
       Work with selected quota
@@ -37,7 +37,7 @@
 
     <form-group :errors="errors" error-key="validity_start_date">
       <template slot-scope="slotProps">
-        <label for="date" class="form-label">
+        <label for="date" class="heading-medium">
           When should these changes take effect?
           <span class="error-message" v-if="slotProps.hasError" v-cloak="">
             {{slotProps.error}}
@@ -53,7 +53,7 @@
 
     <form-group :errors="errors" error-key="action">
       <template slot-scope="slotProps">
-        <label for="action" class="form-label">
+        <label for="action" class="heading-medium">
           What changes do you want to make?
 
           <span class="error-message" v-if="slotProps.hasError" v-cloak="">
@@ -88,7 +88,7 @@
 
           <form-group :errors="errors" classes="panel panel-border-narrow" error-key="suspension_date" v-if="suspendingQuota">
             <template slot-scope="slotProps">
-              <label for="action" class="form-label">
+              <label for="action" class="heading-medium">
                 Optionally, when should the suspension end?
 
                 <span class="error-message" v-if="slotProps.hasError" v-cloak="">
@@ -126,7 +126,7 @@
 
     <form-group :errors="errors" error-key="regulation">
       <template slot-scope="slotProps">
-        <label for="regulation" class="form-label">
+        <label for="regulation" class="heading-medium">
           What regulation (if any) gives force to these changes?
 
           <span class="error-message" v-if="slotProps.hasError" v-cloak="">
@@ -162,7 +162,7 @@
 
     <form-group :errors="errors" error-key="reason">
       <template slot-scope="slotProps">
-        <label for="reason" class="form-label">
+        <label for="reason" class="heading-medium">
           What is the reason for these changes?
           <span class="error-message" v-if="slotProps.hasError" v-cloak="">
             {{slotProps.error}}
@@ -182,7 +182,7 @@
 
     <form-group :errors="errors" error-key="workbasket_name">
       <template slot-scope="slotProps">
-        <label for="workbasket_name" class="form-label">
+        <label for="workbasket_name" class="heading-medium">
           What is the name of this workbasket?
           <span class="error-message" v-if="slotProps.hasError" v-cloak="">
             {{slotProps.error}}
