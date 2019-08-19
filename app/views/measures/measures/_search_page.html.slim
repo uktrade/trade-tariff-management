@@ -32,6 +32,8 @@ script
           span.number-of-records-badge
             = pluralize(search_results.total_count, 'measure', 'measures')
             =<> "found"
+        p.clearfix
+          = link_to "Download as CSV", measures_path(search_code: current_search_code, format: :csv), class: "search-results-download-link"
 
       = render "measures_table" if measures_search.present?
 

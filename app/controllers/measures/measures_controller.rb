@@ -19,6 +19,10 @@ module Measures
       setup_advanced_filters(ops)
     end
 
+    expose(:current_search_code) do
+      params[:search_code]
+    end
+
     expose(:measures_search) do
       if search_mode?
         ::Measures::Search.new(cached_search_ops)
@@ -35,9 +39,30 @@ module Measures
       search_results.map(&:to_table_json)
     end
 
+    expose(:csv_collection) do
+      CSV.generate(headers: false) do |csv|
+        csv << Measure.table_array_headers
+
+        ::Measures::Search.new(
+          Rails.cache.read(current_search_code)
+        ).results(false).map do |measure|
+          csv << measure.to_table_array
+        end
+      end
+    end
+
+    def my_search
+      ::Measures::Search.new(
+        Rails.cache.read(current_search_code)
+      ).results
+    end
+
     def index
       respond_to do |format|
         format.json { render json: json_response }
+        format.csv {
+          send_data csv_collection, filename: "measures_download_#{Date.today.strftime("%Y%m%d")}.csv"
+        }
         format.html
       end
     end
