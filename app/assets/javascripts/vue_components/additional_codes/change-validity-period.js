@@ -56,6 +56,11 @@ Vue.component("change-additional-codes-validity-period-popup", {
     } else {
       this.sameEndDate = true;
     }
+
+    // date picker requires this format
+    this.startDate = startDates[0].format("DD/MM/YYYY");
+    // we probably should display the latest end date
+    this.endDate = endDates[0].format("DD/MM/YYYY");
   },
   methods: {
     clearErrors: function() {
