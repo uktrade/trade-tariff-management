@@ -34,9 +34,8 @@
 
           <div v-if="sameStartDate">
             <info-message>
-              The selected codes currently start on {{earliestStartDate}}
-              <br />
-              This will be changed to the start date you select below.
+              The selected codes start on {{earliestStartDate}}
+              <%# <br /> This will be changed to the start date you select below. %>
             </info-message>
           </div>
 
@@ -62,7 +61,8 @@
             </span>
           </label>
 
-          <date-select :value.sync="startDate" id='additional-codes-start-date'></date-select>
+          <date-select v-bind:value="startDate" disabled="true" id='additional-codes-start-date'></date-select>
+
         </fieldset>
       </template>
     </form-group>
@@ -125,7 +125,7 @@
           </label>
 
           <div class="form-group">
-            <date-select :value.sync="endDate" :disabled="makeOpenEnded" id="additional-codes-end-date"></date-select>
+            <date-select v-bind:value="endDate" :disabled="makeOpenEnded" id="additional-codes-end-date"></date-select>
           </div>
 
           <div class="form-group" v-if="showMakeOpenEnded">

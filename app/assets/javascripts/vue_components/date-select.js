@@ -43,6 +43,9 @@ Vue.component('date-select', {
     }
   },
   watch: {
+    value: function() {
+      this.vproxy = this.value;
+    },
     vproxy: function() {
       this.$emit("update:value", this.vproxy);
     },
