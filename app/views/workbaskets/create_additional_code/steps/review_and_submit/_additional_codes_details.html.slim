@@ -22,6 +22,6 @@
           td.description-column
             = item.description
           td.validity_start_date-column
-            = item.validity_start_date.strftime("%m-%d-%Y")
+            = item.validity_start_date.strftime("%d-%m-%Y")
           td.validity_end_date-column
-            = item.validity_end_date.try(:strftime, "%m-%d-%Y")
+            = item.validity_end_date.try(:strftime, "%d-%m-%Y")
