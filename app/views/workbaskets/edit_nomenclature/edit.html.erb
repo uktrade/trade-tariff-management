@@ -45,7 +45,6 @@
 <%= simple_form_for @edit_nomenclature_form, url: edit_nomenclature_path, html: {method: :patch, novalidate: false} do |f| %>
 <div class="grid-row">
   <div class="column-two-thirds">
-
     <table>
       <caption class="heading-medium m-t-25">Existing commodity code details</caption>
       <tbody>
@@ -78,9 +77,21 @@
                   <%= saver&.conformance_errors&.values[0] %>
                 </span>
               <% end %>
-              <%= f.input :validity_start_date_day, label: 'Day', required: true  %>
-              <%= f.input :validity_start_date_month, label: 'Month', required: true %>
-              <%= f.input :validity_start_date_year, label: 'Year', required: true %>
+              <div class="form-group">
+                <fieldset>
+                  <legend>
+                    <span class="form-label-bold">
+                      When should these changes take effect?
+                    </span>
+                    <span class="form-hint">For example, 01 03 1980</span>
+                  </legend>
+                  <div class="form-date">
+                    <%= f.input :validity_start_date_day, label: 'Day', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits day"}, wrapper_html: { class: 'form-group-day' } %>
+                    <%= f.input :validity_start_date_month, label: 'Month', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits month"}, wrapper_html: { class: 'form-group-month' } %>
+                    <%= f.input :validity_start_date_year, label: 'Year', required: true,  input_html: {pattern:"[0-9]*", minlength:"4", maxlength:"4", title:"Four digits year"}, wrapper_html: { class: 'form-group-year' }  %>
+                  </div>
+                </fieldset>
+              </div>
             </div>
           </td>
         </tr>
