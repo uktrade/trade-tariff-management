@@ -22,7 +22,8 @@ $(document).ready(function() {
           { value: 'toggle_unselected', label: 'Hide/Show unselected items' },
           { value: 'change_description', label: 'Change description' },
           { value: 'change_validity_period', label: 'Change validity period...' },
-          { value: 'delete', label: 'Delete...' },
+          // PP: Temporarirly disabled TARIFFS-347
+          // { value: 'delete', label: 'Delete...' },
           { value: 'remove_from_group', label: 'Remove from workbasket...' },
         ]
       };
