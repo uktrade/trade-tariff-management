@@ -82,10 +82,12 @@ Vue.component("change-additional-codes-validity-period-popup", {
       if (startDate.isValid() === false) {
         isValid = false;
         errors.startDate = "You must specify a start date.";
-      } else if (startDate.diff(todaysDate, "days") <= 0) {
-        isValid = false;
-        errors.startDate = "Start date must be in the future.";
       }
+      // PP: Temporarily disables due to TARIFFS-365
+      // else if (startDate.diff(todaysDate, "days") <= 0) {
+      //   isValid = false;
+      //   errors.startDate = "Start date must be in the future.";
+      // }
 
       if (!makeOpenEnded) {
         if (endDate.isValid() === false) {
