@@ -12,6 +12,7 @@
       </strong>
     </div>
 
+    <h3 class="heading-medium">{{entityName}} to be updated after cross-check</h3>
     <div v-if="pagination.total_count > 0">
       <records-grid :table-class="tableClass" :primary-key="primaryKey" :on-item-selected="onItemSelected" :on-item-deselected="onItemDeselected" :data="visibleRecordsPage" :columns="columns" :selected-rows="selectedRecords" v-if="!isLoading" selection-type="none" :client-selection="true" :on-select-all-changed="selectAllHasChanged" :disable-scroller="true" :sort-by-changed="onSortByChange" :sort-dir-changed="onSortDirChanged"></records-grid>
 
