@@ -94,6 +94,10 @@ Vue.component("bulk-edit-records", {
 
       return thing.toLowerCase().split(" ").join("-");
     },
+    entityName: function() {
+      var str = this.thing.replace("_", " ");
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
     noSelectedRecords: function() {
       return this.selectedRecords.length === 0;
     },
