@@ -26,7 +26,8 @@ table.create-measures-details-table
       td.heading_column
         | Start date
       td
-        = format_date(attributes_parser.start_date)
+        - start_date = attributes_parser.start_date.to_date if attributes_parser.start_date
+        = format_date(start_date)
 
     tr
       td.heading_column
