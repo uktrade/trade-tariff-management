@@ -15,7 +15,7 @@ class GoodsNomenclaturesController < ApplicationController
   end
 
   def search
-    redirect_to goods_nomenclature_path(params[:search_commodity])
+    redirect_to goods_nomenclature_path(search_commodity_code)
   end
 
   def show
@@ -31,6 +31,12 @@ class GoodsNomenclaturesController < ApplicationController
     else
       @errors = "Could not find a matching commodity '#{@search_value}'."
     end
+  end
+
+  private
+
+  def search_commodity_code
+    params[:search_commodity].present? ? params[:search_commodity] : 0
   end
 
 end
