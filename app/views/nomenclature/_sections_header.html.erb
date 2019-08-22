@@ -26,7 +26,10 @@
           Enter commodity code you want to work with
         </label>
         <div class="gem-c-search__item-wrapper">
-          <input type="search" value="" id="search-commodity" title="Search" name="search_commodity" class="gem-c-search__item gem-c-search--on-white gem-c-search__input">
+          <input type="search" value="" id="search-commodity" title="Search" name="search_commodity"
+                 class="gem-c-search__item gem-c-search--on-white gem-c-search__input" type="number" maxlength="10"
+                 oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
+          >
           <div class="gem-c-search__item gem-c-search__submit-wrapper">
             <button type="submit" class="gem-c-search__submit">Search</button>
           </div>
