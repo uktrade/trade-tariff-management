@@ -14,11 +14,12 @@ Vue.component("bulk-edit-records", {
     "columns",
     "actions",
     "recordTableProcessing",
-    "preprocessRecord"
+    "preprocessRecord",
   ],
   data: function() {
     var data = {
       selectedRecords: [],
+      showActionSuccessMessage: null,
       showTooltips: true,
       overloaded: false,
       currentPage: 1,
@@ -44,7 +45,6 @@ Vue.component("bulk-edit-records", {
   },
   mounted: function() {
     var self = this;
-
     if (this.pagination.total_count === 0) {
       return;
     }
@@ -165,6 +165,9 @@ Vue.component("bulk-edit-records", {
     },
 
     triggerAction: function(val) {
+      // Remove previous action messages if any to hide the dom element
+      this.showActionSuccessMessage = null;
+
       if (val == "toggle_unselected") {
         this.toggleUnselected();
       } else {
@@ -305,6 +308,7 @@ Vue.component("bulk-edit-records", {
       });
       this.recordsUpdated();
       this.updateSelectedAll();
+      this.showActionSuccessMessage = 'Selected item(s) have been removed from the workbasket';
     },
     updateSelectedAll: function() {
       var self = this;
@@ -316,6 +320,7 @@ Vue.component("bulk-edit-records", {
     },
     allRecordsRemoved: function() {
       DB.destroyBulk(this.search_code);
+      this.showActionSuccessMessage = 'All item(s) have been removed from the workbasket';
     },
     onSortByChange: function(val) {
       this.sortBy = val;
