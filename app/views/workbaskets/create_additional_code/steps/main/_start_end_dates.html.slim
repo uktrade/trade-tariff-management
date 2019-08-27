@@ -7,7 +7,8 @@ fieldset
     template slot-scope="slotProps"
       span.error-message v-if="slotProps.hasError" v-cloak=""
         | {{slotProps.error}}
-      .bootstrap-row
+
+      .row
         .col-md-6
           = content_tag "date-select", "", id: "additional_code_valid_from", ":value.sync" => "validity_start_date"
 
