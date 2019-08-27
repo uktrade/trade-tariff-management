@@ -90,7 +90,9 @@ Vue.component('custom-select', {
     },
     scopeDate: function(val) {
       this.start_date = val;
-      this.handleDateSentitivity({}, this.start_date, this.end_date);
+      if (this.dateSensitive) {
+        this.handleDateSentitivity({}, this.start_date, this.end_date);
+      }
     }
   },
   methods: {
