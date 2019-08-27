@@ -1,4 +1,4 @@
-h3.heading-medium Summary of measures configuration
+h3.heading-medium Summary of footnote configuration
 - footnote = footnote ? footnote : Footnote.find(workbasket_id: workbasket.id)
 table.create-measures-details-table
   tbody
@@ -7,12 +7,6 @@ table.create-measures-details-table
         | Validity Start Date
       td
         = format_date(footnote.validity_start_date)
-
-    tr
-      td.heading_column
-        | Description
-      td
-        = footnote.description
 
     tr
       td.heading_column
@@ -25,3 +19,9 @@ table.create-measures-details-table
         | Footnote ID
       td
         = footnote.footnote_id
+
+    tr
+      td.heading_column
+        | Associated measures
+      td
+        = footnote.measures.map {|measure| measure.measure_sid}
