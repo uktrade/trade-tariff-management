@@ -271,7 +271,14 @@ module WorkbasketInteractions
 
         target_class_required_params.map do |k|
           if original_params[k.to_s].blank?
-            @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+            case k.to_s
+            when "regulation_group_id"
+              @errors[k] = "Regulation group can't be blank!"
+            when "validity_start_date"
+              @errors[k] = "Start date can't be blank!"
+            else
+              @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+            end
           end
         end
 
@@ -286,9 +293,10 @@ module WorkbasketInteractions
 
       def check_sub_fields!
         legal_id, description, reference_url = original_params['information_text']&.split('|')
-        @errors[:legal_id] = "Legal ID can't be blank!" unless legal_id.present?
+        @errors[:legal_id] = "Public-facing regulation name can't be blank!" unless legal_id.present?
         @errors[:description] = "Description can't be blank!" unless description.present?
         @errors[:reference_url] = "Reference URL can't be blank!" unless reference_url.present?
+
       end
 
       def target_class_required_params

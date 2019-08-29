@@ -23,7 +23,7 @@ describe 'create_regulation_page', js: true do
         it 'shows validation error' do
           visit_create_regulation
           click_on 'Create regulation'
-          expect(page).to have_content "Legal ID can't be blank!"
+          expect(page).to have_content "Public-facing regulation name can't be blank!"
         end
       end
     end

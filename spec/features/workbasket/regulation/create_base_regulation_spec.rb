@@ -19,7 +19,7 @@ describe 'base regulation', js: true do
     base_required_filed_values.
         concat([
                    { name: 'Start date', value: validity_start_date, type: :date },
-                   { name: 'Specify the regulation group', value: regulation_group.regulation_group_id, type: :select },
+                   { name: 'What type of regulation do you want to create?', value: regulation_group.regulation_group_id, type: :select },
                ])
   end
 

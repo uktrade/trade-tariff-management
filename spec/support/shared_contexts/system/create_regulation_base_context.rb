@@ -86,7 +86,16 @@ shared_context 'create_regulation_base_context' do
         click_on 'Create regulation'
 
         required_fields.each do |field|
-          expect(page).to have_content "#{field[:label]} can't be blank!"
+          case field[:label]
+          when "Legal ID"
+            expect(page).to have_content "Public-facing regulation name can't be blank!"
+          when "Validity start date"
+            expect(page).to have_content "Start date can't be blank!"
+          when "Regulation group id"
+            expect(page).to have_content "Regulation group can't be blank!"
+          else
+            expect(page).to have_content "#{field[:label]} can't be blank!"
+          end
         end
       end
     end
@@ -136,7 +145,7 @@ shared_context 'create_regulation_base_context' do
       when :text
         fill_in (value[:id] || value[:name]), with: value[:value]
       when :select
-        within(first(".form-group, fieldset", text: (value[:id] || value[:name]))) do
+        within("#regulation_group") do
           select_dropdown_value(value[:value])
         end
       when :date
