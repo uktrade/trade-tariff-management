@@ -1,5 +1,5 @@
 <% content_for :content do %>
-  <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: sections_path}%>
+  <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: sections_path(request.query_parameters.symbolize_keys)}%>
 
   <% if @sections %>
     <div class="grid-row">
@@ -22,7 +22,7 @@
                 <% else %>
                   <td><%= section.chapter_from.delete_prefix("0") %> to <%= section.chapter_to.delete_prefix("0") %></td>
                 <%end %>
-                <td><%= link_to section.title, section %></td>
+                <td><%= link_to section.title, section_path(section, request.query_parameters.symbolize_keys) %></td>
               </tr>
             <%end %>
           </tbody>

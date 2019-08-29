@@ -15,16 +15,9 @@ class ApplicationController < ActionController::Base
   end
 
   def set_nomenclature_view_date
-    if params[:date].present?
-      selected_date = params[:date]
+    if params[:nomenclature_date].present?
+      selected_date = params[:nomenclature_date]
       @view_date = Date.new selected_date["year"].to_i, selected_date["month"].to_i, selected_date["day"].to_i
-      if @view_date == Date.today
-        cookies.delete :nomenclature_view_date
-      else
-        cookies[:nomenclature_view_date] = @view_date
-      end
-    elsif cookies[:nomenclature_view_date].present?
-      @view_date = Date.parse(cookies[:nomenclature_view_date])
     else
       @view_date = Date.today
     end
@@ -33,7 +26,13 @@ class ApplicationController < ActionController::Base
   private
 
   def actual_date
-    Date.parse(params[:start_date].to_s)
+    if params[:nomenclature_date].present?
+      selected_date = params[:nomenclature_date]
+      Date.new selected_date["year"].to_i, selected_date["month"].to_i, selected_date["day"].to_i
+    else
+      Date.parse(params[:start_date].to_s)
+    end
+
   rescue ArgumentError
     Date.current
   end

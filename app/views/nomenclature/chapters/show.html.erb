@@ -5,11 +5,11 @@
   <div class="column-three-quarters">
     <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
       <nav>
-        <%= link_to "All sections", sections_path, :class => "all-sections-link"  %>
+        <%= link_to "All sections", sections_path(request.query_parameters.symbolize_keys), :class => "all-sections-link"  %>
         <div class="desktop-only">
           <ul>
             <li>
-              <h1><%= link_to "Section #{@chapter.section.numeral}: #{@chapter.section.title}", @chapter.section %></h1>
+              <h1><%= link_to "Section #{@chapter.section.numeral}: #{@chapter.section.title}", section_path(@chapter.section, request.query_parameters.symbolize_keys) %></h1>
               <ul>
                 <li class="chapter-li">
                   <div class="chapter-code">
@@ -46,13 +46,13 @@
               <th scope="row"><%= heading.producline_suffix == '80' ? '-' : heading.producline_suffix %></th>
               <td>
                 <% if heading.producline_suffix == '80' %>
-                  <%= link_to heading.current_description, goods_nomenclature_path(heading.goods_nomenclature_item_id) %></a>
+                  <%= link_to heading.current_description, goods_nomenclature_path(heading.goods_nomenclature_item_id, request.query_parameters.symbolize_keys) %></a>
                 <% else %>
                   <%= heading.current_description %></a>
                 <% end %>
               </td>
               <td>
-                <div class="col-md-1"><%= link_to "Manage", new_manage_nomenclature_path(item_id: heading.goods_nomenclature_item_id, suffix: heading.producline_suffix) %></div>
+                <div class="col-md-1"><%= link_to "Manage", new_manage_nomenclature_path(({item_id: heading.goods_nomenclature_item_id, suffix: heading.producline_suffix}.merge(request.query_parameters)).symbolize_keys) %></div>
               </td>
             </tr>
             <%end %>
