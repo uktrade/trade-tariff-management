@@ -1,6 +1,6 @@
 <% content_for :content do %>
   <% if @errors.present? %>
-    <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: goods_nomenclatures_path } %>
+    <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: goods_nomenclature_path(params[:id], request.query_parameters.symbolize_keys) } %>
     <%= @errors %>
   <% else %>
     <%= render partial: "nomenclature/sections_header", locals: {change_date_base_path: goods_nomenclature_path(@nomenclature.goods_nomenclature_item_id) } %>
@@ -8,11 +8,11 @@
       <div class="column-three-quarters">
         <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
           <nav>
-            <%= link_to "All sections", sections_path, :class => "all-sections-link" %>
+            <%= link_to "All sections", sections_path(request.query_parameters.symbolize_keys), :class => "all-sections-link" %>
             <div class="desktop-only">
               <ul>
                 <li>
-                  <h1><%= link_to "Section #{@heading.chapter.section.numeral}: #{@heading.chapter.section.title}", @heading.chapter.section %></h1>
+                  <h1><%= link_to "Section #{@heading.chapter.section.numeral}: #{@heading.chapter.section.title}", section_path(@heading.chapter.section, request.query_parameters.symbolize_keys) %></h1>
                   <ul>
                     <li class="chapter-li">
                       <div class="chapter-code">

@@ -5,7 +5,7 @@
   <div class="column-three-quarters">
     <div class="tariff-breadcrumbs js-tariff-breadcrumbs clt font-xsmall">
       <nav>
-        <%= link_to "All sections", sections_path, :class => "all-sections-link"  %>
+        <%= link_to "All sections", sections_path(request.query_parameters.symbolize_keys), :class => "all-sections-link"  %>
         <div class="desktop-only">
           <ul>
             <li>
@@ -33,9 +33,9 @@
             <% @section.chapters.each do |chapter| %>
             <tr>
               <th scope="row"><%= chapter.goods_nomenclature_item_id[0..1] %></th>
-              <td><%= link_to chapter.current_description.capitalize, chapter_path(chapter.goods_nomenclature_item_id) %></a></td>
+              <td><%= link_to chapter.current_description.capitalize, chapter_path(chapter.goods_nomenclature_item_id, request.query_parameters.symbolize_keys) %></a></td>
               <td>
-                <div class="col-md-1"><%= link_to "Manage", new_manage_nomenclature_path(item_id: chapter.goods_nomenclature_item_id, suffix: chapter.producline_suffix) %></div>
+                <div class="col-md-1"><%= link_to "Manage", new_manage_nomenclature_path(({item_id: chapter.goods_nomenclature_item_id, suffix: chapter.producline_suffix}.merge(request.query_parameters)).symbolize_keys) %></div>
               </td>
             </tr>
             <%end %>

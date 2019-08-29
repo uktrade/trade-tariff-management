@@ -16,9 +16,9 @@ class GoodsNomenclaturesController < ApplicationController
 
   def search
     if [1,2].include?(params[:search_commodity]&.length)
-      redirect_to chapter_path(search_commodity_code)
+      redirect_to chapter_path(search_commodity_code, request.query_parameters.symbolize_keys)
     else
-      redirect_to goods_nomenclature_path(search_commodity_code)
+      redirect_to goods_nomenclature_path(search_commodity_code, request.query_parameters.symbolize_keys)
     end
   end
 

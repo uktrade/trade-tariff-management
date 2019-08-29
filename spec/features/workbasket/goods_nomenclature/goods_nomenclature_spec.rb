@@ -41,16 +41,21 @@ RSpec.describe "edit description" do
     expect(page).to have_content("Nom nom description")
 
     find('#change_nomenclature_date').click
-    select (1.year.from_now.year.to_s), :from => "date[year]"
+    select (1.year.from_now.year.to_s), :from => "nomenclature_date[year]"
     click_on('Set date')
     expect(page).to have_content("I am from the future")
 
-    # Check date is not lost when browsing from the home page again.
-    visit (root_path)
-    click_on('Manage the goods classification')
+    # Check date is not lost when browsing through links.
     click_on chapter.section.title
     click_on chapter.description.capitalize
     click_on heading.description
     expect(page).to have_content("I am from the future")
+
+    find('#change_nomenclature_date').click
+    select (Date.today.year.to_s), :from => "nomenclature_date[year]"
+    click_on('Set date')
+    expect(page).to_not have_content("I am from the future")
+    expect(page).to have_content("Nom nom description")
+
   end
 end
