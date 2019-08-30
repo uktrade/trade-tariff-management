@@ -55,7 +55,7 @@ module WorkbasketHelper
   def create_certificate_section_header
     case current_step
     when "main"
-      "Add certificate"
+      "Create a certificate"
     end
   end
 
@@ -88,7 +88,7 @@ module WorkbasketHelper
   def create_regulation_section_header
     case current_step
     when "main"
-      "Create a regulation"
+      "Create a new regulation"
     when "review_and_submit"
       "Review and submit"
     end
@@ -97,7 +97,7 @@ module WorkbasketHelper
   def create_geographical_area_section_header
     case current_step
     when "main"
-      "Add geographical area"
+      "Create a new geographical area"
     when "review_and_submit"
       "Review and submit"
     end

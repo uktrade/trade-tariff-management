@@ -39,6 +39,8 @@ module WorkbasketWorkflowHelper
       link_to "Quotas", quotas_url
     elsif workbasket.type.include?("nomenclature")
       link_to "Goods classification", sections_url
+    elsif workbasket.type.include?("footnote")
+      link_to "Footnotes", search_footnotes_url
     else
       link_to "Measures", measures_url
     end
