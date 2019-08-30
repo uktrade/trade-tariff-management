@@ -16,6 +16,8 @@ module CrossCheckHelper
       "Cross-check and bulk edit measures"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "Cross-check and bulk edit additional codes"
+    elsif workbasket.type == 'create_footnote'
+      "Cross-check and create footnote"
     end
   end
 
