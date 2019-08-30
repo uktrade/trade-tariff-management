@@ -10,21 +10,9 @@ table.create-measures-details-table
 
     tr
       td.heading_column
-        | Role
-      td
-        = form.regulation_roles[attributes_parser.role]
-
-    tr
-      td.heading_column
         | Regulation
       td
         = attributes_parser.base_regulation_id
-
-    tr
-      td.heading_column
-        | Replacement
-      td
-        = form.replacement_indicators[attributes_parser.replacement_indicator]
 
     tr
       td.heading_column
@@ -55,12 +43,6 @@ table.create-measures-details-table
         | End date
       td
         = attributes_parser.end_date_formatted
-
-    tr
-      td.heading_column
-        | Effective end date
-      td
-        = attributes_parser.effective_end_date_formatted
 
     tr
       td.heading_column
