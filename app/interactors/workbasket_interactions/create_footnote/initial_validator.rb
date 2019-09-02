@@ -101,6 +101,8 @@ module WorkbasketInteractions
       end
 
       def check_commodity_codes!
+        return unless can_add_commodity_code?
+        
         if commodity_codes.present?
           list = attrs_parser.parse_list_of_values(commodity_codes)
 
@@ -130,6 +132,10 @@ module WorkbasketInteractions
             end
           end
         end
+      end
+
+      def can_add_commodity_code?
+        ['NC', 'PN', 'TN'].include?(footnote_type_id)
       end
 
       def parse_date(option_name)
