@@ -12,6 +12,8 @@
           a Description
         th.measures-column
           a Associated measures
+        th.measures-column
+          a Associated goods codes
     tbody
       tr
         td.validity_start_date-column
@@ -22,3 +24,5 @@
           = footnote.description
         td.measures-column
           = footnote.measures.map {|measure| measure.measure_sid}
+        td.measures-column
+          = footnote.goods_nomenclatures.map { |nomenclature| nomenclature.goods_nomenclature_item_id.to_i }

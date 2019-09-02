@@ -24,4 +24,16 @@ table.create-measures-details-table
       td.heading_column
         | Associated measures
       td
-        = footnote.measures.map {|measure| measure.measure_sid}
+        = footnote.measures.map { |measure| measure.measure_sid }
+
+    tr
+      td.heading_column
+        | Description
+      td
+        = footnote.description
+    tr
+
+      td.heading_column
+        | Associated goods codes
+      td
+        = footnote.goods_nomenclatures.map{ |nomenclature| nomenclature.goods_nomenclature_item_id.to_i }
