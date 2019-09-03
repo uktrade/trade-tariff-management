@@ -31,8 +31,8 @@ script
           span.number-of-records-badge
             = pluralize(search_results.total_count, 'measure', 'measures')
             =<> "found"
-        p.clearfix
-          = link_to "Download as CSV", measures_path(search_code: current_search_code, format: :csv), class: "search-results-download-link"
+      p.clearfix
+        = button_to "Download as CSV", download_measures_path(search_code: current_search_code), class: "button", id: "download_measures", form: { "id" => "download_form" }
 
       = render "measures_table" if measures_search.present?
 
@@ -45,3 +45,16 @@ script
         = content_tag "loading-spinner", nil
 
 = render "shared/vue_templates/records_grid"
+
+javascript:
+  $(document).on('click', '#download_measures', function (e) {
+    e.preventDefault();
+    var uuid = generateUUID();
+    $(this).prop('value', 'Downloading, please wait...')
+    $(this).attr('disabled', 'disabled');
+    var url = document.getElementById('download_form').action + '&uuid=' + uuid;
+    subscribeDownloadChannel(uuid, function () {
+      $.get(url);
+    });
+    return false;
+  });

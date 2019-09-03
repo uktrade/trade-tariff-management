@@ -29,7 +29,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
-
 --
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --

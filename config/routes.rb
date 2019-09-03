@@ -129,6 +129,7 @@ Rails.application.routes.draw do
       collection do
         post :search
 
+        get :download
         get :quick_search
         get :all_measures_data
       end
