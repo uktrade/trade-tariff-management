@@ -10,6 +10,8 @@ module ApprovalHelper
       "Approve new additional codes"
     elsif workbasket.type == 'edit_nomenclature'
       "Approve new goods classification"
+    elsif workbasket.type == 'create_footnote'
+      "Approve new footnotes"
     end
   end
 
