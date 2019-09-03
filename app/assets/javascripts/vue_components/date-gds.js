@@ -1,6 +1,6 @@
 Vue.component('date-gds', {
   template: "#date-gds-template",
-  props: ["label", "hint", "required", "disabled", "value", "error", "min", "max"],
+  props: ["label", "hint", "required", "disabled", "value", "error", "min", "max", "input_name"],
   data: function() {
     return {
       dateString: this.value,
