@@ -149,7 +149,7 @@ shared_context 'create_regulation_base_context' do
           select_dropdown_value(value[:value])
         end
       when :date
-        input_date((value[:id] || value[:name]), value[:value])
+        input_date_gds((value[:id] || value[:name]), value[:value])
       end
     end
   end

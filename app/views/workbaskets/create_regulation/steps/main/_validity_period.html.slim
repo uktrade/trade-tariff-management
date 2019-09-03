@@ -1,34 +1,6 @@
-/ TODO: FIXME: Date should use the below format. Uncomment this when back end is ready
-/ .form-group v-bind:class="{ 'form-group-error': errors.validity_start_date }"
-/   fieldset
-/     legend
-/       h3.heading-medium
-/         | Start date
+= content_tag "date-gds", "", "class"=>"m-t-10", ":value.sync" => "regulation.validity_start_date", "id" => "validity_start_date", ":error" => "errors.validity_start_date", ":required" => "true"
 
-/       span.error-message v-if="errors.validity_start_date" v-html="errors.validity_start_date"
-/     .form-date
-/       = f.input :validity_start_date_day, label: 'Day', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits day"}, wrapper_html: { class: 'form-group-day' },  input_html: { "v-bind:class" => "{ 'form-control-error': errors.validity_start_date_day }" }
-/       = f.input :validity_start_date_month, label: 'Month', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits month"}, wrapper_html: { class: 'form-group-month' },  input_html: { "v-bind:class" => "{ 'form-control-error': errors.validity_start_date_month }" }
-/       = f.input :validity_start_date_year, label: 'Year', required: true,  input_html: {pattern:"[0-9]*", minlength:"4", maxlength:"4", title:"Four digits year"}, wrapper_html: { class: 'form-group-year' },  input_html: { "v-bind:class" => "{ 'form-control-error': errors.validity_start_date_year }" }
-
-.form-group v-bind:class="{ 'form-group-error': errors.validity_start_date }"
-  fieldset
-    label.heading-medium.m-t-5 for="start_date" id="validity_start_date"
-      | Start date
-      span.error-message v-if="errors.validity_start_date" v-html="errors.validity_start_date"
-
-    = f.input :validity_start_date, as: :hidden, input_html: { "v-model" => "regulation.validity_start_date" }
-    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_start_date", id: "start_date" }
-
-.form-group v-bind:class="{ 'form-group-error': errors.validity_end_date }"
-  fieldset
-    label.heading-medium.m-t-5 for="end_date" id="validity_end_date"
-      | End date
-      span.form-hint
-        | Optional - leave blank if the regulation will remain in force indefinitely.
-      span.error-message v-if="errors.validity_end_date" v-html="errors.validity_end_date"
-    = f.input :validity_end_date, as: :hidden, input_html: { "v-model" => "regulation.validity_end_date" }
-    = content_tag "date-select", "", { "v-bind:value.sync" => "regulation.validity_end_date", id: "end_date" }
+= content_tag "date-gds", "", "class"=>"m-t-10", "label" => "End date", "hint" => "Optional - leave blank if the regulation will remain in force indefinitely.", ":value.sync" => "regulation.validity_end_date", "id" => "validity_end_date", ":error" => "errors.validity_end_date"
 
 .grid-row
   .column-one-half
