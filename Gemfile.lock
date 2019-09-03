@@ -101,6 +101,7 @@ GEM
     capybara-screenshot (1.0.22)
       capybara (>= 1.0, < 4)
       launchy
+    cf-app-utils (0.6)
     childprocess (1.0.1)
       rake (< 13.0)
     codeclimate-test-reporter (1.0.9)
@@ -535,6 +536,7 @@ DEPENDENCIES
   byebug
   capybara
   capybara-screenshot
+  cf-app-utils
   codeclimate-test-reporter
   coffee-rails (~> 4.2.2)
   connection_pool (~> 2.2)
