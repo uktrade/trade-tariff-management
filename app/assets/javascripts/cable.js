@@ -8,6 +8,10 @@
 (function() {
   this.App || (this.App = {});
 
-  App.cable = ActionCable.createConsumer();
+  if(window.action_cable_url) {
+    App.cable = ActionCable.createConsumer(window.action_cable_url);
+  } else {
+    App.cable = ActionCable.createConsumer();
+  }
 
 }).call(this);

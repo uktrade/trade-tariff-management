@@ -93,4 +93,16 @@ Rails.application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
+
+  config.action_cable.allowed_request_origins = [ENV.fetch("BASE_URL")]
+
+  application_uris = JSON.parse(ENV['VCAP_APPLICATION'])['application_uris']
+
+  # Be sure this host is able to route your requests on port 4443. This can be an
+  # issue if you have a proxy in front of your application that will not proxy port
+  # 4443 (eg. CloudFlare).
+  first_host = application_uris[0]
+  config.action_cable.url = "wss://#{first_host}:4443/cable"
+
+  config.action_cable.allowed_request_origins = application_uris.flat_map { |host| ["http://#{host}", "https://#{host}"] }
 end

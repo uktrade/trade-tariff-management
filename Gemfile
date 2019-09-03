@@ -93,6 +93,7 @@ gem "ffi", "~> 1.9.24"
 group :production do
   gem "sentry-raven"
   gem "rails_12factor"
+  gem "cf-app-utils"
 end
 
 group :development do
