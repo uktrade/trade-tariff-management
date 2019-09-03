@@ -46,6 +46,8 @@ gem "aws-sdk-rails"
 gem "aws-sdk-s3"
 gem "rubyzip", "~> 1.2.2"
 
+gem 'filesaverjs-rails'
+
 # Helpers
 gem "hashie", "~> 3.4"
 gem 'oj'
