@@ -1,0 +1,29 @@
+<script type="text/x-template" id="date-gds-template">
+  <div class="form-group"  v-bind:class="{ 'form-group-error': errorMessage }">
+    <fieldset>
+      <legend>
+        <h3 v-if="label" class="heading-medium m-t-5">{{label}}</h3>
+        <h3 v-else class="heading-medium m-t-5">Start date</h3>
+        <span class="form-hint" v-if="hint" v-html="hint"></span>
+        <span class="error-message" v-if="errorMessage" v-html="errorMessage"></span>
+      </legend>
+
+      <div class="form-date">
+        <div class="form-group form-group-day">
+          <label class="form-label" for="day">Day</label>
+          <input class="form-control" id="day" name="day" type="string" pattern="[0-9]*" minlength="2" maxlength="2" title="Two digits day" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required">
+        </div>
+        <div class="form-group form-group-month">
+          <label class="form-label" for="month">Month</label>
+          <input class="form-control" id="month" name="month" type="string" pattern="[0-9]*" minlength="2" maxlength="2" title="Two digits month" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required">
+        </div>
+        <div class="form-group form-group-year">
+          <label class="form-label" for="year">Year</label>
+          <input class="form-control" id="year" name="year" type="string" pattern="[0-9]*" minlength="4" maxlength="4" title="Four digits year" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required">
+        </div>
+      </div>
+
+      <input class="form-control" v-model="dateString" type="hidden">
+    </fieldset>
+  </div>
+</script>

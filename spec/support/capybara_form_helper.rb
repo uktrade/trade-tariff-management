@@ -4,6 +4,15 @@ module CapybaraFormHelper
     blur_focus
   end
 
+  def input_date_gds(wrapper, date)
+    within(wrapper) do
+      fill_in('Day', with: date.day)
+      fill_in('Month', with: date.month)
+      fill_in('Year', with: date.year)
+    end
+    blur_focus
+  end
+
   def blur_focus
     find("body").click
   end
