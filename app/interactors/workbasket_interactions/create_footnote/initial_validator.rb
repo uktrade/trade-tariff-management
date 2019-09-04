@@ -102,7 +102,7 @@ module WorkbasketInteractions
 
       def check_commodity_codes!
         return unless can_add_commodity_code?
-        
+
         if commodity_codes.present?
           list = attrs_parser.parse_list_of_values(commodity_codes)
 
@@ -119,6 +119,8 @@ module WorkbasketInteractions
       end
 
       def check_measures!
+        return unless can_add_measures?
+
         if measure_sids.present?
           list = attrs_parser.parse_list_of_values(measure_sids)
 
@@ -136,6 +138,10 @@ module WorkbasketInteractions
 
       def can_add_commodity_code?
         ['NC', 'PN', 'TN'].include?(footnote_type_id)
+      end
+
+      def can_add_measures?
+        ['CD','CG','DU','EU','IS','MG','MX','OZ','PB','TM','TR'].include?(footnote_type_id)
       end
 
       def parse_date(option_name)
