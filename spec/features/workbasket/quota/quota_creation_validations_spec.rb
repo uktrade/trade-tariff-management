@@ -72,7 +72,7 @@ RSpec.describe "adding quotas", :js do
     within(find("fieldset", text: "What period type will this section have?")) do
       search_for_value(type_value: "Annual", select_value: "Annual")
     end
-    fill_in('What is the start date of this section?', with: '01/01/2019')
+    input_date_gds("#annual_start_date", "01/01/2019".to_date)
     within(find("form", text: "How will the quota balance(s) in this section be measured?")) do
       find("#measurement-unit-code").click
       find(".selectize-dropdown-content .selection", text: measurement_unit.measurement_unit_code).click

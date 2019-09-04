@@ -1,16 +1,15 @@
 Vue.component('date-gds', {
   template: "#date-gds-template",
-  props: ["label", "hint", "required", "disabled", "value", "error", "min", "max", "input_name"],
+  props: ["label", "hint", "required", "disabled", "value", "error", "input_name"],
   data: function() {
     return {
       dateString: this.value,
-      errorMessage: this.error
+      errorMessage: this.error,
+      inputName: this.input_name
     }
   },
   mounted: function() {
     var self = this;
-
-    this.applyMinMax();
 
     if (this.value) {
       this.generateDateInputValues()
@@ -28,17 +27,6 @@ Vue.component('date-gds', {
     });
   },
   methods: {
-    applyMinMax: function() {
-      if (this.min) {
-        var min = moment(this.min, ["DD MMM YYYY", "DD/MM/YYYY"], true);
-        this.pikaday.setMinDate(min.isValid() ? min.toDate() : null);
-      }
-
-      if (this.max) {
-        var max = moment(this.max, ["DD MMM YYYY", "DD/MM/YYYY"], true);
-        this.pikaday.setMaxDate(max.isValid() ? max.toDate() : null);
-      }
-    },
     generateDateString: function () {
       this.dateString = null;
 
@@ -72,12 +60,6 @@ Vue.component('date-gds', {
     },
     error: function() {
       this.errorMessage = this.error;
-    },
-    min: function() {
-      this.applyMinMax();
-    },
-    max: function() {
-      this.applyMinMax();
     }
   },
   destroyed: function() {

@@ -1,38 +1,4 @@
-fieldset
-  form-group :errors="errors" error-key="validity_start_date"
-    template slot-scope="slotProps"
-      h3.heading-medium
-        label for="geographical_area_validity_start_date"
-          | When is the area's start date?
-
-      label.form-label id="validity_start_date"
-        span.error-message v-if="slotProps.hasError" v-cloak=""
-          | {{slotProps.error}}
-        span.form-hint
-
-      .bootstrap-row
-        .col-md-6
-          = content_tag "date-select", "",
-            { ":value.sync" => "geographical_area.validity_start_date",
-            id: "geographical_area_validity_start_date" }
-
-fieldset
-  form-group :errors="errors" error-key="validity_end_date"
-    template slot-scope="slotProps"
-      h3.heading-medium
-        label for="geographical_area_validity_end_date"
-          | When is the area's end date?
-
-      label.form-label id="validity_end_date"
-        span.error-message v-if="slotProps.hasError" v-cloak=""
-          | {{slotProps.error}}
-        span.form-hint
-          | This is optional and should usually be left unset (open-ended) unless you know the area is only
-          br
-          | needed for a limited time.
-
-      .bootstrap-row
-        .col-md-6
-          = content_tag "date-select", "",
-          { ":value.sync" => "geographical_area.validity_end_date",
-            id: "geographical_area_validity_end_date" }
+= content_tag "date-gds", "", "label" => "When is the area's start date?", ":value.sync" => "geographical_area.validity_start_date",  "id" => "validity_start_date", ":required" => "true", ":error" => "errors.validity_start_date"
+.grid-row
+  .column-two-thirds
+    = content_tag "date-gds", "", "label" => "When are these new codes' end date?", "hint" => "This is optional and should usually be left unset (open-ended) unless you know the area is only needed for a limited time.", ":value.sync" => "geographical_area.validity_end_date",  "id" => "validity_end_date", ":error" => "errors.validity_end_date"
