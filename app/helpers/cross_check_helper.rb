@@ -18,6 +18,8 @@ module CrossCheckHelper
       "Cross-check and bulk edit additional codes"
     elsif workbasket.type == 'create_footnote'
       "Cross-check and create footnote"
+    elsif workbasket.type == 'edit_footnote'
+      "Cross-check and approve footnote"
     end
   end
 
@@ -40,6 +42,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/edit_nomenclatures"
     elsif workbasket.type == 'create_footnote'
       "workbaskets/shared/steps/review_and_submit/create_footnote"
+    elsif workbasket.type == 'edit_footnote'
+      "workbaskets/shared/steps/review_and_submit/edit_footnote"
     end
   end
 

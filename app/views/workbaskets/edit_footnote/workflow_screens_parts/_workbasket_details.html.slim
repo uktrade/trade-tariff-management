@@ -1,0 +1,18 @@
+h3.heading-medium Workbasket details
+
+table.create-measures-details-table class="#{'view-workbasket-details-block' if workbasket_rejected?}"
+  tbody
+    tr
+      td.heading_column
+        | Created by
+      td
+        = workbasket.author_name
+
+    tr
+      td.heading_column
+        | Created on
+      td
+        = workbasket.created_at.strftime("%d %B %Y")
+
+    - workbasket.ordered_events.map do |event|
+      = render "workbaskets/events/#{event.event_type}", event: event
