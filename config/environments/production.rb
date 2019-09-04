@@ -93,9 +93,6 @@ Rails.application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
-
-  config.action_cable.allowed_request_origins = [ENV.fetch("BASE_URL")]
-
   application_uris = JSON.parse(ENV['VCAP_APPLICATION'])['application_uris']
 
   # Be sure this host is able to route your requests on port 4443. This can be an
