@@ -20,7 +20,7 @@ RSpec.describe "adding measures", :js do
 
     click_on("Create measures")
 
-    input_date("When will these measures start?", Date.today)
+    input_date_gds("#validity_start_date", Date.today)
 
     within(find("fieldset", text: "Which regulation gives legal force")) do
       search_for_value(type_value: "test", select_value: regulation.information_text)

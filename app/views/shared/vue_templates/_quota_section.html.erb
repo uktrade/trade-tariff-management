@@ -14,29 +14,30 @@
 
     <div class="panel panel-border-narrow" v-if="section.type">
       <fieldset v-if="section.type != 'custom'">
-        <div class="form-group">
-          <label class="form-label" for="annual_start_date">
-            What is the start date of this section?
-          </label>
-            <div class="row">
-              <div class="col-md-3">
-                <div v-if="section.type == 'annual'">
-                  <date-select :value.sync="section.start_date" id="annual_start_date" ></date-select>
-                </div>
-                <div class="row" v-else>
-                  <div class="col-md-3">
-                    <input type="text" value="1" disabled class='form-control string'>
-                  </div>
-                  <div class="col-md-5">
-                    <input value="January" disabled class='form-control string'>
-                  </div>
-                  <div class="col-md-4">
-                    <input :value="section.start_date && section.start_date.split('/')[2]" @input="section.start_date = '01/01/'+$event.target.value;" class='form-control string' id='quota-period-year'>
-                  </div>
-                </div>
+        <date-gds v-if="section.type == 'annual'" label="What is the start date of this section?" :value.sync="section.start_date" id="annual_start_date"></date-gds>
+        <div v-else class="form-group">
+          <fieldset>
+            <legend>
+              <h3 class="heading-medium m-t-5">What is the start date of this section?</h3>
+            </legend>
+
+            <div class="form-date">
+              <div class="form-group form-group-day">
+                <label class="form-label" for="day">Day</label>
+                <input class="form-control" id="day" name="day" type="string" pattern="[0-9]*" minlength="2" maxlength="2" title="Two digits day" value="01" disabled>
+              </div>
+              <div class="form-group form-group-month">
+                <label class="form-label" for="month">Month</label>
+                <input class="form-control" id="month" name="month" type="string" pattern="[0-9]*" minlength="2" maxlength="2" title="Two digits month" value="01" disabled>
+              </div>
+              <div class="form-group form-group-year">
+                <label class="form-label" for="year">Year</label>
+                <input class="form-control" id="quota-period-year" name="year" type="string" pattern="[0-9]*" minlength="4" maxlength="4" title="Four digits year" :value="section.start_date && section.start_date.split('/')[2]" @input="section.start_date = '01/01/'+$event.target.value;">
+              </div>
             </div>
-          </div>
+          </fieldset>
         </div>
+
         <div class="form-group">
           <label for="" class="form-label">
             How long will this section last?
@@ -131,21 +132,8 @@
         </div>
 
         <div class='custom-period' v-for="(period, idx) in section.periods">
-          <div class="form-group">
-            <label class="form-label">
-              What is the start date of this period?
-            </label>
-
-            <date-select :value.sync="period.start_date" :min="idx == 0 ? null : section.periods[idx - 1].end_date" :max="maxDate"></date-select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">
-              What is the end date of this period?
-            </label>
-
-            <date-select :value.sync="period.end_date" :min="period.start_date" :max="maxDate"></date-select>
-          </div>
+          <date-gds label="What is the start date of this period?" :value.sync="period.start_date" id="period_start_date"></date-gds>
+          <date-gds label="What is the end date of this period?" :value.sync="period.end_date" id="period_end_date"></date-gds>
 
           <div class="form-group">
             <label for="" class="form-label">

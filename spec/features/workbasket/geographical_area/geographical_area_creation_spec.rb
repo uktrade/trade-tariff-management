@@ -10,7 +10,7 @@ RSpec.describe "adding geographical areas", :js do
     select_radio("A group")
     fill_in("What code will identify this area?", with: "EU27")
     fill_in("What is the area description?", with: "A description")
-    input_date("When is the area's start date?", 3.days.from_now)
+    input_date_gds("#validity_start_date", 3.days.from_now)
 
     click_on "Submit for cross-check"
 
@@ -29,7 +29,7 @@ RSpec.describe "adding geographical areas", :js do
     select_radio("A country")
     fill_in("What code will identify this area?", with: "GE")
     fill_in("What is the area description?", with: "A description")
-    input_date("When is the area's start date?", 3.days.from_now)
+    input_date_gds("#validity_start_date", 3.days.from_now)
 
     click_on("Add memberships")
 
@@ -58,7 +58,7 @@ RSpec.describe "adding geographical areas", :js do
     select_radio("A group")
     fill_in("What code will identify this area?", with: "0000")
     fill_in("What is the area description?", with: "A description")
-    input_date("When is the area's start date?", 3.days.from_now)
+    input_date_gds("#validity_start_date", 3.days.from_now)
 
     click_on("Add memberships")
 
@@ -86,7 +86,7 @@ RSpec.describe "adding geographical areas", :js do
     select_radio("A country")
     fill_in("What code will identify this area?", with: "GE")
     fill_in("What is the area description?", with: "A description")
-    input_date("When is the area's start date?", 3.days.from_now)
+    input_date_gds("#validity_start_date", 3.days.from_now)
 
     expect(page).to have_content("1008")
 
