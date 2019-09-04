@@ -1,0 +1,28 @@
+.records-table-wrapper
+  table class="table"  id="records-table"
+    thead
+      tr
+        th.validity_start_date-column
+          a
+          | Footnote valid from
+          - footnote = Footnote.find(footnote_id: workbasket.settings.original_footnote_id, footnote_type_id: workbasket.settings.original_footnote_type_id)
+        th.name-column
+          a Footnote type
+        th.code-column
+          a Description
+        th.measures-column
+          a Associated measures
+        th.measures-column
+          a Associated goods codes
+    tbody
+      tr
+        td.validity_start_date-column
+          = format_date(footnote.validity_start_date.to_date)
+        td.type-column
+          = footnote.footnote_type_id
+        td.description-column
+          = footnote.description
+        td.measures-column
+          = footnote.measures.map { |measure| measure.measure_sid }.join(', ')
+        td.measures-column
+          = footnote.goods_nomenclatures.map { |nomenclature| nomenclature.goods_nomenclature_item_id.to_i }.join(', ')

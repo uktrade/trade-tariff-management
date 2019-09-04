@@ -1,0 +1,13 @@
+- footnote = footnote ? footnote : Footnote.find(workbasket_id: workbasket.id)
+
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Footnote cross-checked
+  h3.heading-medium
+    | The footnote with type  
+    = footnote.footnote_type_id
+    |  and ID
+    = footnote.footnote_id
+    | has been submitted for approval.
+
+= render "workbaskets/create_footnote/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

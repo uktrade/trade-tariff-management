@@ -1,0 +1,21 @@
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  - if mode == "cross_check" && next_cross_check.present? && workbasket.id != next_cross_check.id
+    li
+      = link_to "Cross-check next workbasket", new_cross_check_url(next_cross_check.id)
+
+  - if mode == "approve" && next_approve.present? && workbasket.id != next_approve.id
+    li
+      = link_to "Approve next workbasket", new_approve_url(next_approve.id)
+
+  li
+    = link_to "Return to main menu", root_url
+
+  - unless workbasket_rejected?
+    li
+      = link_to "View this footnote", create_footnote_url(workbasket.id)
+br
+br

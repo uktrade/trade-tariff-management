@@ -12,6 +12,8 @@ module ApprovalHelper
       "Approve new goods classification"
     elsif workbasket.type == 'create_footnote'
       "Approve new footnotes"
+    elsif workbasket.type == 'edit_footnote'
+      "Approve edited footnote"
     end
   end
 
@@ -34,6 +36,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/geographical_areas"
     elsif workbasket.type == 'create_footnote'
       "workbaskets/shared/steps/review_and_submit/approval/create_footnote"
+    elsif workbasket.type == 'edit_footnote'
+      "workbaskets/shared/steps/review_and_submit/approval/edit_footnote"
     end
   end
 end

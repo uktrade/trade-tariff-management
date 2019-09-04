@@ -1,0 +1,14 @@
+- footnote = footnote ? footnote : Footnote.find(workbasket_id: workbasket.id)
+
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Footnote approved
+
+  h3.heading-medium
+    | The footnote with type 
+    = footnote.footnote_type_id
+    |  and ID
+    = footnote.footnote_id
+    |  has not yet been sent through to CDS and has not been scheduled for export.
+
+= render "workbaskets/create_footnote/workflow_screens_parts/status_pages/next_step_links", mode: "cross_check"

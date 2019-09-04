@@ -1,0 +1,11 @@
+- if workbasket_view_show_actions_allowed?
+  .view-workbasket-actions-allowed
+    - if iam_workbasket_author? && workbasket.can_withdraw?
+      = link_to "Withdraw workbasket from workflow", "#",
+      data: { target_url: withdraw_workbasket_from_workflow_create_footnote_url(workbasket.id), target_modal: workbasket.id },
+      class: "button js-main-menu-show-withdraw-confirmation-link"
+      br
+
+= render "workbaskets/main_menu_parts/schedule_export_to_cds_popup"
+= render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "delete_confirmation_popup", title: "You are going to delete workbasket"
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
