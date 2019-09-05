@@ -1,4 +1,4 @@
-- footnote = footnote ? footnote : Footnote.find(workbasket_id: workbasket.id)
+- footnote = footnote ? footnote : Footnote.find(footnote_id: workbasket.settings.original_footnote_id, footnote_type_id: workbasket.settings.original_footnote_type_id)
 
 .panel.panel--confirmation
   h1.heading-xlarge

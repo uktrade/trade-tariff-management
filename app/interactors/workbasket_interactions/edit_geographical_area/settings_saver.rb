@@ -299,7 +299,7 @@ module WorkbasketInteractions
         check_geo_area_conformance
 
         if description_changed?
-          if  existing_description_period_on_same_day.empty?
+          if existing_description_period_on_same_day.empty?
             @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period)) unless geographical_area_description_period.conformant?
             unless geographical_area_description_period.conformant?
               @conformance_errors.merge!(get_conformance_errors(geographical_area_description_period))
