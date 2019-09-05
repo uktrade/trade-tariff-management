@@ -115,9 +115,13 @@ module WorkbasketInteractions
       def check_conformance_rules!
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           if it_is_just_description_changed?
-            end_date_existing_footnote_description_period!
-            add_next_footnote_description_period!
-            add_next_footnote_description!
+            if existing_description_period_on_same_day.empty?
+              end_date_existing_footnote_description_period!
+              add_next_footnote_description_period!
+              add_next_footnote_description!
+            else
+              update_existing_description!(existing_description_period_on_same_day)
+            end
 
           else
             end_date_existing_footnote!
@@ -143,18 +147,26 @@ module WorkbasketInteractions
         end
       end
 
+      def check_for_updated_description_conformance_errors
+        existing_description = existing_description_period_on_same_day.first.footnote_description
+        @conformance_errors.merge!(get_conformance_errors(existing_description))
+      end
+
       def parse_and_format_conformance_rules
         @conformance_errors = {}
 
         if it_is_just_description_changed?
-          unless next_footnote_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(next_footnote_description_period))
-          end
+          if existing_description_period_on_same_day.empty?
+            unless next_footnote_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_footnote_description_period))
+            end
 
-          unless next_footnote_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(next_footnote_description))
+            unless next_footnote_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(next_footnote_description))
+            end
+          else
+            check_for_updated_description_conformance_errors
           end
-
         else
           unless footnote.conformant?
             @conformance_errors.merge!(get_conformance_errors(footnote))
@@ -317,7 +329,6 @@ module WorkbasketInteractions
         @it_is_just_description_changed ||= begin
           description_changed? &&
             original_footnote.validity_start_date.strftime("%Y-%m-%d") == validity_start_date.try(:strftime, "%Y-%m-%d") &&
-            original_footnote.validity_end_date.try(:strftime, "%Y-%m-%d") == validity_end_date.try(:strftime, "%Y-%m-%d") &&
             original_footnote.commodity_codes == commodity_codes &&
             original_footnote.measure_sids == measure_sids
         end
@@ -410,6 +421,21 @@ module WorkbasketInteractions
 
       def validator_class(record)
         "#{record.class.name}Validator".constantize
+      end
+
+      def existing_description_period_on_same_day
+        FootnoteDescriptionPeriod.where(footnote_id: original_footnote.footnote_id, footnote_type_id: original_footnote.footnote_type_id).all.select {|period| period.validity_start_date === description_validity_start_date}
+      end
+
+      def update_existing_description!(same_day_description_period)
+        description = same_day_description_period.first.footnote_description
+        description.description = description
+
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          description, system_ops.merge(operation: "U")
+        ).assign!(false)
+
+        description.save
       end
     end
   end
