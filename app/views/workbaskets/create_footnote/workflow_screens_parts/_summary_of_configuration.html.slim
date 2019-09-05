@@ -30,7 +30,7 @@ table.create-measures-details-table
       td.heading_column
         | Description
       td
-        = footnote.description
+        = FootnoteDescription.where(footnote_id: footnote.footnote_id).last.description
     tr
 
       td.heading_column

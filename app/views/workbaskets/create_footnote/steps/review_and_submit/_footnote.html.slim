@@ -21,7 +21,7 @@
         td.type-column
           = footnote.footnote_type_id
         td.description-column
-          = footnote.description
+          = FootnoteDescription.where(footnote_id: footnote.footnote_id).last.description
         td.measures-column
           = footnote.measures.map { |measure| measure.measure_sid }.join(', ')
         td.measures-column
