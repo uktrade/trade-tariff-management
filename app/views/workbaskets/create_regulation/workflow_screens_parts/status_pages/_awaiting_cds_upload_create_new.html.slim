@@ -1,0 +1,14 @@
+- regulation = regulation ? regulation : BaseRegulation.find(workbasket_id: workbasket.id).decorate
+
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Regulation approved
+
+  h3.heading-medium
+    | The regulation with ID
+    =<> "'#{regulation.base_regulation_id}'"
+    | and name
+    =<> "'#{regulation.legal_id}'"
+    |  has been approved. It has been scheduled for export CDS
+
+= render "workbaskets/create_regulation/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

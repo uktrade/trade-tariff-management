@@ -20,6 +20,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/measures"
     elsif workbasket.type == 'create_quota'
       "workbaskets/shared/steps/review_and_submit/approval/quotas"
+    elsif workbasket.type == 'create_regulation'
+      "workbaskets/shared/steps/review_and_submit/approval/create_regulation"
     elsif workbasket.type == 'create_geographical_area'
       "workbaskets/shared/steps/review_and_submit/approval/geographical_areas"
     elsif workbasket.type == 'create_additional_code'

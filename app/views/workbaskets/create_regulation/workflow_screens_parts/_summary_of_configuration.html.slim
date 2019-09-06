@@ -1,0 +1,39 @@
+h3.heading-medium Summary of regulation configuration
+- regulation = regulation ? regulation : BaseRegulation.find(workbasket_id: workbasket.id).decorate
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Regulation identifier
+      td
+        = regulation.legal_id
+
+    tr
+      td.heading_column
+        | Regulation name
+      td
+        = regulation.description
+
+    tr
+      td.heading_column
+        | Regulation URL
+      td
+        = regulation.reference_url
+
+    tr
+      td.heading_column
+        | Regulation valid from
+      td
+        = format_date(regulation.validity_start_date)
+
+    tr
+      td.heading_column
+        | Regulation valid to
+      td
+        = format_date(regulation.validity_end_date)
+
+    tr
+      td.heading_column
+        | Regulation type
+      td
+        = "#{regulation.regulation_group.regulation_group_id} #{regulation.regulation_group.description}"

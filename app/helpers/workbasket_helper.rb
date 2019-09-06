@@ -342,6 +342,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_measure_url(workbasket.id)
     elsif workbasket.object.type == "create_quota"
       withdraw_workbasket_from_workflow_create_quotum_url(workbasket.id)
+    elsif workbasket.object.type == "create_regulation"
+      withdraw_workbasket_from_workflow_create_regulation_url(workbasket.id)
     elsif workbasket.object.type == "bulk_edit_of_measures"
       withdraw_workbasket_from_workflow_bulk_edit_of_measure_url(workbasket.id)
     elsif workbasket.object.type == "create_additional_code"
