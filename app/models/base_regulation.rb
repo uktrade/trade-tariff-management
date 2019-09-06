@@ -66,6 +66,10 @@ class BaseRegulation < Sequel::Model
     base_regulation_id
   end
 
+  def decorate
+    BaseRegulationDecorator.decorate(self)
+  end
+
   def to_json(_options = {})
     {
       formatted_id: formatted_id,

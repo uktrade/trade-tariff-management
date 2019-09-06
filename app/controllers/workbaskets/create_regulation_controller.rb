@@ -1,5 +1,7 @@
 module Workbaskets
   class CreateRegulationController < Workbaskets::BaseController
+    skip_around_action :configure_time_machine, only: [:submitted_for_cross_check]
+
     expose(:sub_klass) { "CreateRegulation" }
     expose(:settings_type) { :create_regulation }
 
@@ -22,7 +24,11 @@ module Workbaskets
     end
 
     expose(:submitted_url) do
-      create_regulation_url(workbasket.id)
+      submitted_for_cross_check_create_regulation_url(workbasket.id)
+    end
+
+    expose(:regulation) do
+      workbasket_settings.collection.first.decorate
     end
 
     def update
@@ -51,6 +57,10 @@ module Workbaskets
 
     def workbasket_data_can_be_persisted?
       true
+    end
+
+    def submit_for_cross_check_mode?
+      params[:mode] == "submit_for_cross_check"
     end
   end
 end

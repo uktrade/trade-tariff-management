@@ -4,6 +4,8 @@ module CrossCheckHelper
       'Cross-check and create measures'
     elsif workbasket.type == 'create_quota'
       'Cross-check and create quota'
+    elsif workbasket.type == 'create_regulation'
+      "Cross-check and create regulation"
     elsif workbasket.type == 'create_geographical_area'
       'Cross-check and create geographical area'
     elsif workbasket.type == 'create_additional_code'
@@ -28,6 +30,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/measures"
     elsif workbasket.type == 'create_quota'
       "workbaskets/shared/steps/review_and_submit/quotas"
+    elsif workbasket.type == 'create_regulation'
+      "workbaskets/shared/steps/review_and_submit/regulation"
     elsif workbasket.type == 'bulk_edit_of_measures'
       "workbaskets/shared/steps/review_and_submit/bulk_edit_measures"
     elsif workbasket.type == 'create_geographical_area'
