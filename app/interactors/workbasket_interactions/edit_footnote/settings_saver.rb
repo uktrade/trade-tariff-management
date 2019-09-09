@@ -85,7 +85,7 @@ module WorkbasketInteractions
       def validate!
         check_initial_validation_rules!
         check_if_nothing_changed! if @errors.blank?
-        check_conformance_rules! if @errors.blank?
+        edit_footnote! if @errors.blank?
       end
 
       def check_initial_validation_rules!
@@ -112,28 +112,23 @@ module WorkbasketInteractions
           original_footnote.measure_sids == measure_sids
       end
 
-      def check_conformance_rules!
+      def edit_description!
+        if existing_description_period_on_same_day.empty?
+          end_date_existing_footnote_description_period!
+          add_next_footnote_description_period!
+          add_next_footnote_description!
+        else
+          update_existing_description!(existing_description_period_on_same_day)
+        end
+      end
+
+      def edit_footnote!
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           if it_is_just_description_changed?
-            if existing_description_period_on_same_day.empty?
-              end_date_existing_footnote_description_period!
-              add_next_footnote_description_period!
-              add_next_footnote_description!
-            else
-              update_existing_description!(existing_description_period_on_same_day)
-            end
-
+            edit_description!
           else
-            end_date_existing_footnote!
-
-            add_footnote!
             add_footnote_description_period!
             add_footnote_description!
-
-            if description_should_be_changed_later?
-              add_next_footnote_description_period!
-              add_next_footnote_description!
-            end
 
             end_date_existing_commodity_codes_associations!
             if commodity_codes.present?
@@ -212,18 +207,6 @@ module WorkbasketInteractions
         end
       end
 
-      def end_date_existing_footnote!
-        unless original_footnote.already_end_dated?
-          original_footnote.validity_end_date = validity_start_date
-
-          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            original_footnote, system_ops.merge(operation: "U")
-          ).assign!(false)
-
-          original_footnote.save
-        end
-      end
-
       def end_date_existing_footnote_description_period!
         footnote_description_period = original_footnote.footnote_description
                                                        .footnote_description_period
@@ -237,20 +220,6 @@ module WorkbasketInteractions
 
           footnote_description_period.save
         end
-      end
-
-      def add_footnote!
-        @footnote = Footnote.new(
-          validity_start_date: validity_start_date,
-          validity_end_date: validity_end_date
-        )
-
-        footnote.footnote_type_id = original_footnote.footnote_type_id
-
-        assign_system_ops!(footnote)
-        set_primary_key!(footnote)
-
-        footnote.save if persist_mode?
       end
 
       def add_footnote_description_period!
@@ -284,45 +253,8 @@ module WorkbasketInteractions
         footnote_description.save if persist_mode?
       end
 
-      def add_next_footnote_description_period!
-        @next_footnote_description_period = FootnoteDescriptionPeriod.new(
-          validity_start_date: description_validity_start_date,
-          validity_end_date: validity_end_date
-        )
-
-        next_footnote_description_period.footnote_id = (footnote || original_footnote).footnote_id
-        next_footnote_description_period.footnote_type_id = (footnote || original_footnote).footnote_type_id
-
-        assign_system_ops!(next_footnote_description_period)
-        set_primary_key!(next_footnote_description_period)
-
-        next_footnote_description_period.save if persist_mode?
-      end
-
-      def add_next_footnote_description!
-        @next_footnote_description = FootnoteDescription.new(
-          description: description,
-          language_id: "EN"
-        )
-
-        next_footnote_description.footnote_id = (footnote || original_footnote).footnote_id
-        next_footnote_description.footnote_type_id = (footnote || original_footnote).footnote_type_id
-        next_footnote_description.footnote_description_period_sid = next_footnote_description_period.footnote_description_period_sid
-
-        assign_system_ops!(next_footnote_description)
-        set_primary_key!(next_footnote_description)
-
-        next_footnote_description.save if persist_mode?
-      end
-
       def description_changed?
         original_footnote.description.to_s.squish != description.to_s.squish
-      end
-
-      def description_should_be_changed_later?
-        description_changed? &&
-          description_validity_start_date.present? &&
-          description_validity_start_date != validity_start_date
       end
 
       def it_is_just_description_changed?
