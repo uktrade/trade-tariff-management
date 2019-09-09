@@ -12,21 +12,3 @@ fieldset.js-validity-period-start-date-block
       .bootstrap-row
         .col-md-6
           = content_tag "date-select", "", ":value.sync" => "footnote.validity_start_date"
-
-fieldset
-  form-group :errors="errors" error-key="validity_end_date"
-    template slot-scope="slotProps"
-      h3.heading-medium
-        | When is the footnote's end date?
-
-      label.form-label
-        span.error-message v-if="slotProps.hasError" v-cloak=""
-          | {{slotProps.error}}
-        span.form-hint
-          | This is optional and should usually be left unset (open-ended) unless you know the footnote is only
-          br
-          | needed for a limited time.
-
-      .bootstrap-row
-        .col-md-6
-          = content_tag "date-select", "", ":value.sync" => "footnote.validity_end_date"
