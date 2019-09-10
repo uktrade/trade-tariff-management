@@ -114,9 +114,8 @@ module WorkbasketInteractions
 
       def edit_description!
         if existing_description_period_on_same_day.empty?
-          end_date_existing_footnote_description_period!
-          add_next_footnote_description_period!
-          add_next_footnote_description!
+          add_footnote_description_period!
+          add_footnote_description!
         else
           update_existing_description!(existing_description_period_on_same_day)
         end
@@ -127,8 +126,10 @@ module WorkbasketInteractions
           if it_is_just_description_changed?
             edit_description!
           else
-            add_footnote_description_period!
-            add_footnote_description!
+            if description_changed?
+              add_footnote_description_period!
+              add_footnote_description!
+            end
 
             end_date_existing_commodity_codes_associations!
             if commodity_codes.present?
@@ -152,37 +153,23 @@ module WorkbasketInteractions
 
         if it_is_just_description_changed?
           if existing_description_period_on_same_day.empty?
-            unless next_footnote_description_period.conformant?
+            unless footnote_description_period.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_footnote_description_period))
             end
 
-            unless next_footnote_description.conformant?
+            unless footnote_description.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_footnote_description))
             end
           else
             check_for_updated_description_conformance_errors
           end
         else
-          unless footnote.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote))
-          end
-
           unless footnote_description_period.conformant?
             @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
           end
 
           unless footnote_description.conformant?
             @conformance_errors.merge!(get_conformance_errors(footnote_description))
-          end
-
-          if description_should_be_changed_later?
-            unless next_footnote_description_period.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_footnote_description_period))
-            end
-
-            unless next_footnote_description.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_footnote_description))
-            end
           end
 
           if commodity_codes_candidates.present?
@@ -212,7 +199,7 @@ module WorkbasketInteractions
                                                        .footnote_description_period
 
         unless footnote_description_period.already_end_dated?
-          footnote_description_period.validity_end_date = (description_validity_start_date || validity_start_date)
+          footnote_description_period.validity_end_date = (description_validity_start_date)
 
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
             footnote_description_period, system_ops.merge(operation: "U")
@@ -224,12 +211,11 @@ module WorkbasketInteractions
 
       def add_footnote_description_period!
         @footnote_description_period = FootnoteDescriptionPeriod.new(
-          validity_start_date: validity_start_date,
-          validity_end_date: description_should_be_changed_later? ? description_validity_start_date : validity_end_date
+          validity_start_date: description_validity_start_date
         )
 
-        footnote_description_period.footnote_id = footnote.footnote_id
-        footnote_description_period.footnote_type_id = footnote.footnote_type_id
+        footnote_description_period.footnote_id = original_footnote.footnote.footnote_id
+        footnote_description_period.footnote_type_id = original_footnote.footnote.footnote_type_id
 
         assign_system_ops!(footnote_description_period)
         set_primary_key!(footnote_description_period)
@@ -239,12 +225,12 @@ module WorkbasketInteractions
 
       def add_footnote_description!
         @footnote_description = FootnoteDescription.new(
-          description: description_should_be_changed_later? ? original_footnote.description : description,
+          description: description,
           language_id: "EN"
         )
 
-        footnote_description.footnote_id = footnote.footnote_id
-        footnote_description.footnote_type_id = footnote.footnote_type_id
+        footnote_description.footnote_id = original_footnote.footnote.footnote_id
+        footnote_description.footnote_type_id = original_footnote.footnote.footnote_type_id
         footnote_description.footnote_description_period_sid = footnote_description_period.footnote_description_period_sid
 
         assign_system_ops!(footnote_description)
