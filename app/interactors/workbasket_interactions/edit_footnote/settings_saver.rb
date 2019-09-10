@@ -136,7 +136,7 @@ module WorkbasketInteractions
               add_new_commodity_codes_associations!
             end
 
-            add_new_measures_associations! if measure_sids.present?
+            update_measures_associations! if measure_sids.present?
           end
 
           parse_and_format_conformance_rules
@@ -291,7 +291,16 @@ module WorkbasketInteractions
         end
       end
 
-      def add_new_measures_associations!
+      def update_measures_associations!
+        original_measure_sids = original_footnote.footnote.measures.map {|measure| measure.measure_sid.to_s}
+        deleted_measure_associations = original_measure_sids - measure_sids
+        added_measure_associations = measure_sids - original_measure_sids
+
+        delete_measure_associations!(deleted_measure_associations) if deleted_measure_associations
+        add_measure_associations!(added_measure_associations) if added_measure_associations
+      end
+
+      def add_measure_associations!(measure_sids)
         measure_sids.map do |measure_sid|
           measure = Measure.by_measure_sid(measure_sid)
                            .first
@@ -300,14 +309,29 @@ module WorkbasketInteractions
             association = FootnoteAssociationMeasure.new
             association.measure_sid = measure.measure_sid
 
-            association.footnote_type_id = footnote.footnote_type_id
-            association.footnote_id = footnote.footnote_id
+            association.footnote_type_id = original_footnote.footnote.footnote_type_id
+            association.footnote_id = original_footnote.footnote.footnote_id
 
             assign_system_ops!(association)
             association.save if persist_mode?
 
             @measures_candidates << association
           end
+        end
+      end
+
+      def delete_measure_associations!(measure_sids)
+        measure_sids.each do |measure|
+            measure = Measure.by_measure_sid(measure_sid)
+                      .first
+
+            unless item.already_end_dated?
+              ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+                item, system_ops.merge(operation: "D")
+              ).assign!(false)
+
+              item.save
+            end
         end
       end
 
