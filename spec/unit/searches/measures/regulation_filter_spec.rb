@@ -45,8 +45,7 @@ describe "Measure search: regulation filter" do
         value: "R5555555"
       )
 
-      expect(res.count).to be_eql(1)
-      expect(res[0].measure_sid).to be_eql(c_measure.measure_sid)
+      expect(res.count).to be_eql(0)
 
       res = search_results(
         enabled: true,
