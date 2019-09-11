@@ -17,7 +17,7 @@ fieldset
               label for="geographical_area_type_country"
                 | A country
                 span.form-hint
-                  | This will have two-letter ISO code. You can add countires to geographical area groups, but a country cannot itself be a group.
+                  | This will have two-letter ISO code. You can add countries to geographical area groups, but a country cannot itself be a group.
           .geographical-area-type
             .multiple-choice
               input type='radio' id="geographical_area_type_region" class="radio-inline-group" name="geographical_area[geographical_code]" :checked="geographical_area.geographical_code == 'region'" v-model="geographical_area.geographical_code" value="region"
