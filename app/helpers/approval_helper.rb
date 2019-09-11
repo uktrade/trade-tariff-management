@@ -10,12 +10,20 @@ module ApprovalHelper
       'Approve new geographical area'
     elsif workbasket.type == 'create_additional_code'
       "Approve new additional codes"
+    elsif workbasket.type == 'bulk_edit_of_additional_codes'
+      "Approve edited additional codes"
     elsif workbasket.type == 'edit_nomenclature'
       "Approve new goods classification"
     elsif workbasket.type == 'create_footnote'
       "Approve new footnotes"
     elsif workbasket.type == 'edit_footnote'
       "Approve edited footnote"
+    elsif workbasket.type == 'edit_geographical_area'
+      "Approve edited geographical area"
+    elsif workbasket.type == 'bulk_edit_of_measures'
+      "Approve edited measures"
+    elsif workbasket.type == 'bulk_edit_of_additional_codes'
+      "Approve edited additional codes"
     end
   end
 
