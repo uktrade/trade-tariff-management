@@ -10,6 +10,8 @@ module CrossCheckHelper
       'Cross-check and create geographical area'
     elsif workbasket.type == 'create_additional_code'
       "Cross-check and create additional codes"
+    elsif workbasket.type == 'bulk_edit_of_additional_codes'
+      "Cross-check and edit additional codes"
     elsif workbasket.type == 'edit_nomenclature'
       "Cross-check and edit goods classification"
     elsif workbasket.type == 'edit_geographical_area'
@@ -21,7 +23,7 @@ module CrossCheckHelper
     elsif workbasket.type == 'create_footnote'
       "Cross-check and create footnote"
     elsif workbasket.type == 'edit_footnote'
-      "Cross-check and approve footnote"
+      "Cross-check and edit footnote"
     end
   end
 

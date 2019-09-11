@@ -3,7 +3,7 @@
     li
       = link_to "Main menu", root_url
     li aria-current="page"
-      | Find a quota
+      | Find and edit a quota
 
 div
   - if previous_workbasket.present? && previous_workbasket.settings.workbasket_action == 'suspend_quota'
@@ -45,7 +45,7 @@ div
           |  with workbasket name '#{previous_workbasket.title}'.&nbsp;
 
 h2.heading-large
-  | Find a quota
+  | Find and edit a quota
   small
     = link_to "(add a new one instead)", new_create_quotum_url
 

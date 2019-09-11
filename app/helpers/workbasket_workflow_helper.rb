@@ -32,17 +32,17 @@ module WorkbasketWorkflowHelper
 
   def underlying_object_link
     if workbasket.type.include?("geographical_area")
-      link_to "Geographical Areas", geo_areas_url
+      link_to "Find and edit geographical areas", geo_areas_url
     elsif workbasket.type.include?("additional_code")
-      link_to "Additional Codes", additional_codes_url
+      link_to "Find and edit additional codes", additional_codes_url
     elsif workbasket.type.include?("quot")
-      link_to "Quotas", quotas_url
+      link_to "Find and edit a quota", quotas_url
     elsif workbasket.type.include?("nomenclature")
-      link_to "Goods classification", sections_url
+      link_to "Manage goods classification", sections_url
     elsif workbasket.type.include?("footnote")
-      link_to "Footnotes", search_footnotes_url
+      link_to "Find and edit footnotes", search_footnotes_url
     else
-      link_to "Measures", measures_url
+      link_to "Find and edit measures", measures_url
     end
   end
 end
