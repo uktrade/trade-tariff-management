@@ -164,26 +164,28 @@ module WorkbasketInteractions
             check_for_updated_description_conformance_errors
           end
         else
-          unless footnote_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
-          end
+          if description_changed?
+            unless footnote_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
+            end
 
-          unless footnote_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote_description))
-          end
+            unless footnote_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(footnote_description))
+            end
 
-          if commodity_codes_candidates.present?
-            commodity_codes_candidates.map do |item|
-              unless item.conformant?
-                @conformance_errors.merge!(get_conformance_errors(item))
+            if commodity_codes_candidates.present?
+              commodity_codes_candidates.map do |item|
+                unless item.conformant?
+                  @conformance_errors.merge!(get_conformance_errors(item))
+                end
               end
             end
-          end
 
-          if measures_candidates.present?
-            measures_candidates.map do |item|
-              unless item.conformant?
-                @conformance_errors.merge!(get_conformance_errors(item))
+            if measures_candidates.present?
+              measures_candidates.map do |item|
+                unless item.conformant?
+                  @conformance_errors.merge!(get_conformance_errors(item))
+                end
               end
             end
           end
