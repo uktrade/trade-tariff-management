@@ -2,6 +2,8 @@
   table.table.regulations-table
     thead
       tr
+        th
+          | ID
         th width="30%"
           | Legal base
         th
@@ -13,18 +15,13 @@
         th
           | End date
         th
-          | Publication date
-        th
-          | Official Journal No.
-        th
-          | Official Journal page
-        th
           | &nbsp;
     tbody
       - RegulationsSearchPgViewDecorator.decorate_collection(search_results).each do |item|
         tr
           td
             = item.regulation_id
+          td
             p.regulations_listing_item_description
               = item.keywords&.gsub('|', ' | ')
           td
@@ -36,10 +33,4 @@
           td
             = item.end_date
           td
-            = item.published_date
-          td
-            = item.officialjournal_number
-          td
-            = item.officialjournal_page
-          td
-            = link_to "[measures]", quick_search_measures_url(search_in_measures_by_regulation_rule(item))
+            = link_to "View measures", quick_search_measures_url(search_in_measures_by_regulation_rule(item))
