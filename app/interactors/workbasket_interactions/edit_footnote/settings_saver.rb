@@ -136,7 +136,7 @@ module WorkbasketInteractions
               add_new_commodity_codes_associations!
             end
 
-            update_measures_associations! if measure_sids.present?
+            update_measures_associations!
           end
 
           parse_and_format_conformance_rules
@@ -164,26 +164,28 @@ module WorkbasketInteractions
             check_for_updated_description_conformance_errors
           end
         else
-          unless footnote_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
-          end
+          if description_changed?
+            unless footnote_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(footnote_description_period))
+            end
 
-          unless footnote_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(footnote_description))
-          end
+            unless footnote_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(footnote_description))
+            end
 
-          if commodity_codes_candidates.present?
-            commodity_codes_candidates.map do |item|
-              unless item.conformant?
-                @conformance_errors.merge!(get_conformance_errors(item))
+            if commodity_codes_candidates.present?
+              commodity_codes_candidates.map do |item|
+                unless item.conformant?
+                  @conformance_errors.merge!(get_conformance_errors(item))
+                end
               end
             end
-          end
 
-          if measures_candidates.present?
-            measures_candidates.map do |item|
-              unless item.conformant?
-                @conformance_errors.merge!(get_conformance_errors(item))
+            if measures_candidates.present?
+              measures_candidates.map do |item|
+                unless item.conformant?
+                  @conformance_errors.merge!(get_conformance_errors(item))
+                end
               end
             end
           end
@@ -293,6 +295,8 @@ module WorkbasketInteractions
 
       def update_measures_associations!
         original_measure_sids = original_footnote.footnote.measures.map {|measure| measure.measure_sid.to_s}
+        return if measure_sids == original_measure_sids
+
         deleted_measure_associations = original_measure_sids - measure_sids
         added_measure_associations = measure_sids - original_measure_sids
 
@@ -321,17 +325,18 @@ module WorkbasketInteractions
       end
 
       def delete_measure_associations!(measure_sids)
-        measure_sids.each do |measure|
+        measure_sids.each do |measure_sid|
             measure = Measure.by_measure_sid(measure_sid)
                       .first
+            item = FootnoteAssociationMeasure.find(measure_sid: measure_sid,
+                                                   footnote_id: original_footnote.footnote.footnote_id,
+                                                   footnote_type_id: original_footnote.footnote.footnote_type_id)
 
-            unless item.already_end_dated?
-              ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-                item, system_ops.merge(operation: "D")
-              ).assign!(false)
+            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+              item, system_ops.merge(operation: "D")
+            ).assign!(false)
 
-              item.save
-            end
+            item.save
         end
       end
 
