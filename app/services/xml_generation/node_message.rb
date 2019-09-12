@@ -156,15 +156,14 @@ module XmlGeneration
     end
 
     def update_type
-      case record.operation
-      when :create
+      if record.operation == :create
         "3"
-      when :update
-        "1"
-      when :destroy
+      elsif record.class == FootnoteAssociationMeasure && record.operation == :update
         "2"
-      else
-        "3" # create (by default)
+      elsif record.operation == :update
+        "1"
+      elsif record.operation == :destroy
+        "2"
       end
     end
 
