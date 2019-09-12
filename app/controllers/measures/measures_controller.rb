@@ -56,7 +56,7 @@ module Measures
       # This is a GET version of same search.
       # We need it in order to perform one parametr searches via links.
       #
-      # For example: when you click on [measures] link in regulation
+      # For example: when you click on 'view measures' link in regulation
       # found in 'Find Regulation' section
       #
       perform_search

@@ -39,6 +39,11 @@ class RegulationsController < ::BaseController
     ::WorkbasketForms::CreateRegulationForm.new(nil)
   end
 
+  expose(:search_mode?) do
+    params[:search].present?
+  end
+
+
   def collection
     ::BaseOrModificationRegulationSearch.new(params[:q]).result
   end
