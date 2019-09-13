@@ -12,7 +12,6 @@ RSpec.describe "edit description" do
     click_on('Manage the goods classification')
     click_on chapter.section.title
     click_on chapter.description.capitalize
-    click_on heading.description
     click_on "Manage"
 
     fill_in("What is the name of this workbasket?", with: "Test basket name")
@@ -20,6 +19,9 @@ RSpec.describe "edit description" do
     click_on("Continue")
 
     fill_in("Enter new description", with: "Shiny new description")
+    fill_in("Day", with: "01")
+    fill_in("Month", with: "01")
+    fill_in("Year", with: "2030")
     click_on("Submit for cross-check")
 
     expect(page).to have_content("Amended commodity code description 'Shiny new description' has been submitted for cross-check.")
