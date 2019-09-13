@@ -131,11 +131,7 @@ module WorkbasketInteractions
               add_footnote_description!
             end
 
-            end_date_existing_commodity_codes_associations!
-            if commodity_codes.present?
-              add_new_commodity_codes_associations!
-            end
-
+            update_commodity_code_associations!
             update_measures_associations!
           end
 
@@ -254,42 +250,42 @@ module WorkbasketInteractions
         end
       end
 
-      def end_date_existing_commodity_codes_associations!
-        original_footnote.footnote_association_goods_nomenclatures.map do |item|
-          unless item.already_end_dated?
-            ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-              item, system_ops.merge(operation: "D")
-            ).assign!(false)
+      def end_date_existing_commodity_codes_associations!(commodity_codes)
+        commodity_codes.each do |code|
+          item = FootnoteAssociationGoodsNomenclature.find(goods_nomenclature_item_id: code,
+                                                           footnote_id: original_footnote.footnote.footnote_id,
+                                                           footnote_type: original_footnote.footnote.footnote_type_id)
+          item.validity_end_date = Date.today
 
-            item.save
-          end
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            item, system_ops.merge(operation: "U")
+          ).assign!(false)
+
+          item.save
         end
       end
 
-      def add_new_commodity_codes_associations!
+      def add_new_commodity_code_associations!(commodity_codes)
         commodity_codes.map do |code|
           gn = GoodsNomenclature.actual
                                 .by_code(code)
                                 .first
 
-          if gn.present?
-            association = FootnoteAssociationGoodsNomenclature.new(
-              validity_start_date: validity_start_date,
-              validity_end_date: validity_end_date
-            )
+          association = FootnoteAssociationGoodsNomenclature.new(
+            validity_start_date: validity_start_date
+          )
+          byebug
+          association.goods_nomenclature_sid = gn.goods_nomenclature_sid
+          association.goods_nomenclature_item_id = gn.goods_nomenclature_item_id
+          association.productline_suffix = gn.producline_suffix
 
-            association.goods_nomenclature_sid = gn.goods_nomenclature_sid
-            association.goods_nomenclature_item_id = gn.goods_nomenclature_item_id
-            association.productline_suffix = gn.producline_suffix
+          association.footnote_type = original_footnote.footnote.footnote_type_id
+          association.footnote_id = original_footnote.footnote.footnote_id
 
-            association.footnote_type = footnote.footnote_type_id
-            association.footnote_id = footnote.footnote_id
+          assign_system_ops!(association)
+          association.save if persist_mode?
 
-            assign_system_ops!(association)
-            association.save if persist_mode?
-
-            @commodity_codes_candidates << association
-          end
+          @commodity_codes_candidates << association
         end
       end
 
@@ -302,6 +298,17 @@ module WorkbasketInteractions
 
         delete_measure_associations!(deleted_measure_associations) if deleted_measure_associations
         add_measure_associations!(added_measure_associations) if added_measure_associations
+      end
+
+      def update_commodity_code_associations!
+        original_commodity_code_sids = original_footnote.footnote.commodity_codes
+        return if commodity_codes == original_commodity_code_sids
+
+        end_dated_commodity_code_associations = original_commodity_code_sids - commodity_codes
+        added_commodity_code_associations = commodity_codes - original_commodity_code_sids
+
+        end_date_existing_commodity_codes_associations!(end_dated_commodity_code_associations) if end_dated_commodity_code_associations
+        add_new_commodity_code_associations!(added_commodity_code_associations) if added_commodity_code_associations
       end
 
       def add_measure_associations!(measure_sids)
@@ -326,8 +333,6 @@ module WorkbasketInteractions
 
       def delete_measure_associations!(measure_sids)
         measure_sids.each do |measure_sid|
-            measure = Measure.by_measure_sid(measure_sid)
-                      .first
             item = FootnoteAssociationMeasure.find(measure_sid: measure_sid,
                                                    footnote_id: original_footnote.footnote.footnote_id,
                                                    footnote_type_id: original_footnote.footnote.footnote_type_id)
