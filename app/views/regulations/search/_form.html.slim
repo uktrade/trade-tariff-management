@@ -8,14 +8,9 @@
 
       = f.input :regulation_group_id, as: :select, collection: regulation_search_form.regulation_groups, label_method: :description, value_method: :regulation_group_id, include_blank: true, prompt: "- select regulation group -", label: "Select the regulation group", input_html: { class: "selectize" }
 
-      .bootstrap-row
-        .col-sm-6.col-md-4.col-lg-4
-          = f.input :start_date, label: "Select start date", input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }
-
-        .col-sm-6.col-md-4.col-lg-4
-          = f.input :end_date, label: "Select end date", input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change" }
-
-      / = f.input :geographical_area_id, as: :select, collection: regulation_search_form.geographical_areas, label_method: :description, value_method: :geographical_area_id, include_blank: true, prompt: "- start typing -", input_html: { class: "selectize", "data-min-length" => 1, "data-options" => regulation_search_form.geographical_areas.map(&:to_json).to_json, "data-value" => "geographical_area_id", "data-code" => "geographical_area_id", "data-label" => "description", "data-code-class" => "prefix--region" }, label: "Select a geographical area to which this regulation's measures apply"
+      .vue-instance
+        = content_tag "date-gds", "", "label" => "Start date from", "value" => regulation_search_form.start_date,  "id" => "search_start_date", "input_name" => "search[start_date]"
+        = content_tag "date-gds", "", "label" => "End date to", "value" => regulation_search_form.end_date,  "id" => "search_end_date", "input_name" => "search[end_date]"
 
       = f.input :keywords, as: :text, rows: 3, label: "Enter keyword(s)", hint: "If you know the ID of the regulation, then you can enter the ID in the box below. Alternatively, enter any other keyword(s) to help locate the regulation."
 

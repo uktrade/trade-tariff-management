@@ -116,6 +116,34 @@
     <div id="global-app-error" class="app-error hidden"></div>
 
     <%= yield :body_end %>
+    <script>
+        /**
+         * A Vue application should consists of a root Vue instance created with new Vue,
+         * optionally organized into a tree of nested, reusable components. Either that
+         * or work with single-file components.
+         *
+         * Unfortunatelly current application initialises many vue instances that resulting
+         * in undesirable side effects.
+         *
+         * An quick workaround to was to create the below clean instance that then can be
+         * used on demand when it is required in order to make proper components to work
+         *
+         * @see {@link https://vuejs.org/v2/guide/instance.html|Vue Instance}
+         * @see {@link https://vuejs.org/v2/guide/single-file-components.html|Vue Single File Components}
+         * @author Panos Paralakis
+         *
+         */
+        $(document).ready(function() {
+          if($(".vue-instance")[0]){
+            var app = new Vue({
+              el: '.vue-instance',
+              data: {
+                errors: null
+              }
+            })
+          }
+        })
+    </script>
     <%= javascript_include_tag "govuk-template.js", integrity: true, crossorigin: "anonymous" %>
     <%# if no GOVUK-namespaced module has loaded we can assume JS has failed and remove the class %>
     <script>if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
