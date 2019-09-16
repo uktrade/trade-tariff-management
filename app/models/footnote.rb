@@ -185,6 +185,10 @@ class Footnote < Sequel::Model
     # # FO17
     # associated :footnote_type, ensure: :footnote_type_validity_period_spans_validity_periods
 
+  def current_associated_measures
+    footnote_association_measures.select { |association| association.operation == 'C'}.map(&:measure_sid)
+  end
+
   def code
     "#{footnote_type_id}#{footnote_id}"
   end
