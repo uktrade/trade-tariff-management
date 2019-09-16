@@ -23,6 +23,6 @@
         td.description-column
           = footnote.description
         td.measures-column
-          = footnote.measures.map { |measure| measure.measure_sid }.join(', ')
+          = footnote.current_associated_measures.join(', ')
         td.measures-column
           = footnote.goods_nomenclatures.map { |nomenclature| nomenclature.goods_nomenclature_item_id.to_i }.join(', ')

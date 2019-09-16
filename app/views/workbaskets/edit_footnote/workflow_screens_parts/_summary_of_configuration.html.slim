@@ -24,7 +24,7 @@ table.create-measures-details-table
       td.heading_column
         | Associated measures
       td
-        = footnote.measures.map { |measure| measure.measure_sid }.join(', ')
+        = footnote.current_associated_measures.join(', ')
 
     tr
       td.heading_column
