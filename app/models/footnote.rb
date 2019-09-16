@@ -224,7 +224,7 @@ class Footnote < Sequel::Model
   def associated_records_count
     goods_nomenclatures.count +
       export_refund_nomenclatures.count +
-      measures.count +
+      current_associated_measures.count +
       additional_codes.count +
       meursing_headings.count
   end
