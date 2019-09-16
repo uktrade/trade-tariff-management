@@ -147,7 +147,9 @@ module WorkbasketInteractions
       end
 
       def check_commodity_codes!
-        if commodity_codes.present?
+        return unless can_add_commodity_code?
+
+        if commodity_codes.present? && !commodity_codes_are_invalid?
           list = attrs_parser.parse_list_of_values(commodity_codes)
 
           if list.present?
@@ -160,10 +162,24 @@ module WorkbasketInteractions
             end
           end
         end
+
+        if commodity_codes_are_invalid?
+          @errors[:commodity_codes] = errors_translator(:commodity_codes_not_recognised)
+        end
+      end
+
+      def commodity_codes_are_invalid?
+        valid_codes = commodity_codes.split(', ').map do |code|
+          code.length == 10 && code_contains_only_integers(code)
+        end
+
+        valid_codes.include? false
       end
 
       def check_measures!
-        if measure_sids.present?
+        return unless can_add_measures?
+
+        if measure_sids.present? && !measure_sids_are_invalid?
           list = attrs_parser.parse_list_of_values(measure_sids)
 
           if list.present?
@@ -176,6 +192,18 @@ module WorkbasketInteractions
             end
           end
         end
+
+        if measure_sids_are_invalid?
+          @errors[:measure_sids] = errors_translator(:measures_not_recognised)
+        end
+      end
+
+      def measure_sids_are_invalid?
+        valid_sids = measure_sids.split(', ').map do |sid|
+          sid.length == 7 && code_contains_only_integers(sid)
+        end
+
+        valid_sids.include? false
       end
 
       def parse_date(option_name)
@@ -190,6 +218,14 @@ module WorkbasketInteractions
 
           nil
         end
+      end
+
+      def can_add_commodity_code?
+        ['NC', 'PN', 'TN'].include?(original_footnote.footnote.footnote_type_id)
+      end
+
+      def can_add_measures?
+        ['CD','CG','DU','EU','IS','MG','MX','OZ','PB','TM','TR'].include?(original_footnote.footnote.footnote_type_id)
       end
 
       def description_does_not_match_original_description?
