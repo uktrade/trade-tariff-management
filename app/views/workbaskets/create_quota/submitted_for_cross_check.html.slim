@@ -7,20 +7,17 @@
     = attributes_parser.quota_ordernumber
     | &nbsp;and&nbsp;
     = pluralize(workbasket_settings.measures.count, "measure", "measures")
-    | &nbsp;has been submitted for cross-checking.
+    | &nbsp; has been submitted for cross-checking.
 
-br
-h3.heading-medium
+h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
   li
     = link_to "Withdraw submission/edit quota", withdraw_workbasket_from_workflow_create_quotum_url(workbasket.id)
   li
-    = link_to "View this quota", read_only_section_url
-  li
     = link_to "Create another quota", new_create_quotum_url
   li
+    = link_to "View this quota", read_only_section_url
+  li
     = link_to "Return to main menu", root_url
-br
-br

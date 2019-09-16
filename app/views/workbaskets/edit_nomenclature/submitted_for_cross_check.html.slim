@@ -4,8 +4,7 @@
     =<> "'#{workbasket.settings.description}'"
     | has been submitted for cross-check.
 
-br
-h3.heading-medium
+h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
@@ -16,7 +15,8 @@ ul class="list"
   li
     = link_to "Edit another goods classification", sections_url
   li
+    = link_to "View this goods classification", edit_nomenclature_url(workbasket.id)
+  li
     = link_to "Return to main menu", root_url
-br
-br
+
 = render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket

@@ -7,24 +7,22 @@
     = workbasket.title
     |&rsquo;, containing&nbsp;
     = pluralize(workbasket_settings.measures.count, "measure", "measures")
-    |, was submitted for cross-checking.
+    |, has been submitted for cross-checking.
 
-br
-h3.heading-medium
+h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
-  li
-    = link_to "View measures workbasket", create_measure_url(workbasket.id)
-
   - if iam_workbasket_author? && workbasket.can_withdraw?
     li
       = link_to "Withdraw submission/edit measures", "#",
       data: { target_url: withdraw_workbasket_from_workflow_create_measure_url(workbasket.id), target_modal: workbasket.id },
       class: "js-main-menu-show-withdraw-confirmation-link"
   li
+    = link_to "Create more measures", new_create_measure_url
+  li
+    = link_to "View these measures", read_only_section_url
+  li
     = link_to "Return to main menu", root_url
-br
-br
 
 = render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket

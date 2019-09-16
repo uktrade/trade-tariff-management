@@ -5,15 +5,20 @@
   h3.heading-medium
     = "The workbasket &lsquo;#{workbasket.title}&rsquo;, containing #{pluralize(workbasket_items.count, "edited additional code", "edited additional codes")}, has been submitted for cross-checking.".html_safe
 
-br
-h3.heading-medium
+h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
+  - if iam_workbasket_author? && workbasket.can_withdraw?
+    li
+      = link_to "Withdraw workbasket from workflow", "#",
+        data: { target_url: withdraw_workbasket_from_workflow_additional_codes_bulk_url(workbasket.id), target_modal: workbasket.id },
+        class: "js-main-menu-show-withdraw-confirmation-link"
   li
-    a.disabled href="#"
-      | Withdraw submission/edit additional codes
+    = link_to "Find and edit more additional codes", additional_codes_url
+  li
+    = link_to "View these additional codes", additional_codes_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
   li
     = link_to "Return to main menu", root_url
-br
-br
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket

@@ -11,19 +11,20 @@
     =<> "'#{geographical_area.description}'"
     | has been submitted for cross-check.
 
-br
-h3.heading-medium
+h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
+  - if iam_workbasket_author? && workbasket.can_withdraw?
+    li
+      = link_to "Withdraw submission/edit geographical area", "#",
+      data: { target_url: withdraw_workbasket_from_workflow_edit_geographical_area_url(workbasket.id), target_modal: workbasket.id },
+      class: "js-main-menu-show-withdraw-confirmation-link"
   li
-    a href="#"
-      | Withdraw submission / edit geographical area (not implemented)
+    = link_to "Find and edit another geographical area", geo_areas_url
   li
     = link_to "View this geographical area", read_only_section_url
   li
-    = link_to "Edit another geographical area", geo_areas_url
-  li
     = link_to "Return to main menu", root_url
-br
-br
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
