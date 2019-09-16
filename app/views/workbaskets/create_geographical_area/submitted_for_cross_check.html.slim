@@ -7,13 +7,11 @@
     =<> geographical_area.decorate.type
     | with code
     =<> "'#{geographical_area.geographical_area_id}'"
-    | and description
-    br
+    | and description&nbsp;
     =<> "'#{geographical_area.description}'"
     | has been submitted for cross-check.
 
-br
-h3.heading-medium
+h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
@@ -22,12 +20,12 @@ ul class="list"
       = link_to "Withdraw submission/edit measures", "#",
       data: { target_url: withdraw_workbasket_from_workflow_create_geographical_area_url(workbasket.id), target_modal: workbasket.id },
       class: "js-main-menu-show-withdraw-confirmation-link"
-
   li
     = link_to "Create another geographical area", new_create_geographical_area_url
   li
+    = link_to "View this geographical area", read_only_section_url
+  li
     = link_to "Return to main menu", root_url
-br
-br
+
 
 = render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
