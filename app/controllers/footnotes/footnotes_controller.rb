@@ -31,7 +31,7 @@ module Footnotes
     end
 
     expose(:search_results) do
-      searcher.results
+      measure_sids_are_invalid? ? nil : searcher.results
     end
 
     def validate_search_settings
@@ -54,6 +54,14 @@ module Footnotes
 
     def collection
       Footnote.q_search(params)
+    end
+
+    def measure_sids_are_invalid?
+      valid_sids = search_ops['measure_sids'].split(', ').map do |sid|
+        sid.scan(/\D/).empty?
+      end
+
+      valid_sids.include? false
     end
   end
 end
