@@ -229,6 +229,10 @@ module Workbaskets
         end
       end
 
+      def all_relevant(status, id)
+        where("status = ? and id != ?", status, id)
+      end
+
       def q_search(keyword)
         underscored_keywords = keyword.squish.parameterize.underscore + "%"
 

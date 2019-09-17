@@ -22,6 +22,12 @@ class WorkbasketsSearch
     paginate_workbaskets
   end
 
+  def next_workbasket(status, current_workbasket)
+    order_all_workbaskets(status, current_workbasket)
+    filter_workbaskets
+    paginate_workbaskets
+  end
+
 private
 
   def order_workbaskets
@@ -32,6 +38,16 @@ private
     end
 
     @relation = @relation.default_filter.relevant_for_manager(@current_user)
+  end
+
+  def order_all_workbaskets(status, current_workbasket)
+    @relation = if FIELDS_ALLOWED_FOR_ORDER.include?(@sort_by_field)
+      Workbaskets::Workbasket.custom_field_order(@sort_by_field, @search_options[:sort_dir])
+    else
+      Workbaskets::Workbasket.default_order
+    end
+
+    @relation = @relation.default_filter.all_relevant(status, current_workbasket)
   end
 
   def filter_workbaskets

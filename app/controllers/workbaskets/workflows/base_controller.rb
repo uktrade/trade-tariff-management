@@ -30,11 +30,11 @@ module Workbaskets
       end
 
       expose(:next_cross_check) do
-        current_user.next_workbasket_to_cross_check
+        current_user.next_workbasket_to_cross_check(workbasket.id)
       end
 
       expose(:next_approve) do
-        current_user.next_workbasket_to_approve
+        current_user.next_workbasket_to_approve(workbasket.id)
       end
 
       def create
