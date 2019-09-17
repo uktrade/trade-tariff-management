@@ -192,6 +192,8 @@ module WorkbasketInteractions
       end
 
       def add_new_commodity_codes_associations!
+        return unless can_add_commodity_code?
+
         commodity_codes.map do |code|
           gn = GoodsNomenclature.actual
                                 .by_code(code)
@@ -219,6 +221,8 @@ module WorkbasketInteractions
       end
 
       def add_new_measures_associations!
+        return unless can_add_measures?
+
         measure_sids.map do |measure_sid|
           measure = Measure.by_measure_sid(measure_sid)
                            .first
@@ -266,6 +270,14 @@ module WorkbasketInteractions
 
       def validator_class(record)
         "#{record.class.name}Validator".constantize
+      end
+
+      def can_add_commodity_code?
+        ['NC', 'PN', 'TN'].include?(footnote_type_id)
+      end
+
+      def can_add_measures?
+        ['CD','CG','DU','EU','IS','MG','MX','OZ','PB','TM','TR'].include?(footnote_type_id)
       end
     end
   end
