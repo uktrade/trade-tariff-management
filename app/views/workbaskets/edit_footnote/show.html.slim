@@ -1,28 +1,26 @@
-.panel.panel--confirmation
-  h1.heading-xlarge
-    | Footnote submitted
+.breadcrumbs
+  ol
+    li
+      = link_to "Main menu", root_url
 
-  h3.heading-medium
-    | The edited footnote of type
-    =<> "'#{footnote.decorate.footnote_type_description}'"
-    | and ID
-    =<> "'#{footnote.footnote_id}'"
-    | has been submitted for cross-check.
+    li
+      = link_to "Footnote", footnotes_url
 
-br
-h3.heading-medium.m-t-100
-  | Next steps
+    li aria-current="page"
+      | View Footnote
 
-ul class="list"
-  li
-    = link_to "Withdraw submission / edit footnote", "#",
-    data: { target_url: withdraw_workbasket_from_workflow_edit_footnote_url(workbasket.id), target_modal: workbasket.id },
-    class: "js-main-menu-show-withdraw-confirmation-link"
-  li
-    = link_to "View this footnote", read_only_section_url
-  li
-    = link_to "Edit another footnote", search_footnotes_url
-  li
-    = link_to "Return to main menu", root_url
+header
+  h1.heading-large
+    | View footnote
 
-= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
+  .view-workbasket-container
+    = render "workbaskets/edit_footnote/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/edit_footnote/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/edit_footnote/workflow_screens_parts/workbasket_details"
+
+    - if iam_workbasket_author? && workbasket_rejected?
+      = link_to "Edit footnote", '#',
+              data: {target_url: move_to_editing_mode_edit_footnote_url(workbasket.id)},
+              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
+
+    = render "workbaskets/edit_footnote/workflow_screens_parts/summary_of_configuration"
