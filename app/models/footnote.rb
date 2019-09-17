@@ -189,6 +189,10 @@ class Footnote < Sequel::Model
     footnote_association_measures.select { |association| association.operation == 'C'}.map(&:measure_sid)
   end
 
+  def current_associated_commodity_codes
+    FootnoteAssociationGoodsNomenclature.current.where(footnote_id: footnote_id, footnote_type: footnote_type_id)
+  end
+
   def code
     "#{footnote_type_id}#{footnote_id}"
   end
@@ -222,7 +226,7 @@ class Footnote < Sequel::Model
   end
 
   def associated_records_count
-    goods_nomenclatures.count +
+    current_associated_commodity_codes.count +
       export_refund_nomenclatures.count +
       current_associated_measures.count +
       additional_codes.count +
