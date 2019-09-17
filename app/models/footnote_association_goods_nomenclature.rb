@@ -17,4 +17,10 @@ class FootnoteAssociationGoodsNomenclature < Sequel::Model
   def subrecord_code
     "20".freeze
   end
+
+  dataset_module do
+    def current
+      where("validity_end_date > :date or validity_end_date is NULL", date: Date.today)
+    end
+  end
 end

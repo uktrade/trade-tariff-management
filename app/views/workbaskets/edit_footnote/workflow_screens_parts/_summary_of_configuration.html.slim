@@ -36,4 +36,4 @@ table.create-measures-details-table
       td.heading_column
         | Associated goods codes
       td
-        = footnote.goods_nomenclatures.map{ |nomenclature| nomenclature.goods_nomenclature_item_id.to_i }.join(', ')
+        = footnote.current_associated_commodity_codes.map{ |nomenclature| nomenclature.goods_nomenclature_item_id.to_i }.join(', ')
