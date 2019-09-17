@@ -1,9 +1,8 @@
-br
-h3.heading-medium
+h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
-  - if mode == "cross_check" && next_cross_check.present? && workbasket.id != next_cross_check.id
+  - if mode == "cross_checked" && next_cross_check.present? && workbasket.id != next_cross_check.id
     li
       = link_to "Cross-check next workbasket", new_cross_check_url(next_cross_check.id)
 
@@ -11,11 +10,9 @@ ul class="list"
     li
       = link_to "Approve next workbasket", new_approve_url(next_approve.id)
 
-  li
-    = link_to "Return to main menu", root_url
-
   - unless workbasket_rejected?
     li
       = link_to "View these additional codes", additional_codes_bulk_url(workbasket.id, search_code: workbasket.settings.search_code)
-br
-br
+
+  li
+    = link_to "Return to main menu", root_url

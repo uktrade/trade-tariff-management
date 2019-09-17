@@ -108,19 +108,15 @@ class User < Sequel::Model
     workbasket.user_id == id
   end
 
-  def workbaskets_queue
+  def next_workbasket_to_cross_check(current_workbasket)
     WorkbasketsSearch.new(
       self
-    ).results
+    ).next_workbasket('awaiting_cross_check', current_workbasket).first
   end
 
-  def next_workbasket_to_cross_check
-    workbaskets_queue.cross_check_can_be_started
-                     .first
-  end
-
-  def next_workbasket_to_approve
-    workbaskets_queue.approve_can_be_started
-                     .first
+  def next_workbasket_to_approve(current_workbasket)
+    WorkbasketsSearch.new(
+      self
+    ).next_workbasket('awaiting_approval', current_workbasket).first
   end
 end
