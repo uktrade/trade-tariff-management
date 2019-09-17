@@ -130,8 +130,8 @@ module WorkbasketInteractions
               add_footnote_description!
             end
 
-            update_commodity_code_associations!
-            update_measures_associations!
+            update_commodity_code_associations! if can_add_commodity_code?
+            update_measures_associations! if can_add_measures?
           end
 
           parse_and_format_conformance_rules
@@ -168,7 +168,7 @@ module WorkbasketInteractions
               @conformance_errors.merge!(get_conformance_errors(footnote_description))
             end
 
-            if commodity_codes_candidates.present?
+            if commodity_codes_candidates.present? && can_add_commodity_code?
               commodity_codes_candidates.map do |item|
                 unless item.conformant?
                   @conformance_errors.merge!(get_conformance_errors(item))
@@ -176,7 +176,7 @@ module WorkbasketInteractions
               end
             end
 
-            if measures_candidates.present?
+            if measures_candidates.present? && can_add_measures?
               measures_candidates.map do |item|
                 unless item.conformant?
                   @conformance_errors.merge!(get_conformance_errors(item))
@@ -387,6 +387,14 @@ module WorkbasketInteractions
         ).assign!(false)
 
         description.save
+      end
+
+      def can_add_commodity_code?
+        ['NC', 'PN', 'TN'].include?(original_footnote.footnote.footnote_type_id)
+      end
+
+      def can_add_measures?
+        ['CD','CG','DU','EU','IS','MG','MX','OZ','PB','TM','TR'].include?(original_footnote.footnote.footnote_type_id)
       end
     end
   end
