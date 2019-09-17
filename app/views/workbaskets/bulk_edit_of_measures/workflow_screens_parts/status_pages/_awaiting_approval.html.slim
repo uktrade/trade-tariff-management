@@ -3,7 +3,6 @@
     | Edited measures cross-checked.
 
   h3.heading-medium
-    = "The workbasket #{workbasket.title} has passed cross-check, containing #{pluralize(workbasket.settings.workbasket_items.count, "measure", "measures")},"
-    | Once approve the workbasket will be made live.
+    = "The workbasket #{workbasket.title} has passed cross-check, containing #{pluralize(workbasket.settings.workbasket_items.count, "measure", "measures")}. Once approved the workbasket will be made live."
 
 = render "workbaskets/bulk_edit_of_measures/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"
