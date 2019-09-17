@@ -124,7 +124,7 @@ module WorkbasketInteractions
 
       def commodity_codes_are_invalid?
         valid_codes = commodity_codes.split(', ').map do |code|
-          code.length == 10 && code_contains_only_integers(code)
+          code.length == 10 && code_contains_only_integers?(code)
         end
 
         valid_codes.include? false
@@ -154,13 +154,13 @@ module WorkbasketInteractions
 
       def measure_sids_are_invalid?
         valid_sids = measure_sids.split(', ').map do |sid|
-          sid.length == 7 && code_contains_only_integers(sid)
+          sid.length == 7 && code_contains_only_integers?(sid)
         end
 
         valid_sids.include? false
       end
 
-      def code_contains_only_integers(sid)
+      def code_contains_only_integers?(sid)
         sid.scan(/\D/).empty?
       end
 
