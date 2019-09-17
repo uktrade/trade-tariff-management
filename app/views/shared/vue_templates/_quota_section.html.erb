@@ -14,29 +14,7 @@
 
     <div class="panel panel-border-narrow" v-if="section.type">
       <fieldset v-if="section.type != 'custom'">
-        <date-gds v-if="section.type == 'annual'" label="What is the start date of this section?" :value.sync="section.start_date" id="annual_start_date"></date-gds>
-        <div v-else class="form-group">
-          <fieldset>
-            <legend>
-              <h3 class="heading-medium m-t-5">What is the start date of this section?</h3>
-            </legend>
-
-            <div class="form-date">
-              <div class="form-group form-group-day">
-                <label class="form-label" for="day">Day</label>
-                <input class="form-control" id="day" name="day" type="string" pattern="[0-9]*" minlength="2" maxlength="2" title="Two digits day" value="01" disabled>
-              </div>
-              <div class="form-group form-group-month">
-                <label class="form-label" for="month">Month</label>
-                <input class="form-control" id="month" name="month" type="string" pattern="[0-9]*" minlength="2" maxlength="2" title="Two digits month" value="01" disabled>
-              </div>
-              <div class="form-group form-group-year">
-                <label class="form-label" for="year">Year</label>
-                <input class="form-control" id="quota-period-year" name="year" type="string" pattern="[0-9]*" minlength="4" maxlength="4" title="Four digits year" :value="section.start_date && section.start_date.split('/')[2]" @input="section.start_date = '01/01/'+$event.target.value;">
-              </div>
-            </div>
-          </fieldset>
-        </div>
+        <date-gds label="What is the start date of this section?" :value.sync="section.start_date" id="quota_start_date"></date-gds>
 
         <div class="form-group">
           <label for="" class="form-label">
