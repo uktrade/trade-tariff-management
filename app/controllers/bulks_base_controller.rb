@@ -23,7 +23,7 @@ private
   helper_method :workbasket_is_editable?
 
   def require_to_be_workbasket_owner!
-    unless workbasket_author?
+    unless !workbasket || workbasket_author?
       render nothing: true, status: :ok
       false
     end

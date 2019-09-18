@@ -159,9 +159,9 @@ module Measures
     end
 
     def destroy
-      workbasket.clean_up_workbasket!
+      workbasket.clean_up_workbasket! if workbasket
 
-      redirect_to root_url
+      redirect_to root_url, status: 303
     end
   end
 end
