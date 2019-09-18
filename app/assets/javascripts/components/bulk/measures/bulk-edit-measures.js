@@ -20,7 +20,6 @@ $(document).ready(function() {
           window.BulkEditing.Measures.Actions.additional,
           window.BulkEditing.Measures.Actions.duties,
           window.BulkEditing.Measures.Actions.conditions,
-          window.BulkEditing.Measures.Actions.footnotes,
           window.BulkEditing.Measures.Actions.remove,
           window.BulkEditing.Measures.Actions.delete
         ]
