@@ -26,6 +26,7 @@ Sequel.migration do
 
     Sequel::Model.db.tables
                     .reject{|t_name| t_name.in?([:tariff_updates, :sections, :schema_migrations])}
+                    .reject{|t_gis_table| t_gis_table.in?([:spatial_ref_sys,:raster_columns, :raster_overviews, :geography_columns, :geometry_columns ])}
                     .reject{|t| t.to_s =~ Regexp.new(rejected_tables.join("|"))}.each do |table_name|
       # name of the view we are going to build
       view_name = table_name.to_s.split("_oplog").first
@@ -60,6 +61,7 @@ Sequel.migration do
   down do
     Sequel::Model.db.tables
                     .reject{|t_name| t_name.in?([:tariff_updates, :sections, :schema_migrations])}
+                    .reject{|t_gis_table| t_gis_table.in?([:spatial_ref_sys,:raster_columns, :raster_overviews, :geography_columns, :geometry_columns ])}
                     .reject{|t| t.to_s =~ Regexp.new(rejected_tables.join("|"))}.each do |table_name|
       view_name = table_name.to_s.split("_oplog").first
       drop_view view_name
