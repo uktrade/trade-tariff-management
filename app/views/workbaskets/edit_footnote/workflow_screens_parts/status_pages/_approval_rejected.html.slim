@@ -1,4 +1,4 @@
-- footnote = footnote ? footnote : Footnote.find(workbasket_id: workbasket.id)
+- footnote = footnote ? footnote : Footnote.find(footnote_id: workbasket.settings.original_footnote_id, footnote_type_id: workbasket.settings.original_footnote_type_id)
 
 .panel.panel--confirmation
   h1.heading-xlarge
@@ -11,4 +11,4 @@
     = footnote.footnote_id
     | has problems. It has not been approved. The submitter has been notified.
 
-= render "workbaskets/create_footnote/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
+= render "workbaskets/edit_footnote/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

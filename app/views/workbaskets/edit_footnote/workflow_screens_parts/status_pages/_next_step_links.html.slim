@@ -12,7 +12,7 @@ ul class="list"
 
   - unless workbasket_rejected?
     li
-      = link_to "View this footnote", create_footnote_url(workbasket.id)
+      = link_to "View this footnote", edit_footnote_url(workbasket.id)
 
   li
     = link_to "Return to main menu", root_url
