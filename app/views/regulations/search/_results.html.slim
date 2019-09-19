@@ -23,7 +23,7 @@
             = item.regulation_id
           td
             p.regulations_listing_item_description
-              = item.keywords&.gsub('|', ' | ')
+              = link_to item.keywords&.gsub('|', ' | '), new_edit_regulation_path(base_regulation_id: item.regulation_id, base_regulation_role: item.role)
           td
             = item.regulation_type
           td
