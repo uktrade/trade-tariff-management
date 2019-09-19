@@ -273,7 +273,6 @@ module WorkbasketInteractions
           association = FootnoteAssociationGoodsNomenclature.new(
             validity_start_date: validity_start_date
           )
-          byebug
           association.goods_nomenclature_sid = gn.goods_nomenclature_sid
           association.goods_nomenclature_item_id = gn.goods_nomenclature_item_id
           association.productline_suffix = gn.producline_suffix
