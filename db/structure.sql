@@ -2124,6 +2124,45 @@ ALTER SEQUENCE public.edit_nomenclature_workbasket_settings_id_seq OWNED BY publ
 
 
 --
+-- Name: edit_regulation_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_regulation_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    workbasket_name text,
+    reason_for_changes text,
+    original_base_regulation_id text,
+    original_base_regulation_role text,
+    base_regulation_id text,
+    validity_start_date date,
+    validity_end_date date,
+    regulation_group_id text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: edit_regulation_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_regulation_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_regulation_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_regulation_workbasket_settings_id_seq OWNED BY public.edit_regulation_workbasket_settings.id;
+
+
+--
 -- Name: explicit_abrogation_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8337,6 +8376,13 @@ ALTER TABLE ONLY public.edit_nomenclature_workbasket_settings ALTER COLUMN id SE
 
 
 --
+-- Name: edit_regulation_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_regulation_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_regulation_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: explicit_abrogation_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9301,6 +9347,14 @@ ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings
 
 ALTER TABLE ONLY public.edit_nomenclature_workbasket_settings
     ADD CONSTRAINT edit_nomenclature_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edit_regulation_workbasket_settings edit_regulation_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_regulation_workbasket_settings
+    ADD CONSTRAINT edit_regulation_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12655,3 +12709,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20190625152340_create_edit
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190712143348_add_workbasket_fields_goods_nomenclature_description.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190716105325_add_main_step_validation_passed_to_edit_nomenclature_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190725135752_add_original_description_to_edit_nomenclature_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20190916111955_create_edit_regulation_workbasket_settings.rb');
