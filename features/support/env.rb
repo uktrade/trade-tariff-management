@@ -58,9 +58,9 @@ end
 # Uncomment below to point to a different enviroment while developing.
 # You will need to set the UIDs for all three different type of users
 # ENV['BASE_URL'] = ''
-# ENV['TARIFFMANAGER'] =
-# ENV['CROSSCHECKER'] =
-# ENV['APPROVER'] =
+ENV['TARIFFMANAGER'] = '1'
+ENV['CROSSCHECKER'] = '3'
+ENV['APPROVER'] = '2'
 ###############################
 
 Capybara.app_host = ENV['BASE_URL']

@@ -86,19 +86,7 @@ More details can be found at [https://docs.docker.com/compose/rails/](https://do
 ```
 6. To run all cucumber tests
 ```
-    docker exec -it tariff_management_1 bundle exec rake cucumber
-```
-7. To run all RSpec tests
-```
-    docker exec -it tariff_management_1 bundle exec rspec
-```
-8. To only run RSpec feature tests
-```
-    docker exec -it tariff_management_1 bundle exec rspec ./spec/features
-```
-6. To run all cucumber tests
-```
-    docker exec -it tariff_management_1 rake cucumber
+    docker exec -it tariff_management_1 bundle exec cucumber
 ```
 7. To run all RSpec tests
 ```

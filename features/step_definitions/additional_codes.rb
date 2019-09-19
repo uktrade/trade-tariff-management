@@ -1,5 +1,4 @@
 
-
 When(/^I open a new additional code form$/) do
   @create_additional_code = CreateAdditionalCodePage.new
   @tarriff_main_menu.open_new_additional_code_form
@@ -13,7 +12,7 @@ And(/^I fill the additional codes form for "([^"]*)"$/) do |scenario|
   @start_date = random_future_date
 
   @create_additional_code.enter_workbasket_name @workbasket
-  @create_additional_code.enter_start_date @start_date
+  @create_additional_code.input_date_gds('#start_date', @start_date)
   @create_additional_code.add_additional_code @additional_codes
 end
 

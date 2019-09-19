@@ -3,8 +3,8 @@ class CreateAdditionalCodePage < SitePrism::Page
   include CapybaraFormHelper
 
   element :workbasket_name, "#additional_code_workbasket_name"
-  element :start_date, "#additional_code_valid_from"
-  element :end_date, "#additional_code_valid_until"
+  element :start_date, "#start_date"
+  element :end_date, "#end_date"
   element :submit_for_cross_check_button, "button.js-workbasket-base-continue-button"
   element :save_progress_button, "button.js-workbasket-base-save-progress-button"
 

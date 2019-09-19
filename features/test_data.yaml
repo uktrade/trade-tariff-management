@@ -1,5 +1,5 @@
 defaults: &default_data
-  regulation: "R1803160"
+  regulation: "D0004830"
   origin: {type: "erga_omnes", name: "ERGA OMNES", exception: ~}
   exceptions: ~
   additional_codes: ~

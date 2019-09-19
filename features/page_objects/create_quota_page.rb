@@ -12,7 +12,9 @@ class CreateQuotaPage < CreateQuotaPageElements
   def select_regulation(reg)
     regulation_dropdown.click
     regulation_dropdown.set reg
-    regulations_options.first.click
+    within('#regulations') do
+      regulations_options.first.click
+    end
   end
 
   def enter_quota_order_number(quota_number)
@@ -41,8 +43,7 @@ class CreateQuotaPage < CreateQuotaPageElements
     end
 
   def enter_section_start_date(date)
-    quota_section.start_date.set format_date(date)
-    find("body").click
+    input_date_gds('#quota_start_date', date)
   end
 
   def check_licensed_quota

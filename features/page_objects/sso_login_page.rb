@@ -20,6 +20,7 @@ class SSOLoginPage < SitePrism::Page
   end
 
   def login_as(user)
+    login_button.click
     case user
       when 'tariff_manager'
         uid.set ENV['TARIFFMANAGER']
@@ -28,7 +29,6 @@ class SSOLoginPage < SitePrism::Page
       when 'approver'
         uid.set ENV['APPROVER']
     end
-    login_button.click
     email.set "1"
     first_name.set "1"
     last_name.set "1"

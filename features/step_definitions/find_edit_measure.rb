@@ -23,6 +23,18 @@ And(/^I search for multiple measures by measure sid "([^"]*)"$/) do |sid|
   @find_measure_page.find_measure_by_sid @measure_sid
 end
 
+And(/^I search for a measure by commodity code "([^"]*)"$/) do |ccode|
+  @commodity_code = ccode
+  @find_measure_page = FindMeasurePage.new
+  @find_measure_page.find_measure_by_commodity_code ccode
+end
+
+And(/^I search for multiple measures by commodity code "([^"]*)"$/) do |ccode|
+  @commodity_code = ccode
+  @find_measure_page = FindMeasurePage.new
+  @find_measure_page.find_measure_by_commodity_code ccode
+end
+
 And(/^I enter a quota type in the measure type field$/) do
   @quota_type = "122"
   @find_measure_page = FindMeasurePage.new
@@ -39,21 +51,18 @@ Then(/^the measure should be locked in the search result$/) do
   end
 end
 
-And(/^each row has a checkbox which is "([^"]*)"$/) do |status|
-  expect(@find_measure_page.measure_search_results.size).to eq 1
-  case status
-    when 'checked'
-      @find_measure_page.measure_search_results.each do |result|
-        expect(result).not_to have_lock
-        expect(result.select).to be_checked
-        expect(result.id.text).to eq @measure_sid
+And(/^each unlocked row has a checkbox which is "([^"]*)"$/) do |status|
+  @find_measure_page.measure_search_results.each do |result|
+    if (result.has_no_css?('.locked-column'))
+      case status
+        when 'checked'
+          expect(result.select).to be_checked
+          expect(result.commodity_code.text).to eq @commodity_code
+        when 'unchecked'
+          expect(result.select).not_to be_checked
+          expect(result.commodity_code.text).to eq @commodity_code
       end
-    when 'unchecked'
-      @find_measure_page.measure_search_results.each do |result|
-        expect(result).not_to have_lock
-        expect(result.select).not_to be_checked
-        expect(result.id.text).to eq @measure_sid
-      end
+    end
   end
 end
 
@@ -78,8 +87,8 @@ end
 And(/^I select measures to work with$/) do
   @workbasket = random_workbasket_name
   @change_start_date = random_past_date
-  @regulation = "R1803160"
-  @new_regulation = "R1803100"
+  @regulation = "D0004830"
+  @new_regulation = "R18"
   @edit_measure_page = EditMeasurePage.new
   number_of_measures = @find_measure_page.measure_search_results.size
   @edit_reason = "Edit measure change reason"
@@ -97,7 +106,7 @@ end
 And(/^I select the first available measure to work with$/) do
   @workbasket = random_workbasket_name
   @change_start_date = random_past_date
-  @regulation = "R1803160"
+  @regulation = "D0004830"
   @edit_measure_page = EditMeasurePage.new
   @edit_reason = "Edit measure change reason"
 

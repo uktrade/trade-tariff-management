@@ -10,7 +10,7 @@ class FindMeasurePage < SitePrism::Page
   element :regulation, "div.find-items__row:nth-of-type(4) div.find-item__short input"
   element :search_button, "div.form-actions button"
   element :clear, "div.form-actions a"
-  element :select_all, ".table__header .select-all-column input"
+  element :select_all, ".select-all"
   element :work_with_selected_measures, ".clearfix .button", text: "Work with selected measures"
   element :number_of_measures, ".clearfix .number-of-records-badge"
 
@@ -19,7 +19,7 @@ class FindMeasurePage < SitePrism::Page
     elements :options, ".selectize-dropdown-content .selection"
   end
 
-  sections :measure_search_results, "div.measures-table div.table__row" do
+  sections :measure_search_results, "div#measures-table tbody tr" do
     element :lock, ".locked-column span i"
     element :select, ".select-all-column input"
     element :id, ".measure_sid-column"
@@ -64,6 +64,12 @@ class FindMeasurePage < SitePrism::Page
     else
       measure_sid.set sid
     end
+    search_button.click
+  end
+
+  def find_measure_by_commodity_code(ccode)
+    clear.click
+    commodity_code.set ccode
     search_button.click
   end
 

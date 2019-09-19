@@ -19,7 +19,7 @@ module Helper
   end
 
   def random_past_date
-    number = rand(60..90)
+    number = rand(800..1200)
     number.days.ago
   end
 

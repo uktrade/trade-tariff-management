@@ -14,15 +14,15 @@ end
 And(/^I create a new measure$/) do
   @create_measure_page = CreateMeasurePage.new
   @tarriff_main_menu.create_measures_link.click
-  expect(@create_measure_page).to have_measure_validity_start_date
+  expect(@create_measure_page).to have_text('Create measures')
   @create_measure_page.workbasket_name.set random_workbasket_name
   @create_measure_page.continue_button.click
 end
 
 And(/^I open a new create measure form$/) do
   @create_measure_page = CreateMeasurePage.new
-  @tarriff_main_menu.open_new_measure_form
-  expect(@create_measure_page).to have_measure_validity_start_date
+  @tarriff_main_menu.create_measures_link.click
+  expect(@create_measure_page).to have_text('Create measures')
 end
 
 And(/^I press Continue$/) do
@@ -61,7 +61,7 @@ When(/^I enter all mandatory fields except "([^"]*)"$/) do |string|
   case string
     when 'commodity_codes'
       @create_measure_page.enter_workbasket_name random_workbasket_name
-      @create_measure_page.enter_measure_start_date start_date
+      @create_measure_page.input_date_gds('#validity_start_date', start_date)
       @create_measure_page.select_regulation regulation
       @create_measure_page.select_measure_type measure_type
       @create_measure_page.select_origin origin
@@ -74,7 +74,7 @@ When(/^I enter all mandatory fields except "([^"]*)"$/) do |string|
       @create_measure_page.select_origin origin
       enter_optional_fields
     when 'workbasket_name'
-      @create_measure_page.enter_measure_start_date start_date
+      @create_measure_page.input_date_gds('#validity_start_date', start_date)
       @create_measure_page.enter_commodity_codes commodity_code
       @create_measure_page.select_regulation regulation
       @create_measure_page.select_measure_type measure_type
@@ -82,21 +82,21 @@ When(/^I enter all mandatory fields except "([^"]*)"$/) do |string|
       enter_optional_fields
     when 'origin'
       @create_measure_page.enter_workbasket_name random_workbasket_name
-      @create_measure_page.enter_measure_start_date start_date
+      @create_measure_page.input_date_gds('#validity_start_date', start_date)
       @create_measure_page.select_regulation regulation
       @create_measure_page.enter_commodity_codes commodity_code
       @create_measure_page.select_measure_type measure_type
       enter_optional_fields
     when 'regulation'
       @create_measure_page.enter_workbasket_name random_workbasket_name
-      @create_measure_page.enter_measure_start_date start_date
+      @create_measure_page.input_date_gds('#validity_start_date', start_date)
       @create_measure_page.enter_commodity_codes commodity_code
       @create_measure_page.select_measure_type measure_type
       @create_measure_page.select_origin origin
       enter_optional_fields
     when 'measure_type'
       @create_measure_page.enter_workbasket_name random_workbasket_name
-      @create_measure_page.enter_measure_start_date start_date
+      @create_measure_page.input_date_gds('#validity_start_date', start_date)
       @create_measure_page.select_regulation regulation
       @create_measure_page.enter_commodity_codes commodity_code
       @create_measure_page.select_origin origin
@@ -151,8 +151,9 @@ And(/^I enter an end date which is earlier than the start date$/) do
   end_date = 3.days.ago
   @workbasket = random_workbasket_name
 
-  @create_measure_page.enter_measure_start_date start_date
-  @create_measure_page.enter_measure_end_date end_date
+  @create_measure_page.input_date_gds('#validity_start_date', start_date)
+  @create_measure_page.input_date_gds('#validity_end_date', end_date)
+
   common_steps(regulation, measure_type, commodity_code)
   enter_optional_fields
 end
@@ -204,7 +205,7 @@ end
 
 And(/^I can review the measure$/) do
   expect(@create_measure_page.measure_summary.workbasket_name.text).to eq(@workbasket)
-  expect(@create_measure_page.measure_summary.regulation.text).to eq(format_regulation(@regulation))
+  expect(@create_measure_page.measure_summary.regulation.text).to have_text(@regulation)
   expect(@create_measure_page.measure_summary.start_date.text).to eq(format_summary_date(@start_date))
   expect(@create_measure_page.measure_summary.type.text).to include(@measure_type)
   expect(@create_measure_page.measure_summary.origin.text).to include(@origin['name'])
@@ -263,7 +264,7 @@ When(/^I fill in the form for a "([^"]*)"$/) do |scenario|
   @condition = test_data['condition']
   @duty_expression = test_data['duty_expression']
 
-  @create_measure_page.enter_measure_start_date @start_date
+  @create_measure_page.input_date_gds('#validity_start_date', @start_date)
   @create_measure_page.enter_workbasket_name @workbasket
   @create_measure_page.enter_commodity_codes @commodity_codes unless @commodity_codes.nil?
   @create_measure_page.select_regulation @regulation
@@ -275,7 +276,6 @@ When(/^I fill in the form for a "([^"]*)"$/) do |scenario|
   @create_measure_page.continue
   @create_measure_page.add_duty_expression @duty_expression unless @duty_expression.nil?
   @create_measure_page.add_conditions @condition unless @condition.nil?
-  @create_measure_page.add_footnote @footnote unless @footnote.nil?
   @create_measure_page.continue
 end
 

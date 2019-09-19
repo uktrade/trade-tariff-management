@@ -86,7 +86,7 @@ And(/^I can view the workbasket$/) do
   expect(@work_basket_page).to have_work_basket_details
   expect(@work_basket_page.work_basket_details.workbasket_name.text).to eq @workbasket
   expect(@work_basket_page).to have_configuration_summary
-  expect(@work_basket_page).to have_measures_to_be_created
+  expect(@work_basket_page).to have_text('Measures to be created after cross-check')
 end
 
 Then(/^I can withdraw the workbasket$/) do
