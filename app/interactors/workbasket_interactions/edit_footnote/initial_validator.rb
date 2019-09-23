@@ -155,6 +155,8 @@ module WorkbasketInteractions
       end
 
       def commodity_codes_are_invalid?
+        return unless commodity_codes.present?
+
         valid_codes = commodity_codes.split(', ').map do |code|
           code.length == 10 && code_contains_only_integers?(code)
         end
@@ -185,6 +187,8 @@ module WorkbasketInteractions
       end
 
       def measure_sids_are_invalid?
+        return unless measure_sids.present?
+
         valid_sids = measure_sids.split(', ').map do |sid|
           sid.length == 7 && code_contains_only_integers?(sid)
         end
