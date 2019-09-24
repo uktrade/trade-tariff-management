@@ -1,0 +1,18 @@
+script
+  == "window.__regulation_json = #{workbasket_settings.settings.to_json};"
+
+= simple_form_for form, url: edit_regulation_url(id: workbasket.id),
+                        html: { \
+                          class: "regulation-form edit-measures-v2",
+                          method: :put \
+                        } do |f|
+
+  = render "workbaskets/edit_regulation/steps/review_and_submit/message", read_only: read_only
+  = render "workbaskets/edit_regulation/steps/review_and_submit/details", read_only: read_only
+
+  - if read_only
+    .form-actions
+      h3.heading-medium
+  - else
+    = render "workbaskets/edit_regulation/action_links", f: f
+

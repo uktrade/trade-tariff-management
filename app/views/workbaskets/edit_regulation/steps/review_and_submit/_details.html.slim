@@ -1,0 +1,45 @@
+h3.heading-medium Details
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Regulation
+      td
+        = attributes_parser.base_regulation_id
+
+    tr
+      td.heading_column
+        | Legal ID
+      td
+        = attributes_parser.legal_id
+
+    tr
+      td.heading_column
+        | Description
+      td
+        = attributes_parser.description
+
+    tr
+      td.heading_column
+        | Reference URL
+      td
+        = attributes_parser.reference_url
+
+    tr
+      td.heading_column
+        | Start date
+      td
+        = attributes_parser.start_date_formatted
+
+    tr
+      td.heading_column
+        | End date
+      td
+        = attributes_parser.end_date_formatted
+
+    tr
+      td.heading_column
+        | Regulation group
+      td
+        = attributes_parser.regulation_group_id

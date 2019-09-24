@@ -22,8 +22,11 @@
           td
             = item.regulation_id
           td
-            p.regulations_listing_item_description
-              = link_to item.keywords&.gsub('|', ' | '), new_edit_regulation_path(base_regulation_id: item.regulation_id, base_regulation_role: item.role)
+            - if item.id.end_with? '_base_regulation'
+              p.regulations_listing_item_description
+                = link_to item.keywords&.gsub('|', ' | '), new_edit_regulation_path(base_regulation_id: item.regulation_id, base_regulation_role: item.role)
+            - else
+              = item.keywords&.gsub('|', ' | ')
           td
             = item.regulation_type
           td
