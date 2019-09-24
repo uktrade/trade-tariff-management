@@ -23,25 +23,38 @@ module Workbaskets
     end
 
     expose(:form) do
-      WorkbasketForms::EditRegulationForm.new(original_regulation)
+      WorkbasketForms::EditRegulationForm.new(workbasket_settings)
     end
 
     expose(:original_regulation) do
-      find_original_regulation(workbasket.settings.original_base_regulation_id, workbasket.settings.original_base_regulation_role)
+      find_regulation(workbasket.settings.original_base_regulation_id, workbasket.settings.original_base_regulation_role).decorate
     end
+
+    expose(:regulation) do
+      find_regulation(workbasket.settings.base_regulation_id, workbasket.settings.original_base_regulation_role).decorate
+    end
+
 
     def new
       self.workbasket = Workbaskets::Workbasket.create(
         type: settings_type,
+        title: params[:base_regulation_id],
         user: current_user
       )
-
       workbasket_settings.update(
-        validity_start_date: Date.today,
         original_base_regulation_id: params[:base_regulation_id],
         original_base_regulation_role: params[:base_regulation_role]
       )
 
+      workbasket_settings.update(
+        base_regulation_id: original_regulation.base_regulation_id,
+        legal_id: original_regulation.legal_id,
+        description: original_regulation.description,
+        reference_url: original_regulation.reference_url,
+        validity_start_date: original_regulation.validity_start_date,
+        validity_end_date: original_regulation.validity_end_date,
+        regulation_group_id: original_regulation.regulation_group_id
+      )
 
       redirect_to initial_step_url
     end
@@ -58,7 +71,7 @@ module Workbaskets
         redirect_to submitted_for_cross_check_edit_regulation_url(workbasket.id)
       else
         @edit_regulation_form = WorkbasketForms::EditRegulationForm.new(workbasket.settings)
-        render :edit
+        render :edit, locals: { errors: saver.errors, errors_summary: saver.errors_summary }
       end
     end
 
@@ -68,7 +81,7 @@ module Workbaskets
       true
     end
 
-    def find_original_regulation(regulation_id, role)
+    def find_regulation(regulation_id, role)
       BaseRegulation.find(base_regulation_id: regulation_id, base_regulation_role: role)
     end
 

@@ -1,0 +1,22 @@
+- regulation = regulation ? regulation : BaseRegulation.find(workbasket_id: workbasket.id).decorate
+
+br
+h3.heading-medium
+  | Next steps
+
+ul class="list"
+  - if !current_user.approver_user && next_cross_check.present? && workbasket.id != next_cross_check.id
+    li
+      = link_to "Cross-check next workbasket", new_cross_check_url(next_cross_check.id)
+
+  - if current_user.approver_user && next_approve.present? && workbasket.id != next_approve.id
+    li
+      = link_to "Approve next workbasket", new_approve_url(next_approve.id)
+  li
+    = link_to "Return to main menu", root_url
+
+  - unless workbasket_rejected?
+    li
+      = link_to "View this regulation", edit_regulation_url(workbasket.id)
+br
+br

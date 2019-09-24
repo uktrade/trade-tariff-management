@@ -24,6 +24,8 @@ module CrossCheckHelper
       "Cross-check and create footnote"
     elsif workbasket.type == 'edit_footnote'
       "Cross-check and edit footnote"
+    elsif workbasket.type == 'edit_regulation'
+      "Cross-check and edit regulation"
     end
   end
 
@@ -50,6 +52,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/create_footnote"
     elsif workbasket.type == 'edit_footnote'
       "workbaskets/shared/steps/review_and_submit/edit_footnote"
+    elsif workbasket.type == 'edit_regulation'
+      "workbaskets/shared/steps/review_and_submit/edit_regulation"
     end
   end
 

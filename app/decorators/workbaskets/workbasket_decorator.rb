@@ -32,6 +32,8 @@ module Workbaskets
         "Edit Geographical Area"
       when "edit_nomenclature"
         "Edit Goods Classification"
+      when "edit_regulation"
+        "Edit Regulation"
       end
     end
 

@@ -14,7 +14,7 @@ $(document).ready(function() {
     data: function() {
       var data = {
         savedSuccessfully: false,
-        errors: {}
+        errors: window.__registration_errors || {}
       };
 
       if (window.__regulation_json) {

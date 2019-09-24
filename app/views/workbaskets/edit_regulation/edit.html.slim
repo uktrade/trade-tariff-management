@@ -1,92 +1,105 @@
 = render "workbaskets/#{settings_type}/breadcrumbs"
 
+script
+  == "window.__registration_errors = #{saver.errors.present? ? saver.errors.to_json : {} };"
 h1 class="heading-large m-b-20"
   | Edit regulation
 
 = simple_form_for form, url: edit_regulation_url(id: workbasket.id),
-                        html: { \
-                          class: "edit-regulation-form create-measures-v2", \
-                          method: :put, \
-                          novalidate: false \
-                        } do |f|
-  fieldset
-    .bootstrap-row
-      .col-lg-6.col-md-8.col-sm-12.col-xs-12
-        .form-group.without_bottom_margin
-          label.form-label
-            | What is the reason for these changes?
-            span.form-hint
-              | Be as descriptive as you can. Please list the changes you intend to make.
-            = f.input :reason_for_changes, as: :text, label: false, input_html: { rows: 4 }, required: true
+        html: { \
+                class: "regulation-form edit-regulation-form create-measures-v2", \
+                method: :put, \
+                novalidate: false \
+              } do |f|
 
-    .bootstrap-row
-      .col-lg-6.col-md-8.col-sm-12.col-xs-12
-        = f.input :workbasket_name, label: 'What is the name of this workbasket?', required: true
+  .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.reason_for_changes }"
+    fieldset
+      h3.heading-medium.m-t-5 id="reason_for_changes"
+        = f.label :reason_for_changes, 'What is the reason for these changes?'
+      span.form-hint
+        | Be as descriptive as you can. Please list the changes you intend to make.
+      span.error-message v-if="errors.reason_for_changes" v-html="errors.reason_for_changes"
+      .grid-row
+        .column-one-half
+          = f.input :reason_for_changes, as: :text, label: false, input_html: { rows: 4 }
 
-    .bootstrap-row
-      .col-lg-6.col-md-8.col-sm-12.col-xs-12
-        .form-group.m-b-10
-          fieldset
-            h3.heading-medium.m-t-5 id="base_regulation_id"
-              = f.label 'What is the regulation identifier?'
-            span.form-hint
-              | This must be exactly 8 characters long. Please use the following structure for regulations. Start with one of the following characters:
-            p.form-hint
-              | P Preferential Trade Agreement
-              br
-              | U Unilateral preferences (GSP)
-              br
-              | S Suspensions and reliefs
-              br
-              | X Import and Export control
-              br
-              | N Trade remedies
-              br
-              | M MFN
-              br
-              | Q Quotas
-              br
-              | A Agri
+  .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.base_regulation_id }"
+    fieldset
+      h3.heading-medium.m-t-5 id="base_regulation_id"
+        = f.label :base_regulation_id, 'What is the regulation identifier?'
+      span.form-hint
+        | This must be exactly 8 characters long. Please use the following structure for regulations. Start with one of the following characters:
+      p.form-hint
+        | P Preferential Trade Agreement
+        br
+        | U Unilateral preferences (GSP)
+        br
+        | S Suspensions and reliefs
+        br
+        | X Import and Export control
+        br
+        | N Trade remedies
+        br
+        | M MFN
+        br
+        | Q Quotas
+        br
+        | A Agri
 
+      span.error-message v-if="errors.base_regulation_id" v-html="errors.base_regulation_id"
+
+      .grid-row
+        .column-one-third
           = f.input :base_regulation_id, label: false, as: :string, input_html: { maxlength: 8 }, required: true
 
-        .form-group.m-b-10
-          fieldset
-            h3.heading-medium.m-t-5 id="legal_id"
-              = f.label 'What is the public-facing regulation name?'
+  .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.legal_id }"
+    fieldset
+      h3.heading-medium.m-t-5 id="legal_id"
+        = f.label :legal_id, 'What is the public-facing regulation name?'
+      span.form-hint
+        | This is the name of the regulation as it would appear on (for example) legislation.gov.uk.
+      span.error-message v-if="errors.legal_id" v-html="errors.legal_id"
+      .grid-row
+        .column-one-half
+          = f.input :legal_id, label: false, as: :string, required: true
+
+  .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.description }"
+    fieldset
+      h3.heading-medium.m-t-5 id="description"
+        = f.label :description, 'What is the description of this regulation?'
+      span.form-hint
+        | This is for information purposes only.
+      span.error-message v-if="errors.description" v-html="errors.description"
+      .grid-row
+        .column-one-half
+          = f.input :description, label: false, as: :text, required: true
+
+  .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.reference_url }"
+    fieldset
+      h3.heading-medium.m-t-5 id="reference_url"
+        = f.label :description, 'What is the URL of the regulation?'
+      span.form-hint
+        | Please enter the absolute URL of the regulation.
+      span.error-message v-if="errors.reference_url" v-html="errors.reference_url"
+      .grid-row
+        .column-one-half
+          = f.input :reference_url, label: false, as: :string, required: true
+
+
+  = content_tag "date-gds", "", "label" => "Start date from", "value" => form.validity_start_date.strftime('%d,%m,%Y'), "id" => "workbasket_forms_edit_regulation_form_validity_start_date", "input_name" => "workbasket_forms_edit_regulation_form[validity_start_date]", required: true
+  = content_tag "date-gds", "", "label" => "End date to", "value" => form.validity_end_date&.strftime('%d,%m,%Y'), "id" => "workbasket_forms_edit_regulation_form_validity_end_date", "input_name" => "workbasket_forms_edit_regulation_form[validity_end_date]"
+
+  .grid-row
+    .column-one-half
+      .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.regulation_group_id }"
+        fieldset
+          label.heading-medium.m-t-5 for="regulation_group" id="regulation_group_id"
+            | What type of regulation do you want to create?
             span.form-hint
-              | This is the name of the regulation as it would appear on (for example) legislation.gov.uk.
-            = f.input :legal_id, label: false, as: :string, required: true
+              | Please select the regulation group.
+            span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
+          = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "value" => "regulation.regulation_group_id", "v-model" => "regulation.regulation_group_id", "name" => "workbasket_forms_edit_regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group", id: "regulation_group", required: true  }
 
-        .form-group.m-b-10
-          fieldset
-            h3.heading-medium.m-t-5 id="description"
-              = f.label :description, 'What is the description of this regulation?'
-            span.form-hint
-              | This is for information purposes only.
-            span.error-message v-if="errors.description"
-            = f.input :description, label: false, as: :text, required: true
-
-        .form-group.m-b-10
-          fieldset
-            h3.heading-medium.m-t-5 id="reference_url"
-              = f.label :description, 'What is the URL of the regulation?'
-            span.form-hint
-              | Please enter the absolute URL of the regulation.
-            = f.input :reference_url, label: false, as: :string, required: true
-
-        .vue-instance
-          = content_tag "date-gds", "", "label" => "Start date from", "value" => form.start_date, "id" => "workbasket_forms_edit_regulation_form_validity_start_date", "input_name" => "workbasket_forms_edit_regulation_form[validity_start_date]", required: true
-          = content_tag "date-gds", "", "label" => "End date to", "value" => form.end_date, "id" => "workbasket_forms_edit_regulation_form_validity_end_date", "input_name" => "workbasket_forms_edit_regulation_form[validity_end_date]", required: true
-
-        .form-group.m-b-10
-          fieldset
-            label.heading-medium.m-t-5 id="regulation_group_id"
-              | What type of regulation do you want to create?
-              span.form-hint
-                | Please select the regulation group.
-            .vue-instance
-              = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "form.regulation_group_id", "name" => "workbasket_forms_edit_regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group", id: "regulation_group", required: true }
 
   .form-actions
     button.button data-disable-with='Processing'

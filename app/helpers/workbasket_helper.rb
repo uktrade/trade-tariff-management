@@ -301,6 +301,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :edit_regulation
+      edit_edit_regulation_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
@@ -334,6 +340,8 @@ module WorkbasketHelper
       edit_geographical_area_url(workbasket.id)
     when :edit_nomenclature
       edit_nomenclature_url(workbasket.id)
+    when :edit_regulation
+      edit_regulation_url(workbasket.id)
     end
   end
 
@@ -360,6 +368,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_footnote_url(workbasket.id)
     elsif workbasket.object.type == "edit_footnote"
       withdraw_workbasket_from_workflow_edit_footnote_url(workbasket.id)
+    elsif workbasket.object.type == "edit_regulation"
+      withdraw_workbasket_from_workflow_edit_regulation_url(workbasket.id)
     end
   end
 

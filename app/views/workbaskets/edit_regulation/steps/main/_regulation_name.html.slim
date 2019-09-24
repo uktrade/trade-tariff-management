@@ -1,0 +1,32 @@
+.form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.legal_id }"
+  fieldset
+    h3.heading-medium.m-t-5 id="legal_id"
+      = f.label :legal_id, 'What is the public-facing regulation name?'
+    span.form-hint
+      | This is the name of the regulation as it would appear on (for example) legislation.gov.uk.
+    span.error-message v-if="errors.legal_id" v-html="errors.legal_id"
+    .grid-row
+      .column-one-half
+        = f.input :legal_id, label: false, as: :string, input_html: { "v-model" => "regulation.legal_id" }
+
+.form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.description }"
+  fieldset
+    h3.heading-medium.m-t-5 id="description"
+      = f.label :description, 'What is the description of this regulation?'
+    span.form-hint
+      | This is for information purposes only.
+    span.error-message v-if="errors.description" v-html="errors.description"
+    .grid-row
+      .column-one-half
+        = f.input :description, label: false, as: :text, input_html: { "v-model" => "regulation.description" }
+
+.form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.reference_url }"
+  fieldset
+    h3.heading-medium.m-t-5 id="reference_url"
+      = f.label :description, 'What is the URL of the regulation?'
+    span.form-hint
+      | Please enter the absolute URL of the regulation.
+    span.error-message v-if="errors.reference_url" v-html="errors.reference_url"
+    .grid-row
+      .column-one-half
+        = f.input :reference_url, label: false, as: :string, input_html: { "v-model" => "regulation.reference_url" }

@@ -2130,14 +2130,17 @@ ALTER SEQUENCE public.edit_nomenclature_workbasket_settings_id_seq OWNED BY publ
 CREATE TABLE public.edit_regulation_workbasket_settings (
     id integer NOT NULL,
     workbasket_id integer,
-    workbasket_name text,
     reason_for_changes text,
     original_base_regulation_id text,
     original_base_regulation_role text,
     base_regulation_id text,
+    legal_id text,
+    description text,
+    reference_url text,
     validity_start_date date,
     validity_end_date date,
     regulation_group_id text,
+    main_step_validation_passed boolean DEFAULT false,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );

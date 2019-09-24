@@ -24,6 +24,18 @@ module WorkbasketInteractions
                     :operation_date,
                     :records
 
+      REQUIRED_PARAMS = %i[
+        reason_for_changes
+        legal_id
+        description
+        reference_url
+      ].freeze
+
+      BASE_REGULATION_REQUIRED_PARAMS = REQUIRED_PARAMS + %i[
+        validity_start_date
+        regulation_group_id
+      ]
+
       def initialize(workbasket, current_step, save_mode, settings_ops = {})
         @workbasket = workbasket
         @save_mode = save_mode
@@ -40,17 +52,18 @@ module WorkbasketInteractions
       end
 
       def save!
-        workbasket.settings.workbasket_name = @settings_params[:workbasket_name]
         workbasket.settings.reason_for_changes = @settings_params[:reason_for_changes]
         workbasket.settings.base_regulation_id = @settings_params[:base_regulation_id]
-        workbasket.settings.validity_start_date = @settings_params[:validity_start_date]
-        workbasket.settings.validity_end_date = @settings_params[:validity_end_date]
+        workbasket.settings.legal_id = @settings_params[:legal_id]
+        workbasket.settings.reference_url = @settings_params[:reference_url]
+        workbasket.settings.description = @settings_params[:description]
+        workbasket.settings.validity_start_date = parse_date(@settings_params[:validity_start_date])
+        workbasket.settings.validity_end_date = parse_date(@settings_params[:validity_end_date])
         workbasket.settings.regulation_group_id = @settings_params[:regulation_group_id]
 
         workbasket.settings.save
         if valid?
-          true
-          # create_nomenclature_description!
+          update_regulation!
         else
           false
         end
@@ -71,8 +84,7 @@ module WorkbasketInteractions
       end
 
       def validate!
-        check_initial_validation_rules!
-        check_conformance_rules! if @errors.blank?
+        check_required_params!
       end
 
       def check_initial_validation_rules!
@@ -80,99 +92,66 @@ module WorkbasketInteractions
           workbasket.settings
         )
 
-        @errors = initial_validator.fetch_errors
+        @errors.merge(initial_validator.fetch_errors)
         @errors_summary = initial_validator.errors_summary
       end
 
 
-      # def create_nomenclature_description!
-      #   @records = []
-      #   original_nomenclature = GoodsNomenclature.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature)
-      #
-      #
-      #   @goods_nomenclature_description_period = find_existing_description_period(original_nomenclature, workbasket.settings.validity_start_date)
-      #   description_operation = "U"
-      #   if goods_nomenclature_description_period.nil?
-      #     @records << create_description_period(original_nomenclature)
-      #     description_operation = "C"
-      #   end
-      #
-      #   GoodsNomenclatureDescription.unrestrict_primary_key
-      #   @goods_nomenclature_description = GoodsNomenclatureDescription.new(
-      #     language_id: 'EN',
-      #     goods_nomenclature_description_period_sid: goods_nomenclature_description_period.goods_nomenclature_description_period_sid,
-      #     goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
-      #     goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
-      #     productline_suffix: original_nomenclature.producline_suffix,
-      #     operation: description_operation,
-      #     description: workbasket.settings.description
-      #   )
-      #   @records << @goods_nomenclature_description
-      #
-      #   operation_date = workbasket.settings.validity_start_date
-      #   save_nomenclature_description!
-      # end
+      def update_regulation!
+        @records = []
+        original_regulation = BaseRegulation.find(base_regulation_id: @settings[:original_base_regulation_id], base_regulation_role: @settings[:original_base_regulation_role].to_i)
 
-      # def find_existing_description_period(original_nomenclature, validity_start_date)
-      #   GoodsNomenclatureDescriptionPeriod.find(goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid, validity_start_date: validity_start_date)
-      # end
+        original_regulation.base_regulation_id = workbasket.settings.base_regulation_id
+        original_regulation.information_text = workbasket.settings.legal_id + '|' +
+          workbasket.settings.description + '|' +
+          workbasket.settings.reference_url
+        original_regulation.validity_start_date = workbasket.settings.validity_start_date
+        original_regulation.validity_end_date = workbasket.settings.validity_end_date
+        original_regulation.regulation_group_id = workbasket.settings.regulation_group_id
 
-      # def create_description_period(original_nomenclature)
-      #   GoodsNomenclatureDescriptionPeriod.unrestrict_primary_key
-      #   @goods_nomenclature_description_period = GoodsNomenclatureDescriptionPeriod.new(
-      #     goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
-      #     goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
-      #     productline_suffix: original_nomenclature.producline_suffix,
-      #     validity_start_date: workbasket.settings.validity_start_date
-      #   )
-      #   ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(goods_nomenclature_description_period).assign!
-      #   @goods_nomenclature_description_period
-      # end
+        @records << original_regulation
 
-      def check_conformance_rules!
-        Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
-          # create_nomenclature_description!
+        save_regulation!
+      end
 
-          parse_and_format_conformance_rules
+      def check_required_params!
+        BASE_REGULATION_REQUIRED_PARAMS.map do |k|
+          if @settings_params[k.to_s].blank?
+            case k.to_s
+            when "regulation_group_id"
+              @errors[k] = "Regulation group can't be blank!"
+            when "validity_start_date"
+              @errors[k] = "Start date can't be blank!"
+            else
+              @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
+            end
+          end
+        end
+
+        if @settings_params[:base_regulation_id].present?
+          if @settings_params[:base_regulation_id].size != 8
+            @errors[:base_regulation_id] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
+          end
+        else
+          @errors[:base_regulation_id] = "Regulation identifier can't be blank!"
         end
       end
 
-      def parse_and_format_conformance_rules
-        @conformance_errors = {}
 
-        # unless goods_nomenclature_description_period.conformant?
-        #   @conformance_errors.merge!(get_conformance_errors(goods_nomenclature_description_period))
-        # end
-
-        if conformance_errors.present?
-          @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
+      def save_regulation!
+        records.each do |record|
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            record, system_ops.merge(operation: "U")
+          ).assign!(false)
+          record.save
         end
       end
 
-      def get_conformance_errors(record)
-        res = {}
-
-        record.conformance_errors.map do |k, v|
-          message = if v.is_a?(Array)
-                      v.flatten.join(' ')
-                    else
-                      v
-                    end
-
-          res[k.to_s] = "<strong class='workbasket-conformance-error-code'>#{k}</strong>: #{message}".html_safe
-        end
-
-        res
+      def parse_date(date)
+        return nil if date.empty?
+        date_parts =  date.gsub(',','/').split('/')
+        Date.new(date_parts[2].to_i, date_parts[1].to_i, date_parts[0].to_i)
       end
-
-      # def save_nomenclature_description!
-      #   records.each do |record|
-      #     ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-      #       record, system_ops.merge(operation: record[:operation])
-      #     ).assign!
-      #     record.save
-      #   end
-      # end
     end
   end
 end

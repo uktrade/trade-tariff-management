@@ -24,6 +24,8 @@ module ApprovalHelper
       "Approve edited measures"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "Approve edited additional codes"
+    elsif workbasket.type == 'edit_regulation'
+      "Approve edited regulation"
     end
   end
 
@@ -50,6 +52,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/create_footnote"
     elsif workbasket.type == 'edit_footnote'
       "workbaskets/shared/steps/review_and_submit/approval/edit_footnote"
+    elsif workbasket.type == 'edit_regulation'
+      "workbaskets/shared/steps/review_and_submit/approval/edit_regulation"
     end
   end
 end

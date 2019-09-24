@@ -1,0 +1,14 @@
+= content_tag "date-gds", "", "class"=>"m-t-10", ":value.sync" => "regulation.validity_start_date", "id" => "validity_start_date", ":error" => "errors.validity_start_date", ":required" => "true"
+
+= content_tag "date-gds", "", "class"=>"m-t-10", "label" => "End date", "hint" => "Optional - leave blank if the regulation will remain in force indefinitely.", ":value.sync" => "regulation.validity_end_date", "id" => "validity_end_date", ":error" => "errors.validity_end_date"
+
+.grid-row
+  .column-one-half
+    .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.regulation_group_id }"
+      fieldset
+        label.heading-medium.m-t-5 for="regulation_group" id="regulation_group_id"
+          | What type of regulation do you want to create?
+          span.form-hint
+            | Please select the regulation group.
+          span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
+        = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group", id: "regulation_group" }
