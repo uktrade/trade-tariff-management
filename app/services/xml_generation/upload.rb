@@ -41,11 +41,18 @@ module XmlGeneration
     end
 
     def remote_metadata_file_name
-      "DIT#{record.envelope_id}_metadata.xml"
+      "#{remote_file_name_base}_metadata.xml"
     end
 
     def remote_main_file_name
-      "DIT#{record.envelope_id}.xml"
+      "#{remote_file_name_base}.xml"
+    end
+
+    # Format: Using the example of the file from 2019 with an envelope ID of 142, the filename will be DIT190142.xml, i.e.
+    # DIT, followed by the year (two digits), followed by
+    # the envelope ID (pre-padded with zeroes up to 4 digits)
+    def remote_file_name_base
+      "DIT#{Date.today.strftime("%y")}#{record.envelope_id.to_s.rjust(4, "0")}"
     end
 
     def local_main_file_path
