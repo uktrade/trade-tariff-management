@@ -19,7 +19,8 @@ shared_context 'create_regulation_base_context' do
   let!(:base_regulation) do
     create(:base_regulation,
            base_regulation_id:
-               %w(C D A I J R).sample +
+               # %w(C D A I J R).sample + # Old EU regulation values
+               %w(P U S X N M Q A).sample +  # New UK regulation values
                Forgery(:basic).number(at_least: 10, at_most: 19).to_s +
                Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s +
                Forgery(:basic).number(at_least: 0, at_most: 9).to_s,
@@ -59,7 +60,7 @@ shared_context 'create_regulation_base_context' do
         # { name: 'Publication year', value: Forgery(:basic).number(at_least: 10, at_most: 19).to_s, type: :text },
         # { name: 'Regulation number', value: Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s, type: :text },
         # { name: 'Number suffix', value: Forgery(:basic).number(at_least: 0, at_most: 9).to_s, type: :text },
-        { name: 'Regulation identifier', id: 'workbasket_forms_create_regulation_form_base_regulation_id', value: 'C1234567', type: :text },
+        { name: 'Regulation identifier', id: 'workbasket_forms_create_regulation_form_base_regulation_id', value: 'N1234567', type: :text },
         { name: 'Legal ID', id: 'workbasket_forms_create_regulation_form_legal_id', value: Forgery('lorem_ipsum').characters, type: :text },
         { name: 'Description', id: 'workbasket_forms_create_regulation_form_description', value: Forgery('lorem_ipsum').sentence, type: :text },
         { name: 'Reference URL', id: 'workbasket_forms_create_regulation_form_reference_url', value: Forgery(:internet).domain_name, type: :text }

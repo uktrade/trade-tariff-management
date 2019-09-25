@@ -28,7 +28,7 @@ shared_context "regulation_saver_base_context" do
   let!(:base_regulation) do
     create(:base_regulation,
       base_regulation_role: "1",
-      base_regulation_id: "D9402622")
+      base_regulation_id: "N9402622")
   end
 
   let(:base_ops) do
