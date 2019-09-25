@@ -283,7 +283,9 @@ module WorkbasketInteractions
         end
 
         if original_params[:base_regulation_id].present?
-          if original_params[:base_regulation_id].size != 8
+          if !("PUSXNMQA".include? original_params[:base_regulation_id]&.chr)
+            @errors[:base_regulation_id] = "Regulation identifier must begin with P,U,S,X,N,M,Q or A."
+          elsif original_params[:base_regulation_id].size != 8
             @errors[:base_regulation_id] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
           end
         else
