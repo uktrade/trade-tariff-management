@@ -41,11 +41,32 @@ module Workbaskets
         if checker.valid?
           checker.persist!
 
-          redirect_to check_completed_url
+          upload_xml if (workbasket.status == 'awaiting_cds_upload_edit' || workbasket.status == 'awaiting_cds_upload_create_new')
+
+          render "workbaskets/#{workbasket.type}/workflow_screens_parts/status_pages/_#{workbasket.status}"
         else
           @errors = checker.errors
           render :new,  status: :unprocessable_entity
         end
+      end
+
+      def upload_xml
+        additional_params = {
+          workbasket: false,
+          workbasket_selected: workbasket.id
+        }
+
+        record = XmlExport::File.new(
+          {
+            issue_date: Time.zone.now,
+            state: "P",
+            user_id: current_user.id
+          }.merge(additional_params)
+        )
+
+        record.save_with_envelope_id
+
+        XmlGeneration::ExportWorker.new.perform(record.id)
       end
     end
   end
