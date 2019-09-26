@@ -21,6 +21,7 @@ RSpec.describe 'cross check', :js do
     allow_any_instance_of(WorkbasketValueObjects::AttributesParserBase).to receive(:measure_type) { MeasureType.first }
     allow_any_instance_of(WorkbasketValueObjects::AttributesParserBase).to receive(:regulation) { base_regulation.formatted_id }
     allow_any_instance_of(WorkbasketValueObjects::AttributesParserBase).to receive(:regulation_description) { base_regulation.information_text }
+    allow_any_instance_of(XmlGeneration::ExportWorker).to receive(:perform) { true }
     workbasket.settings.measure_sids_jsonb = "[#{measure.measure_sid}]"
     workbasket.settings.measure_sids_jsonb = "[#{measure.measure_sid}]"
     workbasket.settings.save
