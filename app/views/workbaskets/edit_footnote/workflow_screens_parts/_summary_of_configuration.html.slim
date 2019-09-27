@@ -31,7 +31,12 @@ table.create-measures-details-table
       td.heading_column
         | Description
       td
-        = footnote.description
+        = footnote.footnote_descriptions.first.description
+        details
+          summary
+            | Original description
+          panel.panel-border-narrow.p-t-5.p-b-5
+            = footnote.footnote_descriptions.second.description
     tr
 
       td.heading_column
