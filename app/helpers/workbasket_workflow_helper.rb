@@ -41,6 +41,8 @@ module WorkbasketWorkflowHelper
       link_to "Manage goods classification", sections_url
     elsif workbasket.type.include?("footnote")
       link_to "Find and edit footnotes", search_footnotes_url
+    elsif workbasket.type.include?("regulation")
+      link_to "Find and edit regulations", regulations_url
     else
       link_to "Find and edit measures", measures_url
     end
