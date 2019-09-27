@@ -20,7 +20,7 @@ shared_context 'create_regulation_base_context' do
     create(:base_regulation,
            base_regulation_id:
                # %w(C D A I J R).sample + # Old EU regulation values
-               %w(P U S X N M Q A).sample +  # New UK regulation values
+               %w(C P U S X N M Q A).sample +  # New UK regulation values
                Forgery(:basic).number(at_least: 10, at_most: 19).to_s +
                Forgery(:basic).number(at_least: 1000, at_most: 9999).to_s +
                Forgery(:basic).number(at_least: 0, at_most: 9).to_s,
