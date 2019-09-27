@@ -17,13 +17,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: ml; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA ml;
-
-
---
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -35,7 +28,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
 
 --
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
@@ -49,125 +41,6 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
-
-
---
--- Name: goods_nomenclature_export_brexit(text); Type: FUNCTION; Schema: ml; Owner: -
---
-
-CREATE FUNCTION ml.goods_nomenclature_export_brexit(pchapter text) RETURNS TABLE(goods_nomenclature_sid integer, goods_nomenclature_item_id character varying, producline_suffix character varying, validity_start_date timestamp without time zone, validity_end_date timestamp without time zone, description text, number_indents integer, goods_nomenclature_description_period_sid integer, desc_validity_start_date timestamp without time zone, desc_validity_end_date timestamp without time zone, nice_description text, chapter text, node text, leaf text)
-    LANGUAGE plpgsql
-    AS $_$
-
-#variable_conflict use_column
-
-BEGIN
-
-IF pchapter = '' THEN
-   pchapter = '%';
-END IF;
-
-/* temporary table contains results of query plus a placeholder column for leaf - defaulted to 0
-node column has the significant digits used to find child nodes having the same significant digits.
-The basic query retrieves all current (and future) nomenclature with indents and descriptions */
-
-DROP TABLE IF EXISTS tmp_nomenclature;
-
-CREATE TEMP TABLE tmp_nomenclature ON COMMIT DROP AS
-SELECT gn.goods_nomenclature_sid,
-  gn.goods_nomenclature_item_id,
-  gn.producline_suffix,
-  gn.validity_start_date,
-  gn.validity_end_date,
-  gnd.description,
-  gni.number_indents,
-  gndp.goods_nomenclature_description_period_sid,
-  gndp.validity_start_date as "desc_validity_start_date",
-  gndp.validity_end_date as "desc_validity_end_date",
-  "nice_description",
-  left (gn.goods_nomenclature_item_id, 2) as "chapter",
-  REGEXP_REPLACE (gn.goods_nomenclature_item_id, '(00)+$', '') as "node",
-  CAST( '0' as text) as "leaf"
-  FROM goods_nomenclatures gn
-    JOIN goods_nomenclature_descriptions gnd ON gnd.goods_nomenclature_sid = gn.goods_nomenclature_sid
-    JOIN goods_nomenclature_description_periods gndp ON gndp.goods_nomenclature_description_period_sid = gnd.goods_nomenclature_description_period_sid
-    JOIN goods_nomenclature_indents gni ON gni.goods_nomenclature_sid = gn.goods_nomenclature_sid
-  WHERE (
-    gn.validity_end_date IS NULL OR
-    gn.validity_end_date >= '2019-03-29'
-    ) AND
-    gn.goods_nomenclature_item_id LIKE pchapter AND
-    gn.status = 'published' AND
-    gnd.status = 'published' AND
-    gndp.status = 'published' AND
-    gni.status = 'published' AND
-    gndp.goods_nomenclature_description_period_sid IN
-    (
-      SELECT MAX (gndp2.goods_nomenclature_description_period_sid)
-      FROM goods_nomenclature_description_periods gndp2
-      WHERE gndp2.goods_nomenclature_sid = gnd.goods_nomenclature_sid AND
-        gndp2.validity_start_date <= '2019-03-29'
-      UNION
-        SELECT gndp3.goods_nomenclature_description_period_sid
-        FROM goods_nomenclature_description_periods gndp3
-        WHERE gndp3.goods_nomenclature_sid = gnd.goods_nomenclature_sid AND
-        gndp3.validity_start_date >= '2019-03-29'
-    ) AND gni.goods_nomenclature_indent_sid IN
-    (
-      SELECT MAX (gni2.goods_nomenclature_indent_sid)
-      FROM goods_nomenclature_indents gni2
-      WHERE gni2.goods_nomenclature_sid = gn.goods_nomenclature_sid AND
-        gni2.validity_start_date < '2019-03-29'
-      UNION
-        SELECT gni3.goods_nomenclature_indent_sid
-        FROM goods_nomenclature_indents gni3
-        WHERE gni3.goods_nomenclature_sid = gn.goods_nomenclature_sid AND
-        gni3.validity_start_date >= '2019-03-29'
-    );
-
-
-CREATE INDEX t1_i_nomenclature ON tmp_nomenclature (goods_nomenclature_sid, goods_nomenclature_item_id);
-
-DECLARE cur_nomenclature CURSOR FOR SELECT * FROM tmp_nomenclature;
-
-BEGIN
-    FOR nom_record IN cur_nomenclature LOOP
-      IF nom_record.producline_suffix = '80' THEN
-        IF LENGTH (nom_record.node) = 10 OR NOT EXISTS (
-          SELECT 1
-          FROM tmp_nomenclature
-          WHERE goods_nomenclature_item_id LIKE CONCAT(nom_record.node,'%')
-          AND goods_nomenclature_item_id <> nom_record.goods_nomenclature_item_id
-          ) THEN
-            UPDATE tmp_nomenclature tn
-            SET leaf = '1'
-            WHERE goods_nomenclature_sid = nom_record.goods_nomenclature_sid;
-        END IF;
-      END IF;
-    END LOOP;
-END;
-
-RETURN QUERY SELECT * FROM tmp_nomenclature;
-
-END;
-
-$_$;
-
-
---
--- Name: reformat_regulation_id(character varying); Type: FUNCTION; Schema: ml; Owner: -
---
-
-CREATE FUNCTION ml.reformat_regulation_id(reg character varying) RETURNS character varying
-    LANGUAGE plpgsql
-    AS $$
-declare
-outreg character varying;
-begin
-select into outreg left(reg, 1) || right(reg, 4) || '/' || substring(reg, 2, 2);
-return outreg;
-end
-$$;
 
 
 --
@@ -202,403 +75,6 @@ CREATE FUNCTION public.reassign_owned() RETURNS event_trigger
 SET default_tablespace = '';
 
 SET default_with_oids = false;
-
---
--- Name: base_regulations_oplog; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.base_regulations_oplog (
-    base_regulation_role integer,
-    base_regulation_id character varying(255),
-    validity_start_date timestamp without time zone,
-    validity_end_date timestamp without time zone,
-    community_code integer,
-    regulation_group_id character varying(255),
-    replacement_indicator integer,
-    stopped_flag boolean,
-    information_text text,
-    approved_flag boolean,
-    published_date date,
-    officialjournal_number character varying(255),
-    officialjournal_page integer,
-    effective_end_date timestamp without time zone,
-    antidumping_regulation_role integer,
-    related_antidumping_regulation_id character varying(255),
-    complete_abrogation_regulation_role integer,
-    complete_abrogation_regulation_id character varying(255),
-    explicit_abrogation_regulation_role integer,
-    explicit_abrogation_regulation_id character varying(255),
-    created_at timestamp without time zone,
-    "national" boolean,
-    oid integer NOT NULL,
-    operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date timestamp without time zone,
-    added_by_id integer,
-    added_at timestamp without time zone,
-    status text,
-    workbasket_id integer,
-    workbasket_sequence_number integer
-);
-
-
---
--- Name: base_regulations; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.base_regulations AS
- SELECT base_regulations1.base_regulation_role,
-    base_regulations1.base_regulation_id,
-    base_regulations1.validity_start_date,
-    base_regulations1.validity_end_date,
-    base_regulations1.community_code,
-    base_regulations1.regulation_group_id,
-    base_regulations1.replacement_indicator,
-    base_regulations1.stopped_flag,
-    base_regulations1.information_text,
-    base_regulations1.approved_flag,
-    base_regulations1.published_date,
-    base_regulations1.officialjournal_number,
-    base_regulations1.officialjournal_page,
-    base_regulations1.effective_end_date,
-    base_regulations1.antidumping_regulation_role,
-    base_regulations1.related_antidumping_regulation_id,
-    base_regulations1.complete_abrogation_regulation_role,
-    base_regulations1.complete_abrogation_regulation_id,
-    base_regulations1.explicit_abrogation_regulation_role,
-    base_regulations1.explicit_abrogation_regulation_id,
-    base_regulations1."national",
-    base_regulations1.oid,
-    base_regulations1.operation,
-    base_regulations1.operation_date,
-    base_regulations1.added_by_id,
-    base_regulations1.added_at,
-    base_regulations1.status,
-    base_regulations1.workbasket_id,
-    base_regulations1.workbasket_sequence_number
-   FROM public.base_regulations_oplog base_regulations1
-  WHERE ((base_regulations1.oid IN ( SELECT max(base_regulations2.oid) AS max
-           FROM public.base_regulations_oplog base_regulations2
-          WHERE (((base_regulations1.base_regulation_id)::text = (base_regulations2.base_regulation_id)::text) AND (base_regulations1.base_regulation_role = base_regulations2.base_regulation_role)))) AND ((base_regulations1.operation)::text <> 'D'::text));
-
-
---
--- Name: measure_components_oplog; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.measure_components_oplog (
-    measure_sid integer,
-    duty_expression_id character varying(255),
-    duty_amount double precision,
-    monetary_unit_code character varying(255),
-    measurement_unit_code character varying(3),
-    measurement_unit_qualifier_code character varying(1),
-    created_at timestamp without time zone,
-    oid integer NOT NULL,
-    operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date timestamp without time zone,
-    added_by_id integer,
-    added_at timestamp without time zone,
-    "national" boolean,
-    status text,
-    workbasket_id integer,
-    workbasket_sequence_number integer,
-    original_duty_expression_id text
-);
-
-
---
--- Name: measure_components; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.measure_components AS
- SELECT measure_components1.measure_sid,
-    measure_components1.duty_expression_id,
-    measure_components1.duty_amount,
-    measure_components1.monetary_unit_code,
-    measure_components1.measurement_unit_code,
-    measure_components1.measurement_unit_qualifier_code,
-    measure_components1.oid,
-    measure_components1.operation,
-    measure_components1.operation_date,
-    measure_components1.added_by_id,
-    measure_components1.added_at,
-    measure_components1."national",
-    measure_components1.status,
-    measure_components1.workbasket_id,
-    measure_components1.workbasket_sequence_number,
-    measure_components1.original_duty_expression_id
-   FROM public.measure_components_oplog measure_components1
-  WHERE ((measure_components1.oid IN ( SELECT max(measure_components2.oid) AS max
-           FROM public.measure_components_oplog measure_components2
-          WHERE ((measure_components1.measure_sid = measure_components2.measure_sid) AND ((measure_components1.duty_expression_id)::text = (measure_components2.duty_expression_id)::text)))) AND ((measure_components1.operation)::text <> 'D'::text));
-
-
---
--- Name: measures_oplog; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.measures_oplog (
-    measure_sid integer,
-    measure_type_id character varying(3),
-    geographical_area_id character varying(255),
-    goods_nomenclature_item_id character varying(10),
-    validity_start_date timestamp without time zone,
-    validity_end_date timestamp without time zone,
-    measure_generating_regulation_role integer,
-    measure_generating_regulation_id character varying(255),
-    justification_regulation_role integer,
-    justification_regulation_id character varying(255),
-    stopped_flag boolean,
-    geographical_area_sid integer,
-    goods_nomenclature_sid integer,
-    ordernumber character varying(255),
-    additional_code_type_id text,
-    additional_code_id character varying(3),
-    additional_code_sid integer,
-    reduction_indicator integer,
-    export_refund_nomenclature_sid integer,
-    created_at timestamp without time zone,
-    "national" boolean,
-    tariff_measure_number character varying(10),
-    invalidated_by integer,
-    invalidated_at timestamp without time zone,
-    oid integer NOT NULL,
-    operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date timestamp without time zone,
-    added_by_id integer,
-    added_at timestamp without time zone,
-    status text,
-    last_status_change_at timestamp without time zone,
-    last_update_by_id integer,
-    updated_at timestamp without time zone,
-    workbasket_id integer,
-    searchable_data jsonb DEFAULT '{}'::jsonb,
-    searchable_data_updated_at timestamp without time zone,
-    workbasket_sequence_number integer,
-    original_measure_sid text
-);
-
-
---
--- Name: measures; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.measures AS
- SELECT measures1.measure_sid,
-    measures1.measure_type_id,
-    measures1.geographical_area_id,
-    measures1.goods_nomenclature_item_id,
-    measures1.validity_start_date,
-    measures1.validity_end_date,
-    measures1.measure_generating_regulation_role,
-    measures1.measure_generating_regulation_id,
-    measures1.justification_regulation_role,
-    measures1.justification_regulation_id,
-    measures1.stopped_flag,
-    measures1.geographical_area_sid,
-    measures1.goods_nomenclature_sid,
-    measures1.ordernumber,
-    measures1.additional_code_type_id,
-    measures1.additional_code_id,
-    measures1.additional_code_sid,
-    measures1.reduction_indicator,
-    measures1.export_refund_nomenclature_sid,
-    measures1."national",
-    measures1.tariff_measure_number,
-    measures1.invalidated_by,
-    measures1.invalidated_at,
-    measures1.oid,
-    measures1.operation,
-    measures1.operation_date,
-    measures1.added_by_id,
-    measures1.added_at,
-    measures1.status,
-    measures1.last_status_change_at,
-    measures1.last_update_by_id,
-    measures1.workbasket_id,
-    measures1.searchable_data,
-    measures1.searchable_data_updated_at,
-    measures1.workbasket_sequence_number,
-    measures1.original_measure_sid,
-    measures1.updated_at
-   FROM public.measures_oplog measures1
-  WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
-           FROM public.measures_oplog measures2
-          WHERE (measures1.measure_sid = measures2.measure_sid))) AND ((measures1.operation)::text <> 'D'::text));
-
-
---
--- Name: modification_regulations_oplog; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.modification_regulations_oplog (
-    modification_regulation_role integer,
-    modification_regulation_id character varying(255),
-    validity_start_date timestamp without time zone,
-    validity_end_date timestamp without time zone,
-    published_date date,
-    officialjournal_number character varying(255),
-    officialjournal_page integer,
-    base_regulation_role integer,
-    base_regulation_id character varying(255),
-    replacement_indicator integer,
-    stopped_flag boolean,
-    information_text text,
-    approved_flag boolean,
-    explicit_abrogation_regulation_role integer,
-    explicit_abrogation_regulation_id character varying(8),
-    effective_end_date timestamp without time zone,
-    complete_abrogation_regulation_role integer,
-    complete_abrogation_regulation_id character varying(8),
-    created_at timestamp without time zone,
-    oid integer NOT NULL,
-    operation character varying(1) DEFAULT 'C'::character varying,
-    operation_date timestamp without time zone,
-    added_by_id integer,
-    added_at timestamp without time zone,
-    "national" boolean,
-    status text,
-    workbasket_id integer,
-    workbasket_sequence_number integer
-);
-
-
---
--- Name: modification_regulations; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.modification_regulations AS
- SELECT modification_regulations1.modification_regulation_role,
-    modification_regulations1.modification_regulation_id,
-    modification_regulations1.validity_start_date,
-    modification_regulations1.validity_end_date,
-    modification_regulations1.published_date,
-    modification_regulations1.officialjournal_number,
-    modification_regulations1.officialjournal_page,
-    modification_regulations1.base_regulation_role,
-    modification_regulations1.base_regulation_id,
-    modification_regulations1.replacement_indicator,
-    modification_regulations1.stopped_flag,
-    modification_regulations1.information_text,
-    modification_regulations1.approved_flag,
-    modification_regulations1.explicit_abrogation_regulation_role,
-    modification_regulations1.explicit_abrogation_regulation_id,
-    modification_regulations1.effective_end_date,
-    modification_regulations1.complete_abrogation_regulation_role,
-    modification_regulations1.complete_abrogation_regulation_id,
-    modification_regulations1.oid,
-    modification_regulations1.operation,
-    modification_regulations1.operation_date,
-    modification_regulations1.added_by_id,
-    modification_regulations1.added_at,
-    modification_regulations1."national",
-    modification_regulations1.status,
-    modification_regulations1.workbasket_id,
-    modification_regulations1.workbasket_sequence_number
-   FROM public.modification_regulations_oplog modification_regulations1
-  WHERE ((modification_regulations1.oid IN ( SELECT max(modification_regulations2.oid) AS max
-           FROM public.modification_regulations_oplog modification_regulations2
-          WHERE (((modification_regulations1.modification_regulation_id)::text = (modification_regulations2.modification_regulation_id)::text) AND (modification_regulations1.modification_regulation_role = modification_regulations2.modification_regulation_role)))) AND ((modification_regulations1.operation)::text <> 'D'::text));
-
-
---
--- Name: meursing_components; Type: VIEW; Schema: ml; Owner: -
---
-
-CREATE VIEW ml.meursing_components AS
- SELECT m.measure_sid,
-    m.measure_type_id,
-    m.additional_code_id,
-    mc.duty_amount,
-    m.validity_start_date,
-    m.validity_end_date,
-    m.geographical_area_id,
-    m.reduction_indicator
-   FROM public.measures m,
-    public.measure_components mc,
-    public.base_regulations r
-  WHERE ((m.measure_sid = mc.measure_sid) AND (m.status = 'published'::text) AND (mc.status = 'published'::text) AND (r.status = 'published'::text) AND ((m.measure_generating_regulation_id)::text = (r.base_regulation_id)::text) AND (m.additional_code_type_id = '7'::text) AND (m.validity_end_date IS NULL) AND (r.validity_end_date IS NULL))
-UNION
- SELECT m.measure_sid,
-    m.measure_type_id,
-    m.additional_code_id,
-    mc.duty_amount,
-    m.validity_start_date,
-    m.validity_end_date,
-    m.geographical_area_id,
-    m.reduction_indicator
-   FROM public.measures m,
-    public.measure_components mc,
-    public.modification_regulations r
-  WHERE ((m.measure_sid = mc.measure_sid) AND (m.status = 'published'::text) AND (mc.status = 'published'::text) AND (r.status = 'published'::text) AND ((m.measure_generating_regulation_id)::text = (r.modification_regulation_id)::text) AND (m.additional_code_type_id = '7'::text) AND (m.validity_end_date IS NULL) AND (r.validity_end_date IS NULL))
-  ORDER BY 2, 3, 5 DESC;
-
-
---
--- Name: v5_2019; Type: VIEW; Schema: ml; Owner: -
---
-
-CREATE VIEW ml.v5_2019 AS
- SELECT measures.measure_sid,
-    ml.reformat_regulation_id(("left"((measures.measure_generating_regulation_id)::text, 7))::character varying) AS reformat_regulation_id,
-    "left"((measures.measure_generating_regulation_id)::text, 7) AS regulation_id,
-    (measures.measure_generating_regulation_id)::text AS regulation_id_full,
-    measures.goods_nomenclature_item_id,
-    measures.additional_code_type_id,
-    measures.additional_code_id,
-    measures.measure_type_id,
-    measures.geographical_area_id,
-    measures.validity_start_date,
-    measures.validity_end_date,
-    base_regulations.effective_end_date,
-    measures.ordernumber,
-    measures."national",
-    measures.reduction_indicator,
-    measures.measure_generating_regulation_role,
-    measures.measure_generating_regulation_id,
-    measures.justification_regulation_role,
-    measures.justification_regulation_id,
-    measures.stopped_flag,
-    measures.geographical_area_sid,
-    measures.goods_nomenclature_sid,
-    measures.additional_code_sid,
-    measures.export_refund_nomenclature_sid,
-    base_regulations.regulation_group_id
-   FROM public.measures,
-    public.base_regulations
-  WHERE (((measures.measure_generating_regulation_id)::text = (base_regulations.base_regulation_id)::text) AND (base_regulations.validity_start_date <= '2019-12-31 00:00:00'::timestamp without time zone) AND ((base_regulations.effective_end_date >= '2019-03-29 00:00:00'::timestamp without time zone) OR (((base_regulations.validity_end_date >= '2019-03-29 00:00:00'::timestamp without time zone) OR (base_regulations.validity_end_date IS NULL)) AND (base_regulations.effective_end_date IS NULL))) AND (base_regulations.explicit_abrogation_regulation_id IS NULL) AND (base_regulations.status = 'published'::text) AND (measures.status = 'published'::text) AND (base_regulations.complete_abrogation_regulation_id IS NULL) AND ((measures.validity_end_date IS NULL) OR (measures.validity_end_date >= '2019-03-29 00:00:00'::timestamp without time zone)) AND (measures.validity_start_date <= '2019-12-31 00:00:00'::timestamp without time zone))
-UNION
- SELECT measures.measure_sid,
-    ml.reformat_regulation_id(("left"((measures.measure_generating_regulation_id)::text, 7))::character varying) AS reformat_regulation_id,
-    "left"((measures.measure_generating_regulation_id)::text, 7) AS regulation_id,
-    (measures.measure_generating_regulation_id)::text AS regulation_id_full,
-    measures.goods_nomenclature_item_id,
-    measures.additional_code_type_id,
-    measures.additional_code_id,
-    measures.measure_type_id,
-    measures.geographical_area_id,
-    measures.validity_start_date,
-    measures.validity_end_date,
-    modification_regulations.effective_end_date,
-    measures.ordernumber,
-    measures."national",
-    measures.reduction_indicator,
-    measures.measure_generating_regulation_role,
-    measures.measure_generating_regulation_id,
-    measures.justification_regulation_role,
-    measures.justification_regulation_id,
-    measures.stopped_flag,
-    measures.geographical_area_sid,
-    measures.goods_nomenclature_sid,
-    measures.additional_code_sid,
-    measures.export_refund_nomenclature_sid,
-    base_regulations.regulation_group_id
-   FROM public.measures,
-    (public.modification_regulations
-     LEFT JOIN public.base_regulations ON (((modification_regulations.base_regulation_id)::text = (base_regulations.base_regulation_id)::text)))
-  WHERE (((measures.measure_generating_regulation_id)::text = (modification_regulations.modification_regulation_id)::text) AND (modification_regulations.validity_start_date <= '2019-12-31 00:00:00'::timestamp without time zone) AND ((modification_regulations.effective_end_date >= '2019-03-29 00:00:00'::timestamp without time zone) OR (((modification_regulations.validity_end_date >= '2019-03-29 00:00:00'::timestamp without time zone) OR (modification_regulations.validity_end_date IS NULL)) AND (modification_regulations.effective_end_date IS NULL))) AND (modification_regulations.status = 'published'::text) AND (measures.status = 'published'::text) AND (modification_regulations.complete_abrogation_regulation_id IS NULL) AND (modification_regulations.explicit_abrogation_regulation_id IS NULL) AND ((measures.validity_end_date IS NULL) OR (measures.validity_end_date >= '2019-03-29 00:00:00'::timestamp without time zone)) AND (measures.validity_start_date <= '2019-12-31 00:00:00'::timestamp without time zone))
-  ORDER BY 1, 2, 3, 4;
-
 
 --
 -- Name: additional_code_description_periods_oplog; Type: TABLE; Schema: public; Owner: -
@@ -1125,191 +601,81 @@ ALTER SEQUENCE public.audits_id_seq OWNED BY public.audits.id;
 
 
 --
--- Name: auth_group; Type: TABLE; Schema: public; Owner: -
+-- Name: base_regulations_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.auth_group (
-    id integer NOT NULL,
-    name character varying(150) NOT NULL
+CREATE TABLE public.base_regulations_oplog (
+    base_regulation_role integer,
+    base_regulation_id character varying(255),
+    validity_start_date timestamp without time zone,
+    validity_end_date timestamp without time zone,
+    community_code integer,
+    regulation_group_id character varying(255),
+    replacement_indicator integer,
+    stopped_flag boolean,
+    information_text text,
+    approved_flag boolean,
+    published_date date,
+    officialjournal_number character varying(255),
+    officialjournal_page integer,
+    effective_end_date timestamp without time zone,
+    antidumping_regulation_role integer,
+    related_antidumping_regulation_id character varying(255),
+    complete_abrogation_regulation_role integer,
+    complete_abrogation_regulation_id character varying(255),
+    explicit_abrogation_regulation_role integer,
+    explicit_abrogation_regulation_id character varying(255),
+    created_at timestamp without time zone,
+    "national" boolean,
+    oid integer NOT NULL,
+    operation character varying(1) DEFAULT 'C'::character varying,
+    operation_date timestamp without time zone,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
 );
 
 
 --
--- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: base_regulations; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.auth_group_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
-
-
---
--- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_group_permissions (
-    id integer NOT NULL,
-    group_id integer NOT NULL,
-    permission_id integer NOT NULL
-);
-
-
---
--- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.auth_group_permissions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
-
-
---
--- Name: auth_permission; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_permission (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL,
-    content_type_id integer NOT NULL,
-    codename character varying(100) NOT NULL
-);
-
-
---
--- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.auth_permission_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
-
-
---
--- Name: auth_user; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_user (
-    id integer NOT NULL,
-    password character varying(128) NOT NULL,
-    last_login timestamp with time zone,
-    is_superuser boolean NOT NULL,
-    username character varying(150) NOT NULL,
-    first_name character varying(30) NOT NULL,
-    last_name character varying(150) NOT NULL,
-    email character varying(254) NOT NULL,
-    is_staff boolean NOT NULL,
-    is_active boolean NOT NULL,
-    date_joined timestamp with time zone NOT NULL
-);
-
-
---
--- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_user_groups (
-    id integer NOT NULL,
-    user_id integer NOT NULL,
-    group_id integer NOT NULL
-);
-
-
---
--- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.auth_user_groups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.auth_user_groups_id_seq OWNED BY public.auth_user_groups.id;
-
-
---
--- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.auth_user_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.auth_user_id_seq OWNED BY public.auth_user.id;
-
-
---
--- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.auth_user_user_permissions (
-    id integer NOT NULL,
-    user_id integer NOT NULL,
-    permission_id integer NOT NULL
-);
-
-
---
--- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.auth_user_user_permissions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_user_user_permissions.id;
+CREATE VIEW public.base_regulations AS
+ SELECT base_regulations1.base_regulation_role,
+    base_regulations1.base_regulation_id,
+    base_regulations1.validity_start_date,
+    base_regulations1.validity_end_date,
+    base_regulations1.community_code,
+    base_regulations1.regulation_group_id,
+    base_regulations1.replacement_indicator,
+    base_regulations1.stopped_flag,
+    base_regulations1.information_text,
+    base_regulations1.approved_flag,
+    base_regulations1.published_date,
+    base_regulations1.officialjournal_number,
+    base_regulations1.officialjournal_page,
+    base_regulations1.effective_end_date,
+    base_regulations1.antidumping_regulation_role,
+    base_regulations1.related_antidumping_regulation_id,
+    base_regulations1.complete_abrogation_regulation_role,
+    base_regulations1.complete_abrogation_regulation_id,
+    base_regulations1.explicit_abrogation_regulation_role,
+    base_regulations1.explicit_abrogation_regulation_id,
+    base_regulations1."national",
+    base_regulations1.oid,
+    base_regulations1.operation,
+    base_regulations1.operation_date,
+    base_regulations1.added_by_id,
+    base_regulations1.added_at,
+    base_regulations1.status,
+    base_regulations1.workbasket_id,
+    base_regulations1.workbasket_sequence_number
+   FROM public.base_regulations_oplog base_regulations1
+  WHERE ((base_regulations1.oid IN ( SELECT max(base_regulations2.oid) AS max
+           FROM public.base_regulations_oplog base_regulations2
+          WHERE (((base_regulations1.base_regulation_id)::text = (base_regulations2.base_regulation_id)::text) AND (base_regulations1.base_regulation_role = base_regulations2.base_regulation_role)))) AND ((base_regulations1.operation)::text <> 'D'::text));
 
 
 --
@@ -2492,114 +1858,6 @@ CREATE SEQUENCE public.db_rollbacks_id_seq
 --
 
 ALTER SEQUENCE public.db_rollbacks_id_seq OWNED BY public.db_rollbacks.id;
-
-
---
--- Name: django_admin_log; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_admin_log (
-    id integer NOT NULL,
-    action_time timestamp with time zone NOT NULL,
-    object_id text,
-    object_repr character varying(200) NOT NULL,
-    action_flag smallint NOT NULL,
-    change_message text NOT NULL,
-    content_type_id integer,
-    user_id integer NOT NULL,
-    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
-);
-
-
---
--- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.django_admin_log_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
-
-
---
--- Name: django_content_type; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_content_type (
-    id integer NOT NULL,
-    app_label character varying(100) NOT NULL,
-    model character varying(100) NOT NULL
-);
-
-
---
--- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.django_content_type_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
-
-
---
--- Name: django_migrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_migrations (
-    id integer NOT NULL,
-    app character varying(255) NOT NULL,
-    name character varying(255) NOT NULL,
-    applied timestamp with time zone NOT NULL
-);
-
-
---
--- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.django_migrations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
-
-
---
--- Name: django_session; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.django_session (
-    session_key character varying(40) NOT NULL,
-    session_data text NOT NULL,
-    expire_date timestamp with time zone NOT NULL
-);
 
 
 --
@@ -5065,6 +4323,58 @@ ALTER SEQUENCE public.measure_actions_oid_seq OWNED BY public.measure_actions_op
 
 
 --
+-- Name: measure_components_oplog; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.measure_components_oplog (
+    measure_sid integer,
+    duty_expression_id character varying(255),
+    duty_amount double precision,
+    monetary_unit_code character varying(255),
+    measurement_unit_code character varying(3),
+    measurement_unit_qualifier_code character varying(1),
+    created_at timestamp without time zone,
+    oid integer NOT NULL,
+    operation character varying(1) DEFAULT 'C'::character varying,
+    operation_date timestamp without time zone,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer,
+    original_duty_expression_id text
+);
+
+
+--
+-- Name: measure_components; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.measure_components AS
+ SELECT measure_components1.measure_sid,
+    measure_components1.duty_expression_id,
+    measure_components1.duty_amount,
+    measure_components1.monetary_unit_code,
+    measure_components1.measurement_unit_code,
+    measure_components1.measurement_unit_qualifier_code,
+    measure_components1.oid,
+    measure_components1.operation,
+    measure_components1.operation_date,
+    measure_components1.added_by_id,
+    measure_components1.added_at,
+    measure_components1."national",
+    measure_components1.status,
+    measure_components1.workbasket_id,
+    measure_components1.workbasket_sequence_number,
+    measure_components1.original_duty_expression_id
+   FROM public.measure_components_oplog measure_components1
+  WHERE ((measure_components1.oid IN ( SELECT max(measure_components2.oid) AS max
+           FROM public.measure_components_oplog measure_components2
+          WHERE ((measure_components1.measure_sid = measure_components2.measure_sid) AND ((measure_components1.duty_expression_id)::text = (measure_components2.duty_expression_id)::text)))) AND ((measure_components1.operation)::text <> 'D'::text));
+
+
+--
 -- Name: measure_components_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -6050,6 +5360,100 @@ ALTER SEQUENCE public.measurements_oid_seq OWNED BY public.measurements_oplog.oi
 
 
 --
+-- Name: measures_oplog; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.measures_oplog (
+    measure_sid integer,
+    measure_type_id character varying(3),
+    geographical_area_id character varying(255),
+    goods_nomenclature_item_id character varying(10),
+    validity_start_date timestamp without time zone,
+    validity_end_date timestamp without time zone,
+    measure_generating_regulation_role integer,
+    measure_generating_regulation_id character varying(255),
+    justification_regulation_role integer,
+    justification_regulation_id character varying(255),
+    stopped_flag boolean,
+    geographical_area_sid integer,
+    goods_nomenclature_sid integer,
+    ordernumber character varying(255),
+    additional_code_type_id text,
+    additional_code_id character varying(3),
+    additional_code_sid integer,
+    reduction_indicator integer,
+    export_refund_nomenclature_sid integer,
+    created_at timestamp without time zone,
+    "national" boolean,
+    tariff_measure_number character varying(10),
+    invalidated_by integer,
+    invalidated_at timestamp without time zone,
+    oid integer NOT NULL,
+    operation character varying(1) DEFAULT 'C'::character varying,
+    operation_date timestamp without time zone,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    status text,
+    last_status_change_at timestamp without time zone,
+    last_update_by_id integer,
+    updated_at timestamp without time zone,
+    workbasket_id integer,
+    searchable_data jsonb DEFAULT '{}'::jsonb,
+    searchable_data_updated_at timestamp without time zone,
+    workbasket_sequence_number integer,
+    original_measure_sid text
+);
+
+
+--
+-- Name: measures; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.measures AS
+ SELECT measures1.measure_sid,
+    measures1.measure_type_id,
+    measures1.geographical_area_id,
+    measures1.goods_nomenclature_item_id,
+    measures1.validity_start_date,
+    measures1.validity_end_date,
+    measures1.measure_generating_regulation_role,
+    measures1.measure_generating_regulation_id,
+    measures1.justification_regulation_role,
+    measures1.justification_regulation_id,
+    measures1.stopped_flag,
+    measures1.geographical_area_sid,
+    measures1.goods_nomenclature_sid,
+    measures1.ordernumber,
+    measures1.additional_code_type_id,
+    measures1.additional_code_id,
+    measures1.additional_code_sid,
+    measures1.reduction_indicator,
+    measures1.export_refund_nomenclature_sid,
+    measures1."national",
+    measures1.tariff_measure_number,
+    measures1.invalidated_by,
+    measures1.invalidated_at,
+    measures1.oid,
+    measures1.operation,
+    measures1.operation_date,
+    measures1.added_by_id,
+    measures1.added_at,
+    measures1.status,
+    measures1.last_status_change_at,
+    measures1.last_update_by_id,
+    measures1.workbasket_id,
+    measures1.searchable_data,
+    measures1.searchable_data_updated_at,
+    measures1.workbasket_sequence_number,
+    measures1.original_measure_sid,
+    measures1.updated_at
+   FROM public.measures_oplog measures1
+  WHERE ((measures1.oid IN ( SELECT max(measures2.oid) AS max
+           FROM public.measures_oplog measures2
+          WHERE (measures1.measure_sid = measures2.measure_sid))) AND ((measures1.operation)::text <> 'D'::text));
+
+
+--
 -- Name: measures_oid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -6396,6 +5800,80 @@ CREATE SEQUENCE public.meursing_table_plans_oid_seq
 --
 
 ALTER SEQUENCE public.meursing_table_plans_oid_seq OWNED BY public.meursing_table_plans_oplog.oid;
+
+
+--
+-- Name: modification_regulations_oplog; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.modification_regulations_oplog (
+    modification_regulation_role integer,
+    modification_regulation_id character varying(255),
+    validity_start_date timestamp without time zone,
+    validity_end_date timestamp without time zone,
+    published_date date,
+    officialjournal_number character varying(255),
+    officialjournal_page integer,
+    base_regulation_role integer,
+    base_regulation_id character varying(255),
+    replacement_indicator integer,
+    stopped_flag boolean,
+    information_text text,
+    approved_flag boolean,
+    explicit_abrogation_regulation_role integer,
+    explicit_abrogation_regulation_id character varying(8),
+    effective_end_date timestamp without time zone,
+    complete_abrogation_regulation_role integer,
+    complete_abrogation_regulation_id character varying(8),
+    created_at timestamp without time zone,
+    oid integer NOT NULL,
+    operation character varying(1) DEFAULT 'C'::character varying,
+    operation_date timestamp without time zone,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean,
+    status text,
+    workbasket_id integer,
+    workbasket_sequence_number integer
+);
+
+
+--
+-- Name: modification_regulations; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.modification_regulations AS
+ SELECT modification_regulations1.modification_regulation_role,
+    modification_regulations1.modification_regulation_id,
+    modification_regulations1.validity_start_date,
+    modification_regulations1.validity_end_date,
+    modification_regulations1.published_date,
+    modification_regulations1.officialjournal_number,
+    modification_regulations1.officialjournal_page,
+    modification_regulations1.base_regulation_role,
+    modification_regulations1.base_regulation_id,
+    modification_regulations1.replacement_indicator,
+    modification_regulations1.stopped_flag,
+    modification_regulations1.information_text,
+    modification_regulations1.approved_flag,
+    modification_regulations1.explicit_abrogation_regulation_role,
+    modification_regulations1.explicit_abrogation_regulation_id,
+    modification_regulations1.effective_end_date,
+    modification_regulations1.complete_abrogation_regulation_role,
+    modification_regulations1.complete_abrogation_regulation_id,
+    modification_regulations1.oid,
+    modification_regulations1.operation,
+    modification_regulations1.operation_date,
+    modification_regulations1.added_by_id,
+    modification_regulations1.added_at,
+    modification_regulations1."national",
+    modification_regulations1.status,
+    modification_regulations1.workbasket_id,
+    modification_regulations1.workbasket_sequence_number
+   FROM public.modification_regulations_oplog modification_regulations1
+  WHERE ((modification_regulations1.oid IN ( SELECT max(modification_regulations2.oid) AS max
+           FROM public.modification_regulations_oplog modification_regulations2
+          WHERE (((modification_regulations1.modification_regulation_id)::text = (modification_regulations2.modification_regulation_id)::text) AND (modification_regulations1.modification_regulation_role = modification_regulations2.modification_regulation_role)))) AND ((modification_regulations1.operation)::text <> 'D'::text));
 
 
 --
@@ -8215,392 +7693,6 @@ ALTER SEQUENCE public.rollbacks_id_seq OWNED BY public.rollbacks.id;
 
 
 --
--- Name: schedule_agreement; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_agreement (
-    id integer NOT NULL,
-    slug character varying(50) NOT NULL,
-    country_codes character varying(6)[] NOT NULL,
-    agreement_name character varying(1024) NOT NULL,
-    agreement_date date NOT NULL,
-    version character varying(20) NOT NULL,
-    country_name character varying(200) NOT NULL,
-    document character varying(100),
-    document_created_at timestamp with time zone,
-    document_status character varying(20) NOT NULL,
-    last_checked timestamp with time zone
-);
-
-
---
--- Name: schedule_agreement_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_agreement_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_agreement_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_agreement_id_seq OWNED BY public.schedule_agreement.id;
-
-
---
--- Name: schedule_agreementdocumenthistory; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_agreementdocumenthistory (
-    id integer NOT NULL,
-    data jsonb,
-    change jsonb,
-    created_at timestamp with time zone,
-    forced boolean NOT NULL,
-    agreement_id integer NOT NULL,
-    remote_file_name character varying(300)
-);
-
-
---
--- Name: schedule_chapter; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_chapter (
-    id integer NOT NULL,
-    description text NOT NULL,
-    schedule_document character varying(100),
-    schedule_document_created_at timestamp with time zone,
-    schedule_document_status character varying(20) NOT NULL,
-    classification_document character varying(100),
-    classification_document_created_at timestamp with time zone,
-    classification_document_status character varying(20) NOT NULL,
-    classification_document_check_sum character varying(32),
-    schedule_document_check_sum character varying(32),
-    classification_last_checked timestamp with time zone,
-    schedule_last_checked timestamp with time zone
-);
-
-
---
--- Name: schedule_chapterdocumenthistory; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_chapterdocumenthistory (
-    id integer NOT NULL,
-    data jsonb,
-    change jsonb,
-    created_at timestamp with time zone,
-    forced boolean NOT NULL,
-    remote_file_name character varying(300),
-    document_type character varying(100) NOT NULL,
-    chapter_id integer NOT NULL
-);
-
-
---
--- Name: schedule_chapterdocumenthistory_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_chapterdocumenthistory_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_chapterdocumenthistory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_chapterdocumenthistory_id_seq OWNED BY public.schedule_chapterdocumenthistory.id;
-
-
---
--- Name: schedule_chapternote; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_chapternote (
-    id integer NOT NULL,
-    document character varying(100),
-    document_created_at timestamp with time zone,
-    chapter_id integer NOT NULL,
-    document_check_sum character varying(32)
-);
-
-
---
--- Name: schedule_chapternote_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_chapternote_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_chapternote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_chapternote_id_seq OWNED BY public.schedule_chapternote.id;
-
-
---
--- Name: schedule_documenthistory_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_documenthistory_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_documenthistory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_documenthistory_id_seq OWNED BY public.schedule_agreementdocumenthistory.id;
-
-
---
--- Name: schedule_extendedquota; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_extendedquota (
-    id integer NOT NULL,
-    quota_order_number_id character varying(120) NOT NULL,
-    start_date date,
-    year_start_balance integer,
-    opening_balance integer,
-    scope character varying(1000),
-    addendum character varying(1000),
-    quota_type character varying(20) NOT NULL,
-    is_origin_quota boolean NOT NULL,
-    measurement_unit_code character varying(20),
-    agreement_id integer NOT NULL
-);
-
-
---
--- Name: schedule_extendedquota_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_extendedquota_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_extendedquota_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_extendedquota_id_seq OWNED BY public.schedule_extendedquota.id;
-
-
---
--- Name: schedule_latinterm; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_latinterm (
-    id integer NOT NULL,
-    text character varying(2000) NOT NULL
-);
-
-
---
--- Name: schedule_latinterm_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_latinterm_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_latinterm_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_latinterm_id_seq OWNED BY public.schedule_latinterm.id;
-
-
---
--- Name: schedule_mfndocument; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_mfndocument (
-    id integer NOT NULL,
-    document character varying(100) NOT NULL,
-    document_created_at timestamp with time zone NOT NULL,
-    document_check_sum character varying(32) NOT NULL,
-    document_type character varying(100) NOT NULL,
-    document_status character varying(20) NOT NULL,
-    last_checked timestamp with time zone
-);
-
-
---
--- Name: schedule_mfndocument_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_mfndocument_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_mfndocument_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_mfndocument_id_seq OWNED BY public.schedule_mfndocument.id;
-
-
---
--- Name: schedule_mfndocumenthistory; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_mfndocumenthistory (
-    id integer NOT NULL,
-    data jsonb,
-    change jsonb,
-    created_at timestamp with time zone,
-    forced boolean NOT NULL,
-    remote_file_name character varying(300),
-    document_type character varying(100) NOT NULL,
-    mfn_document_id integer NOT NULL
-);
-
-
---
--- Name: schedule_mfndocumenthistory_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_mfndocumenthistory_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_mfndocumenthistory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_mfndocumenthistory_id_seq OWNED BY public.schedule_mfndocumenthistory.id;
-
-
---
--- Name: schedule_seasonalquota; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_seasonalquota (
-    id integer NOT NULL,
-    quota_order_number_id character varying(120) NOT NULL
-);
-
-
---
--- Name: schedule_seasonalquota_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_seasonalquota_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_seasonalquota_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_seasonalquota_id_seq OWNED BY public.schedule_seasonalquota.id;
-
-
---
--- Name: schedule_seasonalquotaseason; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_seasonalquotaseason (
-    id integer NOT NULL,
-    start_date date NOT NULL,
-    end_date date NOT NULL,
-    duty character varying(1000) NOT NULL,
-    seasonal_quota_id integer NOT NULL
-);
-
-
---
--- Name: schedule_seasonalquotaseason_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_seasonalquotaseason_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_seasonalquotaseason_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_seasonalquotaseason_id_seq OWNED BY public.schedule_seasonalquotaseason.id;
-
-
---
--- Name: schedule_specialnote; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schedule_specialnote (
-    id integer NOT NULL,
-    quota_order_number_id character varying(120) NOT NULL,
-    note text NOT NULL
-);
-
-
---
--- Name: schedule_specialnote_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.schedule_specialnote_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: schedule_specialnote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.schedule_specialnote_id_seq OWNED BY public.schedule_specialnote.id;
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -9091,48 +8183,6 @@ ALTER TABLE ONLY public.audits ALTER COLUMN id SET DEFAULT nextval('public.audit
 
 
 --
--- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
-
-
---
--- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
-
-
---
--- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
-
-
---
--- Name: auth_user id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user ALTER COLUMN id SET DEFAULT nextval('public.auth_user_id_seq'::regclass);
-
-
---
--- Name: auth_user_groups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_groups ALTER COLUMN id SET DEFAULT nextval('public.auth_user_groups_id_seq'::regclass);
-
-
---
--- Name: auth_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_user_user_permissions_id_seq'::regclass);
-
-
---
 -- Name: base_regulations_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9284,27 +8334,6 @@ ALTER TABLE ONLY public.create_regulation_workbasket_settings ALTER COLUMN id SE
 --
 
 ALTER TABLE ONLY public.db_rollbacks ALTER COLUMN id SET DEFAULT nextval('public.db_rollbacks_id_seq'::regclass);
-
-
---
--- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
-
-
---
--- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
-
-
---
--- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
 
 
 --
@@ -9959,83 +8988,6 @@ ALTER TABLE ONLY public.rollbacks ALTER COLUMN id SET DEFAULT nextval('public.ro
 
 
 --
--- Name: schedule_agreement id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_agreement ALTER COLUMN id SET DEFAULT nextval('public.schedule_agreement_id_seq'::regclass);
-
-
---
--- Name: schedule_agreementdocumenthistory id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_agreementdocumenthistory ALTER COLUMN id SET DEFAULT nextval('public.schedule_documenthistory_id_seq'::regclass);
-
-
---
--- Name: schedule_chapterdocumenthistory id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapterdocumenthistory ALTER COLUMN id SET DEFAULT nextval('public.schedule_chapterdocumenthistory_id_seq'::regclass);
-
-
---
--- Name: schedule_chapternote id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapternote ALTER COLUMN id SET DEFAULT nextval('public.schedule_chapternote_id_seq'::regclass);
-
-
---
--- Name: schedule_extendedquota id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_extendedquota ALTER COLUMN id SET DEFAULT nextval('public.schedule_extendedquota_id_seq'::regclass);
-
-
---
--- Name: schedule_latinterm id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_latinterm ALTER COLUMN id SET DEFAULT nextval('public.schedule_latinterm_id_seq'::regclass);
-
-
---
--- Name: schedule_mfndocument id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_mfndocument ALTER COLUMN id SET DEFAULT nextval('public.schedule_mfndocument_id_seq'::regclass);
-
-
---
--- Name: schedule_mfndocumenthistory id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_mfndocumenthistory ALTER COLUMN id SET DEFAULT nextval('public.schedule_mfndocumenthistory_id_seq'::regclass);
-
-
---
--- Name: schedule_seasonalquota id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_seasonalquota ALTER COLUMN id SET DEFAULT nextval('public.schedule_seasonalquota_id_seq'::regclass);
-
-
---
--- Name: schedule_seasonalquotaseason id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_seasonalquotaseason ALTER COLUMN id SET DEFAULT nextval('public.schedule_seasonalquotaseason_id_seq'::regclass);
-
-
---
--- Name: schedule_specialnote id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_specialnote ALTER COLUMN id SET DEFAULT nextval('public.schedule_specialnote_id_seq'::regclass);
-
-
---
 -- Name: search_references id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -10113,14 +9065,6 @@ ALTER TABLE ONLY public.xml_export_files ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- Name: schedule_mfndocument MFN Document Type constraint; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_mfndocument
-    ADD CONSTRAINT "MFN Document Type constraint" UNIQUE (document_type);
-
-
---
 -- Name: additional_code_description_periods_oplog additional_code_description_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10174,102 +9118,6 @@ ALTER TABLE ONLY public.additional_codes_oplog
 
 ALTER TABLE ONLY public.audits
     ADD CONSTRAINT audits_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group
-    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
-
-
---
--- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
-
-
---
--- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group
-    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_permission
-    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
-
-
---
--- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_permission
-    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_groups
-    ADD CONSTRAINT auth_user_groups_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_groups
-    ADD CONSTRAINT auth_user_groups_user_id_group_id_94350c0c_uniq UNIQUE (user_id, group_id);
-
-
---
--- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user
-    ADD CONSTRAINT auth_user_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_user_permissions
-    ADD CONSTRAINT auth_user_user_permissions_pkey PRIMARY KEY (id);
-
-
---
--- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_user_permissions
-    ADD CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq UNIQUE (user_id, permission_id);
-
-
---
--- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user
-    ADD CONSTRAINT auth_user_username_key UNIQUE (username);
 
 
 --
@@ -10454,46 +9302,6 @@ ALTER TABLE ONLY public.data_migrations
 
 ALTER TABLE ONLY public.db_rollbacks
     ADD CONSTRAINT db_rollbacks_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_admin_log
-    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_content_type
-    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
-
-
---
--- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_content_type
-    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_migrations
-    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
-
-
---
--- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_session
-    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
 
 
 --
@@ -11241,126 +10049,6 @@ ALTER TABLE ONLY public.rollbacks
 
 
 --
--- Name: schedule_agreement schedule_agreement_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_agreement
-    ADD CONSTRAINT schedule_agreement_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_agreement schedule_agreement_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_agreement
-    ADD CONSTRAINT schedule_agreement_slug_key UNIQUE (slug);
-
-
---
--- Name: schedule_chapter schedule_chapter_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapter
-    ADD CONSTRAINT schedule_chapter_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_chapterdocumenthistory schedule_chapterdocumenthistory_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapterdocumenthistory
-    ADD CONSTRAINT schedule_chapterdocumenthistory_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_chapternote schedule_chapternote_chapter_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapternote
-    ADD CONSTRAINT schedule_chapternote_chapter_id_key UNIQUE (chapter_id);
-
-
---
--- Name: schedule_chapternote schedule_chapternote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapternote
-    ADD CONSTRAINT schedule_chapternote_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_agreementdocumenthistory schedule_documenthistory_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_agreementdocumenthistory
-    ADD CONSTRAINT schedule_documenthistory_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_extendedquota schedule_extendedquota_agreement_id_quota_order_d0895232_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_extendedquota
-    ADD CONSTRAINT schedule_extendedquota_agreement_id_quota_order_d0895232_uniq UNIQUE (agreement_id, quota_order_number_id);
-
-
---
--- Name: schedule_extendedquota schedule_extendedquota_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_extendedquota
-    ADD CONSTRAINT schedule_extendedquota_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_latinterm schedule_latinterm_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_latinterm
-    ADD CONSTRAINT schedule_latinterm_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_mfndocument schedule_mfndocument_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_mfndocument
-    ADD CONSTRAINT schedule_mfndocument_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_mfndocumenthistory schedule_mfndocumenthistory_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_mfndocumenthistory
-    ADD CONSTRAINT schedule_mfndocumenthistory_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_seasonalquota schedule_seasonalquota_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_seasonalquota
-    ADD CONSTRAINT schedule_seasonalquota_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_seasonalquotaseason schedule_seasonalquotaseason_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_seasonalquotaseason
-    ADD CONSTRAINT schedule_seasonalquotaseason_pkey PRIMARY KEY (id);
-
-
---
--- Name: schedule_specialnote schedule_specialnote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_specialnote
-    ADD CONSTRAINT schedule_specialnote_pkey PRIMARY KEY (id);
-
-
---
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11574,69 +10262,6 @@ CREATE INDEX additional_code_type ON public.footnote_association_additional_code
 --
 
 CREATE INDEX antidumping_regulation ON public.base_regulations_oplog USING btree (antidumping_regulation_role, related_antidumping_regulation_id);
-
-
---
--- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
-
-
---
--- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
-
-
---
--- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
-
-
---
--- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
-
-
---
--- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_user_groups_group_id_97559544 ON public.auth_user_groups USING btree (group_id);
-
-
---
--- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_user_groups_user_id_6a12ed8b ON public.auth_user_groups USING btree (user_id);
-
-
---
--- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON public.auth_user_user_permissions USING btree (permission_id);
-
-
---
--- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_user_permissions USING btree (user_id);
-
-
---
--- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
 
 
 --
@@ -11861,34 +10486,6 @@ CREATE INDEX deo_dutexpopl_utyonslog_operation_date ON public.duty_expressions_o
 --
 
 CREATE INDEX description_period_sid ON public.additional_code_description_periods_oplog USING btree (additional_code_description_period_sid);
-
-
---
--- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
-
-
---
--- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
-
-
---
--- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
-
-
---
--- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
 
 
 --
@@ -13824,69 +12421,6 @@ CREATE INDEX rrto_regroltypopl_ionolepeslog_operation_date ON public.regulation_
 
 
 --
--- Name: schedule_agreement_slug_3a10f569_like; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_agreement_slug_3a10f569_like ON public.schedule_agreement USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: schedule_chapterdocumenthistory_chapter_id_73e1192c; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_chapterdocumenthistory_chapter_id_73e1192c ON public.schedule_chapterdocumenthistory USING btree (chapter_id);
-
-
---
--- Name: schedule_chapterdocumenthistory_created_at_bb52e8e9; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_chapterdocumenthistory_created_at_bb52e8e9 ON public.schedule_chapterdocumenthistory USING btree (created_at);
-
-
---
--- Name: schedule_documenthistory_agreement_id_5c20f4de; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_documenthistory_agreement_id_5c20f4de ON public.schedule_agreementdocumenthistory USING btree (agreement_id);
-
-
---
--- Name: schedule_documenthistory_created_at_2b8c9ec7; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_documenthistory_created_at_2b8c9ec7 ON public.schedule_agreementdocumenthistory USING btree (created_at);
-
-
---
--- Name: schedule_extendedquota_agreement_id_b7e602a6; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_extendedquota_agreement_id_b7e602a6 ON public.schedule_extendedquota USING btree (agreement_id);
-
-
---
--- Name: schedule_mfndocumenthistory_created_at_ad39be16; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_mfndocumenthistory_created_at_ad39be16 ON public.schedule_mfndocumenthistory USING btree (created_at);
-
-
---
--- Name: schedule_mfndocumenthistory_mfn_document_id_ad4170ec; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_mfndocumenthistory_mfn_document_id_ad4170ec ON public.schedule_mfndocumenthistory USING btree (mfn_document_id);
-
-
---
--- Name: schedule_seasonalquotaseason_seasonal_quota_id_8f7dd8a6; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX schedule_seasonalquotaseason_seasonal_quota_id_8f7dd8a6 ON public.schedule_seasonalquotaseason USING btree (seasonal_quota_id);
-
-
---
 -- Name: search_references_referenced_id_referenced_class_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13975,126 +12509,6 @@ CREATE INDEX user_id ON public.rollbacks USING btree (user_id);
 --
 
 CREATE UNIQUE INDEX xml_export_files_envelope_id_index ON public.xml_export_files USING btree (envelope_id);
-
-
---
--- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_group_permissions
-    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_permission
-    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_groups
-    ADD CONSTRAINT auth_user_groups_group_id_97559544_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_groups
-    ADD CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_user_permissions
-    ADD CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.auth_user_user_permissions
-    ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_admin_log
-    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.django_admin_log
-    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: schedule_chapterdocumenthistory schedule_chapterdocu_chapter_id_73e1192c_fk_schedule_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapterdocumenthistory
-    ADD CONSTRAINT schedule_chapterdocu_chapter_id_73e1192c_fk_schedule_ FOREIGN KEY (chapter_id) REFERENCES public.schedule_chapter(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: schedule_chapternote schedule_chapternote_chapter_id_bd89bb33_fk_schedule_chapter_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_chapternote
-    ADD CONSTRAINT schedule_chapternote_chapter_id_bd89bb33_fk_schedule_chapter_id FOREIGN KEY (chapter_id) REFERENCES public.schedule_chapter(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: schedule_agreementdocumenthistory schedule_documenthis_agreement_id_5c20f4de_fk_schedule_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_agreementdocumenthistory
-    ADD CONSTRAINT schedule_documenthis_agreement_id_5c20f4de_fk_schedule_ FOREIGN KEY (agreement_id) REFERENCES public.schedule_agreement(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: schedule_extendedquota schedule_extendedquo_agreement_id_b7e602a6_fk_schedule_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_extendedquota
-    ADD CONSTRAINT schedule_extendedquo_agreement_id_b7e602a6_fk_schedule_ FOREIGN KEY (agreement_id) REFERENCES public.schedule_agreement(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: schedule_mfndocumenthistory schedule_mfndocument_mfn_document_id_ad4170ec_fk_schedule_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_mfndocumenthistory
-    ADD CONSTRAINT schedule_mfndocument_mfn_document_id_ad4170ec_fk_schedule_ FOREIGN KEY (mfn_document_id) REFERENCES public.schedule_mfndocument(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: schedule_seasonalquotaseason schedule_seasonalquo_seasonal_quota_id_8f7dd8a6_fk_schedule_; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedule_seasonalquotaseason
-    ADD CONSTRAINT schedule_seasonalquo_seasonal_quota_id_8f7dd8a6_fk_schedule_ FOREIGN KEY (seasonal_quota_id) REFERENCES public.schedule_seasonalquota(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
