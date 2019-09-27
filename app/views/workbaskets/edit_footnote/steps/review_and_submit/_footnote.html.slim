@@ -21,7 +21,12 @@
         td.type-column
           = footnote.footnote_type_id
         td.description-column
-          = footnote.description
+          = footnote.footnote_descriptions.first.description
+          details
+            summary
+              | Original description
+            panel.panel-border-narrow.p-t-5.p-b-5
+              = footnote.footnote_descriptions.second.description
         td.measures-column
           = footnote.current_associated_measures.join(', ')
         td.measures-column
