@@ -129,10 +129,10 @@ module WorkbasketInteractions
         end
 
         if @settings_params[:base_regulation_id].present?
-          if !("PUSXNMQA".include? @settings_params[:base_regulation_id]&.chr)
+          if !("CPUSXNMQA".include? @settings_params[:base_regulation_id]&.chr)
             @errors[:base_regulation_id] = "Regulation identifier must begin with P,U,S,X,N,M,Q or A."
           elsif @settings_params[:base_regulation_id].size != 8
-            @errors[:base_regulation_id] = "Regulation identifier's length can be 8 chars only (eg: 'R1812345')"
+            @errors[:base_regulation_id] = "Regulation identifier's length can be 8 chars only (eg: 'C1812345')"
           end
         else
           @errors[:base_regulation_id] = "Regulation identifier can't be blank!"
