@@ -6,11 +6,17 @@ table.create-measures-details-table
       td.heading_column
         | Regulation identifier
       td
-        = regulation.legal_id
+        = regulation.base_regulation_id
 
     tr
       td.heading_column
         | Regulation name
+      td
+        = regulation.legal_id
+
+    tr
+      td.heading_column
+        | Regulation description
       td
         = regulation.description
 

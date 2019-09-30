@@ -53,7 +53,6 @@ module WorkbasketInteractions
 
       def save!
         workbasket.settings.reason_for_changes = @settings_params[:reason_for_changes]
-        workbasket.settings.base_regulation_id = @settings_params[:base_regulation_id]
         workbasket.settings.legal_id = @settings_params[:legal_id]
         workbasket.settings.reference_url = @settings_params[:reference_url]
         workbasket.settings.description = @settings_params[:description]
@@ -87,21 +86,10 @@ module WorkbasketInteractions
         check_required_params!
       end
 
-      def check_initial_validation_rules!
-        @initial_validator = ::WorkbasketInteractions::EditRegulation::InitialValidator.new(
-          workbasket.settings
-        )
-
-        @errors.merge(initial_validator.fetch_errors)
-        @errors_summary = initial_validator.errors_summary
-      end
-
-
       def update_regulation!
         @records = []
         original_regulation = BaseRegulation.find(base_regulation_id: @settings[:original_base_regulation_id], base_regulation_role: @settings[:original_base_regulation_role].to_i)
 
-        original_regulation.base_regulation_id = workbasket.settings.base_regulation_id
         original_regulation.information_text = workbasket.settings.legal_id + '|' +
           workbasket.settings.description + '|' +
           workbasket.settings.reference_url
@@ -126,16 +114,6 @@ module WorkbasketInteractions
               @errors[k] = "#{k.to_s.capitalize.split('_').join(' ')} can't be blank!"
             end
           end
-        end
-
-        if @settings_params[:base_regulation_id].present?
-          if !("CPUSXNMQA".include? @settings_params[:base_regulation_id]&.chr)
-            @errors[:base_regulation_id] = "Regulation identifier must begin with P,U,S,X,N,M,Q or A."
-          elsif @settings_params[:base_regulation_id].size != 8
-            @errors[:base_regulation_id] = "Regulation identifier's length can be 8 chars only (eg: 'C1812345')"
-          end
-        else
-          @errors[:base_regulation_id] = "Regulation identifier can't be blank!"
         end
       end
 
