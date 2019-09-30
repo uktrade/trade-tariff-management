@@ -23,35 +23,6 @@ h1 class="heading-large m-b-20"
         .column-one-half
           = f.input :reason_for_changes, as: :text, label: false, input_html: { rows: 4 }
 
-  .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.base_regulation_id }"
-    fieldset
-      h3.heading-medium.m-t-5 id="base_regulation_id"
-        = f.label :base_regulation_id, 'What is the regulation identifier?'
-      span.form-hint
-        | This must be exactly 8 characters long. Please use the following structure for regulations. Start with one of the following characters:
-      p.form-hint
-        | P Preferential Trade Agreement
-        br
-        | U Unilateral preferences (GSP)
-        br
-        | S Suspensions and reliefs
-        br
-        | X Import and Export control
-        br
-        | N Trade remedies
-        br
-        | M MFN
-        br
-        | Q Quotas
-        br
-        | A Agri
-
-      span.error-message v-if="errors.base_regulation_id" v-html="errors.base_regulation_id"
-
-      .grid-row
-        .column-one-third
-          = f.input :base_regulation_id, label: false, as: :string, input_html: { maxlength: 8 }, required: true
-
   .form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.legal_id }"
     fieldset
       h3.heading-medium.m-t-5 id="legal_id"
