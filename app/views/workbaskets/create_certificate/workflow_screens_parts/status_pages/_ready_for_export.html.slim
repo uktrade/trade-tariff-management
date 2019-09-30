@@ -1,0 +1,16 @@
+- certificate = certificate ? certificate : Certificate.find(workbasket_id: workbasket.id)
+
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Certificate approved
+
+  h3.heading-medium
+    | The certificate with type
+    =<> "'#{certificate.decorate.certificate_type_description}'"
+    | with code
+    =<> "'#{certificate.certificate_code}'"
+    | and description
+    =<> "'#{certificate.description}'"
+    |  has not yet been sent through to CDS and has not been scheduled for export.
+
+= render "workbaskets/create_certificate/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

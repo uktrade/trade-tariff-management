@@ -1,30 +1,26 @@
-.panel.panel--confirmation
-  h1.heading-xlarge
-    | Certificate submitted
+.breadcrumbs
+  ol
+    li
+      = link_to "Main menu", root_url
 
-  h3.heading-medium
-    | A new
-    =<> "'#{certificate.decorate.certificate_type_description}'"
-    | with code
-    =<> "'#{certificate.certificate_code}'"
-    | and description
-    br
-    =<> "'#{certificate.description}'"
-    | has been submitted for cross-check.
+    li
+      = link_to "Footnote", footnotes_url
 
-br
-h3.heading-medium
-  | Next steps
+    li aria-current="page"
+      | View Certificate
 
-ul class="list"
-  li
-    a href="#"
-      | Withdraw submission / edit certificate (not implemented)
-  li
-    = link_to "View this certificate", read_only_section_url
-  li
-    = link_to "Create another certificate", new_create_certificate_url
-  li
-    = link_to "Return to main menu", root_url
-br
-br
+header
+  h1.heading-large
+    | View certificate
+
+  .view-workbasket-container
+    = render "workbaskets/create_certificate/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/create_certificate/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/create_certificate/workflow_screens_parts/workbasket_details"
+
+    - if iam_workbasket_author? && workbasket_rejected?
+      = link_to "Edit cer", '#',
+              data: {target_url: move_to_editing_mode_create_certificate_url(workbasket.id)},
+              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
+
+    = render "workbaskets/create_certificate/workflow_screens_parts/summary_of_configuration"
