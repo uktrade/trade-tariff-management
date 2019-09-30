@@ -26,34 +26,6 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
-      var description_validity_period_date_input = $(".js-description-validity-period-date");
-
-      var description_validity_period_date_picker = new Pikaday({
-        field: description_validity_period_date_input[0],
-        format: "DD/MM/YYYY",
-        blurFieldOnSelect: true,
-        onSelect: function(value) {
-          description_validity_period_date_input.trigger("change");
-        }
-      });
-
-      window.js_start_date_pikaday_instance = description_validity_period_date_picker;
-
-      var changes_take_effect_date_input = $(".js-changes_take_effect_date_input");
-
-      var changes_take_effect_date_picker = new Pikaday({
-        field: changes_take_effect_date_input[0],
-        format: "DD/MM/YYYY",
-        blurFieldOnSelect: true,
-        onSelect: function(value) {
-          changes_take_effect_date_input.trigger("change");
-          new_val = moment(changes_take_effect_date_input.val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-          description_validity_period_date_picker.setDate(new_val);
-        }
-      });
-
-      window.js_end_date_pikaday_instance = changes_take_effect_date_picker;
-
       this.initialCheckOfDescriptionBlock();
 
       $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
@@ -66,7 +38,6 @@ $(document).ready(function() {
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
 
         changes_take_effect__date = $(".js-changes_take_effect_date_input").val();
-        description_validity_period__date = $(".js-description-validity-period-date").val();
 
         self.errors = {};
         self.conformanceErrors = {};
@@ -193,7 +164,7 @@ $(document).ready(function() {
       },
       footnotePayLoad: function() {
         if ($(".js-footnote-description-textarea").val() !== window.__original_footnote_description) {
-          description_validity_start_date = $(".js-description-validity-period-date").val();
+          description_validity_start_date = $("input[name='workbasket_forms_edit_footnote_form[description_validity_start_date]']").val();
         } else {
           description_validity_start_date = '';
         }

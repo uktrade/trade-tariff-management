@@ -1,21 +1,2 @@
-fieldset
-  .edit-footnote-description-validity-period-block.hidden
-    form-group :errors="errors" error-key="description_validity_start_date"
-      template slot-scope="slotProps"
-        h3.heading-medium.without_top_margin
-          | Description validity
-
-        label.form-label
-          span.error-message v-if="slotProps.hasError" v-cloak=""
-            | {{slotProps.error}}
-          span.form-hint
-            | You have edited the footnote description. Please specify the date when this change should apply, if different from the change-date already given above.
-
-        .bootstrap-row
-          .col-lg-6.col-md-7.col-sm-10.col-xs-12
-            = f.input :description_validity_start_date, label: false, input_html: { class: "js-description-validity-period-date", "v-model" => "footnote.description_validity_start_date" }
-
-        label.form-label
-          span.form-hint.hint_below_input
-            | This must fall between the footnote validity dates shown below.
-
+div.edit-footnote-description-validity-period-block.hidden.m-t-5
+  = content_tag "date-gds", "", "label" => "Description validity", "hint" =>"You have edited the footnote description. Please specify the date when this change should apply, if different from the change-date already given above. This must fall between the footnote validity dates shown below.", "v-model" => "footnote.description_validity_start_date",  "id" => "start_date",  ":required" => "true", "input_name" => "workbasket_forms_edit_footnote_form[description_validity_start_date]", ":error" => "errors.description_validity_start_date"
