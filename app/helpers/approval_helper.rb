@@ -54,6 +54,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/edit_footnote"
     elsif workbasket.type == 'edit_regulation'
       "workbaskets/shared/steps/review_and_submit/approval/edit_regulation"
+    elsif workbasket.type == 'create_certificate'
+      "workbaskets/shared/steps/review_and_submit/approval/create_certificate"
     end
   end
 end

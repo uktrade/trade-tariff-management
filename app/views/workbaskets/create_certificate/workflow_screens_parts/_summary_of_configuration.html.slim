@@ -1,0 +1,28 @@
+h3.heading-medium Summary of Certificate configuration
+- certificate = certificate ? certificate : Certificate.find(workbasket_id: workbasket.id)
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Validity Start Date
+      td
+        = format_date(certificate.validity_start_date)
+
+    tr
+      td.heading_column
+        | Certificate type
+      td
+        = certificate.certificate_type_code
+
+    tr
+      td.heading_column
+        | Certificate type code
+      td
+        = certificate.certificate_code
+
+    tr
+      td.heading_column
+        | Description
+      td
+        = certificate.description
+    tr

@@ -1,0 +1,24 @@
+.records-table-wrapper
+  table class="table"  id="records-table"
+    thead
+      tr
+        th.validity_start_date-column
+          a
+          | Certificate valid from
+          - certificate = certificate ? certificate : Certificate.find(workbasket_id: workbasket.id)
+        th.type-column
+          a Certificate type
+        th.code-column
+          a Certificate type code
+        th.description-column
+          a Description
+    tbody
+      tr
+        td.validity_start_date-column
+          = format_date(certificate.validity_start_date.to_date)
+        td.type-column
+          = certificate.certificate_type_code
+        td.code-column
+          = certificate.certificate_code
+        td.description-column
+          = certificate.description
