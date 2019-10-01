@@ -13,7 +13,6 @@ module WorkbasketHelpers
     def system_ops
       {
         workbasket_id: workbasket.id,
-        operation_date: operation_date,
         current_admin_id: current_admin.id
       }
     end

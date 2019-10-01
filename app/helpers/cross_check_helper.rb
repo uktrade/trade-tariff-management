@@ -10,6 +10,8 @@ module CrossCheckHelper
       'Cross-check and create geographical area'
     elsif workbasket.type == 'create_additional_code'
       "Cross-check and create additional codes"
+    elsif workbasket.type == 'create_certificate'
+      "Cross-check and create certificate"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "Cross-check and edit additional codes"
     elsif workbasket.type == 'edit_nomenclature'
