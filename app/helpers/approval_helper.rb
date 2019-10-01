@@ -10,6 +10,8 @@ module ApprovalHelper
       'Approve new geographical area'
     elsif workbasket.type == 'create_additional_code'
       "Approve new additional codes"
+    elsif workbasket.type == 'create_certificate'
+      "Approve new certificate"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "Approve edited additional codes"
     elsif workbasket.type == 'edit_nomenclature'
