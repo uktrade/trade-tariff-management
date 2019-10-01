@@ -34,7 +34,3 @@
   SearchableDataReindexWorker:
     cron: "5 0 * * *"
     description: "SearchableDataReindexWorker will run at 00:05 every day"
-
-  DownloadXmlWorker:
-    cron: '0 * * * * *'
-    description: "Polls S3 for responses"
