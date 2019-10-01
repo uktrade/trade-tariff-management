@@ -160,9 +160,13 @@ module Sequel
         # Invoking outside time machine block will probably yield no as
         # current time variable will be nil.
         #
-        def actual
+        def actual(include_future: false)
           if model.point_in_time.present?
-            filter { |o| o.<=(model.period_start_date_column, model.point_in_time) & (o.>=(model.period_end_date_column, model.point_in_time) | ({ model.period_end_date_column => nil })) }
+            if include_future
+              filter { |o| o.>=(model.period_end_date_column, model.point_in_time) | ({ model.period_end_date_column => nil }) }
+            else
+              filter { |o| o.<=(model.period_start_date_column, model.point_in_time) & (o.>=(model.period_end_date_column, model.point_in_time) | ({ model.period_end_date_column => nil })) }
+            end
           else
             self
           end
@@ -191,13 +195,17 @@ module Sequel
         #
         # Useful for forming time bound associations.
         #
-        def with_actual(assoc, parent = nil)
+        def with_actual(assoc, parent = nil, include_future = false)
           klass = assoc.to_s.classify.constantize
 
           if parent && klass.relevant_query?
             filter { |o| o.<=(klass.period_start_date_column, parent.send(parent.class.period_start_date_column.column)) & (o.>=(klass.period_end_date_column, parent.send(parent.class.period_end_date_column.column)) | ({ klass.period_end_date_column => nil })) }
           elsif klass.point_in_time.present?
-            filter { |o| o.<=(klass.period_start_date_column, klass.point_in_time) & (o.>=(klass.period_end_date_column, klass.point_in_time) | ({ klass.period_end_date_column => nil })) }
+            if include_future
+              filter { |o| o.>=(klass.period_end_date_column, klass.point_in_time) | ({ klass.period_end_date_column => nil }) }
+            else
+              filter { |o| o.<=(klass.period_start_date_column, klass.point_in_time) & (o.>=(klass.period_end_date_column, klass.point_in_time) | ({ klass.period_end_date_column => nil })) }
+            end
           else
             self
           end

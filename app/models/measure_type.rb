@@ -39,7 +39,7 @@ class MeasureType < Sequel::Model
     end
 
     def q_search(filter_ops)
-      scope = actual
+      scope = actual(include_future: true)
 
       if filter_ops[:quota].present? && filter_ops[:quota] == "true"
         scope = scope.where(order_number_capture_code: 1)

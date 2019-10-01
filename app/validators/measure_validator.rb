@@ -3,8 +3,8 @@ class MeasureValidator < TradeTariffBackend::Validator
     validates :uniqueness, of: %i[measure_type_id geographical_area_sid goods_nomenclature_sid additional_code_type_id additional_code_id ordernumber reduction_indicator validity_start_date]
   end
 
-  validation :ME2, 'The measure type must exist.', on: %i[create update] do
-    validates :presence, of: :measure_type
+  validation :ME2, 'The measure type must exist.', on: %i[create update] do |record|
+    MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).any?
   end
 
   validation :ME3, 'The validity period of the measure type must span the validity period of the measure.', on: %i[create update] do
@@ -59,9 +59,10 @@ class MeasureValidator < TradeTariffBackend::Validator
   end
 
   validation :ME10, 'The order number must be specified if the "order number flag" (specified in the measure type record) has the value "mandatory". If the flag is set to "not permitted" then the field cannot be entered.', on: %i[create update] do |record|
-    record.measure_type.present? &&
-      ((record.ordernumber.present? && record.measure_type.order_number_capture_code == 1) ||
-      (record.ordernumber.blank? && record.measure_type.order_number_capture_code != 1))
+    measure_type = MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).first
+    measure_type.present? &&
+      ((record.ordernumber.present? && measure_type.order_number_capture_code == 1) ||
+      (record.ordernumber.blank? && measure_type.order_number_capture_code != 1))
   end
 
   validation :ME12, 'If the additional code is specified then the additional code type must have a relationship with the measure type.',
@@ -276,15 +277,15 @@ class MeasureValidator < TradeTariffBackend::Validator
     # TODO is not applicable for goods indent numbers above 10?
     (record.national? && record.invalidated?) ||
       (record.goods_nomenclature.blank? && record.export_refund_nomenclature.blank?) ||
-      (record.measure_type.present? &&
+      (MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).any? &&
       (record.goods_nomenclature.present? &&
        record.goods_nomenclature.number_indents.present? &&
        (record.goods_nomenclature.number_indents > 10 ||
-       record.goods_nomenclature.number_indents <= record.measure_type.measure_explosion_level)) ||
+       record.goods_nomenclature.number_indents <= MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).first.measure_explosion_level)) ||
        (record.export_refund_nomenclature.present? &&
         record.export_refund_nomenclature.number_indents.present? &&
         (record.export_refund_nomenclature.number_indents > 10 ||
-         record.export_refund_nomenclature.number_indents <= record.measure_type.measure_explosion_level)))
+         record.export_refund_nomenclature.number_indents <= MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).first.measure_explosion_level)))
   end
 
   validation :ME104,

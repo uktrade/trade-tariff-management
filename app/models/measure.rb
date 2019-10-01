@@ -26,7 +26,7 @@ class Measure < Sequel::Model
   one_to_one :measure_type, primary_key: :measure_type_id,
                     key: :measure_type_id,
                     class_name: MeasureType do |ds|
-                      ds.with_actual(MeasureType)
+                      ds.with_actual(MeasureType, nil, true)
                     end
 
   one_to_many :measure_conditions, key: :measure_sid,
