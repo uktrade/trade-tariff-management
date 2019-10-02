@@ -1,0 +1,77 @@
+<% content_for :content do %>
+
+<div class="breadcrumbs">
+  <nav>
+    <ol>
+      <li>
+       <%= link_to "Main menu", root_url %>
+      </li>
+      <li>
+          Quota associations
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<h1 class="heading-large">
+  Work with selected measures
+</h1>
+
+<div class="grid-row">
+  <div class="column-full">
+    <p>This screen lists all quota associations that have been created for quotas in the last 2 years.</p>
+
+    <p>Please click here to <%= link_to "create a new quota association", create_quota_association_index_path %>. If you would like to edit the values associated with an existing
+      quota association, please delete the association and then create a new association afterwards. Please be aware that
+      a quota association can only be deleted / edited for quota definition periods that are yet to start.
+    </p>
+  </div>
+</div>
+
+<table class="m-t-35">
+  <thead>
+    <tr>
+      <th scope="col">Parent quota</th>
+      <th scope="col">Child quota</th>
+      <th scope="col">Relation type</th>
+      <th scope="col">Ceofficient</th>
+      <th scope="col">Start date</th>
+      <th scope="col">End date</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Should be generated from back end data -->
+    <tr>
+      <td>090227</td>
+      <td>093211</td>
+      <td>EQ</td>
+      <td>1.81000</td>
+      <td>30 Sep 2019</td>
+      <td>30 Sep 2019</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>090227</td>
+      <td>093211</td>
+      <td>EQ</td>
+      <td>1.81000</td>
+      <td>30 Sep 2019</td>
+      <td>30 Sep 2019</td>
+      <td>
+        <!-- only show if the association has not already started (i.e. the start date of the parent association is in the future) -->
+        <button class="button" type="submit">Delete</button>
+      </td>
+    </tr>
+    <tr>
+      <td>090227</td>
+      <td>093211</td>
+      <td>EQ</td>
+      <td>1.81000</td>
+      <td>30 Sep 2019</td>
+      <td>30 Sep 2019</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<% end %>

@@ -60,6 +60,12 @@
   .bootstrap-row
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       p
+        = link_to "View quota associations", quota_associations_path
+    .col-xs-12.col-sm-12.col-md-4.col-lg-3
+      p
+  .bootstrap-row
+    .col-xs-12.col-sm-12.col-md-4.col-lg-3
+      p
         = link_to "XML generation", xml_generation_exports_url
     .col-xs-12.col-sm-12.col-md-4.col-lg-3
       - unless TradeTariffBackend.production?
