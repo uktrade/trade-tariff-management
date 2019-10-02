@@ -312,4 +312,13 @@ Rails.application.routes.draw do
     resources :sections, only: [:index, :show]
     resources :chapters, only: [:show]
   end
+
+  scope module: :quota_associations do
+    resources :quota_associations, only: [:index]
+    resources :create_quota_association, only: [:index, :new] do
+      collection do
+        post 'search'
+      end
+    end
+  end
 end

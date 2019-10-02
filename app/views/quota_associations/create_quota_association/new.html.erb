@@ -1,0 +1,158 @@
+<% content_for :content do %>
+<!-- <script>
+  window.__quota_association_json = ### Render Rails workbasket settings here ###;
+</script> -->
+  <div id="vue-create-quota-association-form">
+    <div class="breadcrumbs">
+      <nav>
+        <ol>
+          <li>
+          <%= link_to "Main menu", root_url %>
+          </li>
+          <li>
+              <%= link_to "Quota associations", quota_associations_url %>
+          </li>
+          <li>
+              Create quota association
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <div v-if="hasErrors" class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+      <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+        Error
+      </h2>
+      <p>
+        Please see individual fields for details.
+      </p>
+      <ul class="error-summary-list">
+        <li v-for="(value, name) in errors"><a v-bind:href="'#' + name">{{value}}</a></li>
+      </ul>
+    </div>
+
+    <h1 class="heading-large">
+      Create quota association
+    </h1>
+
+    <div class="grid-row">
+      <div class="column-full">
+        <p>You are associating parent quota <strong class="bold-small">{{quotaAssociation.parent_quota}}</strong> with child quota <strong class="bold-small">{{quotaAssociation.child_quota}}</strong></p>
+
+        <p>Describe the type of relationship that you would like to create between these quotas and the periods that you
+          would like to link. Please ensure that you select concurrent periods with the same start and end dates to ensure
+          that the quota association functionality works correctly. If concurrent periods exist, then the two quota
+          definition periods will be synchronised automatically.
+        </p>
+      </div>
+    </div>
+
+    <form @submit="validateStepTwoData">
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group" v-bind:class="{ 'form-group-error': errors.parent_definition_period }">
+            <label class="heading-medium" for="parent_definition_period">
+              Select the parent quota definition period
+              <span class="form-hint">
+                  To use this functionality, the quota definition period must already exist in the system
+              </span>
+              <span v-if="errors.parent_definition_period" class="error-message">{{errors.parent_definition_period}}</span>
+            </label>
+            <div class="grid-row">
+              <div class="column-one-third">
+                <select id="parent_definition_period" v-model="quotaAssociation.parent_definition_period" class="form-control" name="parent_definition_period" required>
+                  <option value="" disabled selected>Select parent quota definition period</option>
+                  <option>GOV.UK elements option 1</option>
+                  <option>GOV.UK elements option 2</option>
+                  <option>GOV.UK elements option 3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group" v-bind:class="{ 'form-group-error': errors.child_definition_period }">
+            <label class="heading-medium m-t-10" for="child_definition_period">
+              Select the child quota definition period
+              <span class="form-hint">
+                  To use this functionality, the quota definition period must already exist in the system
+              </span>
+              <span v-if="errors.child_definition_period" class="error-message">{{errors.child_definition_period}}</span>
+            </label>
+            <div class="grid-row">
+              <div class="column-one-third">
+                <select id="child_definition_period" v-model="quotaAssociation.child_definition_period" class="form-control" name="child_definition_period" required>
+                  <option value="" disabled selected>Select child quota definition period</option>
+                  <option>GOV.UK elements option 1</option>
+                  <option>GOV.UK elements option 2</option>
+                  <option>GOV.UK elements option 3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group" v-bind:class="{ 'form-group-error': errors.relation_type }">
+            <fieldset>
+              <legend id="relation_type">
+                <h1 class="heading-medium m-t-10">Select the relation type</h1>
+                <span class="form-hint">
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                </span>
+                <span v-if="errors.relation_type" class="error-message">{{errors.relation_type}}</span>
+              </legend>
+              <div class="multiple-choice">
+                <input id="relation_type_EQ" v-model="quotaAssociation.relation_type" type="radio" name="relation_type" value="EQ" required>
+                <label for="relation_type_EQ">EQ - Equivalent to main quota</label>
+              </div>
+              <div class="multiple-choice">
+                <input id="relation_type_NM" v-model="quotaAssociation.relation_type" type="radio" name="relation_type" value="NM" required>
+                <label for="relation_type_NM">NM - Normal (restrictive to main quota)</label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group" v-bind:class="{ 'form-group-error': errors.coefficient }">
+            <label class="heading-medium m-t-10" for="coefficient">
+              Enter the co-efficient
+              <span class="form-hint">
+                The co-efficient determines the... If you select a relation of "NM" in the relation type field (above),
+                then the co-efficient field wil automatically be set to the value "1.00000"
+                <br>
+                Please enter up to 5 decimal places.
+              </span>
+              <span v-if="errors.coefficient" class="error-message">{{errors.coefficient}}</span>
+            </label>
+            <div class="grid-row">
+              <div class="column-one-quarter">
+                <input id="coefficient" v-model="quotaAssociation.coefficient" class="form-control" type="text" pattern="^[0-9](\.[0-9]+)?$" name="coefficient" minlength="1" maxlength="10" size="10" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-t-30">
+        <div class="submit_group_for_cross_check_block">
+          <button class="button js-workbasket-base-continue-button" type="submit" aria-disabled="true">Send quota association for approval</button>
+          <div class="js-workbasket-base-continue-spinner spinner_block hidden">
+            <%= render "measures/bulks/loading_spinner", message: "Saving..." %>
+          </div>
+        </div>
+        <div class="save_progress_block">
+          <%= link_to "Previous step", create_quota_association_index_url, class: "secondary-button" %>
+        </div>
+      </div>
+    </form>
+  </div>
+<% end %>

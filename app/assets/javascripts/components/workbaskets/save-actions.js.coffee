@@ -35,7 +35,7 @@ window.WorkbasketBaseSaveActions =
 
   unlockButtonsAndHideSpinner: ->
     $(".spinner_block").addClass('hidden')
-    $(".js-workbasket-base-submit-button, .js-workbasket-base-exit-button, .js-workbasket-base-previous-step-link").removeClass('disabled')
+    $(".js-workbasket-base-continue-button, .js-workbasket-base-submit-button, .js-workbasket-base-exit-button, .js-workbasket-base-previous-step-link").removeClass('disabled')
                                                                                                                       .removeClass('hidden')
 
   handleSuccessResponse: (resp, submit_mode, callback) ->
