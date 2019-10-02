@@ -52,7 +52,7 @@ module XmlGeneration
     # DIT, followed by the year (two digits), followed by
     # the envelope ID (pre-padded with zeroes up to 4 digits)
     def remote_file_name_base
-      "DIT#{Date.today.strftime("%y")}#{record.envelope_id.to_s.rjust(4, "0")}"
+      "DIT#{record.envelope_id.to_s.rjust(4, "0")}"
     end
 
     def local_main_file_path

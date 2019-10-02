@@ -43,7 +43,7 @@ module XmlExport
     end
 
     def envelope_id_offset_for_current_year
-      ENV.fetch("XML_ENVELOPE_ID_OFFSET_YEAR_#{Date.current.year}", 0).to_i
+      ENV["XML_ENVELOPE_ID_OFFSET_YEAR_#{Date.current.year}"]&.to_i || 0
     end
 
     class << self
