@@ -130,7 +130,7 @@
 
           <opening-balances-manager :prefix="'quota-section-' + index + '-period-' + idx" :section="section" :period="period" v-if="period.measurement_unit_code"></opening-balances-manager>
 
-          <p>
+          <p v-if="idx">
             <a href="#" v-on:click.prevent="removePeriod(idx)">Remove period</a>
           </p>
         </div>
