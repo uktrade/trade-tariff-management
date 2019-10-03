@@ -333,7 +333,7 @@ module Workbaskets
             move_status_to!(current_admin, "editing")
 
             clean_up_draft_measures! if type == "bulk_edit_of_measures"
-            clean_up_draft_regulation! if type == "edit_regulation"
+            clean_up_drafts! if (type == "edit_regulation" || type == 'edit_footnote')
 
             settings.collection.map do |item|
               item.move_status_to!(:editing)
@@ -380,7 +380,7 @@ module Workbaskets
             end
           end
 
-          def clean_up_draft_regulation!
+          def clean_up_drafts!
             settings.collection.each(&:delete)
           end
 
