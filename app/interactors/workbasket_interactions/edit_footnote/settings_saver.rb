@@ -378,14 +378,14 @@ module WorkbasketInteractions
       end
 
       def update_existing_description!(same_day_description_period)
-        description = same_day_description_period.first.footnote_description
-        description.description = description
+        existing_footnote_description = same_day_description_period.first.footnote_description
+        existing_footnote_description.description = description
 
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-          description, system_ops.merge(operation: "U")
+          existing_footnote_description, system_ops.merge(operation: "U")
         ).assign!(false)
 
-        description.save
+        existing_footnote_description.save
       end
 
       def can_add_commodity_code?
