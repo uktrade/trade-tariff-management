@@ -1,15 +1,10 @@
-fieldset
-  h3.heading-medium
-    | What is the certificate code?
-
-  form-group.without_bottom_margin :errors="errors" error-key="certificate_code"
-    template slot-scope="slotProps"
-      label.form-label id="certificate_code"
-        span.error-message v-if="slotProps.hasError" v-cloak=""
-          | {{slotProps.error}}
-        span.form-hint
-          | Maximum 3 numbers or letters. Must not already be in use for the selected certificate type.
-
-      .bootstrap-row
-        .col-md-1
-          = f.input :certificate_code, label: false, input_html: { "v-model" => "certificate.certificate_code" }
+.form-group.m-b-10 v-bind:class="{ 'form-group-error': errors.reference_url }"
+  fieldset
+    h3.heading-medium.m-t-5 id="reference_url"
+      = f.label :description, 'What is the certificate code?'
+    span.form-hint
+      | Maximum 3 numbers or letters. Must not already be in use for the selected certificate type.
+    span.error-message v-if="errors.reference_url" v-html="errors.reference_url"
+    .grid-row
+      .column-one-quarter
+        = f.input :certificate_code, label: false, input_html: { "v-model" => "certificate.certificate_code", "maxlength" => 3}
