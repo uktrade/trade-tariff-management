@@ -17,11 +17,14 @@ h3.heading-medium.m-t-100
 
 ul class="list"
   li
-    a href="#"
-      | Withdraw submission / edit certificate (not implemented)
+  = link_to "Withdraw submission / edit certificate", "#",
+          data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
+          class: "js-main-menu-show-withdraw-confirmation-link"
   li
     = link_to "Create another certificate", new_create_certificate_url
   li
     = link_to "View this certificate", read_only_section_url
   li
     = link_to "Return to main menu", root_url
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
