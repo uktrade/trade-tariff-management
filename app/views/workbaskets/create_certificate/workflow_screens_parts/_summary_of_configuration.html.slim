@@ -24,5 +24,5 @@ table.create-measures-details-table
       td.heading_column
         | Description
       td
-        = certificate.description
+        = CertificateDescription.find(certificate_type_code: certificate.certificate_type_code, certificate_code: certificate.certificate_code).description
     tr
