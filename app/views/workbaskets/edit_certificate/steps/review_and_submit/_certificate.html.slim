@@ -5,7 +5,7 @@
         th.validity_start_date-column
           a
           | Certificate valid from
-          - certificate = certificate ? certificate : Certificate.find(workbasket_id: workbasket.id)
+          - certificate = certificate ? certificate : Certificate.find(certificate_code: workbasket.settings.original_certificate_code, certificate_type_code: workbasket.settings.original_certificate_type_code)
         th.type-column
           a Certificate type
         th.code-column

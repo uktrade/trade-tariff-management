@@ -79,7 +79,7 @@ module WorkbasketInteractions
       def validate!
         check_initial_validation_rules!
         check_if_nothing_changed! if @errors.blank?
-        check_conformance_rules! if @errors.blank?
+        edit_certificate! if @errors.blank?
       end
 
       def check_initial_validation_rules!
@@ -104,12 +104,10 @@ module WorkbasketInteractions
           original_certificate.validity_end_date.try(:strftime, "%Y-%m-%d") == validity_end_date.try(:strftime, "%Y-%m-%d")
       end
 
-      def check_conformance_rules!
+      def edit_certificate!
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
           if it_is_just_description_changed?
-            end_date_existing_certificate_desription_period!
-            add_next_certificate_description_period!
-            add_next_certificate_description!
+            edit_description!
 
           else
             end_date_existing_certificate!
@@ -128,39 +126,71 @@ module WorkbasketInteractions
         end
       end
 
+      def edit_description!
+        if existing_description_period_on_same_day.empty?
+          add_certificate_description_period!
+          add_certificate_description!
+        else
+          update_existing_description!(existing_description_period_on_same_day)
+        end
+      end
+
+      def update_existing_description!(same_day_description_period)
+        existing_certificate_description = same_day_description_period.first.certificate_description
+        existing_certificate_description.description = description
+
+        ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+          existing_certificate_description, system_ops.merge(operation: "U")
+        ).assign!(false)
+
+        existing_certificate_description.save
+      end
+
+      def existing_description_period_on_same_day
+        CertificateDescriptionPeriod.where(certificate_code: original_certificate.certificate_code, certificate_type_code: original_certificate.certificate_type_code).all.select {|period| period.validity_start_date === description_validity_start_date}
+      end
+
+      def add_certificate_description_period!
+        @certificate_description_period = CertificateDescriptionPeriod.new(
+          validity_start_date: description_validity_start_date
+        )
+
+        certificate_description_period.certificate_code = original_certificate.certificate_code
+        certificate_description_period.ceritificate_type_code = original_certificate.certificate_type_code
+
+        assign_system_ops!(certificate_description_period)
+        set_primary_key!(certificate_description_period)
+
+        certificate_description_period.save if persist_mode?
+      end
+
       def parse_and_format_conformance_rules
         @conformance_errors = {}
 
         if it_is_just_description_changed?
-          unless next_certificate_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(next_certificate_description_period))
-          end
-
-          unless next_certificate_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(next_certificate_description))
-          end
-
-        else
-
-          unless certificate.conformant?
-            @conformance_errors.merge!(get_conformance_errors(certificate))
-          end
-
-          unless certificate_description_period.conformant?
-            @conformance_errors.merge!(get_conformance_errors(certificate_description_period))
-          end
-
-          unless certificate_description.conformant?
-            @conformance_errors.merge!(get_conformance_errors(certificate_description))
-          end
-
-          if description_validity_start_date.present?
-            unless next_certificate_description_period.conformant?
+          if existing_description_period_on_same_day.empty?
+            unless certificate_description_period.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_certificate_description_period))
             end
 
-            unless next_certificate_description.conformant?
+            unless certificate_description.conformant?
               @conformance_errors.merge!(get_conformance_errors(next_certificate_description))
+            end
+          else
+            check_for_updated_description_conformance_errors
+          end
+        else
+          if description_changed?
+            unless certificate.conformant?
+              @conformance_errors.merge!(get_conformance_errors(certificate))
+            end
+
+            unless certificate_description_period.conformant?
+              @conformance_errors.merge!(get_conformance_errors(certificate_description_period))
+            end
+
+            unless certificate_description.conformant?
+              @conformance_errors.merge!(get_conformance_errors(certificate_description))
             end
           end
         end
@@ -194,6 +224,8 @@ module WorkbasketInteractions
         certificate_description_period = original_certificate.certificate_description
                                                              .certificate_description_period
 
+        certificate_description_period = CertificateDescription.find()
+
         unless certificate_description_period.already_end_dated?
           certificate_description_period.validity_end_date = (description_validity_start_date || validity_start_date)
 
@@ -225,8 +257,8 @@ module WorkbasketInteractions
           validity_end_date: (description_validity_start_date || validity_end_date)
         )
 
-        certificate_description_period.certificate_code = certificate.certificate_code
-        certificate_description_period.certificate_type_code = certificate.certificate_type_code
+        certificate_description_period.certificate_code = original_certificate.certificate_code
+        certificate_description_period.certificate_type_code = original_certificate.certificate_type_code
 
         assign_system_ops!(certificate_description_period)
         set_primary_key!(certificate_description_period)
@@ -240,8 +272,8 @@ module WorkbasketInteractions
           language_id: "EN"
         )
 
-        certificate_description.certificate_code = certificate.certificate_code
-        certificate_description.certificate_type_code = certificate.certificate_type_code
+        certificate_description.certificate_code = original_certificate.certificate_code
+        certificate_description.certificate_type_code = original_certificate.certificate_type_code
         certificate_description.certificate_description_period_sid = certificate_description_period.certificate_description_period_sid
 
         assign_system_ops!(certificate_description)

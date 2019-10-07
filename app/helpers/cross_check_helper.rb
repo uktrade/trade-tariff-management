@@ -26,6 +26,8 @@ module CrossCheckHelper
       "Cross-check and edit footnote"
     elsif workbasket.type == 'edit_regulation'
       "Cross-check and edit regulation"
+    elsif workbasket.type == 'edit_certificate'
+      "Cross-check and edit certificate"
     end
   end
 
@@ -56,6 +58,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/edit_regulation"
     elsif workbasket.type == 'create_certificate'
       "workbaskets/shared/steps/review_and_submit/create_certificate"
+    elsif workbasket.type == 'edit_certificate'
+      "workbaskets/shared/steps/review_and_submit/edit_certificate"
     end
   end
 
