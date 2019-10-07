@@ -1,5 +1,5 @@
 h3.heading-medium Summary of Certificate configuration
-- certificate = certificate ? certificate : Certificate.find(workbasket_id: workbasket.id)
+- certificate = certificate ? certificate : Certificate.find(certificate_code: workbasket.settings.original_certificate_code, certificate_type_code: workbasket.settings.original_certificate_type_code)
 table.create-measures-details-table
   tbody
     tr
