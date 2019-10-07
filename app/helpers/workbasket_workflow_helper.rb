@@ -43,6 +43,8 @@ module WorkbasketWorkflowHelper
       link_to "Find and edit footnotes", search_footnotes_url
     elsif workbasket.type.include?("regulation")
       link_to "Find and edit regulations", regulations_url
+    elsif workbasket.type.include?("certificate")
+      link_to "Find and edit certificates", search_certificates_path
     else
       link_to "Find and edit measures", measures_url
     end

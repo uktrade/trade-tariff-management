@@ -79,6 +79,7 @@ en:
     certificate_code_blank: "Certificate code must be specified."
     certificate_code_in_use: "Certificate code is already in use for the selected certificate type."
     certificate_code_max_limit: "Certificate code can not be more than three characters long"
+    certificate_code_alphanumeric: "Certificate code can only include alphanumeric characters"
     description_blank: "Description cannot be left blank and must comprise at least one word."
     validity_start_date_blank: "Start date must be specified."
     validity_start_date_wrong_format: "Format is invalid."
