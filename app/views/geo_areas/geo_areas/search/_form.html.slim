@@ -87,7 +87,7 @@
                         | Group
 
       .bootstrap-row
-        .col-lg-6.col-md-7.col-sm-10.col-xs-12
+        .col.m-t-30
           .form-actions
             .submit_group_for_cross_check_block
               button type="submit" name="save_progress" class="button js-validate-geographical-areas-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
@@ -97,3 +97,4 @@
                 = render "measures/bulks/loading_spinner", message: "Loading..."
 
             = link_to "Clear form", geo_areas_url, class: 'secondary-button js-workbasket-base-exit-button'
+            = link_to "Cancel", root_url, class: "secondary-button"

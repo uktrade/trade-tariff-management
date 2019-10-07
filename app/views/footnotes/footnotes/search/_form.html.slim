@@ -69,7 +69,7 @@
       = content_tag "date-gds", "", "label" => "End date to", "hint" => "Optionally search for footnotes with end date to", ":value.sync" => "search.end_date",  "id" => "end_date", "input_name" => "search[end_date]", ":error" => "errors.end_date"
 
       .bootstrap-row
-        .col-lg-6.col-md-7.col-sm-10.col-xs-12.m-t-30
+        .col.m-t-30
           .form-actions
             .submit_group_for_cross_check_block
               button type="submit" name="save_progress" class="button js-validate-footnotes-search-form js-workbasket-base-continue-button js-workbasket-base-submit-button"
@@ -79,3 +79,4 @@
                 = render "measures/bulks/loading_spinner", message: "Loading..."
 
             = link_to "Clear form", search_footnotes_url, class: 'secondary-button js-workbasket-base-exit-button'
+            = link_to "Cancel", root_url, class: "secondary-button"
