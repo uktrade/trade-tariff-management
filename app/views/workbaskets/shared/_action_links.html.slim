@@ -22,7 +22,7 @@
       .js-workbasket-base-save-progress-spinner.spinner_block.hidden
         = render "measures/bulks/loading_spinner", message: "Saving..."
 
-  = link_to "Exit (return to main menu)", root_url, class: "secondary-button js-workbasket-base-exit-button"
+  = link_to "Cancel", root_url, class: "secondary-button js-workbasket-base-exit-button"
 
   - if step_pointer.has_previous_step?
     = link_to "Previous step", previous_step_url,
