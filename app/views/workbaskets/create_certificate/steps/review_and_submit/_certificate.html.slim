@@ -21,4 +21,4 @@
         td.code-column
           = certificate.certificate_code
         td.description-column
-          = certificate.description
+          = CertificateDescription.find(certificate_type_code: certificate.certificate_type_code, certificate_code: certificate.certificate_code).description
