@@ -2,18 +2,20 @@
   ol
     li
       = link_to "Main menu", root_url
-
     li
       = link_to "Find and edit measures", measures_url
-
     li
       = link_to "Back to search results", measures_url(search_code: workbasket_settings.initial_search_results_code)
+    li
+      = link_to "Work with selected measures", work_with_selected_measures_measures_bulk_url(search_code: workbasket_settings.initial_search_results_code)
+    li
+      | Bulk edit measures
 
 h2.heading-large
   - if workbasket.awaiting_cross_check?
     | Submitted for Cross-Check
   - else
-    = workbasket_author? ? 'Edit measures' : 'Review measures'
+    = workbasket_author? ? 'Bulk edit measures' : 'Review measures'
 
 = render "measures/bulks/details"
 

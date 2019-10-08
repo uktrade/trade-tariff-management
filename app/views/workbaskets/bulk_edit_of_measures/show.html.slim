@@ -3,15 +3,12 @@
     li
       = link_to "Main menu", root_url
 
-    li
-      = link_to "Find and edit measures", measures_url
-
     li aria-current="page"
-      | View measures workbasket
+      | Edit measures
 
 header
   h1.heading-large
-    | View measures workbasket
+    | Edit measures
 
   .view-workbasket-container
     = render "workbaskets/bulk_edit_of_measures/workflow_screens_parts/notifications/block", screen_type: :view

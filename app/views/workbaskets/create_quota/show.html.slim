@@ -3,15 +3,12 @@
     li
       = link_to "Main menu", root_url
 
-    li
-      = link_to "Find and edit a quota", quotas_url
-
     li aria-current="page"
-      | View quota workbasket
+      | Create a new quota
 
 header
   h1.heading-large
-    | View quota workbasket
+    | Create a new quota
 
   .view-workbasket-container
     = render "workbaskets/create_quota/workflow_screens_parts/notifications/block", screen_type: :view

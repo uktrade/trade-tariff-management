@@ -3,15 +3,12 @@
     li
       = link_to "Main menu", root_url
 
-    li
-      = link_to "Find and edit regulations", regulations_url
-
     li aria-current="page"
       | Edit regulation
 
 header
   h1.heading-large
-    | View regulation
+    | Edit regulation
 
   .view-workbasket-container
     = render "workbaskets/edit_regulation/workflow_screens_parts/notifications/block", screen_type: :view
