@@ -5,7 +5,6 @@ module WorkbasketInteractions
 
       ATTRS_PARSER_METHODS = %w(
         reason_for_changes
-        operation_date
         description
         description_validity_start_date
         validity_start_date
@@ -48,7 +47,6 @@ module WorkbasketInteractions
 
       def save!
         workbasket.title = original_certificate.title
-        workbasket.operation_date = (Date.strptime(operation_date, "%d/%m/%Y") rescue nil)
         workbasket.save
 
         settings.set_settings_for!(current_step, settings_params)
@@ -198,6 +196,11 @@ module WorkbasketInteractions
         if conformance_errors.present?
           @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
         end
+      end
+
+      def check_for_updated_description_conformance_errors
+        existing_description = existing_description_period_on_same_day.first.certificate_description
+        @conformance_errors.merge!(get_conformance_errors(existing_description))
       end
 
       def it_is_just_description_changed?
