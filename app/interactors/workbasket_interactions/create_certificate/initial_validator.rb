@@ -66,7 +66,7 @@ module WorkbasketInteractions
             @errors[:certificate_code] = errors_translator(:certificate_code_in_use)
           elsif certificate_code.size > 3
             @errors[:certificate_code] = errors_translator(:certificate_code_max_limit)
-          elsif certificate_code.match(/^[a-zA-Z1-9]+$/).nil?
+          elsif certificate_code.match(/^[a-zA-Z0-9]+$/).nil?
             @errors[certificate_code] = errors_translator(:certificate_code_alphanumeric)
           end
 
