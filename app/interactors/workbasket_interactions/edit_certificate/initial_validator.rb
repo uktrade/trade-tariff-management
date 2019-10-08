@@ -3,7 +3,6 @@ module WorkbasketInteractions
     class InitialValidator
       ALLOWED_OPS = %w(
         reason_for_changes
-        operation_date
         description
         description_validity_start_date
         validity_start_date
@@ -39,7 +38,6 @@ module WorkbasketInteractions
 
       def fetch_errors
         check_reason_for_changes!
-        check_operation_date!
         check_description!
         check_description_validity_start_date!
         check_validity_period!
@@ -56,19 +54,6 @@ module WorkbasketInteractions
       def check_reason_for_changes!
         if reason_for_changes.blank?
           @errors[:reason_for_changes] = errors_translator(:reason_for_changes_blank)
-          @errors_summary = errors_translator(:summary_minimal_required_fields)
-        end
-      end
-
-      def check_operation_date!
-        oper_date = parse_date(:operation_date)
-
-        if oper_date.present?
-          if start_date.present? && oper_date < start_date
-            @errors[:operation_date] = errors_translator(:operation_date_is_before_start_date)
-          end
-        else
-          @errors[:operation_date] = errors_translator(:operation_date_blank)
           @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
       end
