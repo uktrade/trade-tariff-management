@@ -12,8 +12,6 @@ module CrossCheckHelper
       "Cross-check and create additional codes"
     elsif workbasket.type == 'create_certificate'
       "Cross-check and create certificate"
-    elsif workbasket.type == 'bulk_edit_of_additional_codes'
-      "Cross-check and edit additional codes"
     elsif workbasket.type == 'edit_nomenclature'
       "Cross-check and edit goods classification"
     elsif workbasket.type == 'edit_geographical_area'

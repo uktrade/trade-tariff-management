@@ -3,15 +3,12 @@
     li
       = link_to "Main menu", root_url
 
-    li
-      = link_to "Find and edit geographical areas", geo_areas_url
-
     li aria-current="page"
-      | View geographical area
+      | Create a new geographical area
 
 header
   h1.heading-large
-    | View geographical area
+    | Create a new geographical area
 
   .view-workbasket-container
     = render "workbaskets/create_geographical_area/workflow_screens_parts/notifications/block", screen_type: :view

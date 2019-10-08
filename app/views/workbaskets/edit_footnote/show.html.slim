@@ -3,15 +3,12 @@
     li
       = link_to "Main menu", root_url
 
-    li
-      = link_to "Find and edit footnotes", search_footnotes_url
-
     li aria-current="page"
-      | View Footnote
+      | Edit Footnote
 
 header
   h1.heading-large
-    | View footnote
+    | Edit footnote
 
   .view-workbasket-container
     = render "workbaskets/edit_footnote/workflow_screens_parts/notifications/block", screen_type: :view

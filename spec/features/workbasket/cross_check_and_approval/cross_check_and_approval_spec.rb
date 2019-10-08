@@ -117,7 +117,7 @@ RSpec.describe 'cross check', :js do
         expect(page).to have_content('Quota approved')
         expect(page).to have_content('Approve next workbasket')
         click_link 'Approve next workbasket'
-        expect(page).to have_content('Approve new quota')
+        expect(page).to have_content('Approve and create quota')
       end
     end
   end

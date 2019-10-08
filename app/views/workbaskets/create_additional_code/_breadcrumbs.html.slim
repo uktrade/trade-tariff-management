@@ -5,15 +5,9 @@
     ol
       li
         = link_to "Main menu", root_url
-      - if details["reason"].present?
-        li
-          = link_to "Find and edit additional codes", additional_codes_url
-
+      - if workbasket.submitted?
         li aria-current="page"
-          = link_to "Work with selected additional codes", current_url
-      - elsif workbasket.submitted?
-        li aria-current="page"
-          | View additional codes
+          | Create new additional codes
       - else
         li aria-current="page"
           | Create new additional codes

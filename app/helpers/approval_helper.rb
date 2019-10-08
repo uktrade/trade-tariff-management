@@ -1,33 +1,31 @@
 module ApprovalHelper
   def approval_title(workbasket)
     if workbasket.type == 'create_measures'
-      'Approve new measures'
+      'Approve and create measures'
     elsif workbasket.type == 'create_quota'
-      'Approve new quota'
+      'Approve and create quota'
     elsif workbasket.type == 'create_regulation'
-      'Approve new regulation'
+      'Approve and create regulation'
     elsif workbasket.type == 'create_geographical_area'
-      'Approve new geographical area'
+      'Approve and create geographical area'
     elsif workbasket.type == 'create_additional_code'
-      "Approve new additional codes"
+      "Approve and create additional codes"
     elsif workbasket.type == 'create_certificate'
-      "Approve new certificate"
+      "Approve and create certificate"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
-      "Approve edited additional codes"
+      "Approve and bulk edit additional codes"
     elsif workbasket.type == 'edit_nomenclature'
-      "Approve new goods classification"
+      "Approve and create goods classification"
     elsif workbasket.type == 'create_footnote'
-      "Approve new footnotes"
+      "Approve and create footnotes"
     elsif workbasket.type == 'edit_footnote'
-      "Approve edited footnote"
+      "Approve and edit footnote"
     elsif workbasket.type == 'edit_geographical_area'
-      "Approve edited geographical area"
+      "Approve and edit geographical area"
     elsif workbasket.type == 'bulk_edit_of_measures'
-      "Approve edited measures"
-    elsif workbasket.type == 'bulk_edit_of_additional_codes'
-      "Approve edited additional codes"
+      "Approve and bulk edit measures"
     elsif workbasket.type == 'edit_regulation'
-      "Approve edited regulation"
+      "Approve and edit regulation"
     end
   end
 

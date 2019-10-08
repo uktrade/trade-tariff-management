@@ -8,6 +8,9 @@
         <%= link_to "Find and edit measures", measures_url %>
       </li>
       <li>
+        <%= link_to "Back to search results", measures_url(search_code: workbasket_settings.initial_search_results_code) %>
+      </li>
+      <li>
           Bulk edit measures
       </li>
     </ol>
@@ -19,7 +22,7 @@
     <h1 class="heading-large">
       Work with selected measures
     </h1>
-
+{{workbasket_settings}}
     <div class="row">
       <div class="col-md-7 col-lg-6">
         <info-message>

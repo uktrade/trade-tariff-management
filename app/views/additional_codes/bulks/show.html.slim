@@ -3,12 +3,9 @@
     ol
       li
         = link_to "Main menu", root_url
-      li
-        = link_to "Find and edit additional codes", additional_codes_url
-      li
-        = link_to "Search results", additional_codes_url(search_code: workbasket_settings.initial_search_results_code)
+
       li aria-current="page"
-        = link_to "Work with selected codes", edit_additional_codes_bulk_url(workbasket.id, search_code: workbasket_settings.initial_search_results_code)
+        | Edit additional codes
 
 h2.heading-large
   | Submitted for Cross-Check
