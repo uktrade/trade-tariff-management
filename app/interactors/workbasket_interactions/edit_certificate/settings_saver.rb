@@ -104,22 +104,7 @@ module WorkbasketInteractions
 
       def edit_certificate!
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
-          if it_is_just_description_changed?
-            edit_description!
-
-          else
-            end_date_existing_certificate!
-
-            add_certificate!
-            add_certificate_description_period!
-            add_certificate_description!
-
-            if description_validity_start_date.present?
-              add_next_certificate_description_period!
-              add_next_certificate_description!
-            end
-          end
-
+          edit_description!
           parse_and_format_conformance_rules
         end
       end
@@ -165,32 +150,16 @@ module WorkbasketInteractions
       def parse_and_format_conformance_rules
         @conformance_errors = {}
 
-        if it_is_just_description_changed?
-          if existing_description_period_on_same_day.empty?
-            unless certificate_description_period.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_certificate_description_period))
-            end
+        if existing_description_period_on_same_day.empty?
+          unless certificate_description_period.conformant?
+            @conformance_errors.merge!(get_conformance_errors(certificate_description_period))
+          end
 
-            unless certificate_description.conformant?
-              @conformance_errors.merge!(get_conformance_errors(next_certificate_description))
-            end
-          else
-            check_for_updated_description_conformance_errors
+          unless certificate_description.conformant?
+            @conformance_errors.merge!(get_conformance_errors(certificate_description))
           end
         else
-          if description_changed?
-            unless certificate.conformant?
-              @conformance_errors.merge!(get_conformance_errors(certificate))
-            end
-
-            unless certificate_description_period.conformant?
-              @conformance_errors.merge!(get_conformance_errors(certificate_description_period))
-            end
-
-            unless certificate_description.conformant?
-              @conformance_errors.merge!(get_conformance_errors(certificate_description))
-            end
-          end
+          check_for_updated_description_conformance_errors
         end
 
         if conformance_errors.present?
@@ -208,18 +177,6 @@ module WorkbasketInteractions
           original_certificate.description.to_s.squish != description.to_s.squish &&
             original_certificate.validity_start_date.strftime("%Y-%m-%d") == validity_start_date.try(:strftime, "%Y-%m-%d") &&
             original_certificate.validity_end_date.try(:strftime, "%Y-%m-%d") == validity_end_date.try(:strftime, "%Y-%m-%d")
-        end
-      end
-
-      def end_date_existing_certificate!
-        unless original_certificate.already_end_dated?
-          original_certificate.validity_end_date = validity_start_date
-
-          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            original_certificate, system_ops.merge(operation: "U")
-          ).assign!(false)
-
-          original_certificate.save
         end
       end
 
@@ -271,7 +228,7 @@ module WorkbasketInteractions
 
       def add_certificate_description!
         @certificate_description = CertificateDescription.new(
-          description: original_certificate.description,
+          description: description,
           language_id: "EN"
         )
 
