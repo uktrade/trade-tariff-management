@@ -6,30 +6,18 @@
     li aria-current="page"
       | Edit certificate
 
-.panel.panel--confirmation
-  h1.heading-xlarge
-    | Certificate submitted
+header
+  h1.heading-large
+    | Edit certificate
 
-  h3.heading-medium
-    | The edited certificate of type
-    =<> "'#{certificate.decorate.certificate_type_description}'"
-    | and ID
-    =<> "'#{certificate.decorate.code}'"
-    | has been submitted for cross-check.
+  .view-workbasket-container
+    = render "workbaskets/edit_certificate/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/edit_certificate/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/edit_certificate/workflow_screens_parts/workbasket_details"
 
-br
-h3.heading-medium
-  | Next steps
+    - if iam_workbasket_author? && workbasket_rejected?
+      = link_to "Edit certificate", '#',
+              data: {target_url: move_to_editing_mode_edit_certificate_url(workbasket.id)},
+              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
-ul class="list"
-  li
-    a href="#"
-      | Withdraw submission / edit certificate (not implemented)
-  li
-    = link_to "View this certificate", read_only_section_url
-  li
-    = link_to "Edit another certificate", search_certificates_url
-  li
-    = link_to "Return to main menu", root_url
-br
-br
+    = render "workbaskets/edit_certificate/workflow_screens_parts/summary_of_configuration"

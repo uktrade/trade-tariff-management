@@ -372,6 +372,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_edit_footnote_url(workbasket.id)
     elsif workbasket.object.type == "edit_regulation"
       withdraw_workbasket_from_workflow_edit_regulation_url(workbasket.id)
+    elsif workbasket.object.type == "edit_certificate"
+      withdraw_workbasket_from_workflow_edit_certificate_url(workbasket.id)
     end
   end
 
