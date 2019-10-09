@@ -2,11 +2,13 @@ fieldset
   h3.heading-medium id="additional_codes"
     | Define the new additional code(s)
 
-  form-group :errors="errors" error-key="additional_codes"
+  form-group :class="{'form-group-error': errors.zero_additional_codes}" :errors="errors" error-key="additional_codes"
     template slot-scope="slotProps"
+      span.error-message v-if="errors.zero_additional_codes" id="zero_additional_codes"
+        | {{errors.zero_additional_codes}}
       p.error-message v-if="slotProps.hasError" v-cloak=""
         | {{slotProps.error}}
-        br
+
       .bootstrap-row
         .col-md-2
           label.form-label
@@ -19,7 +21,7 @@ fieldset
             | Code
 
             span.form-hint
-              | Must be three numbers and/or characters.
+              | This must be exactly three  characters long.
         .col-md-2
           label.form-label
             | Description
@@ -27,11 +29,17 @@ fieldset
             span.form-hint
               | This will be visible to operators and should be as precise as possible, or use 'Other'.
       .bootstrap-row.additional-code-row v-for="(additionalCode, index) in additional_codes"
-        div :class="{'col-md-2': true, 'col-has-error': !!errors['additional_code_type_id_' + index]}"
-          custom-select url="/additional_code_types" value-field="additional_code_type_id" code-field="additional_code_type_id" label-field="description" v-model="additionalCode.additional_code_type_id" placeholder="— select type —" :scope-date="validity_start_date" :date-sensitive="false" :id="'additional_code_type_'+index"
-        div :class="{'col-md-2': true, 'col-has-error': !!errors['additional_code_' + index]}"
-          input.form-control v-model="additionalCode.additional_code" maxlength="3" :id="'additional_code_code_'+index"
-        div :class="{'col-md-7': true, 'col-has-error': !!errors['description_' + index]}"
-          textarea.form-control v-model="additionalCode.description" rows="3" :id="'additional_code_description_'+index"
+        div :class="{'col-md-2': true, 'col-has-error': errors['additional_code_type_id_' + index]}"
+          span.error-message v-if="errors['additional_code_type_id_' + index]"
+            | Additional code type can't be blank
+          custom-select url="/additional_code_types" value-field="additional_code_type_id" code-field="additional_code_type_id" label-field="description" v-model="additionalCode.additional_code_type_id" placeholder="— select type —" :scope-date="validity_start_date" :date-sensitive="false" :id="'additional_code_type_id_'+index"
+        div.col-md-2
+          span.error-message v-if="errors['additional_code_' + index]"
+            | Additional code can't be blank
+          input.form-control v-model="additionalCode.additional_code" maxlength="3" :id="'additional_code_'+index" :class="{'form-control-error': errors['additional_code_' + index]}"
+        div.col-md-7
+          span.error-message v-if="errors['additional_code_description_' + index]"
+            | Description can't be blank
+          textarea.form-control v-model="additionalCode.description" rows="3" :id="'additional_code_description_'+index" :class="{'form-control-error': errors['additional_code_description_' + index]}"
       a href="#" role="button" v-on:click.prevent="addAdditionalCodes"
         | Add more codes

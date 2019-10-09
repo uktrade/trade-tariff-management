@@ -61,16 +61,17 @@ module WorkbasketInteractions
 
       def check_additional_codes!
         if filtered_additional_codes.size == 0
-          @errors["additional_code_additional_code_type_id_0"] = "\#1 - At least one code must be entered"
+          @errors["zero_additional_codes"] = "At least one new code must be entered"
         else
           filtered_additional_codes.each do |index, item|
-            @errors["additional_code_additional_code_type_id_#{index}"] = "\##{index.to_i + 1} - Additional code type can't be blank" if item['additional_code_type_id'].blank?
-            if item['additional_code_type_id'].blank?
-              @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can't be blank"
+            @errors["additional_code_type_id_#{index}"] = "Additional code type can't be blank for new additional code at row #{index.to_i + 1}" if item['additional_code_type_id'].blank?
+            if item['additional_code'].blank?
+              @errors["additional_code_#{index}"] = "Additional code can't be blank for new additional code at row #{index.to_i + 1}"
             else
-              @errors["additional_code_additional_code_#{index}"] = "\##{index.to_i + 1} - Additional code can contain only numbers and characters" if item['additional_code_type_id'].upcase =~ /[^A-Z0-9]/
+              @errors["additional_code_#{index}"] = "Additional code can contain only numbers and characters for new additional code at row #{index.to_i + 1}" if item['additional_code'].upcase =~ /[^A-Z0-9]/
             end
-            @errors["additional_code_description_#{index}"] = "\##{index.to_i + 1} - Description can't be blank" if item['description'].blank? && !attrs_parser.meursing?(item)
+            # FIXME: There is bug here when trying to validate description without defining additional_code_type_id.
+            @errors["additional_code_description_#{index}"] = "Description can't be blank for new additional code at row #{index.to_i + 1}" if item['description'].blank? && !attrs_parser.meursing?(item)
           end
         end
       end
