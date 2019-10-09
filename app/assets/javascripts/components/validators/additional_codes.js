@@ -99,23 +99,24 @@ AdditionalCodesValidator.prototype.validateLevelTwo = function() {
       return false;
     }
 
+    self.errors.additional_codes = "One or more of the specified codes is incomplete";
+
+    if (incompleteType) {
+      self.errors["additional_code_type_id_" + index] = "Additional code type can't be blank for new additional code at row " + (index+1);
+    }
+
     if (incompleteCode) {
-      self.errors["additional_code_" + index] = "invalid";
+      self.errors["additional_code_" + index] = "Additional code can't be blank for new additional code at row " + (index+1);
     }
 
     if (incompleteDescription) {
-      self.errors["description_" + index] = "invalid";
+      self.errors["additional_code_description_" + index] = "Description can't be blank for new additional code at row " + (index+1);
     }
 
-    if (incompleteType) {
-      self.errors["additional_code_type_id_" + index] = "invalid";
-    }
-
-    return incompleteCode || incompleteDescription || incompleteType;
+    return true;
   });
 
   if (invalidCodes) {
-    this.errors.additional_codes = "One or more of the specified codes is incomplete.";
     valid = false;
   }
 
@@ -184,6 +185,12 @@ AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors)
 
   var invalidCodes = false;
 
+  if (errors["zero_additional_codes"] ) {
+    this.errors.zero_additional_codes = errors["zero_additional_codes"];
+  } else {
+    this.errors.additional_codes = "One or more of the specified codes is incomplete";
+  }
+
   for (var k in errors) {
     if (!errors.hasOwnProperty(k)) {
       continue;
@@ -192,11 +199,9 @@ AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors)
     var message = errors[k];
 
     if (k.indexOf("additional_code_description_") > -1) {
-      k = k.replace("additional_code_description_", "description_");
       self.setLevel("three");
       invalidCodes = true;
-    } else if (k.indexOf("additional_code_additional_code_") > -1) {
-      k = k.replace("additional_code_additional_code_", "additional_code_");
+    } else if (k.indexOf("additional_code_") > -1) {
       self.setLevel("two");
       invalidCodes = true;
     } else if (isObject(message)) {
@@ -219,8 +224,8 @@ AdditionalCodesValidator.prototype.parseBackendErrors = function(action, errors)
     this.valid = false;
   }
 
-  if (invalidCodes) {
-    this.errors.additional_codes = "One or more of the specified codes is incomplete.";
+  if (!invalidCodes) {
+    delete this.errors.additional_codes;
   }
 
   return this.gatherResults();
