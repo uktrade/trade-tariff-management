@@ -4,7 +4,6 @@
       = link_to "Withdraw workbasket from workflow", "#",
       data: { target_url: withdraw_workbasket_from_workflow_edit_certificate_url(workbasket.id), target_modal: workbasket.id },
       class: "button js-main-menu-show-withdraw-confirmation-link"
-      br
 
 = render "workbaskets/main_menu_parts/schedule_export_to_cds_popup"
 = render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "delete_confirmation_popup", title: "You are going to delete workbasket"
