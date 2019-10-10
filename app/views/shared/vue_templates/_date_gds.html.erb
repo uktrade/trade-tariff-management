@@ -11,15 +11,15 @@
       <div class="form-date">
         <div class="form-group form-group-day">
           <label class="form-label" for="day">Day</label>
-          <input class="form-control" id="day" name="day" type="string" pattern="[0-9]*" minlength="1" maxlength="2" title="Two digits day" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required">
+          <input class="form-control" id="day" name="day" type="string" pattern="[0-9]*" minlength="1" maxlength="2" title="Two digits day" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required" v-bind:disabled="disabled">
         </div>
         <div class="form-group form-group-month">
           <label class="form-label" for="month">Month</label>
-          <input class="form-control" id="month" name="month" type="string" pattern="[0-9]*" minlength="1" maxlength="2" title="Two digits month" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required">
+          <input class="form-control" id="month" name="month" type="string" pattern="[0-9]*" minlength="1" maxlength="2" title="Two digits month" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required" v-bind:disabled="disabled">
         </div>
         <div class="form-group form-group-year">
           <label class="form-label" for="year">Year</label>
-          <input class="form-control" id="year" name="year" type="string" pattern="[0-9]*" minlength="4" maxlength="4" title="Four digits year" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required">
+          <input class="form-control" id="year" name="year" type="string" pattern="[0-9]*" minlength="4" maxlength="4" title="Four digits year" v-bind:class='{ "form-control-error": errorMessage }' v-bind:required="required" v-bind:disabled="disabled">
         </div>
       </div>
 
