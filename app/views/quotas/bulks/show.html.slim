@@ -27,3 +27,6 @@ script
   bulk-edit-records primary-key="measure_sid" initial-sort-key="measure_sid" :bulk-actions="bulkActions" thing="measures" :columns="columns" :actions="actions" :record-table-processing="recordTableProcessing" :preprocess-record="preprocessRecord"
 
 = render "shared/vue_templates/bulk_edit_records"
+
+.m-t-40
+  = link_to "Return to main menu", root_path, class: "link-back"
