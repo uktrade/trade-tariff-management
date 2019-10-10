@@ -19,3 +19,6 @@
     records-grid primary-key="additional_code_sid" :data="additional_codes" :columns="columns" :client-sorting="true" :disable-selection="true"
 
 = render "shared/vue_templates/records_grid"
+
+.m-t-40
+  = link_to "Return to main menu", root_path, class: "link-back"

@@ -27,6 +27,9 @@ header
 
     = render "shared/vue_templates/bulk_edit_records"
 
+.m-t-40
+  = link_to "Return to main menu", root_path, class: "link-back"
+
 script
   == "window.__workbasket_id = #{workbasket.id};"
   == "window.__pagination_metadata = #{pagination_metadata.to_json};"
