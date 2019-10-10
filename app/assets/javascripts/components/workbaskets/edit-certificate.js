@@ -26,34 +26,6 @@ $(document).ready(function() {
     mounted: function() {
       var self = this;
 
-      var description_validity_period_date_input = $(".js-description-validity-period-date");
-
-      var description_validity_period_date_picker = new Pikaday({
-        field: description_validity_period_date_input[0],
-        format: "DD/MM/YYYY",
-        blurFieldOnSelect: true,
-        onSelect: function(value) {
-          description_validity_period_date_input.trigger("change");
-        }
-      });
-
-      window.js_start_date_pikaday_instance = description_validity_period_date_picker;
-
-      var changes_take_effect_date_input = $(".js-changes_take_effect_date_input");
-
-      var changes_take_effect_date_picker = new Pikaday({
-        field: changes_take_effect_date_input[0],
-        format: "DD/MM/YYYY",
-        blurFieldOnSelect: true,
-        onSelect: function(value) {
-          changes_take_effect_date_input.trigger("change");
-          new_val = moment(changes_take_effect_date_input.val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-          description_validity_period_date_picker.setDate(new_val);
-        }
-      });
-
-      window.js_end_date_pikaday_instance = changes_take_effect_date_picker;
-
       this.initialCheckOfDescriptionBlock();
 
       $(document).on('click', ".js-create-measures-v1-submit-button, .js-workbasket-base-submit-button", function(e) {
@@ -64,9 +36,6 @@ $(document).ready(function() {
 
         self.savedSuccessfully = false;
         WorkbasketBaseSaveActions.toogleSaveSpinner($(this).attr('name'));
-
-        changes_take_effect__date = $(".js-changes_take_effect_date_input").val();
-        description_validity_period__date = $(".js-description-validity-period-date").val();
 
         self.errors = {};
         self.conformanceErrors = {};
@@ -83,10 +52,7 @@ $(document).ready(function() {
             WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock();
 
             if (response.redirect_url !== undefined) {
-              setTimeout(function tick() {
-                window.location = response.redirect_url;
-              }, 1000);
-
+              window.location = response.redirect_url;
             } else {
               WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner();
               self.savedSuccessfully = true;
@@ -112,24 +78,6 @@ $(document).ready(function() {
             }
           }
         });
-
-        setTimeout(function() {
-          var start_date_formatted = '';
-          if (changes_take_effect__date.length > 0) {
-            $(".js-changes_take_effect_date_input").val(changes_take_effect__date);
-
-            start_date_formatted = moment(changes_take_effect__date, 'DD/MM/YYYY').format('YYYY-MM-DD');
-            changes_take_effect_date_picker.setDate(start_date_formatted);
-          }
-
-          var end_date_formatted = ''
-          if (description_validity_period__date.length > 0) {
-            $(".js-description-validity-period-date").val(description_validity_period__date);
-
-            end_date_formatted = moment(description_validity_period__date, 'DD/MM/YYYY').format('YYYY-MM-DD');
-            description_validity_period_date_picker.setDate(end_date_formatted);
-          }
-        }, 1000);
       });
     },
     computed: {
@@ -189,7 +137,7 @@ $(document).ready(function() {
       },
       certificatePayLoad: function() {
         if ($(".js-certificate-description-textarea").val() !== window.__original_certificate_description) {
-          description_validity_start_date = $(".js-description-validity-period-date").val();
+          description_validity_start_date = $("input[name='workbasket_forms_edit_certificate_form[description_validity_start_date]']").val();
         } else {
           description_validity_start_date = '';
         }
