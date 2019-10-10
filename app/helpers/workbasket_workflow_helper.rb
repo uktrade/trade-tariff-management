@@ -16,6 +16,7 @@ module WorkbasketWorkflowHelper
 
   def workbasket_view_show_actions_allowed?
     workbasket.awaiting_cross_check? ||
+      workbasket.awaiting_approval? ||
       workbasket.ready_for_export? ||
       workbasket.awaiting_cds_upload_create_new?
   end
