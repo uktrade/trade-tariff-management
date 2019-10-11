@@ -38,7 +38,7 @@ module Workbaskets
 
     def current_memberships
       if original_geographical_area.group?
-        original_geographical_area.currently_contains
+        original_geographical_area.contained_geographical_areas
       else
         original_geographical_area.currently_member_of
       end
@@ -50,8 +50,15 @@ module Workbaskets
         hash[:geographical_area] = {
           'description' => area.description
         }
-        hash[:validity_start_date] = area.validity_start_date.to_date.to_formatted_s(:rfc822) if area.validity_start_date
-        hash[:validity_end_date] = area.validity_end_date.to_date.to_formatted_s(:rfc822) if area.validity_end_date
+
+        if original_geographical_area.group?
+          membership = GeographicalAreaMembership.find(geographical_area_sid: area.geographical_area_sid, geographical_area_group_sid: original_geographical_area.geographical_area_sid)
+        else
+          membership = GeographicalAreaMembership.find(geographical_area_sid: original_geographical_area.geographical_area_sid, geographical_area_group_sid: area.geographical_area_sid)
+        end
+
+        hash[:start_date] = membership.validity_start_date ? membership.validity_start_date.to_date.to_formatted_s(:rfc822) : ''
+        hash[:end_date] = membership.validity_end_date.to_date.to_formatted_s(:rfc822) if membership.validity_end_date
         hash
       end
     end

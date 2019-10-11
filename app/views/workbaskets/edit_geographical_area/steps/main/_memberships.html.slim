@@ -52,9 +52,9 @@ fieldset
               a href="#" role="button" v-on:click.prevent="editMembership(membership)"
                 | {{membership.geographical_area.description}}
             td
-              | {{membership.validity_start_date}}
+              | {{membership.start_date}}
             td
-              | {{membership.validity_end_date}}
+              | {{membership.end_date}}
             td
               a href="#" id="remove-group" role="button" v-on:click.prevent="removeMembershipTrigger(membership)"
                 | Remove
