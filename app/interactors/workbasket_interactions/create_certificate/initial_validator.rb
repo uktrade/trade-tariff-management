@@ -79,6 +79,10 @@ module WorkbasketInteractions
           @errors[:description] = errors_translator(:description_blank)
           @errors_summary = errors_translator(:summary_minimal_required_fields)
         end
+        if description.length > 500
+          @errors[:description] = errors_translator(:description_max_limit)
+        end
+
       end
 
       def check_validity_period!
