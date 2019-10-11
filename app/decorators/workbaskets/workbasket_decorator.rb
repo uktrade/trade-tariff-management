@@ -34,6 +34,8 @@ module Workbaskets
         "Edit Goods Classification"
       when "edit_regulation"
         "Edit Regulation"
+      when "create_quota_association"
+        "Create Quota Association"
       end
     end
 

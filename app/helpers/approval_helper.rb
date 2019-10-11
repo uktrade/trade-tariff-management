@@ -28,6 +28,8 @@ module ApprovalHelper
       "Approve and edit regulation"
     elsif workbasket.type == 'edit_certificate'
       "Approve and edit certificate"
+    elsif workbasket.type == 'create_quota_association'
+      "Approve and create quota association"
     end
   end
 
@@ -42,6 +44,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/geographical_areas"
     elsif workbasket.type == 'create_additional_code'
       "workbaskets/shared/steps/review_and_submit/approval/additional_code"
+    elsif workbasket.type == 'create_quota_association'
+      "workbaskets/shared/steps/review_and_submit/approval/create_quota_association"
     elsif workbasket.type == 'edit_nomenclature'
       "workbaskets/shared/steps/review_and_submit/approval/edit_nomenclatures"
     elsif workbasket.type == 'bulk_edit_of_measures'

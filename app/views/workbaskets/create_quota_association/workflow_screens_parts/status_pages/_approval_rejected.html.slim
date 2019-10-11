@@ -1,0 +1,10 @@
+.panel.panel--confirmation
+  h1.heading-xlarge
+    | Quota Association approval rejected
+
+  h3.heading-medium
+    | You indicated that the new Quota Association
+    =<> "'#{workbasket.settings.decorate.description}'"
+    | had problems and has not been approved. The submitter has been notified.
+
+= render "workbaskets/create_quota_association/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

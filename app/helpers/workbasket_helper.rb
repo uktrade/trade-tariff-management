@@ -307,6 +307,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :create_quota_association
+      edit_create_quota_association_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
@@ -344,6 +350,8 @@ module WorkbasketHelper
       edit_regulation_url(workbasket.id)
     when :bulk_edit_of_quotas_url
       edit_quotas_url(workbasket.id)
+    when :create_quota_association
+      create_quota_association_url(workbasket.id)
     end
   end
 
@@ -378,9 +386,9 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_edit_certificate_url(workbasket.id)
     elsif workbasket.object.type == "bulk_edit_of_quotas"
       withdraw_workbasket_from_workflow_bulk_edit_of_quotas_url(workbasket.id)
+    elsif workbasket.object.type == "create_quota_association"
+      withdraw_workbasket_from_workflow_create_quota_association_url(workbasket.id)
     end
-
-
   end
 
   def show_withdraw_edit?(workbasket)

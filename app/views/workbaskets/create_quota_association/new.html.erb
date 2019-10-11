@@ -42,8 +42,9 @@
         <p>Alternatively, please click here to view <%= link_to "existing quota associations", quota_associations_url %>.</p>
       </div>
     </div>
+    <%= simple_form_for @create_quota_association_form, url: create_quota_association_index_path, html: { novalidate: false}  do |f| %>
 
-    <%= form_tag(search_create_quota_association_index_url, {:@submit => 'validateStepOneData'}) do %>
+    <%#= form_tag(create_quota_association_index_url, {:@submit => 'validateStepOneData'}) do %>
       <div class="grid-row">
         <div class="column-full">
           <div class="form-group" v-bind:class="{ 'form-group-error': errors.workbasket_name }">
@@ -53,12 +54,16 @@
                 This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
               </span>
 
-              <span v-if="errors.workbasket_name" class="error-message">{{errors.workbasket_name}}</span>
+              <% if @create_quota_association_form.settings_errors[:workbasket_title] %>
+                <span class="error-message"><%= @create_quota_association_form.settings_errors[:workbasket_title] %></span>
+              <% end %>
 
             </label>
             <div class="grid-row">
               <div class="column-one-half">
-                <input id="workbasket_name" v-model="quotaAssociation.workbasket_name" type="text" name="workbasket_name" class="form-control" required>
+                <%= f.input :workbasket_title, label: false, required: true %>
+
+<!--                <input id="workbasket_name" v-model="quotaAssociation.workbasket_name" type="text" name="workbasket_name" class="form-control" required>-->
               </div>
             </div>
           </div>
@@ -74,12 +79,16 @@
                     Please ensure that you select an existing quota order number ID with 6 numeric digits beginning "09".
                   </span>
 
-                  <span v-if="errors.parent_quota" class="error-message">{{errors.parent_quota}}</span>
+                  <% if @create_quota_association_form.settings_errors[:parent_order_id] %>
+                    <span class="error-message"><%= @create_quota_association_form.settings_errors[:parent_order_id] %></span>
+                  <% end %>
 
                 </label>
                 <div class="grid-row">
                   <div class="column-one-quarter">
-                    <input id="parent_quota" v-model="quotaAssociation.parent_quota" class="form-control" type="text" pattern="09[0-9]{4}" name="parent_quota" minlength="6" maxlength="6" size="8" required>
+                    <%= f.input :parent_order_id, label: false, required: true, input_html: { minlength: 6,  maxlength: 6 } %>
+
+<!--                    <input id="parent_quota" v-model="quotaAssociation.parent_quota" class="form-control" type="text" pattern="09[0-9]{4}" name="parent_quota" minlength="6" maxlength="6" size="8" required>-->
                   </div>
                 </div>
               </div>
@@ -95,23 +104,37 @@
                     Please ensure that you select an existing quota order number ID with 6 numeric digits beginning "09".
                   </span>
 
-                  <span v-if="errors.child_quota" class="error-message">{{errors.child_quota}}</span>
+                  <% if @create_quota_association_form.settings_errors[:child_order_id] %>
+                    <span class="error-message"><%= @create_quota_association_form.settings_errors[:child_order_id] %></span>
+                  <% end %>
 
                 </label>
                 <div class="grid-row">
                   <div class="column-one-quarter">
-                    <input id="child_quota" v-model="quotaAssociation.child_quota" class="form-control" type="text" pattern="09[0-9]{4}" name="child_quota" minlength="6" maxlength="6" size="8" required>
+                    <%= f.input :child_order_id, label: false, required: true, input_html: { minlength: 6,  maxlength: 6 } %>
+
+<!--                    <input id="child_quota" v-model="quotaAssociation.child_quota" class="form-control" type="text" pattern="09[0-9]{4}" name="child_quota" minlength="6" maxlength="6" size="8" required>-->
                   </div>
                 </div>
               </div>
           </div>
         </div>
 
-        <!-- <a href="#" v-on:click.prevent.stop="validateQuota" class="button m-t-30">Continue</a> -->
-        <button class="button m-t-30 js-workbasket-base-continue-button" type="submit">Continue</button>
-        <div class="js-workbasket-base-continue-spinner spinner_block hidden">
-            <%= render "measures/bulks/loading_spinner", message: "Checking data..." %>
+      <div class="actions">
+        <div class="form-actions">
+          <button type="submit"
+                  class='button'
+                  data-disable-with='Processing'>
+            Continue
+          </button>
+
+          <%= link_to "Cancel", quota_associations_path, class: "secondary-button" %>
         </div>
-    <% end %>
+
+      </div>
+    <%# end %>
   </div>
+
+  <% end %>
+
 <% end %>

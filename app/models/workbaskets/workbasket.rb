@@ -17,6 +17,7 @@ module Workbaskets
       edit_geographical_area
       edit_nomenclature
       edit_regulation
+      create_quota_association
     ].freeze
 
     STATUS_LIST = [
@@ -162,6 +163,9 @@ module Workbaskets
 
     one_to_one :edit_regulation_settings, key: :workbasket_id,
                class_name: "Workbaskets::EditRegulationSettings"
+
+    one_to_one :create_quota_association_settings, key: :workbasket_id,
+               class_name: "Workbaskets::CreateQuotaAssociationSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -333,7 +337,7 @@ module Workbaskets
             move_status_to!(current_admin, "editing")
 
             clean_up_draft_measures! if type == "bulk_edit_of_measures"
-            clean_up_drafts! if (type == "edit_regulation" || type == 'edit_footnote')
+            clean_up_drafts! if (type == "edit_regulation" || type == 'edit_footnote' || type == 'create_quota_association')
 
             settings.collection.map do |item|
               item.move_status_to!(:editing)
@@ -546,6 +550,8 @@ module Workbaskets
         edit_nomenclature_settings
       when :edit_regulation
         edit_regulation_settings
+      when :create_quota_association
+        create_quota_association_settings
       end
     end
 
@@ -650,6 +656,7 @@ module Workbaskets
           edit_geographical_area
           edit_nomenclature
           edit_regulation
+          create_quota_association
         ).map do |type_name|
           by_type(type_name).map(&:clean_up_workbasket!)
         end
@@ -690,6 +697,8 @@ module Workbaskets
                        ::Workbaskets::EditNomenclatureSettings
                      when :edit_regulation
                        ::Workbaskets::EditRegulationSettings
+                     when :create_quota_association
+                       ::Workbaskets::CreateQuotaAssociationSettings
       end
 
       settings = target_class.new(
