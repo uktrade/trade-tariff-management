@@ -12,16 +12,6 @@ Vue.component("edit-geographical-area-membership-popup", {
     };
   },
   mounted: function() {
-    var start = moment(this.membership.validity_start_date, ["DD MMM YYYY", "DD/MM/YYYY"], true);
-    var end = moment(this.membership.validity_end_date, ["DD MMM YYYY", "DD/MM/YYYY"], true);
-
-    if (start.isValid()) {
-      this.join_date = start.format("DD/MM/YYYY");
-    }
-
-    if (end.isValid()) {
-      this.leave_date = end.format("DD/MM/YYYY");
-    }
   },
   computed: {
     disableJoinDate: function() {
@@ -64,13 +54,6 @@ Vue.component("edit-geographical-area-membership-popup", {
 
       this.validate(function() {
         var membership = self.membership;
-
-        var start = moment(self.join_date, "DD/MM/YYYY", true);
-        var end = moment(self.leave_date, "DD/MM/YYYY", true);
-
-        self.membership.delete = false;
-        self.membership.validity_start_date = start.isValid() ? start.format("DD MMMM YYYY") : null;
-          self.membership.validity_end_date = end.isValid() ? end.format("DD MMMM YYYY") : null;
 
         self.onClose();
       }, function() {
