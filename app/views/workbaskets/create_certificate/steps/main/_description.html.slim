@@ -2,6 +2,9 @@ fieldset
   h3.heading-medium.m-t-5
     | What is the certificate description?
 
+    span.form-hint
+      | Maximum 500 characters
+
   form-group.without_bottom_margin :errors="errors" error-key="description"
     template slot-scope="slotProps"
       label.form-label id="description"
@@ -10,4 +13,4 @@ fieldset
 
       .bootstrap-row
         .col-lg-6.col-md-8.col-sm-12.col-xs-12
-          = f.input :description, as: :text, label: false, input_html: { "v-model" => "certificate.description", rows: 5 }
+          = f.input :description, as: :text, label: false, input_html: { "v-model" => "certificate.description", rows: 5, maxlength: 500 }

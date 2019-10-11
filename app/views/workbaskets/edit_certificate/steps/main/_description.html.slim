@@ -4,6 +4,9 @@ fieldset
       h3.heading-medium.sub_heading_block
         | What is the certificate description?
 
+      span.form-hint
+        | Maximum 500 characters
+
       label.form-label
         span.error-message v-if="slotProps.hasError" v-cloak=""
           | {{slotProps.error}}
@@ -11,4 +14,4 @@ fieldset
 
       .bootstrap-row
         .col-lg-6.col-md-8.col-sm-12.col-xs-12
-          = f.input :description, as: :text, label: false, input_html: { "v-model" => "certificate.description", rows: 5, class: "js-certificate-description-textarea" }
+          = f.input :description, as: :text, label: false, input_html: { "v-model" => "certificate.description", rows: 5, class: "js-certificate-description-textarea", maxlength: 500 }
