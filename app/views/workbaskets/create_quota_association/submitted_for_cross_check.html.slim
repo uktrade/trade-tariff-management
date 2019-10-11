@@ -1,0 +1,23 @@
+.panel.panel--confirmation
+  h3.heading-medium
+    | New quota association
+    =<> "'#{workbasket_settings.parent_quota_order_id}' and"
+    =<> "'#{workbasket_settings.child_quota_order_id}'"
+    | has been submitted for cross-check.
+
+h3.heading-medium.m-t-100
+  | Next steps
+
+ul class="list"
+  li
+    = link_to "Withdraw submission / edit goods classification", "#",
+            data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
+            class: "js-main-menu-show-withdraw-confirmation-link"
+  li
+    = link_to "Create another quota association", create_quota_association_url
+  li
+    = link_to "View this quota association", create_quota_association_path(workbasket.id)
+  li
+    = link_to "Return to main menu", root_url
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket

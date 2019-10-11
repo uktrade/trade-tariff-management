@@ -291,6 +291,15 @@ Rails.application.routes.draw do
         get :withdraw_workbasket_from_workflow
       end
     end
+
+    resources :create_quota_association, only: [:new, :create, :edit, :update, :show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
   end
 
   scope module: :geo_areas do
@@ -315,10 +324,5 @@ Rails.application.routes.draw do
 
   scope module: :quota_associations do
     resources :quota_associations, only: [:index]
-    resources :create_quota_association, only: [:index, :new] do
-      collection do
-        post 'search'
-      end
-    end
   end
 end

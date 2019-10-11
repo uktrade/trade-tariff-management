@@ -185,11 +185,13 @@ describe 'workbasket table', js: true do
 
           visit root_path
 
-          expect(page).to have_content(other_users_awaiting_approval_workbasket.title)
-          expect(page).to have_content('Create Quota')
-          expect(page).to have_content('Awaiting approval')
-          expect(page).to have_content('View')
-          expect(page).to_not have_content('Withdraw/edit')
+          within('div.workbaskets') do
+            expect(page).to have_content(other_users_awaiting_approval_workbasket.title)
+            expect(page).to have_content('Create Quota')
+            expect(page).to have_content('Awaiting approval')
+            expect(page).to have_content('View')
+            expect(page).to_not have_content('Withdraw/edit')
+          end
         end
       end
 
@@ -201,11 +203,13 @@ describe 'workbasket table', js: true do
 
           visit root_path
 
-          expect(page).to_not have_content(other_users_awaiting_approval_workbasket.title)
-          expect(page).to_not have_content('Create Quota')
-          expect(page).to_not have_content('Awaiting approval')
-          expect(page).to_not have_content('View')
-          expect(page).to_not have_content('Withdraw/edit')
+          within('div.workbaskets') do
+            expect(page).to_not have_content(other_users_awaiting_approval_workbasket.title)
+            expect(page).to_not have_content('Create Quota')
+            expect(page).to_not have_content('Awaiting approval')
+            expect(page).to_not have_content('View')
+            expect(page).to_not have_content('Withdraw/edit')
+          end
         end
       end
     end

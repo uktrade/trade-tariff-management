@@ -1,7 +1,7 @@
 <% content_for :content do %>
-<!-- <script>
-  window.__quota_association_json = ### Render Rails workbasket settings here ###;
-</script> -->
+   <script>
+    <%= raw "window.__quota_association_json = #{ workbasket_settings.to_json };"  %>
+  </script>
   <div id="vue-create-quota-association-form">
     <div class="breadcrumbs">
       <nav>
@@ -19,17 +19,22 @@
       </nav>
     </div>
 
-    <div v-if="hasErrors" class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
-      <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
-        Error
-      </h2>
-      <p>
-        Please see individual fields for details.
-      </p>
-      <ul class="error-summary-list">
-        <li v-for="(value, name) in errors"><a v-bind:href="'#' + name">{{value}}</a></li>
-      </ul>
-    </div>
+    <% if @edit_quota_association_form.settings_errors.any? %>
+      <div class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+          Error
+        </h2>
+        <p>
+          Please see individual fields for details.
+        </p>
+        <ul class="error-summary-list">
+<!--          <li v-for="(value, name) in errors"><a v-bind:href="'#' + name">{{value}}</a></li>-->
+          <% @edit_quota_association_form.settings_errors.each do | error | %>
+            <span class="error-message"><%= error[1] %></span>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
     <h1 class="heading-large">
       Create quota association
@@ -47,7 +52,8 @@
       </div>
     </div>
 
-    <form @submit="validateStepTwoData">
+<!--    <form @submit="validateStepTwoData">-->
+    <%= simple_form_for @edit_quota_association_form, url: create_quota_association_path, method: :patch, html: {id: "vue-create-quota-association-form" , novalidate: false}  do |f| %>
       <div class="grid-row">
         <div class="column-full">
           <div class="form-group" v-bind:class="{ 'form-group-error': errors.parent_definition_period }">
@@ -56,15 +62,20 @@
               <span class="form-hint">
                   To use this functionality, the quota definition period must already exist in the system
               </span>
-              <span v-if="errors.parent_definition_period" class="error-message">{{errors.parent_definition_period}}</span>
+              <% if @edit_quota_association_form.settings_errors[:parent_definition_period] %>
+                <span class="error-message"><%= @edit_quota_association_form.settings_errors[:parent_definition_period] %></span>
+              <% end %>
+
             </label>
             <div class="grid-row">
               <div class="column-one-third">
-                <select id="parent_definition_period" v-model="quotaAssociation.parent_definition_period" class="form-control" name="parent_definition_period" required>
+                <%#= f.input :parent_definition_period, collection: @edit_quota_association_form.parent_quota.quota_definitions, label_method: :select_options, selected: 21 %>
+                <select id="parent_definition_period" v-model="quotaAssociation.parent_definition_period" class="form-control" name="parent_definition_period" >
                   <option value="" disabled selected>Select parent quota definition period</option>
-                  <option>GOV.UK elements option 1</option>
-                  <option>GOV.UK elements option 2</option>
-                  <option>GOV.UK elements option 3</option>
+                  <% @edit_quota_association_form.parent_quota.quota_definitions.each do |quota_definition| %>
+                    quota_definition = quota_definition.decorate
+                    <option value="<%= quota_definition.quota_definition_sid %>"><%= quota_definition.validity_start_date.to_s(:uk_Mmm) %> to <%= quota_definition.validity_end_date.to_s(:uk_Mmm) %></option>
+                  <% end %>
                 </select>
               </div>
             </div>
@@ -80,15 +91,18 @@
               <span class="form-hint">
                   To use this functionality, the quota definition period must already exist in the system
               </span>
-              <span v-if="errors.child_definition_period" class="error-message">{{errors.child_definition_period}}</span>
+              <% if @edit_quota_association_form.settings_errors[:child_definition_period] %>
+                <span class="error-message"><%= @edit_quota_association_form.settings_errors[:child_definition_period] %></span>
+              <% end %>
+
             </label>
             <div class="grid-row">
               <div class="column-one-third">
-                <select id="child_definition_period" v-model="quotaAssociation.child_definition_period" class="form-control" name="child_definition_period" required>
+                <select id="child_definition_period" v-model="quotaAssociation.child_definition_period" class="form-control" name="child_definition_period" >
                   <option value="" disabled selected>Select child quota definition period</option>
-                  <option>GOV.UK elements option 1</option>
-                  <option>GOV.UK elements option 2</option>
-                  <option>GOV.UK elements option 3</option>
+                  <% @edit_quota_association_form.child_quota.quota_definitions.each do |quota_definition| %>
+                    <option value="<%= quota_definition.quota_definition_sid %>"><%= quota_definition.validity_start_date.to_s(:uk_Mmm) %> to <%= quota_definition.validity_end_date.to_s(:uk_Mmm) %></option>
+                  <% end %>
                 </select>
               </div>
             </div>
@@ -144,15 +158,16 @@
 
       <div class="m-t-30">
         <div class="submit_group_for_cross_check_block">
-          <button class="button js-workbasket-base-continue-button" type="submit" aria-disabled="true">Send quota association for approval</button>
+          <button class="button js-workbasket-base-continue-button" type="submit" aria-disabled="true">Submit for cross-check</button>
           <div class="js-workbasket-base-continue-spinner spinner_block hidden">
             <%= render "measures/bulks/loading_spinner", message: "Saving..." %>
           </div>
         </div>
         <div class="save_progress_block">
-          <%= link_to "Previous step", create_quota_association_index_url, class: "secondary-button" %>
+          <%= link_to "Cancel", quota_associations_url, class: "secondary-button" %>
         </div>
       </div>
-    </form>
+<!--    </form>-->
+    <% end %>
   </div>
 <% end %>

@@ -37,6 +37,10 @@ class QuotaDefinition < Sequel::Model
   one_to_one :measurement_unit_qualifier, key: :measurement_unit_qualifier_code,
                                           primary_key: :measurement_unit_qualifier_code
 
+  def decorate
+    QuotaDefinitionDecorator.decorate(self)
+  end
+
   def critical_status
     QuotaEvent.last_for(quota_definition_sid).status.presence || (critical_state? ? 'Critical' : 'Open')
   end

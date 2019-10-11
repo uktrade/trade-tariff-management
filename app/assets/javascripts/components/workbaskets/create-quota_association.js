@@ -110,10 +110,10 @@ $(document).ready(function() {
       parseData: function(payload) {
         return {
           workbasket_name: payload.workbasket_name,
-          parent_quota: payload.parent_quota,
-          child_quota: payload.child_quota,
-          parent_definition_period: payload.parent_definition_period,
-          child_definition_period: payload.child_definition_period,
+          parent_quota: payload.parent_quota_order_id,
+          child_quota: payload.child_quota_order_id,
+          parent_definition_period: payload.parent_quota_definition_period,
+          child_definition_period: payload.child_quota_definition_period,
           relation_type: payload.relation_type,
           coefficient: payload.coefficient,
         };

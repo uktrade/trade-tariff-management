@@ -10,6 +10,8 @@ module CrossCheckHelper
       'Cross-check and create geographical area'
     elsif workbasket.type == 'create_additional_code'
       "Cross-check and create additional codes"
+    elsif workbasket.type == 'create_quota_association'
+      "Cross-check and create quota association"
     elsif workbasket.type == 'create_certificate'
       "Cross-check and create certificate"
     elsif workbasket.type == 'edit_nomenclature'
@@ -46,6 +48,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/geographical_areas"
     elsif workbasket.type == 'create_additional_code'
       "workbaskets/shared/steps/review_and_submit/additional_code"
+    elsif workbasket.type == 'create_quota_association'
+      "workbaskets/shared/steps/review_and_submit/quota_association"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "workbaskets/shared/steps/review_and_submit/bulk_edit_additional_codes"
     elsif workbasket.type == 'edit_nomenclature'
