@@ -1,5 +1,8 @@
 h3.heading-medium Summary of Certificate configuration
+
 - certificate = certificate ? certificate : Certificate.find(certificate_code: workbasket.settings.original_certificate_code, certificate_type_code: workbasket.settings.original_certificate_type_code)
+- descriptions_new_to_old = CertificateDescription.where(certificate_type_code: certificate.certificate_type_code, certificate_code: certificate.certificate_code).order(:certificate_description_period_sid).reverse.all
+
 table.create-measures-details-table
   tbody
     tr
@@ -22,7 +25,20 @@ table.create-measures-details-table
 
     tr
       td.heading_column
-        | Description
+        | Description (old)
       td
-        = CertificateDescription.find(certificate_type_code: certificate.certificate_type_code, certificate_code: certificate.certificate_code).description
+        = descriptions_new_to_old.second ? descriptions_new_to_old.second.description : ''
+
+    tr
+      td.heading_column
+        | Description (new)
+      td
+        = descriptions_new_to_old.first.description
+    tr
+
+    tr
+      td.heading_column
+        | Description Validity Start Date
+      td
+        = format_date(descriptions_new_to_old.first.certificate_description_period.validity_start_date)
     tr
