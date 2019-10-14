@@ -26,6 +26,8 @@ module ApprovalHelper
       "Approve and bulk edit measures"
     elsif workbasket.type == 'edit_regulation'
       "Approve and edit regulation"
+    elsif workbasket.type == 'edit_certificate'
+      "Approve and edit certificate"
     end
   end
 
