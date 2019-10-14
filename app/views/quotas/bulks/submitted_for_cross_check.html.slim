@@ -9,8 +9,17 @@ h3.heading-medium.m-t-100
   | Next steps
 
 ul class="list"
+  - if iam_workbasket_author? && workbasket.can_withdraw?
+    li
+      = link_to "Withdraw workbasket from workflow", "#",
+        data: { target_url: withdraw_workbasket_from_workflow_bulk_edit_of_quotas_url(workbasket.id), target_modal: workbasket.id },
+        class: "js-main-menu-show-withdraw-confirmation-link"
   li
-    a.disabled href="#"
-      | Withdraw submission/edit measures
+    = link_to "Find and edit a quota", quotas_url
+    / FIXME: TODO: The below bulk edit link needs to be update with the correct one
+  li
+    = link_to "View these quota measures", bulk_edit_of_measure_url(workbasket.id)
   li
     = link_to "Return to main menu", root_url
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket

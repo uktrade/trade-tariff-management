@@ -342,6 +342,8 @@ module WorkbasketHelper
       edit_nomenclature_url(workbasket.id)
     when :edit_regulation
       edit_regulation_url(workbasket.id)
+    when :bulk_edit_of_quotas_url
+      edit_quotas_url(workbasket.id)
     end
   end
 
@@ -374,7 +376,11 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_edit_regulation_url(workbasket.id)
     elsif workbasket.object.type == "edit_certificate"
       withdraw_workbasket_from_workflow_edit_certificate_url(workbasket.id)
+    elsif workbasket.object.type == "bulk_edit_of_quotas"
+      withdraw_workbasket_from_workflow_bulk_edit_of_quotas_url(workbasket.id)
     end
+
+
   end
 
   def show_withdraw_edit?(workbasket)
