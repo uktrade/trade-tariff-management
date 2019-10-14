@@ -5,3 +5,9 @@
     path d=("M16 21.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-1.5v-8c0-0.281-0.219-0.5-0.5-0.5h-5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h1.5v5h-1.5c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h7c0.281 0 0.5-0.219 0.5-0.5zM14 7.5v-2.5c0-0.281-0.219-0.5-0.5-0.5h-3c-0.281 0-0.5 0.219-0.5 0.5v2.5c0 0.281 0.219 0.5 0.5 0.5h3c0.281 0 0.5-0.219 0.5-0.5zM24 14c0 6.625-5.375 12-12 12s-12-5.375-12-12 5.375-12 12-12 12 5.375 12 12z")
 
   = render (defined?(partial_name) ? partial_name : "workbaskets/#{workbasket.type}/workflow_screens_parts/notifications/#{screen_type}/#{workbasket.status}")
+
+- if iam_workbasket_author? && workbasket.can_withdraw?
+  = link_to "Withdraw submission / edit regulation", "#",
+          data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
+          class: "button js-main-menu-show-withdraw-confirmation-link"
+  = render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
