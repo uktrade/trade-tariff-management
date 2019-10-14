@@ -139,7 +139,7 @@ module WorkbasketInteractions
         )
 
         certificate_description_period.certificate_code = original_certificate.certificate_code
-        certificate_description_period.ceritificate_type_code = original_certificate.certificate_type_code
+        certificate_description_period.certificate_type_code = original_certificate.certificate_type_code
 
         assign_system_ops!(certificate_description_period)
         set_primary_key!(certificate_description_period)
@@ -209,21 +209,6 @@ module WorkbasketInteractions
         assign_system_ops!(certificate)
 
         certificate.save if persist_mode?
-      end
-
-      def add_certificate_description_period!
-        @certificate_description_period = CertificateDescriptionPeriod.new(
-          validity_start_date: validity_start_date,
-          validity_end_date: (description_validity_start_date || validity_end_date)
-        )
-
-        certificate_description_period.certificate_code = original_certificate.certificate_code
-        certificate_description_period.certificate_type_code = original_certificate.certificate_type_code
-
-        assign_system_ops!(certificate_description_period)
-        set_primary_key!(certificate_description_period)
-
-        certificate_description_period.save if persist_mode?
       end
 
       def add_certificate_description!
