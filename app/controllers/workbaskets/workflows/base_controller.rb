@@ -66,7 +66,7 @@ module Workbaskets
 
         record.save_with_envelope_id
 
-        XmlGeneration::ExportWorker.new.perform(record.id)
+        XmlGeneration::ExportWorker.perform_async(record.id)
       end
     end
   end
