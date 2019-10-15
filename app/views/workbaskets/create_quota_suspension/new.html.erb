@@ -16,18 +16,6 @@
       </nav>
     </div>
 
-    <div v-if="hasErrors" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
-        Error
-      </h2>
-      <p>
-        Please see individual fields for details.
-      </p>
-      <ul class="error-summary-list">
-        <li v-for="(value, name) in errors"><a v-bind:href="'#' + name">{{value}}</a></li>
-      </ul>
-    </div>
-
     <h1 class="heading-large">
       Create quota suspension
     </h1>
@@ -40,16 +28,11 @@
       </div>
     </div>
     <%= simple_form_for @create_quota_suspension_form, url: create_quota_suspension_index_path, html: { novalidate: false}  do |f| %>
-
-    <%#= form_tag(create_quota_association_index_url, {:@submit => 'validateStepOneData'}) do %>
       <div class="grid-row">
         <div class="column-full">
-          <div class="form-group" v-bind:class="{ 'form-group-error': errors.workbasket_name }">
+          <div class="form-group">
             <label for="workbasket_name" class="heading-medium">
               Please enter the name of the workbasket
-              <span class="form-hint">
-                Please enter the quota order number ID
-              </span>
 
               <% if @create_quota_suspension_form.settings_errors[:workbasket_title] %>
                 <span class="error-message"><%= @create_quota_suspension_form.settings_errors[:workbasket_title] %></span>
@@ -67,7 +50,7 @@
 
       <div class="grid-row">
           <div class="column-full">
-              <div class="form-group" v-bind:class="{ 'form-group-error': errors.parent_quota }">
+              <div class="form-group">
                 <label class="heading-medium m-t-10" for="parent_quota">
                   Please enter the quota order number ID
                   <span class="form-hint">
@@ -95,12 +78,9 @@
                   data-disable-with='Processing'>
             Continue
           </button>
-
           <%= link_to "Cancel", quota_associations_path, class: "secondary-button" %>
         </div>
-
       </div>
-    <%# end %>
   </div>
 
   <% end %>
