@@ -10,11 +10,36 @@ module WorkbasketForms
 
     def initialize(settings = {}, current_user = nil)
       @workbasket_title =  settings[:workbasket_title]
+      @quota_order_number_id = settings[:quota_order_number_id]
       @current_user = current_user
       @settings_errors = {}
     end
 
     def save
+      if @workbasket_title.empty?
+        @settings_errors[:workbasket_title] = "Workbasket title must be entered"
+      end
+
+      if QuotaOrderNumber.find(quota_order_number_id: quota_order_number_id).nil?
+        @settings_errors[:quota_order_number_id] = "Quota order number ID must exist"
+      end
+
+      if quota_order_number_id.first(3) == '094'
+        @settings_errors[:quota_order_number_id] = "Quota order number cannot start 094"
+      end
+
+      if @settings_errors.empty?
+        @workbasket = Workbaskets::Workbasket.new(
+          title: @workbasket_title,
+          status: :new_in_progress,
+          type: :create_quota_suspension,
+          user: @current_user
+        ).save
+
+        @workbasket.settings.update(quota_order_number_id: quota_order_number_id)
+      end
+
+      @settings_errors.empty?
     end
   end
 end
