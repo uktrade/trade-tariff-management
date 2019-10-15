@@ -22,12 +22,18 @@ module WorkbasketForms
         @settings_errors[:workbasket_title] = "Workbasket title must be entered"
       end
 
-      if QuotaOrderNumber.find(quota_order_number_id: @parent_order_id).nil?
+      parent_order = QuotaOrderNumber.find(quota_order_number_id: @parent_order_id)
+      if parent_order.nil?
         @settings_errors[:parent_order_id] = "Parent quota order ID must exist"
+      elsif parent_order.validity_end_date.present?
+        @settings_errors[:parent_order_id] = "Parent quota order must not have an end date"
       end
 
-      if QuotaOrderNumber.find(quota_order_number_id: @child_order_id).nil?
+      child_order = QuotaOrderNumber.find(quota_order_number_id: @child_order_id)
+      if child_order.nil?
         @settings_errors[:child_order_id] = "Child quota order ID must exist"
+      elsif child_order.validity_end_date.present?
+        @settings_errors[:child_order_id] = "Child quota order must not have an end date"
       end
 
       if @settings_errors.empty?
