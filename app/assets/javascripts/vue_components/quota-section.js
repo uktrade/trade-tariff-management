@@ -249,7 +249,7 @@ Vue.component("quota-section", {
       }
     },
     "section.type": function(newVal, oldVal) {
-      if (newVal && newVal != oldVal) {
+      if (newVal && newVal != oldVal && !this.section.replacing) {
         this.resetOpeningBalances();
         this.section.parent_quota.associate = false;
 
@@ -262,17 +262,23 @@ Vue.component("quota-section", {
         }
 
         this.section.parent_quota.balances.splice(0, 999);
+      } else if (this.section.replacing) {
+        delete this.section.replacing;
       }
     },
-    "section.period": function() {
-      this.resetOpeningBalances();
-      this.section.parent_quota.associate = false;
+    "section.period": function(newVal, oldVal) {
+      if (newVal && newVal != oldVal && !this.section.replacing) {
+        this.resetOpeningBalances();
+        this.section.parent_quota.associate = false;
 
-      if (!this.section.parent_quota.balances) {
-        this.section.parent_quota.balances = [];
+        if (!this.section.parent_quota.balances) {
+          this.section.parent_quota.balances = [];
+        }
+
+        this.section.parent_quota.balances.splice(0, 999);
+      } else if (this.section.replacing) {
+        delete this.section.replacing;
       }
-
-      this.section.parent_quota.balances.splice(0, 999);
     }
   }
 });

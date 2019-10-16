@@ -14,7 +14,7 @@
 
     <div class="panel panel-border-narrow" v-if="section.type">
       <fieldset v-if="section.type != 'custom'">
-        <date-gds label="What is the start date of this section?" :value.sync="section.start_date" id="quota_start_date"></date-gds>
+        <date-gds label="What is the start date of this section?" :value.sync="section.start_date" :id="'quota_start_date_' + index"></date-gds>
 
         <div class="form-group">
           <label for="" class="form-label">
@@ -110,8 +110,8 @@
         </div>
 
         <div class='custom-period' v-for="(period, idx) in section.periods">
-          <date-gds label="What is the start date of this period?" :value.sync="period.start_date" id="period_start_date"></date-gds>
-          <date-gds label="What is the end date of this period?" :value.sync="period.end_date" id="period_end_date"></date-gds>
+          <date-gds label="What is the start date of this period?" :value.sync="period.start_date" :id="'period_start_date' + index" ></date-gds>
+          <date-gds label="What is the end date of this period?" :value.sync="period.end_date" :id="'period_end_date' + index"></date-gds>
 
           <div class="form-group">
             <label for="" class="form-label">
