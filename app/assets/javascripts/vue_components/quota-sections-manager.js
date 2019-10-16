@@ -65,6 +65,7 @@ Vue.component("quota-sections-manager", {
     },
     removeSection: function(index) {
       if (confirm('Are you sure?')) {
+        this.sections[index+1].replacing = true;
         this.sections.splice(index, 1);
 
         if (this.sections.length === 0) {

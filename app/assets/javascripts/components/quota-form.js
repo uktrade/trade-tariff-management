@@ -552,8 +552,6 @@ $(document).ready(function() {
 
                 var component = clone(condition.measure_condition_components[kk]);
 
-                console.log(component)
-
                 if (!component.duty_expression_id && component.duty_expression) {
                   component.duty_expression_id = component.duty_expression.duty_expression_id;
                 }

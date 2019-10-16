@@ -46,14 +46,17 @@ Vue.component('date-gds', {
     },
     generateDateInputValues: function () {
       var dateValue = moment(this.value, 'DD/MM/YYYY');
-      $(this.$el).find('#day').val(dateValue.format('DD'));
-      $(this.$el).find('#month').val(dateValue.format('MM'));
-      $(this.$el).find('#year').val(dateValue.format('YYYY'));
+      if (dateValue.isValid()) {
+        $(this.$el).find('#day').val(dateValue.format('DD'));
+        $(this.$el).find('#month').val(dateValue.format('MM'));
+        $(this.$el).find('#year').val(dateValue.format('YYYY'));
+      }
     }
   },
   watch: {
     value: function() {
       this.dateString = this.value;
+      this.generateDateInputValues();
     },
     dateString: function() {
       this.$emit("update:value", this.dateString);
