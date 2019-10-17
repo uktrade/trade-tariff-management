@@ -26,35 +26,9 @@
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
                 = f.input :q, label: false, input_html: { class: "form-control", "v-model" => "search.q" }
 
-      fieldset
-        form-group :errors="errors" error-key="start_date"
-          template slot-scope="slotProps"
-            h3.heading-medium.with_smaller_top_border
-              | Optionally search for certificates with start date from
 
-            label.form-label.search-certificates-error-container
-              span.error-message v-if="slotProps.hasError" v-cloak=""
-                | {{slotProps.error}}
-              span.form-hint
-
-              .bootstrap-row
-                .col-lg-6.col-md-7.col-sm-10.col-xs-12
-                  = f.input :start_date, label: false, input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.start_date" }
-
-      fieldset
-        form-group :errors="errors" error-key="end_date"
-          template slot-scope="slotProps"
-            h3.heading-medium.with_smaller_top_border
-              | Optionally search for certificates with end date to
-
-            label.form-label.search-certificates-error-container
-              span.error-message v-if="slotProps.hasError" v-cloak=""
-                | {{slotProps.error}}
-              span.form-hint
-
-            .bootstrap-row
-              .col-lg-6.col-md-7.col-sm-10.col-xs-12
-                = f.input :end_date, label: false, input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.end_date" }
+      = content_tag "date-gds", "", "label" => "Optionally search for certificates with start date from", ":value.sync" => "search.start_date",  "id" => "start_date", "input_name" => "search[start_date]", ":error" => "errors.start_date"
+      = content_tag "date-gds", "", "label" => "Optionally search for certificates with end date to", ":value.sync" => "search.end_date",  "id" => "end_date", "input_name" => "search[end_date]", ":error" => "errors.end_date"
 
       .bootstrap-row
         .col.m-t-30
