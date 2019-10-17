@@ -89,6 +89,24 @@ AdditionalCodesValidator.prototype.validateLevelTwo = function() {
     }
   }
 
+  // if all empty \
+  var i = 0;
+  var emptyCodes = [];
+  for (i; i < this.data.additional_codes.length; i++) {
+    var incompleteCode = this.data.additional_codes[i].additional_code.trim().length == 0;
+    var incompleteDescription = this.data.additional_codes[i].description.trim().length == 0;
+    var incompleteType = !this.data.additional_codes[i].additional_code_type_id;
+
+    if (incompleteCode && incompleteDescription && incompleteType) {
+      emptyCodes.push(true);
+    }
+  }
+
+  if(emptyCodes.length === this.data.additional_codes.length){
+    self.errors.additional_codes = "One or more codes need to be specified";
+    valid = false;
+  }
+
   var invalidCodes = any(this.data.additional_codes, function(code, index) {
     var incompleteCode = code.additional_code.trim().length == 0;
     var incompleteDescription = code.description.trim().length == 0 && code.additional_code_type_id != "7";
@@ -97,23 +115,25 @@ AdditionalCodesValidator.prototype.validateLevelTwo = function() {
     // if all blank, ignore
     if (incompleteCode && incompleteDescription && incompleteType) {
       return false;
+    } else {
+      self.errors.additional_codes = "One or more of the specified codes is incomplete";
+
+      if (incompleteType) {
+        self.errors["additional_code_type_id_" + index] = "Additional code type can't be blank for new additional code at row " + (index+1);
+      }
+
+      if (incompleteCode) {
+        self.errors["additional_code_" + index] = "Additional code can't be blank for new additional code at row " + (index+1);
+      }
+
+      if (incompleteDescription) {
+        self.errors["additional_code_description_" + index] = "Description can't be blank for new additional code at row " + (index+1);
+      }
+
+      if (incompleteCode || incompleteDescription || incompleteType) {
+        return true;
+      }
     }
-
-    self.errors.additional_codes = "One or more of the specified codes is incomplete";
-
-    if (incompleteType) {
-      self.errors["additional_code_type_id_" + index] = "Additional code type can't be blank for new additional code at row " + (index+1);
-    }
-
-    if (incompleteCode) {
-      self.errors["additional_code_" + index] = "Additional code can't be blank for new additional code at row " + (index+1);
-    }
-
-    if (incompleteDescription) {
-      self.errors["additional_code_description_" + index] = "Description can't be blank for new additional code at row " + (index+1);
-    }
-
-    return true;
   });
 
   if (invalidCodes) {
