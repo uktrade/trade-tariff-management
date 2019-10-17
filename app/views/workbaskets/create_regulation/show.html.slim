@@ -11,14 +11,6 @@ h1.heading-large
 .view-workbasket-container
   = render "workbaskets/create_regulation/workflow_screens_parts/notifications/block", screen_type: :view
   = render "workbaskets/create_regulation/workflow_screens_parts/workbasket_details"
-
-  - if iam_workbasket_author? && workbasket_rejected?
-    = link_to "Edit regulation", "#",
-            data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
-            class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
-    = render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
-
-
   = render "workbaskets/create_regulation/workflow_screens_parts/summary_of_configuration"
 
 .m-t-40

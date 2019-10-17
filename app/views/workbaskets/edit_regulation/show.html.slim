@@ -15,9 +15,5 @@ header
     = render "workbaskets/edit_regulation/workflow_screens_parts/workbasket_details"
     = render "workbaskets/edit_regulation/workflow_screens_parts/summary_of_configuration"
 
-    - if iam_workbasket_author? && workbasket_rejected?
-      = link_to "Edit regulation", '#',
-              data: {target_url: move_to_editing_mode_edit_regulation_url(workbasket.id)},
-              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 .m-t-40
   = link_to "Return to main menu", root_path, class: "link-back"
