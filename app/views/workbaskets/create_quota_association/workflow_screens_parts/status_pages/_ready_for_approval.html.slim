@@ -1,8 +1,8 @@
 .govuk-box-highlight
   h1.heading-xlarge
-    | Goods Classification cross-checked
+    | Quota Association cross-checked
 
   p.font-large
-    = "Goods Classification <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has passed cross-check. It has not yet been submitted for approval.".html_safe
+    = "Quota Association <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has passed cross-check. It has not yet been submitted for approval.".html_safe
 
 = render "workbaskets/create_quota_association/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"
