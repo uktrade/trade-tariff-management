@@ -1,14 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Quota rejected
 
-  h3.heading-medium
-    | You declined to approve the quota with order number
-    =<> "#{workbasket.settings.main_step_settings['quota_ordernumber']}"
-    | .
-
-    br
-    br
-    | The quota has been returned to its creator for amendment. It will not be sent to CDS until approved.
+  p.font-large
+    = "You declined to approve the quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong>. The quota has been returned to its creator for amendment. It will not be sent to CDS until approved.".html_safe
 
 = render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

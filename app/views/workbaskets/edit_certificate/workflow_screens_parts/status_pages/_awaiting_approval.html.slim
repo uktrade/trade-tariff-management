@@ -1,16 +1,10 @@
 - certificate = Certificate.find(certificate_code: workbasket.settings.original_certificate_code, certificate_type_code: workbasket.settings.original_certificate_type_code)
 
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Certificate cross-checked
-    
-  h3.heading-medium
-    | The certificate with type
-    =<> "'#{certificate.decorate.certificate_type_description}'"
-    | with code
-    =<> "'#{certificate.certificate_code}'"
-    | and description
-    =<> "'#{certificate.description}'"
-    | has been submitted for approval.
+
+  p.font-large
+    = "The certificate with type <strong class='bold'>#{certificate.decorate.certificate_type_description}</strong> with code <strong class='bold'>#{certificate.certificate_code}</strong> and description <strong class='bold'>#{certificate.description}</strong> has been submitted for approval.".html_safe
 
 = render "workbaskets/edit_certificate/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

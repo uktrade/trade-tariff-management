@@ -1,10 +1,9 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Goods Classification cross-check rejected
 
-  h3.heading-medium
-    | You indicated that goods classification
-    =<> "'#{workbasket.settings.description}'"
-    | has problems. It has not passed cross-check. The submitter has been notified.
+  p.font-large
+    = "You indicated that goods classification <strong class='bold'>#{workbasket.settings.description}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
+
 
 = render "workbaskets/edit_nomenclature/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

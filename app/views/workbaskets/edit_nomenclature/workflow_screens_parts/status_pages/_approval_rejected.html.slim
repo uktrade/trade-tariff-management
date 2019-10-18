@@ -1,10 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Goods Classification approval rejected
 
-  h3.heading-medium
-    | You indicated that the new Goods Classification
-    =<> "'#{workbasket.settings.description}'"
-    | had problems and has not been approved. The submitter has been notified.
+  p.font-large
+    = "You indicated that the new Goods Classification <strong class='bold'>#{workbasket.settings.description}</strong> had problems and has not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/edit_nomenclature/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -78,7 +78,7 @@ class CreateQuotaPageElements < SitePrism::Page
     elements :duties, ".duties-column"
   end
 
-  section :confirm_submission, '.panel--confirmation' do
+  section :confirm_submission, '.govuk-box-highlight' do
     element :header, "h1", text: "Quota submitted"
     element :message, "h3"
   end

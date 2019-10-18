@@ -9,7 +9,7 @@ class CrossCheckPage < SitePrism::Page
     element :start_date, "tr:nth-child(2) td:nth-child(2)"
   end
 
-  section :cross_check_confirmation, '.panel--confirmation' do
+  section :cross_check_confirmation, '.govuk-box-highlight' do
     element :header, "h1"
     element :message, "h3"
   end

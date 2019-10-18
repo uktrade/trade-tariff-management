@@ -1,15 +1,10 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Certificate submitted
 
-  h3.heading-medium
-    | A new
-    =<> "'#{certificate.decorate.certificate_type_description}'"
-    | with code
-    =<> "'#{certificate.certificate_code}'"
-    | and description
-    =<> "'#{certificate.description}'"
-    | has been submitted for cross-check.
+  p.font-large
+    = "A new <strong class='bold'>#{certificate.decorate.certificate_type_description}</strong> with code <strong class='bold'>#{certificate.certificate_code}</strong> and description <strong class='bold'>#{certificate.description}</strong> has been submitted for cross-check.".html_safe
+
 
 h3.heading-medium.m-t-100
   | Next steps

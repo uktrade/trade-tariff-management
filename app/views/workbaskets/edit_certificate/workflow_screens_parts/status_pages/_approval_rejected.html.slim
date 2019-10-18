@@ -1,16 +1,10 @@
 - certificate = Certificate.find(certificate_code: workbasket.settings.original_certificate_code, certificate_type_code: workbasket.settings.original_certificate_type_code)
 
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Certificate approval rejected
 
-  h3.heading-medium
-    | The certificate with type
-    =<> "'#{certificate.decorate.certificate_type_description}'"
-    | with code
-    =<> "'#{certificate.certificate_code}'"
-    | and description
-    =<> "'#{certificate.description}'"
-    | has problems. It has not been approved. The submitter has been notified.
+  p.font-large
+    = "The certificate of type <strong class='bold'>#{certificate.decorate.certificate_type_description}</strong> with code <strong class='bold'>#{certificate.certificate_code}</strong> and description <strong class='bold'>#{certificate.description}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/edit_certificate/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

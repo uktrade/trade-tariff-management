@@ -1,13 +1,9 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Certificate submitted
 
-  h3.heading-medium
-    | The edited certificate of type
-    =<> "'#{certificate.decorate.certificate_type_description}'"
-    | and ID
-    =<> "'#{certificate.decorate.code}'"
-    | has been submitted for cross-check.
+  p.font-large
+    = "The edited certificate of type <strong class='bold'>#{certificate.decorate.certificate_type_description}</strong> and ID <strong class='bold'>#{certificate.decorate.code}</strong> has been submitted for cross-check.".html_safe
 
 h3.heading-medium.m-t-100
   | Next steps

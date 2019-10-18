@@ -1,15 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Geographical area approval rejected
 
-  h3.heading-medium
-    | A new
-    =<> workbasket.settings.main_step_settings['geographical_code']
-    | with code
-    =<> "'#{workbasket.settings.main_step_settings['geographical_area_id'].upcase}'"
-    | and description
-    br
-    =<> "'#{workbasket.settings.main_step_settings['description'].capitalize}'"
-    | has problems. It has not been approved. The submitter has been notified.
+  p.font-large
+    = "A new #{workbasket.settings.main_step_settings['geographical_code']} with code <strong class='bold'>#{workbasket.settings.main_step_settings['geographical_area_id'].upcase}</strong> and description <strong class='bold'>#{workbasket.settings.main_step_settings['description'].capitalize}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

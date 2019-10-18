@@ -62,7 +62,7 @@ class EditMeasurePage < SitePrism::Page
     element :regulation, "tr:nth-child(4) td:nth-child(2)"
   end
 
-  section :confirm_submission, '.panel--confirmation' do
+  section :confirm_submission, '.govuk-box-highlight' do
     element :header, "h1", text: "Measures submitted"
     element :message, "h3"
   end

@@ -1,17 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Geographical area approved
 
-  h3.heading-medium
-    | A new
-    =<> geographical_area.decorate.type
-    | with code
-    =<> "'#{geographical_area.geographical_area_id}'"
-    | and description
-    br
-    =<> "'#{geographical_area.description}'"
-    | has been approved.
-    br
-    | It has not yet been sent through to CDS and has not been scheduled for export.
+  p.font-large
+    = "A new #{geographical_area.decorate.type} with code <strong class='bold'>#{geographical_area.geographical_area_id}</strong> and description <strong class='bold'>#{geographical_area.description}</strong> has been approved. It has not yet been sent through to CDS and has not been scheduled for export.".html_safe
 
 = render "workbaskets/create_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

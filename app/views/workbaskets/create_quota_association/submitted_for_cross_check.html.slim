@@ -1,9 +1,9 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h3.heading-medium
     | New quota association
-    =<> "'#{workbasket_settings.parent_quota_order_id}' and"
-    =<> "'#{workbasket_settings.child_quota_order_id}'"
-    | has been submitted for cross-check.
+
+  p.font-large
+    = "New quota association <strong class='bold'>#{workbasket_settings.parent_quota_order_id}</strong> and <strong class='bold'>#{workbasket_settings.child_quota_order_id}</strong> has been submitted for cross-check.".html_safe
 
 h3.heading-medium.m-t-100
   | Next steps

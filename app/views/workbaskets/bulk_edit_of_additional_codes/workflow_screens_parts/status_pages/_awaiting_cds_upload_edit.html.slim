@@ -1,9 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Additional codes approved
-  h3.heading-medium
-    The additional codes in the workbasket
-    =<> "'#{workbasket.title}'"
-    | have been approved and can be exported to CDS.
+
+  p.font-large
+    = "The additional codes in the workbasket <strong class='bold'>#{workbasket.title}</strong> have been approved and can be exported to CDS.".html_safe
 
 = render "workbaskets/bulk_edit_of_additional_codes/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

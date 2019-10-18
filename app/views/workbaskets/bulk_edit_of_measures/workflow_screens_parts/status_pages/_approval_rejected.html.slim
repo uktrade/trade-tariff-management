@@ -1,14 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Measures rejected
 
-  h3.heading-medium
-    | You declined to approve the measures in workbasket
-    =<> "'#{workbasket.title}'"
-    | .
-
-    br
-    br
-    | The group has been returned to its creator for amendment. Measures will not be sent to CDS until approved.
+  p.font-large
+    = "You declined to approve the measures in workbasket <strong class='bold'>#{workbasket.title}</strong>. The group has been returned to its creator for amendment. Measures will not be sent to CDS until approved.".html_safe
 
 = render "workbaskets/bulk_edit_of_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

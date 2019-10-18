@@ -1,14 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Additional Codes cross-checked.
 
-  h3.heading-medium.m-t-100
-    | The additional codes have been cross-checked but not yet sent through to CDS. They are currently pending approval.
-
-    br
-    br
-    | Once approved,
-    =<> pluralize(workbasket_settings.additional_codes.count, "additional code", "additional codes")
-    | will be made live.
+  p.font-large
+    = "The additional codes have been cross-checked but not yet sent through to CDS. They are currently pending approval. Once approved, #{pluralize(workbasket_settings.additional_codes.count, "additional code", "additional codes")} will be made live.".html_safe
 
 = render "workbaskets/create_additional_code/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

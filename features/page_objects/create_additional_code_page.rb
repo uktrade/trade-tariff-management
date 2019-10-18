@@ -8,7 +8,7 @@ class CreateAdditionalCodePage < SitePrism::Page
   element :submit_for_cross_check_button, "button.js-workbasket-base-continue-button"
   element :save_progress_button, "button.js-workbasket-base-save-progress-button"
 
-  section :confirm_submission, '.panel--confirmation' do
+  section :confirm_submission, '.govuk-box-highlight' do
     element :header, "h1", text: "New additional codes submitted"
     element :message, "h3"
   end

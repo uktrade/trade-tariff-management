@@ -1,13 +1,11 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Measures cross-check rejected
 
-  h3.heading-medium
-    | You indicated that the measures in workbasket
-    =<> "'#{workbasket.title}'"
-    | have problems.
-    br
+  p.font-large
+    = "You indicated that the measures in workbasket <strong class='bold'>#{workbasket.title}</strong> have problems.".html_safe
 
+  p.font-large
     | The author has been notified.
 
 = render "workbaskets/bulk_edit_of_measures/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"
