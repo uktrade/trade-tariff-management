@@ -99,7 +99,7 @@ $(document).ready(function() {
       quotaAssociation: {
         handler: function (after, before) {
           this.quotaAssociation = after;
-          if (this.quotaAssociation.relation_type === "EQ") {
+          if (this.quotaAssociation.relation_type === "NM") {
             this.quotaAssociation.coefficient = "1.00000";
           }
         },
