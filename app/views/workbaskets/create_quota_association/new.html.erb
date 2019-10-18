@@ -1,7 +1,4 @@
 <% content_for :content do %>
-  <!-- <script>
-    window.__quota_association_json = ### Render Rails workbasket settings here ###;
-  </script> -->
   <div id="vue-create-quota-association-form">
     <div class="breadcrumbs">
       <nav>
@@ -19,17 +16,21 @@
       </nav>
     </div>
 
-    <div v-if="hasErrors" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
-        Error
-      </h2>
-      <p>
-        Please see individual fields for details.
-      </p>
-      <ul class="error-summary-list">
-        <li v-for="(value, name) in errors"><a v-bind:href="'#' + name">{{value}}</a></li>
-      </ul>
-    </div>
+    <% if @create_quota_association_form.settings_errors.any? %>
+      <div class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
+          Error
+        </h2>
+        <p>
+          Please see individual fields for details.
+        </p>
+        <ul class="error-summary-list">
+          <% @create_quota_association_form.settings_errors.each do |error| %>
+            <li><a href=<%= "#workbasket_forms_create_quota_association_form_#{error[0]}" %>><%="#{error[1]}" %> </a></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
     <h1 class="heading-large">
       Create quota association
@@ -44,10 +45,9 @@
     </div>
     <%= simple_form_for @create_quota_association_form, url: create_quota_association_index_path, html: { novalidate: false}  do |f| %>
 
-    <%#= form_tag(create_quota_association_index_url, {:@submit => 'validateStepOneData'}) do %>
       <div class="grid-row">
         <div class="column-full">
-          <div class="form-group" v-bind:class="{ 'form-group-error': errors.workbasket_name }">
+          <div class="form-group <%= "form-group-error" if @create_quota_association_form.settings_errors[:workbasket_title] %>">
             <label for="workbasket_name" class="heading-medium">
               What is the name of this workbasket?
               <span class="form-hint">
@@ -62,8 +62,6 @@
             <div class="grid-row">
               <div class="column-one-half">
                 <%= f.input :workbasket_title, label: false, required: true %>
-
-<!--                <input id="workbasket_name" v-model="quotaAssociation.workbasket_name" type="text" name="workbasket_name" class="form-control" required>-->
               </div>
             </div>
           </div>
@@ -72,7 +70,7 @@
 
       <div class="grid-row">
           <div class="column-full">
-              <div class="form-group" v-bind:class="{ 'form-group-error': errors.parent_quota }">
+              <div class="form-group <%= "form-group-error" if @create_quota_association_form.settings_errors[:parent_order_id] %>">
                 <label class="heading-medium m-t-10" for="parent_quota">
                   Please enter the parent (main) quota order number ID
                   <span class="form-hint">
@@ -87,8 +85,6 @@
                 <div class="grid-row">
                   <div class="column-one-quarter">
                     <%= f.input :parent_order_id, label: false, required: true, input_html: { minlength: 6,  maxlength: 6 } %>
-
-<!--                    <input id="parent_quota" v-model="quotaAssociation.parent_quota" class="form-control" type="text" pattern="09[0-9]{4}" name="parent_quota" minlength="6" maxlength="6" size="8" required>-->
                   </div>
                 </div>
               </div>
@@ -97,7 +93,7 @@
 
         <div class="grid-row">
           <div class="column-full">
-              <div class="form-group" v-bind:class="{ 'form-group-error': errors.child_quota }">
+              <div class="form-group <%= "form-group-error" if @create_quota_association_form.settings_errors[:child_order_id] %>">
                 <label class="heading-medium m-t-10" for="child_quota">
                   Please enter the child (sub) quota order number ID
                   <span class="form-hint">
@@ -112,8 +108,6 @@
                 <div class="grid-row">
                   <div class="column-one-quarter">
                     <%= f.input :child_order_id, label: false, required: true, input_html: { minlength: 6,  maxlength: 6 } %>
-
-<!--                    <input id="child_quota" v-model="quotaAssociation.child_quota" class="form-control" type="text" pattern="09[0-9]{4}" name="child_quota" minlength="6" maxlength="6" size="8" required>-->
                   </div>
                 </div>
               </div>
