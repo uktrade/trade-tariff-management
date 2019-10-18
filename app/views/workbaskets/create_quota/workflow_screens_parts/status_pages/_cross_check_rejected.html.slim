@@ -1,12 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Quota  cross-check rejected
 
-  h3.heading-medium
-    = "You indicated that quota with order number #{workbasket.settings.main_step_settings['quota_ordernumber']} has problems"
-
-    br
-
-    | The quota has been returned to it's creator for amendment. No measures have been created
+  p.font-large
+    = "You indicated that quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong> has problems. The quota has been returned to it's creator for amendment. No measures have been created".html_safe
 
 = render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

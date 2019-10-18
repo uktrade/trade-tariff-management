@@ -1,14 +1,10 @@
 - regulation = regulation ? regulation : BaseRegulation.find(workbasket_id: workbasket.id).decorate
 
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Regulation approved
 
-  h3.heading-medium
-    | The regulation with ID
-    =<> "'#{regulation.base_regulation_id}'"
-    | and name
-    =<> "'#{regulation.legal_id}'"
-    |  has not yet been sent through to CDS and has not been scheduled for export.
+  p.font-large
+    = "The regulation with ID <strong class='bold'>#{regulation.base_regulation_id}</strong> and name <strong class='bold'>#{regulation.legal_id}</strong> has not yet been sent through to CDS and has not been scheduled for export.".html_safe
 
 = render "workbaskets/create_regulation/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -1,10 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Measures approved
-  h3.heading-medium
-    => pluralize(workbasket.settings.workbasket_items.count, "measure", "measures")
-    | in the workbasket
-    =<> "'#{workbasket.title}'"
-    | have been approved and scheduled for export to CDS.
+
+  p.font-large
+    = "#{pluralize(workbasket.settings.workbasket_items.count, "measure", "measures")} in the workbasket <strong class='bold'>#{workbasket.title}</strong> have been approved and scheduled for export to CDS.".html_safe
 
 = render "workbaskets/bulk_edit_of_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -1,15 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Geographical area cross-check rejected
 
-  h3.heading-medium
-    | You indicated that the edited
-    =<> workbasket.settings.original_geographical_area.geographical_code.capitalize
-    | with code
-    =<> "'#{workbasket.settings[:original_geographical_area_id].upcase}'"
-    | and description
-    br
-    =<> "'#{workbasket.settings.main_step_settings['description'].capitalize}'"
-    | has problems. It has not passed cross-check. The submitter has been notified.
+  p.font-large
+    = "You indicated that the edited <strong class='bold'>#{workbasket.settings.original_geographical_area.geographical_code.capitalize}</strong> with code <strong class='bold'>#{workbasket.settings[:original_geographical_area_id].upcase}</strong> and description <strong class='bold'>#{workbasket.settings.main_step_settings['description'].capitalize}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
 
 = render "workbaskets/edit_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

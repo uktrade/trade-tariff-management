@@ -2,12 +2,8 @@
   h1.heading-xlarge
     | Quota submitted
 
-  h3.heading-medium
-    | A quota with order number&nbsp;
-    = attributes_parser.quota_ordernumber
-    | &nbsp;and&nbsp;
-    = pluralize(workbasket_settings.measures.count, "measure", "measures")
-    | &nbsp; has been submitted for cross-checking.
+  p.font-large
+    = "A quota with order number <strong class='bold'>#{attributes_parser.quota_ordernumber}</strong> and #{pluralize(workbasket_settings.measures.count, "measure", "measures")} has been submitted for cross-checking.".html_safe
 
 h3.heading-medium.m-t-100
   | Next steps

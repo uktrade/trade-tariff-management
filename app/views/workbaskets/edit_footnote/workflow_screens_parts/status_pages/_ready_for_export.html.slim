@@ -1,14 +1,10 @@
 - footnote = footnote ? footnote : Footnote.find(footnote_id: workbasket.settings.original_footnote_id, footnote_type_id: workbasket.settings.original_footnote_type_id)
 
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Footnote approved
 
-  h3.heading-medium
-    | The footnote with type
-    = footnote.footnote_type_id
-    |  and ID
-    = footnote.footnote_id
-    |  has not yet been sent through to CDS and has not been scheduled for export.
+  p.font-large
+    = "The footnote with type <strong class='bold'>#{footnote.footnote_type_id}</strong> and ID <strong class='bold'>#{footnote.footnote_id}</strong> has not yet been sent through to CDS and has not been scheduled for export.".html_safe
 
 = render "workbaskets/edit_footnote/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -1,10 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Goods Classification approved
 
-  h3.heading-medium
-    | Goods Classification
-    =<> "'#{workbasket.settings.description}'"
-    | is approved It has not yet been sent through to CDS and has not been scheduled for export.
+  p.font-large
+    = "Goods Classification <strong class='bold'>#{workbasket.settings.description}</strong> is approved It has not yet been sent through to CDS and has not been scheduled for export.".html_safe
 
 = render "workbaskets/edit_nomenclature/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -1,10 +1,9 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | New additional codes submitted
 
-  h3.heading-medium
-    = pluralize(workbasket_settings.additional_codes.count, "new additional code", "new additional codes")
-    |&nbsp;have been submitted for cross-check.
+  p.font-large
+    = "#{pluralize(workbasket_settings.additional_codes.count, "new additional code", "new additional codes")} have been submitted for cross-check.".html_safe
 
 h3.heading-medium.m-t-100
   | Next step

@@ -1,8 +1,9 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h3.heading-medium
     | Amended commodity code description
-    =<> "'#{workbasket.settings.description}'"
-    | has been submitted for cross-check.
+
+  p.font-large
+    = "Amended commodity code description <strong class='bold'>#{workbasket.settings.description}</strong> has been submitted for cross-check.".html_safe
 
 h3.heading-medium.m-t-100
   | Next steps

@@ -1,13 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Quota created
 
-  h3.heading-medium
-    = "A quota with order number #{workbasket.settings.main_step_settings['quota_ordernumber']} has been created."
-
-    br
-    br
-    =<> pluralize(workbasket_settings.measure_sids.count, "measure", "measures")
-    | associated measures were also created.
+  p.font-large
+    = "A quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong>  has been created. #{pluralize(workbasket_settings.measure_sids.count, "measure", "measures")} associated measures were also created.".html_safe
 
 = render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

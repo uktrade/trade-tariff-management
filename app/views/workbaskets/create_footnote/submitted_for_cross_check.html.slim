@@ -1,13 +1,9 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Footnote submitted
 
-  h3.heading-medium
-    | A new footnote of type
-    =<> "'#{footnote.decorate.footnote_type_description}'"
-    | and ID
-    =<> "'#{footnote.footnote_id}'"
-    | has been submitted for cross-check.
+  p.font-large
+    = "A new footnote of type <strong class='bold'>#{footnote.decorate.footnote_type_description}</strong> and ID <strong class='bold'>#{footnote.footnote_id}</strong> has been submitted for cross-check.".html_safe
 
 h3.heading-medium.m-t-100
   | Next steps

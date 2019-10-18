@@ -1,10 +1,8 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Quota approved
 
-  h3.heading-medium
-    | The quota with order number
-    =<> "#{workbasket.settings.main_step_settings['quota_ordernumber']}"
-    | has been approved, but has not yet been sent through to CDS and has not been scheduled for export.
+  p.font-large
+    = "A quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong> has been approved, but has not yet been sent through to CDS and has not been scheduled for export.".html_safe
 
 = render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

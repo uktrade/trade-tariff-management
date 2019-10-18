@@ -61,7 +61,7 @@ class CreateMeasurePageElements < SitePrism::Page
     elements :footnotes, ".footnotes-column"
   end
 
-  section :confirm_submission, '.panel--confirmation' do
+  section :confirm_submission, '.govuk-box-highlight' do
     element :header, "h1", text: "Measures submitted"
     element :message, "h3"
   end

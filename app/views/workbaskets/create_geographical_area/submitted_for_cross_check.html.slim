@@ -1,15 +1,9 @@
-.panel.panel--confirmation
+.govuk-box-highlight
   h1.heading-xlarge
     | Geographical area submitted
 
-  h3.heading-medium
-    | A new
-    =<> geographical_area.decorate.type
-    | with code
-    =<> "'#{geographical_area.geographical_area_id}'"
-    | and description&nbsp;
-    =<> "'#{geographical_area.description}'"
-    | has been submitted for cross-check.
+  p.font-large
+    = "A new #{geographical_area.decorate.type} with code <strong class='bold'>#{geographical_area.geographical_area_id}</strong> and description <strong class='bold'>#{geographical_area.description}</strong> has been submitted for cross-check.".html_safe
 
 h3.heading-medium.m-t-100
   | Next steps
