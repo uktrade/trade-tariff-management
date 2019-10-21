@@ -1781,6 +1781,42 @@ ALTER SEQUENCE public.create_quota_association_workbasket_settings_id_seq OWNED 
 
 
 --
+-- Name: create_quota_suspension_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_quota_suspension_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    description text,
+    start_date date,
+    end_date date,
+    quota_order_number_id text,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_quota_suspension_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_quota_suspension_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_quota_suspension_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_quota_suspension_workbasket_settings_id_seq OWNED BY public.create_quota_suspension_workbasket_settings.id;
+
+
+--
 -- Name: create_quota_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8361,6 +8397,13 @@ ALTER TABLE ONLY public.create_quota_association_workbasket_settings ALTER COLUM
 
 
 --
+-- Name: create_quota_suspension_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_quota_suspension_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_quota_suspension_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: create_quota_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9323,6 +9366,14 @@ ALTER TABLE ONLY public.create_measures_workbasket_settings
 
 ALTER TABLE ONLY public.create_quota_association_workbasket_settings
     ADD CONSTRAINT create_quota_association_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_quota_suspension_workbasket_settings create_quota_suspension_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_quota_suspension_workbasket_settings
+    ADD CONSTRAINT create_quota_suspension_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12767,3 +12818,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20190716105325_add_main_st
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190725135752_add_original_description_to_edit_nomenclature_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190916111955_create_edit_regulation_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191004104951_create_quota_association_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20191021140811_create_quota_suspension_workbasket_settings.rb');
