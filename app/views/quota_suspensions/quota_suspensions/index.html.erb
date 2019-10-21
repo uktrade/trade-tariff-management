@@ -1,0 +1,53 @@
+<% content_for :content do %>
+
+<div class="breadcrumbs">
+  <nav>
+    <ol>
+      <li>
+       <%= link_to "Main menu", root_url %>
+      </li>
+      <li>
+          Quota suspension periods
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<h1 class="heading-large">
+  View quota suspension periods
+</h1>
+
+<div class="grid-row">
+  <div class="column-full">
+    <p>This screen lists all quota blocking periods that have been created for quotas that are currently active.</p>
+
+    <p>Please click here to <%= link_to "create a new quota suspension period", new_create_quota_suspension_path %>. Please be aware that a quota suspension period can only be edited
+       for suspension periods that are yet to finish. You may only delete quota suspension periods that are yet to start.
+    </p>
+  </div>
+</div>
+
+<table class="m-t-35">
+  <thead>
+    <tr>
+      <th scope="col">Quota order number</th>
+      <th scope="col">Definition dates</th>
+      <th scope="col">Suspension period dates</th>
+      <th scope="col">Description</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @quota_suspensions.each do | quota_suspension | %>
+      <% quota_definition = QuotaDefinition.find(quota_definition_sid: quota_suspension.quota_definition_sid) %>
+      <tr>
+        <td><%= quota_definition.quota_order_number_id %></td>
+        <td><%= "#{quota_definition.validity_start_date} to #{quota_definition.validity_end_date}" %></td>
+        <td><%= "#{quota_suspension.suspension_start_date} to #{quota_suspension.suspension_end_date}" %></td>
+        <td><%= quota_suspension.description %></td>
+        <td></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
