@@ -32,6 +32,7 @@ module WorkbasketForms
 
       if @settings_errors.empty?
         QuotaSuspensionPeriod.unrestrict_primary_key
+
         suspension = QuotaSuspensionPeriod.new(
           quota_definition_sid: @workbasket_settings.quota_definition_sid,
           suspension_start_date: @workbasket_settings.start_date,
@@ -40,13 +41,25 @@ module WorkbasketForms
         )
 
         if @settings_errors.empty?
-          assign_system_ops!(suspension)
+          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(suspension).assign!
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            suspension, system_ops
+          ).assign!
+
           suspension.save
           workbasket.submit_for_cross_check!(current_admin: current_admin)
         end
       end
 
       @settings_errors.empty?
+    end
+
+    def system_ops
+      {
+        current_admin_id: current_admin.id,
+        workbasket_id: workbasket.id,
+        status: "awaiting_cross_check"
+      }
     end
 
     private def is_number?(string)
