@@ -51,7 +51,9 @@ module Workbaskets
       def update_quota_suspension_params
         {
           quota_definition_sid: params[:quota_definition_sid],
-          description: params[:workbasket_forms_edit_quota_suspension_form][:description]
+          description: params[:workbasket_forms_edit_quota_suspension_form][:description],
+          start_date: params[:workbasket_forms_edit_quota_suspension_form][:start_date],
+          end_date: params[:workbasket_forms_edit_quota_suspension_form][:end_date]
         }
       end
 
