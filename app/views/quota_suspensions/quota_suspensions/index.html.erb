@@ -42,8 +42,8 @@
       <% quota_definition = QuotaDefinition.find(quota_definition_sid: quota_suspension.quota_definition_sid) %>
       <tr>
         <td><%= quota_definition.quota_order_number_id %></td>
-        <td><%= "#{quota_definition.validity_start_date} to #{quota_definition.validity_end_date}" %></td>
-        <td><%= "#{quota_suspension.suspension_start_date} to #{quota_suspension.suspension_end_date}" %></td>
+        <td><%= "#{quota_definition.validity_start_date.strftime("%d-%m-%y")} to #{quota_definition.validity_end_date.strftime("%d-%m-%y")}" %></td>
+        <td><%= "#{quota_suspension.suspension_start_date.strftime("%d-%m-%y")} to #{quota_suspension.suspension_end_date.strftime("%d-%m-%y")}" %></td>
         <td><%= quota_suspension.description %></td>
         <td></td>
       </tr>
