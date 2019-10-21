@@ -30,6 +30,22 @@ module WorkbasketForms
         end_date: @settings_params[:end_date]
       )
 
+      unless @workbasket_settings.quota_definition_sid
+        @settings_errors[:quota_definition_sid] = "You must select a quota definition period"
+      end
+
+      if @workbasket_settings.start_date.empty?
+        @settings_errors[:start_date] = "You must select a start date"
+      end
+
+      if @workbasket_settings.end_date.empty?
+        @settings_errors[:end_date] = "You must select an end date"
+      end
+
+      unless start_date_valid?
+        @settings_errors[:start_date_invalid] = "You must enter a valid suspension period"
+      end
+
       if @settings_errors.empty?
         QuotaSuspensionPeriod.unrestrict_primary_key
 
@@ -46,7 +62,7 @@ module WorkbasketForms
             suspension, system_ops
           ).assign!
 
-          suspension.save
+          workbasket_settings.save
           workbasket.submit_for_cross_check!(current_admin: current_admin)
         end
       end
@@ -60,6 +76,36 @@ module WorkbasketForms
         workbasket_id: workbasket.id,
         status: "awaiting_cross_check"
       }
+    end
+
+    def start_date_valid?
+      definition = QuotaDefinition.find(quota_definition_sid: @workbasket_settings.quota_definition_sid)
+
+      starts_same_day_or_after_definition?(definition) &&
+       starts_before_end_day_of_definition?(definition) &&
+        ends_after_start_date_of_definition(definition) &&
+         ends_same_day_or_before_definition?(definition) &&
+          ends_after_start_date?
+    end
+
+    def starts_same_day_or_after_definition?(definition)
+      definition.validity_start_date <= @workbasket_settings.start_date
+    end
+
+    def starts_before_end_day_of_definition?(definition)
+      definition.validity_end_date > @workbasket_settings.start_date
+    end
+
+    def ends_after_start_date_of_definition(definition)
+      definition.validity_start_date <= @workbasket_settings.end_date
+    end
+
+    def ends_same_day_or_before_definition?(definition)
+      definition.validity_end_date >= @workbasket_settings.end_date
+    end
+
+    def ends_after_start_date?
+      @workbasket_settings.start_date < @workbasket_settings.end_date
     end
 
     private def is_number?(string)
