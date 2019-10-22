@@ -1,0 +1,8 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Quota Suspension approved
+
+  p.font-large
+    = "Quota Suspension description <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has been approved. It is ready to be sent to CDS.".html_safe
+
+= render "workbaskets/create_quota_suspension/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -313,6 +313,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :create_quota_suspension
+      edit_create_quota_suspension_url(
+        workbasket.id,
+        step: :main
+      )
+
     end
   end
 
@@ -352,6 +358,8 @@ module WorkbasketHelper
       edit_quotas_url(workbasket.id)
     when :create_quota_association
       create_quota_association_url(workbasket.id)
+    when :create_quota_suspension
+      create_quota_suspension_url(workbasket.id)
     end
   end
 

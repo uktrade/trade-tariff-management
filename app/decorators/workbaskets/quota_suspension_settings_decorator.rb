@@ -1,0 +1,2 @@
+class Workbaskets::QuotaSuspensionSettingsDecorator < ApplicationDecorator
+end

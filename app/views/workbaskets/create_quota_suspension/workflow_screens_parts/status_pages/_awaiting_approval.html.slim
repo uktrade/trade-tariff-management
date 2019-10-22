@@ -1,0 +1,8 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Quota Suspension cross-checked
+
+  p.font-large
+    = "Quota Suspension <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has been submitted for approval.".html_safe
+
+= render "workbaskets/create_quota_suspension/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"
