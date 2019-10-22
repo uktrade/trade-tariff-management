@@ -11,7 +11,7 @@ $(document).ready(function() {
       savedSuccessfully: false,
       errors: {},
       errorsSummary: "",
-      quotaAssociation: {
+      quotaSuspension: {
         workbasket_name: null,
         quota_order_number_id: null
       },
@@ -22,8 +22,8 @@ $(document).ready(function() {
       },
     },
     created: function () {
-      if (!$.isEmptyObject(window.__quota_association_json)) {
-        this.quotaAssociation = this.parseData(window.__quota_association_json);
+      if (!$.isEmptyObject(window.__quota_suspension_json)) {
+        this.quotaSuspension = this.parseData(window.__quota_suspension_json);
       }
     },
     mounted: function() {
