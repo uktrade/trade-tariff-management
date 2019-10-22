@@ -62,7 +62,7 @@ module WorkbasketForms
             suspension, system_ops
           ).assign!
 
-          workbasket_settings.save
+          suspension.save
           workbasket.submit_for_cross_check!(current_admin: current_admin)
         end
       end
