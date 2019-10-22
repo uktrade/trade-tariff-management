@@ -1,0 +1,22 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Main menu", root_url
+
+    li
+      = link_to "Quota Suspenion Periods", quota_suspensions_url
+
+    li aria-current="page"
+      | View Quota Suspension Period
+
+header
+  h1.heading-large
+    | View quota suspension period
+
+  .view-workbasket-container
+    = render "workbaskets/create_quota_suspension/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/create_quota_suspension/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/create_quota_suspension/workflow_screens_parts/workbasket_details"
+
+    = render "workbaskets/create_quota_suspension/workflow_screens_parts/summary_of_configuration"
+    = render "workbaskets/shared/steps/review_and_submit/quota_suspension"
