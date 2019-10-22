@@ -27,7 +27,7 @@ module Workbaskets
     end
 
     def decorate
-      QuotaAssociationSettingsDecorator.decorate(self)
+      QuotaSuspensionSettingsDecorator.decorate(self)
     end
   end
 end
