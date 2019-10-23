@@ -1,0 +1,8 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Delete Quota Association approved
+
+  p.font-large
+    = "Deletion of Quota Association description <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has been approved. It is ready to be sent to CDS.".html_safe
+
+= render "workbaskets/delete_quota_association/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

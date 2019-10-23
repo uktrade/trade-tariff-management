@@ -1,5 +1,5 @@
 module Workbaskets
-  class CreateQuotaAssociationSettings < Sequel::Model(:create_quota_association_workbasket_settings)
+  class DeleteQuotaAssociationSettings < Sequel::Model(:delete_quota_association_workbasket_settings)
     include ::WorkbasketHelpers::SettingsBase
     extend ActiveSupport::Concern
 
@@ -22,7 +22,7 @@ module Workbaskets
     end
 
     def decorate
-      CreateQuotaAssociationSettingsDecorator.decorate(self)
+      DeleteQuotaAssociationSettingsDecorator.decorate(self)
     end
   end
 end

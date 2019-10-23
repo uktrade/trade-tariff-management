@@ -36,6 +36,8 @@ module Workbaskets
         "Edit Regulation"
       when "create_quota_association"
         "Create Quota Association"
+      when "delete_quota_association"
+        "Delete Quota Association"
       when "create_quota_suspension"
         "Create Quota Suspension Period"
       end

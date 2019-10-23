@@ -30,6 +30,8 @@ module ApprovalHelper
       "Approve and edit certificate"
     elsif workbasket.type == 'create_quota_association'
       "Approve and create quota association"
+    elsif workbasket.type == 'delete_quota_association'
+      "Approve and delete quota association"
     end
   end
 
@@ -46,6 +48,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/additional_code"
     elsif workbasket.type == 'create_quota_association'
       "workbaskets/shared/steps/review_and_submit/approval/create_quota_association"
+    elsif workbasket.type == 'delete_quota_association'
+      "workbaskets/shared/steps/review_and_submit/approval/delete_quota_association"
     elsif workbasket.type == 'create_quota_suspension'
       "workbaskets/shared/steps/review_and_submit/approval/create_quota_suspension"
     elsif workbasket.type == 'edit_nomenclature'

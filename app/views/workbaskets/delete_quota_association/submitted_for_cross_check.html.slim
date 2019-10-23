@@ -1,0 +1,21 @@
+.govuk-box-highlight
+  h3.heading-medium
+    | Quota Association deletion submitted
+
+  p.font-large
+    = "The deletion of quota association #{workbasket_settings.decorate.description} has been submitted for cross-check."
+
+h3.heading-medium.m-t-100
+  | Next steps
+
+ul class="list"
+  li
+    = link_to "Withdraw submission", "#",
+            data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
+            class: "js-main-menu-show-withdraw-confirmation-link"
+  li
+    = link_to "View this quota association", delete_quota_association_path(workbasket.id)
+  li
+    = link_to "Return to main menu", root_url
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket

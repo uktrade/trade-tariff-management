@@ -1935,6 +1935,40 @@ ALTER SEQUENCE public.db_rollbacks_id_seq OWNED BY public.db_rollbacks.id;
 
 
 --
+-- Name: delete_quota_association_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delete_quota_association_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    main_quota_definition_sid text,
+    sub_quota_definition_sid text,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: delete_quota_association_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.delete_quota_association_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: delete_quota_association_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.delete_quota_association_workbasket_settings_id_seq OWNED BY public.delete_quota_association_workbasket_settings.id;
+
+
+--
 -- Name: duty_expression_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8425,6 +8459,13 @@ ALTER TABLE ONLY public.db_rollbacks ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: delete_quota_association_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delete_quota_association_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.delete_quota_association_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: duty_expression_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9406,6 +9447,14 @@ ALTER TABLE ONLY public.data_migrations
 
 ALTER TABLE ONLY public.db_rollbacks
     ADD CONSTRAINT db_rollbacks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delete_quota_association_workbasket_settings delete_quota_association_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delete_quota_association_workbasket_settings
+    ADD CONSTRAINT delete_quota_association_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12819,3 +12868,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20190725135752_add_origina
 INSERT INTO "schema_migrations" ("filename") VALUES ('20190916111955_create_edit_regulation_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191004104951_create_quota_association_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191021140811_create_quota_suspension_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20191022083212_create_delete_quota_association_workbasket_settings.rb');

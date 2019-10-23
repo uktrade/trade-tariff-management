@@ -18,6 +18,7 @@ module Workbaskets
       edit_nomenclature
       edit_regulation
       create_quota_association
+      delete_quota_association
       create_quota_suspension
     ].freeze
 
@@ -167,6 +168,9 @@ module Workbaskets
 
     one_to_one :create_quota_association_settings, key: :workbasket_id,
                class_name: "Workbaskets::CreateQuotaAssociationSettings"
+
+    one_to_one :delete_quota_association_settings, key: :workbasket_id,
+               class_name: "Workbaskets::DeleteQuotaAssociationSettings"
 
     one_to_one :create_quota_suspension_settings, key: :workbasket_id,
                class_name: "Workbaskets::CreateQuotaSuspensionSettings"
@@ -342,6 +346,7 @@ module Workbaskets
 
             clean_up_draft_measures! if type == "bulk_edit_of_measures"
             clean_up_drafts! if (type == "edit_regulation" || type == 'edit_footnote' || type == 'create_quota_association')
+            clean_up_quota_association_deletions! if (type == 'delete_quota_association')
 
             settings.collection.map do |item|
               item.move_status_to!(:editing)
@@ -392,6 +397,10 @@ module Workbaskets
             settings.collection.each(&:delete)
           end
 
+          def clean_up_quota_association_deletions!
+            QuotaAssociation.undo_deletion_by_workbasket!(workbasket_id: id)
+          end
+
           def clean_up_draft_measures!
             delete_draft_measures
             remove_references_to_drafts_in_settings
@@ -423,7 +432,7 @@ module Workbaskets
           end
 
           def editable?
-            status.to_sym.in?(EDITABLE_STATES)
+            status.to_sym.in?(EDITABLE_STATES) && type != :delete_quota_association
           end
 
           def submitted?
@@ -556,6 +565,8 @@ module Workbaskets
         edit_regulation_settings
       when :create_quota_association
         create_quota_association_settings
+      when :delete_quota_association
+        delete_quota_association_settings
       when :create_quota_suspension
         create_quota_suspension_settings
       end
@@ -622,6 +633,7 @@ module Workbaskets
 
         settings.destroy
       end
+      clean_up_quota_association_deletions! if type == 'delete_quota_association'
 
       clean_up_related_cache!
       destroy
@@ -663,6 +675,7 @@ module Workbaskets
           edit_nomenclature
           edit_regulation
           create_quota_association
+          delete_quota_association
           create_quota_suspension
         ).map do |type_name|
           by_type(type_name).map(&:clean_up_workbasket!)
@@ -694,8 +707,6 @@ module Workbaskets
                        ::Workbaskets::CreateFootnoteSettings
                      when :create_certificate
                        ::Workbaskets::CreateCertificateSettings
-                     when :create_quota_suspension
-                       ::Workbaskets::CreateQuotaSuspensionSettings
                      when :edit_footnote
                        ::Workbaskets::EditFootnoteSettings
                      when :edit_certificate
@@ -708,6 +719,8 @@ module Workbaskets
                        ::Workbaskets::EditRegulationSettings
                      when :create_quota_association
                        ::Workbaskets::CreateQuotaAssociationSettings
+                     when :delete_quota_association
+                       ::Workbaskets::DeleteQuotaAssociationSettings
                      when :create_quota_suspension
                        ::Workbaskets::CreateQuotaSuspensionSettings
       end
