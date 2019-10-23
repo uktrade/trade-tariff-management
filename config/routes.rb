@@ -300,6 +300,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :delete_quota_association, only: [:new, :create, :show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
     resources :create_quota_suspension, only: [:new, :create, :edit, :update, :show, :destroy] do
       member do
         get :submitted_for_cross_check

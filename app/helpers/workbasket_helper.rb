@@ -313,6 +313,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :delete_quota_association
+      edit_delete_quota_association_url(
+        workbasket.id,
+        step: :main
+      )
+
     when :create_quota_suspension
       edit_create_quota_suspension_url(
         workbasket.id,
@@ -358,6 +364,8 @@ module WorkbasketHelper
       edit_quotas_url(workbasket.id)
     when :create_quota_association
       create_quota_association_url(workbasket.id)
+    when :delete_quota_association
+      delete_quota_association_url(workbasket.id)
     when :create_quota_suspension
       create_quota_suspension_url(workbasket.id)
     end
@@ -396,6 +404,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_bulk_edit_of_quotas_url(workbasket.id)
     elsif workbasket.object.type == "create_quota_association"
       withdraw_workbasket_from_workflow_create_quota_association_url(workbasket.id)
+    elsif workbasket.object.type == "delete_quota_association"
+      withdraw_workbasket_from_workflow_delete_quota_association_url(workbasket.id)
     end
   end
 

@@ -1,0 +1,8 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Delete Quota Association approval rejected
+
+  p.font-large
+    = "You indicated that the deletion of Quota Association <strong class='bold'>#{workbasket.settings.decorate.description}</strong> had problems and has not been approved. The submitter has been notified.".html_safe
+
+= render "workbaskets/delete_quota_association/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -1,0 +1,8 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Delete Quota Association cross-check rejected
+
+  p.font-large
+    = "You indicated that the deletion of quota association <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
+
+= render "workbaskets/delete_quota_association/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

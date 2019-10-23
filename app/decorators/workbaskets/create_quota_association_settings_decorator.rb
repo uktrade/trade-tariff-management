@@ -1,4 +1,4 @@
-class Workbaskets::QuotaAssociationSettingsDecorator < ApplicationDecorator
+class Workbaskets::CreateQuotaAssociationSettingsDecorator < ApplicationDecorator
 
   def description
     "#{parent_quota_order_id} and #{child_quota_order_id}"

@@ -39,7 +39,6 @@
       <th scope="col">Parent End date</th>
       <th scope="col">Child Start date</th>
       <th scope="col">Child End date</th>
-      <th scope="col"></th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -54,6 +53,12 @@
         <td><%= quota_association.main_quota_definition.validity_end_date.to_s :uk_Mmm %></td>
         <td><%= quota_association.sub_quota_definition&.validity_start_date&.to_s :uk_Mmm %></td>
         <td><%= quota_association.sub_quota_definition&.validity_end_date&.to_s :uk_Mmm %></td>
+        <td>
+          <% if quota_association.main_quota_definition.validity_start_date > Date.today %>
+            <%= link_to "Delete", new_delete_quota_association_path(main_quota_definition_sid: quota_association.main_quota_definition_sid,
+                                                                    sub_quota_definition_sid: quota_association.sub_quota_definition_sid ), class: 'button' %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
