@@ -7,10 +7,10 @@
           <%= link_to "Main menu", root_url %>
           </li>
           <li>
-              <%= link_to "Quota suspension", quota_suspensions_url %>
+              <%= link_to "Quota suspension period", quota_suspensions_url %>
           </li>
           <li>
-              Create quota suspension
+              Create quota suspension period
           </li>
         </ol>
       </nav>
@@ -33,7 +33,7 @@
     <% end %>
 
     <h1 class="heading-large">
-      Create quota suspension
+      Create quota suspension period
     </h1>
 
     <%= simple_form_for @edit_quota_suspension_form, url: create_quota_suspension_path, method: :patch do |f| %>
