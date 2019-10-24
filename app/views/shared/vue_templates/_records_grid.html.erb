@@ -4,7 +4,7 @@
       <table class="table" id="records-table">
           <thead class="actions">
             <tr>
-              <th class="locked-column">
+              <th class="locked-column" v-if="hideLockedColumn !== true">
                   <span>Locked</span>
               </th>
               <th class="select-all-column" v-if="disableSelection !== true">
@@ -28,7 +28,7 @@
           </thead>
           <tbody>
               <tr :class="{ deleted: item.deleted }" :data-measure-sid="item.row_id" :data-record-sid="item.row_id" v-for="(item, index) in sorted">
-                <td class="locked-column">
+                <td class="locked-column" v-if="hideLockedColumn !== true">
                   <span>
                     <i v-if="locked(item)">&#x1F510;</i>
                   </span>
