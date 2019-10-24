@@ -11,10 +11,7 @@
         = link_to "Work with selected codes", edit_additional_codes_bulk_url(workbasket.id, search_code: workbasket_settings.initial_search_results_code)
 
 h2.heading-large
-  - if workbasket.awaiting_cross_check?
-    | Submitted for Cross-Check
-  - else
-    = workbasket_author? ? 'Edit additional codes' : 'Review additional codes'
+  | Edit additional codes
 
 script
   == "window.__workbasket_id = #{workbasket.id};"
