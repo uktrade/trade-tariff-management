@@ -16,6 +16,18 @@
   </p>
 </div>
 
+
+<% if workbasket_view_show_actions_allowed? %>
+  <% if iam_workbasket_author? && workbasket.can_withdraw? %>
+    <div class="view-workbasket-actions-allowed m-t-40 m-b-25">
+      <%= link_to "Withdraw workbasket from workflow", "#",
+        data: { target_url: withdraw_workbasket_from_workflow_edit_nomenclature_url(workbasket.id), target_modal: workbasket.id },
+        class: "button js-main-menu-show-withdraw-confirmation-link"  %>
+    </div>
+    <%= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket %>
+  <% end %>
+<% end %>
+
 <div class="grid-row">
   <div class="column-two-thirds">
     <table>
