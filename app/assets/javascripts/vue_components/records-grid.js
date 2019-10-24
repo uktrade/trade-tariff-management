@@ -18,6 +18,7 @@ Vue.component("records-grid", {
     "clientSelection",
     "disableSelection",
     "disableSelectAll",
+    "hideLockedColumn",
     "singleSelection",
     "selectedItem",
     "back-end-sort"
