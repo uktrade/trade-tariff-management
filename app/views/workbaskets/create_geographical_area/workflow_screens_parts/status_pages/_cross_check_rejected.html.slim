@@ -3,6 +3,6 @@
     | Geographical area cross-check rejected
 
   p.font-large
-    = "You indicated that the new #{workbasket.settings.main_step_settings['geographical_code']} with code <strong class='bold'>#{workbasket.settings.main_step_settings['geographical_area_id'].upcase}</strong> and description <strong class='bold'>#{workbasket.settings.main_step_settings['description'].capitalize}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
+    = "The new #{workbasket.settings.main_step_settings['geographical_code']} with code <strong class='bold'>#{workbasket.settings.main_step_settings['geographical_area_id'].upcase}</strong> and description <strong class='bold'>#{workbasket.settings.main_step_settings['description'].capitalize}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

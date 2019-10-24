@@ -1,8 +1,8 @@
 .govuk-box-highlight
   h1.heading-xlarge
-    | Edited additional codes cross-checked.
+    | Edited additional codes cross-checked
 
   p.font-large
-    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has passed cross-check. Once approved the workbasket will be made live.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has been sumbitted for approval".html_safe
 
 = render "workbaskets/bulk_edit_of_additional_codes/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

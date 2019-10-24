@@ -3,6 +3,6 @@
     | Goods Classification approval rejected
 
   p.font-large
-    = "You indicated that the new Goods Classification <strong class='bold'>#{workbasket.settings.description}</strong> had problems and has not been approved. The submitter has been notified.".html_safe
+    = "The new Goods Classification <strong class='bold'>#{workbasket.settings.description}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/edit_nomenclature/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

@@ -3,6 +3,6 @@
     | Quota  cross-check rejected
 
   p.font-large
-    = "You indicated that quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong> has problems. The quota has been returned to it's creator for amendment. No measures have been created".html_safe
+    = "Quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

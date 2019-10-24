@@ -1,8 +1,8 @@
 .govuk-box-highlight
   h1.heading-xlarge
-    | Measures cross-checked.
+    | Measures cross-checked
 
   p.font-large
-    = "The measure(s) have been cross-checked but not yet sent through to CDS. They are currently pending approval. Once approved, #{pluralize(workbasket_settings.measure_sids.count, "measure", "measures")} will be made live.".html_safe
+    = "The measure(s) #{pluralize(workbasket_settings.measure_sids.count, "measure", "measures")} have been sumbitted for approval".html_safe
 
 = render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

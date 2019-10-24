@@ -3,9 +3,6 @@
     | Additional Codes approval rejected
 
   p.font-large
-    = "You indicated that the Additional Codes in workbasket <strong class='bold'>#{workbasket.title}</strong> have problems.".html_safe
-
-  p.font-large
-    | The author has been notified.
+    = "The Additional Codes in workbasket <strong class='bold'>#{workbasket.title}</strong> have problems. They have not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

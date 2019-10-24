@@ -1,8 +1,8 @@
 .govuk-box-highlight
   h1.heading-xlarge
-    | Additional Codes cross-checked.
+    | Additional Codes cross-checked
 
   p.font-large
-    = "The additional codes have been cross-checked but not yet sent through to CDS. They are currently pending approval. Once approved, #{pluralize(workbasket_settings.additional_codes.count, "additional code", "additional codes")} will be made live.".html_safe
+    = "The additional codes #{pluralize(workbasket_settings.additional_codes.count, "additional code", "additional codes")} have been sumbitted for approval".html_safe
 
 = render "workbaskets/create_additional_code/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"
