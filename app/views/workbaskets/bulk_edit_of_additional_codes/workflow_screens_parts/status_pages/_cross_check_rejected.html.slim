@@ -3,9 +3,6 @@
     | Additional codes cross-check rejected
 
   p.font-large
-    = "You indicated that the additional codes in workbasket <strong class='bold'>#{workbasket.title}</strong> have problems.".html_safe
-
-  p.font-large
-    | The author has been notified.
+    = "The additional codes in workbasket <strong class='bold'>#{workbasket.title}</strong> have problems. They have not passed cross-check. The submitter has been notified.".html_safe
 
 = render "workbaskets/bulk_edit_of_additional_codes/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

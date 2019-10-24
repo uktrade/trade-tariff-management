@@ -3,6 +3,6 @@
     | Additional codes approved
 
   p.font-large
-    = "#{pluralize(workbasket_settings.additional_codes.count, "additional code", "additional codes")} in the workbasket <strong class='bold'>#{workbasket.title}</strong> has/have been approved and scheduled for export to CDS.".html_safe
+    = "#{pluralize(workbasket_settings.additional_codes.count, "additional code", "additional codes")} in the workbasket <strong class='bold'>#{workbasket.title}</strong> have been approved. They have been scheduled for export CDS".html_safe
 
 = render "workbaskets/create_additional_code/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
