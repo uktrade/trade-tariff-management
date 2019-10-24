@@ -16,6 +16,19 @@
       </nav>
     </div>
 
+    <% if @create_quota_suspension_form.settings_errors[:workbasket_title] %>
+      <div class="error-summary" role="alert">
+        <h2 class="heading-medium error-summary-heading">
+          There is a problem
+        </h2>
+        <% @create_quota_suspension_form.settings_errors.values.each do |error| %>
+          <p class="error-message">
+            <%= error %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
     <h1 class="heading-large">
       Create quota suspension
     </h1>
@@ -27,7 +40,7 @@
         <p>Alternatively, please click here to view <%= link_to "existing quota suspensions periods", quota_suspensions_url %>.</p>
       </div>
     </div>
-    <%= simple_form_for @create_quota_suspension_form, url: create_quota_suspension_index_path, html: { novalidate: false}  do |f| %>
+    <%= simple_form_for @create_quota_suspension_form, url: create_quota_suspension_index_path do |f| %>
       <div class="grid-row">
         <div class="column-full">
           <div class="form-group">
