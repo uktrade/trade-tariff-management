@@ -119,7 +119,16 @@
               <legend id="relation_type">
                 <h1 class="heading-medium m-t-10">Select the relation type</h1>
                 <span class="form-hint">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                  <p>
+                    Please select 'EQ' if this association involves creating coefficients that differ between the two
+                    associated quotas. For example, in the case of the WTO lamb quota, where KGM amounts of boneless lamb,
+                    boneless mutton and sheep meat on the bone are to be multiplied by the coefficient to work out the
+                    applicable duty.
+                  </p>
+                  <p>
+                    Please select NM if a co-coefficient of 1 is required but this and other sub-quotas' usage is
+                    restricted to the parent quota's balance.
+                  </p>
                 </span>
                 <span v-if="errors.relation_type" class="error-message">{{errors.relation_type}}</span>
               </legend>
