@@ -60,6 +60,7 @@ Vue.component("records-grid", {
         this.$parent.onPageChange(column.field);
       } else if (column.field == this.sortBy) {
         this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
+        this.sortBy = column.field;
       } else {
         this.sortDir = "desc";
         this.sortBy = column.field;
@@ -106,7 +107,7 @@ Vue.component("records-grid", {
           };
         case "string":
           return function(a, b) {
-            return a - b;
+            return a[sortBy] - b[sortBy];
           };
         case "date":
           return function(a, b) {
