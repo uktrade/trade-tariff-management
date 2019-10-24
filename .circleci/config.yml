@@ -14,6 +14,7 @@ jobs: # a collection of steps
           REDIS_URL: redis://localhost:6379
           RAILS_ENV: test
           GOVUK_APP_DOMAIN: test
+          TARIFF_TRADE_APPLICATION_URL: http://localhost:8000
       - image: circleci/postgres:9.6-alpine # database image
         environment: # environment variables for database
           POSTGRES_USER: circleci-tariffs-management
