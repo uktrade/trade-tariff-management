@@ -24,7 +24,7 @@ module WorkbasketForms
         @settings_errors[:quota_order_number_id] = "Quota order number ID must exist"
       end
 
-      unless quota_order_number.validity_end_date.nil?
+      if quota_order_number && !quota_order_number.validity_end_date.nil?
         @settings_errors[:quota_order_number_id] = "Quota order number must not have an end date"
       end
 
