@@ -20,8 +20,12 @@ module WorkbasketForms
         @settings_errors[:workbasket_title] = "Workbasket title must be entered"
       end
 
-      if QuotaOrderNumber.find(quota_order_number_id: quota_order_number_id).nil?
+      if quota_order_number.nil?
         @settings_errors[:quota_order_number_id] = "Quota order number ID must exist"
+      end
+
+      unless quota_order_number.validity_end_date.nil?
+        @settings_errors[:quota_order_number_id] = "Quota order number must not have an end date"
       end
 
       if quota_order_number_id.first(3) == '094'
@@ -40,6 +44,10 @@ module WorkbasketForms
       end
 
       @settings_errors.empty?
+    end
+
+    def quota_order_number
+      QuotaOrderNumber.where(quota_order_number_id: quota_order_number_id).order(Sequel.desc(:added_at)).first
     end
   end
 end
