@@ -3,15 +3,12 @@
     li
       = link_to "Main menu", root_url
 
-    li
-      = link_to "Footnote", footnotes_url
-
     li aria-current="page"
-      | View Quota Association
+      | Create Quota Association
 
 header
   h1.heading-large
-    | View quota association
+    | Create quota association
 
   .view-workbasket-container
     = render "workbaskets/create_quota_association/workflow_screens_parts/notifications/block", screen_type: :view
