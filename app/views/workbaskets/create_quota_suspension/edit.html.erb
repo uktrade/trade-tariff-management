@@ -65,9 +65,9 @@
         </div>
       </div>
 
-      <%= content_tag "date-gds", "", "label" => "Start date from", "hint" => "Optionally search for footnotes with start date from", "id" => "start_date", "input_name" => "workbasket_forms_edit_quota_suspension_form[start_date]", ":error" => "errors.start_date" %>
+      <%= content_tag "date-gds", "", "label" => "Suspension period start date", "hint" => "Please ensure that this date falls on or after the definition start date", "id" => "start_date", "input_name" => "workbasket_forms_edit_quota_suspension_form[start_date]", ":error" => "errors.start_date" %>
 
-      <%= content_tag "date-gds", "", "label" => "End date from", "hint" => "Optionally search for footnotes with end date from", "id" => "end_date", "input_name" => "workbasket_forms_edit_quota_suspension_form[end_date]", ":error" => "errors.start_date" %>
+      <%= content_tag "date-gds", "", "label" => "Suspension period end date", "hint" => "Please ensure that this date falls on or before the definition end date", "id" => "end_date", "input_name" => "workbasket_forms_edit_quota_suspension_form[end_date]", ":error" => "errors.start_date" %>
 
       <div>
         <h3 class='heading medium'>
