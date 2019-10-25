@@ -33,7 +33,7 @@
     <% end %>
 
     <h1 class="heading-large">
-      Create quota suspension period
+      <%= "Create quota suspension period on quota #{@edit_quota_suspension_form.quota.quota_order_number_id}" %>
     </h1>
 
     <%= simple_form_for @edit_quota_suspension_form, url: create_quota_suspension_path, method: :patch do |f| %>
