@@ -43,7 +43,7 @@ module WorkbasketForms
       end
 
       unless start_date_valid?
-        @settings_errors[:start_date_invalid] = "You must enter a valid suspension period"
+        @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or suspension period'
       end
 
       if @settings_errors.empty?
