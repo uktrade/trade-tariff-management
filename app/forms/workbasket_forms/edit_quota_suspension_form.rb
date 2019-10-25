@@ -46,6 +46,10 @@ module WorkbasketForms
         @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or suspension period'
       end
 
+      if @workbasket_settings.description.length > 500
+        @settings_errors[:description_too_long] = 'Description cannot be more than 500 characters'
+      end
+
       if @settings_errors.empty?
         QuotaSuspensionPeriod.unrestrict_primary_key
 
