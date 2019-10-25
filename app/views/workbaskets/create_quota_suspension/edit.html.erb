@@ -81,7 +81,7 @@
           <div class='bootstrap-row'>
             <div class='col-md-6'>
               <div class='form-group'>
-                <%= f.input :description, label: false, required: true %>
+                <%= f.input :description, label: false, required: true, input_html: { maxlength: 500 }%>
               </div>
             </div>
           </div>
