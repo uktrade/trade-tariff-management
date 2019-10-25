@@ -3,6 +3,6 @@
     | Measures cross-checked
 
   p.font-large
-    = "#{pluralize(workbasket_settings.measures.count, "measure", "measures")} in the workbasket <strong class='bold'>#{workbasket.title}</strong> passed cross-check. They have not yet been submitted for approval.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has passed cross-check. It has been submitted for approval".html_safe
 
 = render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

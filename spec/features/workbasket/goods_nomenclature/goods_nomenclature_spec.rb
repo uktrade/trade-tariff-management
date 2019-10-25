@@ -24,7 +24,7 @@ RSpec.describe "edit description" do
     fill_in("Year", with: "2030")
     click_on("Submit for cross-check")
 
-    expect(page).to have_content("Amended commodity code description Shiny new description has been submitted for cross-check.")
+    expect(page).to have_content("The workbasket Test basket name has been submitted for cross-check.")
   end
 
   it "displays correct descriptions when viewing at specific date" do

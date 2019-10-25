@@ -3,6 +3,6 @@
     | Quota Association cross-check rejected
 
   p.font-large
-    = "Quota association <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_quota_association/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

@@ -1,8 +1,8 @@
 .govuk-box-highlight
   h1.heading-xlarge
-    | Quota  cross-check rejected
+    | Quota cross-check rejected
 
   p.font-large
-    = "Quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has problems. It has not passed cross-check. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_quota/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"

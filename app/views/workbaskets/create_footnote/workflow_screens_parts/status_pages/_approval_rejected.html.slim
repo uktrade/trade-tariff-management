@@ -5,6 +5,6 @@
     | Footnote approval rejected
 
   p.font-large
-    = "The footnote with type <strong class='bold'>#{footnote.footnote_type_id}</strong> and ID <strong class='bold'>#{footnote.footnote_id}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_footnote/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

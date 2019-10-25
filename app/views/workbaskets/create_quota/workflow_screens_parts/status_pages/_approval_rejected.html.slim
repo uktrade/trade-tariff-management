@@ -3,6 +3,6 @@
     | Quota rejected
 
   p.font-large
-    = "You declined to approve the quota with order number <strong class='bold'>#{workbasket.settings.main_step_settings['quota_ordernumber']}</strong>. The quota has been returned to its creator for amendment. It will not be sent to CDS until approved.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_measures/workflow_screens_parts/status_pages/next_step_links", mode: "approve"
