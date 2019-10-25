@@ -5,6 +5,6 @@
     | Regulation approval rejected
 
   p.font-large
-    = "The regulation with ID <strong class='bold'>#{regulation.base_regulation_id}</strong> and name <strong class='bold'>#{regulation.legal_id}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has problems. It has not been approved. The submitter has been notified.".html_safe
 
 = render "workbaskets/create_regulation/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

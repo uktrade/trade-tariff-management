@@ -3,6 +3,6 @@
     | Geographical area approved
 
   p.font-large
-    = "An edited <strong class='bold'>#{workbasket.settings.original_geographical_area.geographical_code.capitalize}</strong> with code <strong class='bold'>#{workbasket.settings[:original_geographical_area_id].upcase}</strong> and description <strong class='bold'>#{workbasket.settings.main_step_settings['description'].capitalize}</strong> has been approved. It has been scheduled for export CDS in the next batch.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has been approved. It has been scheduled for export CDS".html_safe
 
 = render "workbaskets/edit_geographical_area/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

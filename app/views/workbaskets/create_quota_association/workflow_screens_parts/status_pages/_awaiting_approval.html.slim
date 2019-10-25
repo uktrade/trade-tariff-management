@@ -3,6 +3,6 @@
     | Quota Association cross-checked
 
   p.font-large
-    = "Quota Association <strong class='bold'>#{workbasket.settings.decorate.description}</strong> has been submitted for approval.".html_safe
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has passed cross-check. It has been submitted for approval".html_safe
 
 = render "workbaskets/create_quota_association/workflow_screens_parts/status_pages/next_step_links", mode: "cross_checked"
