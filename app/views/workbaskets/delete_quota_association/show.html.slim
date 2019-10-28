@@ -18,11 +18,6 @@ header
     = render "workbaskets/delete_quota_association/workflow_screens_parts/actions_allowed"
     = render "workbaskets/delete_quota_association/workflow_screens_parts/workbasket_details"
 
-    - if iam_workbasket_author? && workbasket_rejected?
-      = link_to "XXXXX quota association", '#',
-              data: {target_url: move_to_editing_mode_create_quota_association_url(workbasket.id)},
-              class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
-
     = render "workbaskets/delete_quota_association/workflow_screens_parts/summary_of_configuration"
     = render "workbaskets/shared/steps/review_and_submit/delete_quota_association"
 

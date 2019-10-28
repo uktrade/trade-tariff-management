@@ -16,16 +16,6 @@ class QuotaAssociation < Sequel::Model
               key: :sub_quota_definition_sid,
               class: QuotaDefinition
 
-  def self.undo_deletion_by_workbasket!(workbasket_id:)
-    undo_deletion_by_workbasket_sql = <<-SQL
-      DELETE from quota_associations_oplog 
-             where workbasket_id = :workbasket_id
-             and operation = 'D';
-    SQL
-
-    @deleted_quota_association = Sequel::Model.db.fetch(undo_deletion_by_workbasket_sql, workbasket_id: workbasket_id).all
-  end
-
   def record_code
     "370".freeze
   end
