@@ -345,8 +345,7 @@ module Workbaskets
             move_status_to!(current_admin, "editing")
 
             clean_up_draft_measures! if type == "bulk_edit_of_measures"
-            clean_up_drafts! if (type == "edit_regulation" || type == 'edit_footnote' || type == 'create_quota_association')
-            clean_up_quota_association_deletions! if (type == 'delete_quota_association')
+            clean_up_drafts! if (type == "edit_regulation" || type == 'edit_footnote' || type == 'create_quota_association' || type == 'delete_quota_association')
 
             settings.collection.map do |item|
               item.move_status_to!(:editing)
@@ -395,10 +394,6 @@ module Workbaskets
 
           def clean_up_drafts!
             settings.collection.each(&:delete)
-          end
-
-          def clean_up_quota_association_deletions!
-            QuotaAssociation.undo_deletion_by_workbasket!(workbasket_id: id)
           end
 
           def clean_up_draft_measures!
@@ -633,8 +628,6 @@ module Workbaskets
 
         settings.destroy
       end
-      clean_up_quota_association_deletions! if type == 'delete_quota_association'
-
       clean_up_related_cache!
       destroy
     end

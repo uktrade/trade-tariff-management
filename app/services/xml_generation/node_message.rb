@@ -158,7 +158,7 @@ module XmlGeneration
     def update_type
       if record.operation == :create
         "3"
-      elsif record.class == FootnoteAssociationMeasure && record.operation == :update
+      elsif record_is_a_pending_deletion?
         "2"
       elsif record.operation == :update
         "1"
@@ -171,15 +171,19 @@ module XmlGeneration
       "#{base_partial_path}/#{partial_folder_name}/#{record_class}.builder"
     end
 
-  private
+    private
+
+    def record_is_a_pending_deletion?
+      [FootnoteAssociationMeasure, QuotaAssociation].include?(record.class) && record.operation == :update
+    end
 
     def record_class
       record.class
-            .name
-            .titleize
-            .split
-            .map(&:downcase)
-            .join("_")
+        .name
+        .titleize
+        .split
+        .map(&:downcase)
+        .join("_")
     end
 
     def base_partial_path
@@ -220,7 +224,7 @@ module XmlGeneration
 
     def it_is?(record, list)
       list.map(&:to_s)
-          .include?(record.class.name)
+        .include?(record.class.name)
     end
   end
 end

@@ -57,7 +57,7 @@ module WorkbasketForms
           association, system_ops.merge(operation: "D")
         ).assign!(false)
 
-        association.destroy
+        association.save
 
         workbasket.submit_for_cross_check!(current_admin: current_admin)
 
