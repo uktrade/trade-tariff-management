@@ -14,8 +14,10 @@ module ApprovalHelper
       "Approve and create certificate"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "Approve and bulk edit additional codes"
-    elsif workbasket.type == 'edit_nomenclature'
+    elsif workbasket.type == 'create_nomenclature'
       "Approve and create goods classification"
+    elsif workbasket.type == 'edit_nomenclature'
+      "Approve and edit goods classification"
     elsif workbasket.type == 'create_footnote'
       "Approve and create footnotes"
     elsif workbasket.type == 'edit_footnote'
@@ -56,10 +58,12 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/delete_quota_association"
     elsif workbasket.type == 'create_quota_suspension'
       "workbaskets/shared/steps/review_and_submit/approval/create_quota_suspension"
-    elsif workbasket.type == 'edit_quota_suspension'
-      "workbaskets/shared/steps/review_and_submit/approval/edit_quota_suspension"
+    elsif workbasket.type == 'create_nomenclature'
+      "workbaskets/shared/steps/review_and_submit/approval/create_nomenclatures"
     elsif workbasket.type == 'edit_nomenclature'
       "workbaskets/shared/steps/review_and_submit/approval/edit_nomenclatures"
+    elsif workbasket.type == 'edit_quota_suspension'
+      "workbaskets/shared/steps/review_and_submit/approval/edit_quota_suspension"
     elsif workbasket.type == 'bulk_edit_of_measures'
       "workbaskets/shared/steps/review_and_submit/approval/bulk_edit_measures"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'

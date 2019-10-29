@@ -17,9 +17,13 @@ module Workbaskets
     end
 
     def create
-      @workbasket = create_edit_nomenclature_workbasket
-
-      redirect_to edit_edit_nomenclature_path(@workbasket.id)
+      if (workbasket_params[:action] == 'new_nomenclature')
+        @workbasket = create_create_nomenclature_workbasket
+        redirect_to edit_create_nomenclature_path(@workbasket.id)
+      else
+        @workbasket = create_edit_nomenclature_workbasket
+        redirect_to edit_edit_nomenclature_path(@workbasket.id)
+      end
     end
 
     private def create_edit_nomenclature_workbasket
@@ -40,6 +44,28 @@ module Workbaskets
           reason_for_changes: workbasket_params[:reason_for_changes],
           original_nomenclature: original_nomenclature.goods_nomenclature_sid,
           original_description: original_nomenclature.description
+        )
+      end
+      workbasket
+    end
+
+    private def create_create_nomenclature_workbasket
+      nomenclature = GoodsNomenclature.find(goods_nomenclature_item_id: workbasket_params[:item_id], producline_suffix: workbasket_params[:suffix])
+
+      workbasket = Workbaskets::Workbasket.new(
+        title: workbasket_params[:workbasket_name],
+        status: :new_in_progress,
+        type: :create_nomenclature,
+        user: current_user
+      )
+
+      if workbasket.save
+        original_nomenclature = find_original_nomenclature(workbasket_params[:original_nomenclature])
+        workbasket.settings.update(
+          workbasket_id: workbasket.id,
+          workbasket_name: workbasket_params[:workbasket_name],
+          reason_for_changes: workbasket_params[:reason_for_changes],
+          parent_nomenclature_sid: original_nomenclature.goods_nomenclature_sid
         )
       end
       workbasket

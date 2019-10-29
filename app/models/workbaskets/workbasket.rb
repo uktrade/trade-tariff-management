@@ -16,6 +16,7 @@ module Workbaskets
       edit_certificate
       edit_geographical_area
       edit_nomenclature
+      create_nomenclature
       edit_regulation
       create_quota_association
       delete_quota_association
@@ -103,6 +104,7 @@ module Workbaskets
       create_geographical_area
       create_additional_code
       create_footnote
+      create_nomenclature
       create_certificate
     ).freeze
 
@@ -163,6 +165,9 @@ module Workbaskets
 
     one_to_one :edit_nomenclature_settings, key: :workbasket_id,
                class_name: "Workbaskets::EditNomenclatureSettings"
+
+    one_to_one :create_nomenclature_settings, key: :workbasket_id,
+               class_name: "Workbaskets::CreateNomenclatureSettings"
 
     one_to_one :edit_regulation_settings, key: :workbasket_id,
                class_name: "Workbaskets::EditRegulationSettings"
@@ -349,7 +354,11 @@ module Workbaskets
             move_status_to!(current_admin, "editing")
 
             clean_up_draft_measures! if type == "bulk_edit_of_measures"
-            clean_up_drafts! if (type == "edit_regulation" || type == 'edit_footnote' || type == 'create_quota_association' || type == 'delete_quota_association')
+            clean_up_drafts! if (type == "edit_regulation" ||
+                                 type == 'edit_footnote' ||
+                                 type == 'create_quota_association' ||
+                                 type == 'delete_quota_association' ||
+                                 type == 'create_nomenclature')
 
             settings.collection.map do |item|
               item.move_status_to!(:editing)
@@ -560,6 +569,8 @@ module Workbaskets
         edit_geographical_area_settings
       when :edit_nomenclature
         edit_nomenclature_settings
+      when :create_nomenclature
+        create_nomenclature_settings
       when :edit_regulation
         edit_regulation_settings
       when :create_quota_association
@@ -672,6 +683,7 @@ module Workbaskets
           edit_certificate
           edit_geographical_area
           edit_nomenclature
+          create_nomenclature
           edit_regulation
           create_quota_association
           delete_quota_association
@@ -715,6 +727,8 @@ module Workbaskets
                        ::Workbaskets::EditGeographicalAreaSettings
                      when :edit_nomenclature
                        ::Workbaskets::EditNomenclatureSettings
+                     when :create_nomenclature
+                       ::Workbaskets::CreateNomenclatureSettings
                      when :edit_regulation
                        ::Workbaskets::EditRegulationSettings
                      when :create_quota_association
