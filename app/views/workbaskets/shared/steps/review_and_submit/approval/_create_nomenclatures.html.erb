@@ -1,0 +1,51 @@
+<div class="grid-row">
+  <div class="column-two-thirds">
+
+    <table>
+      <tbody>
+      <tr>
+        <td class="heading_column">New code</td>
+        <td>
+          <%= workbasket.settings.goods_nomenclature_item_id %>
+        </td>
+      </tr>
+      <tr>
+        <td class="heading_column">Description</td>
+        <td>
+          <%= workbasket.settings.description %>
+        </td>
+      </tr>
+      <tr>
+        <td class="heading_column">Start Date</td>
+        <td>
+          <%= workbasket.settings.validity_start_date.to_s(:uk_Mmm) %>
+        </td>
+      </tr>
+      <tr>
+        <td class="heading_column">Product line suffix</td>
+        <td>
+          <%= workbasket.settings.producline_suffix%>
+        </td>
+      </tr>
+      <tr>
+        <td class="heading_column">Indents</td>
+        <td>
+          <%= workbasket.settings.number_indents%>
+        </td>
+      </tr>
+      <tr>
+        <td class="heading_column">Origin code</td>
+        <td>
+          <%= workbasket.settings.origin_nomenclature%>
+        </td>
+      </tr>
+      <tr>
+        <td class="heading_column">Origin suffix</td>
+        <td>
+          <%= workbasket.settings.origin_producline_suffix%>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

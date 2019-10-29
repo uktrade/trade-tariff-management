@@ -1,0 +1,228 @@
+<div class="breadcrumbs">
+  <ol>
+    <li>
+      <%= link_to "Main menu", root_url %>
+    </li>
+  </ol>
+</div>
+
+<h1 class="heading-xlarge m-b-5">
+  Add new commodity code
+</h1>
+
+<div class="panel panel-border-narrow p-t-5 p-b-5">
+  <p>
+    <%= original_nomenclature.goods_nomenclature_item_id %> - <%= original_nomenclature.description %>
+  </p>
+</div>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <details>
+      <summary>
+        Workbasket details
+      </summary>
+      <div class="panel panel-border-narrow m-b-60">
+        <table>
+          <tbody>
+            <tr>
+              <td class="bold-small">Workbasket name</td>
+              <td><%= workbasket.title %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Reason for changes</td>
+              <td><%= workbasket.settings.reason_for_changes %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <details>
+      <summary>
+        Parent code details
+      </summary>
+      <div class="panel panel-border-narrow m-b-60">
+        <table>
+          <tbody>
+          <tr>
+            <td class="bold-small">Commodity code</td>
+            <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
+          </tr>
+          <tr>
+            <td class="bold-small">Description</td>
+            <td><%= original_nomenclature.description %></td>
+          </tr>
+          <tr>
+            <td class="bold-small">Product line suffix</td>
+            <td><%= original_nomenclature.producline_suffix %></td>
+          </tr>
+          <tr>
+            <td class="bold-small">Indents</td>
+            <td><%= original_nomenclature.number_indents %></td>
+          </tr>
+          <tr>
+            <td class="bold-small">Footnotes</td>
+            <td><%= original_nomenclature.footnotes.map(&:code).join(", ") %></td>
+          </tr>
+          <tr>
+            <td class="bold-small">Code valid from</td>
+            <td><%= original_nomenclature.validity_start_date.to_formatted_s(:uk_Mmm) %></td>
+          </tr>
+          <tr>
+            <td class="bold-small">Code valid until</td>
+            <td><%= original_nomenclature.validity_end_date %></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</div>
+
+
+
+<%= simple_form_for @create_nomenclature_form, url: create_nomenclature_path, method: :put, html: {novalidate: false} do |f| %>
+  <h3 class="heading-large m-t-25">Define the new commodity code</h3>
+
+  <div class="grid-row">
+    <div class="column-full">
+      <div <%= 'class="panel panel-border-narrow form-group-error' if saver&.errors[:goods_nomenclature_item_id] %>">
+        <% if saver&.errors[:goods_nomenclature_item_id]  %>
+          <span class="error-message"><%= saver&.errors[:goods_nomenclature_item_id] %></span>
+        <% end %>
+        <div class="grid-row">
+          <div class="column-one-quarter">
+            <%= f.input :goods_nomenclature_item_id, label: 'New code', required: true, input_html: { minlength: 10,  maxlength: 10 } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-row">
+    <div class="column-full">
+      <div <%= 'class="panel panel-border-narrow form-group-error' if saver&.errors[:description] %>">
+        <% if saver&.errors[:description]  %>
+          <span class="error-message"><%= saver&.errors[:description] %></span>
+        <% end %>
+        <div class="grid-row">
+          <div class="column-one-half">
+            <%= f.input :description, label: 'Description', required: true, :as => :text, :input_html => { rows: 6 } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid-row m-b-30">
+    <div class="column-full">
+      <div <%= 'class="panel panel-border-narrow form-group-error' if (saver&.errors[:validity_start_date].present? || saver&.conformance_errors.present?) %>">
+        <% if (saver&.errors[:validity_start_date] || saver&.conformance_errors)  %>
+          <span class="error-message">
+            <%= saver&.errors[:validity_start_date] %>
+            <%= saver&.conformance_errors&.values[0] %>
+          </span>
+        <% end %>
+        <div class="grid-row">
+          <div class="column-one-half">
+            <fieldset>
+              <legend>
+                <span class="form-label-bold">
+                  When should these changes take effect?
+                </span>
+                <span class="form-hint">For example, 01 03 1980</span>
+              </legend>
+              <div class="form-date">
+                <%= f.input :validity_start_date_day, label: 'Day', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits day"}, wrapper_html: { class: 'form-group-day' } %>
+                <%= f.input :validity_start_date_month, label: 'Month', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits month"}, wrapper_html: { class: 'form-group-month' } %>
+                <%= f.input :validity_start_date_year, label: 'Year', required: true,  input_html: {pattern:"[0-9]*", minlength:"4", maxlength:"4", title:"Four digits year"}, wrapper_html: { class: 'form-group-year' }  %>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid-row">
+    <div class="column-full">
+      <div <%= 'class="panel panel-border-narrow form-group-error' if saver&.errors[:producline_suffix] %>">
+        <% if saver&.errors[:producline_suffix]  %>
+          <span class="error-message"><%= saver&.errors[:producline_suffix] %></span>
+        <% end %>
+        <div class="grid-row">
+          <div class="column-one-quarter">
+
+            <%= f.input :producline_suffix, label: 'Product line suffix', required: true, input_html: { maxlength: 2 } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-row">
+    <div class="column-full">
+      <div <%= 'class="panel panel-border-narrow form-group-error' if saver&.errors[:number_indents] %>">
+        <% if saver&.errors[:number_indents]  %>
+          <span class="error-message"><%= saver&.errors[:number_indents] %></span>
+        <% end %>
+        <div class="grid-row">
+          <div class="column-one-quarter">
+            <%= f.input :number_indents, label: 'Indents', required: true, input_html: { maxlength: 2 } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-row">
+    <div class="column-full">
+      <div <%= 'class="panel panel-border-narrow form-group-error' if saver&.errors[:origin_code] %>">
+        <% if saver&.errors[:origin_code]  %>
+          <span class="error-message"><%= saver&.errors[:origin_code] %></span>
+        <% end %>
+        <div class="grid-row">
+          <div class="column-one-quarter">
+            <%= f.input :origin_code, label: 'Origin code', required: true, input_html: { minlength: 10,  maxlength: 10 } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-row">
+    <div class="column-full">
+      <div <%= 'class="panel panel-border-narrow form-group-error' if saver&.errors[:origin_producline_suffix] %>">
+        <% if saver&.errors[:origin_producline_suffix]  %>
+          <span class="error-message"><%= saver&.errors[:origin_producline_suffix] %></span>
+        <% end %>
+        <div class="grid-row">
+          <div class="column-one-quarter">
+            <%= f.input :origin_producline_suffix, label: 'Origin product line suffix', required: true, input_html: { maxlength: 2 } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div>
+      <div class="form-actions">
+        <button type="submit"
+                class='button'
+                data-disable-with='Processing'>
+          Submit for cross-check
+        </button>
+
+        <%= link_to "Cancel", root_path, class: "secondary-button" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

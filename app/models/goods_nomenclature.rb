@@ -96,10 +96,8 @@ class GoodsNomenclature < Sequel::Model
   delegate :number_indents, to: :goods_nomenclature_indent, allow_nil: true
   delegate :description, :formatted_description, to: :goods_nomenclature_description, allow_nil: true
 
-  one_to_one :goods_nomenclature_origin, key: %i[goods_nomenclature_item_id
-                                                 productline_suffix],
-                                         primary_key: %i[goods_nomenclature_item_id
-                                                         producline_suffix]
+  one_to_one :goods_nomenclature_origin, key: %i[goods_nomenclature_sid],
+             primary_key: %i[goods_nomenclature_sid]
 
   one_to_many :goods_nomenclature_successors, key: %i[absorbed_goods_nomenclature_item_id
                                                       absorbed_productline_suffix],

@@ -276,6 +276,14 @@ Rails.application.routes.draw do
 
     resource :manage_nomenclature, only: [:new, :create]
 
+    resources :create_nomenclature, only: [:edit, :update, :show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
     resources :edit_nomenclature, only: [:edit, :update, :show, :destroy] do
       member do
         get :submitted_for_cross_check

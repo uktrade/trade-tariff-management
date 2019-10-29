@@ -46,6 +46,7 @@ shared_context "xml_generation_record_context" do
     xml_name = "oub:#{field_name.tr('_', '.')}"
     xml_value = db_record.public_send(data_field_name)
     xml_value = xml_value.strftime("%Y-%m-%d") if date_type
+    xml_value = (xml_value.to_s.rjust(2, '0')) if field_name == 'number_indents'
 
     expect(xml_values[xml_name]).to be_eql xml_value.to_s
   end

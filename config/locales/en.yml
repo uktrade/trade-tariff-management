@@ -199,3 +199,8 @@ en:
   edit_nomenclature:
     description_blank: "Description cannot be left blank and must comprise at least one word."
     validity_start_date_blank: "Start date must be specified."
+
+  create_nomenclature:
+    description_blank: "Description cannot be left blank and must comprise at least one word."
+    validity_start_date_blank: "Start date must be specified."
+    origin_code_not_valid: "The origin code/suffix is not a valid commodiy."

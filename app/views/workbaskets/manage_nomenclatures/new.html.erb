@@ -47,15 +47,16 @@
         </label>
       </div>
       <div class="multiple-choice">
-        <input type='radio' id="amend_description" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="amend_description" checked>
+        <input type='radio' id="amend_description" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="amend_description">
         <label for="amend_description">
           Amend description
         </label>
       </div>
       <div class="multiple-choice">
-        <input type='radio' id="new_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="new_nomenclature" disabled>
+        <input type='radio' id="new_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="new_nomenclature"
+               <%= 'disabled' if @nomenclature.goods_nomenclature_item_id.ends_with?('000000') %> >
         <label for="new_nomenclature">
-          Add new code (structural) (Not implemented)
+          Add new code (structural)
         </label>
       </div>
       <div class="multiple-choice">

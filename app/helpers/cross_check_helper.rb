@@ -16,6 +16,8 @@ module CrossCheckHelper
       "Cross-check and delete quota association"
     elsif workbasket.type == 'create_certificate'
       "Cross-check and create certificate"
+    elsif workbasket.type == 'create_nomenclature'
+      "Cross-check and create goods classification"
     elsif workbasket.type == 'edit_nomenclature'
       "Cross-check and edit goods classification"
     elsif workbasket.type == 'edit_geographical_area'
@@ -62,6 +64,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/quota_suspension"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'
       "workbaskets/shared/steps/review_and_submit/bulk_edit_additional_codes"
+    elsif workbasket.type == 'create_nomenclature'
+      "workbaskets/shared/steps/review_and_submit/create_nomenclatures"
     elsif workbasket.type == 'edit_nomenclature'
       "workbaskets/shared/steps/review_and_submit/edit_nomenclatures"
     elsif workbasket.type == 'create_footnote'
