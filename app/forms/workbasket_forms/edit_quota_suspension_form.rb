@@ -42,12 +42,14 @@ module WorkbasketForms
         @settings_errors[:end_date] = "You must select an end date"
       end
 
-      unless start_date_valid?
-        @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or suspension period'
-      end
+      if @workbasket_settings.quota_definition_sid
+        unless start_date_valid?
+          @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or suspension period'
+        end
 
-      if @workbasket_settings.description.length > 500
-        @settings_errors[:description_too_long] = 'Description cannot be more than 500 characters'
+        if @workbasket_settings.description.length > 500
+          @settings_errors[:description_too_long] = 'Description cannot be more than 500 characters'
+        end
       end
 
       if @settings_errors.empty?
