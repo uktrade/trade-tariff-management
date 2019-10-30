@@ -18,12 +18,23 @@ module WorkbasketHelpers
       self.manual_add = true
       self.status = new_status
 
+      mark_deleted if pending_deletion?(new_status)
+
       save
     end
 
     def already_end_dated?
       validity_end_date.present? &&
         validity_end_date <= Date.today.midnight
+    end
+
+    private def pending_deletion?(new_status)
+      # Updates for Quota Associations are actually deletions.
+      self.class == QuotaAssociation && self.operation == :update && new_status == 'published'
+    end
+
+    private def mark_deleted
+      self.operation = 'D'
     end
   end
 end
