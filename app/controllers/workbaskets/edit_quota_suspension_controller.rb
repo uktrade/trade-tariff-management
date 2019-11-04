@@ -15,6 +15,7 @@ module Workbaskets
 
     def new
       @edit_quota_suspension_form = WorkbasketForms::EditQuotaSuspensionForm.new
+      @quota_order_number = params[:quota_order_number]
     end
 
     def create
