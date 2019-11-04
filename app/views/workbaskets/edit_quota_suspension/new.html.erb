@@ -77,7 +77,7 @@
                 </label>
                 <div class="grid-row">
                   <div class="column-one-quarter">
-                    <%= f.input :quota_order_number_id, label: false, required: true, input_html: { minlength: 6,  maxlength: 6 } %>
+                    <%= f.input :quota_order_number_id, label: false, readonly: true, required: true, input_html: { value: "#{@quota_order_number}", minlength: 6,  maxlength: 6 } %>
                   </div>
                 </div>
               </div>
