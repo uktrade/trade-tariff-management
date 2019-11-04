@@ -1,0 +1,103 @@
+<% content_for :content do %>
+  <div id="vue-create-quota-suspension-form">
+    <div class="breadcrumbs">
+      <nav>
+        <ol>
+          <li>
+          <%= link_to "Main menu", root_url %>
+          </li>
+          <li>
+              <%= link_to "Quota suspension period", quota_suspensions_url %>
+          </li>
+          <li>
+              Create quota suspension period
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <% if @edit_quota_suspension_form.settings_errors.any? %>
+      <div class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+          Error
+        </h2>
+        <p>
+          Please see individual fields for details.
+        </p>
+        <ul class="error-summary-list">
+          <% @edit_quota_suspension_form.settings_errors.each do | error | %>
+            <span class="error-message"><%= error[1] %></span>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <h1 class="heading-large">
+      <%= "Create quota suspension period on quota #{@edit_quota_suspension_form.quota.quota_order_number_id}" %>
+    </h1>
+
+    <%= simple_form_for @edit_quota_suspension_form, url: create_quota_suspension_path, method: :patch do |f| %>
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group">
+            <label class="heading-medium" for="parent_definition_period">
+              Select the quota definition period to suspend
+              <span class="form-hint">
+                  This is the quota definition on to which the quota suspension will be assigned. This list only includes future and current definition periods
+              </span>
+              <% if @edit_quota_suspension_form.settings_errors[:quota_order_number_id] %>
+                <span class="error-message"><%= @edit_quota_suspension_form.settings_errors[:quota_order_number_id] %></span>
+              <% end %>
+            </label>
+
+          </label>
+          <div class="grid-row">
+            <div class="column-one-third">
+              <select id="quota_definition_sid" class="form-control" name="quota_definition_sid" >
+                <option value="" disabled selected>Select quota suspension period</option>
+                <% @edit_quota_suspension_form.quota.quota_definitions.each do |quota_definition| %>
+                  <option value="<%= quota_definition.quota_definition_sid %>"><%= quota_definition.validity_start_date.to_s(:uk_Mmm) %> to <%= quota_definition.validity_end_date.to_s(:uk_Mmm) %></option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <%= content_tag "date-gds", "", "label" => "Suspension period start date", "hint" => "Please ensure that this date falls on or after the definition start date", "id" => "start_date", "input_name" => "workbasket_forms_edit_create_quota_suspension_form[start_date]", ":error" => "errors.start_date" %>
+
+      <%= content_tag "date-gds", "", "label" => "Suspension period end date", "hint" => "Please ensure that this date falls on or before the definition end date", "id" => "end_date", "input_name" => "workbasket_forms_edit_create_quota_suspension_form[end_date]", ":error" => "errors.start_date" %>
+
+      <div>
+        <h3 class='heading medium'>
+          <label id='description' class='form-label' name='description'>
+            Please enter a description for this suspension period
+          </label>
+        </h2>
+          <span class='form-hint'>
+            This field is for informational purposes only. It is not mandatory.
+          </span>
+          <div class='bootstrap-row'>
+            <div class='col-md-6'>
+              <div class='form-group'>
+                <%= f.input :description, label: false, required: true, input_html: { maxlength: 500 }%>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="m-t-30">
+        <div class="submit_group_for_cross_check_block">
+          <button class="button js-workbasket-base-continue-button" type="submit" aria-disabled="true">Submit for cross-check</button>
+          <div class="js-workbasket-base-continue-spinner spinner_block hidden">
+            <%= render "measures/bulks/loading_spinner", message: "Saving..." %>
+          </div>
+        </div>
+        <div class="save_progress_block">
+          <%= link_to "Cancel", new_create_quota_suspension_path, class: "secondary-button" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
