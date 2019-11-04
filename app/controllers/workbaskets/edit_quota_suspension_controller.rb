@@ -32,6 +32,16 @@ module Workbaskets
       @workbasket = Workbasket.find(id: params[:id])
     end
 
+    def update
+      @edit_quota_suspension_form = WorkbasketForms::EditEditQuotaSuspensionForm.new(params[:id], update_quota_suspension_params)
+
+      if @edit_quota_suspension_form.save
+        redirect_to submitted_for_cross_check_create_quota_suspension_path(@edit_quota_suspension_form.workbasket.id)
+      else
+        render :edit
+      end
+    end
+
     private
       def check_if_action_is_permitted!
         true
@@ -39,6 +49,15 @@ module Workbaskets
 
       def edit_quota_suspension_params
         params.require(:workbasket_forms_edit_quota_suspension_form).permit(:workbasket_title, :workbasket_id, :quota_order_number_id)
+      end
+
+      def update_quota_suspension_params
+        {
+          quota_definition_sid: params[:quota_definition_sid],
+          description: params[:workbasket_forms_edit_edit_quota_suspension_form][:description],
+          start_date: params[:workbasket_forms_edit_edit_quota_suspension_form][:start_date],
+          end_date: params[:workbasket_forms_edit_edit_quota_suspension_form][:end_date]
+        }
       end
   end
 end
