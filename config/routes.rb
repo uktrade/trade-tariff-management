@@ -316,6 +316,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :edit_quota_suspension, only: [:new, :create, :edit, :update, :show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
   end
 
   scope module: :geo_areas do

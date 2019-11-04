@@ -1,0 +1,101 @@
+<% content_for :content do %>
+  <div id="vue-edit-quota-suspension-form">
+    <div class="breadcrumbs">
+      <nav>
+        <ol>
+          <li>
+          <%= link_to "Main menu", root_url %>
+          </li>
+          <li>
+              <%= link_to "Quota suspension", quota_suspensions_url %>
+          </li>
+          <li>
+              Edit quota suspension period
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <% if @edit_quota_suspension_form.settings_errors[:workbasket_title] %>
+      <div class="error-summary" role="alert">
+        <h2 class="heading-medium error-summary-heading">
+          There is a problem
+        </h2>
+        <% @edit_quota_suspension_form.settings_errors.values.each do |error| %>
+          <p class="error-message">
+            <%= error %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <h1 class="heading-large">
+      Edit quota suspension period
+    </h1>
+
+    <div class="grid-row">
+      <div class="column-full">
+        <p>Use this functionality to edit a suspension period for a given quota.</p>
+
+        <p>Alternatively, please click here to view <%= link_to "existing quota suspensions periods", quota_suspensions_url %>.</p>
+      </div>
+    </div>
+    <%= simple_form_for @edit_quota_suspension_form, url: edit_quota_suspension_index_path do |f| %>
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group">
+            <label for="workbasket_name" class="heading-medium">
+              Please enter the name of the workbasket
+
+              <% if @edit_quota_suspension_form.settings_errors[:workbasket_title] %>
+                <span class="error-message"><%= @edit_quota_suspension_form.settings_errors[:workbasket_title] %></span>
+              <% end %>
+
+            </label>
+            <div class="grid-row">
+              <div class="column-one-half">
+                <%= f.input :workbasket_title, label: false, required: true %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-row">
+          <div class="column-full">
+              <div class="form-group">
+                <label class="heading-medium m-t-10" for="parent_quota">
+                  Please enter the quota order number ID
+                  <span class="form-hint">
+                    Please ensure that you select an existing quota order number ID with 6 numeric digits beginning "09". Only select FCFS quotas that do not start with the characters "094"
+                  </span>
+
+                  <% if @edit_quota_suspension_form.settings_errors[:quota_order_number_id] %>
+                    <span class="error-message"><%= @edit_quota_suspension_form.settings_errors[:quota_order_number_id] %></span>
+                  <% end %>
+
+                </label>
+                <div class="grid-row">
+                  <div class="column-one-quarter">
+                    <%= f.input :quota_order_number_id, label: false, required: true, input_html: { minlength: 6,  maxlength: 6 } %>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
+      <div class="actions">
+        <div class="form-actions">
+          <button type="submit"
+                  class='button'
+                  data-disable-with='Processing'>
+            Continue
+          </button>
+          <%= link_to "Cancel", root_path, class: "secondary-button" %>
+        </div>
+      </div>
+  </div>
+
+  <% end %>
+
+<% end %>
