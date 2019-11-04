@@ -10,13 +10,12 @@
               <%= link_to "Quota suspension period", quota_suspensions_url %>
           </li>
           <li>
-              Create quota suspension period
+              Edit quota suspension period
           </li>
         </ol>
       </nav>
     </div>
-
-    <% if @edit_quota_suspension_form.settings_errors.any? %>
+    <% if @edit_edit_quota_suspension_form.settings_errors.any? %>
       <div class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
           Error
@@ -25,7 +24,7 @@
           Please see individual fields for details.
         </p>
         <ul class="error-summary-list">
-          <% @edit_quota_suspension_form.settings_errors.each do | error | %>
+          <% @edit_edit_quota_suspension_form.settings_errors.each do | error | %>
             <span class="error-message"><%= error[1] %></span>
           <% end %>
         </ul>
@@ -33,10 +32,10 @@
     <% end %>
 
     <h1 class="heading-large">
-      <%= "Create quota suspension period on quota #{@edit_quota_suspension_form.quota.quota_order_number_id}" %>
+      <%= "Edit quota suspension period on quota #{@edit_edit_quota_suspension_form.quota.quota_order_number_id}" %>
     </h1>
 
-    <%= simple_form_for @edit_quota_suspension_form, url: create_quota_suspension_path, method: :patch do |f| %>
+    <%= simple_form_for @edit_edit_quota_suspension_form, url: edit_quota_suspension_path, method: :patch do |f| %>
       <div class="grid-row">
         <div class="column-full">
           <div class="form-group">
@@ -45,8 +44,8 @@
               <span class="form-hint">
                   This is the quota definition on to which the quota suspension will be assigned. This list only includes future and current definition periods
               </span>
-              <% if @edit_quota_suspension_form.settings_errors[:quota_order_number_id] %>
-                <span class="error-message"><%= @edit_quota_suspension_form.settings_errors[:quota_order_number_id] %></span>
+              <% if @edit_edit_quota_suspension_form.settings_errors[:quota_order_number_id] %>
+                <span class="error-message"><%= @edit_edit_quota_suspension_form.settings_errors[:quota_order_number_id] %></span>
               <% end %>
             </label>
 
@@ -55,7 +54,7 @@
             <div class="column-one-third">
               <select id="quota_definition_sid" class="form-control" name="quota_definition_sid" >
                 <option value="" disabled selected>Select quota suspension period</option>
-                <% @edit_quota_suspension_form.quota.quota_definitions.each do |quota_definition| %>
+                <% @edit_edit_quota_suspension_form.quota.quota_definitions.each do |quota_definition| %>
                   <option value="<%= quota_definition.quota_definition_sid %>"><%= quota_definition.validity_start_date.to_s(:uk_Mmm) %> to <%= quota_definition.validity_end_date.to_s(:uk_Mmm) %></option>
                 <% end %>
               </select>
@@ -65,9 +64,9 @@
         </div>
       </div>
 
-      <%= content_tag "date-gds", "", "label" => "Suspension period start date", "hint" => "Please ensure that this date falls on or after the definition start date", "id" => "start_date", "input_name" => "workbasket_forms_edit_create_quota_suspension_form[start_date]", ":error" => "errors.start_date" %>
+      <%= content_tag "date-gds", "", "label" => "Suspension period start date", "hint" => "Please ensure that this date falls on or after the definition start date", "id" => "start_date", "input_name" => "workbasket_forms_edit_quota_suspension_form[start_date]", ":error" => "errors.start_date" %>
 
-      <%= content_tag "date-gds", "", "label" => "Suspension period end date", "hint" => "Please ensure that this date falls on or before the definition end date", "id" => "end_date", "input_name" => "workbasket_forms_edit_create_quota_suspension_form[end_date]", ":error" => "errors.start_date" %>
+      <%= content_tag "date-gds", "", "label" => "Suspension period end date", "hint" => "Please ensure that this date falls on or before the definition end date", "id" => "end_date", "input_name" => "workbasket_forms_edit_quota_suspension_form[end_date]", ":error" => "errors.start_date" %>
 
       <div>
         <h3 class='heading medium'>
@@ -95,7 +94,7 @@
           </div>
         </div>
         <div class="save_progress_block">
-          <%= link_to "Cancel", new_create_quota_suspension_path, class: "secondary-button" %>
+          <%= link_to "Cancel", new_edit_quota_suspension_path, class: "secondary-button" %>
         </div>
       </div>
     <% end %>
