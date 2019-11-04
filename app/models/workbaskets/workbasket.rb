@@ -20,6 +20,7 @@ module Workbaskets
       create_quota_association
       delete_quota_association
       create_quota_suspension
+      edit_quota_suspension
     ].freeze
 
     STATUS_LIST = [
@@ -174,6 +175,9 @@ module Workbaskets
 
     one_to_one :create_quota_suspension_settings, key: :workbasket_id,
                class_name: "Workbaskets::CreateQuotaSuspensionSettings"
+
+    one_to_one :edit_quota_suspension_settings, key: :workbasket_id,
+               class_name: "Workbaskets::EditQuotaSuspensionSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -564,6 +568,8 @@ module Workbaskets
         delete_quota_association_settings
       when :create_quota_suspension
         create_quota_suspension_settings
+      when :edit_quota_suspension
+        edit_quota_suspension_settings
       end
     end
 
@@ -716,6 +722,8 @@ module Workbaskets
                        ::Workbaskets::DeleteQuotaAssociationSettings
                      when :create_quota_suspension
                        ::Workbaskets::CreateQuotaSuspensionSettings
+                     when :edit_quota_suspension
+                       ::Workbaskets::EditQuotaSuspensionSettings
       end
 
       target_class.unrestrict_primary_key
