@@ -33,7 +33,7 @@ module WorkbasketForms
       unless @workbasket_settings.quota_definition_sid
         @settings_errors[:quota_definition_sid] = "You must select a quota definition period"
       end
-
+      
       if @workbasket_settings.start_date.empty?
         @settings_errors[:start_date] = "You must select a start date"
       end
