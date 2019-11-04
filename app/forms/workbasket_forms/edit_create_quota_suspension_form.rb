@@ -1,5 +1,5 @@
 module WorkbasketForms
-  class EditQuotaSuspensionForm
+  class EditCreateQuotaSuspensionForm
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ::WorkbasketHelpers::SettingsSaverHelperMethods

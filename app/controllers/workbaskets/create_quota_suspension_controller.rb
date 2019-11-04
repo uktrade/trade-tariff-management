@@ -28,12 +28,12 @@ module Workbaskets
     end
 
     def edit
-      @edit_quota_suspension_form = WorkbasketForms::EditQuotaSuspensionForm.new(params[:id])
+      @edit_quota_suspension_form = WorkbasketForms::EditCreateQuotaSuspensionForm.new(params[:id])
       @workbasket = Workbasket.find(id: params[:id])
     end
 
     def update
-      @edit_quota_suspension_form = WorkbasketForms::EditQuotaSuspensionForm.new(params[:id], update_quota_suspension_params)
+      @edit_quota_suspension_form = WorkbasketForms::EditCreateQuotaSuspensionForm.new(params[:id], update_quota_suspension_params)
 
       if @edit_quota_suspension_form.save
         redirect_to submitted_for_cross_check_create_quota_suspension_path(@edit_quota_suspension_form.workbasket.id)
@@ -51,9 +51,9 @@ module Workbaskets
       def update_quota_suspension_params
         {
           quota_definition_sid: params[:quota_definition_sid],
-          description: params[:workbasket_forms_edit_quota_suspension_form][:description],
-          start_date: params[:workbasket_forms_edit_quota_suspension_form][:start_date],
-          end_date: params[:workbasket_forms_edit_quota_suspension_form][:end_date]
+          description: params[:workbasket_forms_edit_create_quota_suspension_form][:description],
+          start_date: params[:workbasket_forms_edit_create_quota_suspension_form][:start_date],
+          end_date: params[:workbasket_forms_edit_create_quota_suspension_form][:end_date]
         }
       end
 
