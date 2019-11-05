@@ -11,6 +11,8 @@ module WorkbasketForms
     def initialize(settings = {}, current_user = nil)
       @workbasket_title =  settings[:workbasket_title]
       @quota_order_number_id = settings[:quota_order_number_id]
+      @quota_definition_sid = settings[:quota_definition_sid]
+      @quota_suspension_period_sid = settings[:quota_suspension_period_sid]
       @current_user = current_user
       @settings_errors = {}
     end
@@ -39,7 +41,7 @@ module WorkbasketForms
           type: :edit_quota_suspension,
           user: @current_user
         ).save
-        
+
         @workbasket.settings.update(quota_order_number_id: quota_order_number_id)
       end
 
