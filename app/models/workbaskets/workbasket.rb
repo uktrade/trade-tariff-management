@@ -676,6 +676,7 @@ module Workbaskets
           create_quota_association
           delete_quota_association
           create_quota_suspension
+          edit_quota_suspension
         ).map do |type_name|
           by_type(type_name).map(&:clean_up_workbasket!)
         end

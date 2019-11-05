@@ -325,7 +325,13 @@ module WorkbasketHelper
         step: :main
       )
 
-    end
+    when :edit_quota_suspension
+        edit_edit_quota_suspension_url(
+          workbasket.id,
+          step: :main
+        )
+
+      end
   end
 
   def workbasket_view_link_based_on_type(workbasket)
@@ -368,6 +374,8 @@ module WorkbasketHelper
       delete_quota_association_url(workbasket.id)
     when :create_quota_suspension
       create_quota_suspension_url(workbasket.id)
+    when :edit_quota_suspension
+      edit_quota_suspension_url(workbasket.id)
     end
   end
 

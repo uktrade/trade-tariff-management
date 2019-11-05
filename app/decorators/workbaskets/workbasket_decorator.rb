@@ -40,6 +40,8 @@ module Workbaskets
         "Delete Quota Association"
       when "create_quota_suspension"
         "Create Quota Suspension Period"
+      when "edit_quota_suspension"
+        "Edit Quota Suspension Period"
       end
     end
 
