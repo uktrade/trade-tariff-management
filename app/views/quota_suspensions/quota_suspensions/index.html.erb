@@ -45,7 +45,7 @@
         <td><%= "#{quota_definition.validity_start_date.strftime("%d-%m-%y")} to #{quota_definition.validity_end_date.strftime("%d-%m-%y")}" if quota_definition %></td>
         <td><%= "#{quota_suspension.suspension_start_date.strftime("%d-%m-%y")} to #{quota_suspension.suspension_end_date.strftime("%d-%m-%y")}" %></td>
         <td class='break-word'><%= quota_suspension.description %></td>
-        <td><%= link_to "Edit", new_edit_quota_suspension_path(quota_order_number: quota_definition.quota_order_number_id) %></td>
+        <td><%= link_to "Edit", new_edit_quota_suspension_path(quota_suspension_period_sid: quota_suspension.quota_suspension_period_sid, quota_definition_sid: quota_definition.quota_definition_sid) %></td>
       </tr>
     <% end %>
   </tbody>

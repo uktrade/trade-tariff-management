@@ -15,6 +15,7 @@
         </ol>
       </nav>
     </div>
+
     <% if @edit_edit_quota_suspension_form.settings_errors.any? %>
       <div class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
@@ -53,10 +54,7 @@
           <div class="grid-row">
             <div class="column-one-third">
               <select id="quota_definition_sid" class="form-control" name="quota_definition_sid" >
-                <option value="" disabled selected>Select quota suspension period</option>
-                <% @edit_edit_quota_suspension_form.quota.quota_definitions.each do |quota_definition| %>
-                  <option value="<%= quota_definition.quota_definition_sid %>"><%= quota_definition.validity_start_date.to_s(:uk_Mmm) %> to <%= quota_definition.validity_end_date.to_s(:uk_Mmm) %></option>
-                <% end %>
+                <option readonly='true' value="<%= @quota_definition.quota_definition_sid %>"><%= @quota_definition.validity_start_date.to_s(:uk_Mmm) %> to <%= @quota_definition.validity_end_date.to_s(:uk_Mmm) %></option>
               </select>
             </div>
           </div>
@@ -64,9 +62,9 @@
         </div>
       </div>
 
-      <%= content_tag "date-gds", "", "label" => "Suspension period start date", "hint" => "Please ensure that this date falls on or after the definition start date", "id" => "start_date", "input_name" => "workbasket_forms_edit_edit_quota_suspension_form[start_date]", ":error" => "errors.start_date" %>
+      <%= content_tag "date-gds", "", "value" => @quota_suspension_period.suspension_start_date.strftime('%d,%m,%Y'), "label" => "Suspension period start date", "hint" => "Please ensure that this date falls on or after the definition start date", "id" => "start_date", "input_name" => "workbasket_forms_edit_edit_quota_suspension_form[start_date]", ":error" => "errors.start_date" %>
 
-      <%= content_tag "date-gds", "", "label" => "Suspension period end date", "hint" => "Please ensure that this date falls on or before the definition end date", "id" => "end_date", "input_name" => "workbasket_forms_edit_edit_quota_suspension_form[end_date]", ":error" => "errors.start_date" %>
+      <%= content_tag "date-gds", "", "value" => @quota_suspension_period.suspension_end_date.strftime('%d,%m,%Y'),"label" => "Suspension period end date", "hint" => "Please ensure that this date falls on or before the definition end date", "id" => "end_date", "input_name" => "workbasket_forms_edit_edit_quota_suspension_form[end_date]", ":error" => "errors.start_date" %>
 
       <div>
         <h3 class='heading medium'>
@@ -80,7 +78,7 @@
           <div class='bootstrap-row'>
             <div class='col-md-6'>
               <div class='form-group'>
-                <%= f.input :description, label: false, required: true, input_html: { maxlength: 500 }%>
+                <%= f.input :description, label: false, required: true, input_html: { value: "#{@quota_suspension_period.description}", maxlength: 500 }%>
               </div>
             </div>
           </div>

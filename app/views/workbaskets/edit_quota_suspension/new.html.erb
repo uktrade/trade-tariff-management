@@ -77,7 +77,9 @@
                 </label>
                 <div class="grid-row">
                   <div class="column-one-quarter">
-                    <%= f.input :quota_order_number_id, label: false, readonly: true, required: true, input_html: { value: "#{@quota_order_number}", minlength: 6,  maxlength: 6 } %>
+                    <%= hidden_field_tag :quota_suspension_period_sid, @quota_suspension_period_sid %>
+                    <%= hidden_field_tag :quota_definition_sid, @quota_definition.quota_definition_sid %>
+                    <%= f.input :quota_order_number_id, label: false, readonly: true, required: true, input_html: { value: "#{@quota_definition.quota_order_number_id}", minlength: 6,  maxlength: 6 } %>
                   </div>
                 </div>
               </div>
