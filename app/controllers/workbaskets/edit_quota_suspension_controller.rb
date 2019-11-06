@@ -25,7 +25,7 @@ module Workbaskets
       if @edit_quota_suspension_form.save
         redirect_to edit_edit_quota_suspension_path(id: @edit_quota_suspension_form.workbasket.id, quota_suspension_period_sid: params[:quota_suspension_period_sid], quota_definition_sid: params[:quota_definition_sid])
       else
-        render :new
+        redirect_to new_edit_quota_suspension_path(quota_definition_sid: params[:quota_definition_sid], quota_suspension_period_sid: params[:quota_suspension_period_sid])
       end
     end
 
@@ -40,7 +40,7 @@ module Workbaskets
       @edit_edit_quota_suspension_form = WorkbasketForms::EditEditQuotaSuspensionForm.new(params[:id], update_quota_suspension_params)
 
       if @edit_edit_quota_suspension_form.save
-        redirect_to submitted_for_cross_check_create_quota_suspension_path(@edit_edit_quota_suspension_form.workbasket.id)
+        redirect_to submitted_for_cross_check_edit_quota_suspension_path(@edit_edit_quota_suspension_form.workbasket.id)
       else
         render :edit
       end

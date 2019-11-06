@@ -55,10 +55,13 @@ module WorkbasketForms
       if @settings_errors.empty?
         QuotaSuspensionPeriod.unrestrict_primary_key
 
+        start_date = format_date(@workbasket_settings.start_date)
+        end_date = format_date(@workbasket_settings.end_date)
+
         suspension = QuotaSuspensionPeriod.new(
           quota_definition_sid: @workbasket_settings.quota_definition_sid,
-          suspension_start_date: @workbasket_settings.start_date,
-          suspension_end_date: @workbasket_settings.end_date,
+          suspension_start_date: start_date,
+          suspension_end_date: end_date,
           description: @workbasket_settings.description
         )
 
@@ -112,6 +115,10 @@ module WorkbasketForms
 
     def ends_after_start_date?
       @workbasket_settings.start_date < @workbasket_settings.end_date
+    end
+
+    def format_date(date)
+      date.gsub(',','/')
     end
 
     private def is_number?(string)
