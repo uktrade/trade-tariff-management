@@ -1,6 +1,6 @@
 .govuk-box-highlight
   h1.heading-xlarge
-    | New quota suspension submitted
+    | Edited quota suspension submitted
 
   p.font-large
     = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has been submitted for cross-check.".html_safe
@@ -14,7 +14,7 @@ ul class="list"
             data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
             class: "js-main-menu-show-withdraw-confirmation-link"
   li
-    = link_to "Create another quota suspension", new_create_quota_suspension_url
+    = link_to "Edit another quota suspension", quota_suspensions_url
   li
     = link_to "View this quota suspension", create_quota_suspension_path(workbasket.id)
   li

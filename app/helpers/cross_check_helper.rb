@@ -70,6 +70,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/create_certificate"
     elsif workbasket.type == 'edit_certificate'
       "workbaskets/shared/steps/review_and_submit/edit_certificate"
+    elsif workbasket.type == 'edit_quota_suspension'
+      "workbaskets/shared/steps/review_and_submit/quota_suspension"
     end
   end
 

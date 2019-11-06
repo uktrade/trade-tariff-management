@@ -36,8 +36,10 @@ module WorkbasketWorkflowHelper
       link_to "Find and edit geographical areas", geo_areas_url
     elsif workbasket.type.include?("additional_code")
       link_to "Find and edit additional codes", additional_codes_url
-    elsif workbasket.type.include?("quot")
+    elsif workbasket.type.include?("quota_association")
       link_to "Find and edit a quota association", quotas_url
+    elsif workbasket.type.include?("quota_suspension")
+      link_to "Find and edit a quota suspension", quota_suspensions_url
     elsif workbasket.type.include?("nomenclature")
       link_to "Manage goods classification", sections_url
     elsif workbasket.type.include?("footnote")
