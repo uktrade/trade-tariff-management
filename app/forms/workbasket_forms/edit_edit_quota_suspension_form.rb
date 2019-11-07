@@ -42,7 +42,7 @@ module WorkbasketForms
         @settings_errors[:end_date] = "You must select an end date"
       end
 
-      if @workbasket_settings.quota_definition_sid
+      if all_fields_completed?
         unless start_date_valid?
           @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or suspension period'
         end
@@ -95,6 +95,10 @@ module WorkbasketForms
         ends_after_start_date_of_definition(definition) &&
          ends_same_day_or_before_definition?(definition) &&
           ends_after_start_date?
+    end
+
+    def all_fields_completed?
+      @workbasket_settings.quota_definition_sid && !@workbasket_settings.start_date.empty? && !@workbasket_settings.end_date.empty?
     end
 
     def starts_same_day_or_after_definition?(definition)
