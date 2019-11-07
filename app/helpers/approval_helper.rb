@@ -54,8 +54,6 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/create_quota_suspension"
     elsif workbasket.type == 'edit_quota_suspension'
       "workbaskets/shared/steps/review_and_submit/approval/edit_quota_suspension"
-    elsif workbasket.type == 'edit_quota_suspension'
-      "workbaskets/shared/steps/review_and_submit/approval/edit_quota_suspension"
     elsif workbasket.type == 'edit_nomenclature'
       "workbaskets/shared/steps/review_and_submit/approval/edit_nomenclatures"
     elsif workbasket.type == 'bulk_edit_of_measures'

@@ -12,7 +12,7 @@ ul class="list"
 
   - unless workbasket_rejected?
     li
-      = link_to "View this quota suspension", create_quota_suspension_url(workbasket.id)
+      = link_to "View this quota suspension", edit_quota_suspension_url(workbasket.id)
 
   li
     = link_to "Return to main menu", root_url
