@@ -21,11 +21,13 @@ module Workbaskets
 
     def create
       @quota_definition = QuotaDefinition.find(quota_definition_sid: params[:quota_definition_sid])
+      @quota_suspension_period_sid = params[:quota_suspension_period_sid]
       @edit_quota_suspension_form = WorkbasketForms::EditQuotaSuspensionForm.new(edit_quota_suspension_params, current_user)
+
       if @edit_quota_suspension_form.save
         redirect_to edit_edit_quota_suspension_path(id: @edit_quota_suspension_form.workbasket.id, quota_suspension_period_sid: params[:quota_suspension_period_sid], quota_definition_sid: params[:quota_definition_sid])
       else
-        redirect_to new_edit_quota_suspension_path(quota_definition_sid: params[:quota_definition_sid], quota_suspension_period_sid: params[:quota_suspension_period_sid])
+        render :action => 'new'
       end
     end
 
