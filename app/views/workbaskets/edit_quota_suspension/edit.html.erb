@@ -55,6 +55,7 @@
             <div class="column-one-third">
               <select id="quota_definition_sid" class="form-control" name="quota_definition_sid" >
                 <option readonly='true' value="<%= @quota_definition.quota_definition_sid %>"><%= @quota_definition.validity_start_date.to_s(:uk_Mmm) %> to <%= @quota_definition.validity_end_date.to_s(:uk_Mmm) %></option>
+                <%= hidden_field_tag :quota_definition_sid, @quota_definition.quota_definition_sid %>
               </select>
             </div>
           </div>
