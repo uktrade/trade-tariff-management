@@ -67,7 +67,8 @@ module Workbaskets
           quota_definition_sid: params[:quota_definition_sid],
           description: params[:workbasket_forms_edit_edit_quota_suspension_form][:description],
           start_date: params[:workbasket_forms_edit_edit_quota_suspension_form][:start_date],
-          end_date: params[:workbasket_forms_edit_edit_quota_suspension_form][:end_date]
+          end_date: params[:workbasket_forms_edit_edit_quota_suspension_form][:end_date],
+          quota_suspension_period_sid: params[:quota_suspension_period_sid]
         }
       end
   end

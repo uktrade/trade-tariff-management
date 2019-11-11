@@ -79,6 +79,7 @@
             <div class='col-md-6'>
               <div class='form-group'>
                 <%= f.input :description, label: false, required: true, input_html: { value: "#{@quota_suspension_period.description}", maxlength: 500 }%>
+                <%= hidden_field_tag :quota_suspension_period_sid, @quota_suspension_period.quota_suspension_period_sid %>
               </div>
             </div>
           </div>
