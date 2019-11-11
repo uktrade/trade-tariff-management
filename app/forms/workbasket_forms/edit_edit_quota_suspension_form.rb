@@ -58,20 +58,20 @@ module WorkbasketForms
         start_date = format_date(@workbasket_settings.start_date)
         end_date = format_date(@workbasket_settings.end_date)
 
-        suspension = QuotaSuspensionPeriod.new(
-          quota_definition_sid: @workbasket_settings.quota_definition_sid,
-          suspension_start_date: start_date,
-          suspension_end_date: end_date,
-          description: @workbasket_settings.description
-        )
+        suspension = QuotaSuspensionPeriod.find(quota_suspension_period_sid: @settings_params[:quota_suspension_period_sid])
+
+        suspension.suspension_start_date = start_date
+        suspension.suspension_end_date = end_date
+        suspension.description = @workbasket_settings.description
+        suspension.workbasket_id = workbasket.id
 
         if @settings_errors.empty?
+          suspension.save
           ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(suspension).assign!
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
             suspension, system_ops.merge(operation: "U")
           ).assign!
 
-          suspension.save
           workbasket.submit_for_cross_check!(current_admin: current_admin)
         end
       end
