@@ -32,6 +32,10 @@ module ApprovalHelper
       "Approve and create quota association"
     elsif workbasket.type == 'delete_quota_association'
       "Approve and delete quota association"
+    elsif workbasket.type == 'create_quota_suspension'
+      "Approve and create quota suspension"
+    elsif workbasket.type == 'edit_quota_suspension'
+      "Approve and edit quota suspension"
     end
   end
 
