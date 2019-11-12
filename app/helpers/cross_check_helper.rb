@@ -32,6 +32,10 @@ module CrossCheckHelper
       "Cross-check and edit regulation"
     elsif workbasket.type == 'edit_certificate'
       "Cross-check and edit certificate"
+    elsif workbasket.type == 'create_quota_suspension'
+      "Cross-check and create quota suspension period"
+    elsif workbasket.type == 'edit_quota_suspension'
+      "Cross-check and edit quota suspension period"
     end
   end
 
