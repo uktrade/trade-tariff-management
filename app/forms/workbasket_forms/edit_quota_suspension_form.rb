@@ -49,7 +49,7 @@ module WorkbasketForms
     end
 
     def quota_order_number
-      QuotaOrderNumber.where(quota_order_number_id: quota_order_number_id).order(Sequel.desc(:added_at)).first
+      QuotaOrderNumber.where(quota_order_number_id: quota_order_number_id).order(Sequel.desc(:validity_start_date)).first
     end
   end
 end
