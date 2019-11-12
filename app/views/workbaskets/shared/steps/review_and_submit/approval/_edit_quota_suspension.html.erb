@@ -6,19 +6,19 @@
     <table>
       <tbody>
       <tr>
-        <td class="heading_column">Quota order number</td>
+        <td class="header_column">Quota order number</td>
         <td><%= definition.quota_order_number_id %></td>
       </tr>
       <tr>
-        <td class="heading_column">Definition dates</td>
+        <td class="header_column">Definition dates</td>
         <td><%= "#{definition.validity_start_date.strftime("%d-%m-%y")} to #{definition.validity_end_date.strftime("%d-%m-%y")}" %></td>
       </tr>
       <tr>
-        <td class="heading_column">Suspension period dates</td>
+        <td class="header_column">Suspension period dates</td>
         <td><%= "#{suspension.suspension_start_date.strftime("%d-%m-%y")} to #{suspension.suspension_end_date.strftime("%d-%m-%y")}" %></td>
       </tr>
       <tr>
-        <td class="heading_column">Description</td>
+        <td class="header_column">Description</td>
         <td><%= suspension.description %></td>
       </tr>
       </tbody>
