@@ -119,37 +119,9 @@
     </div>
   </div>
 
-
-  <div class="grid-row m-b-30">
-    <div class="column-full">
-      <div <%= 'class="panel panel-border-narrow form-group-error' if (saver&.errors[:validity_start_date].present? || saver&.conformance_errors.present?) %>">
-        <% if (saver&.errors[:validity_start_date] || saver&.conformance_errors)  %>
-          <span class="error-message">
-            <%= saver&.errors[:validity_start_date] %>
-            <%= saver&.conformance_errors&.values[0] %>
-          </span>
-        <% end %>
-        <div class="grid-row">
-          <div class="column-one-half">
-            <fieldset>
-              <legend>
-                <span class="form-label-bold">
-                  When should these changes take effect?
-                </span>
-                <span class="form-hint">For example, 01 03 1980</span>
-              </legend>
-              <div class="form-date">
-                <%= f.input :validity_start_date_day, label: 'Day', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits day"}, wrapper_html: { class: 'form-group-day' } %>
-                <%= f.input :validity_start_date_month, label: 'Month', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits month"}, wrapper_html: { class: 'form-group-month' } %>
-                <%= f.input :validity_start_date_year, label: 'Year', required: true,  input_html: {pattern:"[0-9]*", minlength:"4", maxlength:"4", title:"Four digits year"}, wrapper_html: { class: 'form-group-year' }  %>
-              </div>
-            </fieldset>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="vue-instance">
+    <%= content_tag "date-gds", "", "label" => "When should these changes take effect?", "value" => @create_nomenclature_form.validity_start_date&.strftime('%d,%m,%Y'), "id" => "workbasket_forms_create_nomenclature_form_validity_start_date", "input_name" => "workbasket_forms_create_nomenclature_form[validity_start_date]", "error" => saver.errors[:validity_start_date], required: true %>
   </div>
-
 
   <div class="grid-row">
     <div class="column-full">

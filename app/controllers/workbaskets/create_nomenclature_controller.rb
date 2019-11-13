@@ -30,15 +30,6 @@ module Workbaskets
       find_original_nomenclature(workbasket.settings.parent_nomenclature_sid)
     end
 
-    def new
-      self.workbasket = Workbaskets::Workbasket.create(
-        type: settings_type,
-        user: current_user
-      )
-
-      redirect_to initial_step_url
-    end
-
     def edit
       @create_nomenclature_form = WorkbasketForms::CreateNomenclatureForm.new(original_nomenclature, workbasket.settings)
     end

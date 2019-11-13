@@ -10,9 +10,6 @@ module WorkbasketForms
                   :number_indents,
                   :origin_code,
                   :origin_producline_suffix,
-                  :validity_start_date_day,
-                  :validity_start_date_month,
-                  :validity_start_date_year,
                   :validity_start_date
 
     def initialize(original_nomenclature, settings = {})
@@ -20,9 +17,6 @@ module WorkbasketForms
       @description = settings.present? ? settings[:description] : ""
       @goods_nomenclature_item_id = settings[:goods_nomenclature_item_id]
       @validity_start_date = settings.present? ? settings[:validity_start_date] : nil
-      @validity_start_date_day = @validity_start_date.present? ? @validity_start_date.strftime("%d") : nil
-      @validity_start_date_month = @validity_start_date.present? ? @validity_start_date.strftime("%m") : nil
-      @validity_start_date_year = @validity_start_date.present? ? @validity_start_date.strftime("%Y") : nil
       @producline_suffix = settings[:producline_suffix]
       @number_indents = settings[:number_indents] || original_nomenclature.number_indents + 1
       @origin_code = settings[:origin_nomenclature] || original_nomenclature.goods_nomenclature_item_id
