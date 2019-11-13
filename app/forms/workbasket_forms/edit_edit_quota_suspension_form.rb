@@ -12,7 +12,9 @@ module WorkbasketForms
                   :description,
                   :quota_definition_sid,
                   :start_date,
-                  :end_date
+                  :end_date,
+                  :formatted_start_date,
+                  :formatted_end_date
 
     def initialize(workbasket_id, settings_params = {})
       @workbasket_settings = Workbaskets::EditQuotaSuspensionSettings.find(workbasket_id: workbasket_id)
@@ -29,6 +31,9 @@ module WorkbasketForms
         start_date: @settings_params[:start_date],
         end_date: @settings_params[:end_date]
       )
+
+      @formatted_start_date = format_date(@workbasket_settings.start_date)
+      @formatted_end_date = format_date(@workbasket_settings.end_date)
 
       unless @workbasket_settings.quota_definition_sid
         @settings_errors[:quota_definition_sid] = "You must select a quota definition period"
@@ -102,23 +107,23 @@ module WorkbasketForms
     end
 
     def starts_same_day_or_after_definition?(definition)
-      definition.validity_start_date <= @workbasket_settings.start_date
+      definition.validity_start_date <= @formatted_start_date
     end
 
     def starts_before_end_day_of_definition?(definition)
-      definition.validity_end_date > @workbasket_settings.start_date
+      definition.validity_end_date > @formatted_start_date
     end
 
     def ends_after_start_date_of_definition(definition)
-      definition.validity_start_date <= @workbasket_settings.end_date
+      definition.validity_start_date <= @formatted_end_date
     end
 
     def ends_same_day_or_before_definition?(definition)
-      definition.validity_end_date >= @workbasket_settings.end_date
+      definition.validity_end_date >= @formatted_end_date
     end
 
     def ends_after_start_date?
-      @workbasket_settings.start_date < @workbasket_settings.end_date
+      @formatted_start_date < @formatted_end_date
     end
 
     def format_date(date)
