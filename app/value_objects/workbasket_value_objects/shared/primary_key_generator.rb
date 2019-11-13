@@ -17,9 +17,7 @@ module WorkbasketValueObjects
         "CertificateDescriptionPeriod" => :certificate_description_period_sid,
         "GoodsNomenclature" => :goods_nomenclature_sid,
         "GoodsNomenclatureIndent" => :goods_nomenclature_indent_sid,
-        "GoodsNomenclatureDescriptionPeriod" => :goods_nomenclature_description_period_sid,
-        "GoodsNomenclatureDescription" => :goods_nomenclature_description_sid,
-        "GoodsNomenclatureOrigin" => :goods_nomenclature_sid
+        "GoodsNomenclatureDescriptionPeriod" => :goods_nomenclature_description_period_sid
       }.freeze
 
       attr_accessor :record,

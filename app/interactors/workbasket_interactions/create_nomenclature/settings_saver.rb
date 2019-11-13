@@ -40,7 +40,7 @@ module WorkbasketInteractions
 
         @goods_nomenclature_item_id = @settings_params[:goods_nomenclature_item_id]
         @producline_suffix = @settings_params[:producline_suffix]
-        @validity_start_date = date_from_params("validity_start_date", @settings_params)
+        @validity_start_date = Date.strptime(@settings_params[:validity_start_date].gsub(',','/'), "%d/%m/%Y") if @settings_params[:validity_start_date]
         @number_indents = @settings_params[:number_indents]
         @goods_nomenclature_description = @settings_params[:description]
         @origin_code = @settings_params[:origin_code]
@@ -54,7 +54,7 @@ module WorkbasketInteractions
 
       def save!
         workbasket.settings.description = @goods_nomenclature_description
-        workbasket.settings.validity_start_date = set_date
+        workbasket.settings.validity_start_date = @validity_start_date
         workbasket.settings.goods_nomenclature_item_id = @goods_nomenclature_item_id
         workbasket.settings.producline_suffix = @producline_suffix
         workbasket.settings.number_indents = @number_indents
@@ -62,8 +62,9 @@ module WorkbasketInteractions
         workbasket.settings.origin_producline_suffix = @origin_suffix
 
         workbasket.settings.save
-        # valid?
-        persist!
+        if valid?
+          persist!
+        end
       end
 
       def valid?
@@ -78,12 +79,6 @@ module WorkbasketInteractions
       end
 
       private
-
-      def set_date
-        Date.new(@settings_params["validity_start_date_year"].to_i, @settings_params["validity_start_date_month"].to_i, @settings_params["validity_start_date_day"].to_i)
-      rescue ArgumentError
-        nil
-      end
 
       def validate!
         check_initial_validation_rules!
@@ -123,7 +118,7 @@ module WorkbasketInteractions
         assign_system_ops!(@goods_nomenclature)
         set_primary_key!(@goods_nomenclature)
 
-        @goods_nomenclature.save #if persist_mode?
+        @goods_nomenclature.save
       end
 
       def add_goods_nomenclature_indent!
@@ -139,7 +134,7 @@ module WorkbasketInteractions
         assign_system_ops!(goods_nomenclature_indent)
         set_primary_key!(goods_nomenclature_indent)
 
-        goods_nomenclature_indent.save #if persist_mode?
+        goods_nomenclature_indent.save
       end
 
       def add_goods_nomenclature_description!
@@ -155,7 +150,7 @@ module WorkbasketInteractions
         assign_system_ops!(goods_nomenclature_description_period)
         set_primary_key!(goods_nomenclature_description_period)
 
-        goods_nomenclature_description_period.save #if persist_mode?
+        goods_nomenclature_description_period.save
 
         GoodsNomenclatureDescription.unrestrict_primary_key
         goods_nomenclature_description = GoodsNomenclatureDescription.new(
@@ -169,7 +164,7 @@ module WorkbasketInteractions
 
         assign_system_ops!(goods_nomenclature_description)
 
-        goods_nomenclature_description.save #if persist_mode?
+        goods_nomenclature_description.save
       end
 
       def add_goods_nomenclature_origin!
@@ -183,9 +178,8 @@ module WorkbasketInteractions
         )
 
         assign_system_ops!(goods_nomenclature_origin)
-        # set_primary_key!(goods_nomenclature_origin)
 
-        goods_nomenclature_origin.save #if persist_mode?
+        goods_nomenclature_origin.save
       end
 
       def parse_and_format_conformance_rules
@@ -222,12 +216,6 @@ module WorkbasketInteractions
             record, system_ops.merge(operation: record[:operation])
           ).assign!
           record.save
-        end
-      end
-
-      private def date_from_params(field, params)
-        if params["#{field}_year"].present?
-          Date.new(params["#{field}_year"].to_i, params["#{field}_month"].to_i, params["#{field}_day"].to_i)
         end
       end
     end

@@ -4038,7 +4038,10 @@ CREATE TABLE public.goods_nomenclature_indents_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -4059,7 +4062,10 @@ CREATE VIEW public.goods_nomenclature_indents AS
     goods_nomenclature_indents1.operation_date,
     goods_nomenclature_indents1.status,
     goods_nomenclature_indents1.workbasket_id,
-    goods_nomenclature_indents1.workbasket_sequence_number
+    goods_nomenclature_indents1.workbasket_sequence_number,
+    goods_nomenclature_indents1.added_by_id,
+    goods_nomenclature_indents1.added_at,
+    goods_nomenclature_indents1."national"
    FROM public.goods_nomenclature_indents_oplog goods_nomenclature_indents1
   WHERE ((goods_nomenclature_indents1.oid IN ( SELECT max(goods_nomenclature_indents2.oid) AS max
            FROM public.goods_nomenclature_indents_oplog goods_nomenclature_indents2
@@ -4101,7 +4107,10 @@ CREATE TABLE public.goods_nomenclature_origins_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -4120,7 +4129,10 @@ CREATE VIEW public.goods_nomenclature_origins AS
     goods_nomenclature_origins1.operation_date,
     goods_nomenclature_origins1.status,
     goods_nomenclature_origins1.workbasket_id,
-    goods_nomenclature_origins1.workbasket_sequence_number
+    goods_nomenclature_origins1.workbasket_sequence_number,
+    goods_nomenclature_origins1.added_by_id,
+    goods_nomenclature_origins1.added_at,
+    goods_nomenclature_origins1."national"
    FROM public.goods_nomenclature_origins_oplog goods_nomenclature_origins1
   WHERE ((goods_nomenclature_origins1.oid IN ( SELECT max(goods_nomenclature_origins2.oid) AS max
            FROM public.goods_nomenclature_origins_oplog goods_nomenclature_origins2
@@ -4224,7 +4236,10 @@ CREATE TABLE public.goods_nomenclatures_oplog (
     operation_date timestamp without time zone,
     status text,
     workbasket_id integer,
-    workbasket_sequence_number integer
+    workbasket_sequence_number integer,
+    added_by_id integer,
+    added_at timestamp without time zone,
+    "national" boolean
 );
 
 
@@ -4244,7 +4259,10 @@ CREATE VIEW public.goods_nomenclatures AS
     goods_nomenclatures1.operation_date,
     goods_nomenclatures1.status,
     goods_nomenclatures1.workbasket_id,
-    goods_nomenclatures1.workbasket_sequence_number
+    goods_nomenclatures1.workbasket_sequence_number,
+    goods_nomenclatures1.added_by_id,
+    goods_nomenclatures1.added_at,
+    goods_nomenclatures1."national"
    FROM public.goods_nomenclatures_oplog goods_nomenclatures1
   WHERE ((goods_nomenclatures1.oid IN ( SELECT max(goods_nomenclatures2.oid) AS max
            FROM public.goods_nomenclatures_oplog goods_nomenclatures2
@@ -12979,3 +12997,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20191021140811_create_quot
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191022083212_create_delete_quota_association_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191104110933_create_edit_quota_suspension_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191105131733_create_create_nomenclature_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20191113160652_add_workbasket_fields_goods_nomenclature.rb');
