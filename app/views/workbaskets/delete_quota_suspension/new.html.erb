@@ -1,0 +1,139 @@
+<% content_for :content do %>
+  <div id="vue-edit-quota-suspension-form">
+    <div class="breadcrumbs">
+      <nav>
+        <ol>
+          <li>
+          <%= link_to "Main menu", root_url %>
+          </li>
+          <li>
+              <%= link_to "Quota suspension", quota_suspensions_url %>
+          </li>
+          <li>
+              Delete quota suspension period
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <% if @delete_quota_suspension_form.settings_errors[:workbasket_title] %>
+      <div class="error-summary" role="alert">
+        <h2 class="heading-medium error-summary-heading">
+          There is a problem
+        </h2>
+        <% @delete_quota_suspension_form.settings_errors.values.each do |error| %>
+          <p class="error-message">
+            <%= error %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <h1 class="heading-large">
+      Delete quota suspension period
+    </h1>
+
+    <div class="grid-row">
+      <div class="column-full">
+        <p>You will delete the following quota suspension period.</p>
+      </div>
+    </div>
+
+    <% suspension = QuotaSuspensionPeriod.find(quota_suspension_period_sid: @quota_suspension_period_sid) %>
+    <% definition = @quota_definition %>
+
+    <div class="grid-row">
+      <div class="column-two-thirds">
+
+        <table>
+          <tbody>
+          <tr>
+            <td class="header_column">Quota order number</td>
+            <td><%= definition.quota_order_number_id %></td>
+          </tr>
+          <tr>
+            <td class="header_column">Definition dates</td>
+            <td><%= "#{definition.validity_start_date.strftime("%d-%m-%y")} to #{definition.validity_end_date.strftime("%d-%m-%y")}" %></td>
+          </tr>
+          <tr>
+            <td class="header_column">Suspension period dates</td>
+            <td><%= "#{suspension.suspension_start_date.strftime("%d-%m-%y")} to #{suspension.suspension_end_date.strftime("%d-%m-%y")}" %></td>
+          </tr>
+          <tr>
+            <td class="header_column">Description</td>
+            <td><%= suspension.description %></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h1 class="heading-large">
+      Delete quota suspension period
+    </h1>
+
+    <%= simple_form_for @delete_quota_suspension_form, url: delete_quota_suspension_index_path, html: { novalidate: false}  do |f| %>
+      <%= f.input :quota_suspension_period_sid, :as => :hidden, :input_html => { :value => @quota_suspension_period_sid } %>
+
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group <%= "form-group-error" if @delete_quota_suspension_form.settings_errors[:workbasket_title] %>">
+            <label for="workbasket_name" class="heading-medium">
+              What is the name of this workbasket?
+              <span class="form-hint">
+                This will allow you to identify the workbasket if you save progress, it will also help cross-chckers and approvers identify it. Be descriptive!
+              </span>
+
+              <% if @delete_quota_suspension_form.settings_errors[:workbasket_title] %>
+                <span class="error-message"><%= @delete_quota_suspension_form.settings_errors[:workbasket_title] %></span>
+              <% end %>
+
+            </label>
+            <div class="grid-row">
+              <div class="column-one-half">
+                <%= f.input :workbasket_title, label: false, required: true %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-row">
+        <div class="column-full">
+          <div class="form-group <%= "form-group-error" if @delete_quota_suspension_form.settings_errors[:reason_for_changes] %>">
+            <label for="reason_for_changes" class="heading-medium">
+              What is the reason for these changes?
+              <span class="form-hint">
+                Be as descriptive as you can, and keep in mind what you type here may become publicly visible. Please list the changes you intend to make.
+              </span>
+
+              <% if @delete_quota_suspension_form.settings_errors[:reason_for_changes] %>
+                <span class="error-message"><%= @delete_quota_suspension_form.settings_errors[:reason_for_changes] %></span>
+              <% end %>
+
+            </label>
+            <div class="grid-row">
+              <div class="column-one-half">
+                <%= f.input :reason_for_changes, as: :text, label: false, required: true, input_html: { rows: 4 } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="form-actions">
+          <button type="submit"
+                  class='button'
+                  data-disable-with='Processing'>
+            Submit for Cross-Check
+          </button>
+
+          <%= link_to "Cancel", root_path, class: "secondary-button" %>
+        </div>
+
+      </div>
+
+    <% end %>
+
+<% end %>
