@@ -2011,6 +2011,39 @@ ALTER SEQUENCE public.delete_quota_association_workbasket_settings_id_seq OWNED 
 
 
 --
+-- Name: delete_quota_suspension_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delete_quota_suspension_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    quota_suspension_period_sid text,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: delete_quota_suspension_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.delete_quota_suspension_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: delete_quota_suspension_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.delete_quota_suspension_workbasket_settings_id_seq OWNED BY public.delete_quota_suspension_workbasket_settings.id;
+
+
+--
 -- Name: duty_expression_descriptions_oplog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8569,6 +8602,13 @@ ALTER TABLE ONLY public.delete_quota_association_workbasket_settings ALTER COLUM
 
 
 --
+-- Name: delete_quota_suspension_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delete_quota_suspension_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.delete_quota_suspension_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: duty_expression_descriptions_oplog oid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9573,6 +9613,14 @@ ALTER TABLE ONLY public.db_rollbacks
 
 ALTER TABLE ONLY public.delete_quota_association_workbasket_settings
     ADD CONSTRAINT delete_quota_association_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delete_quota_suspension_workbasket_settings delete_quota_suspension_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delete_quota_suspension_workbasket_settings
+    ADD CONSTRAINT delete_quota_suspension_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -12998,3 +13046,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20191022083212_create_dele
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191104110933_create_edit_quota_suspension_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191105131733_create_create_nomenclature_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191113160652_add_workbasket_fields_goods_nomenclature.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20191115160657_create_delete_quota_suspension_workbasket_settings.rb');
