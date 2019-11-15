@@ -20,7 +20,7 @@ header
 
     - if iam_workbasket_author? && workbasket_rejected?
       = link_to "Edit measures", '#',
-              data: {target_url: move_to_editing_mode_create_measure_url(workbasket.id)},
+              data: {target_url: move_to_editing_mode_create_measure_url(workbasket.id), target_modal: workbasket.id},
               class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
     = render "workbaskets/create_measures/workflow_screens_parts/summary_of_configuration"

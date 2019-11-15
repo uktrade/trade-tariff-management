@@ -17,7 +17,7 @@ header
 
     - if iam_workbasket_author? && workbasket_rejected?
       = link_to "Edit footnote", '#',
-              data: {target_url: move_to_editing_mode_edit_footnote_url(workbasket.id), target_modal: workbasket.id},
+              data: {target_url: move_to_editing_mode_create_footnote_url(workbasket.id), target_modal: workbasket.id},
               class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
     = render "workbaskets/create_footnote/workflow_screens_parts/summary_of_configuration"
