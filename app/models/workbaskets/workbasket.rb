@@ -22,6 +22,7 @@ module Workbaskets
       delete_quota_association
       create_quota_suspension
       edit_quota_suspension
+      delete_quota_suspension
     ].freeze
 
     STATUS_LIST = [
@@ -177,6 +178,9 @@ module Workbaskets
 
     one_to_one :delete_quota_association_settings, key: :workbasket_id,
                class_name: "Workbaskets::DeleteQuotaAssociationSettings"
+
+    one_to_one :delete_quota_suspension_settings, key: :workbasket_id,
+               class_name: "Workbaskets::DeleteQuotaSuspensionSettings"
 
     one_to_one :create_quota_suspension_settings, key: :workbasket_id,
                class_name: "Workbaskets::CreateQuotaSuspensionSettings"
@@ -440,7 +444,7 @@ module Workbaskets
           end
 
           def editable?
-            status.to_sym.in?(EDITABLE_STATES) && type != :delete_quota_association
+            status.to_sym.in?(EDITABLE_STATES) && (type != :delete_quota_association && type != :delete_quota_suspension)
           end
 
           def submitted?
@@ -448,7 +452,7 @@ module Workbaskets
           end
 
           def can_withdraw?
-            (rejected? || waiting_for_cross_check_or_approval?)
+            (rejected? || waiting_for_cross_check_or_approval?) && (type != :delete_quota_association && type != :delete_quota_suspension)
           end
 
           def rejected?
@@ -577,6 +581,8 @@ module Workbaskets
         create_quota_association_settings
       when :delete_quota_association
         delete_quota_association_settings
+      when :delete_quota_suspension
+        delete_quota_suspension_settings
       when :create_quota_suspension
         create_quota_suspension_settings
       when :edit_quota_suspension
@@ -689,6 +695,7 @@ module Workbaskets
           delete_quota_association
           create_quota_suspension
           edit_quota_suspension
+          delete_quota_suspension
         ).map do |type_name|
           by_type(type_name).map(&:clean_up_workbasket!)
         end
@@ -735,6 +742,8 @@ module Workbaskets
                        ::Workbaskets::CreateQuotaAssociationSettings
                      when :delete_quota_association
                        ::Workbaskets::DeleteQuotaAssociationSettings
+                     when :delete_quota_suspension
+                       ::Workbaskets::DeleteQuotaSuspensionSettings
                      when :create_quota_suspension
                        ::Workbaskets::CreateQuotaSuspensionSettings
                      when :edit_quota_suspension

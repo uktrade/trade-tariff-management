@@ -1,0 +1,28 @@
+<% suspension = QuotaSuspensionPeriod.find(workbasket_id: workbasket.id) %>
+<% definition = QuotaDefinition.find(quota_definition_sid: suspension.quota_definition_sid) %>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+
+    <table>
+      <tbody>
+      <tr>
+        <td class="header_column">Quota order number</td>
+        <td><%= definition.quota_order_number_id %></td>
+      </tr>
+      <tr>
+        <td class="header_column">Definition dates</td>
+        <td><%= "#{definition.validity_start_date.strftime("%d-%m-%y")} to #{definition.validity_end_date.strftime("%d-%m-%y")}" %></td>
+      </tr>
+      <tr>
+        <td class="header_column">Suspension period dates</td>
+        <td><%= "#{suspension.suspension_start_date.strftime("%d-%m-%y")} to #{suspension.suspension_end_date.strftime("%d-%m-%y")}" %></td>
+      </tr>
+      <tr>
+        <td class="header_column">Description</td>
+        <td><%= suspension.description %></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+- quota_suspension = QuotaSuspensionPeriod.find(quota_suspension_period_sid: workbasket.settings.quota_suspension_period_sid)
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Delete Quota suspension period approval rejected
+
+  p.font-large
+    = "You indicated that the deletion of Quota suspension period <strong class='bold'>#{quota_suspension.description}</strong> had problems and has not been approved. The submitter has been notified.".html_safe
+
+= render "workbaskets/delete_quota_suspension/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

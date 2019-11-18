@@ -14,6 +14,8 @@ module CrossCheckHelper
       "Cross-check and create quota association"
     elsif workbasket.type == 'delete_quota_association'
       "Cross-check and delete quota association"
+    elsif workbasket.type == 'delete_quota_suspension'
+      "Cross-check and delete quota suspension"
     elsif workbasket.type == 'create_certificate'
       "Cross-check and create certificate"
     elsif workbasket.type == 'create_nomenclature'
@@ -60,6 +62,8 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/quota_association"
     elsif workbasket.type == 'delete_quota_association'
       "workbaskets/shared/steps/review_and_submit/delete_quota_association"
+    elsif workbasket.type == 'delete_quota_suspension'
+      "workbaskets/shared/steps/review_and_submit/delete_quota_suspension"
     elsif workbasket.type == 'create_quota_suspension'
       "workbaskets/shared/steps/review_and_submit/quota_suspension"
     elsif workbasket.type == 'bulk_edit_of_additional_codes'

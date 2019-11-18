@@ -1,0 +1,25 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Main menu", root_url
+
+    li
+      = link_to "Quota Suspension Periods", quota_associations_url
+
+    li aria-current="page"
+      | View Quota Association
+
+header
+  h1.heading-large
+    | View quota association
+
+  .view-workbasket-container
+    = render "workbaskets/delete_quota_suspension/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/delete_quota_suspension/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/delete_quota_suspension/workflow_screens_parts/workbasket_details"
+
+    = render "workbaskets/delete_quota_suspension/workflow_screens_parts/summary_of_configuration"
+    = render "workbaskets/shared/steps/review_and_submit/delete_quota_suspension"
+
+.m-t-40
+  = link_to "Return to main menu", root_path, class: "link-back"

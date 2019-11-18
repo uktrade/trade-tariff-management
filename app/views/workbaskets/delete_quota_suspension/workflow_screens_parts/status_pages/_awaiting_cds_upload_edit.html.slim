@@ -1,0 +1,9 @@
+- quota_suspension = QuotaSuspensionPeriod.find(quota_suspension_period_sid: workbasket.settings.quota_suspension_period_sid)
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Delete Quota suspension period approved
+
+  p.font-large
+    = "Deletion of Quota suspension period description <strong class='bold'>#{quota_suspension.description}</strong> has been approved. It is ready to be sent to CDS.".html_safe
+
+= render "workbaskets/delete_quota_suspension/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

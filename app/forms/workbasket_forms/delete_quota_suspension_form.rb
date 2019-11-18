@@ -8,11 +8,9 @@ module WorkbasketForms
                   :settings_errors,
                   :workbasket_title,
                   :reason_for_changes,
-                  :quota_suspension_period_sid,
-                  :quota_association
+                  :quota_suspension_period_sid
 
     def initialize(settings: {}, current_user: nil)
-      byebug
       @workbasket_title =  settings[:workbasket_title]
       @reason_for_changes = settings[:reason_for_changes]
       @quota_suspension_period_sid = settings[:quota_suspension_period_sid]
@@ -35,21 +33,18 @@ module WorkbasketForms
         @workbasket = Workbaskets::Workbasket.create(
           title: @workbasket_title,
           status: :new_in_progress,
-          type: :delete_quota_association,
+          type: :delete_quota_suspension,
           user: @current_user
         )
 
-        byebug
 
-        @workbasket.settings.update(main_quota_definition_sid: @main_quota_definition_sid,
-                                    sub_quota_definition_sid: @sub_quota_definition_sid
-        )
+        @workbasket.settings.update(quota_suspension_period_sid: @quota_suspension_period_sid)
 
         ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-          association, system_ops.merge(operation: "D")
+          quota_suspension, system_ops.merge(operation: "D")
         ).assign!(false)
 
-        association.save
+        quota_suspension.save
 
         workbasket.submit_for_cross_check!(current_admin: current_admin)
 
@@ -57,5 +52,13 @@ module WorkbasketForms
 
       @settings_errors.empty?
     end
+  end
+
+  def system_ops
+    {
+      current_admin_id: current_admin.id,
+      workbasket_id: workbasket.id,
+      status: "awaiting_cross_check"
+    }
   end
 end
