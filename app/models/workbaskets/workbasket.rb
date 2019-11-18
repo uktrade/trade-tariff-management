@@ -452,7 +452,7 @@ module Workbaskets
           end
 
           def can_withdraw?
-            (rejected? || waiting_for_cross_check_or_approval?) && (type != :delete_quota_association && type != :delete_quota_suspension)
+            (rejected? || waiting_for_cross_check_or_approval?)
           end
 
           def rejected?
