@@ -42,7 +42,7 @@ module WorkbasketForms
           user: @current_user
         ).save
 
-        @workbasket.settings.update(quota_order_number_id: quota_order_number_id)
+        @workbasket.settings.update(quota_order_number_id: quota_order_number_id, quota_suspension_period_sid: @quota_suspension_period_sid, quota_definition_sid: @quota_definition_sid)
       end
 
       @settings_errors.empty?

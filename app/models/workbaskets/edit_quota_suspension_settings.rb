@@ -4,7 +4,6 @@ module Workbaskets
     extend ActiveSupport::Concern
 
     attr_accessor :description,
-                  :quota_definition_sid,
                   :start_date,
                   :end_date
 
