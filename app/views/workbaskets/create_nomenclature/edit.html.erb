@@ -3,6 +3,9 @@
     <li>
       <%= link_to "Main menu", root_url %>
     </li>
+    <li aria-current="page">
+      Create new commodity code
+    </li>
   </ol>
 </div>
 
@@ -97,7 +100,7 @@
         <% end %>
         <div class="grid-row">
           <div class="column-one-quarter">
-            <%= f.input :goods_nomenclature_item_id, label: 'New code', required: true, input_html: { minlength: 10,  maxlength: 10 } %>
+            <%= f.input :goods_nomenclature_item_id, label: 'New code (10 digits)', required: true, input_html: { pattern:"[0-9]*", minlength: 10,  maxlength: 10, title:"10 digits only" } %>
           </div>
         </div>
       </div>
@@ -132,7 +135,7 @@
         <div class="grid-row">
           <div class="column-one-quarter">
 
-            <%= f.input :producline_suffix, label: 'Product line suffix', required: true, input_html: { maxlength: 2 } %>
+            <%= f.input :producline_suffix, label: 'Product line suffix', required: true, input_html: { pattern:"[0-9]*", maxlength: 2, title:"2 digits only" } %>
           </div>
         </div>
       </div>
@@ -147,7 +150,7 @@
         <% end %>
         <div class="grid-row">
           <div class="column-one-quarter">
-            <%= f.input :number_indents, label: 'Indents', required: true, input_html: { maxlength: 2 } %>
+            <%= f.input :number_indents, label: 'Indents', required: true, input_html: { pattern:"[0-9]*", maxlength: 2, title:"Digits only" } %>
           </div>
         </div>
       </div>
@@ -162,7 +165,7 @@
         <% end %>
         <div class="grid-row">
           <div class="column-one-quarter">
-            <%= f.input :origin_code, label: 'Origin code', required: true, input_html: { minlength: 10,  maxlength: 10 } %>
+            <%= f.input :origin_code, label: 'Origin code', required: true, input_html: { pattern:"[0-9]*", minlength: 10,  maxlength: 10, title:"10 digits only" } %>
           </div>
         </div>
       </div>
@@ -177,7 +180,7 @@
         <% end %>
         <div class="grid-row">
           <div class="column-one-quarter">
-            <%= f.input :origin_producline_suffix, label: 'Origin product line suffix', required: true, input_html: { maxlength: 2 } %>
+            <%= f.input :origin_producline_suffix, label: 'Origin product line suffix', required: true, input_html: { pattern:"[0-9]*", maxlength: 2, title:"2 digits only" } %>
           </div>
         </div>
       </div>

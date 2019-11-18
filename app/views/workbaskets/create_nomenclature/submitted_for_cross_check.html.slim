@@ -13,8 +13,8 @@ ul class="list"
     = link_to "Withdraw submission / edit goods classification", "#",
             data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
             class: "js-main-menu-show-withdraw-confirmation-link"
-  / li
-    / = link_to "Edit another goods classification", sections_url
+  li
+    = link_to "Create another goods classification", new_manage_nomenclature_path(item_id: workbasket.settings.origin_nomenclature, suffix: workbasket.settings.origin_producline_suffix)
   li
     = link_to "View this goods classification", create_nomenclature_url(workbasket.id)
   li

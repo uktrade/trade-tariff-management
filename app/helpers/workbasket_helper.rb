@@ -295,6 +295,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :create_nomenclature
+      edit_create_nomenclature_url(
+        workbasket.id,
+        step: :main
+      )
+
     when :edit_nomenclature
       edit_edit_nomenclature_url(
         workbasket.id,
