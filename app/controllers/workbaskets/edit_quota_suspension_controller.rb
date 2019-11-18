@@ -33,8 +33,8 @@ module Workbaskets
 
     def edit
       @workbasket = Workbasket.find(id: params[:id])
-      @quota_suspension_period = params[:quota_suspension_period_sid] ? QuotaSuspensionPeriod.find(quota_suspension_period_sid: params[:quota_suspension_period_sid]) : QuotaSuspensionPeriod.find(quota_suspension_period_sid: @workbasket.settings.quota_suspension_period_sid)
-      @quota_definition = params[:quota_definition_sid] ? QuotaDefinition.find(quota_definition_sid: params[:quota_definition_sid]) : QuotaDefinition.find(quota_definition_sid: @workbasket.settings.quota_definition_sid)
+      @quota_suspension_period = QuotaSuspensionPeriod.find(quota_suspension_period_sid: @workbasket.settings.quota_suspension_period_sid)
+      @quota_definition = QuotaDefinition.find(quota_definition_sid: @workbasket.settings.quota_definition_sid)
       @edit_edit_quota_suspension_form = WorkbasketForms::EditEditQuotaSuspensionForm.new(params[:id])
     end
 
