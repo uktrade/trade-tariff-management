@@ -2319,7 +2319,9 @@ CREATE TABLE public.edit_quota_suspension_workbasket_settings (
     quota_order_number_id text,
     main_step_validation_passed boolean DEFAULT false,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    quota_definition_sid text,
+    quota_suspension_period_sid text
 );
 
 
@@ -13047,3 +13049,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20191104110933_create_edit
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191105131733_create_create_nomenclature_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191113160652_add_workbasket_fields_goods_nomenclature.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191115160657_create_delete_quota_suspension_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20191118132010_add_columns_to_edit_quota_suspension_workbasket_settings.rb');
