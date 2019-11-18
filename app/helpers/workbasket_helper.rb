@@ -424,6 +424,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_quota_association_url(workbasket.id)
     elsif workbasket.object.type == "create_quota_suspension"
       withdraw_workbasket_from_workflow_create_quota_suspension_url(workbasket.id)
+    elsif workbasket.object.type == "edit_quota_suspension"
+      withdraw_workbasket_from_workflow_edit_quota_suspension_url(workbasket.id)
     elsif workbasket.object.type == "delete_quota_association"
       withdraw_workbasket_from_workflow_delete_quota_association_url(workbasket.id)
     end
