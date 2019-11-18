@@ -174,7 +174,7 @@ module XmlGeneration
     private
 
     def record_is_a_pending_deletion?
-      [FootnoteAssociationMeasure, QuotaAssociation].include?(record.class) && record.operation == :update
+      [FootnoteAssociationMeasure, QuotaAssociation, QuotaSuspensionPeriod].include?(record.class) && record.operation == :update
     end
 
     def record_class

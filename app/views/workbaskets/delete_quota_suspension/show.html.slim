@@ -4,14 +4,14 @@
       = link_to "Main menu", root_url
 
     li
-      = link_to "Quota Suspension Periods", quota_associations_url
+      = link_to "Quota Suspension Periods", quota_suspensions_url
 
     li aria-current="page"
-      | View Quota Association
+      | View Quota Suspension period deletion
 
 header
   h1.heading-large
-    | View quota association
+    | View quota suspension period deletion
 
   .view-workbasket-container
     = render "workbaskets/delete_quota_suspension/workflow_screens_parts/notifications/block", screen_type: :view
