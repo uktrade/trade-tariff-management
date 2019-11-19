@@ -158,6 +158,8 @@ module Workbaskets
     end
 
     def clean_up_persisted_data_on_update!
+      return if workbasket.type == "edit_quota_suspension"
+      
       unless step_pointer.review_and_submit_step?
         workbasket_settings.clean_up_temporary_data!
       end
