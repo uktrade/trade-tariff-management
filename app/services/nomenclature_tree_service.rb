@@ -24,6 +24,7 @@ class NomenclatureTreeService
       where (gn.validity_end_date is null or gn.validity_end_date >= :view_date)
         and gn.validity_start_date <= :view_date
         and gn.goods_nomenclature_item_id like :nomenclature_code
+        and gn.status = 'published'
       order by gn.goods_nomenclature_item_id, gn.producline_suffix;
     SQL
 
