@@ -17,7 +17,7 @@ header
 
     - if iam_workbasket_author? && workbasket_rejected?
       = link_to "Edit  geographical area", '#',
-              data: {target_url: move_to_editing_mode_edit_geographical_area_url(workbasket.id)},
+              data: {target_url: move_to_editing_mode_edit_geographical_area_url(workbasket.id), target_modal: workbasket.id},
               class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
     = render "workbaskets/edit_geographical_area/workflow_screens_parts/area_details"

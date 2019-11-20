@@ -17,7 +17,7 @@ header
 
     - if iam_workbasket_author? && workbasket_rejected?
       = link_to "Edit certificate", '#',
-              data: {target_url: move_to_editing_mode_edit_certificate_url(workbasket.id)},
+              data: {target_url: move_to_editing_mode_edit_certificate_url(workbasket.id), target_modal: workbasket.id},
               class: "secondary-button view-workbasket-edit-measures-link js-main-menu-show-withdraw-confirmation-link"
 
     = render "workbaskets/edit_certificate/workflow_screens_parts/summary_of_configuration"
