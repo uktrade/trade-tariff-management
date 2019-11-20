@@ -32,6 +32,7 @@ module WorkbasketInteractions
         check_description!
         check_validity_period!
         check_origin!
+        check_section_and_chapter!
 
         errors
       end
@@ -83,7 +84,18 @@ module WorkbasketInteractions
         end
       end
 
+      def check_section_and_chapter!
+        unless chapter_exists_for_nomenclature?(settings.goods_nomenclature_item_id)
+          @errors[:goods_nomenclature_item_id] = errors_translator(:chapter_doesnt_exist)
+          @errors_summary = errors_translator(:chapter_doesnt_exist)
+        end
+      end
 
+      def chapter_exists_for_nomenclature?(goods_nomenclature_item_id)
+        # check if an item exists using the first 4 characters - this will correspond to the section chapter
+        section_chapter = GoodsNomenclature.actual(include_future: true).where(goods_nomenclature_item_id: goods_nomenclature_item_id.first(4).ljust(10, '0'), status: 'published').first
+        section_chapter.present?
+      end
     end
   end
 end

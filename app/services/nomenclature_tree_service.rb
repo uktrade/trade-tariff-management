@@ -38,7 +38,11 @@ class NomenclatureTreeService
         else
           # item is a heading group - do nothing (e.g. see 7101000000 which has an item suffix 10 as a group heading)
         end
-      elsif (nomenclature[:number_indents] -1 == current_path[-1].content[:number_indents])
+      elsif (nomenclature[:number_indents] > current_path[-1].content[:number_indents])
+        # If this item has indentations that are larger than one step down we need to move the indentations up
+        if nomenclature[:number_indents] - 1 != current_path[-1].content[:number_indents]
+          nomenclature[:number_indents] = current_path[-1].content[:number_indents] + 1
+        end
         # new_node is a child of the current path end
         current_path[-1].children << new_node
         current_path << new_node
