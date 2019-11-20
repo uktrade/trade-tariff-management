@@ -44,7 +44,7 @@ gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem "shrine"
 gem "aws-sdk-rails"
 gem "aws-sdk-s3"
-gem "rubyzip", "~> 1.2.2"
+gem "rubyzip", "~> 1.3.0"
 
 gem 'filesaverjs-rails'
 
@@ -61,7 +61,7 @@ gem "addressable", "~> 2.3"
 gem 'slim-rails'
 gem 'kaminari'
 gem 'kaminari-sequel'
-gem "simple_form", "~> 3.5"
+gem "simple_form", "~> 5.0"
 gem "jbuilder"
 gem "enumerize"
 
