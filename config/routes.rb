@@ -339,6 +339,14 @@ Rails.application.routes.draw do
         get :withdraw_workbasket_from_workflow
       end
     end
+
+    resources :create_quota_blocking_period, only: [:new, :create, :edit, :update, :show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
   end
 
   scope module: :geo_areas do
@@ -367,5 +375,9 @@ Rails.application.routes.draw do
 
   scope module: :quota_suspensions do
     resources :quota_suspensions, only: [:index]
+  end
+
+  scope module: :quota_blocking_periods do
+    resources :quota_blocking_periods, only: [:index]
   end
 end
