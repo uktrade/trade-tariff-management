@@ -6,7 +6,7 @@ module Workbaskets
     expose(:settings_type) { :edit_quota_suspension }
     expose(:current_step) { "main" }
     expose(:previous_step_url) { quota_suspensions_url }
-    expose(:initial_step_url) { edit_quota_suspension_url }
+    expose(:initial_step_url) { edit_edit_quota_suspension_url }
 
     respond_to :json
 
