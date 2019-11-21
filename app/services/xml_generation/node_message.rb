@@ -174,7 +174,10 @@ module XmlGeneration
     private
 
     def record_is_a_pending_deletion?
-      [FootnoteAssociationMeasure, QuotaAssociation, QuotaSuspensionPeriod].include?(record.class) && record.operation == :update
+      workbasket = Workbaskets::Workbasket.find(id: record.workbasket_id)
+      return true if workbasket.settings.class == Workbaskets::DeleteQuotaSuspensionSettings
+
+      [FootnoteAssociationMeasure, QuotaAssociation].include?(record.class) && record.operation == :update
     end
 
     def record_class
