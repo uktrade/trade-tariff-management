@@ -15,7 +15,9 @@
 
 <div class="panel panel-border-narrow p-t-5 p-b-5">
   <p>
-    <%= original_nomenclature.goods_nomenclature_item_id %> - <%= original_nomenclature.description %>
+    <% TimeMachine.at(original_nomenclature.validity_start_date) do %>
+      <%= original_nomenclature.goods_nomenclature_item_id %> - <%= original_nomenclature.description %>
+    <% end %>
   </p>
 </div>
 
@@ -52,34 +54,36 @@
       <div class="panel panel-border-narrow m-b-60">
         <table>
           <tbody>
-          <tr>
-            <td class="bold-small">Commodity code</td>
-            <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
-          </tr>
-          <tr>
-            <td class="bold-small">Description</td>
-            <td><%= original_nomenclature.description %></td>
-          </tr>
-          <tr>
-            <td class="bold-small">Product line suffix</td>
-            <td><%= original_nomenclature.producline_suffix %></td>
-          </tr>
-          <tr>
-            <td class="bold-small">Indents</td>
-            <td><%= original_nomenclature.number_indents %></td>
-          </tr>
-          <tr>
-            <td class="bold-small">Footnotes</td>
-            <td><%= original_nomenclature.footnotes.map(&:code).join(", ") %></td>
-          </tr>
-          <tr>
-            <td class="bold-small">Code valid from</td>
-            <td><%= original_nomenclature.validity_start_date.to_formatted_s(:uk_Mmm) %></td>
-          </tr>
-          <tr>
-            <td class="bold-small">Code valid until</td>
-            <td><%= original_nomenclature.validity_end_date %></td>
-          </tr>
+          <% TimeMachine.at(original_nomenclature.validity_start_date) do %>
+            <tr>
+              <td class="bold-small">Commodity code</td>
+              <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Description</td>
+              <td><%= original_nomenclature.description %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Product line suffix</td>
+              <td><%= original_nomenclature.producline_suffix %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Indents</td>
+              <td><%= original_nomenclature.number_indents %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Footnotes</td>
+              <td><%= original_nomenclature.footnotes.map(&:code).join(", ") %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Code valid from</td>
+              <td><%= original_nomenclature.validity_start_date.to_formatted_s(:uk_Mmm) %></td>
+            </tr>
+            <tr>
+              <td class="bold-small">Code valid until</td>
+              <td><%= original_nomenclature.validity_end_date %></td>
+            </tr>
+          <% end %>
           </tbody>
         </table>
       </div>
