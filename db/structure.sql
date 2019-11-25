@@ -1823,6 +1823,45 @@ ALTER SEQUENCE public.create_quota_association_workbasket_settings_id_seq OWNED 
 
 
 --
+-- Name: create_quota_blocking_period_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.create_quota_blocking_period_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    description text,
+    start_date date,
+    end_date date,
+    quota_order_number_id text,
+    quota_definition_sid text,
+    quota_blocking_period_sid text,
+    blocking_period_type text,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: create_quota_blocking_period_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.create_quota_blocking_period_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: create_quota_blocking_period_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.create_quota_blocking_period_workbasket_settings_id_seq OWNED BY public.create_quota_blocking_period_workbasket_settings.id;
+
+
+--
 -- Name: create_quota_suspension_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8569,6 +8608,13 @@ ALTER TABLE ONLY public.create_quota_association_workbasket_settings ALTER COLUM
 
 
 --
+-- Name: create_quota_blocking_period_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_quota_blocking_period_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.create_quota_blocking_period_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: create_quota_suspension_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9567,6 +9613,14 @@ ALTER TABLE ONLY public.create_nomenclature_workbasket_settings
 
 ALTER TABLE ONLY public.create_quota_association_workbasket_settings
     ADD CONSTRAINT create_quota_association_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: create_quota_blocking_period_workbasket_settings create_quota_blocking_period_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.create_quota_blocking_period_workbasket_settings
+    ADD CONSTRAINT create_quota_blocking_period_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -13050,3 +13104,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20191105131733_create_crea
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191113160652_add_workbasket_fields_goods_nomenclature.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191115160657_create_delete_quota_suspension_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191118132010_add_columns_to_edit_quota_suspension_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20191125154127_create_quota_blocking_period_workbasket_settings.rb');
