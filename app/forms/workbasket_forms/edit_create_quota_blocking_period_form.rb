@@ -38,7 +38,8 @@ module WorkbasketForms
         quota_definition_sid: @settings_params[:quota_definition_sid],
         description: @settings_params[:description],
         start_date: @settings_params[:start_date],
-        end_date: @settings_params[:end_date]
+        end_date: @settings_params[:end_date],
+        blocking_period_type: @settings_params[:blocking_period_type]
       )
 
       unless @workbasket_settings.quota_definition_sid
@@ -59,7 +60,7 @@ module WorkbasketForms
 
       if all_fields_completed?
         unless start_date_valid?
-          @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or suspension period'
+          @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or blocking period'
         end
 
         if @workbasket_settings.description.length > 500
@@ -68,24 +69,27 @@ module WorkbasketForms
       end
 
       if @settings_errors.empty?
-        # QuotaSuspensionPeriod.unrestrict_primary_key
-        #
-        # suspension = QuotaSuspensionPeriod.new(
-        #   quota_definition_sid: @workbasket_settings.quota_definition_sid,
-        #   suspension_start_date: @workbasket_settings.start_date,
-        #   suspension_end_date: @workbasket_settings.end_date,
-        #   description: @workbasket_settings.description
-        # )
-        #
-        # if @settings_errors.empty?
-        #   ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(suspension).assign!
-        #   ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-        #     suspension, system_ops
-        #   ).assign!
-        #
-        #   suspension.save
-        #   workbasket.submit_for_cross_check!(current_admin: current_admin)
-        # end
+        QuotaBlockingPeriod.unrestrict_primary_key
+
+        blocking_period = QuotaBlockingPeriod.new(
+          quota_definition_sid: @workbasket_settings.quota_definition_sid,
+          blocking_start_date: @workbasket_settings.start_date,
+          blocking_end_date: @workbasket_settings.end_date,
+          description: @workbasket_settings.description,
+          blocking_period_type: @workbasket_settings.blocking_period_type,
+          workbasket_id: @workbasket.id
+        )
+
+        if @settings_errors.empty?
+          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(blocking_period).assign!
+          ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
+            blocking_period, system_ops
+          ).assign!
+
+          blocking_period.save
+
+          workbasket.submit_for_cross_check!(current_admin: current_admin)
+        end
       end
 
       @settings_errors.empty?

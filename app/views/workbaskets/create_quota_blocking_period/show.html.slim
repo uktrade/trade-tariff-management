@@ -1,0 +1,22 @@
+.breadcrumbs
+  ol
+    li
+      = link_to "Main menu", root_url
+
+    li
+      = link_to "Quota Blocking Periods", quota_blocking_periods_url
+
+    li aria-current="page"
+      | View Quota Blocking Period
+
+header
+  h1.heading-large
+    | View quota blocking period
+
+  .view-workbasket-container
+    = render "workbaskets/create_quota_blocking_period/workflow_screens_parts/notifications/block", screen_type: :view
+    = render "workbaskets/create_quota_blocking_period/workflow_screens_parts/actions_allowed"
+    = render "workbaskets/create_quota_blocking_period/workflow_screens_parts/workbasket_details"
+
+    = render "workbaskets/create_quota_blocking_period/workflow_screens_parts/summary_of_configuration"
+    = render "workbaskets/shared/steps/review_and_submit/quota_blocking_period"

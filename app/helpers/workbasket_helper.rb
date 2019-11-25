@@ -342,6 +342,12 @@ module WorkbasketHelper
         workbasket.id,
         step: :main
       )
+
+    when :create_quota_blocking_period
+      edit_create_quota_blocking_period_url(
+        workbasket.id,
+        step: :main
+      )
       end
   end
 
@@ -391,6 +397,8 @@ module WorkbasketHelper
       create_quota_suspension_url(workbasket.id)
     when :edit_quota_suspension
       edit_quota_suspension_url(workbasket.id)
+    when :create_quota_blocking_period
+      create_quota_blocking_period_url(workbasket.id)
     end
   end
 
@@ -437,6 +445,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_delete_quota_association_url(workbasket.id)
     elsif workbasket.object.type == "delete_quota_suspension"
       withdraw_workbasket_from_workflow_delete_quota_suspension_url(workbasket.id)
+    elsif workbasket.object.type == "create_quota_blocking_period"
+      withdraw_workbasket_from_workflow_create_quota_blocking_period_url(workbasket.id)
     end
   end
 

@@ -33,11 +33,10 @@ module Workbaskets
     end
 
     def update
-      byebug
       @edit_quota_blocking_period_form = WorkbasketForms::EditCreateQuotaBlockingPeriodForm.new(params[:id], update_quota_blocking_period_params)
 
       if @edit_quota_blocking_period_form.save
-        redirect_to submitted_for_cross_check_create_quota_suspension_path(@edit_quota_suspension_form.workbasket.id)
+        redirect_to submitted_for_cross_check_create_quota_blocking_period_path(@edit_quota_blocking_period_form.workbasket.id)
       else
         render :edit
       end

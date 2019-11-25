@@ -36,10 +36,10 @@ module WorkbasketForms
         @workbasket = Workbaskets::Workbasket.new(
           title: @workbasket_title,
           status: :new_in_progress,
-          type: :create_quota_suspension,
+          type: :create_quota_blocking_period,
           user: @current_user
         ).save
-
+        
         @workbasket.settings.update(quota_order_number_id: quota_order_number_id)
       end
 

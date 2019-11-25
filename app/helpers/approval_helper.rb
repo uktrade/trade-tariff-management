@@ -40,6 +40,8 @@ module ApprovalHelper
       "Approve and edit quota suspension"
     elsif workbasket.type == 'delete_quota_suspension'
       "Approve and delete quota suspension"
+    elsif workbasket.type == 'create_quota_blocking_period'
+      "Approve and create quota blocking period"
     end
   end
 
@@ -62,6 +64,8 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/delete_quota_suspension"
     elsif workbasket.type == 'create_quota_suspension'
       "workbaskets/shared/steps/review_and_submit/approval/create_quota_suspension"
+    elsif workbasket.type == 'create_quota_blocking_period'
+      "workbaskets/shared/steps/review_and_submit/approval/create_quota_blocking_period"
     elsif workbasket.type == 'create_nomenclature'
       "workbaskets/shared/steps/review_and_submit/approval/create_nomenclatures"
     elsif workbasket.type == 'edit_nomenclature'
