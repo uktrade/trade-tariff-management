@@ -205,3 +205,4 @@ en:
     validity_start_date_blank: "Start date must be specified."
     origin_code_not_valid: "The origin code/suffix is not a valid commodity."
     chapter_doesnt_exist: "The chapter indicated by the item id does not exist."
+    summary_conformance_rules: "The commodity code could not be submitted because there are conformance errors."

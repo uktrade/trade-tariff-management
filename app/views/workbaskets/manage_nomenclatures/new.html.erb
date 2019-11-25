@@ -60,7 +60,8 @@
         </label>
       </div>
       <div class="multiple-choice">
-        <input type='radio' id="remove_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="remove_nomenclature" disabled>
+        <input type='radio' id="remove_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="remove_nomenclature"
+               <%= 'disabled' if @nomenclature.goods_nomenclature_item_id.ends_with?('000000') %> >
         <label for="remove_nomenclature">
           Remove this code (structural) (Not implemented)
         </label>
