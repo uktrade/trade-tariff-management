@@ -191,6 +191,7 @@ module WorkbasketInteractions
 
         if conformance_errors.present?
           @errors_summary = initial_validator.errors_translator(:summary_conformance_rules)
+          @errors.merge!(@conformance_errors)
         end
       end
 
