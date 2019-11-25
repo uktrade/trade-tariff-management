@@ -18,7 +18,9 @@ module WorkbasketForms
       @goods_nomenclature_item_id = settings[:goods_nomenclature_item_id]
       @validity_start_date = settings.present? ? settings[:validity_start_date] : nil
       @producline_suffix = settings[:producline_suffix]
-      @number_indents = settings[:number_indents] || original_nomenclature.number_indents + 1
+      TimeMachine.at(original_nomenclature.validity_start_date) do
+        @number_indents = settings[:number_indents] || original_nomenclature.number_indents + 1
+      end
       @origin_code = settings[:origin_nomenclature] || original_nomenclature.goods_nomenclature_item_id
       @origin_producline_suffix = settings[:origin_producline_suffix] || original_nomenclature.producline_suffix
     end
