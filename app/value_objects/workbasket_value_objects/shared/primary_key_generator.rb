@@ -12,6 +12,7 @@ module WorkbasketValueObjects
         "QuotaOrderNumberOrigin" => :quota_order_number_origin_sid,
         "MeasureCondition" => :measure_condition_sid,
         "QuotaSuspensionPeriod" => :quota_suspension_period_sid,
+        "QuotaBlockingPeriod" => :quota_blocking_period_sid,
         "GeographicalArea" => :geographical_area_sid,
         "GeographicalAreaDescriptionPeriod" => :geographical_area_description_period_sid,
         "CertificateDescriptionPeriod" => :certificate_description_period_sid,

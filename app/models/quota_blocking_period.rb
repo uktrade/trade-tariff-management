@@ -1,7 +1,10 @@
 class QuotaBlockingPeriod < Sequel::Model
   include ::XmlGeneration::BaseHelper
+  include ::WorkbasketHelpers::Association
 
-  plugin :oplog, primary_key: :quota_definition_sid
+  attr_accessor :added_at, :added_by_id, :national
+
+  plugin :oplog, primary_key: :quota_blocking_period_sid
   plugin :conformance_validator
 
   set_primary_key [:quota_blocking_period_sid]
