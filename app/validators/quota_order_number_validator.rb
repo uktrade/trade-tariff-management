@@ -41,8 +41,10 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
       record.class.where(
         quota_order_number_id: record.quota_order_number_id
       ) {
-        (validity_end_date > record.validity_start_date)
-      }.empty?
+        (validity_end_date > record.validity_start_date) | Sequel.lit('validity_end_date is null')
+      }.exclude(
+        quota_order_number_sid: record.quota_order_number_sid
+      ).empty?
     end
   end
 
