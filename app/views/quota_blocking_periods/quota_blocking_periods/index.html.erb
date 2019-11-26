@@ -1,0 +1,55 @@
+<% content_for :content do %>
+
+<div class="breadcrumbs">
+  <nav>
+    <ol>
+      <li>
+       <%= link_to "Main menu", root_url %>
+      </li>
+      <li>
+          Quota blocking periods
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<h1 class="heading-large">
+  View quota blocking periods
+</h1>
+
+<div class="grid-row">
+  <div class="column-full">
+    <p>This screen lists all quota blocking periods that have been created for quotas that are currently active.</p>
+
+    <p>Please click here to <%= link_to "create a new quota blocking period", new_create_quota_blocking_period_path %>. Please be aware that a quota blocking period can only be edited
+       for blocking periods that are yet to finish. You may only delete quota blocking periods that are yet to start.
+    </p>
+  </div>
+</div>
+
+<table class="m-t-35">
+  <thead>
+    <tr>
+      <th scope="col">Quota order number</th>
+      <th scope="col">Definition dates</th>
+      <th scope="col">Suspension period dates</th>
+      <th scope="col">Blocking type</th>
+      <th scope="col">Description</th>
+      <th scope="col">Actions</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @quota_blocking_periods.each do | blocking_period | %>
+      <% quota_definition = QuotaDefinition.find(quota_definition_sid: blocking_period.quota_definition_sid) %>
+      <tr>
+        <td><%= quota_definition.quota_order_number_id if quota_definition %></td>
+        <td><%= "#{quota_definition.validity_start_date.strftime("%d-%m-%y")} to #{quota_definition.validity_end_date.strftime("%d-%m-%y")}" if quota_definition %></td>
+        <td><%= "#{blocking_period.blocking_start_date.strftime("%d-%m-%y")} to #{blocking_period.blocking_end_date.strftime("%d-%m-%y")}" %></td>
+        <td><%= WorkbasketForms::EditCreateQuotaBlockingPeriodForm::BLOCKING_TYPES[blocking_period.blocking_period_type] %></td>
+        <td class='break-word'><%= blocking_period.description %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
