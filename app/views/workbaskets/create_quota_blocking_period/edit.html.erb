@@ -7,7 +7,7 @@
           <%= link_to "Main menu", root_url %>
           </li>
           <li>
-              <%= link_to "Quota blocking period period", quota_blocking_periods_url %>
+              <%= link_to "Quota blocking periods", quota_blocking_periods_url %>
           </li>
           <li>
               Create quota blocking period
@@ -33,7 +33,7 @@
     <% end %>
 
     <h1 class="heading-large">
-      <%= "Create quota blocking period period on quota #{@edit_quota_blocking_period_form.quota.quota_order_number_id}" %>
+      <%= "Create quota blocking period on quota #{@edit_quota_blocking_period_form.quota.quota_order_number_id}" %>
     </h1>
 
     <%= simple_form_for @edit_quota_blocking_period_form, url: create_quota_blocking_period_path, method: :patch do |f| %>
