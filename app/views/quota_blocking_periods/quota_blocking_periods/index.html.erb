@@ -48,6 +48,7 @@
         <td><%= "#{blocking_period.blocking_start_date.strftime("%d-%m-%y")} to #{blocking_period.blocking_end_date.strftime("%d-%m-%y")}" %></td>
         <td><%= WorkbasketForms::EditCreateQuotaBlockingPeriodForm::BLOCKING_TYPES[blocking_period.blocking_period_type] %></td>
         <td class='break-word'><%= blocking_period.description %></td>
+        <td><%= link_to "Edit", new_edit_quota_blocking_period_path(quota_blocking_period_sid: blocking_period.quota_blocking_period_sid, quota_definition_sid: quota_definition.quota_definition_sid) %></td>
       </tr>
     <% end %>
   </tbody>
