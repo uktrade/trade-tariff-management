@@ -24,6 +24,7 @@ module Workbaskets
       edit_quota_suspension
       delete_quota_suspension
       create_quota_blocking_period
+      edit_quota_blocking_period
     ].freeze
 
     STATUS_LIST = [
@@ -191,6 +192,9 @@ module Workbaskets
 
     one_to_one :create_quota_blocking_period_settings, key: :workbasket_id,
                class_name: "Workbaskets::CreateQuotaBlockingPeriodSettings"
+
+    one_to_one :edit_quota_blocking_period_settings, key: :workbasket_id,
+               class_name: "Workbaskets::EditQuotaBlockingPeriodSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -593,6 +597,8 @@ module Workbaskets
         edit_quota_suspension_settings
       when :create_quota_blocking_period
         create_quota_blocking_period_settings
+      when :edit_quota_blocking_period
+        edit_quota_blocking_period_settings
       end
     end
 
@@ -703,6 +709,7 @@ module Workbaskets
           edit_quota_suspension
           delete_quota_suspension
           create_quota_blocking_period
+          edit_quota_blocking_period
         ).map do |type_name|
           by_type(type_name).map(&:clean_up_workbasket!)
         end
@@ -757,6 +764,8 @@ module Workbaskets
                        ::Workbaskets::EditQuotaSuspensionSettings
                      when :create_quota_blocking_period
                        ::Workbaskets::CreateQuotaBlockingPeriodSettings
+                     when :edit_quota_blocking_period
+                       ::Workbaskets::EditQuotaBlockingPeriodSettings
       end
 
       target_class.unrestrict_primary_key

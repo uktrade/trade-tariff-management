@@ -1,0 +1,2 @@
+class Workbaskets::QuotaBlockingPeriodSettingsDecorator < ApplicationDecorator
+end
