@@ -32,6 +32,7 @@ module WorkbasketInteractions
         check_description!
         check_validity_period!
         check_origin!
+        check_indents!
         check_section_and_chapter!
 
         errors
@@ -96,6 +97,14 @@ module WorkbasketInteractions
         section_chapter = GoodsNomenclature.actual(include_future: true).where(goods_nomenclature_item_id: goods_nomenclature_item_id.first(4).ljust(10, '0'), status: 'published').first
         section_chapter.present?
       end
+
+      def check_indents!
+        if settings.number_indents < 1
+          @errors[:number_indents] = errors_translator(:indents_must_be_greater_than_zero)
+          @errors_summary = errors_translator(:indents_must_be_greater_than_zero)
+        end
+      end
+
     end
   end
 end
