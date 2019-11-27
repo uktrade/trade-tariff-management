@@ -18,7 +18,6 @@ module WorkbasketForms
     end
 
     def save
-      byebug
       if @workbasket_title.empty?
         @settings_errors[:workbasket_title] = "Workbasket title must be entered"
       end
@@ -43,9 +42,7 @@ module WorkbasketForms
           user: @current_user
         ).save
 
-        byebug
-
-        @workbasket.settings.update(quota_order_number_id: quota_order_number_id, quota_blocking_period_sid: @quota_suspension_period_sid, quota_definition_sid: @quota_definition_sid)
+        @workbasket.settings.update(quota_order_number_id: quota_order_number_id, quota_blocking_period_sid: @quota_blocking_period_sid, quota_definition_sid: @quota_definition_sid)
       end
 
       @settings_errors.empty?

@@ -1,5 +1,5 @@
 module WorkbasketForms
-  class EditEditQuotablockingPeriodForm
+  class EditEditQuotaBlockingPeriodForm
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ::WorkbasketHelpers::SettingsSaverHelperMethods
