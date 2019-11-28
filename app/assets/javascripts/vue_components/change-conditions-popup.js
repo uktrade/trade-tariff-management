@@ -101,7 +101,9 @@ Vue.component("change-conditions-popup", {
         action_code: condition.measure_action ? condition.measure_action.action_code : null,
         measure_action: condition.measure_action,
         certificate_type_id: condition.certificate_type ? condition.certificate_type.certificate_type_id : null,
+        certificate_type_code: condition.certificate_type ? condition.certificate_type.certificate_type_code : null,
         certificate_id: condition.certificate ? condition.certificate_id : null,
+        certificate_code: condition.certificate ? condition.certificate_code : null,
         certificate_type: condition.certificate_type,
         certificate: condition.certificate,
         measure_condition_components: condition.measure_condition_components.filter(function (mcc) {
@@ -186,8 +188,10 @@ Vue.component("change-conditions-popup", {
               if (mcc.original_duty_expression_id) {
                 mcc.original_duty_expression_id = mcc.duty_expression_id.slice(0);
               }
-              mcc.duty_expression_id = mcc.duty_expression_id.substring(0, 2);
-              mcc.duty_expression.duty_expression_id = mcc.duty_expression.duty_expression_id.substring(0, 2);
+              if (mcc.duty_expression_id) {
+                mcc.duty_expression_id = mcc.duty_expression_id.substring(0, 2);
+                mcc.duty_expression.duty_expression_id = mcc.duty_expression.duty_expression_id.substring(0, 2);
+              }
             });
 
             measure.measure_conditions.push(condition);

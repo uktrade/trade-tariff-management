@@ -54,11 +54,11 @@
         </form-group>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-2" v-if="roomCertificateType">
-        <form-group v-if="showCertificateType && condition.certificate_type">
+        <form-group v-if="showCertificateType">
           <label class="form-label" v-if="index == 0">
             Certificate type(s)
           </label>
-          <custom-select :id="'measure-condition-' + index + '-certificate-type'" url="/certificate_types" v-model="condition.certificate_type.certificate_type_code" codeField="certificate_type_code" valueField="certificate_type_code" labelField="description" date-sensitive="true" code-class-name="prefix--certificate-type" :on-change="onCertificateTypeSelected" :compact="true"></custom-select>
+          <custom-select :id="'measure-condition-' + index + '-certificate-type'" url="/certificate_types" v-model="condition.certificate_type_code" codeField="certificate_type_code" valueField="certificate_type_code" labelField="description" date-sensitive="true" code-class-name="prefix--certificate-type" :on-change="onCertificateTypeSelected" :compact="true"></custom-select>
         </form-group>
         <form-group v-else>
           <label class="form-label" v-if="index == 0">
@@ -68,11 +68,11 @@
         </form-group>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-1" v-if="roomCertificate">
-        <form-group v-if="showCertificate && condition.certificate">
+        <form-group v-if="showCertificate">
           <label class="form-label" v-if="index == 0">
             Certificate
           </label>
-          <custom-select :id="'measure-condition-' + index + '-certificate'" url="/certificates" v-model="condition.certificate.certificate_code" codeField="certificate_code" valueField="certificate_code" labelField="description" date-sensitive="true" drilldown-name="certificate_type_code" :drilldown-value="condition.certificate_type_code" :drilldown-required="showCertificateType" code-class-name="prefix--certificate" :on-change="onCertificateSelected" :compact="true"></custom-select>
+          <custom-select :id="'measure-condition-' + index + '-certificate'" url="/certificates" v-model="condition.certificate_code" codeField="certificate_code" valueField="certificate_code" labelField="description" date-sensitive="true" drilldown-name="certificate_type_code" :drilldown-value="condition.certificate_type_code" :drilldown-required="showCertificateType" code-class-name="prefix--certificate" :on-change="onCertificateSelected" :compact="true"></custom-select>
         </form-group>
         <form-group v-else>
           <label class="form-label" v-if="index == 0">
