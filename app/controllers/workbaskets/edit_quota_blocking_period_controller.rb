@@ -42,9 +42,9 @@ module Workbaskets
       @quota_definition = QuotaDefinition.find(quota_definition_sid: params[:quota_definition_sid])
       @quota_blocking_period_sid = params[:quota_blocking_period_sid]
       @quota_blocking_period = QuotaBlockingPeriod.find(quota_blocking_period_sid: params[:quota_blocking_period_sid])
-      @edit_edit_quota_suspension_form = WorkbasketForms::EditEditQuotaSuspensionForm.new(params[:id], update_quota_blocking_period_params)
+      @edit_edit_quota_blocking_period_form = WorkbasketForms::EditEditQuotaBlockingPeriodForm.new(params[:id], update_quota_blocking_period_params)
 
-      if @edit_edit_quota_suspension_form.save
+      if @edit_edit_quota_blocking_period_form.save
         redirect_to submitted_for_cross_check_edit_quota_blocking_period_path(@edit_edit_quota_blocking_period_form.workbasket.id)
       else
         render :action => 'edit'
@@ -65,13 +65,14 @@ module Workbaskets
         }
       end
 
-      def update_quota_suspension_params
+      def update_quota_blocking_period_params
         {
           quota_definition_sid: params[:quota_definition_sid],
+          blocking_period_type: params[:blocking_period_type].to_i,
           description: params[:workbasket_forms_edit_edit_quota_blocking_period_form][:description],
           start_date: params[:workbasket_forms_edit_edit_quota_blocking_period_form][:start_date],
-          end_date: params[:workbasket_forms_edit_edit_quota_blocking_period_form][:end_date],
-          quota_blocking_period_sid: params[:quota_blocking_period_sid]
+          quota_blocking_period_sid: params[:quota_blocking_period_sid],
+          end_date: params[:workbasket_forms_edit_edit_quota_blocking_period_form][:end_date]
         }
       end
   end

@@ -41,7 +41,7 @@
         <div class="column-full">
           <div class="form-group">
             <label class="heading-medium" for="parent_definition_period">
-              Select the quota blocking period to suspend
+              Select the quota period to block
               <span class="form-hint">
                   This is the quota definition on to which the quota blocking period will be assigned. This list only includes future and current definition periods
               </span>
@@ -61,6 +61,31 @@
           </div>
           </div>
         </div>
+        <div class="grid-row">
+          <div class="column-full">
+            <div class="form-group">
+              <label class="heading-medium" for="parent_definition_period">
+                Select the type of blocking period
+                <span class="form-hint">
+                  This is the reason for the quota being blocked.
+                </span>
+                <% if @edit_edit_quota_blocking_period_form.settings_errors[:quota_order_number_id] %>
+                <span class="error-message"><%= @edit_quota_blocking_period_form.settings_errors[:quota_order_number_id] %></span>
+                <% end %>
+              </label>
+
+            </label>
+            <div class="grid-row">
+              <div class="column-one-third">
+                <select id="blocking_period_type" class="form-control" name="blocking_period_type" >
+                  <% @edit_edit_quota_blocking_period_form.blocking_reasons.values.each do |reason| %>
+                    <option value="<%= reason.to_i %>"><%= reason %></option>
+                  <% end %>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <%= content_tag "date-gds", "", "value" => @quota_blocking_period.blocking_start_date.strftime('%d,%m,%Y'), "label" => "Blocking period start date", "hint" => "Please ensure that this date falls on or after the definition start date", "id" => "start_date", "input_name" => "workbasket_forms_edit_edit_quota_blocking_period_form[start_date]", ":error" => "errors.start_date" %>
@@ -70,7 +95,7 @@
       <div>
         <h3 class='heading medium'>
           <label id='description' class='form-label' name='description'>
-            Please enter a description for this suspension period
+            Please enter a description for this blocking period
           </label>
         </h2>
           <span class='form-hint'>

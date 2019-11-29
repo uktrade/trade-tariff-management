@@ -69,6 +69,7 @@ module WorkbasketForms
         blocking_period.blocking_end_date = end_date
         blocking_period.description = @workbasket_settings.description
         blocking_period.workbasket_id = workbasket.id
+        blocking_period.blocking_period_type = @settings_params[:blocking_period_type]
 
         if @settings_errors.empty?
           blocking_period.save
@@ -137,6 +138,10 @@ module WorkbasketForms
     private def format_coefficient(coefficient)
       # Always has 5 decimal places
       '%.5f' % coefficient.to_f.truncate(5)
+    end
+
+    def blocking_reasons
+      EditCreateQuotaBlockingPeriodForm::BLOCKING_TYPES
     end
   end
 end
