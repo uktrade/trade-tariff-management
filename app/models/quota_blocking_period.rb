@@ -22,4 +22,8 @@ class QuotaBlockingPeriod < Sequel::Model
   def subrecord_code
     "10".freeze
   end
+
+  def definition
+    QuotaDefinition.find(quota_definition_sid: quota_definition_sid)
+  end
 end

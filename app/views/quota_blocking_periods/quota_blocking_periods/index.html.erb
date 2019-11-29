@@ -42,7 +42,7 @@
   <tbody>
     <% @quota_blocking_periods.each do | blocking_period | %>
       <% quota_definition = QuotaDefinition.find(quota_definition_sid: blocking_period.quota_definition_sid) %>
-      <tr>
+      <tr valign='top'>
         <td><%= quota_definition.quota_order_number_id if quota_definition %></td>
         <td><%= "#{quota_definition.validity_start_date.strftime("%d-%m-%y")} to #{quota_definition.validity_end_date.strftime("%d-%m-%y")}" if quota_definition %></td>
         <td><%= "#{blocking_period.blocking_start_date.strftime("%d-%m-%y")} to #{blocking_period.blocking_end_date.strftime("%d-%m-%y")}" %></td>
