@@ -58,11 +58,6 @@ class BaseRegulation < Sequel::Model
   #
   def formatted_id
     return "I9999/YY" if base_regulation_id == "IYY99990"
-
-    year = Date.strptime(base_regulation_id.slice(1, 2), "%y").strftime("%Y");
-    number = base_regulation_id.slice(3, 4)
-
-    # "#{year}/#{number}"
     base_regulation_id
   end
 
