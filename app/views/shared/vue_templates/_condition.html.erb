@@ -81,16 +81,26 @@
           &nbsp;
         </form-group>
       </div>
-      <div class="col-xs-12 col-sm-6 col-md-1">
-        <form-group>
-          <label class="form-label" v-if="index == 0">
-            Action
-          </label>
-          <custom-select :id="'measure-condition-' + index + '-action'" url="/measure_actions" v-model="condition.action_code" codeField="action_code" valueField="action_code" labelField="description" date-sensitive="true" code-class-name="prefix--measure-action" :on-change="onActionSelected" :compact="true"></custom-select>
-        </form-group>
+      <div v-if="condition.condition_code">
+        <div class="col-xs-12 col-sm-6 col-md-1">
+          <form-group>
+            <label class="form-label" v-if="index == 0">
+              Action
+            </label>
+            <custom-select :id="'measure-condition-' + index + '-action'" url="/measure_actions" v-model="condition.action_code" codeField="action_code" valueField="action_code" labelField="description" date-sensitive="true" code-class-name="prefix--measure-action" :on-change="onActionSelected" :compact="true"></custom-select>
+          </form-group>
+        </div>
+        <div class="col-md-6">
+          <components-coordinator :components="condition.measure_condition_components" type="measure_condition_component" classes="measure-condition-component" :hide-help="hideHelp !== true && index == 0" :index="index" :compact="true" :show-conditions-duty-amount="showConditionsDutyAmount" :show-conditions-measurement-unit="showConditionsMeasurementUnit"></components-coordinator>
+        </div>
       </div>
-      <div class="col-md-6">
-        <components-coordinator :components="condition.measure_condition_components" type="measure_condition_component" classes="measure-condition-component" :hide-help="hideHelp !== true && index == 0" :index="index" :compact="true" :show-conditions-duty-amount="showConditionsDutyAmount" :show-conditions-measurement-unit="showConditionsMeasurementUnit"></components-coordinator>
+      <div v-else>
+        <div class="col-xs-12 col-sm-6 col-md-1">
+          &nbsp;
+        </div>
+        <div class="col-md-6">
+          &nbsp;
+        </div>
       </div>
 
       <slot></slot>
