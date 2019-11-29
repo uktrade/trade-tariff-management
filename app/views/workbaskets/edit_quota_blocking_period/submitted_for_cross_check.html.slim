@@ -1,0 +1,23 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Edited quota blocking period submitted
+
+  p.font-large
+    = "The workbasket <strong class='bold'>#{workbasket.title}</strong> has been submitted for cross-check.".html_safe
+
+h3.heading-medium.m-t-100
+  | Next steps
+
+ul class="list"
+  li
+    = link_to "Withdraw submission / edit quota blocking period", "#",
+            data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
+            class: "js-main-menu-show-withdraw-confirmation-link"
+  li
+    = link_to "Edit another quota blocking period", new_edit_quota_blocking_period_url
+  li
+    = link_to "View this quota blocking period", edit_quota_blocking_period_path(workbasket.id)
+  li
+    = link_to "Return to main menu", root_url
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket
