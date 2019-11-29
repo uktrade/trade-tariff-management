@@ -1,19 +1,17 @@
 fieldset
   h3.heading-medium
-    | What duties will apply these measures?
+    | What duties will apply to these measures?
 
-  .form-group.with_less_bottom_margin
-    label.form-label
-      span.form-hint
-        | Duties specified here will apply to all the measures being created. If you need to specify
-        br
-
-        | exceptions, you can vary the amounts on next screen; If you need to specify completelly
-        br
-
-        | different duty expressions, you should either create those measures separately, or create
-        br
-        | them with the same duties initially and then use bulk-editing to make the necessary changes.
-
+  / .form-group.with_less_bottom_margin
+  /   label.form-label
+  /     span.form-hint
+  /       | Duties specified here will apply to all the measures being created. If you need to specify
+  /       br
+  /       | exceptions, you can vary the amounts on next screen; If you need to specify completely
+  /       br
+  /       | different duty expressions, you should either create those measures separately, or create
+  /       br
+  /       | them with the same duties initially and then use bulk-editing to make the necessary changes.
+  /
   .measure-components
     = content_tag "components-coordinator", nil, { ":components" => "measure.measure_components", ":conditions" => "measure.conditions", "type" => "measure_component", "classes" => "measure-component", ":hide-help" => "false", ":index" => "0" }

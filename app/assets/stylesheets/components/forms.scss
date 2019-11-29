@@ -116,14 +116,10 @@ label abbr {
 }
 
 .measure-condition {
-  padding: 15px 0 0;
+  padding: 15px 0 15px;
 
   &:first-of-type {
     padding-top: 0;
-  }
-
-  &:first-of-type:last-of-type {
-    padding-bottom: 0 !important;
   }
 
   .modal & {
