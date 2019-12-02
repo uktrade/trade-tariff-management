@@ -21,7 +21,7 @@ class RegulationsSearchPgView < Sequel::Model(:regulations_search_pg_view)
     end
 
     def q_search(keywords)
-      q_rule = "#{keywords}%"
+      q_rule = "%#{keywords}%"
 
       where(
         "regulation_id ilike ? OR keywords ilike ?",
