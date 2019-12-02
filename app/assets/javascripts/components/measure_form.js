@@ -377,7 +377,8 @@ $(document).ready(function() {
           $.ajax({
             url: url,
             data: {
-              q: this[code].trim()
+              q: this[code].trim(),
+              start_date: this.measure.validity_start_date
             },
             success: function(data) {
 

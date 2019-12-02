@@ -3,7 +3,7 @@ class GoodsNomenclaturesController < ApplicationController
   around_action :configure_time_machine
 
   def index
-    @nomenclature = GoodsNomenclature.actual
+    @nomenclature = GoodsNomenclature.actual(include_future: true)
                                      .where(goods_nomenclature_item_id: params[:q])
                                      .first.try(:sti_instance)
 
