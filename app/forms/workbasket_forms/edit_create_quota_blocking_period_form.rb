@@ -60,7 +60,7 @@ module WorkbasketForms
 
       if all_fields_completed?
         unless start_date_valid?
-          @settings_errors[:start_date_invalid] = 'You must select the date as on or after start date or before end date of the selected definition or blocking period'
+          @settings_errors[:start_date_invalid] = 'You must select the date as in the future and on or after start date or before end date of the selected definition or blocking period'
         end
 
         if @workbasket_settings.description.length > 500
@@ -106,11 +106,12 @@ module WorkbasketForms
     def start_date_valid?
       definition = QuotaDefinition.find(quota_definition_sid: @workbasket_settings.quota_definition_sid)
 
-      starts_same_day_or_after_definition?(definition) &&
-       starts_before_end_day_of_definition?(definition) &&
-        ends_after_start_date_of_definition(definition) &&
-         ends_same_day_or_before_definition?(definition) &&
-          ends_after_start_date?
+      starts_in_future? &&
+        starts_same_day_or_after_definition?(definition) &&
+         starts_before_end_day_of_definition?(definition) &&
+          ends_after_start_date_of_definition(definition) &&
+           ends_same_day_or_before_definition?(definition) &&
+            ends_same_day_or_after_start_date?
     end
 
     def all_fields_completed?
@@ -133,8 +134,12 @@ module WorkbasketForms
       definition.validity_end_date >= @workbasket_settings.end_date
     end
 
-    def ends_after_start_date?
-      @workbasket_settings.start_date < @workbasket_settings.end_date
+    def ends_same_day_or_after_start_date?
+      @workbasket_settings.start_date <= @workbasket_settings.end_date
+    end
+
+    def starts_in_future?
+      @workbasket_settings.start_date.to_date >= Date.tomorrow
     end
 
     def blocking_reasons
