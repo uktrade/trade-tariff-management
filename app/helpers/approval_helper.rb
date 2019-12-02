@@ -88,6 +88,10 @@ module ApprovalHelper
       "workbaskets/shared/steps/review_and_submit/approval/create_certificate"
     elsif workbasket.type == 'edit_certificate'
       "workbaskets/shared/steps/review_and_submit/approval/edit_certificate"
+    elsif workbasket.type == 'create_quota_blocking_period'
+      "workbaskets/shared/steps/review_and_submit/approval/create_quota_blocking_period"
+    elsif workbasket.type == 'edit_quota_blocking_period'
+      "workbaskets/shared/steps/review_and_submit/approval/edit_quota_blocking_period"
     end
   end
 end

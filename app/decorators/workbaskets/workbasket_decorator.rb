@@ -46,6 +46,10 @@ module Workbaskets
         "Create Quota Suspension Period"
       when "edit_quota_suspension"
         "Edit Quota Suspension Period"
+      when "create_quota_blocking_period"
+        "Create Quota Blocking Period"
+      when "edit_quota_blocking_period"
+        "Edit Quota Blocking Period"
       end
     end
 

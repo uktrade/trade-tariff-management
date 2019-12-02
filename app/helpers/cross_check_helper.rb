@@ -40,6 +40,10 @@ module CrossCheckHelper
       "Cross-check and create quota suspension period"
     elsif workbasket.type == 'edit_quota_suspension'
       "Cross-check and edit quota suspension period"
+    elsif workbasket.type == 'create_quota_blocking_period'
+      "Cross-check and create quota blocking period"
+    elsif workbasket.type == 'edit_quota_suspension'
+      "Cross-check and edit quota blocking period"
     end
   end
 
@@ -84,6 +88,10 @@ module CrossCheckHelper
       "workbaskets/shared/steps/review_and_submit/edit_certificate"
     elsif workbasket.type == 'edit_quota_suspension'
       "workbaskets/shared/steps/review_and_submit/quota_suspension"
+    elsif workbasket.type == 'create_quota_blocking_period'
+      "workbaskets/shared/steps/review_and_submit/quota_blocking_period"
+    elsif workbasket.type == 'edit_quota_blocking_period'
+      "workbaskets/shared/steps/review_and_submit/quota_blocking_period"
     end
   end
 
