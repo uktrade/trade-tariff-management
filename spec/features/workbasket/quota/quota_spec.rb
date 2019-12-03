@@ -66,7 +66,7 @@ RSpec.describe "quotas", :js do
       fill_out_configure_quota_form
       skip_optional_footnote_form
       expect_to_be_on_submit_for_cross_check_page
-      click_button 'Submit for cross-check'
+      click_button 'Submit for approval'
       navigate_to_edit_form
       change_precision_quota_and_submit
       expect(page).to have_content('Quota submitted')
@@ -145,6 +145,6 @@ RSpec.describe "quotas", :js do
     click_button 'Continue'
     click_button 'Continue'
     click_button 'Continue'
-    click_button 'Submit for cross-check'
+    click_button 'Submit for approval'
   end
 end

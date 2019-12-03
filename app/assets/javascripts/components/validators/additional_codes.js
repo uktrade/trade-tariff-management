@@ -166,11 +166,11 @@ AdditionalCodesValidator.prototype.setSummary = function() {
   if (this.level == "one" && this.action == "save_progress") {
     this.summary = "You cannot save progress yet because you have not entered the minimum required data.";
   } else if (this.level == "one") {
-    this.summary = "You cannot submit for cross-check yet because you have not entered the minimum required data.";
+    this.summary = "You cannot submit for approval yet because you have not entered the minimum required data.";
   } else if (this.level == "two" && this.action == "save_progress") {
     this.summary = "You cannot save progress yet because there is invalid data that cannot be saved.";
   }  else if (this.level == "two") {
-    this.summary = "You cannot submit for cross-check yet because there is invalid data that cannot be saved..";
+    this.summary = "You cannot submit for approval yet because there is invalid data that cannot be saved..";
   } else if (this.level == "three") {
     this.summary = "There is missing and/or invalid data on this page.";
   } else if (this.level == "four") {

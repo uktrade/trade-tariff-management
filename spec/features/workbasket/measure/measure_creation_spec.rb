@@ -42,7 +42,7 @@ RSpec.describe "adding measures", :js do
 
     expect(page).to have_content "Review and submit"
 
-    click_on("Submit for cross-check")
+    click_on("Submit for approval")
 
     expect(page).to have_content "Measures submitted"
   end

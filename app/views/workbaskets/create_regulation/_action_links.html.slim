@@ -6,7 +6,7 @@
     - if step_pointer.has_next_step?
       = f.button :submit, "Create regulation", name: "continue", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button"
     - else
-      = f.button :submit, "Submit for cross-check", name: "submit_for_cross_check", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button"
+      = f.button :submit, "Submit for approval", name: "submit_for_cross_check", class: "button js-workbasket-base-continue-button js-workbasket-base-submit-button"
 
     .js-workbasket-base-continue-spinner.spinner_block.hidden
       = render "measures/bulks/loading_spinner", message: "Checking data..."

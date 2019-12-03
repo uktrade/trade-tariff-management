@@ -12,7 +12,7 @@ RSpec.describe "adding geographical areas", :js do
     fill_in("What is the area description?", with: "A description")
     input_date_gds("#validity_start_date", 3.days.from_now)
 
-    click_on "Submit for cross-check"
+    click_on "Submit for approval"
 
     expect(page).to have_content "Geographical area submitted"
   end
@@ -40,7 +40,7 @@ RSpec.describe "adding geographical areas", :js do
 
     expect(area_membership_codes).to include group.geographical_area_id
 
-    click_on "Submit for cross-check"
+    click_on "Submit for approval"
 
     expect(page).to have_content "Geographical area submitted"
     expect_to_be_a_member(group)
@@ -69,7 +69,7 @@ RSpec.describe "adding geographical areas", :js do
 
     expect(area_membership_codes).to include "XX"
 
-    click_on "Submit for cross-check"
+    click_on "Submit for approval"
 
     expect(page).to have_content "Geographical area submitted"
     expect_to_have_member(country)
@@ -99,7 +99,7 @@ RSpec.describe "adding geographical areas", :js do
 
     expect(page).to_not have_content("1008")
 
-    click_on "Submit for cross-check"
+    click_on "Submit for approval"
 
     expect(page).to have_content "Geographical area submitted"
     expect_to_not_be_a_member(third_countries)

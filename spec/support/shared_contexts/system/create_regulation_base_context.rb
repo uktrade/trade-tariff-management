@@ -103,7 +103,7 @@ shared_context 'create_regulation_base_context' do
 
     context 'filled required fields' do
       context 'click on Create regulation' do
-        context 'click on Submit for cross-check' do
+        context 'click on Submit for approval' do
           it 'is okay' do
             visit_create_regulation
 
@@ -112,7 +112,7 @@ shared_context 'create_regulation_base_context' do
             click_on 'Create regulation'
             expect(page).to have_content('Review and submit')
 
-            click_on 'Submit for cross-check'
+            click_on 'Submit for approval'
             expect(page).to have_content('has been submitted for cross-check')
           end
         end
@@ -121,7 +121,7 @@ shared_context 'create_regulation_base_context' do
 
     context 'filled all fields' do
       context 'click on Create regulation' do
-        context 'click on Submit for cross-check' do
+        context 'click on Submit for approval' do
           it 'is okay' do
             visit_create_regulation
 
@@ -130,7 +130,7 @@ shared_context 'create_regulation_base_context' do
             click_on 'Create regulation'
             expect(page).to have_content('Review and submit')
 
-            click_on 'Submit for cross-check'
+            click_on 'Submit for approval'
             expect(page).to have_content('has been submitted for cross-check')
           end
         end

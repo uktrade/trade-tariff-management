@@ -355,11 +355,7 @@ module Workbaskets
           end
 
           def submit_for_cross_check!(current_admin:)
-            move_status_to!(current_admin, :awaiting_cross_check)
-
-            settings.collection.map do |item|
-              item.move_status_to!(:awaiting_cross_check)
-            end
+            submit_for_approval!(current_admin: current_admin)
           end
 
           def move_to_editing!(current_admin:)
@@ -378,6 +374,8 @@ module Workbaskets
           end
 
           def submit_for_approval!(current_admin:)
+            move_status_to!(current_admin, :awaiting_approval)
+
             settings.collection.map do |item|
               item.move_status_to!(:awaiting_approval)
             end

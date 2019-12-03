@@ -21,7 +21,7 @@ RSpec.describe "adding footnotes", :js do
     fill_in("What is the footnote description?", with: footnote_description)
     input_date_gds("#validity_start_date", footnote_valid_from)
 
-    click_on "Submit for cross-check"
+    click_on "Submit for approval"
 
     expect(page).to have_content("has been submitted for cross-check.")
     expect(Footnote.last).to have_attributes(description: footnote_description,
