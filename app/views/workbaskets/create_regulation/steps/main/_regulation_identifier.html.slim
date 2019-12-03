@@ -3,25 +3,7 @@
     h3.heading-medium.m-t-5 id="base_regulation_id"
       = f.label :base_regulation_id, 'What is the regulation identifier?'
     span.form-hint
-      | This must be exactly 8 characters long. Please use the following structure for regulations. Start with one of the following characters:
-    p.form-hint
-      | C Draft regulation
-      br
-      | P Preferential Trade Agreement
-      br
-      | U Unilateral preferences (GSP)
-      br
-      | S Suspensions and reliefs
-      br
-      | X Import and Export control
-      br
-      | N Trade remedies
-      br
-      | M MFN
-      br
-      | Q Quotas
-      br
-      | A Agri
+      | This must be exactly 8 characters long
 
     span.error-message v-if="errors.base_regulation_id" v-html="errors.base_regulation_id"
 
@@ -29,3 +11,5 @@
       .column-one-third
         = content_tag "custom-select", { "allow-clear" => true, "code-field" => "value", "label-field" => "text", "value-field" => "value", "v-model" => "regulation.base_regulation_id" } do
           = f.input :base_regulation_id, label: false, as: :string, input_html: { "v-model" => "regulation.base_regulation_id",  maxlength: 8 }
+
+    = render '/workbaskets/shared/regulations/regulation_identifier_help_text'
