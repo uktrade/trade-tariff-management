@@ -11,3 +11,5 @@
             | Please select the regulation group.
           span.error-message v-if="errors.regulation_group_id" v-html="errors.regulation_group_id"
         = content_tag "custom-select", "", { url: "/regulation_form_api/regulation_groups", "label-field" => "description", "code-field" => "regulation_group_id", "value-field" => "regulation_group_id",  "v-model" => "regulation.regulation_group_id", "name" => "regulation_form[regulation_group_id]", placeholder: "- select regulation group -", "allow-clear" => true, "code-class-name" => "prefix--regulation-group", id: "regulation_group" }
+
+    = render '/workbaskets/shared/regulations/regulation_group_help_text'
