@@ -23,6 +23,9 @@
     | &nbsp;|&nbsp;
     = link_to "Review for approval", new_approve_url(workbasket.id)
 
+| &nbsp;|&nbsp;
+= link_to "Reassign", new_reassign_url(workbasket.id)
+
 
 = render "workbaskets/main_menu_parts/schedule_export_to_cds_popup"
 = render "workbaskets/main_menu_parts/confirmation_popup", modal_id: "delete_confirmation_popup_#{workbasket.id}", title: "You are going to delete workbasket"
