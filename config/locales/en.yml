@@ -45,14 +45,14 @@ en:
       blank_workbasket_name: "Workbasket name can not be blank."
       blank_commodity_and_additional_codes: "Goods commodity codes: can be empty but only if one or more Meursing codes are entered in the Additional codes field."
       commodity_codes_exclusions: "Exceptions: if one or more codes are entered here, Goods commodity codes field must not be empty; each exception code must be a child of one of the goods commodity codes above."
-      commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please, double check params"
+      commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please double check params"
 
   create_quota:
     errors:
       quota_ordernumber: "Order number can not be blank."
       blank_commodity_and_additional_codes: "Goods commodity codes: can be empty but only if one or more Meursing codes are entered in the Additional codes field."
       commodity_codes_exclusions: "Exceptions: if one or more codes are entered here, Goods commodity codes field must not be empty; each exception code must be a child of one of the goods commodity codes above."
-      commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please, double check params"
+      commodity_codes_invalid: "There are no any valid code specified in 'Goods commodity codes' or 'Additional codes' inputs! Please double check params"
       no_any_quota_period: "Need to specify at least of one valid quota period. Period type, Start date, Length of period, Balance and either Measurement or Monetary Unit are required!"
       no_geographical_area: "A geographical origin (or Erga Omnes) must be specified."
       maximum_precision_blank: "Maximum precision must be specified."
@@ -105,7 +105,7 @@ en:
     errors:
       cross_check_mode_blank: "It is required to specify if you are going to confirm or reject changes in this workbasket."
       approve_mode_blank: "It is required to specify if you are going to approve or reject changes in this workbasket."
-      reject_reasons_blank: "Please, provide your reasons and/or state the changes required."
+      reject_reasons_blank: "Please provide your reasons and/or state the changes required."
 
   find_certificates:
     start_date_invalid: Start date is invalid.
