@@ -22,7 +22,7 @@ RSpec.describe "edit description" do
     fill_in("Day", with: "01")
     fill_in("Month", with: "01")
     fill_in("Year", with: "2030")
-    click_on("Submit for cross-check")
+    click_on("Submit for approval")
 
     expect(page).to have_content("The workbasket Test basket name has been submitted for cross-check.")
   end

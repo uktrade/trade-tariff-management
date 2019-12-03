@@ -38,7 +38,7 @@ $(document).ready(function() {
           return "Proceed to selected quota measures";
         }
 
-        return "Submit for cross-check";
+        return "Submit for approval";
       }
     },
     methods: {

@@ -21,7 +21,7 @@ RSpec.describe "adding additional codes", :js do
     fill_in('additional_code_code_0', with: new_code)
     fill_in('additional_code_description_0', with: new_description)
 
-    click_on "Submit for cross-check"
+    click_on "Submit for approval"
 
     expect(page).to have_content "New additional codes submitted"
 
