@@ -44,7 +44,7 @@ Vue.component('measure-condition', {
       return codes.indexOf(this.condition.condition_code) > -1;
     },
     canRemoveComponent: function() {
-      return this.condition.measure_condition_components.length > 1;
+      return (this.condition.measure_condition_components.length > 1) || (this.condition.measure_condition_components[0].condition_code);
     },
     showMonetaryUnit: function() {
       var codes = ["E2", "I2", "M1", "M2"];

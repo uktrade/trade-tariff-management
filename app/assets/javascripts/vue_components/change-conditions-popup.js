@@ -74,7 +74,7 @@ Vue.component("change-conditions-popup", {
       return this.measures.length > 1;
     },
     canRemoveMeasureCondition: function () {
-      return this.conditions.length > 1;
+      return (this.conditions.length > 1) || (this.conditions[0].condition_code);
     },
     disableUpdate: function () {
       return this.replacing && this.mode == null;

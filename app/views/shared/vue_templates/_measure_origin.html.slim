@@ -13,10 +13,10 @@ script type="text/x-template" id="measure-origin-template"
                 | Remove
         p v-if="origin.selected"
           a href="#" v-on:click.prevent="addCountryOrTerritory"
-            | Add another country
+            | Add country
           | &nbsp;|&nbsp;
           a href="#" v-on:click.prevent="addGroup"
-            | Add another group
+            | Add group
       label :for="radioID" v-if="!notErgaOmnes"
         | Erga Omnes (all origins)
 
@@ -34,4 +34,4 @@ script type="text/x-template" id="measure-origin-template"
 
       p.add-another-wrapper
         a href="#" v-on:click.prevent="addExclusion"
-          | Add another exclusion
+          | Add exclusion

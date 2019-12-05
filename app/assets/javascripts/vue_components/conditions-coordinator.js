@@ -13,7 +13,7 @@ var template = [
       '</measure-condition>',
     '</div>',
     '<p>',
-      '<a href="#" v-on:click.prevent="addCondition">Add another condition</a>',
+      '<a href="#" v-on:click.prevent="addCondition">Add condition</a>',
     '</p>',
   '</div>'
 ].join("");
@@ -64,7 +64,7 @@ Vue.component("conditions-coordinator", {
   },
   computed: {
     canRemoveMeasureCondition: function() {
-      return this.conditions.length > 1;
+      return (this.conditions.length > 1) || (this.conditions[0].condition_code);
     },
     showReferencedValue: function() {
       var codes = ["E1", "E2", "F", "G", "I1", "I2", "L", "M1", "M2", "N", "R", "S", "U", "V"];
