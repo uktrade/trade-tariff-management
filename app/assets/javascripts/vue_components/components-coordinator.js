@@ -22,8 +22,8 @@ var template = [
         '</div>',
       '</measure-component>',
     '</div>',
-    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureConditionComponent">Add another component</a>',
-    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureComponent">Add another duty expression</a>',
+    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureConditionComponent">Add component</a>',
+    '<a href="#" v-on:click.prevent="addComponent" v-if="isMeasureComponent">Add duty expression</a>',
   '</div>'
 ].join("");
 
@@ -78,7 +78,7 @@ Vue.component("components-coordinator", {
       return this.flattenArray(conditions_allow_duty).includes(false);
     },
     canRemoveComponent: function() {
-      return this.components.length > 1;
+      return (this.components.length > 1) || (this.components[0].duty_expression);
     },
     isMeasureConditionComponent: function() {
       return this.type == "measure_condition_component";

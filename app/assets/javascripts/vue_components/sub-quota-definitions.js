@@ -41,7 +41,7 @@ var template = '\
 \
   <p>\
     <a href="#" v-on:click.prevent="addDefinition();">\
-      Add another associated sub quota\
+      Add associated sub quota\
     </a>\
   </p>\
 </div>';

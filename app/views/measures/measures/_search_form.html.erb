@@ -157,7 +157,7 @@
         <input type="hidden" :name="'search[origin_exclusions][value][' + index + ']'" :value="exclusion.value" :disabled="exclusionsValueDisabled" />
       </div>
       <a href="#" v-on:click.prevent="addOriginExclusion" v-if="!exclusionsValueDisabled">
-        Add another exclusion
+        Add exclusion
       </a>
     </div>
   </div>
@@ -183,7 +183,7 @@
         <input type="hidden" :name="'search[duties][value][' + index + '][' + duty.duty_expression_id + ']'" :value="duty.duty_amount" />
       </div>
       <a href="#" v-on:click.prevent="addDuty" v-if="duties.enabled">
-        Add another duty expression
+        Add duty expression
       </a>
     </div>
   </div>
@@ -207,7 +207,7 @@
         <input type="hidden" :name="'search[conditions][value][' + index + ']'" :value="condition.measure_condition_code" :disabled="conditionsValueDisabled" />
       </div>
       <a href="#" v-on:click.prevent="addCondition" v-if="!conditionsValueDisabled">
-        Add another condition
+        Add condition
       </a>
     </div>
   </div>
@@ -237,7 +237,7 @@
         <input type="hidden" :name="'search[footnotes][value][' + index + '][' + footnote.footnote_type_id || 'null' + ']'" :value="footnote.footnote_id" :disabled="footnotesValueDisabled" />
       </div>
       <a href="#" v-on:click.prevent="addFootnote" v-if="!footnotesValueDisabled">
-        Add another footnote
+        Add footnote
       </a>
     </div>
   </div>
