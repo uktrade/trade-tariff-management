@@ -21,6 +21,16 @@ module Workbaskets
       )
     end
 
+    def self.license_quota_excluded_models
+      [
+        QuotaAssociation,
+        QuotaOrderNumber,
+        QuotaOrderNumberOrigin,
+        QuotaOrderNumberOriginExclusion,
+        QuotaDefinition
+      ]
+    end
+
     def settings
       main_step_settings.merge(configure_quota_step_settings)
                         .merge(conditions_footnotes_step_settings)
