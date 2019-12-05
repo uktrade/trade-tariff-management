@@ -38,6 +38,10 @@ class QuotaOrderNumber < Sequel::Model
     end
   end
 
+  def is_license_quota?
+    quota_order_number_id.start_with?('094')
+  end
+
   def record_code
     "360".freeze
   end

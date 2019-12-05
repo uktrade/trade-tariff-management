@@ -14,10 +14,14 @@
       | ), comprising
 
     =<> workbasket_quota_periods_overview
-    | over
 
-    =< workbasket_quota_periods_years_length
+    - unless attributes_parser.quota_ordernumber.starts_with?('094') # I.e. is license quota with no quota definitions
+      | over
+
+      =< workbasket_quota_periods_years_length
+
     | .
+
 
   p
     | This quota will have

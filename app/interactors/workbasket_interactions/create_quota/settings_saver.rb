@@ -57,6 +57,8 @@ module WorkbasketInteractions
         settings.quota_period_sids_jsonb = @quota_period_sids.to_json
         settings.parent_quota_period_sids_jsonb = @parent_quota_period_sids.to_json
         settings.set_searchable_data_for_created_measures! if settings.save
+
+        clean_up_license_quota!
       end
 
     private
@@ -223,6 +225,14 @@ module WorkbasketInteractions
         end
 
         "::WorkbasketServices::QuotaSavers::#{target_klass_name}".constantize
+      end
+
+      def clean_up_license_quota!
+        if @order_number.is_license_quota?
+          @workbasket.collection.select do |item|
+            Workbaskets::CreateQuotaSettings.license_quota_excluded_models.include?(item.class)
+          end.each(&:destroy)
+        end
       end
     end
   end
