@@ -1,0 +1,13 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Workbasket reassigned
+
+  p.font-large
+    = "The workbasket #{@workbasket.title} has been reassigned to #{User.find(@workbasket.user_id).first.name} should be #{@user.name}".html_safe
+
+h3.heading-medium.m-t-100
+  | Next steps
+
+ul class="list"
+  li
+    = link_to "Return to main menu", root_url
