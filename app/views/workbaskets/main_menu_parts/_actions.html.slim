@@ -24,7 +24,7 @@
     = link_to "Review for approval", new_approve_url(workbasket.id)
 
 | &nbsp;|&nbsp;
-= link_to "Reassign", new_reassign_url(workbasket.id)
+= link_to "Reassign", new_reassign_url(workbasket_id: workbasket.id)
 
 
 = render "workbaskets/main_menu_parts/schedule_export_to_cds_popup"
