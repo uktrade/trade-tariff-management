@@ -96,11 +96,12 @@ module WorkbasketForms
     def start_date_valid?
       definition = QuotaDefinition.find(quota_definition_sid: @workbasket_settings.quota_definition_sid)
 
-      starts_same_day_or_after_definition?(definition) &&
-       starts_before_end_day_of_definition?(definition) &&
-        ends_after_start_date_of_definition(definition) &&
-         ends_same_day_or_before_definition?(definition) &&
-          ends_after_start_date?
+      starts_in_future? &&
+        starts_same_day_or_after_definition?(definition) &&
+         starts_before_end_day_of_definition?(definition) &&
+          ends_after_start_date_of_definition(definition) &&
+           ends_same_day_or_before_definition?(definition) &&
+            ends_same_day_or_after_start_date?
     end
 
     def all_fields_completed?
@@ -123,8 +124,12 @@ module WorkbasketForms
       definition.validity_end_date >= @formatted_end_date
     end
 
-    def ends_after_start_date?
-      @formatted_start_date < @formatted_end_date
+    def ends_same_day_or_after_start_date?
+      @formatted_start_date <= @formatted_end_date
+    end
+
+    def starts_in_future?
+      @formatted_start_date.to_date >= Date.tomorrow
     end
 
     def format_date(date)
