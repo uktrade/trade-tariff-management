@@ -21,11 +21,11 @@ script
               = error
       .bootstrap-row
         .controls
-          - @users.each do |user|
+          - @users.each_with_index do |user, index|
             .cross-check-decision
               .multiple-choice
-                input type='radio' id="radioID" class="radio-inline-group js-cross-check-decision" name="user_id" value="#{user.id}" required="true"
-                  label.with_bigger_font-size for='radioID'
+                input type='radio' id="radio#{index}" class="radio-inline-group js-cross-check-decision" name="user_id" value="#{user.id}" required="true"
+                  label.with_bigger_font-size for="radio#{index}"
                     = user.name
 
   .form-actions

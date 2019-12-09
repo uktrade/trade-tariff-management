@@ -32,9 +32,9 @@ RSpec.describe 'reassign workbasket', :js do
     it 'reassigns the workbasket to selected user' do
       visit root_path
       click_link 'Reassign'
-      all(".multiple-choice").first.click
+      all(".multiple-choice").last.click
 
-      reassigned_to = User.find(name: all(".multiple-choice").first.text)
+      reassigned_to = User.find(name: all(".multiple-choice").last.text)
 
       click_button 'Reassign'
       expect(page).to have_content('Workbasket reassigned')
