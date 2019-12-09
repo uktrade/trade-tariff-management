@@ -6,7 +6,7 @@ module Workbaskets
 
     def new
       @workbasket = Workbaskets::Workbasket.find(id: params[:workbasket_id])
-      @users = User.all
+      @users = User.all - [current_user]
     end
 
     def create
