@@ -51,7 +51,7 @@ RSpec.describe 'reassign workbasket', :js do
 
     it 'shows reassign button' do
       visit root_path
-      expect(page).to_not have_content('Reassign')
+      expect(page).to have_content('Reassign')
     end
   end
 end
