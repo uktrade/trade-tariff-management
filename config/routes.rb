@@ -180,12 +180,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :reassigns do
-      member do
-        get :submitted_for_cross_check
-      end
-    end
-
+    resources :reassigns, only: [:new, :create]
+    
     resources :create_additional_code, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
