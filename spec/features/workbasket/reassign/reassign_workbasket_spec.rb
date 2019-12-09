@@ -5,14 +5,14 @@ RSpec.describe 'reassign workbasket', :js do
 
   let!(:approver_user) { create(:user, name: 'Approver user', approver_user: true) }
   let!(:tariff_manager) { create(:user, name: 'Tariff manager', approver_user: false) }
-  let!(:other_user) { create(:user, name: 'Other user') }
+  let!(:other_user) { create(:user, name: 'Other user', approver_user: false) }
 
   let!(:workbasket) do
     create(:workbasket,
       user_id: other_user.id,
       title: '093456',
       type: :create_quota,
-      status: :awaiting_approval,)
+      status: :editing,)
   end
 
 
@@ -44,12 +44,12 @@ RSpec.describe 'reassign workbasket', :js do
 
   context 'non-approver user' do
     before do
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tariff_manager)
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(other_user)
       allow_any_instance_of(ApplicationController).to receive(:token_expired?).and_return(false)
       allow_any_instance_of(ApplicationController).to receive(:audit_session).and_return(nil)
     end
 
-    it 'does not show reassign button' do
+    it 'shows reassign button' do
       visit root_path
       expect(page).to_not have_content('Reassign')
     end
