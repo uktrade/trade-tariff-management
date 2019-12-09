@@ -275,17 +275,20 @@ class MeasureValidator < TradeTariffBackend::Validator
     # NOTE wont apply to national invalidates Measures
     # Taric may delete a Goods Code and national measures will be invalid.
     # TODO is not applicable for goods indent numbers above 10?
+
+
     (record.national? && record.invalidated?) ||
       (record.goods_nomenclature.blank? && record.export_refund_nomenclature.blank?) ||
       (MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).any? &&
-      (record.goods_nomenclature.present? &&
-       record.goods_nomenclature.number_indents.present? &&
-       (record.goods_nomenclature.number_indents > 10 ||
-       record.goods_nomenclature.number_indents <= MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).first.measure_explosion_level)) ||
-       (record.export_refund_nomenclature.present? &&
-        record.export_refund_nomenclature.number_indents.present? &&
-        (record.export_refund_nomenclature.number_indents > 10 ||
-         record.export_refund_nomenclature.number_indents <= MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).first.measure_explosion_level)))
+        (record.goods_nomenclature.present? &&
+          GoodsNomenclatureIndent.where(goods_nomenclature_sid: record.goods_nomenclature_sid).where(
+            Sequel.lit('validity_start_date <= ?', record.validity_start_date)).where(
+            Sequel.lit('number_indents > 10 OR number_indents <= ?'), MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).first.measure_explosion_level).any?
+        ) ||
+        (record.export_refund_nomenclature.present? &&
+         record.export_refund_nomenclature.number_indents.present? &&
+         (record.export_refund_nomenclature.number_indents > 10 ||
+          record.export_refund_nomenclature.number_indents <= MeasureType.actual(include_future: true).where(measure_type_id: record.measure_type_id).first.measure_explosion_level)))
   end
 
   validation :ME104,
