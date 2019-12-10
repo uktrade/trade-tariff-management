@@ -113,7 +113,7 @@ shared_context 'create_regulation_base_context' do
             expect(page).to have_content('Review and submit')
 
             click_on 'Submit for approval'
-            expect(page).to have_content('has been submitted for cross-check')
+            expect(page).to have_content('has been submitted for approval')
           end
         end
       end
@@ -131,7 +131,7 @@ shared_context 'create_regulation_base_context' do
             expect(page).to have_content('Review and submit')
 
             click_on 'Submit for approval'
-            expect(page).to have_content('has been submitted for cross-check')
+            expect(page).to have_content('has been submitted for approval')
           end
         end
       end
