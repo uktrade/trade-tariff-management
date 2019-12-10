@@ -23,7 +23,7 @@ RSpec.describe "adding footnotes", :js do
 
     click_on "Submit for approval"
 
-    expect(page).to have_content("has been submitted for cross-check.")
+    expect(page).to have_content("has been submitted for approval.")
     expect(Footnote.last).to have_attributes(description: footnote_description,
                                              validity_start_date: footnote_valid_from)
   end
