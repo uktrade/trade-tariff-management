@@ -86,9 +86,9 @@
                     <span class="form-hint">For example, 01 03 1980</span>
                   </legend>
                   <div class="form-date">
-                    <%= f.input :validity_start_date_day, label: 'Day', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits day"}, wrapper_html: { class: 'form-group-day' } %>
-                    <%= f.input :validity_start_date_month, label: 'Month', required: true, input_html: {pattern:"[0-9]*", minlength:"2", maxlength:"2", title:"Two digits month"}, wrapper_html: { class: 'form-group-month' } %>
-                    <%= f.input :validity_start_date_year, label: 'Year', required: true,  input_html: {pattern:"[0-9]*", minlength:"4", maxlength:"4", title:"Four digits year"}, wrapper_html: { class: 'form-group-year' }  %>
+                    <%= f.input :validity_start_date_day, label: 'Day', required: true, input_html: {pattern:"[0-9]*", maxlength:"2", title:"Two digits day"}, wrapper_html: { class: 'form-group-day' } %>
+                    <%= f.input :validity_start_date_month, label: 'Month', required: true, input_html: {pattern:"[0-9]*", maxlength:"2", title:"Two digits month"}, wrapper_html: { class: 'form-group-month' } %>
+                    <%= f.input :validity_start_date_year, label: 'Year', required: true,  input_html: {pattern:"[0-9]*", maxlength:"4", title:"Four digits year"}, wrapper_html: { class: 'form-group-year' }  %>
                   </div>
                 </fieldset>
               </div>
