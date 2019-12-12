@@ -9,7 +9,7 @@ RSpec.describe "edit description" do
 
   it "allows a description to be edited" do
     visit (root_path)
-    click_on('Manage the goods classification')
+    click_on('Find and edit goods classification')
     click_on chapter.section.title
     click_on chapter.description.capitalize
     click_on "Manage"
@@ -36,7 +36,7 @@ RSpec.describe "edit description" do
                               description: "I am from the future")
 
     visit (root_path)
-    click_on('Manage the goods classification')
+    click_on('Find and edit goods classification')
     click_on chapter.section.title
     click_on chapter.description.capitalize
     click_on heading.description

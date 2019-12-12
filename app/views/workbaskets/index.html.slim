@@ -4,11 +4,11 @@
       .col-xs-12.col-sm-6.col-md-8
         h1.heading-large
           | Main menu
-      .col-xs-12.col-sm-4.col-md-4.align-bottom
-        p.text-right.logout-section
-          = "Logged in as: #{@current_user.name} | #{link_to("Logout", gds_sign_out_path, id: "log-out")}".html_safe
 
   = render "workbaskets/main_menu_parts/main_menu"
+
+  h2.heading-medium.without_top_margin
+    | Workbaskets
 
   info-message
     - if workbaskets.present?

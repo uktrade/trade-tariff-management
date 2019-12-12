@@ -1,95 +1,98 @@
 #main-menu
   .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Find and edit regulations", regulations_path
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create a new regulation", new_create_regulation_url
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Manage the goods classification", sections_url
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create reference documents", ENV.fetch("TARIFF_TRADE_APPLICATION_URL"), :target => "_blank" if ENV['TARIFF_TRADE_APPLICATION_URL']
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Find and edit additional codes", additional_codes_url
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create new additional codes", new_create_additional_code_url
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Find and edit geographical areas", geo_areas_url
-
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create a new geographical area", new_create_geographical_area_url
-
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Find and edit certificates, licences, documents", search_certificates_url
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create a certificate, licence, or document", new_create_certificate_url
-
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Find and edit footnotes", search_footnotes_url
-
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create a new footnote", new_create_footnote_url
-
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Find and edit measures", measures_path
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create measures", new_create_measure_url
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Find and edit a quota", quotas_path
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create a new quota", new_create_quotum_url
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "View quota associations", quota_associations_path
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "View quota suspension periods", quota_suspensions_path
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create quota suspension periods", new_create_quota_suspension_path
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "View quota blocking periods", quota_blocking_periods_path
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "Create quota blocking periods", new_create_quota_blocking_period_path
-  .bootstrap-row
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      p
-        = link_to "XML generation", xml_generation_exports_url
-    .col-xs-12.col-sm-12.col-md-4.col-lg-3
-      - unless TradeTariffBackend.production?
+    .col-xs-12.col-sm-3
+      .main-menu-block
+        h4.b
+          | Manage regulations
         p
-          = link_to "Rollbacks", db_rollbacks_url
-  - if ENV['ALLOW_TESTER_TO_BYPASS_CDS'] == 'ALLOW'
-    .bootstrap-row
-      .col-xs-12.col-sm-12.col-md-4.col-lg-3
+          = link_to "Create a new regulation", new_create_regulation_url
         p
-          = link_to "Status Change", admin_workbasket_status_index_url
+          = link_to "Find and edit regulations", regulations_path
+
+      .main-menu-block
+        h4.b
+          | Manage measures
+        p
+          = link_to "Find and edit measures", measures_path
+        p
+          = link_to "Create measures", new_create_measure_url
+
+      .main-menu-block
+        h4.b
+          | Manage quotas
+        p
+          = link_to "Find and edit a quota", quotas_path
+        p
+          = link_to "Create a new quota", new_create_quotum_url
+        p
+          = link_to "View quota associations", quota_associations_path
+        p
+          = link_to "View quota suspension periods", quota_suspensions_path
+        p
+          = link_to "View quota blocking periods", quota_blocking_periods_path
+
+    .col-xs-12.col-sm-3
+      .main-menu-block
+        h4.b
+          | Manage goods classification
+        p
+          = link_to "Find and edit goods classification", sections_url
+
+      .main-menu-block
+        h4.b
+          | Manage geographical areas
+        p
+          = link_to "Find and edit geographical areas", geo_areas_url
+        p
+          = link_to "Create a new geographical area", new_create_geographical_area_url
+
+      .main-menu-block
+        h4.b
+          | Manage footnotes
+        p
+          = link_to "Find and edit footnotes", search_footnotes_url
+        p
+          = link_to "Create a new footnote", new_create_footnote_url
+
+      .main-menu-block
+        h4.b
+          | Manage certificates
+        p
+          = link_to "Find and edit certificates", search_certificates_url
+        p
+          = link_to "Create a certificate", new_create_certificate_url
+
+    .col-xs-12.col-sm-3
+      .main-menu-block
+        h4.b
+          | Manage additional codes
+        p
+          = link_to "Find and edit additional codes", additional_codes_url
+        p
+          = link_to "Create new additional codes", new_create_additional_code_url
+
+      .main-menu-block
+        h4.b
+          | Reference documents
+        p
+          = link_to "View and Create reference documents", ENV.fetch("TARIFF_TRADE_APPLICATION_URL"), :target => "_blank" if ENV['TARIFF_TRADE_APPLICATION_URL']
+
+      .main-menu-block
+        h4.b
+          | Reporting & auditing
+        p
+          | Generate audit report
+        p
+          | Measure snapshots
+
+      .main-menu-block
+        h4.b
+          | Data
+        - if ENV['ALLOW_TESTER_TO_BYPASS_CDS'] == 'ALLOW'
+          p
+            = link_to "Change Status", admin_workbasket_status_index_url
+        p
+          = link_to "Generate XML", xml_generation_exports_url
+        - unless TradeTariffBackend.production?
+          p
+            = link_to "Rollbacks", db_rollbacks_url

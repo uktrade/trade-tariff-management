@@ -1,5 +1,5 @@
 #main-menu {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 
   p {
     margin-bottom: 0.3em;
@@ -24,6 +24,14 @@
 
 .main-menu-page {
   padding-bottom: 3em;
+}
+
+.main-menu-block {
+  margin: 1rem;
+}
+
+.without_top_margin {
+  margin-top: 0px;
 }
 
 .modal__container.workbasket-main-menu-modal {

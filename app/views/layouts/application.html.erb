@@ -23,7 +23,8 @@
   <div class="tma_header">
     <ul>
       <% if current_user %>
-      <li><%= link_to 'Sign out', gds_sign_out_path, id: 'sign-out' %></li>
+        <li>Logged in to <span class="highlight"><%= "#{ENV['GOVUK_APP_DOMAIN'].upcase}" %></span> as: <%= @current_user.name.html_safe %></li>
+        <li><%= link_to("Sign out", gds_sign_out_path, id: "log-out") %></li>
       <% end %>
     </ul>
   </div>
