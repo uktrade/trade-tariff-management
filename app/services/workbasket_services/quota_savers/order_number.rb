@@ -6,10 +6,13 @@ module WorkbasketServices
                     :first_period_start_date,
                     :excluded_areas_ops,
                     :excluded_areas,
+                    # :terminated_excluded_areas,
                     :order_number,
+                    :terminated_order_number,
                     :persist_data,
                     :origin_areas_ops,
                     :origin_areas,
+                    :terminated_origin_areas,
                     :periods,
                     :errors
 
@@ -20,6 +23,13 @@ module WorkbasketServices
         @excluded_areas_ops = order_number_ops['excluded_geographical_areas']
         @origin_areas_ops = Array.wrap(order_number_ops["geographical_area_id"])
         @periods = order_number_ops['quota_periods']
+
+        # XXXX Need to check if it's still valid - not just that it exists!!!!!!
+        @existing_QON = QuotaOrderNumber.where(quota_order_number_id: order_number_ops["quota_ordernumber"]).last
+
+        @same_QON_exists_with_same_origins = check_existing_QON_origins(existing_QON: @existing_QON,
+                                                                        origin_area_codes: @origin_areas_ops,
+                                                                        excluded_area_codes: @excluded_areas_ops)
 
         @errors = []
       end
@@ -37,6 +47,14 @@ module WorkbasketServices
 
       def generate_records!
         set_first_period_date
+
+
+        # XXXX IT'S ALL HERE XXXXX
+        # # XXXX IT'S ALL HERE XXXXX# XXXX IT'S ALL HERE XXXXX# XXXX IT'S ALL HERE XXXXX
+        # # XXXX IT'S ALL HERE XXXXX# XXXX IT'S ALL HERE XXXXX# XXXX IT'S ALL HERE XXXXX
+        # # XXXX IT'S ALL HERE XXXXXV
+
+        terminate_existing_records if @existing_QON && !(@same_QON_exists_with_same_origins)
 
         build_order_number
         build_origin_areas_ops if origin_areas_ops.present?
@@ -68,12 +86,19 @@ module WorkbasketServices
     private
 
       def records
-        [
-          order_number,
-          origin_areas,
-          excluded_areas
-        ].flatten
-         .reject(&:blank?)
+        if @same_QON_exists_with_same_origins
+          []
+        else
+          [
+            terminated_origin_areas,
+            terminated_order_number,
+            # terminated_excluded_areas,
+            order_number,
+            origin_areas,
+            excluded_areas
+          ].flatten
+           .reject(&:blank?)
+        end
       end
 
       def set_first_period_date
@@ -101,42 +126,56 @@ module WorkbasketServices
         Rails.logger.info " first_period_start_date: #{first_period_start_date}"
         Rails.logger.info ""
 
-        @order_number = QuotaOrderNumber.new(
-          quota_order_number_id: order_number_ops["quota_ordernumber"],
-          validity_start_date: first_period_start_date
-        )
+        if @existing_QON.present?
+          @order_number = @existing_QON
+        else
+          @order_number = QuotaOrderNumber.new(
+            quota_order_number_id: order_number_ops["quota_ordernumber"],
+            validity_start_date: first_period_start_date
+          )
 
-        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(@order_number).assign!
+          ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(@order_number).assign!
 
-        set_system_data(order_number)
+          set_system_data(order_number)
+        end
       end
 
       def build_origin_areas_ops
-        @origin_areas = origin_areas_ops.reject(&:blank?).map do |area_code|
-          area = geographical_area(area_code)
+        if @existing_QON.present?
+          # XXX need to check if the origins are the same
+          @origin_areas = QuotaOrderNumberOrigin.where(quota_order_number_sid: @existing_QON.quota_order_number_sid).all
+        else
+          @origin_areas = origin_areas_ops.reject(&:blank?).map do |area_code|
+            area = geographical_area(area_code)
 
-          origin = QuotaOrderNumberOrigin.new(
-            validity_start_date: order_number.validity_start_date,
-              quota_order_number_sid: order_number.quota_order_number_sid,
-              geographical_area_id: area.geographical_area_id,
-              geographical_area_sid: area.geographical_area_sid
-          )
-          set_system_data(origin)
+            origin = QuotaOrderNumberOrigin.new(
+              validity_start_date: order_number.validity_start_date,
+                quota_order_number_sid: order_number.quota_order_number_sid,
+                geographical_area_id: area.geographical_area_id,
+                geographical_area_sid: area.geographical_area_sid
+            )
+            set_system_data(origin)
 
-          origin
+            origin
+          end
         end
       end
 
       def build_excluded_areas_ops
-        @excluded_areas = excluded_areas_ops.reject(&:blank?).map do |area_code|
-          area = geographical_area(area_code)
+        if @existing_QON.present?
+          # XXX need to check if the origins are the same
+          @excluded_areas = QuotaOrderNumberOriginExclusion.where(quota_order_number_origin_sid: origin_areas.first.quota_order_number_origin_sid).all
+        else
+          @excluded_areas = excluded_areas_ops.reject(&:blank?).map do |area_code|
+            area = geographical_area(area_code)
 
-          exclusion = QuotaOrderNumberOriginExclusion.new
-          exclusion.quota_order_number_origin_sid = origin_areas.first.quota_order_number_origin_sid
-          exclusion.excluded_geographical_area_sid = area.geographical_area_sid
-          set_system_data(exclusion)
+            exclusion = QuotaOrderNumberOriginExclusion.new
+            exclusion.quota_order_number_origin_sid = origin_areas.first.quota_order_number_origin_sid
+            exclusion.excluded_geographical_area_sid = area.geographical_area_sid
+            set_system_data(exclusion)
 
-          exclusion
+            exclusion
+          end
         end
       end
 
@@ -150,6 +189,41 @@ module WorkbasketServices
           QuotaOrderNumberOriginExclusionValidator
         end
       end
+
+      def check_existing_QON_origins(existing_QON: nil,
+                                     origin_area_codes: [],
+                                     excluded_area_codes: [])
+        return false unless existing_QON
+        return false unless (origin_area_codes&.sort == QuotaOrderNumberOrigin.where(quota_order_number_sid: existing_QON.quota_order_number_sid).map(:geographical_area_id)&.sort)
+        return false unless (excluded_area_codes&.sort == QuotaOrderNumberOriginExclusion.where(quota_order_number_origin_sid: QuotaOrderNumberOrigin.where(quota_order_number_sid: existing_QON.quota_order_number_sid).first.quota_order_number_origin_sid).map(:geographical_area_id)&.sort)
+        true
+      end
+
+      def terminate_existing_records
+        # terminate_excluded_areas!
+        terminate_origin_areas!
+        terminate_quota_order_number!
+      end
+
+      # def terminate_excluded_areas!
+      #   @terminated_excluded_areas = QuotaOrderNumberOriginExclusion.where(quota_order_number_origin_sid: origin_areas.first.quota_order_number_origin_sid).map do |existing_exclusion|
+      #     existing_exclusion.validity_end_date = @first_period_start_date - 1.day
+      #     existing_exclusion
+      #   end
+      # end
+
+      def terminate_origin_areas!
+        @terminated_origin_areas = QuotaOrderNumberOrigin.where(quota_order_number_sid: @existing_QON.quota_order_number_sid).map do |existing_origin|
+          existing_origin.validity_end_date = @first_period_start_date - 1.day
+          existing_origin
+        end
+      end
+
+      def terminate_quota_order_number!
+        @existing_QON.validity_end_date = @first_period_start_date - 1.day
+        @terminated_order_number = @existing_QON
+      end
+
     end
   end
 end
