@@ -41,8 +41,8 @@ class QuotaOrderNumberOriginValidator < TradeTariffBackend::Validator
   end
 
   validation :ON10, 'When a quota order number is used in a measure then the validity period of the quota order number origin must span the validity period of the measure. This rule is only applicable for measures with start date after 31/12/2007.' do |record|
-    if record.quota_order_number.present? && record.quota_order_number.measure.present? && record.quota_order_number.measure.validity_start_date.to_date > Date.new(2007, 12, 31)
-      measure = record.quota_order_number.measure
+    measure = Measure.where(ordernumber: record.quota_order_number&.quota_order_number_id).last
+    if record.quota_order_number.present? && measure.present? && measure.validity_start_date.to_date > Date.new(2007, 12, 31)
       (
         record.validity_start_date <= measure.validity_start_date
       ) && (
