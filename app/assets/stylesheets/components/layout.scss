@@ -56,6 +56,10 @@ main {
   float: left;
   display: block;
   margin: 0px 10px;
+  color: white;
+  .highlight {
+    color: yellow;
+  }
 }
 
 .tma_header li a {
