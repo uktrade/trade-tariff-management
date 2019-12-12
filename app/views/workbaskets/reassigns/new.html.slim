@@ -1,3 +1,42 @@
+h1.heading-large Reassign workbasket
+
+h3.heading-medium Workbasket details
+
+table.create-measures-details-table
+  tbody
+    tr
+      td.heading_column
+        | Workbasket ID
+      td
+        = @workbasket.id
+
+    tr
+      td.heading_column
+        | Workbasket name
+      td
+        = @workbasket.title
+
+    tr
+      td.heading_column
+        | Created by
+      td
+        = @workbasket.author_name
+
+    tr
+      td.heading_column
+        | Type
+      td
+        = @workbasket.decorate.type
+
+    tr
+      td.heading_column
+        | Status
+      td
+        = @workbasket.decorate.status
+
+    - @workbasket.ordered_events.map do |event|
+      = render "workbaskets/events/#{event.event_type}", event: event
+
 = simple_form_for form, url: reassigns_url(@workbasket.id),
                         html: { \
                           class: "cross-check-form create-measures-v2", \
@@ -29,6 +68,6 @@
       | Next step
 
     .submit_group_for_cross_check_block
-      = f.button :submit, "Reassign", name: "submit_for_cross_check", class: "button"
+      = f.button :submit, "Reassign workbasket", name: "submit_for_cross_check", class: "button"
 
     = link_to "Cancel", root_url, class: "secondary-button"
