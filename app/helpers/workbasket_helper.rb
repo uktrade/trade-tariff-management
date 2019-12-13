@@ -348,6 +348,12 @@ module WorkbasketHelper
         workbasket.id,
         step: :main
       )
+
+    when :create_quota_blocking_period
+      edit_edit_quota_blocking_period_url(
+        workbasket.id,
+        step: :main
+      )
       end
   end
 
