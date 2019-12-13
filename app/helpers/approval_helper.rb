@@ -42,6 +42,8 @@ module ApprovalHelper
       "Approve and delete quota suspension"
     elsif workbasket.type == 'create_quota_blocking_period'
       "Approve and create quota blocking period"
+    elsif workbasket.type == 'edit_quota_blocking_period'
+      "Approve and edit quota blocking period"
     end
   end
 

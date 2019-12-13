@@ -4,14 +4,14 @@
       = link_to "Main menu", root_url
 
     li
-      = link_to "Quota Blocking Periods", quota_blocking_periods_url
+      = link_to "Edit Quota Blocking Periods", quota_blocking_periods_url
 
     li aria-current="page"
-      | View Quota Blocking Period
+      | View Edited Quota Blocking Period
 
 header
   h1.heading-large
-    | View quota blocking period
+    | View edited quota blocking period
 
   .view-workbasket-container
     = render "workbaskets/edit_quota_blocking_period/workflow_screens_parts/notifications/block", screen_type: :view
@@ -20,3 +20,5 @@ header
 
     = render "workbaskets/edit_quota_blocking_period/workflow_screens_parts/summary_of_configuration"
     = render "workbaskets/shared/steps/review_and_submit/quota_blocking_period"
+
+= link_to "Return to main menu", root_path, class: "link-back"

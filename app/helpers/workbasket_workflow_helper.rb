@@ -48,6 +48,8 @@ module WorkbasketWorkflowHelper
       link_to "Find and edit regulations", regulations_url
     elsif workbasket.type.include?("certificate")
       link_to "Find and edit certificates", search_certificates_path
+    elsif workbasket.type.include?("blocking")
+      link_to "Find and edit quota blocking periods", quota_blocking_periods_path
     else
       link_to "Find and edit measures", measures_url
     end

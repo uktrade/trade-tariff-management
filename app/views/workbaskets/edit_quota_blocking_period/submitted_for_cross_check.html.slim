@@ -14,7 +14,7 @@ ul class="list"
             data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
             class: "js-main-menu-show-withdraw-confirmation-link"
   li
-    = link_to "Edit another quota blocking period", new_edit_quota_blocking_period_url
+    = link_to "Edit another quota blocking period", quota_blocking_periods_url
   li
     = link_to "View this quota blocking period", edit_quota_blocking_period_path(workbasket.id)
   li
