@@ -11,11 +11,19 @@ $find-item-gutter: 5px;
 .find-items__row {
   display: flex;
   border-bottom: 1px solid $border-colour;
+  margin-top:2px;
 
   &.without_border {
     border-bottom: none;
     margin-bottom: 2px;
   }
+}
+
+.find-item__flow a {
+  display:block;
+  padding:0px;
+  font-size: 14px;
+  margin:0px 0px 0.5em 0px;
 }
 
 .find-items__checkbox-column {
@@ -87,7 +95,7 @@ $find-item-gutter: 5px;
 }
 
 .origin-exclusion-search {
-  padding: 5px 0;
+  padding: 5px 0px 0px 0px;
   >div {
     width: 220px;
     display: inline-block;
@@ -114,7 +122,7 @@ $find-item-gutter: 5px;
 }
 
 .condition-search {
-  padding: 5px 0;
+  padding: 5px 0px 0px 0px;
   >div {
     width: 300px;
     display: inline-block;
@@ -131,7 +139,6 @@ $find-item-gutter: 5px;
 .records-table-wrapper,
 .measures-table-wrapper {
   width: 100%;
-  overflow: scroll;
   .recycle-list {
     max-height: 600px;
     overflow-y: auto;
