@@ -1,0 +1,44 @@
+@media (min-width: 641px) {
+  main,
+  .bold-small,
+  .heading-small,
+  .form-label,
+  .form-label-bold,
+  .form-hint,
+  .form-control,
+  .error-message {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  main p {
+    max-width:800px !important;
+  }
+
+  table th,
+  table td {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+}
+
+.heading-large {
+  margin-top: 0.5em;
+  margin-bottom: 0.4166666667em
+}
+
+.form-hint {
+  line-height: 1.4;
+  margin: 0.25em 0 0.25em 0px;
+  max-width:800px;
+}
+
+.form-control {
+  font-weight: normal;
+  padding: 5px 4px 5px 4px;
+}
+
+#records-table th, #records-table td, .table th, .table td {
+  font-size:12px !important;
+}
+

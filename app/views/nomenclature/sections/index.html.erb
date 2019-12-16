@@ -16,7 +16,7 @@
           <tbody>
             <% @sections.each do |section| %>
               <tr>
-                <th scope="row"><%= section.numeral %></th>
+                <th scope="row" class="nomenclature-code"><%= section.numeral %></th>
                 <% if section.chapter_from ===  section.chapter_to %>
                   <td><%= section.chapter_to %></td>
                 <% else %>

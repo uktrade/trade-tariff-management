@@ -32,8 +32,3 @@
   }
 }
 
-p.ellipsis_max_height_container {
-  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 4, $bgColor: white);
-  margin-right: 10px;
-  margin-bottom: 5px;
-}

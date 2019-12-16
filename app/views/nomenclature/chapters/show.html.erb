@@ -42,8 +42,8 @@
           <tbody>
             <% @chapter.headings.each do |heading| %>
             <tr>
-              <th scope="row"><%= format_nomenclature_code(heading.goods_nomenclature_item_id) %></th>
-              <th scope="row"><%= heading.producline_suffix == '80' ? '-' : heading.producline_suffix %></th>
+              <td scope="row" class="nomenclature-code"><%= format_nomenclature_code(heading.goods_nomenclature_item_id) %></td>
+              <td scope="row"><%= heading.producline_suffix == '80' ? '-' : heading.producline_suffix %></td>
               <td>
                 <% if heading.producline_suffix == '80' %>
                   <%= link_to heading.current_description, goods_nomenclature_path(heading.goods_nomenclature_item_id, request.query_parameters.symbolize_keys) %></a>

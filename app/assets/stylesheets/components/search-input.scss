@@ -16,13 +16,6 @@
   margin: 0
 }
 
-@media (min-width: 641px) {
-  .gem-c-search__label h1 {
-    font-size: 19px;
-    line-height: 40px
-  }
-}
-
 .gem-c-search__input[type="search"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -41,13 +34,6 @@
   border: 0;
   background: #fff;
   border-radius: 0
-}
-
-@media (min-width: 641px) {
-  .gem-c-search__input[type="search"] {
-    font-size: 19px;
-    line-height: 1.4736842105
-  }
 }
 
 .gem-c-search__input[type="search"]:focus {
@@ -78,13 +64,6 @@
   top: 1px;
   z-index: 1;
   color: #6f777b
-}
-
-@media (min-width: 641px) {
-  .js-enabled .gem-c-search__label {
-    font-size: 19px;
-    line-height: 40px
-  }
 }
 
 .gem-c-search__item-wrapper {
@@ -192,13 +171,6 @@ only screen and (min-resolution: 2dppx) {
   text-transform: none;
   font-size: 16px;
   line-height: 50px
-}
-
-@media (min-width: 641px) {
-  .gem-c-search--large .gem-c-search__label {
-    font-size: 19px;
-    line-height: 50px
-  }
 }
 
 .gem-c-search--large .gem-c-search__input[type="search"] {

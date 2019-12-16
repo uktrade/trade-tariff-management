@@ -4,6 +4,7 @@
   margin: 1em 0;
 
   li {
+    font-size: 12px;
     display: inline-block;
     padding: 0;
     margin: 0;
@@ -14,7 +15,7 @@
       color: $link-colour;
       background: #fff;
       border: 1px solid $grey-2;
-      text-decoration: underline;
+      text-decoration: none;
 
       &:hover,
       &:focus {
@@ -32,9 +33,5 @@
       color: #222;
     }
 
-
-    & + li {
-      margin-left: 0.5em;
-    }
   }
 }

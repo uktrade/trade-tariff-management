@@ -61,10 +61,10 @@ $site-width: 1100px;
 //   @extend %grid-row;
 // }
 
-%grid-row {
-  @extend %contain-floats;
-  margin: 0 (-$gutter-half);
-}
+//%grid-row {
+//  @extend %contain-floats;
+//  margin: 0 (-$gutter-half);
+//}
 
 // A mixin for a grid column
 // Creates a cross browser grid column with a standardised gutter between the
