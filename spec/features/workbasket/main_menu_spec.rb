@@ -4,7 +4,7 @@ describe 'workbasket table', js: true do
   context 'no workbaskets exist' do
     it 'contains no data' do
       visit root_path
-      expect(page).to have_content('You are not working with any items at the moment.')
+      expect(page).to have_content('You are not working with any workbaskets at the moment.')
     end
   end
 
