@@ -61,6 +61,12 @@ module WorkbasketInteractions
       end
 
       def save!
+        general_errors = {}
+        
+        if workbasket_name.blank?
+          general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
+        end
+
         if step_pointer.main_step?
           workbasket.title = workbasket_name
           workbasket.operation_date = operation_date.try(:to_date)

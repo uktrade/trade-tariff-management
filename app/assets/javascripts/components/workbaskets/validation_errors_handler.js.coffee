@@ -3,9 +3,9 @@ window.WorkbasketBaseValidationErrorsHandler =
   handleErrorsResponse: (response, workbasket_form) ->
     WorkbasketBaseValidationErrorsHandler.hideCustomErrorsBlock()
 
-    if response.responseJSON && response.responseJSON.step == "main"
+    if response.responseJSON && response.responseJSON.step == "main" && response.responseJSON.workbasket_type != "create_measures"
       WorkbasketBaseValidationErrorsHandler.setFormErrors(response, workbasket_form)
-    else
+    else if response.responseJSON.workbasket_type != "create_measures"
       WorkbasketBaseValidationErrorsHandler.renderErrorsBlock(response, workbasket_form)
 
     WorkbasketBaseSaveActions.unlockButtonsAndHideSpinner()

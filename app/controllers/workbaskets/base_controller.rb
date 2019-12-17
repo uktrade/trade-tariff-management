@@ -72,10 +72,12 @@ module Workbaskets
       saver.save!
 
       if step_pointer.main_step?
-        render json: saver.success_ops,
-                     status: :ok
+        if workbasket.type != 'create_measures' || saver.valid?
+          render json: saver.success_ops,
+                       status: :ok
 
-        return false
+          return false
+        end
       end
 
       if saver.valid?
@@ -153,13 +155,14 @@ module Workbaskets
       render json: {
         step: current_step,
         errors: saver.errors,
+        workbasket_type:workbasket.type,
         candidates_with_errors: saver.candidates_with_errors
       }, status: :unprocessable_entity
     end
 
     def clean_up_persisted_data_on_update!
       return if workbasket.type == "edit_quota_suspension"
-      
+
       unless step_pointer.review_and_submit_step?
         workbasket_settings.clean_up_temporary_data!
       end
