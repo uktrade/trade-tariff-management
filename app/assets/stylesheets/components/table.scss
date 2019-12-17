@@ -8,7 +8,12 @@
     top: 0.5em;
   }
 
+  td {
+    vertical-align: top;
+  }
+
   th {
+    vertical-align: bottom;
     a.current {
       &.desc {
 
