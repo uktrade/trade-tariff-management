@@ -62,7 +62,7 @@ module WorkbasketInteractions
 
       def save!
         general_errors = {}
-        
+
         if workbasket_name.blank?
           general_errors[:workbasket_name] = errors_translator(:blank_workbasket_name)
         end
@@ -146,7 +146,7 @@ module WorkbasketInteractions
         if commodity_codes.present?
           invalid_commodity_codes = get_invalid_commodity_codes(CodeParsingService.csv_string_to_array(commodity_codes))
           invalid_commodity_codes << commodity_codes.split(', ').select { |code| code.length > 10 || !code.scan(/\D/).empty? }
-          invalid_commodity_codes.flatten!
+          invalid_commodity_codes = invalid_commodity_codes.flatten.uniq
 
           if invalid_commodity_codes.present?
             general_errors[:commodity_codes] = "The following Commodity Codes are incorrect, please check: #{invalid_commodity_codes}"
