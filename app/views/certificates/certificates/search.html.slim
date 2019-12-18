@@ -9,8 +9,10 @@
 header
   h1.heading-large
     | Find and edit certificates
-    small
-      = link_to "(add a new one instead)", new_create_certificate_url
+  p
+    ' Alternatively,
+    = link_to "create a new certificate", new_create_certificate_url
+    |.
 
   .js-search-certificates-section
     = render "certificates/certificates/search/form"

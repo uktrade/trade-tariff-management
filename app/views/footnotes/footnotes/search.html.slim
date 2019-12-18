@@ -9,8 +9,10 @@
 header
   h1.heading-large
     | Find and edit footnotes
-    small
-      = link_to "(add a new one instead)", new_create_footnote_url
+  p
+    ' Alternatively,
+    = link_to "create a new footnote", new_create_footnote_url
+    |.
 
   .js-search-footnotes-section
     = render "footnotes/footnotes/search/form"

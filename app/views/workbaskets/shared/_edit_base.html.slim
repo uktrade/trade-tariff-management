@@ -3,9 +3,11 @@
 header
   h1.heading-large
     = public_send("#{settings_type}_section_header")
-    - unless local_assigns[:subheader].nil?
-      small
-        = local_assigns[:subheader]
+  - unless local_assigns[:subheader].nil?
+    p
+      ' Alternatively,
+      = local_assigns[:subheader]
+      |.
 
 - if step_pointer.current_step_is_form_step?
   = render "workbaskets/#{settings_type}/form"
