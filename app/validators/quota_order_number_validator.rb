@@ -68,8 +68,7 @@ class QuotaOrderNumberValidator < TradeTariffBackend::Validator
         record.validity_start_date <= record.quota_order_number_origin.validity_start_date
       ) && (
         (record.validity_end_date.blank? && record.quota_order_number_origin.validity_end_date.blank?) ||
-        (record.validity_end_date.present?)
-        # (record.validity_end_date.present? && record.quota_order_number_origin.validity_end_date.present? && (record.validity_end_date >= record.quota_order_number_origin.validity_end_date))
+        (record.validity_end_date.present? && record.quota_order_number_origin.validity_end_date.present? && (record.validity_end_date >= record.quota_order_number_origin.validity_end_date))
       )
     end
   end
