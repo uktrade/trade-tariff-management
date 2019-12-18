@@ -1,5 +1,10 @@
 <% blocking_period = QuotaBlockingPeriod.find(workbasket_id: workbasket.id) %>
-<% definition = QuotaDefinition.find(quota_definition_sid: blocking_period.quota_definition_sid) %>
+<% if blocking_period %>
+  <% definition = QuotaDefinition.find(quota_definition_sid: blocking_period.quota_definition_sid) %>
+<% else %>
+  <% blocking_period = QuotaBlockingPeriod.find(quota_blocking_period_sid: workbasket.settings.quota_blocking_period_sid) %>
+  <% definition = QuotaDefinition.find(quota_definition_sid: workbasket.settings.quota_definition_sid) %>
+<% end %>
 
 <div class="grid-row">
   <div class="column-two-thirds">
