@@ -8,8 +8,9 @@ label.form-label
   label.form-label
     span.form-hint
       | If you need to check a commodity code, enter it here to see the description.
-      br
-      | Codes entered here will not be added to the measures.
+        Codes entered here will not be added to the measures.
+      - if controller_name == "create_quota"
+        p Please note, this function will only find currently active commodity codes.
 
   .row
     .col-md-2
