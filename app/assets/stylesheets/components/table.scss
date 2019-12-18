@@ -8,16 +8,18 @@
     top: 0.5em;
   }
 
-  td {
-    vertical-align: top;
-  }
-
   th {
-    vertical-align: bottom;
     a.current {
       &.desc {
 
       }
     }
   }
+}
+
+#records-table th, .table th {
+  vertical-align:bottom;
+}
+#records-table td, .table td {
+  vertical-align:top;
 }
