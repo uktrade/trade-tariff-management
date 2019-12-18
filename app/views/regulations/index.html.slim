@@ -9,8 +9,10 @@
 header
   h1.heading-large
     | Find a regulation
-    small
-      = link_to "(add a new one instead)", new_create_regulation_url
+  p
+    ' Alternatively,
+    = link_to "create a new regulation", new_create_regulation_url
+    |.
 
   = render "regulations/search/form"
   - if search_mode?

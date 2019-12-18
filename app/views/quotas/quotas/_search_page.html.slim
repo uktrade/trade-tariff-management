@@ -46,8 +46,10 @@ div
 
 h2.heading-large
   | Find and edit a quota
-  small
-    = link_to "(add a new one instead)", new_create_quotum_url
+p
+  ' Alternatively,
+  = link_to "create a new quota", new_create_quotum_url
+  |.
 
 script
   == "window.__search_params = #{full_search_params.to_json};"
