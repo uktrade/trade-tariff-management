@@ -12,6 +12,8 @@
           template slot-scope="slotProps"
             h3.heading-medium
               | Enter a geographical area code or search string
+            span.form-hint
+              | This will search in both the description and ID fields.
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""
@@ -23,40 +25,12 @@
                 input.form-control name="search[q]" v-model="search.q"
 
       fieldset
-        form-group :errors="errors" error-key="start_date"
-          template slot-scope="slotProps"
-            h3.heading-medium
-              | Optionally search for geographical areas with start date from
-
-            label.form-label.search-geographical-areas-error-container
-              span.error-message v-if="slotProps.hasError" v-cloak=""
-                | {{slotProps.error}}
-              span.form-hint
-
-              .bootstrap-row
-                .col-lg-6.col-md-7.col-sm-10.col-xs-12
-                  = f.input :start_date, label: false, input_html: { class: "start-date", "data-parsley-moment" => true, "data-parsley-max-date-to" => "#search_end_date", "data-parsley-max-date-to-message" => "Start date should not be greater than End date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.start_date" }
-
-      fieldset
-        form-group :errors="errors" error-key="end_date"
-          template slot-scope="slotProps"
-            h3.heading-medium.with_smaller_top_border
-              | Optionally search for geographical areas with end date to
-
-            label.form-label.search-geographical-areas-error-container
-              span.error-message v-if="slotProps.hasError" v-cloak=""
-                | {{slotProps.error}}
-              span.form-hint
-
-            .bootstrap-row
-              .col-lg-6.col-md-7.col-sm-10.col-xs-12
-                = f.input :end_date, label: false, input_html: { class: "end-date", "data-parsley-moment" => true, "data-parsley-min-date-to" => "#search_start_date", "data-parsley-min-date-to-message" => "End date should be greater than Start date", "data-parsley-trigger" => "change", "data-parsley-trigger-after-failure" => "change", "v-model" => "search.end_date" }
-
-      fieldset
         form-group :errors="errors" error-key="code"
           template slot-scope="slotProps"
             h3.heading-medium.with_smaller_top_border
              | Optionally filter results by geographical area type
+            span.form-hint
+             | Regions are typically single countries that are yet to be fully recognised internationally. Country groups represent multiple countries that have been aligned in formal or informal groups.
 
             label.form-label.search-geographical-areas-error-container
               span.error-message v-if="slotProps.hasError" v-cloak=""
