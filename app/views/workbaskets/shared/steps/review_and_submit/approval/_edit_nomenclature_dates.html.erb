@@ -1,0 +1,25 @@
+<% original_nomenclature = GoodsNomenclature.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature) %>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+
+    <table>
+      <tbody>
+      <tr>
+        <td class="heading_column">Commodity code</td>
+        <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
+      </tr>
+      <tr>
+        <td class="heading_column">Start date</td>
+        <td><%= workbasket_settings.validity_start_date.to_s :uk_Mmm %></td>
+      </tr>
+      <tr>
+        <td class="heading_column">End date</td>
+        <td>
+          <%= workbasket_settings.validity_end_date.to_s :uk_Mmm %>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

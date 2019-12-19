@@ -1,5 +1,5 @@
 module WorkbasketInteractions
-  module EditNomenclature
+  module EditNomenclatureDates
     class InitialValidator
       ALLOWED_OPS = %w(
         description
@@ -29,8 +29,8 @@ module WorkbasketInteractions
       end
 
       def fetch_errors
-        #check_description!
-        #check_validity_period!
+        check_description!
+        check_validity_period!
 
         errors
       end

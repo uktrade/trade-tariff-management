@@ -2341,6 +2341,43 @@ ALTER SEQUENCE public.edit_geographical_areas_workbasket_settings_id_seq OWNED B
 
 
 --
+-- Name: edit_nomenclature_dates_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.edit_nomenclature_dates_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    workbasket_name text,
+    reason_for_changes text,
+    original_nomenclature text,
+    validity_start_date date,
+    validity_end_date date,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: edit_nomenclature_dates_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.edit_nomenclature_dates_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edit_nomenclature_dates_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.edit_nomenclature_dates_workbasket_settings_id_seq OWNED BY public.edit_nomenclature_dates_workbasket_settings.id;
+
+
+--
 -- Name: edit_nomenclature_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8765,6 +8802,13 @@ ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings ALTER COLUMN
 
 
 --
+-- Name: edit_nomenclature_dates_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_nomenclature_dates_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.edit_nomenclature_dates_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: edit_nomenclature_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9805,6 +9849,14 @@ ALTER TABLE ONLY public.edit_footnotes_workbasket_settings
 
 ALTER TABLE ONLY public.edit_geographical_areas_workbasket_settings
     ADD CONSTRAINT edit_geographical_areas_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edit_nomenclature_dates_workbasket_settings edit_nomenclature_dates_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.edit_nomenclature_dates_workbasket_settings
+    ADD CONSTRAINT edit_nomenclature_dates_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -13204,3 +13256,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20191125154127_create_quot
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191127110431_create_edit_quota_blocking_period_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191202145535_change_regulations_search_pg_view.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20200106095903_create_delete_quota_blocking_period_workbasket_settings.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20200103140902_create_edit_nomenclature_dates_workbasket_settings.rb');

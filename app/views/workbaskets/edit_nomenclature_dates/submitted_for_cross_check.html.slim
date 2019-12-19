@@ -1,0 +1,21 @@
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Commodity code updated
+
+  p.font-large
+    = "Your update to the dates of commodity code #{original_nomenclature.goods_nomenclature_item_id} has been sent for approval.".html_safe
+
+h3.heading-medium.m-t-100
+  | Next steps
+
+ul class="list"
+  li
+    = link_to "Withdraw this submission", "#",
+            data: {target_url: workbasket_edit_link(workbasket.decorate), target_modal: workbasket.id},
+            class: "js-main-menu-show-withdraw-confirmation-link"
+  li
+    = link_to "View / search the goods classification", sections_url
+  li
+    = link_to "Return to main menu", root_url
+
+= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket

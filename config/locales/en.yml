@@ -200,6 +200,13 @@ en:
     description_blank: "Description cannot be left blank and must comprise at least one word."
     validity_start_date_blank: "Start date must be specified."
 
+  edit_nomenclature_dates:
+    start_date_hint: If you choose to move this commodity code's start date forward in time and there are measures or
+      footnotes associated with the commodity code, then you may be subject to conformance errors.
+    end_date_hint: If you choose to terminate this commodity code, then any unterminated measures and footnote
+      associations will also be terminated on the same date. Any measures or footnote measures that start after the
+      selected end date will be deleted.
+
   create_nomenclature:
     description_blank: "Description cannot be left blank and must comprise at least one word."
     validity_start_date_blank: "Start date must be specified."

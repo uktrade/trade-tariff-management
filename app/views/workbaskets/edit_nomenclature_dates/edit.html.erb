@@ -1,0 +1,199 @@
+<div class="breadcrumbs">
+  <ol>
+    <li>
+      <%= link_to "Main menu", root_url %>
+    </li>
+  </ol>
+</div>
+
+<h1 class="heading-xlarge m-b-5">
+  Edit commodity code start / end dates
+</h1>
+
+<div class="panel panel-border-narrow p-t-5 p-b-5">
+  <p>
+    <%= original_nomenclature.goods_nomenclature_item_id %> - <%= original_nomenclature.description %>
+  </p>
+</div>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <details>
+      <summary>
+        Workbasket details
+      </summary>
+      <div class="panel panel-border-narrow m-b-60">
+        <table class="details_table">
+          <tbody>
+            <tr>
+              <th class="nowrap">Workbasket name</td>
+              <td><%= workbasket.title %></td>
+            </tr>
+            <tr>
+              <th class="nowrap">Reason for changes</td>
+              <td><%= workbasket.settings.reason_for_changes %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <details>
+      <summary>
+        Commodity code details
+      </summary>
+      <div class="panel panel-border-narrow m-b-60">
+        <table class="details_table">
+          <tbody>
+          <tr>
+            <th class="nowrap">Commodity code</th>
+            <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
+          </tr>
+          <tr>
+            <th class="nowrap">Product line suffix</th>
+            <td><%= original_nomenclature.producline_suffix %></td>
+          </tr>
+          <tr>
+            <th class="nowrap">Description</th>
+            <td><%= original_nomenclature.description %></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="grid-row">
+  <div class="column-three-quarters">
+    <details>
+      <summary>
+        Associated measures (<%= original_nomenclature.measures.count %>)
+      </summary>
+      <div class="panel panel-border-narrow m-b-60">
+        <% if original_nomenclature.measures.count < 1 %>
+          <p>
+            There are no active measures assigned to this commodity code.
+          </p>
+        <% else %>
+          <p>
+            There are <%= original_nomenclature.measures.count %> active measures assigned to this commodity code. If you choose to terminate this commodity code,
+            then any unterminated measures (or measures that end after your selected end date) will also be terminated
+            on the same date.
+          </p>
+          <table class="table">
+            <tbody>
+              <thead>
+                <tr>
+                  <th class="nowrap">Measure type</th>
+                  <th class="nowrap">Geographical area</th>
+                  <th class="nowrap">Start date</th>
+                  <th class="nowrap">End date</th>
+                </tr>
+              </thead>
+              <% original_nomenclature.measures.each do | associated_measure | %>
+                <tr>
+                  <td class="nowrap"><%= "#{associated_measure.measure_type&.measure_type_id} (#{associated_measure.measure_type&.description})" %></td>
+                  <td><%= "#{associated_measure.geographical_area&.geographical_area_id} (#{associated_measure.geographical_area&.description})" %></td>
+                  <td class="nowrap"><%= associated_measure.validity_start_date.to_s(:uk_Mmm) %></td>
+                  <td class="nowrap"><%= associated_measure.validity_end_date&.to_s(:uk_Mmm) %></td>
+                </tr>
+              <% end %>
+              </tbody>
+          </table>
+          <p class="m-t-25">
+            See <%= link_to "all measures associated with this commodity code", root_path %>
+          </p>
+        <% end %>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="grid-row">
+  <div class="column-three-quarters">
+    <details>
+      <summary>
+        Associated footnotes (<%= original_nomenclature.footnotes.count %>)
+      </summary>
+      <div class="panel panel-border-narrow m-b-60">
+        <% if original_nomenclature.footnotes.count < 1 %>
+          <p>
+            There are no active footnotes associated with this commodity code.
+          </p>
+        <% else %>
+          <p>
+            There are <%= original_nomenclature.footnotes.count %> active footnotes associated with this commodity code. If you choose to terminate this commodity code,
+            then any unterminated footnote associations (or footnote associations that end after your selected end date)
+            will also be terminated on the same date.
+          </p>
+          <table class="table">
+            <tbody>
+            <thead>
+            <tr>
+              <th>Code</th>
+              <th>Description</th>
+              <th class="nowrap">Start date</th>
+              <th class="nowrap">End date</th>
+            </tr>
+            </thead>
+            <% original_nomenclature.footnotes.each do | associated_footnote | %>
+              <tr>
+                <td class="nowrap"><%= associated_footnote.code %></td>
+                <td><%= associated_footnote.description %></td>
+                <td class="nowrap"><%= associated_footnote.validity_start_date.to_s(:uk_Mmm) %></td>
+                <td class="nowrap"><%= associated_footnote.validity_end_date&.to_s(:uk_Mmm) %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+          <p class="m-t-25">
+            See <%= link_to "all footnotes associated with this commodity code", root_path %>
+          </p>
+        <% end %>
+      </div>
+    </details>
+  </div>
+</div>
+
+<%= simple_form_for @edit_nomenclature_dates_form, url: edit_nomenclature_date_path, html: {method: :patch, novalidate: false} do |f| %>
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <div class="vue-instance">
+      <div class="<%= 'panel panel-border-narrow form-group-error' if (saver&.errors[:validity_start_date].present? || saver&.conformance_errors.present?) %>">
+
+        <% if (saver&.errors[:validity_start_date] || saver&.conformance_errors)  %>
+          <span class="error-message">
+            <%= saver&.errors[:validity_start_date] %>
+            <%= saver&.conformance_errors&.values[0] %>
+          </span>
+        <% end %>
+        <%= content_tag "date-gds", "", "label" => "Start date", "hint" => t('edit_nomenclature_dates.start_date_hint'), "value" => @edit_nomenclature_dates_form.validity_start_date, "id" => "workbasket_forms_edit_nomenclature_dates_form_validity_start_date", "input_name" => "workbasket_forms_edit_nomenclature_dates_form[validity_start_date]", "error" => saver.errors[:validity_start_date], required: true %>
+      </div>
+
+      <div class=" <%= 'panel panel-border-narrow form-group-error' if saver&.errors[:validity_end_date] %>">
+        <% if saver&.errors[:validity_end_date]  %>
+          <span class="error-message"><%= saver&.errors[:validity_end_date] %></span>
+        <% end %>
+        <%= content_tag "date-gds", "", "label" => "End date", "hint" => t('edit_nomenclature_dates.end_date_hint'), "value" => @edit_nomenclature_dates_form.validity_end_date, "id" => "workbasket_forms_edit_nomenclature_dates_form_validity_end_date", "input_name" => "workbasket_forms_edit_nomenclature_dates_form[validity_end_date]", "error" => saver.errors[:validity_end_date], required: true %>
+      </div>
+
+    </div>
+    <div>
+      <div class="form-actions">
+        <button type="submit"
+                class='button'
+                data-disable-with='Processing'>
+          Submit for approval
+        </button>
+
+        <%= link_to "Cancel", '#', onclick: "history.back()", class: "secondary-button" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

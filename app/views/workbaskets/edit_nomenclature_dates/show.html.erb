@@ -1,0 +1,89 @@
+<div class="breadcrumbs">
+  <ol>
+    <li>
+      <%= link_to "Main menu", root_url %>
+    </li>
+  </ol>
+</div>
+
+<h1 class="heading-xlarge m-b-5">
+  Amend commodity code dates
+</h1>
+
+<% if workbasket_view_show_actions_allowed? %>
+  <% if iam_workbasket_author? && workbasket.can_withdraw? %>
+    <div class="view-workbasket-actions-allowed m-t-40 m-b-25">
+      <%= link_to "Withdraw workbasket from workflow", "#",
+        data: { target_url: withdraw_workbasket_from_workflow_edit_nomenclature_url(workbasket.id), target_modal: workbasket.id },
+        class: "button js-main-menu-show-withdraw-confirmation-link"  %>
+    </div>
+    <%= render "workbaskets/main_menu_parts/withdraw_confirmation_popup", modal_id: "withdraw_confirmation_popup_#{workbasket.id}", workbasket: workbasket %>
+  <% end %>
+<% end %>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <table>
+      <caption class="heading-medium m-t-25">Workbasket details</caption>
+      <tbody>
+        <tr>
+          <td class="heading_column">Workbasket name</td>
+          <td><%= workbasket.title %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Reason for changes</td>
+          <td><%= workbasket.settings.reason_for_changes %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Created by</td>
+          <td><%= workbasket.author_name %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Created on</td>
+          <td><%= workbasket.created_at.strftime("%d %B %Y") %></td>
+        </tr>
+        <% workbasket.ordered_events.map do |event|  %>
+          <%= render "workbaskets/events/#{event.event_type}", event: event %>
+        <% end %>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+
+    <table>
+      <caption class="heading-medium m-t-25">Summary of change - edit commodity start / end dates</caption>
+      <tbody>
+        <tr>
+          <td class="heading_column">Commodity code</td>
+          <td><%= original_nomenclature.goods_nomenclature_item_id %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Product line suffix</td>
+          <td><%= original_nomenclature.producline_suffix %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Description</td>
+          <td><%= original_nomenclature.description %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">Start date</td>
+          <td><%= workbasket_settings.validity_start_date.to_s :uk_Mmm %></td>
+        </tr>
+        <tr>
+          <td class="heading_column">End date</td>
+          <td>
+            <%= workbasket_settings.validity_end_date.to_s :uk_Mmm %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="m-t-40">
+      <%= link_to "Return to main menu", root_path, class: "link-back" %>
+    </div>
+  </div>
+</div>

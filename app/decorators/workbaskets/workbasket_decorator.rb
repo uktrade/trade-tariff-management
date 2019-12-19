@@ -34,6 +34,8 @@ module Workbaskets
         "Create Goods Classification"
       when "edit_nomenclature"
         "Edit Goods Classification"
+      when "edit_nomenclature_dates"
+        "Edit Goods Classification Dates"
       when "edit_regulation"
         "Edit Regulation"
       when "create_quota_association"

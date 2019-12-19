@@ -9,11 +9,11 @@
   </ol>
 </div>
 
-<h1 class="heading-xlarge m-b-5">
+<h1 class="heading-xlarge m-b-15">
   Work with selected commodity code
 </h1>
 
-<div class="panel panel-border-wide m-b-60">
+<div class="panel panel-border-wide m-b-20">
   <p>
     <%= @nomenclature.goods_nomenclature_item_id %> - <%= @nomenclature.description %>
   </p>
@@ -23,55 +23,74 @@
 
   <fieldset>
   <div class="bootstrap-row">
-    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
       <%= f.hidden_field :original_nomenclature, value: @nomenclature.goods_nomenclature_sid %>
     </div>
   </div>
   <div class="bootstrap-row">
-    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
       <%= f.input :workbasket_name, label: 'What is the name of this workbasket?', required: true %>
     </div>
   </div>
   <div class="bootstrap-row">
-    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
       <%= f.input :reason_for_changes, label: 'What is the reason for these changes?', as: :text, required: true %>
     </div>
   </div>
 
   <div class="bootstrap-row">
-    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
 
       <div class="form-group">
-        <label class="heading-medium">
-          What do you want to do with this commodity code
+        <label class="heading-medium m-t-15">
+          What do you want to do with this commodity code?
         </label>
-      </div>
-      <div class="multiple-choice">
-        <input type='radio' id="amend_description" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="amend_description">
-        <label for="amend_description">
-          Amend description
-        </label>
-      </div>
-      <div class="multiple-choice">
-        <input type='radio' id="new_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="new_nomenclature"
-               <%= 'disabled' if @nomenclature.goods_nomenclature_item_id.ends_with?('000000') %> >
-        <label for="new_nomenclature">
-          Add new code (structural)
-        </label>
-      </div>
-      <div class="multiple-choice">
-        <input type='radio' id="remove_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="remove_nomenclature"
-               <%= 'disabled' if @nomenclature.goods_nomenclature_item_id.ends_with?('000000') %> >
-        <label for="remove_nomenclature">
-          Remove this code (structural) (Not implemented)
-        </label>
+        <p>
+          Use the "Edit commodity code start / end dates" option if
+          you would like to terminate the code or modify its start date. You
+          will not be able to terminate this code if there are any unended
+          child commodity codes.</p>
+        <p>Please use the "Delete
+          this commodity code" option if you would like to permanently
+          delete a code created in error.
+        </p>
+        <div class="multiple-choice">
+          <input type='radio' id="edit_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="edit_nomenclature">
+          <label for="edit_nomenclature">
+            Amend description
+          </label>
+        </div>
+        <div class="multiple-choice">
+          <input type='radio' id="new_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="new_nomenclature"
+                 <%= 'disabled' if @nomenclature.chapter? || @nomenclature.heading? %> >
+          <label for="new_nomenclature">
+            Add new commodity code
+          </label>
+        </div>
+        <div class="multiple-choice">
+          <input type='radio' id="edit_nomenclature_dates" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="edit_nomenclature_dates"
+                 <%= 'disabled' if @nomenclature.chapter? || @nomenclature.heading? %> >
+          <label for="edit_nomenclature_dates">
+            Edit commodity code start / end dates
+          </label>
+        </div>
+        <div class="multiple-choice">
+          <input type='radio' id="remove_nomenclature" class="radio-inline-group" name="workbasket_forms_manage_nomenclature_form[action]" value="remove_nomenclature"
+                 <%= 'disabled' if @nomenclature.chapter? || @nomenclature.heading? %>
+                 <%= 'disabled' if @nomenclature.children.present?  %>
+                 <%= 'disabled' if @nomenclature.validity_start_date <= Date.today %>
+          >
+          <label for="remove_nomenclature">
+            Delete this commodity code
+          </label>
+        </div>
       </div>
     </div>
   </div>
   </fieldset>
 
   <div>
-    <div class="form-actions">
+    <div class="form-actions m-t-15">
       <button type="submit" class='button' data-disable-with='Processing'>
         Continue
       </button>
