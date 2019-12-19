@@ -1,0 +1,9 @@
+- blocking_period = QuotaBlockingPeriod.find(quota_blocking_period_sid: workbasket.settings.quota_blocking_period_sid)
+.govuk-box-highlight
+  h1.heading-xlarge
+    | Delete Quota blocking period approved
+
+  p.font-large
+    = "Deletion of Quota blocking period <strong class='bold'>#{blocking_period.description}</strong> is approved It has not yet been sent through to CDS and has not been scheduled for export.".html_safe
+
+= render "workbaskets/delete_quota_blocking_period/workflow_screens_parts/status_pages/next_step_links", mode: "approve"

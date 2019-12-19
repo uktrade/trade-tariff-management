@@ -25,6 +25,7 @@ module Workbaskets
       delete_quota_suspension
       create_quota_blocking_period
       edit_quota_blocking_period
+      delete_quota_blocking_period
     ].freeze
 
     STATUS_LIST = [
@@ -195,6 +196,9 @@ module Workbaskets
 
     one_to_one :edit_quota_blocking_period_settings, key: :workbasket_id,
                class_name: "Workbaskets::EditQuotaBlockingPeriodSettings"
+
+    one_to_one :delete_quota_blocking_period_settings, key: :workbasket_id,
+               class_name: "Workbaskets::DeleteQuotaBlockingPeriodSettings"
 
     many_to_one :user, key: :user_id,
                        foreign_key: :id,
@@ -454,7 +458,7 @@ module Workbaskets
           end
 
           def editable?
-            status.to_sym.in?(EDITABLE_STATES) && (type != :delete_quota_association && type != :delete_quota_suspension)
+            status.to_sym.in?(EDITABLE_STATES) && (type != :delete_quota_association && type != :delete_quota_suspension && type != :delete_quota_blocking_period)
           end
 
           def submitted?
@@ -601,6 +605,8 @@ module Workbaskets
         create_quota_blocking_period_settings
       when :edit_quota_blocking_period
         edit_quota_blocking_period_settings
+      when :delete_quota_blocking_period
+        delete_quota_blocking_period_settings
       end
     end
 
@@ -768,6 +774,8 @@ module Workbaskets
                        ::Workbaskets::CreateQuotaBlockingPeriodSettings
                      when :edit_quota_blocking_period
                        ::Workbaskets::EditQuotaBlockingPeriodSettings
+                     when :delete_quota_blocking_period
+                       ::Workbaskets::DeleteQuotaBlockingPeriodSettings
       end
 
       target_class.unrestrict_primary_key
