@@ -50,6 +50,8 @@ module Workbaskets
         "Create Quota Blocking Period"
       when "edit_quota_blocking_period"
         "Edit Quota Blocking Period"
+      when "delete_quota_blocking_period"
+        "Delete Quota Blocking Period"
       end
     end
 

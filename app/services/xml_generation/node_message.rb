@@ -175,7 +175,7 @@ module XmlGeneration
 
     def record_is_a_pending_deletion?
       workbasket = Workbaskets::Workbasket.find(id: record.workbasket_id)
-      return true if workbasket.settings.class == Workbaskets::DeleteQuotaSuspensionSettings
+      return true if (workbasket.settings.class == Workbaskets::DeleteQuotaSuspensionSettings || workbasket.settings.class == Workbaskets::DeleteQuotaBlockingPeriodSettings)
 
       [FootnoteAssociationMeasure, QuotaAssociation].include?(record.class) && record.operation == :update
     end

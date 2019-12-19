@@ -181,7 +181,7 @@ Rails.application.routes.draw do
     end
 
     resources :reassigns, only: [:new, :create]
-    
+
     resources :create_additional_code, only: [:new, :show, :edit, :update, :destroy] do
       member do
         get :submitted_for_cross_check
@@ -351,6 +351,14 @@ Rails.application.routes.draw do
     end
 
     resources :edit_quota_blocking_period, only: [:new, :create, :edit, :update, :show, :destroy] do
+      member do
+        get :submitted_for_cross_check
+        get :move_to_editing_mode
+        get :withdraw_workbasket_from_workflow
+      end
+    end
+
+    resources :delete_quota_blocking_period, only: [:new, :create, :edit, :update, :show, :destroy] do
       member do
         get :submitted_for_cross_check
         get :move_to_editing_mode

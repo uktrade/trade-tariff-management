@@ -354,6 +354,12 @@ module WorkbasketHelper
         workbasket.id,
         step: :main
       )
+
+    when :delete_quota_blocking_period
+      edit_delete_quota_blocking_period_url(
+        workbasket.id,
+        step: :main
+      )
       end
   end
 
@@ -407,6 +413,8 @@ module WorkbasketHelper
       create_quota_blocking_period_url(workbasket.id)
     when :edit_quota_blocking_period
       edit_quota_blocking_period_url(workbasket.id)
+    when :delete_quota_blocking_period
+      delete_quota_blocking_period_url(workbasket.id)
     end
   end
 
@@ -457,6 +465,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_quota_blocking_period_url(workbasket.id)
     elsif workbasket.object.type == "edit_quota_blocking_period"
       withdraw_workbasket_from_workflow_edit_quota_blocking_period_url(workbasket.id)
+    elsif workbasket.object.type == "delete_quota_blocking_period"
+      withdraw_workbasket_from_workflow_delete_quota_blocking_period_url(workbasket.id)
     end
   end
 
