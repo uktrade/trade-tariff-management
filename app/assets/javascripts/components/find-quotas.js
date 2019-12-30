@@ -126,8 +126,7 @@ $(document).ready(function() {
         },
         license: {
           enabled: false,
-          operator: "no",
-          value: null
+          operator: "no"
         },
         staged: {
           enabled: false,
@@ -494,11 +493,6 @@ $(document).ready(function() {
         }
       },
       "license.operator": function(val) {
-        if (val) {
-          this.license.enabled = true;
-        }
-      },
-      "license.value": function(val) {
         if (val) {
           this.license.enabled = true;
         }

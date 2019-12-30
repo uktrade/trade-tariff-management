@@ -84,14 +84,6 @@
     <div class="find-items__is">
       <custom-select :options="conditionsForLicense" label-field="label" value-field="value"  v-model="license.operator" name="search[license][operator]"></custom-select>
     </div>
-    <div class="find-item__text">
-      <span class='middle-text'>
-        with licence ID
-      </span>
-    </div>
-    <div class="find-item__short">
-      <custom-select url="/certificates" code-field="certificate_code" label-field="description" value-field="certificate_code" code-class-name="prefix--certificate-code"  placeholder="― start typing ―" min-length="1" v-model="license.value" name="search[license][value]" v-bind:disabled="licenseValueDisabled"></custom-select>
-    </div>
   </div>
   <div class="find-items__row">
     <div class="find-items__checkbox-column">
