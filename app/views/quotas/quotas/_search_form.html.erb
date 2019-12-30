@@ -159,22 +159,6 @@
   <div class="find-items__row">
     <div class="find-items__checkbox-column">
       <div class="multiple-choice">
-        <input name="search[additional_code][enabled]" id="toggle-additional-code" type="checkbox" value="1" v-model="additional_code.enabled" />
-        <label for="toggle-additional-code">
-          Additional code
-        </label>
-      </div>
-    </div>
-    <div class="find-items__is">
-      <custom-select :options="conditionsForAdditionalCode" label-field="label" value-field="value"  v-model="additional_code.operator" name="search[additional_code][operator]"></custom-select>
-    </div>
-    <div class="find-item__short">
-      <input name="search[additional_code][value]" class="form-control" v-model="additional_code.value" />
-    </div>
-  </div>
-  <div class="find-items__row">
-    <div class="find-items__checkbox-column">
-      <div class="multiple-choice">
         <input id="toggle-origin" name="search[origin][enabled]" type="checkbox" value="1" v-model="origin.enabled" />
         <label for="toggle-origin">
           Origin
