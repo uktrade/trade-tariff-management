@@ -47,7 +47,6 @@ $(document).ready(function() {
           {enabled: true, title: "Start date", field: "validity_start_date"},
           {enabled: true, title: "End date", field: "validity_end_date"},
           {enabled: true, title: "Commodity code(s)", field: "goods_nomenclature_item_ids"},
-          {enabled: true, title: "Additional code(s)", field: "additional_code_ids"},
           {enabled: true, title: "Origin", field: "origin"},
           {enabled: true, title: "Origin exclusions", field: "origin_exclusions"},
           {enabled: true, title: "Status", field: "status"}
@@ -182,11 +181,6 @@ $(document).ready(function() {
           operator: "includes",
           value: null
         },
-        additional_code: {
-          enabled: false,
-          operator: "is",
-          value: null
-        },
         origin: {
           enabled: false,
           operator: "is",
@@ -213,7 +207,6 @@ $(document).ready(function() {
         "validity_start_date",
         "validity_end_date",
         "commodity_code",
-        "additional_code",
         "origin",
         "origin_exclusions"
       ];
@@ -246,7 +239,6 @@ $(document).ready(function() {
           valid_from: "validity_start_date",
           valid_to: "validity_end_date",
           commodity_code: "commodity_code",
-          additional_code: "additional_code",
           origin: "origin"
         };
 
@@ -479,16 +471,6 @@ $(document).ready(function() {
       "commodity_code.value": function(val) {
         if (val) {
           this.commodity_code.enabled = true;
-        }
-      },
-      "additional_code.operator": function(val) {
-        if (val) {
-          this.additional_code.enabled = true;
-        }
-      },
-      "additional_code.value": function(val) {
-        if (val) {
-          this.additional_code.enabled = true;
         }
       },
       "origin.operator": function(val) {
