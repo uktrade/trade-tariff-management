@@ -4,14 +4,11 @@ module Quotas
       attr_accessor :operator,
                     :license
 
-      def initialize(operator, license = nil)
+      def initialize(operator, _license = nil)
         @operator = operator
-        @license = license.to_s.strip
       end
 
       def sql_rules
-        return nil if license.blank? && operator == 'yes'
-
         clause
       end
 
@@ -21,7 +18,7 @@ module Quotas
         case operator
         when "yes"
 
-          [yes_clause, license]
+          yes_clause
         when "no"
 
           no_clause
@@ -36,7 +33,7 @@ module Quotas
                     WHERE measures.ordernumber = quota_definitions.quota_order_number_id
                       AND measures.validity_start_date = quota_definitions.validity_start_date
                       AND measure_conditions.measure_sid = measures.measure_sid
-                      AND measure_conditions.certificate_code = ?)
+                      AND measure_conditions.certificate_code IS NOT NULL)
         eos
       end
 
