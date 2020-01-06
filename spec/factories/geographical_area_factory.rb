@@ -12,6 +12,10 @@ FactoryBot.define do
       validity_start_date { Date.today.ago(15.years) }
     end
 
+    trait :twenty_years do
+      validity_start_date { Date.today.ago(20.years) }
+    end
+
     trait :erga_omnes do
       group
       geographical_area_id { GeographicalArea::ERGA_OMNES.dup }
