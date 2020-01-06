@@ -2050,6 +2050,39 @@ ALTER SEQUENCE public.delete_quota_association_workbasket_settings_id_seq OWNED 
 
 
 --
+-- Name: delete_quota_blocking_period_workbasket_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delete_quota_blocking_period_workbasket_settings (
+    id integer NOT NULL,
+    workbasket_id integer,
+    quota_blocking_period_sid text,
+    main_step_validation_passed boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: delete_quota_blocking_period_workbasket_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.delete_quota_blocking_period_workbasket_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: delete_quota_blocking_period_workbasket_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.delete_quota_blocking_period_workbasket_settings_id_seq OWNED BY public.delete_quota_blocking_period_workbasket_settings.id;
+
+
+--
 -- Name: delete_quota_suspension_workbasket_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8683,6 +8716,13 @@ ALTER TABLE ONLY public.delete_quota_association_workbasket_settings ALTER COLUM
 
 
 --
+-- Name: delete_quota_blocking_period_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delete_quota_blocking_period_workbasket_settings ALTER COLUMN id SET DEFAULT nextval('public.delete_quota_blocking_period_workbasket_settings_id_seq'::regclass);
+
+
+--
 -- Name: delete_quota_suspension_workbasket_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9709,6 +9749,14 @@ ALTER TABLE ONLY public.db_rollbacks
 
 ALTER TABLE ONLY public.delete_quota_association_workbasket_settings
     ADD CONSTRAINT delete_quota_association_workbasket_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delete_quota_blocking_period_workbasket_settings delete_quota_blocking_period_workbasket_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delete_quota_blocking_period_workbasket_settings
+    ADD CONSTRAINT delete_quota_blocking_period_workbasket_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -13155,3 +13203,4 @@ INSERT INTO "schema_migrations" ("filename") VALUES ('20191118132010_add_columns
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191125154127_create_quota_blocking_period_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191127110431_create_edit_quota_blocking_period_workbasket_settings.rb');
 INSERT INTO "schema_migrations" ("filename") VALUES ('20191202145535_change_regulations_search_pg_view.rb');
+INSERT INTO "schema_migrations" ("filename") VALUES ('20200106095903_create_delete_quota_blocking_period_workbasket_settings.rb');
