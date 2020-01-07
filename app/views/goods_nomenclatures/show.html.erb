@@ -38,18 +38,20 @@
     </div>
 
     <% if @nomenclature_tree %>
-      <ul id="nomenclatures-goods-list">
-        <div class="row">
-          <div class="col-md-6 b">Description</div>
-          <div class="col-md-1 b text-center">Suffix</div>
-          <div class="col-md-1 b text-center">Indent</div>
-          <div class="col-md-2 b">Commodity code</div>
-        </div>
+      <div class="column-three-quarters">
+        <ul id="nomenclatures-goods-list">
+          <div class="row">
+            <div class="col-md-6 b">Description</div>
+            <div class="col-md-1 b text-center">Suffix</div>
+            <div class="col-md-1 b text-center">Indent</div>
+            <div class="col-md-2 b">Commodity code</div>
+          </div>
 
-        <% @nomenclature_tree.children.each do |sub_header| %>
-          <%= render partial: 'tree_node', locals: {node: sub_header} %>
-        <% end %>
-      </ul>
+          <% @nomenclature_tree.children.each do |sub_header| %>
+            <%= render partial: 'tree_node', locals: {node: sub_header} %>
+          <% end %>
+        </ul>
+      </div>
     <%end %>
 
   <% end %>
