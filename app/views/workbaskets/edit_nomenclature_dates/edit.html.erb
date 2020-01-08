@@ -160,28 +160,27 @@
   </div>
 </div>
 
+<% if saver.conformance_errors.any? %>
+  <div class="error-summary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+    <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+      Error
+    </h2>
+    <ul class="error-summary-list">
+      <% saver.conformance_errors.each do | error | %>
+        <span class="error-message"><%= error[1] %></span>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
 <%= simple_form_for @edit_nomenclature_dates_form, url: edit_nomenclature_date_path, html: {method: :patch, novalidate: false} do |f| %>
 <div class="grid-row">
   <div class="column-two-thirds">
     <div class="vue-instance">
-      <div class="<%= 'panel panel-border-narrow form-group-error' if (saver&.errors[:validity_start_date].present? || saver&.conformance_errors.present?) %>">
-
-        <% if (saver&.errors[:validity_start_date] || saver&.conformance_errors)  %>
-          <span class="error-message">
-            <%= saver&.errors[:validity_start_date] %>
-            <%= saver&.conformance_errors&.values[0] %>
-          </span>
-        <% end %>
-        <%= content_tag "date-gds", "", "label" => "Start date", "hint" => t('edit_nomenclature_dates.start_date_hint'), "value" => @edit_nomenclature_dates_form.validity_start_date, "id" => "workbasket_forms_edit_nomenclature_dates_form_validity_start_date", "input_name" => "workbasket_forms_edit_nomenclature_dates_form[validity_start_date]", "error" => saver.errors[:validity_start_date], required: true %>
-      </div>
-
-      <div class=" <%= 'panel panel-border-narrow form-group-error' if saver&.errors[:validity_end_date] %>">
-        <% if saver&.errors[:validity_end_date]  %>
-          <span class="error-message"><%= saver&.errors[:validity_end_date] %></span>
-        <% end %>
-        <%= content_tag "date-gds", "", "label" => "End date", "hint" => t('edit_nomenclature_dates.end_date_hint'), "value" => @edit_nomenclature_dates_form.validity_end_date, "id" => "workbasket_forms_edit_nomenclature_dates_form_validity_end_date", "input_name" => "workbasket_forms_edit_nomenclature_dates_form[validity_end_date]", "error" => saver.errors[:validity_end_date], required: true %>
-      </div>
-
+        <%#= content_tag "date-gds", "", "label" => "Start date", "hint" => t('edit_nomenclature_dates.start_date_hint'), "value" => @edit_nomenclature_dates_form.validity_start_date, "id" => "workbasket_forms_edit_nomenclature_dates_form_validity_start_date", "input_name" => "workbasket_forms_edit_nomenclature_dates_form[validity_start_date]", "error" => saver.errors[:validity_start_date], required: true %>
+        <%= content_tag "date-gds", "", "label" => "Start date", "hint" => t('edit_nomenclature_dates.start_date_hint'), "value" => @edit_nomenclature_dates_form.validity_start_date&.strftime("%d-%m-%Y"), "id" => "workbasket_forms_edit_nomenclature_dates_form_validity_start_date", "input_name" => "workbasket_forms_edit_nomenclature_dates_form[validity_start_date]", "error" => saver.errors[:validity_start_date], required: true %>
+        <%= content_tag "date-gds", "", "label" => "End date", "hint" => t('edit_nomenclature_dates.end_date_hint'), "value" => @edit_nomenclature_dates_form.validity_end_date&.strftime("%d-%m-%Y"), "id" => "workbasket_forms_edit_nomenclature_dates_form_validity_end_date", "input_name" => "workbasket_forms_edit_nomenclature_dates_form[validity_end_date]", "error" => saver.errors[:validity_end_date] %>
     </div>
     <div>
       <div class="form-actions">

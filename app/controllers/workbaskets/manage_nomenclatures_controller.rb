@@ -68,7 +68,9 @@ module Workbaskets
           workbasket_id: workbasket.id,
           workbasket_name: workbasket_params[:workbasket_name],
           reason_for_changes: workbasket_params[:reason_for_changes],
-          original_nomenclature: original_nomenclature.goods_nomenclature_sid
+          original_nomenclature: original_nomenclature.goods_nomenclature_sid,
+          validity_start_date: original_nomenclature.validity_start_date,
+          validity_end_date: original_nomenclature.validity_end_date
         )
       end
       workbasket

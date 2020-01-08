@@ -16,6 +16,7 @@ RSpec.describe "edit description" do
 
     fill_in("What is the name of this workbasket?", with: "Test basket name")
     fill_in("What is the reason for these changes?", with: "Test edit nom reason")
+    select_radio('Amend description')
     click_on("Continue")
 
     fill_in("Enter new description", with: "Shiny new description")

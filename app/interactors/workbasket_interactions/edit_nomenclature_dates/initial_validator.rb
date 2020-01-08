@@ -2,8 +2,8 @@ module WorkbasketInteractions
   module EditNomenclatureDates
     class InitialValidator
       ALLOWED_OPS = %w(
-        description
         validity_start_date
+        validity_end_date
       ).freeze
 
       VALIDITY_PERIOD_ERRORS_KEYS = %i[
@@ -29,7 +29,6 @@ module WorkbasketInteractions
       end
 
       def fetch_errors
-        check_description!
         check_validity_period!
 
         errors
@@ -40,17 +39,6 @@ module WorkbasketInteractions
       end
 
     private
-
-      def check_description!
-        if settings.description.blank? || (
-            settings.description.present? &&
-            settings.description.squish.split.size.zero?
-          )
-
-          @errors[:description] = errors_translator(:description_blank)
-          @errors_summary = errors_translator(:summary_minimal_required_fields)
-        end
-      end
 
       def check_validity_period!
         if settings.validity_start_date.present?

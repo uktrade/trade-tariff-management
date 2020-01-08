@@ -14,13 +14,7 @@ module WorkbasketInteractions
                     :attrs_parser,
                     :initial_validator,
                     :original_nomenclature,
-                    #:goods_nomenclature,
-                    #:goods_nomenclature_description,
-                    #:goods_nomenclature_description_period,
-                    #:next_goods_nomenclature_description,
-                    #:next_goods_nomenclature_description_period,
                     :persist,
-                    #:operation_date,
                     :records
 
       def initialize(workbasket, current_step, save_mode, settings_ops = {})
@@ -32,7 +26,7 @@ module WorkbasketInteractions
 
         clear_cached_sequence_number!
 
-        @persist = true # For now it always true
+        @persist = true
         @errors = {}
         @errors_summary = {}
         @conformance_errors = {}
@@ -44,16 +38,13 @@ module WorkbasketInteractions
 
         workbasket.settings.save
         if valid?
-          #create_nomenclature_description!
-          #
-          true #xxxx :D remove this and use the rest
+          edit_nomenclature_dates!
         else
           false
         end
       end
 
       def valid?
-        return true #xxxxx remove this :D
         validate!
         errors.blank? && conformance_errors.blank?
       end
@@ -72,7 +63,7 @@ module WorkbasketInteractions
       end
 
       def check_initial_validation_rules!
-        @initial_validator = ::WorkbasketInteractions::EditNomenclature::InitialValidator.new(
+        @initial_validator = ::WorkbasketInteractions::EditNomenclatureDates::InitialValidator.new(
           workbasket.settings
         )
 
@@ -81,63 +72,51 @@ module WorkbasketInteractions
       end
 
 
-      def create_nomenclature_description!
+      def edit_nomenclature_dates!
         @records = []
         original_nomenclature = GoodsNomenclature.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature)
 
-
-        @goods_nomenclature_description_period = find_existing_description_period(original_nomenclature, workbasket.settings.validity_start_date)
-        description_operation = "U"
-        if goods_nomenclature_description_period.nil?
-          @records << create_description_period(original_nomenclature)
-          description_operation = "C"
+        if original_nomenclature.validity_start_date != workbasket.settings.validity_start_date
+          edit_nomenclature_description_period!
+          edit_nomenclature_indents!
         end
 
-        GoodsNomenclatureDescription.unrestrict_primary_key
-        @goods_nomenclature_description = GoodsNomenclatureDescription.new(
-          language_id: 'EN',
-          goods_nomenclature_description_period_sid: goods_nomenclature_description_period.goods_nomenclature_description_period_sid,
-          goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
-          goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
-          productline_suffix: original_nomenclature.producline_suffix,
-          operation: description_operation,
-          description: workbasket.settings.description
-        )
-        @records << @goods_nomenclature_description
+        #GoodsNomenclatureDescription.unrestrict_primary_key
+        @edited_goods_nomenclature = original_nomenclature
+        @edited_goods_nomenclature.validity_start_date = workbasket.settings.validity_start_date
+        @edited_goods_nomenclature.validity_end_date = workbasket.settings.validity_end_date
+        @records << @edited_goods_nomenclature
 
         operation_date = workbasket.settings.validity_start_date
-        save_nomenclature_description!
+        save_nomenclature!
+
       end
 
-      def find_existing_description_period(original_nomenclature, validity_start_date)
-        GoodsNomenclatureDescriptionPeriod.find(goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid, validity_start_date: validity_start_date)
+      def edit_nomenclature_description_period!
+        desc_period = GoodsNomenclatureDescriptionPeriod.where(goods_nomenclature_sid: workbasket.settings.original_nomenclature).first
+        desc_period.validity_start_date = workbasket.settings.validity_start_date
+        @records << desc_period
       end
 
-      def create_description_period(original_nomenclature)
-        GoodsNomenclatureDescriptionPeriod.unrestrict_primary_key
-        @goods_nomenclature_description_period = GoodsNomenclatureDescriptionPeriod.new(
-          goods_nomenclature_sid: original_nomenclature.goods_nomenclature_sid,
-          goods_nomenclature_item_id: original_nomenclature.goods_nomenclature_item_id,
-          productline_suffix: original_nomenclature.producline_suffix,
-          validity_start_date: workbasket.settings.validity_start_date
-        )
-        ::WorkbasketValueObjects::Shared::PrimaryKeyGenerator.new(goods_nomenclature_description_period).assign!
-        @goods_nomenclature_description_period
+      def edit_nomenclature_indents!
+        indent = GoodsNomenclatureIndent.where(goods_nomenclature_sid: workbasket.settings.original_nomenclature).first
+        indent.validity_start_date = workbasket.settings.validity_start_date
+        @records << indent
       end
 
       def check_conformance_rules!
         Sequel::Model.db.transaction(@do_not_rollback_transactions.present? ? {} : { rollback: :always }) do
-          #create_nomenclature_description!
+          edit_nomenclature_dates!
 
-          #parse_and_format_conformance_rules
+          parse_and_format_conformance_rules
         end
       end
 
       def parse_and_format_conformance_rules
         @conformance_errors = {}
 
-        unless goods_nomenclature_description_period.conformant?
-          @conformance_errors.merge!(get_conformance_errors(goods_nomenclature_description_period))
+        unless @edited_goods_nomenclature.conformant?
+          @conformance_errors.merge!(get_conformance_errors(@edited_goods_nomenclature))
         end
 
         if conformance_errors.present?
@@ -161,11 +140,11 @@ module WorkbasketInteractions
         res
       end
 
-      def save_nomenclature_description!
+      def save_nomenclature!
         records.each do |record|
           ::WorkbasketValueObjects::Shared::SystemOpsAssigner.new(
-            record, system_ops.merge(operation: record[:operation])
-          ).assign!
+            record, system_ops.merge(operation: "U")
+          ).assign!(false)
           record.save
         end
       end

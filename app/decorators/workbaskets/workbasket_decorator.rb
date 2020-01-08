@@ -33,7 +33,7 @@ module Workbaskets
       when "create_nomenclature"
         "Create Goods Classification"
       when "edit_nomenclature"
-        "Edit Goods Classification"
+        "Edit Goods Classification Description"
       when "edit_nomenclature_dates"
         "Edit Goods Classification Dates"
       when "edit_regulation"
