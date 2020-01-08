@@ -4,6 +4,18 @@ table.create-measures-details-table class="#{'view-workbasket-details-block' if 
   tbody
     tr
       td.heading_column
+        | Workbasket name
+      td
+        = workbasket.title
+
+    tr
+      td.heading_column
+        | Reason for changes
+      td
+        = workbasket.settings.reason_for_changes
+
+    tr
+      td.heading_column
         | Created by
       td
         = workbasket.author_name

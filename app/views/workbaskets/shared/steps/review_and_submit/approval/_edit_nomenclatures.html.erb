@@ -1,38 +1,9 @@
-<div class="panel panel-border-narrow p-t-5 p-b-5">
-  <p>
-    <% original_nomenclature = GoodsNomenclature.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature) %>
-    <%= original_nomenclature.goods_nomenclature_item_id %> - <%= original_nomenclature.description %>
-  </p>
-</div>
-
-<div class="grid-row">
-  <div class="column-two-thirds">
-    <table>
-      <caption class="heading-small">Workbasket details</caption>
-      <tbody>
-      <tr>
-        <td class="heading_column">Workbasket name</td>
-        <td><%= workbasket.title %></td>
-      </tr>
-      <tr>
-        <td class="heading_column">Reason for changes</td>
-        <td><%= workbasket.settings.reason_for_changes %></td>
-      </tr>
-
-      <% workbasket.ordered_events.map do |event|  %>
-        <%= render "workbaskets/events/#{event.event_type}", event: event %>
-      <% end %>
-
-      </tbody>
-    </table>
-  </div>
-</div>
+<% original_nomenclature = GoodsNomenclature.find(goods_nomenclature_sid: workbasket.settings.original_nomenclature) %>
 
 <div class="grid-row">
   <div class="column-two-thirds">
 
     <table>
-      <caption class="heading-medium m-t-25">Existing commodity code details</caption>
       <tbody>
       <tr>
         <td class="heading_column">Commodity code</td>
