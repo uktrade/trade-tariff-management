@@ -370,6 +370,7 @@ module Workbaskets
                                  type == 'edit_footnote' ||
                                  type == 'create_quota_association' ||
                                  type == 'delete_quota_association' ||
+                                 type == 'edit_quota_blocking_period'
                                  type == 'create_nomenclature')
 
             settings.collection.map do |item|
