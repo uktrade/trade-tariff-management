@@ -24,7 +24,7 @@ module WorkbasketForms
       end
 
       if @reason_for_changes.empty?
-        @settings_errors[:workbasket_title] = "Workbasket title must be entered"
+        @settings_errors[:reason_for_changes] = "Reason for changes must be entered"
       end
 
       quota_blocking_period = QuotaBlockingPeriod.find(quota_blocking_period_sid: @quota_blocking_period_sid)

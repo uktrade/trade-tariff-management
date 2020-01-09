@@ -20,8 +20,8 @@ module Workbaskets
     end
 
     def create
-      @quota_definition = QuotaDefinition.find(quota_definition_sid: params[:quota_definition_sid])
-      @quota_blocking_period_sid = params[:quota_blocking_period_sid]
+      @quota_definition = QuotaDefinition.find(quota_definition_sid: quota_definition_sid)
+      @quota_blocking_period_sid = quota_blocking_period_sid
 
       @delete_quota_blocking_period_form = WorkbasketForms::DeleteQuotaBlockingPeriodForm.new(settings: delete_quota_blocking_period_params, current_user: current_user)
 
@@ -35,6 +35,14 @@ module Workbaskets
     private
       def check_if_action_is_permitted!
         true
+      end
+
+      def quota_definition_sid
+        params[:quota_definition_sid] ? params[:quota_definition_sid] : params[:workbasket_forms_delete_quota_blocking_period_form][:quota_definition_sid]
+      end
+
+      def quota_blocking_period_sid
+        params[:quota_blocking_period_sid] ? params[:quota_blocking_period_sid] : params[:workbasket_forms_delete_quota_blocking_period_form][:quota_blocking_period_sid]
       end
 
       def delete_quota_blocking_period_params

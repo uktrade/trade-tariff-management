@@ -52,12 +52,16 @@
             <td><%= definition.quota_order_number_id %></td>
           </tr>
           <tr>
-            <td class="header_column">Definition dates</td>
+            <td class="header_column">Quota definition period</td>
             <td><%= "#{definition.validity_start_date.strftime("%d-%m-%y")} to #{definition.validity_end_date.strftime("%d-%m-%y")}" %></td>
           </tr>
           <tr>
-            <td class="header_column">Blocking period dates</td>
+            <td class="header_column">Quota blocking period</td>
             <td><%= "#{blocking_period.blocking_start_date.strftime("%d-%m-%y")} to #{blocking_period.blocking_end_date.strftime("%d-%m-%y")}" %></td>
+          </tr>
+          <tr>
+            <td class="header_column">Blocking type</td>
+            <td><%= WorkbasketForms::EditCreateQuotaBlockingPeriodForm::BLOCKING_TYPES[blocking_period.blocking_period_type] %></td>
           </tr>
           <tr>
             <td class="header_column">Description</td>
@@ -68,12 +72,10 @@
       </div>
     </div>
 
-    <h1 class="heading-large">
-      Delete quota blocking period
-    </h1>
 
     <%= simple_form_for @delete_quota_blocking_period_form, url: delete_quota_blocking_period_index_path, html: { novalidate: false}  do |f| %>
       <%= f.input :quota_blocking_period_sid, :as => :hidden, :input_html => { :value => @quota_blocking_period_sid } %>
+      <%= f.input :quota_definition_sid, :as => :hidden, :input_html => { :value => definition.quota_definition_sid } %>
 
       <div class="grid-row">
         <div class="column-full">
@@ -91,7 +93,7 @@
             </label>
             <div class="grid-row">
               <div class="column-one-half">
-                <%= f.input :workbasket_title, label: false, required: true %>
+                <%= f.input :workbasket_title, label: false %>
               </div>
             </div>
           </div>
@@ -114,7 +116,7 @@
             </label>
             <div class="grid-row">
               <div class="column-one-half">
-                <%= f.input :reason_for_changes, as: :text, label: false, required: true, input_html: { rows: 4 } %>
+                <%= f.input :reason_for_changes, as: :text, label: false, input_html: { rows: 4 } %>
               </div>
             </div>
           </div>
