@@ -46,7 +46,7 @@ class AllAdditionalCode < Sequel::Model
       additional_code_type_id = full_code[0]
       additional_code = full_code[1..-1]
 
-      scope = actual.where(additional_code: additional_code)
+      scope = actual(include_future: true).where(additional_code: additional_code)
 
       if additional_code_type_id.present?
         scope = scope.where("lower(additional_code_type_id) = ?", additional_code_type_id)

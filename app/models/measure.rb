@@ -63,7 +63,7 @@ class Measure < Sequel::Model
 
   one_to_one :additional_code, key: :additional_code_sid,
                                primary_key: :additional_code_sid do |ds|
-    ds.with_actual(AdditionalCode)
+    ds.with_actual(AdditionalCode, nil, true)
   end
 
   one_to_one :meursing_additional_code, key: :meursing_additional_code_sid,
