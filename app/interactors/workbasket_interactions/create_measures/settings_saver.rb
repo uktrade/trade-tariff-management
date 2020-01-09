@@ -144,6 +144,7 @@ module WorkbasketInteractions
         end
 
         if commodity_codes.present?
+          commodity_codes.squish!
           invalid_commodity_codes = get_invalid_commodity_codes(CodeParsingService.csv_string_to_array(commodity_codes))
           invalid_commodity_codes << commodity_codes.split(', ').select { |code| code.length > 10 || !code.scan(/\D/).empty? }
           invalid_commodity_codes = invalid_commodity_codes.flatten.uniq
@@ -291,7 +292,7 @@ module WorkbasketInteractions
 
             def get_invalid_commodity_codes(codes)
               codes.reject do |code|
-                GoodsNomenclature.by_code(code).declarable.first.present?
+                code.length == 10 && GoodsNomenclature.by_code(code).declarable.first.present?
               end
             end
 
