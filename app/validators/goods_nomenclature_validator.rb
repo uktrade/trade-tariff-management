@@ -11,4 +11,10 @@ class GoodsNomenclatureValidator < TradeTariffBackend::Validator
   validation :NIG4, 'The start date must be less than or equal to the end date.' do
     validates :validity_dates
   end
+
+  validation :NIG11, 'At least one indent record is required and the start date of the first indentation must be equal to the start date of the nomenclature' do |record|
+    indent = GoodsNomenclatureIndent.where(goods_nomenclature_sid: record.goods_nomenclature_sid).first
+    indent.validity_start_date == record.validity_start_date
+  end
+
 end

@@ -19,7 +19,18 @@
 
 #records-table th, .table th {
   vertical-align:bottom;
+  font-size:12px !important;
 }
 #records-table td, .table td {
   vertical-align:top;
+  font-size:12px !important;
+}
+
+.details_table {
+  th, td {
+    vertical-align: top;
+  }
+  th {
+    font-weight: bold;
+  }
 }

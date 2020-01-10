@@ -307,6 +307,12 @@ module WorkbasketHelper
         step: :main
       )
 
+    when :edit_nomenclature_dates
+      edit_edit_nomenclature_date_url(
+        workbasket.id,
+        step: :main
+      )
+
     when :edit_regulation
       edit_edit_regulation_url(
         workbasket.id,
@@ -395,6 +401,8 @@ module WorkbasketHelper
       create_nomenclature_url(workbasket.id)
     when :edit_nomenclature
       edit_nomenclature_url(workbasket.id)
+    when :edit_nomenclature_dates
+      edit_nomenclature_date_url(workbasket.id)
     when :edit_regulation
       edit_regulation_url(workbasket.id)
     when :bulk_edit_of_quotas_url
@@ -441,6 +449,8 @@ module WorkbasketHelper
       withdraw_workbasket_from_workflow_create_nomenclature_url(workbasket.id)
     elsif workbasket.object.type == "edit_nomenclature"
       withdraw_workbasket_from_workflow_edit_nomenclature_url(workbasket.id)
+    elsif workbasket.object.type == "edit_nomenclature_dates"
+      withdraw_workbasket_from_workflow_edit_nomenclature_date_url(workbasket.id)
     elsif workbasket.object.type == "create_footnote"
       withdraw_workbasket_from_workflow_create_footnote_url(workbasket.id)
     elsif workbasket.object.type == "edit_footnote"

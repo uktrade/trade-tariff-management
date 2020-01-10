@@ -16,6 +16,7 @@ module Workbaskets
       edit_certificate
       edit_geographical_area
       edit_nomenclature
+      edit_nomenclature_dates
       create_nomenclature
       edit_regulation
       create_quota_association
@@ -120,6 +121,7 @@ module Workbaskets
       edit_certificate
       edit_geographical_area
       edit_nomenclature
+      edit_nomenclature_dates
       edit_regulation
     ).freeze
 
@@ -169,6 +171,9 @@ module Workbaskets
 
     one_to_one :edit_nomenclature_settings, key: :workbasket_id,
                class_name: "Workbaskets::EditNomenclatureSettings"
+
+    one_to_one :edit_nomenclature_dates_settings, key: :workbasket_id,
+               class_name: "Workbaskets::EditNomenclatureDatesSettings"
 
     one_to_one :create_nomenclature_settings, key: :workbasket_id,
                class_name: "Workbaskets::CreateNomenclatureSettings"
@@ -370,6 +375,7 @@ module Workbaskets
                                  type == 'edit_footnote' ||
                                  type == 'create_quota_association' ||
                                  type == 'delete_quota_association' ||
+                                 type == 'edit_nomenclature_dates' ||
                                  type == 'edit_quota_blocking_period'
                                  type == 'create_nomenclature')
 
@@ -588,6 +594,8 @@ module Workbaskets
         edit_geographical_area_settings
       when :edit_nomenclature
         edit_nomenclature_settings
+      when :edit_nomenclature_dates
+        edit_nomenclature_dates_settings
       when :create_nomenclature
         create_nomenclature_settings
       when :edit_regulation
@@ -710,6 +718,7 @@ module Workbaskets
           edit_certificate
           edit_geographical_area
           edit_nomenclature
+          edit_nomenclature_dates
           create_nomenclature
           edit_regulation
           create_quota_association
@@ -757,6 +766,8 @@ module Workbaskets
                        ::Workbaskets::EditGeographicalAreaSettings
                      when :edit_nomenclature
                        ::Workbaskets::EditNomenclatureSettings
+                     when :edit_nomenclature_dates
+                       ::Workbaskets::EditNomenclatureDatesSettings
                      when :create_nomenclature
                        ::Workbaskets::CreateNomenclatureSettings
                      when :edit_regulation
