@@ -324,7 +324,7 @@ GEM
     raabro (1.1.6)
     rabl (0.14.0)
       activesupport (>= 2.3.14)
-    rack (2.0.8)
+    rack (2.2.3)
     rack-contrib (2.1.0)
       rack (~> 2.0)
     rack-protection (2.0.4)
