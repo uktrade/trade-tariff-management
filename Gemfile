@@ -54,7 +54,7 @@ gem 'oj'
 gem "multi_json", "~> 1.11"
 gem "builder", "~> 3.2"
 gem "ox", ">= 2.8.1"
-gem "nokogiri", "~> 1.10.4"
+gem "nokogiri", "~> 1.10.10"
 gem 'holidays'
 gem "govspeak", "~> 5.6.0"
 gem "addressable", "~> 2.3"

@@ -284,7 +284,7 @@ GEM
     multipart-post (2.0.0)
     mustermann (1.0.3)
     nio4r (2.5.2)
-    nokogiri (1.10.5)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     nokogumbo (1.5.0)
       nokogiri
@@ -574,7 +574,7 @@ DEPENDENCIES
   meta_request
   momentjs-rails
   multi_json (~> 1.11)
-  nokogiri (~> 1.10.4)
+  nokogiri (~> 1.10.10)
   oj
   omniauth-oauth2
   omniauth-rails_csrf_protection (~> 0.1)
